@@ -1,10 +1,9 @@
 {
-  "name": "benchmark",
+  "name": "benchmarks",
   "version": "0.0.0",
-  "main": "./dist/esm/index.js",
+  "main": "./dist/index.js",
   "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.cjs",
+    "import": "./dist/index.js",
     "types": "./dist/types/index.d.ts"
   },
   "types": "./dist/types/index.d.ts",
@@ -29,19 +28,17 @@
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "benchmark": "^2.1.4",
-    "microtime": "^3.1.1",
-    "node-fetch": "^3.3.2"
+    "benchmark": "^2.1.4"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.9",
+    "@swc/cli": "^0.4.0",
     "@swc/core": "^1.4.2",
     "@types/benchmark": "^2.1.5",
-    "@types/node": "^20.11.25",
+    "@types/node": "^20.14.10",
     "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.4.5"
+    "typescript": "^5.5.3"
   }
 }

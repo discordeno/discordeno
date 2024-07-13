@@ -26,7 +26,7 @@
     "test:deno-unit": "swc --strip-leading-paths tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
     "@discordeno/bot": "19.0.0-beta.1",
@@ -34,23 +34,23 @@
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "commander": "^12.0.0"
+    "commander": "^12.1.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.9",
+    "@swc/cli": "^0.4.0",
     "@swc/core": "^1.4.2",
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.7",
-    "@types/node": "^20.11.25",
+    "@types/node": "^20.14.10",
     "@types/sinon": "^17.0.3",
     "c8": "^9.1.0",
     "chai": "^5.1.1",
     "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.5.1",
-    "sinon": "^17.0.1",
+    "sinon": "^18.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.4.5"
+    "typescript": "^5.5.3"
   }
 }

@@ -4,8 +4,6 @@ const benchmarkData = await fetch(`https://raw.githubusercontent.com/discordeno/
   .then(async (res) => await res.text())
   .then((text) => JSON.parse(text.slice(24)))
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-// const commitSha = await fs.readFile('./sha', 'utf-8')
 const results = JSON.parse(await fs.readFile('./data.json', 'utf-8'))
 
 interface BenchmarksData {

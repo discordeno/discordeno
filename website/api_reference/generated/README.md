@@ -1,4 +1,6 @@
-discordeno-monorepo / [Modules](modules.md)
+[**Documentation**](README.md) • **Docs**
+
+***
 
 # Discordeno
 

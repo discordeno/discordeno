@@ -1,8 +1,8 @@
 import ReactFlow, {
   Background,
   Controls,
-  Edge,
-  Node,
+  type Edge,
+  type Node,
   Position,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
@@ -15,7 +15,7 @@ export const defaultNodeOptions = {
 }
 
 const genServer = (x: number, id: number) => {
-  const server: Node<any, string>[] = [
+  const server: Array<Node<any, string>> = [
     {
       id: `s${id + 1}`,
       data: { label: `Server ${id + 1}` },
@@ -24,7 +24,7 @@ const genServer = (x: number, id: number) => {
   ]
 
   for (let i = 0; i < 4; i++) {
-    if (i == 2) {
+    if (i === 2) {
       server.push(
         {
           id: `baseLineNodeText-${id}-${i}`,
@@ -48,17 +48,17 @@ const genServer = (x: number, id: number) => {
     server.push(
       ...[
         {
-          id: `w${id * 50 + (i == 3 ? 49 : i) + 1}`,
-          data: { label: `Worker ${id * 50 + (i == 3 ? 49 : i)}` },
+          id: `w${id * 50 + (i === 3 ? 49 : i) + 1}`,
+          data: { label: `Worker ${id * 50 + (i === 3 ? 49 : i)}` },
           position: { x: x - 112.5 + 75 * i, y: 200 },
           ...defaultNodeOptions,
           ...{ style: { ...defaultNodeOptions.style, padding: '5px 10px' } },
         },
         {
-          id: `w${id * 50 + (i == 3 ? 49 : i) + 1}s`,
+          id: `w${id * 50 + (i === 3 ? 49 : i) + 1}s`,
           data: {
-            label: `Shard ${id * 500 + (i == 3 ? 49 : i) * 10}-${
-              id * 500 + (i == 3 ? 49 : i) * 10 + 9
+            label: `Shard ${id * 500 + (i === 3 ? 49 : i) * 10}-${
+              id * 500 + (i === 3 ? 49 : i) * 10 + 9
             }`,
           },
           position: { x: x - 112.5 + 75 * i, y: 300 },
@@ -67,10 +67,10 @@ const genServer = (x: number, id: number) => {
           ...{
             style: {
               ...defaultNodeOptions.style,
-              ...(id == 1 || (id == 0 && i == 3)
+              ...(id === 1 || (id === 0 && i === 3)
                 ? { padding: '5px 10px' }
                 : { padding: `5px 5px` }),
-              ...(id == 0 && i != 3 ? { padding: '5px 15px' } : {}),
+              ...(id === 0 && i !== 3 ? { padding: '5px 15px' } : {}),
             },
           },
         },
@@ -101,7 +101,7 @@ const nodes = [
   },
 ]
 
-const edges: Edge<any>[] = [
+const edges: Array<Edge<any>> = [
   { id: 'gwm-s1', source: 'gwm', target: 's1', type: 'step' },
   { id: 'gwm-s2', source: 'gwm', target: 's2', type: 'step' },
   { id: 'gwm-s10', source: 'gwm', target: 's10', type: 'step' },
