@@ -271,6 +271,7 @@ export class DiscordenoShard {
     //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
     this.stopHeartbeating()
+    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code}.`)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
@@ -297,7 +298,7 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.InvalidSeq:
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.SessionTimedOut: {
-        this.logger.debug(`[Shard] Gateway connection closing requiring re-identify. Code: ${close.code}`)
+        this.logger.debug('[Shard] Gateway connection closing requiring re-identify.')
         this.state = ShardState.Identifying
         this.events.disconnected?.(this)
 
@@ -321,7 +322,7 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.DecodeError:
       case GatewayCloseEventCodes.AlreadyAuthenticated:
       default: {
-        this.logger.info(`[Shard] closed shard #${this.id}. Resuming...`)
+        this.logger.info(`[Shard] Closed shard #${this.id} with code ${close.code}. Attempting to resume...`)
         this.state = ShardState.Resuming
         this.events.disconnected?.(this)
 
