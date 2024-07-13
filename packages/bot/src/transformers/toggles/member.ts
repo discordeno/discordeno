@@ -47,12 +47,10 @@ export class MemberToggles extends ToggleBitfield {
   get flags(): number {
     let flags = 0
 
-    for (const key of Object.keys(MemberToggle)) {
-      if (!memberFlags.includes(key as MemberFlagsKeys)) continue
-      if (!super.contains(MemberToggle[key as MemberToggleKeys])) continue
-
-      flags |= MemberToggle[key as MemberToggleKeys]
-    }
+    if (this.didRejoin) flags |= MemberFlags.DidRejoin
+    if (this.startedOnboarding) flags |= MemberFlags.StartedOnboarding
+    if (this.bypassesVerification) flags |= MemberFlags.BypassesVerification
+    if (this.completedOnboarding) flags |= MemberFlags.CompletedOnboarding
 
     return flags
   }
