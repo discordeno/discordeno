@@ -93,8 +93,8 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
     if (props.autoArchiveDuration && payload.channel.thread_metadata?.auto_archive_duration)
       channel.internalThreadMetadata.autoArchiveDuration = payload.channel.thread_metadata.auto_archive_duration
   }
-  if (props.autoArchiveDuration && payload.channel.default_auto_archive_duration)
-    channel.autoArchiveDuration = payload.channel.default_auto_archive_duration
+  if (props.defaultAutoArchiveDuration && payload.channel.default_auto_archive_duration)
+    channel.defaultAutoArchiveDuration = payload.channel.default_auto_archive_duration
   if (props.permissions && payload.channel.permissions) channel.permissions = new Permissions(payload.channel.permissions)
   if (props.flags) channel.flags = payload.channel.flags
   if (props.permissionOverwrites && payload.channel.permission_overwrites)
@@ -187,7 +187,7 @@ export interface Channel extends BaseChannel {
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: DiscordThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  autoArchiveDuration?: number
+  defaultAutoArchiveDuration?: number
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions
   /** The flags of the channel */

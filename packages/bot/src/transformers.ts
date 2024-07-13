@@ -227,6 +227,7 @@ export interface Transformers {
       memberCount: boolean
       messageCount: boolean
       archiveTimestamp: boolean
+      defaultAutoArchiveDuration: boolean
       autoArchiveDuration: boolean
       botIsMember: boolean
       archived: boolean
@@ -847,6 +848,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         memberCount: opts?.defaultDesiredPropertiesValue ?? false,
         messageCount: opts?.defaultDesiredPropertiesValue ?? false,
         archiveTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultAutoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
         autoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
         botIsMember: opts?.defaultDesiredPropertiesValue ?? false,
         archived: opts?.defaultDesiredPropertiesValue ?? false,
