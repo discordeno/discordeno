@@ -1,4 +1,4 @@
-import { iconHashToBigInt, type Bot, type DiscordAvatarDecorationData } from '../index.js'
+import { type Bot, type DiscordAvatarDecorationData, iconHashToBigInt } from '../index.js'
 
 export function transformAvatarDecorationData(bot: Bot, payload: DiscordAvatarDecorationData): AvatarDecorationData {
   const data = {} as AvatarDecorationData

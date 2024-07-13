@@ -1,10 +1,7 @@
 // Note: type annotations allow type checking and IDEs autocompletion
 
 import type { Options as PluginContentDocs } from '@docusaurus/plugin-content-docs'
-import type {
-  Options as PresetClassicOptions,
-  ThemeConfig,
-} from '@docusaurus/preset-classic'
+import type { Options as PresetClassicOptions, ThemeConfig } from '@docusaurus/preset-classic'
 import type { Config } from '@docusaurus/types'
 import { themes } from 'prism-react-renderer'
 
@@ -27,7 +24,7 @@ const config: Config = {
   trailingSlash: false,
 
   webpack: {
-    jsLoader: isServer => ({
+    jsLoader: (isServer) => ({
       loader: require.resolve('esbuild-loader'),
       options: {
         loader: 'tsx',
@@ -57,8 +54,7 @@ const config: Config = {
           sidebarPath: require.resolve('./sidebars.ts'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/discordeno/discordeno/tree/main/website/',
+          editUrl: 'https://github.com/discordeno/discordeno/tree/main/website/',
         },
         blog: {
           showReadingTime: true,

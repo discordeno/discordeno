@@ -1,10 +1,4 @@
-import ReactFlow, {
-  Background,
-  Controls,
-  type Edge,
-  type Node,
-  Position,
-} from 'reactflow'
+import ReactFlow, { Background, Controls, type Edge, type Node, Position } from 'reactflow'
 import 'reactflow/dist/style.css'
 
 export const defaultNodeOptions = {
@@ -15,7 +9,7 @@ export const defaultNodeOptions = {
 }
 
 const genServer = (x: number, id: number) => {
-  const server: Array<Node<any, string>> = [
+  const server: Node<any, string>[] = [
     {
       id: `s${id + 1}`,
       data: { label: `Server ${id + 1}` },
@@ -57,9 +51,7 @@ const genServer = (x: number, id: number) => {
         {
           id: `w${id * 50 + (i === 3 ? 49 : i) + 1}s`,
           data: {
-            label: `Shard ${id * 500 + (i === 3 ? 49 : i) * 10}-${
-              id * 500 + (i === 3 ? 49 : i) * 10 + 9
-            }`,
+            label: `Shard ${id * 500 + (i === 3 ? 49 : i) * 10}-${id * 500 + (i === 3 ? 49 : i) * 10 + 9}`,
           },
           position: { x: x - 112.5 + 75 * i, y: 300 },
           type: 'output',
@@ -67,9 +59,7 @@ const genServer = (x: number, id: number) => {
           ...{
             style: {
               ...defaultNodeOptions.style,
-              ...(id === 1 || (id === 0 && i === 3)
-                ? { padding: '5px 10px' }
-                : { padding: `5px 5px` }),
+              ...(id === 1 || (id === 0 && i === 3) ? { padding: '5px 10px' } : { padding: `5px 5px` }),
               ...(id === 0 && i !== 3 ? { padding: '5px 15px' } : {}),
             },
           },
@@ -101,7 +91,7 @@ const nodes = [
   },
 ]
 
-const edges: Array<Edge<any>> = [
+const edges: Edge<any>[] = [
   { id: 'gwm-s1', source: 'gwm', target: 's1', type: 'step' },
   { id: 'gwm-s2', source: 'gwm', target: 's2', type: 'step' },
   { id: 'gwm-s10', source: 'gwm', target: 's10', type: 'step' },
@@ -132,7 +122,7 @@ function Flow() {
         nodes={nodes}
         edges={edges}
         nodeTypes={{
-          baseLineNodeText: n => (
+          baseLineNodeText: (n) => (
             <div
               style={{
                 textAlign: 'center',

@@ -18,8 +18,8 @@
     "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist/esm && swc --strip-leading-paths --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
     "release-build": "yarn build && yarn build:type",
-    "fmt": "eslint --fix \"src/**/*.ts*\"",
-    "lint": "eslint \"src/**/*.ts*\"",
+    "fmt": "biome format --write",
+    "lint": "biome lint --write",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/unit/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/unit/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js discordeno",
     "test:deno-unit": "swc tests --strip-leading-paths --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist/unit",
@@ -35,6 +35,7 @@
     "@discordeno/utils": "19.0.0-beta.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.4.2",
     "@types/chai": "^4.3.16",
@@ -43,8 +44,6 @@
     "@types/sinon": "^17.0.3",
     "c8": "^9.1.0",
     "chai": "^5.1.1",
-    "eslint": "^8.57.0",
-    "eslint-config-discordeno": "*",
     "mocha": "^10.5.1",
     "sinon": "^18.0.0",
     "ts-node": "^10.9.2",

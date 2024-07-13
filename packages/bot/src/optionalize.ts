@@ -14,7 +14,7 @@ export type Optionalize<T> = T extends object
   ? T extends unknown[]
     ? number extends T['length']
       ? T[number] extends object
-        ? Array<OptionalizeAux<T[number]>>
+        ? OptionalizeAux<T[number]>[]
         : T
       : Partial<T>
     : OptionalizeAux<T>

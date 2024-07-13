@@ -4,7 +4,7 @@ import type { Bot } from '../../bot.js'
 import type { Member } from '../member.js'
 import type { User } from '../user.js'
 
-export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser {
+export function transformUserToDiscordUser(_bot: Bot, payload: User): DiscordUser {
   return {
     id: payload.id.toString(),
     username: payload.username,
@@ -35,6 +35,7 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
     deaf: payload.toggles?.deaf,
     mute: payload.toggles?.mute,
     pending: payload.toggles?.pending,
+    flags: payload.flags,
     avatar_decoration_data: {
       asset: iconBigintToHash(payload.avatarDecorationData.asset),
       sku_id: bot.transformers.reverse.snowflake(payload.avatarDecorationData.skuId),

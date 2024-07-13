@@ -1,5 +1,4 @@
 await import(`https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js`)
-const commitSha = await Deno.readTextFile('./sha')
 const results = JSON.parse(await Deno.readTextFile('./data.json'))
 
 interface BenchmarksData {

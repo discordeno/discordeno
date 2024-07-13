@@ -1,4 +1,4 @@
-import { Collection, type ApplicationCommandOption, type ApplicationCommandTypes, type Interaction } from '@discordeno/bot'
+import { type ApplicationCommandOption, type ApplicationCommandTypes, Collection, type Interaction } from '@discordeno/bot'
 
 export const commands = new Collection<string, Command>()
 

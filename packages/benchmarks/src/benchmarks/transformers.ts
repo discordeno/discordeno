@@ -1,6 +1,8 @@
 import {
   ApplicationFlags,
+  type Bot,
   ButtonStyles,
+  type DiscordMessage,
   InteractionTypes,
   MemberToggles,
   MessageActivityTypes,
@@ -13,8 +15,6 @@ import {
   UserFlags,
   createBot,
   iconHashToBigInt,
-  type Bot,
-  type DiscordMessage,
 } from '@discordeno/bot'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
@@ -390,7 +390,6 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
     // UNTRANSFORMED STUFF HERE
     content: payload.content ?? '',
     isFromBot: payload.author.bot ?? false,
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     tag: `${payload.author.username}#${payload.author.discriminator}`,
     timestamp: Date.parse(payload.timestamp),
     editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,
@@ -483,7 +482,7 @@ await memoryBenchmark(
   (object, event: DiscordMessage) => object.cache.push(oldtransformMessage(bot, event)),
   // function specify how to add event to the object/ run the object
   [...new Array(MESSAGE_SIZE)].map(
-    (i) =>
+    () =>
       ({
         activity: {
           party_id: 'party_id',

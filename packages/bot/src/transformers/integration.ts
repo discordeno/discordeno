@@ -1,5 +1,5 @@
 import type { DiscordIntegrationCreateUpdate, IntegrationExpireBehaviors, OAuth2Scope } from '@discordeno/types'
-import { iconHashToBigInt, type Bot, type User } from '../index.js'
+import { type Bot, type User, iconHashToBigInt } from '../index.js'
 
 export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate): Integration {
   const integration = {

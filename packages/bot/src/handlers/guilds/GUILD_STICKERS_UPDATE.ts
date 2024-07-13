@@ -1,6 +1,6 @@
 import type { Bot, DiscordGatewayPayload, DiscordGuildStickersUpdate } from '../../index.js'
 
-export async function handleGuildStickersUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
+export async function handleGuildStickersUpdate(bot: Bot, data: DiscordGatewayPayload, _shardId: number): Promise<void> {
   if (!bot.events.guildStickersUpdate) return
 
   const payload = data.d as DiscordGuildStickersUpdate
