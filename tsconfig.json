@@ -5,8 +5,7 @@
     "incremental": false,
     "tsBuildInfoFile": null,
     "rootDir": null,
-    "outDir": null,
-    "allowJs": true
+    "outDir": null
   },
   "include": ["."]
 }
