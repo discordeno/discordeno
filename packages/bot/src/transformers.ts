@@ -15,9 +15,11 @@ import type {
   DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordCreateApplicationCommand,
+  DiscordDefaultReactionEmoji,
   DiscordEmbed,
   DiscordEmoji,
   DiscordEntitlement,
+  DiscordForumTag,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -75,10 +77,12 @@ import {
   transformChannel,
   transformComponent,
   transformComponentToDiscordComponent,
+  transformDefaultReactionEmoji,
   transformEmbed,
   transformEmbedToDiscordEmbed,
   transformEmoji,
   transformEntitlement,
+  transformForumTag,
   transformGatewayBot,
   transformGuild,
   transformGuildOnboarding,
@@ -126,9 +130,11 @@ import {
   type AvatarDecorationData,
   type Channel,
   type Component,
+  type DefaultReactionEmoji,
   type Embed,
   type Emoji,
   type Entitlement,
+  type ForumTag,
   type GetGatewayBot,
   type Guild,
   type GuildApplicationCommandPermissions,
@@ -173,6 +179,7 @@ import type { BotInteractionResponse, DiscordComponent, DiscordInteractionRespon
 export interface Transformers {
   customizers: {
     channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
+    forumTag: (bot: Bot, payload: DiscordForumTag, forumTag: ForumTag) => any
     interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
     messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
@@ -190,6 +197,7 @@ export interface Transformers {
     application: (bot: Bot, payload: DiscordApplication, application: Application) => any
     team: (bot: Bot, payload: DiscordTeam, team: Team) => any
     emoji: (bot: Bot, payload: DiscordEmoji, emoji: Emoji) => any
+    defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji, defaultReactionEmoji: DefaultReactionEmoji) => any
     activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
     presence: (bot: Bot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
     attachment: (bot: Bot, payload: DiscordAttachment, attachment: Attachment) => any
@@ -270,6 +278,7 @@ export interface Transformers {
       memberCount: boolean
       messageCount: boolean
       archiveTimestamp: boolean
+      defaultAutoArchiveDuration: boolean
       autoArchiveDuration: boolean
       botIsMember: boolean
       archived: boolean
@@ -278,12 +287,33 @@ export interface Transformers {
       createTimestamp: boolean
       newlyCreated: boolean
       flags: boolean
+      recipients: boolean
+      icon: boolean
+      member: boolean
+      totalMessageSent: boolean
+      availableTags: boolean
+      appliedTags: boolean
+      defaultReactionEmoji: boolean
+      defaultThreadRateLimitPerUser: boolean
+      defaultSortOrder: boolean
+      defaultForumLayout: boolean
+    }
+    forumTag: {
+      id: boolean
+      name: boolean
+      moderated: boolean
+      emojiId: boolean
+      emojiName: boolean
     }
     emoji: {
       id: boolean
       name: boolean
       roles: boolean
       user: boolean
+    }
+    defaultReactionEmoji: {
+      emojiId: boolean
+      emojiName: boolean
     }
     guild: {
       afkTimeout: boolean
@@ -638,6 +668,7 @@ export interface Transformers {
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
+  forumTag: (bot: Bot, payload: DiscordForumTag) => ForumTag
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
   user: (bot: Bot, payload: DiscordUser) => User
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
@@ -653,6 +684,7 @@ export interface Transformers {
   application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
+  defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji) => DefaultReactionEmoji
   activity: (bot: Bot, payload: DiscordActivity) => Activity
   presence: (bot: Bot, payload: DiscordPresenceUpdate) => PresenceUpdate
   attachment: (bot: Bot, payload: DiscordAttachment) => Attachment
@@ -706,6 +738,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     customizers: {
       channel(bot, payload, channel) {
         return channel
+      },
+      forumTag(bot, payload, forumTag) {
+        return forumTag
       },
       interaction(bot, payload, interaction) {
         return interaction
@@ -766,6 +801,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       emoji(bot, payload, emoji) {
         return emoji
+      },
+      defaultReactionEmoji(bot, payload, defaultReactionEmoji) {
+        return defaultReactionEmoji
       },
       guild(bot, payload, guild) {
         return guild
@@ -890,6 +928,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         memberCount: opts?.defaultDesiredPropertiesValue ?? false,
         messageCount: opts?.defaultDesiredPropertiesValue ?? false,
         archiveTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultAutoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
         autoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
         botIsMember: opts?.defaultDesiredPropertiesValue ?? false,
         archived: opts?.defaultDesiredPropertiesValue ?? false,
@@ -898,12 +937,33 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         createTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
         newlyCreated: opts?.defaultDesiredPropertiesValue ?? false,
         flags: opts?.defaultDesiredPropertiesValue ?? false,
+        appliedTags: opts?.defaultDesiredPropertiesValue ?? false,
+        availableTags: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultForumLayout: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultReactionEmoji: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultSortOrder: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultThreadRateLimitPerUser: opts?.defaultDesiredPropertiesValue ?? false,
+        icon: opts?.defaultDesiredPropertiesValue ?? false,
+        member: opts?.defaultDesiredPropertiesValue ?? false,
+        recipients: opts?.defaultDesiredPropertiesValue ?? false,
+        totalMessageSent: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      forumTag: {
+        emojiId: opts?.defaultDesiredPropertiesValue ?? false,
+        emojiName: opts?.defaultDesiredPropertiesValue ?? false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        moderated: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
       },
       emoji: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
         name: opts?.defaultDesiredPropertiesValue ?? false,
         roles: opts?.defaultDesiredPropertiesValue ?? false,
         user: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      defaultReactionEmoji: {
+        emojiId: opts?.defaultDesiredPropertiesValue ?? false,
+        emojiName: opts?.defaultDesiredPropertiesValue ?? false,
       },
       guild: {
         afkTimeout: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1260,9 +1320,11 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     application: options.application ?? transformApplication,
     attachment: options.attachment ?? transformAttachment,
     channel: options.channel ?? transformChannel,
+    forumTag: options.forumTag ?? transformForumTag,
     component: options.component ?? transformComponent,
     embed: options.embed ?? transformEmbed,
     emoji: options.emoji ?? transformEmoji,
+    defaultReactionEmoji: options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     guild: options.guild ?? transformGuild,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,

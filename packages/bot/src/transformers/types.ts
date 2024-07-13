@@ -28,9 +28,9 @@ import type {
   DiscordSkuType,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
-  DiscordThreadMember,
   EmbedTypes,
   ExplicitContentFilterLevels,
+  ForumLayout,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
@@ -55,6 +55,7 @@ import type {
   ScheduledEventStatus,
   SelectOption,
   SkuFlags,
+  SortOrderTypes,
   StickerFormatTypes,
   StickerTypes,
   SystemChannelFlags,
@@ -447,9 +448,9 @@ export interface Channel {
    * This field is an internal field, subject to breaking changes.
    */
   internalThreadMetadata?: InternalChannelThreadMetadata
-  member?: DiscordThreadMember
+  member?: ThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  autoArchiveDuration?: number
+  defaultAutoArchiveDuration?: number
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions
   /** The flags of the channel */
@@ -461,10 +462,30 @@ export interface Channel {
    * Use channel.permissionOverwrites. This is for internal use only, and prone to breaking changes.
    */
   internalOverwrites?: bigint[]
+  /** The recipients of a group dm */
+  recipients?: User[]
+  /** Icon hash of the group dm */
+  icon?: bigint
+  /** Application id of the group DM creator if it is bot-created */
+  applicationId?: bigint
+  /** Number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted */
+  totalMessageSent?: number
+  /** The set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
+  availableTags?: ForumTag[]
+  /** The IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
+  appliedTags?: bigint[]
+  /** The emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
+  defaultReactionEmoji?: DefaultReactionEmoji
+  /** the initial `rateLimitPerUser` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  defaultThreadRateLimitPerUser?: number
+  /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
+  defaultSortOrder?: SortOrderTypes | null
+  defaultForumLayout?: ForumLayout
   /** Whether the channel is nsfw */
   nsfw: boolean
   /** Thread-specific fields not needed by other channels */
   threadMetadata?: ChannelThreadMetadata
+  /** When a thread is created this will be true on that channel payload for the thread. */
   newlyCreated: boolean
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
   locked: boolean
@@ -472,8 +493,23 @@ export interface Channel {
   invitable: boolean
   /** Whether the thread is archived */
   archived: boolean
+  /** for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope */
+  managed: boolean
   /** Explicit permission overwrites for members and roles. */
   permissionOverwrites: OverwriteReadable[]
+}
+
+export interface ForumTag {
+  /** The id of the tag */
+  id: bigint
+  /** The name of the tag (0-20 characters) */
+  name: string
+  /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+  moderated: boolean
+  /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+  emojiId: bigint
+  /** The unicode character of the emoji */
+  emojiName: string | null
 }
 
 /**
@@ -620,6 +656,13 @@ export interface Emoji {
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
   available?: boolean
   toggles: EmojiToggles
+}
+
+export interface DefaultReactionEmoji {
+  /** The id of a guild's custom emoji */
+  emojiId: bigint
+  /** The unicode character of the emoji */
+  emojiName?: string
 }
 
 export interface Entitlement {
