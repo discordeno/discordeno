@@ -15,11 +15,10 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-website/api_reference/generated/classes/*.md
-website/api_reference/generated/enums/*.md
-website/api_reference/generated/interfaces/*.md
-website/api_reference/generated/modules/*.md
-website/.yarn/
+website/.yarn
+
+website/api_reference/generated/**/*.md
+
 # testing
 coverage
 

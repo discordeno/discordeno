@@ -1,8 +1,17 @@
-# Standalone WS / Proxy WS
+# Discordeno WS
 
-This WS service is meant for ADVANCED DEVELOPERS ONLY!
+<img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/website/static/img/logo.png" height="150px" />
 
-## Benefits
+Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land) & [Bun](https://bun.sh/)
+
+[![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
+[![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK)](https://codecov.io/gh/discordeno/discordeno)
+![action status](https://github.com/discordeno/discordeno/actions/workflows/lib-check.yml/badge.svg?event=push)
+
+> [!WARNING]
+> Using a Standalone / Proxy WS is mean for advanced developers only
+
+Standalone WebSocket to connect to the Discord API.
 
 - **Zero Downtime Updates**:
 
@@ -48,14 +57,8 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
   - Take full advantage of all your CPU cores by using workers to spread the load. Control how many shards per worker
     and how many workers to maximize efficiency!
 
-## Usage
+## Links
 
-```ts
-createGatewayManager({
-  // TODO: (docs) Fill this out
-})
-```
-
-## API/Docs
-
-// TODO: (docs) Fill this out. List all props/methods.
+- [Website](https://discordeno.js.org/)
+- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
+- [Discord](https://discord.com/invite/5vBgXk3UcZ)

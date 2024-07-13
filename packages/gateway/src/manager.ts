@@ -710,7 +710,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * Edits the bot status in all shards that this gateway manages.
    *
    * @param data The status data to set the bots status to.
-   * @returns Promise<void>
+   * @returns nothing
    */
   editBotStatus: (data: StatusUpdate) => Promise<void>
   /**
@@ -718,7 +718,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * @param shardId The shard id to edit the status for.
    * @param data The status data to set the bots status to.
-   * @returns Promise<void>
+   * @returns nothing
    */
   editShardStatus: (shardId: number, data: StatusUpdate) => Promise<void>
   /**
