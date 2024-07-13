@@ -34,6 +34,32 @@ export enum UserFlags {
   ActiveDeveloper = 1 << 22,
 }
 
+export enum MemberFlags {
+  /**
+   * Member has left and rejoined the guild
+   *
+   * @remarks
+   * This value is not editable
+   */
+  DidRejoin = 1 << 0,
+  /**
+   * Member has completed onboarding
+   *
+   * @remarks
+   * This value is not editable
+   */
+  CompletedOnboarding = 1 << 1,
+  /** Member is exempt from guild verification requirements */
+  BypassesVerification = 1 << 2,
+  /**
+   * Member has started onboarding
+   *
+   * @remarks
+   * This value is not editable
+   */
+  StartedOnboarding = 1 << 3,
+}
+
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
 export enum ChannelFlags {
   None,

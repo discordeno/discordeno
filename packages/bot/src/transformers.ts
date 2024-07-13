@@ -376,6 +376,7 @@ export interface Transformers {
       deaf: boolean
       mute: boolean
       pending: boolean
+      flags: boolean
       avatarDecorationData: boolean
     }
     message: {
@@ -1026,6 +1027,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         deaf: opts?.defaultDesiredPropertiesValue ?? false,
         mute: opts?.defaultDesiredPropertiesValue ?? false,
         pending: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
         avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
       },
       message: {
