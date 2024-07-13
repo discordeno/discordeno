@@ -8,7 +8,9 @@ import type {
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
+  DiscordDefaultReactionEmoji,
   DiscordEmbed,
+  DiscordForumTag,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
@@ -31,6 +33,7 @@ import type {
   ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
+  ForumLayout,
   GuildFeatures,
   InteractionResponseTypes,
   Localization,
@@ -665,66 +668,218 @@ export interface AddGuildMemberOptions {
   deaf?: boolean
 }
 
+/**
+ * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-group-dm
+ * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-guild-channel
+ * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread
+ */
 export interface ModifyChannel {
-  /** 1-100 character channel name */
+  /**
+   * 1-100 character channel name
+   *
+   * @remarks
+   * This is valid only when editing group dms, any guild channel type, or a thread
+   */
   name?: string
-  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
+  /**
+   * Base64 encoded icon
+   *
+   * @remarks
+   * This is valid only when editing group dms
+   */
+  icon?: string
+  /**
+   * The type of channel
+   *
+   * @remarks
+   * You can only convert between {@link ChannelTypes.GuildText} channels and {@link ChannelTypes.GuildAnnouncement} channels when the guild has the `NEWS` feature
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText} or {@link ChannelTypes.GuildAnnouncement}.
+   */
   type?: ChannelTypes
-  /** The position of the channel in the left-hand listing (channels with the same position are sorted by id) */
+  /**
+   * The position of the channel in the left-hand listing (channels with the same position are sorted by id)
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of any type
+   */
   position?: number | null
-  /** 0-1024 character channel topic */
+  /**
+   * Channel topic
+   *
+   * @remarks
+   * 0-1024 character channel topic, or for {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} 0-4096
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   topic?: string | null
-  /** Whether the channel is nsfw */
+  /**
+   * Whether the channel is nsfw
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   nsfw?: boolean | null
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  /**
+   * Amount of seconds a user has to wait before sending another message in seconds (0-21600)
+   *
+   * @remarks
+   * Bots and users with the permission `MANAGE_MESSAGES` or `MANAGE_CHANNEL`, are unaffected
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   */
   rateLimitPerUser?: number | null
-  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  /**
+   * The bitrate (in bits) of the voice or stage channel
+   *
+   * @remarks
+   * Minimum of 8000 bits
+   *
+   * For voice channels:
+   * - normal servers can set bitrate up to 96000
+   * - servers with Boost level 1 can set up to 128000
+   * - servers with Boost level 2 can set up to 256000
+   * - servers with Boost level 3 or the `VIP_REGIONS` guild feature can set up to 384000.
+   *
+   * For stage channels, bitrate can be set up to 64000.
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   bitrate?: number | null
-  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
+  /**
+   * The user limit of the voice or stage channel (0 refers to no limit)
+   *
+   * @remarks
+   * - For voice channels, the max is set to 99
+   * - For stage channels, the max is set to 10,000
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   userLimit?: number | null
-  /** Channel or category-specific permissions */
+  /**
+   * Channel or category-specific permissions
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of any type
+   */
   permissionOverwrites?: OverwriteReadable[] | null
-  /** Id of the new parent category for a channel */
+  /**
+   * Id of the new parent category for a channel
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   parentId?: BigString | null
-  /** Voice region id for the voice channel, automatic when set to null */
+  /**
+   * Voice region id for the voice channel, automatic when set to null
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   rtcRegion?: string | null
-  /** The camera video quality mode of the voice channel */
+  /**
+   * The camera video quality mode of the voice channel
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   videoQualityMode?: VideoQualityModes
-  /** Whether the thread is archived */
-  archived?: boolean
-  /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
-  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked?: boolean
-  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable?: boolean
-
-  /** The set of tags that can be used in a GUILD_FORUM channel */
-  availableTags?: Array<{
-    /** The id of the tag */
-    id: string
-    /** The name of the tag (0-20 characters) */
-    name: string
-    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-    moderated: boolean
-    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
-    emojiId: string
-    /** The unicode character of the emoji */
-    emojiName: string
-  }>
-  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
-  appliedTags?: BigString[]
-  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
-  defaultReactionEmoji?: {
-    /** The id of a guild's custom emoji */
-    emojiId: string
-    /** The unicode character of the emoji */
-    emojiName: string | null
-  }
-  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  /**
+   * The default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
+  defaultAutoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  /**
+   * Channel flags combined as a bitfield.
+   *
+   * @remarks
+   * - `REQUIRE_TAG` is supported only by {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels.
+   * - `HIDE_MEDIA_DOWNLOAD_OPTIONS` is supported only by {@link ChannelTypes.GuildMedia} channels
+   * - `PINNED` can only be set for threads in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   */
+  flags?: number
+  /**
+   * The set of tags that can be used in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
+   *
+   * @remarks
+   * Limited to 20 tags
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
+  availableTags?: DiscordForumTag[]
+  /**
+   * The emoji to show in the add reaction button on a thread in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
+  defaultReactionEmoji?: DiscordDefaultReactionEmoji
+  /**
+   * The initial `rate_limit_per_user` to set on newly created threads in a channel.
+   *
+   * @remarks
+   * This field is copied to the thread at creation time and does not live update.
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   defaultThreadRateLimitPerUser?: number
-  /** the default sort order type used to order posts in forum channels */
+  /**
+   * The default sort order type used to order posts in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   defaultSortOrder?: SortOrderTypes | null
+  /**
+   * The default forum layout type used to display posts in {@link ChannelTypes.GuildForum} channels
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum}.
+   */
+  defaultFormLayout?: ForumLayout
+  /**
+   * Whether the thread is archived
+   *
+   * @remarks
+   * This is only valid when editing a thread
+   */
+  archived?: boolean
+  /**
+   * The thread will stop showing in the channel list after `auto_archive_duration` minutes of inactivity
+   *
+   * @remarks
+   * This is only valid when editing a thread
+   */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  /**
+   * Whether the thread is locked. When a thread is locked, only users with `MANAGE_THREADS` can unarchive it
+   *
+   * @remarks
+   * This is only valid when editing a thread
+   */
+  locked?: boolean
+  /**
+   * Whether non-moderators can add other non-moderators to a thread
+   *
+   * @remarks
+   * Only available on private threads
+   *
+   * This is only valid when editing a thread
+   */
+  invitable?: boolean
+  /**
+   * The IDs of the set of tags that have been applied to a thread in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
+   *
+   * @remarks
+   * Limited to 5
+   *
+   * This is only valid when editing a thread
+   */
+  appliedTags?: BigString[]
 }
 
 export interface EditChannelPermissionOverridesOptions extends OverwriteReadable {}
