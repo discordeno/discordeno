@@ -1,9 +1,8 @@
-import { MemberFlags, type BigString, type DiscordMember } from '@discordeno/types'
+import { type BigString, type DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { AvatarDecorationData } from './avatarDecorationData.js'
 import { Permissions } from './toggles/Permissions.js'
-import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 import { MemberToggles } from './toggles/member.js'
 import type { User } from './user.js'
 
@@ -17,17 +16,20 @@ const baseMember: Partial<Member> & BaseMember = {
   get pending() {
     return !!this.toggles?.has('pending')
   },
+  get flags() {
+    return this.toggles?.flags ?? 0
+  },
   get didRejoin() {
-    return this.flags?.contains(MemberFlags.DidRejoin) ?? false
+    return !!this.toggles?.didRejoin
   },
   get startedOnboarding() {
-    return this.flags?.contains(MemberFlags.StartedOnboarding) ?? false
+    return !!this.toggles?.startedOnboarding
   },
   get bypassesVerification() {
-    return this.flags?.contains(MemberFlags.BypassesVerification) ?? false
+    return !!this.toggles?.bypassesVerification
   },
   get completedOnboarding() {
-    return this.flags?.contains(MemberFlags.CompletedOnboarding) ?? false
+    return !!this.toggles?.completedOnboarding
   },
 }
 
@@ -46,10 +48,9 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
   if (props.avatar && payload.avatar) member.avatar = iconHashToBigInt(payload.avatar)
   if (props.permissions && payload.permissions) member.permissions = new Permissions(payload.permissions)
-  if (props.deaf || props.mute || props.pending) {
+  if (props.deaf || props.mute || props.pending || props.flags) {
     member.toggles = new MemberToggles(payload)
   }
-  if (props.flags) member.flags = new ToggleBitfield(payload.flags)
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
@@ -71,6 +72,8 @@ export interface BaseMember {
   bypassesVerification?: boolean
   /** Member has started onboarding */
   completedOnboarding?: boolean
+  /** Guild member flags */
+  flags: number
 }
 
 export interface Member extends BaseMember {
@@ -96,8 +99,6 @@ export interface Member extends BaseMember {
   permissions?: Permissions
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communicationDisabledUntil?: number
-  /** Guild member flags */
-  flags: ToggleBitfield
   /** data for the member's guild avatar decoration */
   avatarDecorationData: AvatarDecorationData
 }

@@ -1,5 +1,7 @@
-import type { DiscordMember } from '@discordeno/types'
+import { MemberFlags, type DiscordMember } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
+
+const memberFlags = ['didRejoin', 'startedOnboarding', 'bypassesVerification', 'completedOnboarding'] as const
 
 export const MemberToggle = {
   /** Whether the user is deafened in voice channels */
@@ -8,6 +10,17 @@ export const MemberToggle = {
   mute: 1 << 1,
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending: 1 << 2,
+
+  // Member flags
+
+  /** Member has left and rejoined the guild */
+  didRejoin: 1 << 3,
+  /** Member has completed onboarding */
+  startedOnboarding: 1 << 4,
+  /** Member is exempt from guild verification requirements */
+  bypassesVerification: 1 << 5,
+  /** Member has started onboarding */
+  completedOnboarding: 1 << 6,
 }
 
 export class MemberToggles extends ToggleBitfield {
@@ -21,7 +34,27 @@ export class MemberToggles extends ToggleBitfield {
       if (member.deaf) this.add(MemberToggle.deaf)
       if (member.mute) this.add(MemberToggle.mute)
       if (member.pending) this.add(MemberToggle.pending)
+
+      if (member.flags) {
+        if (member.flags & MemberFlags.DidRejoin) this.add(MemberToggle.didRejoin)
+        if (member.flags & MemberFlags.StartedOnboarding) this.add(MemberToggle.startedOnboarding)
+        if (member.flags & MemberFlags.BypassesVerification) this.add(MemberToggle.bypassesVerification)
+        if (member.flags & MemberFlags.CompletedOnboarding) this.add(MemberToggle.completedOnboarding)
+      }
     }
+  }
+
+  get flags(): number {
+    let flags = 0
+
+    for (const key of Object.keys(MemberToggle)) {
+      if (!memberFlags.includes(key as MemberFlagsKeys)) continue
+      if (!super.contains(MemberToggle[key as MemberToggleKeys])) continue
+
+      flags |= MemberToggle[key as MemberToggleKeys]
+    }
+
+    return flags
   }
 
   /** Whether the user belongs to an OAuth2 application */
@@ -37,6 +70,26 @@ export class MemberToggles extends ToggleBitfield {
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   get pending(): boolean {
     return this.has('pending')
+  }
+
+  /** Member has left and rejoined the guild */
+  get didRejoin(): boolean {
+    return this.has('didRejoin')
+  }
+
+  /** Member has completed onboarding */
+  get startedOnboarding(): boolean {
+    return this.has('startedOnboarding')
+  }
+
+  /** Member is exempt from guild verification requirements */
+  get bypassesVerification(): boolean {
+    return this.has('bypassesVerification')
+  }
+
+  /** Member has started onboarding */
+  get completedOnboarding(): boolean {
+    return this.has('completedOnboarding')
   }
 
   /** Checks whether or not the permissions exist in this */
@@ -58,3 +111,5 @@ export class MemberToggles extends ToggleBitfield {
 }
 
 export type MemberToggleKeys = keyof typeof MemberToggle
+
+export type MemberFlagsKeys = (typeof memberFlags)[number]
