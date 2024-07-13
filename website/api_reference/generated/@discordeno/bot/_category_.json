@@ -1,0 +1,8 @@
+{
+  "label": "Bot",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Automatically generated documentation for the bot package."
+  }
+}

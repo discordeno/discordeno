@@ -12,6 +12,8 @@ export const ChannelToggle = {
   archived: 1 << 3,
   /** When a thread is created this will be true on that channel payload for the thread. */
   newlyCreated: 1 << 4,
+  /** for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope */
+  managed: 1 << 5,
 }
 
 export class ChannelToggles extends ToggleBitfield {
@@ -26,6 +28,7 @@ export class ChannelToggles extends ToggleBitfield {
       if (channel.thread_metadata?.invitable) this.add(ChannelToggle.invitable)
       if (channel.thread_metadata?.archived) this.add(ChannelToggle.archived)
       if (channel.newly_created) this.add(ChannelToggle.newlyCreated)
+      if (channel.managed) this.add(ChannelToggle.managed)
     }
   }
 
@@ -52,6 +55,10 @@ export class ChannelToggles extends ToggleBitfield {
   /** Whether or not this thread channel is newly created. */
   get newlyCreated(): boolean {
     return this.has('newlyCreated')
+  }
+
+  get managed(): boolean {
+    return this.has('managed')
   }
 
   /** Checks whether or not the permissions exist in this */
