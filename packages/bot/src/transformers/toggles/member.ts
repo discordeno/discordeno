@@ -1,4 +1,4 @@
-import { MemberFlags, type DiscordMember } from '@discordeno/types'
+import { type DiscordMember, MemberFlags } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
 
 const memberFlags = ['didRejoin', 'startedOnboarding', 'bypassesVerification', 'completedOnboarding'] as const
