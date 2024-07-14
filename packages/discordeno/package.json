@@ -24,6 +24,7 @@
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js discordeno",
     "test:deno-unit": "swc --strip-leading-paths tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
+    "test:bun-unit": "node ../../scripts/fixBunTestExtension.js && bun test bunTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
     "test:test-type": "tsc --project tests/tsconfig.json"

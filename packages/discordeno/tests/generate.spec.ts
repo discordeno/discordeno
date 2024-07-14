@@ -6,12 +6,15 @@ import { typescriptOptions } from '../src/bin/generate/typescript.js'
 
 describe('discordeno generate', () => {
   it('will emit without errors', async function () {
-    if (this.timeout) {
-      this.timeout(20_000) // 20s, typescript can be slow at doing the entire type checking
+    // Mocha will crash if this takes more then 2s
+    // Deno does not have the timeout function
+    // Bun does not give a this object at all
+    if (this?.timeout) {
+      // we set the timeout to 20s, typescript can be slow at doing the entire type checking
+      this.timeout(20_000)
     }
 
-    // Temp hack to work-around the script deno tests
-    const typesFile = await findUp('packages/bot/dist/types/transformers/types.d.' + 'ts', {
+    const typesFile = await findUp('packages/bot/dist/types/transformers/types.d.ts', {
       allowSymlinks: true,
     })
 
