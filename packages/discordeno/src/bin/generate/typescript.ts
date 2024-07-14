@@ -68,9 +68,6 @@ function processChild(writeStream: WriteStream, checker: ts.TypeChecker, node: t
 
     assert(symbol.members)
 
-    // Get the general information about the symbol and it's members
-    const members = Array.from(symbol.members.values()).map(getMemberInformation.bind(null, checker))
-
     writeStream.write('\n')
 
     writeJSDoc(writeStream, symbol.getDocumentationComment(checker), symbol.getJsDocTags(checker))
@@ -78,35 +75,25 @@ function processChild(writeStream: WriteStream, checker: ts.TypeChecker, node: t
     writeStream.write(`export interface ${symbol.getName()} {\n`)
 
     // Generate the interface in the output file
-    for (const memberMetadata of members) {
-      writeJSDoc(writeStream, memberMetadata.documentation, memberMetadata.jsDoc, '  ')
+    for (const [, member] of symbol.members) {
+      const valueDeclaration = member.valueDeclaration
+      assert(valueDeclaration)
 
-      const isOptionalQuestionMark = memberMetadata.isOptional ? '?' : ''
+      const valueDeclarationChildren = valueDeclaration.getChildren()
+      const typeNode = valueDeclarationChildren.find((x) => ts.isTypeNode(x))
+      assert(typeNode)
 
-      writeStream.write(`  ${memberMetadata.name}${isOptionalQuestionMark}: ${memberMetadata.type}\n`)
+      // Since we are getting the type directly from the sourceFile it may have a trailing space, so we remove them
+      const typeText = typeNode.getFullText().trim()
+
+      writeJSDoc(writeStream, member.getDocumentationComment(checker), member.getJsDocTags(checker), '  ')
+
+      const isOptionalQuestionMark = member.getFlags() & ts.SymbolFlags.Optional ? '?' : ''
+
+      writeStream.write(`  ${member.getName()}${isOptionalQuestionMark}: ${typeText}\n`)
     }
 
     writeStream.write('}\n')
-  }
-}
-
-function getMemberInformation(checker: ts.TypeChecker, member: ts.Symbol): TypeInformation {
-  const valueDeclaration = member.valueDeclaration
-  assert(valueDeclaration)
-
-  const valueDeclarationChildren = valueDeclaration.getChildren()
-  const typeNode = valueDeclarationChildren.find((x) => ts.isTypeNode(x))
-  assert(typeNode)
-
-  // Since we are getting the type directly from the sourceFile it may have a trailing space, so we remove them
-  const typeText = typeNode.getFullText().trim()
-
-  return {
-    name: member.getName(),
-    type: typeText,
-    isOptional: (member.getFlags() & ts.SymbolFlags.Optional) === ts.SymbolFlags.Optional,
-    documentation: member.getDocumentationComment(checker),
-    jsDoc: member.getJsDocTags(checker),
   }
 }
 
@@ -157,12 +144,4 @@ function writeSymbolDisplayParts(stream: WriteStream, documentation: ts.SymbolDi
     stream.write(`\n${ident} * `)
     stream.write(text)
   }
-}
-
-interface TypeInformation {
-  name: string
-  documentation: ts.SymbolDisplayPart[]
-  jsDoc: ts.JSDocTagInfo[]
-  type: string
-  isOptional: boolean
 }
