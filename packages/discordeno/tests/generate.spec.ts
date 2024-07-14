@@ -10,7 +10,10 @@ describe('discordeno generate', () => {
       this.timeout(20_000) // 20s, typescript can be slow at doing the entire type checking
     }
 
-    const typesFile = await findUp('packages/bot/dist/types/transformers/types.d.ts', { allowSymlinks: true })
+    // Temp hack to work-around the script deno tests
+    const typesFile = await findUp('packages/bot/dist/types/transformers/types.d.' + 'ts', {
+      allowSymlinks: true,
+    })
 
     expect(typesFile).to.exist
 
