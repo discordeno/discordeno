@@ -41,16 +41,10 @@
       "allowTrailingCommas": true
     }
   },
-  "overrides": [
-    {
-      "include": ["package.json"],
-      "formatter": {
-        "lineWidth": 1
-      }
-    }
-  ],
   "files": {
     "ignore": [
+      // Ignore the package.json and leave yarn to format it
+      "package.json",
       "node_modules",
       // Ignore turbo and docusaurus cache/stuff
       ".docusaurus",
