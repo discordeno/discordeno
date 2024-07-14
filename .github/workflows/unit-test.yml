@@ -38,6 +38,12 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+      - name: Build type cache
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Unit Test
         run: yarn test:unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
         timeout-minutes: 1

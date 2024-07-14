@@ -41,6 +41,12 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+      - name: Build type cache
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Deno cache
         uses: actions/cache@v3
         with:
@@ -85,6 +91,12 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+      - name: Build type cache
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Bun Unit Test
         run: yarn test:bun-unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
         timeout-minutes: 1

@@ -135,7 +135,7 @@ jobs:
   # Not using matrix because test later on cant needs a specific job
   bot-unit-test:
     name: Bot
-    needs: build-dist
+    needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
     with:
       package: bot
@@ -157,7 +157,7 @@ jobs:
 
   discordeno-unit-test:
     name: Discordeno
-    needs: build-dist
+    needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
     with:
       package: discordeno
@@ -170,7 +170,7 @@ jobs:
 
   gateway-unit-test:
     name: Gateway
-    needs: build-dist
+    needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
     with:
       package: gateway
@@ -189,7 +189,7 @@ jobs:
 
   rest-unit-test:
     name: Rest
-    needs: build-dist
+    needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
     with:
       package: rest
@@ -211,7 +211,7 @@ jobs:
 
   types-unit-test:
     name: Types
-    needs: build-dist
+    needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
     with:
       package: types
@@ -224,7 +224,7 @@ jobs:
 
   utils-unit-test:
     name: Utils
-    needs: build-dist
+    needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
     with:
       package: utils
