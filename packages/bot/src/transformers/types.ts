@@ -1,3 +1,5 @@
+/** @import { DiscordPollResult, InteractionResponseTypes } from '@discordeno/types' */
+
 import type {
   ActivityTypes,
   ApplicationCommandOptionTypes,
@@ -22,9 +24,6 @@ import type {
   DiscordInviteType,
   DiscordOverwrite,
   DiscordPollLayoutType,
-  // required for js doc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  DiscordPollResult,
   DiscordSkuType,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
@@ -34,9 +33,6 @@ import type {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
-  // required for js doc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  InteractionResponseTypes,
   InteractionTypes,
   Locales,
   Localization,

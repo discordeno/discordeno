@@ -1,1 +1,1 @@
-import('../dist/bin/index.js')
+import('../dist/esm/bin/index.js')
