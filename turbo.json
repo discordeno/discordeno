@@ -29,7 +29,7 @@
       "dependsOn": ["^build:type"]
     },
     "test:deno-unit": {
-      "dependsOn": ["build", "^build"],
+      "dependsOn": ["build", "^build", "build:type"],
       "outputs": ["denoTestsDist/**"]
     },
     "test:bun-unit": {
