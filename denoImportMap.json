@@ -8,6 +8,7 @@
     "mocha": "https://deno.land/std@0.168.0/testing/bdd.ts",
     "chai": "https://cdn.skypack.dev/chai@4.3.4?dts",
     "sinon": "https://cdn.skypack.dev/sinon@15.0.0?dts",
+    "find-up": "npm:find-up",
     "chai-as-promised": "npm:chai-as-promised",
     "benchmark": "npm:benchmark",
     "dotenv": "npm:dotenv",
