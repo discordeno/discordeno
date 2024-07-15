@@ -21,7 +21,7 @@ describe('discordeno generate', () => {
     expect(typesFile).to.exist
 
     if (!typesFile) {
-      throw new Error("This shouldn't happen!")
+      throw new Error("Transformers types file not found!")
     }
 
     const program = ts.createProgram([typesFile], typescriptOptions)
