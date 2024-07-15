@@ -46,7 +46,7 @@
     "chai": "^5.1.1",
     "chai-as-promised": "^7.1.1",
     "dotenv": "^16.4.5",
-    "mocha": "^10.5.1",
+    "mocha": "^10.6.0",
     "sinon": "^18.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
