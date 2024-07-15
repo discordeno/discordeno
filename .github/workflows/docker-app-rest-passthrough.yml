@@ -136,11 +136,12 @@ jobs:
         with:
           image: 'discordeno/app-rest-passthrough:latest'
           args: --file=docker-apps/rest-passthrough/Dockerfile
-      # See https://github.com/github/codeql-action/issues/2187#issuecomment-2043220400 for for info
-      - name: Replace security-severity undefined for license-related findings
+      # Snyk will use a security-severify of "null" when the CVE didn't get an assigned score
+      - name: Replace security-severity null for non assigned CVE scores
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         run: |
-          sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk.sarif
+          sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
+          sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
       - name: Upload snyk scan results to GitHub Security tab
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         uses: github/codeql-action/upload-sarif@v3
