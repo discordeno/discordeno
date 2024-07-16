@@ -332,7 +332,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
-      // If this queue doesn't have an identifier, fallback to the bot token
+      // If we didn't received the identifier, fallback to the bot token
       identifier ??= `Bot ${rest.token}`
 
       rest.queues.get(`${identifier}${url}`)?.handleCompletedRequest({
@@ -503,7 +503,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       // If we the request has a token, use it
-      // If the quest has a custom queue identifier, use it
       // Else fallback to prefix with the bot token
       const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
 
@@ -525,16 +524,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async makeRequest(method, route, options) {
       if (rest.isProxied) {
-        options ??= {}
-        options.headers ??= {}
-
         if (rest.authorization !== undefined) {
+          options ??= {}
+          options.headers ??= {}
           options.headers[rest.authorizationHeader] = rest.authorization
         }
 
-        const fetchOptions = rest.createRequestBody(method, options)
-
-        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, fetchOptions)
+        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
           const err = (await result.json().catch(() => {})) as Record<string, any>

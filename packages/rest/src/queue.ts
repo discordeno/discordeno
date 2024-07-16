@@ -31,7 +31,7 @@ export class Queue {
   /** The timeout for the deletion of this queue */
   deleteQueueTimeout?: NodeJS.Timeout
   /**
-   * The identifier for this request, may be the request authorization, a custom identifier or fallback to the bot auth
+   * The identifier for this request, may be the request authorization or fallback to the bot auth
    *
    * @remarks
    * This is used to get the identify this queue from the queue mapping of the rest manager
