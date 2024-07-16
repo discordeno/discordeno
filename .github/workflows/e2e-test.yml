@@ -56,3 +56,4 @@ jobs:
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info
           flags: ${{ inputs.package }}-e2e,${{ inputs.package }}
+          token: ${{ secrets.CODECOV_TOKEN }}
