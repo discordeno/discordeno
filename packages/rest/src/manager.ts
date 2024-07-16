@@ -505,7 +505,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // If we the request has a token, use it
       // If the quest has a custom queue identifier, use it
       // Else fallback to prefix with the bot token
-      const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? request.queueIdentifier ?? `Bot ${rest.token}`
+      const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
 
       const queue = rest.queues.get(`${queueIdentifier}${url}`)
 
@@ -525,13 +525,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async makeRequest(method, route, options) {
       if (rest.isProxied) {
+        options ??= {}
+        options.headers ??= {}
+
         if (rest.authorization !== undefined) {
-          options ??= {}
-          options.headers ??= {}
           options.headers[rest.authorizationHeader] = rest.authorization
         }
 
-        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
+        const fetchOptions = rest.createRequestBody(method, options)
+
+        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, fetchOptions)
 
         if (!result.ok) {
           const err = (await result.json().catch(() => {})) as Record<string, any>
@@ -564,7 +567,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             reject(error)
           },
           runThroughQueue: options?.runThroughQueue,
-          queueIdentifier: options?.queueIdentifier,
         }
 
         await rest.processRequest(payload)
@@ -829,7 +831,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteWebhookWithToken(webhookId, token) {
       await rest.delete(rest.routes.webhooks.webhook(webhookId, token), {
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
@@ -931,7 +932,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           data: options,
         },
         files: options.files,
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
@@ -975,7 +975,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
         body: options,
         files: options.files,
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
@@ -983,7 +982,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async editWebhookWithToken(webhookId, token, body) {
       return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
         body,
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
@@ -999,7 +997,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async executeWebhook(webhookId, token, options) {
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
         body: options,
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
@@ -1359,14 +1356,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getWebhookMessage(webhookId, token, messageId, options) {
       return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
 
     async getWebhookWithToken(webhookId, token) {
       return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
-        queueIdentifier: `Webhook ${webhookId}:${token}`,
         unauthorized: true,
       })
     },
@@ -1415,7 +1410,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
         body: options,
         files: options.files,
-        queueIdentifier: `Webhook ${rest.applicationId}:${token}`,
         unauthorized: true,
       })
     },

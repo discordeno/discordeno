@@ -2945,7 +2945,7 @@ export interface CreateRequestBodyOptions {
   files?: FileContent[]
 }
 
-export type MakeRequestOptions = Omit<CreateRequestBodyOptions, 'method'> & Pick<SendRequestOptions, 'runThroughQueue' | 'queueIdentifier'>
+export type MakeRequestOptions = Omit<CreateRequestBodyOptions, 'method'> & Pick<SendRequestOptions, 'runThroughQueue'>
 
 export interface RequestBody {
   headers: Record<string, string>
@@ -2975,11 +2975,6 @@ export interface SendRequestOptions {
    * Useful for routes which do not have any rate limits.
    */
   runThroughQueue?: boolean
-  /**
-   * The identifier for the queue.
-   * Useful when the route does not use the traditional authentication approach (using the Authentication header)
-   */
-  queueIdentifier?: string
 }
 
 export interface RestRateLimitedPath {
