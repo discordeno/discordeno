@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import { type WriteStream, createWriteStream } from 'node:fs'
 import ts from 'typescript'
+import { DesiredProprietiesBehavior, desiredProprietiesBehavior, isProprietyDesired } from './desiredModes.js'
 
 export const typescriptOptions: ts.CompilerOptions = {
   target: ts.ScriptTarget.ES2022,
@@ -33,52 +34,88 @@ export function generateNewFile(fileName: string, outFile: string) {
 
 function processChild(writeStream: WriteStream, checker: ts.TypeChecker, node: ts.Node): void {
   if (ts.isImportDeclaration(node)) {
-    let importText = node.getFullText().trim()
-
-    // We manually add the newline afterwards, so we need to remove it from here
-    if (importText.startsWith('\n')) {
-      importText = importText.substring(1)
-    }
-
-    writeStream.write(importText)
-    writeStream.write('\n')
-
+    processImportNode(node, writeStream)
     return
   }
 
   if (ts.isInterfaceDeclaration(node)) {
-    const symbol = checker.getSymbolAtLocation(node.name)
-    if (!symbol) return
+    processInterfaceDeclarationNode(node, checker, writeStream)
+    return
+  }
+}
 
-    assert(symbol.members)
+function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, checker: ts.TypeChecker, writeStream: WriteStream) {
+  const symbol = checker.getSymbolAtLocation(node.name)
+  if (!symbol) return
 
-    writeStream.write('\n')
+  assert(symbol.members)
 
-    writeJSDoc(writeStream, symbol.getDocumentationComment(checker), symbol.getJsDocTags(checker))
+  writeStream.write('\n')
 
-    writeStream.write(`export interface ${symbol.getName()} {\n`)
+  writeJSDoc(writeStream, symbol.getDocumentationComment(checker), symbol.getJsDocTags(checker))
 
-    // Generate the interface in the output file
-    for (const [, member] of symbol.members) {
-      const valueDeclaration = member.valueDeclaration
-      assert(valueDeclaration)
+  const interfaceName = symbol.getName()
 
-      const valueDeclarationChildren = valueDeclaration.getChildren()
-      const typeNode = valueDeclarationChildren.find((x) => ts.isTypeNode(x))
-      assert(typeNode)
+  writeStream.write(`export interface ${interfaceName} {\n`)
 
-      // Since we are getting the type directly from the sourceFile it may have a trailing space, so we remove them
-      const typeText = typeNode.getFullText().trim()
+  // Generate the interface in the output file
+  for (const [, member] of symbol.members) {
+    const memberName = member.getName()
+    const isDesired = isProprietyDesired(interfaceName, memberName)
 
-      writeJSDoc(writeStream, member.getDocumentationComment(checker), member.getJsDocTags(checker), '  ')
+    const valueDeclaration = member.valueDeclaration
+    assert(valueDeclaration)
 
-      const isOptionalQuestionMark = member.getFlags() & ts.SymbolFlags.Optional ? '?' : ''
+    const valueDeclarationChildren = valueDeclaration.getChildren()
+    const typeNode = valueDeclarationChildren.find((x) => ts.isTypeNode(x))
+    assert(typeNode)
 
-      writeStream.write(`  ${member.getName()}${isOptionalQuestionMark}: ${typeText}\n`)
+    // Since we are getting the type directly from the sourceFile it may have a trailing space, so we remove them
+    let typeText = typeNode.getFullText().trim()
+    const jsDoc = member.getJsDocTags(checker)
+    const isOptionalQuestionMark = member.getFlags() & ts.SymbolFlags.Optional ? '?' : ''
+
+    if (!isDesired) {
+      switch (desiredProprietiesBehavior) {
+        case DesiredProprietiesBehavior.Remove: {
+          continue
+        }
+        case DesiredProprietiesBehavior.TypeAsNever: {
+          jsDoc.push({
+            name: 'remarks',
+            text: [
+              {
+                kind: 'text',
+                text: `This propriety is not desired according to your Desired Proprieties configuration.\n\nOriginal type: ${typeText}`,
+              },
+            ],
+          })
+
+          typeText = 'never'
+
+          break
+        }
+      }
     }
 
-    writeStream.write('}\n')
+    writeJSDoc(writeStream, member.getDocumentationComment(checker), jsDoc, '  ')
+
+    writeStream.write(`  ${memberName}${isOptionalQuestionMark}: ${typeText}\n`)
   }
+
+  writeStream.write('}\n')
+}
+
+function processImportNode(node: ts.ImportDeclaration, writeStream: WriteStream) {
+  let importText = node.getFullText().trim()
+
+  // We manually add the newline afterwards, so we need to remove it from here
+  if (importText.startsWith('\n')) {
+    importText = importText.substring(1)
+  }
+
+  writeStream.write(importText)
+  writeStream.write('\n')
 }
 
 function writeJSDoc(stream: WriteStream, docs: ts.SymbolDisplayPart[], jsDocTags: ts.JSDocTagInfo[], ident = ''): void {
