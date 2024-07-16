@@ -913,6 +913,8 @@ export interface DiscordPartialGuild {
   id: string
   /** Icon hash */
   icon: string | null
+  /** Banner hash */
+  banner: string | null
   /** true if the user is the owner of the guild */
   owner: boolean
   /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
