@@ -3,10 +3,11 @@ import {
   type DiscordMessage,
   type DiscordMessageCall,
   type DiscordMessageInteractionMetadata,
+  type DiscordMessageSnapshot,
   MessageFlags,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { type Bot, type Message, type MessageCall, type MessageInteractionMetadata, snowflakeToTimestamp } from '../index.js'
+import { type Bot, type Message, type MessageCall, type MessageInteractionMetadata, type MessageSnapshot, snowflakeToTimestamp } from '../index.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
@@ -202,6 +203,9 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
 
     message.messageReference = reference
   }
+  if (props.referencedMessage && payload.referenced_message) message.referencedMessage = bot.transformers.message(bot, payload.referenced_message)
+  if (props.messageSnapshots && payload.message_snapshots)
+    message.messageSnapshots = payload.message_snapshots.map((snap) => bot.transformers.messageSnapshot(bot, snap))
   if (props.nonce && payload.nonce) message.nonce = payload.nonce
   if (payload.pinned) message.pinned = true
   if (props.reactions && payload.reactions?.length) {
@@ -231,6 +235,15 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (props.call && payload.call) message.call = bot.transformers.messageCall(bot, payload.call)
 
   return bot.transformers.customizers.message(bot, payload, message)
+}
+
+export function transformMessageSnapshot(bot: Bot, payload: DiscordMessageSnapshot): MessageSnapshot {
+  const props = bot.transformers.desiredProperties.messageSnapshot
+  const messageSnapshot = {} as MessageSnapshot
+
+  if (props.message && payload.message) messageSnapshot.message = bot.transformers.message(bot, payload.message as DiscordMessage)
+
+  return bot.transformers.customizers.messageSnapshot(bot, payload, messageSnapshot)
 }
 
 export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {

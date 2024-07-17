@@ -15,6 +15,7 @@ import type {
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
   DiscordInteractionContextType,
+  DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
   DiscordPollMedia,
@@ -63,8 +64,10 @@ export interface CreateMessageOptions {
   embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** Include to make your message a reply */
+  /** Include to make your message a reply or a forward */
   messageReference?: {
+    /** Type of reference */
+    type?: DiscordMessageReferenceType
     /** id of the originating message */
     messageId?: BigString
     /**
