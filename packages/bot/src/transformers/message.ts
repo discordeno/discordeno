@@ -145,33 +145,30 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (props.embeds && payload.embeds?.length) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (props.guildId && guildId) message.guildId = guildId
   if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
-  if (payload.interaction_metadata) message.interactionMetadata = transformMessageInteractionMetadata(bot, payload.interaction_metadata)
-  if (payload.interaction) {
+  if (props.interactionMetadata && payload.interaction_metadata)
+    message.interactionMetadata = transformMessageInteractionMetadata(bot, payload.interaction_metadata)
+  if (props.interaction && payload.interaction) {
     const interaction = {} as NonNullable<Message['interaction']>
-    let edited = false
-    if (props.interaction.id) {
+    const messageInteractionProps = bot.transformers.desiredProperties.messageInteraction
+
+    if (messageInteractionProps.id) {
       interaction.id = bot.transformers.snowflake(payload.interaction.id)
-      edited = true
     }
-    if (props.interaction.member && payload.interaction.member) {
+    if (messageInteractionProps.member && payload.interaction.member) {
       // @ts-expect-error TODO: partial - check why this is partial and handle as needed
       interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, payload.interaction.user.id)
-      edited = true
     }
-    if (props.interaction.name) {
+    if (messageInteractionProps.name) {
       interaction.name = payload.interaction.name
-      edited = true
     }
-    if (props.interaction.type) {
+    if (messageInteractionProps.type) {
       interaction.type = payload.interaction.type
-      edited = true
     }
-    if (props.interaction.user) {
+    if (messageInteractionProps.user) {
       interaction.user = bot.transformers.user(bot, payload.interaction.user)
-      edited = true
     }
 
-    if (edited) message.interaction = interaction
+    message.interaction = interaction
   }
   if (props.member && guildId && payload.member) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
   if (payload.mention_everyone) message.mentionEveryone = true
@@ -189,24 +186,21 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (props.mentionedRoleIds && payload.mention_roles?.length)
     message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id))
   if (props.mentions && payload.mentions?.length) message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user))
-  if (payload.message_reference) {
+  if (props.messageReference && payload.message_reference) {
     const reference = {} as NonNullable<Message['messageReference']>
-    let edited = false
+    const messageReferenceProps = bot.transformers.desiredProperties.messageReference
 
-    if (props.messageReference.channelId && payload.message_reference.channel_id) {
+    if (messageReferenceProps.channelId && payload.message_reference.channel_id) {
       reference.channelId = bot.transformers.snowflake(payload.message_reference.channel_id)
-      edited = true
     }
-    if (props.messageReference.guildId && payload.message_reference.guild_id) {
+    if (messageReferenceProps.guildId && payload.message_reference.guild_id) {
       reference.guildId = bot.transformers.snowflake(payload.message_reference.guild_id)
-      edited = true
     }
-    if (props.messageReference.messageId && payload.message_reference.message_id) {
+    if (messageReferenceProps.messageId && payload.message_reference.message_id) {
       reference.messageId = bot.transformers.snowflake(payload.message_reference.message_id)
-      edited = true
     }
 
-    if (edited) message.messageReference = reference
+    message.messageReference = reference
   }
   if (props.nonce && payload.nonce) message.nonce = payload.nonce
   if (payload.pinned) message.pinned = true
@@ -240,7 +234,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
 }
 
 export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {
-  const props = bot.transformers.desiredProperties.message.interactionMetadata
+  const props = bot.transformers.desiredProperties.messageInteractionMetadata
   const metadata = {} as MessageInteractionMetadata
 
   if (props.id) metadata.id = bot.transformers.snowflake(payload.id)
@@ -269,7 +263,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
 
 export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): MessageCall {
   const call = {} as MessageCall
-  const props = bot.transformers.desiredProperties.message.call
+  const props = bot.transformers.desiredProperties.messageCall
 
   if (props.participants && payload.participants) call.participants = payload.participants.map((x) => bot.transformers.snowflake(x))
   if (props.endedTimestamp && payload.ended_timestamp) call.endedTimestamp = Date.parse(payload.ended_timestamp)

@@ -16,7 +16,7 @@ export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboardi
 }
 
 export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOnboardingPrompt): GuildOnboardingPrompt {
-  const props = bot.transformers.desiredProperties.guildOnboarding.prompts
+  const props = bot.transformers.desiredProperties.guildOnboardingPrompt
   const prompt = {} as GuildOnboardingPrompt
 
   if (props.id && payload.id) prompt.id = bot.transformers.snowflake(prompt.id)
@@ -31,7 +31,7 @@ export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOn
 }
 
 export function transformGuildOnboardingPromptOption(bot: Bot, payload: DiscordGuildOnboardingPromptOption): GuildOnboardingPromptOption {
-  const props = bot.transformers.desiredProperties.guildOnboarding.prompts.options
+  const props = bot.transformers.desiredProperties.guildOnboardingPromptOption
   const option = {} as GuildOnboardingPromptOption
 
   if (props.id && payload.id) option.id = bot.transformers.snowflake(payload.id)

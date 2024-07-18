@@ -13,9 +13,10 @@ export function transformPoll(bot: Bot, payload: DiscordPoll): Poll {
   if (props.layoutType) poll.layoutType = payload.layout_type
   if (props.results && payload.results) {
     poll.results = {} as PollResult
+    const pollResultProps = bot.transformers.desiredProperties.pollResult
 
-    if (props.results.isFinalized && payload.results.is_finalized) poll.results.isFinalized = payload.results.is_finalized
-    if (props.results.answerCounts && payload.results.answer_counts)
+    if (pollResultProps.isFinalized && payload.results.is_finalized) poll.results.isFinalized = payload.results.is_finalized
+    if (pollResultProps.answerCounts && payload.results.answer_counts)
       poll.results.answerCounts = payload.results.answer_counts.map((x) => ({ id: x.id, count: x.count, meVoted: x.me_voted }))
   }
 

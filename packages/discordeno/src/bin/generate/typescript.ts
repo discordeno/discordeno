@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { type WriteStream, createWriteStream } from 'node:fs'
 import ts from 'typescript'
-import { DesiredProprietiesBehavior, desiredProprietiesBehavior, isProprietyDesired } from './desiredModes.js'
+import { DesiredProprietiesBehavior, desiredProprietiesBehavior, isProprietyDesired } from './config.js'
 
 export const typescriptOptions: ts.CompilerOptions = {
   target: ts.ScriptTarget.ES2022,
@@ -86,7 +86,7 @@ function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, checker:
             text: [
               {
                 kind: 'text',
-                text: `This propriety is not desired according to your Desired Proprieties configuration.\n\nOriginal type: ${typeText}`,
+                text: `This property is not desired according to your Desired Properties configuration.\n\nOriginal type: ${typeText}`,
               },
             ],
           })

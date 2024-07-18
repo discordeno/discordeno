@@ -53,6 +53,7 @@ import type {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
+  RecursivePartial,
 } from '@discordeno/types'
 import { logger } from '@discordeno/utils'
 import type { Bot } from './bot.js'
@@ -238,416 +239,7 @@ export interface Transformers {
     pollMedia: (bot: Bot, payload: DiscordPollMedia, pollMedia: PollMedia) => any
     avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData, avatarDecorationData: AvatarDecorationData) => any
   }
-  desiredProperties: {
-    attachment: {
-      id: boolean
-      filename: boolean
-      title: boolean
-      contentType: boolean
-      size: boolean
-      url: boolean
-      proxyUrl: boolean
-      height: boolean
-      width: boolean
-      ephemeral: boolean
-      description: boolean
-      duration_secs: boolean
-      waveform: boolean
-      flags: boolean
-    }
-    channel: {
-      type: boolean
-      position: boolean
-      name: boolean
-      topic: boolean
-      nsfw: boolean
-      bitrate: boolean
-      userLimit: boolean
-      rateLimitPerUser: boolean
-      rtcRegion: boolean
-      videoQualityMode: boolean
-      guildId: boolean
-      lastPinTimestamp: boolean
-      permissionOverwrites: boolean
-      id: boolean
-      permissions: boolean
-      lastMessageId: boolean
-      ownerId: boolean
-      applicationId: boolean
-      managed: boolean
-      parentId: boolean
-      memberCount: boolean
-      messageCount: boolean
-      archiveTimestamp: boolean
-      defaultAutoArchiveDuration: boolean
-      autoArchiveDuration: boolean
-      botIsMember: boolean
-      archived: boolean
-      locked: boolean
-      invitable: boolean
-      createTimestamp: boolean
-      newlyCreated: boolean
-      flags: boolean
-      recipients: boolean
-      icon: boolean
-      member: boolean
-      totalMessageSent: boolean
-      availableTags: boolean
-      appliedTags: boolean
-      defaultReactionEmoji: boolean
-      defaultThreadRateLimitPerUser: boolean
-      defaultSortOrder: boolean
-      defaultForumLayout: boolean
-    }
-    forumTag: {
-      id: boolean
-      name: boolean
-      moderated: boolean
-      emojiId: boolean
-      emojiName: boolean
-    }
-    emoji: {
-      id: boolean
-      name: boolean
-      roles: boolean
-      user: boolean
-    }
-    defaultReactionEmoji: {
-      emojiId: boolean
-      emojiName: boolean
-    }
-    guild: {
-      afkTimeout: boolean
-      approximateMemberCount: boolean
-      approximatePresenceCount: boolean
-      defaultMessageNotifications: boolean
-      description: boolean
-      explicitContentFilter: boolean
-      maxMembers: boolean
-      maxPresences: boolean
-      maxVideoChannelUsers: boolean
-      mfaLevel: boolean
-      name: boolean
-      nsfwLevel: boolean
-      preferredLocale: boolean
-      premiumSubscriptionCount: boolean
-      premiumTier: boolean
-      toggles: boolean
-      stageInstances: boolean
-      channels: boolean
-      members: boolean
-      roles: boolean
-      emojis: boolean
-      stickers: boolean
-      threads: boolean
-      voiceStates: boolean
-      large: boolean
-      owner: boolean
-      widgetEnabled: boolean
-      unavailable: boolean
-      iconHash: boolean
-      presences: boolean
-      systemChannelFlags: boolean
-      vanityUrlCode: boolean
-      verificationLevel: boolean
-      welcomeScreen: boolean
-      discoverySplash: boolean
-      joinedAt: boolean
-      memberCount: boolean
-      shardId: boolean
-      icon: boolean
-      banner: boolean
-      splash: boolean
-      id: boolean
-      ownerId: boolean
-      permissions: boolean
-      afkChannelId: boolean
-      widgetChannelId: boolean
-      applicationId: boolean
-      systemChannelId: boolean
-      rulesChannelId: boolean
-      publicUpdatesChannelId: boolean
-      premiumProgressBarEnabled: boolean
-      safetyAlertsChannelId: boolean
-    }
-    interaction: {
-      id: boolean
-      applicationId: boolean
-      type: boolean
-      guild: boolean
-      guildId: boolean
-      channel: boolean
-      channelId: boolean
-      member: boolean
-      user: boolean
-      token: boolean
-      version: boolean
-      message: boolean
-      data: boolean
-      locale: boolean
-      guildLocale: boolean
-      appPermissions: boolean
-      authorizingIntegrationOwners: boolean
-      context: boolean
-    }
-    invite: {
-      type: boolean
-      channelId: boolean
-      code: boolean
-      createdAt: boolean
-      guildId: boolean
-      inviter: boolean
-      maxAge: boolean
-      maxUses: boolean
-      targetType: boolean
-      targetUser: boolean
-      targetApplication: boolean
-      temporary: boolean
-      uses: boolean
-      approximateMemberCount: boolean
-      approximatePresenceCount: boolean
-      guildScheduledEvent: boolean
-      stageInstance: boolean
-      expiresAt: boolean
-    }
-    member: {
-      id: boolean
-      guildId: boolean
-      user: boolean
-      nick: boolean
-      roles: boolean
-      joinedAt: boolean
-      premiumSince: boolean
-      avatar: boolean
-      permissions: boolean
-      communicationDisabledUntil: boolean
-      deaf: boolean
-      mute: boolean
-      pending: boolean
-      flags: boolean
-      avatarDecorationData: boolean
-    }
-    message: {
-      activity: boolean
-      application: boolean
-      applicationId: boolean
-      attachments: boolean
-      author: boolean
-      channelId: boolean
-      components: boolean
-      content: boolean
-      editedTimestamp: boolean
-      embeds: boolean
-      guildId: boolean
-      id: boolean
-      interactionMetadata: {
-        id: boolean
-        type: boolean
-        user: boolean
-        authorizingIntegrationOwners: boolean
-        originalResponseMessageId: boolean
-        interactedMessageId: boolean
-        triggeringInteractionMetadata: boolean
-      }
-      interaction: {
-        id: boolean
-        member: boolean
-        name: boolean
-        user: boolean
-        type: boolean
-      }
-      member: boolean
-      mentionedChannelIds: boolean
-      mentionedRoleIds: boolean
-      mentions: boolean
-      messageReference: {
-        messageId: boolean
-        channelId: boolean
-        guildId: boolean
-      }
-      nonce: boolean
-      reactions: boolean
-      stickerItems: boolean
-      thread: boolean
-      type: boolean
-      webhookId: boolean
-      poll: boolean
-      call: {
-        participants: boolean
-        endedTimestamp: boolean
-      }
-    }
-    role: {
-      name: boolean
-      guildId: boolean
-      position: boolean
-      color: boolean
-      id: boolean
-      botId: boolean
-      integrationId: boolean
-      permissions: boolean
-      icon: boolean
-      unicodeEmoji: boolean
-      mentionable: boolean
-      hoist: boolean
-      managed: boolean
-      subscriptionListingId: boolean
-      flags: boolean
-    }
-    scheduledEvent: {
-      id: boolean
-      guildId: boolean
-      channelId: boolean
-      creatorId: boolean
-      scheduledStartTime: boolean
-      scheduledEndTime: boolean
-      entityId: boolean
-      creator: boolean
-      name: boolean
-      description: boolean
-      privacyLevel: boolean
-      status: boolean
-      entityType: boolean
-      userCount: boolean
-      location: boolean
-      image: boolean
-    }
-    stageInstance: {
-      id: boolean
-      guildId: boolean
-      channelId: boolean
-      topic: boolean
-      guildScheduledEventId: boolean
-    }
-    inviteStageInstance: {
-      members: boolean
-      participantCount: boolean
-      speakerCount: boolean
-      topic: boolean
-    }
-    sticker: {
-      id: boolean
-      packId: boolean
-      name: boolean
-      description: boolean
-      tags: boolean
-      type: boolean
-      formatType: boolean
-      available: boolean
-      guildId: boolean
-      user: boolean
-      sortValue: boolean
-    }
-    user: {
-      username: boolean
-      globalName: boolean
-      locale: boolean
-      flags: boolean
-      premiumType: boolean
-      publicFlags: boolean
-      accentColor: boolean
-      id: boolean
-      discriminator: boolean
-      avatar: boolean
-      bot: boolean
-      system: boolean
-      mfaEnabled: boolean
-      verified: boolean
-      email: boolean
-      banner: boolean
-      avatarDecorationData: boolean
-    }
-    avatarDecorationData: {
-      asset: boolean
-      skuId: boolean
-    }
-    webhook: {
-      id: boolean
-      type: boolean
-      guildId: boolean
-      channelId: boolean
-      user: boolean
-      name: boolean
-      avatar: boolean
-      token: boolean
-      applicationId: boolean
-      sourceGuild: boolean
-      sourceChannel: boolean
-      url: boolean
-    }
-    guildOnboarding: {
-      guildId: boolean
-      prompts: {
-        id: boolean
-        type: boolean
-        options: {
-          id: boolean
-          channelIds: boolean
-          roleIds: boolean
-          emoji: boolean
-          title: boolean
-          description: boolean
-        }
-        title: boolean
-        singleSelect: boolean
-        required: boolean
-        inOnboarding: boolean
-      }
-      defaultChannelIds: boolean
-      enabled: boolean
-      mode: boolean
-    }
-    entitlement: {
-      id: boolean
-      skuId: boolean
-      userId: boolean
-      guildId: boolean
-      applicationId: boolean
-      type: boolean
-      deleted: boolean
-      startsAt: boolean
-      endsAt: boolean
-      consumed: boolean
-    }
-    sku: {
-      id: boolean
-      type: boolean
-      applicationId: boolean
-      name: boolean
-      slug: boolean
-      flags: boolean
-    }
-    voiceState: {
-      requestToSpeakTimestamp: boolean
-      channelId: boolean
-      guildId: boolean
-      toggles: boolean
-      sessionId: boolean
-      userId: boolean
-    }
-    poll: {
-      question: boolean
-      answers: {
-        answerId: boolean
-        pollMedia: boolean
-      }
-      expiry: boolean
-      allowMultiselect: boolean
-      layoutType: boolean
-      results: {
-        isFinalized: boolean
-        answerCounts: {
-          id: boolean
-          count: boolean
-          meVoted: boolean
-        }
-      }
-    }
-    pollMedia: {
-      text: boolean
-      emoji: boolean
-    }
-  }
+  desiredProperties: TransformersDesiredProprieties
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
     embed: (bot: Bot, payload: Embed) => DiscordEmbed
@@ -717,6 +309,426 @@ export interface Transformers {
   poll: (bot: Bot, payload: DiscordPoll) => Poll
   pollMedia: (bot: Bot, payload: DiscordPollMedia) => PollMedia
   avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
+}
+
+export interface TransformersDesiredProprieties {
+  attachment: {
+    id: boolean
+    filename: boolean
+    title: boolean
+    contentType: boolean
+    size: boolean
+    url: boolean
+    proxyUrl: boolean
+    height: boolean
+    width: boolean
+    ephemeral: boolean
+    description: boolean
+    duration_secs: boolean
+    waveform: boolean
+    flags: boolean
+  }
+  channel: {
+    type: boolean
+    position: boolean
+    name: boolean
+    topic: boolean
+    nsfw: boolean
+    bitrate: boolean
+    userLimit: boolean
+    rateLimitPerUser: boolean
+    rtcRegion: boolean
+    videoQualityMode: boolean
+    guildId: boolean
+    lastPinTimestamp: boolean
+    permissionOverwrites: boolean
+    id: boolean
+    permissions: boolean
+    lastMessageId: boolean
+    ownerId: boolean
+    applicationId: boolean
+    managed: boolean
+    parentId: boolean
+    memberCount: boolean
+    messageCount: boolean
+    archiveTimestamp: boolean
+    defaultAutoArchiveDuration: boolean
+    autoArchiveDuration: boolean
+    botIsMember: boolean
+    archived: boolean
+    locked: boolean
+    invitable: boolean
+    createTimestamp: boolean
+    newlyCreated: boolean
+    flags: boolean
+    recipients: boolean
+    icon: boolean
+    member: boolean
+    totalMessageSent: boolean
+    availableTags: boolean
+    appliedTags: boolean
+    defaultReactionEmoji: boolean
+    defaultThreadRateLimitPerUser: boolean
+    defaultSortOrder: boolean
+    defaultForumLayout: boolean
+  }
+  forumTag: {
+    id: boolean
+    name: boolean
+    moderated: boolean
+    emojiId: boolean
+    emojiName: boolean
+  }
+  emoji: {
+    id: boolean
+    name: boolean
+    roles: boolean
+    user: boolean
+  }
+  defaultReactionEmoji: {
+    emojiId: boolean
+    emojiName: boolean
+  }
+  guild: {
+    afkTimeout: boolean
+    approximateMemberCount: boolean
+    approximatePresenceCount: boolean
+    defaultMessageNotifications: boolean
+    description: boolean
+    explicitContentFilter: boolean
+    maxMembers: boolean
+    maxPresences: boolean
+    maxVideoChannelUsers: boolean
+    mfaLevel: boolean
+    name: boolean
+    nsfwLevel: boolean
+    preferredLocale: boolean
+    premiumSubscriptionCount: boolean
+    premiumTier: boolean
+    toggles: boolean
+    stageInstances: boolean
+    channels: boolean
+    members: boolean
+    roles: boolean
+    emojis: boolean
+    stickers: boolean
+    threads: boolean
+    voiceStates: boolean
+    large: boolean
+    owner: boolean
+    widgetEnabled: boolean
+    unavailable: boolean
+    iconHash: boolean
+    presences: boolean
+    systemChannelFlags: boolean
+    vanityUrlCode: boolean
+    verificationLevel: boolean
+    welcomeScreen: boolean
+    discoverySplash: boolean
+    joinedAt: boolean
+    memberCount: boolean
+    shardId: boolean
+    icon: boolean
+    banner: boolean
+    splash: boolean
+    id: boolean
+    ownerId: boolean
+    permissions: boolean
+    afkChannelId: boolean
+    widgetChannelId: boolean
+    applicationId: boolean
+    systemChannelId: boolean
+    rulesChannelId: boolean
+    publicUpdatesChannelId: boolean
+    premiumProgressBarEnabled: boolean
+    safetyAlertsChannelId: boolean
+  }
+  interaction: {
+    id: boolean
+    applicationId: boolean
+    type: boolean
+    guild: boolean
+    guildId: boolean
+    channel: boolean
+    channelId: boolean
+    member: boolean
+    user: boolean
+    token: boolean
+    version: boolean
+    message: boolean
+    data: boolean
+    locale: boolean
+    guildLocale: boolean
+    appPermissions: boolean
+    authorizingIntegrationOwners: boolean
+    context: boolean
+  }
+  invite: {
+    type: boolean
+    channelId: boolean
+    code: boolean
+    createdAt: boolean
+    guildId: boolean
+    inviter: boolean
+    maxAge: boolean
+    maxUses: boolean
+    targetType: boolean
+    targetUser: boolean
+    targetApplication: boolean
+    temporary: boolean
+    uses: boolean
+    approximateMemberCount: boolean
+    approximatePresenceCount: boolean
+    guildScheduledEvent: boolean
+    stageInstance: boolean
+    expiresAt: boolean
+  }
+  member: {
+    id: boolean
+    guildId: boolean
+    user: boolean
+    nick: boolean
+    roles: boolean
+    joinedAt: boolean
+    premiumSince: boolean
+    avatar: boolean
+    permissions: boolean
+    communicationDisabledUntil: boolean
+    deaf: boolean
+    mute: boolean
+    pending: boolean
+    flags: boolean
+    avatarDecorationData: boolean
+  }
+  message: {
+    activity: boolean
+    application: boolean
+    applicationId: boolean
+    attachments: boolean
+    author: boolean
+    channelId: boolean
+    components: boolean
+    content: boolean
+    editedTimestamp: boolean
+    embeds: boolean
+    guildId: boolean
+    id: boolean
+    interactionMetadata: boolean
+    interaction: boolean
+    member: boolean
+    mentionedChannelIds: boolean
+    mentionedRoleIds: boolean
+    mentions: boolean
+    messageReference: boolean
+    nonce: boolean
+    reactions: boolean
+    stickerItems: boolean
+    thread: boolean
+    type: boolean
+    webhookId: boolean
+    poll: boolean
+    call: boolean
+  }
+  messageInteractionMetadata: {
+    id: boolean
+    type: boolean
+    user: boolean
+    authorizingIntegrationOwners: boolean
+    originalResponseMessageId: boolean
+    interactedMessageId: boolean
+    triggeringInteractionMetadata: boolean
+  }
+  messageInteraction: {
+    id: boolean
+    member: boolean
+    name: boolean
+    user: boolean
+    type: boolean
+  }
+  messageReference: {
+    messageId: boolean
+    channelId: boolean
+    guildId: boolean
+  }
+  messageCall: {
+    participants: boolean
+    endedTimestamp: boolean
+  }
+  role: {
+    name: boolean
+    guildId: boolean
+    position: boolean
+    color: boolean
+    id: boolean
+    botId: boolean
+    integrationId: boolean
+    permissions: boolean
+    icon: boolean
+    unicodeEmoji: boolean
+    mentionable: boolean
+    hoist: boolean
+    managed: boolean
+    subscriptionListingId: boolean
+    flags: boolean
+  }
+  scheduledEvent: {
+    id: boolean
+    guildId: boolean
+    channelId: boolean
+    creatorId: boolean
+    scheduledStartTime: boolean
+    scheduledEndTime: boolean
+    entityId: boolean
+    creator: boolean
+    name: boolean
+    description: boolean
+    privacyLevel: boolean
+    status: boolean
+    entityType: boolean
+    userCount: boolean
+    location: boolean
+    image: boolean
+  }
+  stageInstance: {
+    id: boolean
+    guildId: boolean
+    channelId: boolean
+    topic: boolean
+    guildScheduledEventId: boolean
+  }
+  inviteStageInstance: {
+    members: boolean
+    participantCount: boolean
+    speakerCount: boolean
+    topic: boolean
+  }
+  sticker: {
+    id: boolean
+    packId: boolean
+    name: boolean
+    description: boolean
+    tags: boolean
+    type: boolean
+    formatType: boolean
+    available: boolean
+    guildId: boolean
+    user: boolean
+    sortValue: boolean
+  }
+  user: {
+    username: boolean
+    globalName: boolean
+    locale: boolean
+    flags: boolean
+    premiumType: boolean
+    publicFlags: boolean
+    accentColor: boolean
+    id: boolean
+    discriminator: boolean
+    avatar: boolean
+    bot: boolean
+    system: boolean
+    mfaEnabled: boolean
+    verified: boolean
+    email: boolean
+    banner: boolean
+    avatarDecorationData: boolean
+  }
+  avatarDecorationData: {
+    asset: boolean
+    skuId: boolean
+  }
+  webhook: {
+    id: boolean
+    type: boolean
+    guildId: boolean
+    channelId: boolean
+    user: boolean
+    name: boolean
+    avatar: boolean
+    token: boolean
+    applicationId: boolean
+    sourceGuild: boolean
+    sourceChannel: boolean
+    url: boolean
+  }
+  guildOnboarding: {
+    guildId: boolean
+    prompts: boolean
+    defaultChannelIds: boolean
+    enabled: boolean
+    mode: boolean
+  }
+  guildOnboardingPrompt: {
+    id: boolean
+    type: boolean
+    options: boolean
+    title: boolean
+    singleSelect: boolean
+    required: boolean
+    inOnboarding: boolean
+  }
+  guildOnboardingPromptOption: {
+    id: boolean
+    channelIds: boolean
+    roleIds: boolean
+    emoji: boolean
+    title: boolean
+    description: boolean
+  }
+  entitlement: {
+    id: boolean
+    skuId: boolean
+    userId: boolean
+    guildId: boolean
+    applicationId: boolean
+    type: boolean
+    deleted: boolean
+    startsAt: boolean
+    endsAt: boolean
+    consumed: boolean
+  }
+  sku: {
+    id: boolean
+    type: boolean
+    applicationId: boolean
+    name: boolean
+    slug: boolean
+    flags: boolean
+  }
+  voiceState: {
+    requestToSpeakTimestamp: boolean
+    channelId: boolean
+    guildId: boolean
+    toggles: boolean
+    sessionId: boolean
+    userId: boolean
+  }
+  poll: {
+    question: boolean
+    answers: boolean
+    expiry: boolean
+    allowMultiselect: boolean
+    layoutType: boolean
+    results: boolean
+  }
+  pollAnswer: {
+    answerId: boolean
+    pollMedia: boolean
+  }
+  pollResult: {
+    isFinalized: boolean
+    answerCounts: boolean
+  }
+  pollAnswerCount: {
+    id: boolean
+    count: boolean
+    meVoted: boolean
+  }
+  pollMedia: {
+    text: boolean
+    emoji: boolean
+  }
 }
 
 export interface CreateTransformerOptions {
@@ -889,416 +901,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         return avatarDecorationData
       },
     },
-    desiredProperties: {
-      attachment: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        filename: opts?.defaultDesiredPropertiesValue ?? false,
-        title: opts?.defaultDesiredPropertiesValue ?? false,
-        contentType: opts?.defaultDesiredPropertiesValue ?? false,
-        size: opts?.defaultDesiredPropertiesValue ?? false,
-        url: opts?.defaultDesiredPropertiesValue ?? false,
-        proxyUrl: opts?.defaultDesiredPropertiesValue ?? false,
-        height: opts?.defaultDesiredPropertiesValue ?? false,
-        width: opts?.defaultDesiredPropertiesValue ?? false,
-        ephemeral: opts?.defaultDesiredPropertiesValue ?? false,
-        description: opts?.defaultDesiredPropertiesValue ?? false,
-        duration_secs: opts?.defaultDesiredPropertiesValue ?? false,
-        waveform: opts?.defaultDesiredPropertiesValue ?? false,
-        flags: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      channel: {
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        position: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        topic: opts?.defaultDesiredPropertiesValue ?? false,
-        nsfw: opts?.defaultDesiredPropertiesValue ?? false,
-        bitrate: opts?.defaultDesiredPropertiesValue ?? false,
-        userLimit: opts?.defaultDesiredPropertiesValue ?? false,
-        rateLimitPerUser: opts?.defaultDesiredPropertiesValue ?? false,
-        rtcRegion: opts?.defaultDesiredPropertiesValue ?? false,
-        videoQualityMode: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        lastPinTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
-        permissionOverwrites: opts?.defaultDesiredPropertiesValue ?? false,
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        permissions: opts?.defaultDesiredPropertiesValue ?? false,
-        lastMessageId: opts?.defaultDesiredPropertiesValue ?? false,
-        ownerId: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        managed: opts?.defaultDesiredPropertiesValue ?? false,
-        parentId: opts?.defaultDesiredPropertiesValue ?? false,
-        memberCount: opts?.defaultDesiredPropertiesValue ?? false,
-        messageCount: opts?.defaultDesiredPropertiesValue ?? false,
-        archiveTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
-        defaultAutoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
-        autoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
-        botIsMember: opts?.defaultDesiredPropertiesValue ?? false,
-        archived: opts?.defaultDesiredPropertiesValue ?? false,
-        locked: opts?.defaultDesiredPropertiesValue ?? false,
-        invitable: opts?.defaultDesiredPropertiesValue ?? false,
-        createTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
-        newlyCreated: opts?.defaultDesiredPropertiesValue ?? false,
-        flags: opts?.defaultDesiredPropertiesValue ?? false,
-        appliedTags: opts?.defaultDesiredPropertiesValue ?? false,
-        availableTags: opts?.defaultDesiredPropertiesValue ?? false,
-        defaultForumLayout: opts?.defaultDesiredPropertiesValue ?? false,
-        defaultReactionEmoji: opts?.defaultDesiredPropertiesValue ?? false,
-        defaultSortOrder: opts?.defaultDesiredPropertiesValue ?? false,
-        defaultThreadRateLimitPerUser: opts?.defaultDesiredPropertiesValue ?? false,
-        icon: opts?.defaultDesiredPropertiesValue ?? false,
-        member: opts?.defaultDesiredPropertiesValue ?? false,
-        recipients: opts?.defaultDesiredPropertiesValue ?? false,
-        totalMessageSent: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      forumTag: {
-        emojiId: opts?.defaultDesiredPropertiesValue ?? false,
-        emojiName: opts?.defaultDesiredPropertiesValue ?? false,
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        moderated: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      emoji: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        roles: opts?.defaultDesiredPropertiesValue ?? false,
-        user: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      defaultReactionEmoji: {
-        emojiId: opts?.defaultDesiredPropertiesValue ?? false,
-        emojiName: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      guild: {
-        afkTimeout: opts?.defaultDesiredPropertiesValue ?? false,
-        approximateMemberCount: opts?.defaultDesiredPropertiesValue ?? false,
-        approximatePresenceCount: opts?.defaultDesiredPropertiesValue ?? false,
-        defaultMessageNotifications: opts?.defaultDesiredPropertiesValue ?? false,
-        description: opts?.defaultDesiredPropertiesValue ?? false,
-        explicitContentFilter: opts?.defaultDesiredPropertiesValue ?? false,
-        maxMembers: opts?.defaultDesiredPropertiesValue ?? false,
-        maxPresences: opts?.defaultDesiredPropertiesValue ?? false,
-        maxVideoChannelUsers: opts?.defaultDesiredPropertiesValue ?? false,
-        mfaLevel: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        channels: opts?.defaultDesiredPropertiesValue ?? false,
-        emojis: opts?.defaultDesiredPropertiesValue ?? false,
-        iconHash: opts?.defaultDesiredPropertiesValue ?? false,
-        large: opts?.defaultDesiredPropertiesValue ?? false,
-        members: opts?.defaultDesiredPropertiesValue ?? false,
-        owner: opts?.defaultDesiredPropertiesValue ?? false,
-        presences: opts?.defaultDesiredPropertiesValue ?? false,
-        roles: opts?.defaultDesiredPropertiesValue ?? false,
-        stickers: opts?.defaultDesiredPropertiesValue ?? false,
-        threads: opts?.defaultDesiredPropertiesValue ?? false,
-        toggles: opts?.defaultDesiredPropertiesValue ?? false,
-        unavailable: opts?.defaultDesiredPropertiesValue ?? false,
-        voiceStates: opts?.defaultDesiredPropertiesValue ?? false,
-        widgetEnabled: opts?.defaultDesiredPropertiesValue ?? false,
-        nsfwLevel: opts?.defaultDesiredPropertiesValue ?? false,
-        preferredLocale: opts?.defaultDesiredPropertiesValue ?? false,
-        premiumSubscriptionCount: opts?.defaultDesiredPropertiesValue ?? false,
-        premiumTier: opts?.defaultDesiredPropertiesValue ?? false,
-        stageInstances: opts?.defaultDesiredPropertiesValue ?? false,
-        systemChannelFlags: opts?.defaultDesiredPropertiesValue ?? false,
-        vanityUrlCode: opts?.defaultDesiredPropertiesValue ?? false,
-        verificationLevel: opts?.defaultDesiredPropertiesValue ?? false,
-        welcomeScreen: opts?.defaultDesiredPropertiesValue ?? false,
-        discoverySplash: opts?.defaultDesiredPropertiesValue ?? false,
-        joinedAt: opts?.defaultDesiredPropertiesValue ?? false,
-        memberCount: opts?.defaultDesiredPropertiesValue ?? false,
-        shardId: opts?.defaultDesiredPropertiesValue ?? false,
-        icon: opts?.defaultDesiredPropertiesValue ?? false,
-        banner: opts?.defaultDesiredPropertiesValue ?? false,
-        splash: opts?.defaultDesiredPropertiesValue ?? false,
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        ownerId: opts?.defaultDesiredPropertiesValue ?? false,
-        permissions: opts?.defaultDesiredPropertiesValue ?? false,
-        afkChannelId: opts?.defaultDesiredPropertiesValue ?? false,
-        widgetChannelId: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        systemChannelId: opts?.defaultDesiredPropertiesValue ?? false,
-        rulesChannelId: opts?.defaultDesiredPropertiesValue ?? false,
-        publicUpdatesChannelId: opts?.defaultDesiredPropertiesValue ?? false,
-        premiumProgressBarEnabled: opts?.defaultDesiredPropertiesValue ?? false,
-        safetyAlertsChannelId: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      interaction: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        guild: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        channel: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        member: opts?.defaultDesiredPropertiesValue ?? false,
-        user: opts?.defaultDesiredPropertiesValue ?? false,
-        token: opts?.defaultDesiredPropertiesValue ?? false,
-        version: opts?.defaultDesiredPropertiesValue ?? false,
-        message: opts?.defaultDesiredPropertiesValue ?? false,
-        data: opts?.defaultDesiredPropertiesValue ?? false,
-        locale: opts?.defaultDesiredPropertiesValue ?? false,
-        guildLocale: opts?.defaultDesiredPropertiesValue ?? false,
-        appPermissions: opts?.defaultDesiredPropertiesValue ?? false,
-        authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
-        context: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      invite: {
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        code: opts?.defaultDesiredPropertiesValue ?? false,
-        createdAt: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        inviter: opts?.defaultDesiredPropertiesValue ?? false,
-        maxAge: opts?.defaultDesiredPropertiesValue ?? false,
-        maxUses: opts?.defaultDesiredPropertiesValue ?? false,
-        targetType: opts?.defaultDesiredPropertiesValue ?? false,
-        targetUser: opts?.defaultDesiredPropertiesValue ?? false,
-        targetApplication: opts?.defaultDesiredPropertiesValue ?? false,
-        temporary: opts?.defaultDesiredPropertiesValue ?? false,
-        uses: opts?.defaultDesiredPropertiesValue ?? false,
-        approximateMemberCount: opts?.defaultDesiredPropertiesValue ?? false,
-        approximatePresenceCount: opts?.defaultDesiredPropertiesValue ?? false,
-        guildScheduledEvent: opts?.defaultDesiredPropertiesValue ?? false,
-        stageInstance: opts?.defaultDesiredPropertiesValue ?? false,
-        expiresAt: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      member: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        user: opts?.defaultDesiredPropertiesValue ?? false,
-        nick: opts?.defaultDesiredPropertiesValue ?? false,
-        roles: opts?.defaultDesiredPropertiesValue ?? false,
-        joinedAt: opts?.defaultDesiredPropertiesValue ?? false,
-        premiumSince: opts?.defaultDesiredPropertiesValue ?? false,
-        avatar: opts?.defaultDesiredPropertiesValue ?? false,
-        permissions: opts?.defaultDesiredPropertiesValue ?? false,
-        communicationDisabledUntil: opts?.defaultDesiredPropertiesValue ?? false,
-        deaf: opts?.defaultDesiredPropertiesValue ?? false,
-        mute: opts?.defaultDesiredPropertiesValue ?? false,
-        pending: opts?.defaultDesiredPropertiesValue ?? false,
-        flags: opts?.defaultDesiredPropertiesValue ?? false,
-        avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      message: {
-        activity: opts?.defaultDesiredPropertiesValue ?? false,
-        application: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        attachments: opts?.defaultDesiredPropertiesValue ?? false,
-        author: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        components: opts?.defaultDesiredPropertiesValue ?? false,
-        content: opts?.defaultDesiredPropertiesValue ?? false,
-        editedTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
-        embeds: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        interactionMetadata: {
-          id: opts?.defaultDesiredPropertiesValue ?? false,
-          type: opts?.defaultDesiredPropertiesValue ?? false,
-          user: opts?.defaultDesiredPropertiesValue ?? false,
-          authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
-          originalResponseMessageId: opts?.defaultDesiredPropertiesValue ?? false,
-          interactedMessageId: opts?.defaultDesiredPropertiesValue ?? false,
-          triggeringInteractionMetadata: opts?.defaultDesiredPropertiesValue ?? false,
-        },
-        interaction: {
-          id: opts?.defaultDesiredPropertiesValue ?? false,
-          member: opts?.defaultDesiredPropertiesValue ?? false,
-          name: opts?.defaultDesiredPropertiesValue ?? false,
-          type: opts?.defaultDesiredPropertiesValue ?? false,
-          user: opts?.defaultDesiredPropertiesValue ?? false,
-        },
-        member: opts?.defaultDesiredPropertiesValue ?? false,
-        mentionedChannelIds: opts?.defaultDesiredPropertiesValue ?? false,
-        mentionedRoleIds: opts?.defaultDesiredPropertiesValue ?? false,
-        mentions: opts?.defaultDesiredPropertiesValue ?? false,
-        messageReference: {
-          messageId: opts?.defaultDesiredPropertiesValue ?? false,
-          channelId: opts?.defaultDesiredPropertiesValue ?? false,
-          guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        },
-        nonce: opts?.defaultDesiredPropertiesValue ?? false,
-        reactions: opts?.defaultDesiredPropertiesValue ?? false,
-        stickerItems: opts?.defaultDesiredPropertiesValue ?? false,
-        thread: opts?.defaultDesiredPropertiesValue ?? false,
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        webhookId: opts?.defaultDesiredPropertiesValue ?? false,
-        poll: opts?.defaultDesiredPropertiesValue ?? false,
-        call: {
-          participants: opts?.defaultDesiredPropertiesValue ?? false,
-          endedTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
-        },
-      },
-      role: {
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        position: opts?.defaultDesiredPropertiesValue ?? false,
-        color: opts?.defaultDesiredPropertiesValue ?? false,
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        botId: opts?.defaultDesiredPropertiesValue ?? false,
-        integrationId: opts?.defaultDesiredPropertiesValue ?? false,
-        permissions: opts?.defaultDesiredPropertiesValue ?? false,
-        icon: opts?.defaultDesiredPropertiesValue ?? false,
-        unicodeEmoji: opts?.defaultDesiredPropertiesValue ?? false,
-        mentionable: opts?.defaultDesiredPropertiesValue ?? false,
-        hoist: opts?.defaultDesiredPropertiesValue ?? false,
-        managed: opts?.defaultDesiredPropertiesValue ?? false,
-        subscriptionListingId: opts?.defaultDesiredPropertiesValue ?? false,
-        flags: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      scheduledEvent: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        creatorId: opts?.defaultDesiredPropertiesValue ?? false,
-        scheduledStartTime: opts?.defaultDesiredPropertiesValue ?? false,
-        scheduledEndTime: opts?.defaultDesiredPropertiesValue ?? false,
-        entityId: opts?.defaultDesiredPropertiesValue ?? false,
-        creator: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        description: opts?.defaultDesiredPropertiesValue ?? false,
-        privacyLevel: opts?.defaultDesiredPropertiesValue ?? false,
-        status: opts?.defaultDesiredPropertiesValue ?? false,
-        entityType: opts?.defaultDesiredPropertiesValue ?? false,
-        userCount: opts?.defaultDesiredPropertiesValue ?? false,
-        location: opts?.defaultDesiredPropertiesValue ?? false,
-        image: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      stageInstance: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        topic: opts?.defaultDesiredPropertiesValue ?? false,
-        guildScheduledEventId: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      inviteStageInstance: {
-        members: opts?.defaultDesiredPropertiesValue ?? false,
-        participantCount: opts?.defaultDesiredPropertiesValue ?? false,
-        speakerCount: opts?.defaultDesiredPropertiesValue ?? false,
-        topic: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      sticker: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        packId: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        description: opts?.defaultDesiredPropertiesValue ?? false,
-        tags: opts?.defaultDesiredPropertiesValue ?? false,
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        formatType: opts?.defaultDesiredPropertiesValue ?? false,
-        available: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        user: opts?.defaultDesiredPropertiesValue ?? false,
-        sortValue: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      user: {
-        username: opts?.defaultDesiredPropertiesValue ?? false,
-        globalName: opts?.defaultDesiredPropertiesValue ?? false,
-        locale: opts?.defaultDesiredPropertiesValue ?? false,
-        flags: opts?.defaultDesiredPropertiesValue ?? false,
-        premiumType: opts?.defaultDesiredPropertiesValue ?? false,
-        publicFlags: opts?.defaultDesiredPropertiesValue ?? false,
-        accentColor: opts?.defaultDesiredPropertiesValue ?? false,
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        discriminator: opts?.defaultDesiredPropertiesValue ?? false,
-        avatar: opts?.defaultDesiredPropertiesValue ?? false,
-        bot: opts?.defaultDesiredPropertiesValue ?? false,
-        system: opts?.defaultDesiredPropertiesValue ?? false,
-        mfaEnabled: opts?.defaultDesiredPropertiesValue ?? false,
-        verified: opts?.defaultDesiredPropertiesValue ?? false,
-        email: opts?.defaultDesiredPropertiesValue ?? false,
-        banner: opts?.defaultDesiredPropertiesValue ?? false,
-        avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      avatarDecorationData: {
-        asset: opts?.defaultDesiredPropertiesValue ?? false,
-        skuId: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      webhook: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        user: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        avatar: opts?.defaultDesiredPropertiesValue ?? false,
-        token: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        sourceGuild: opts?.defaultDesiredPropertiesValue ?? false,
-        sourceChannel: opts?.defaultDesiredPropertiesValue ?? false,
-        url: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      guildOnboarding: {
-        defaultChannelIds: opts?.defaultDesiredPropertiesValue ?? false,
-        enabled: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        mode: opts?.defaultDesiredPropertiesValue ?? false,
-        prompts: {
-          id: opts?.defaultDesiredPropertiesValue ?? false,
-          inOnboarding: opts?.defaultDesiredPropertiesValue ?? false,
-          options: {
-            channelIds: opts?.defaultDesiredPropertiesValue ?? false,
-            description: opts?.defaultDesiredPropertiesValue ?? false,
-            emoji: opts?.defaultDesiredPropertiesValue ?? false,
-            id: opts?.defaultDesiredPropertiesValue ?? false,
-            roleIds: opts?.defaultDesiredPropertiesValue ?? false,
-            title: opts?.defaultDesiredPropertiesValue ?? false,
-          },
-          required: opts?.defaultDesiredPropertiesValue ?? false,
-          singleSelect: opts?.defaultDesiredPropertiesValue ?? false,
-          title: opts?.defaultDesiredPropertiesValue ?? false,
-          type: opts?.defaultDesiredPropertiesValue ?? false,
-        },
-      },
-      entitlement: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        skuId: opts?.defaultDesiredPropertiesValue ?? false,
-        userId: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        deleted: opts?.defaultDesiredPropertiesValue ?? false,
-        startsAt: opts?.defaultDesiredPropertiesValue ?? false,
-        endsAt: opts?.defaultDesiredPropertiesValue ?? false,
-        consumed: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      sku: {
-        id: opts?.defaultDesiredPropertiesValue ?? false,
-        type: opts?.defaultDesiredPropertiesValue ?? false,
-        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
-        name: opts?.defaultDesiredPropertiesValue ?? false,
-        slug: opts?.defaultDesiredPropertiesValue ?? false,
-        flags: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      voiceState: {
-        requestToSpeakTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
-        channelId: opts?.defaultDesiredPropertiesValue ?? false,
-        guildId: opts?.defaultDesiredPropertiesValue ?? false,
-        toggles: opts?.defaultDesiredPropertiesValue ?? false,
-        sessionId: opts?.defaultDesiredPropertiesValue ?? false,
-        userId: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-      poll: {
-        question: opts?.defaultDesiredPropertiesValue ?? false,
-        answers: {
-          answerId: opts?.defaultDesiredPropertiesValue ?? false,
-          pollMedia: opts?.defaultDesiredPropertiesValue ?? false,
-        },
-        expiry: opts?.defaultDesiredPropertiesValue ?? false,
-        layoutType: opts?.defaultDesiredPropertiesValue ?? false,
-        allowMultiselect: opts?.defaultDesiredPropertiesValue ?? false,
-        results: {
-          isFinalized: opts?.defaultDesiredPropertiesValue ?? false,
-          answerCounts: {
-            id: opts?.defaultDesiredPropertiesValue ?? false,
-            count: opts?.defaultDesiredPropertiesValue ?? false,
-            meVoted: opts?.defaultDesiredPropertiesValue ?? false,
-          },
-        },
-      },
-      pollMedia: {
-        text: opts?.defaultDesiredPropertiesValue ?? false,
-        emoji: opts?.defaultDesiredPropertiesValue ?? false,
-      },
-    },
+    desiredProperties: createDesiredProprietiesObject({}, opts?.defaultDesiredPropertiesValue ?? false),
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
@@ -1368,5 +971,460 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     poll: options.poll ?? transformPoll,
     pollMedia: options.pollMedia ?? transformPollMedia,
     avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
+  }
+}
+
+export function createDesiredProprietiesObject(desiredProperties: RecursivePartial<TransformersDesiredProprieties>, defaultValue = false) {
+  return {
+    attachment: {
+      id: defaultValue,
+      filename: defaultValue,
+      title: defaultValue,
+      contentType: defaultValue,
+      size: defaultValue,
+      url: defaultValue,
+      proxyUrl: defaultValue,
+      height: defaultValue,
+      width: defaultValue,
+      ephemeral: defaultValue,
+      description: defaultValue,
+      duration_secs: defaultValue,
+      waveform: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.attachment,
+    },
+    channel: {
+      type: defaultValue,
+      position: defaultValue,
+      name: defaultValue,
+      topic: defaultValue,
+      nsfw: defaultValue,
+      bitrate: defaultValue,
+      userLimit: defaultValue,
+      rateLimitPerUser: defaultValue,
+      rtcRegion: defaultValue,
+      videoQualityMode: defaultValue,
+      guildId: defaultValue,
+      lastPinTimestamp: defaultValue,
+      permissionOverwrites: defaultValue,
+      id: defaultValue,
+      permissions: defaultValue,
+      lastMessageId: defaultValue,
+      ownerId: defaultValue,
+      applicationId: defaultValue,
+      managed: defaultValue,
+      parentId: defaultValue,
+      memberCount: defaultValue,
+      messageCount: defaultValue,
+      archiveTimestamp: defaultValue,
+      defaultAutoArchiveDuration: defaultValue,
+      autoArchiveDuration: defaultValue,
+      botIsMember: defaultValue,
+      archived: defaultValue,
+      locked: defaultValue,
+      invitable: defaultValue,
+      createTimestamp: defaultValue,
+      newlyCreated: defaultValue,
+      flags: defaultValue,
+      appliedTags: defaultValue,
+      availableTags: defaultValue,
+      defaultForumLayout: defaultValue,
+      defaultReactionEmoji: defaultValue,
+      defaultSortOrder: defaultValue,
+      defaultThreadRateLimitPerUser: defaultValue,
+      icon: defaultValue,
+      member: defaultValue,
+      recipients: defaultValue,
+      totalMessageSent: defaultValue,
+      ...desiredProperties.channel,
+    },
+    forumTag: {
+      emojiId: defaultValue,
+      emojiName: defaultValue,
+      id: defaultValue,
+      moderated: defaultValue,
+      name: defaultValue,
+      ...desiredProperties.forumTag,
+    },
+    emoji: {
+      id: defaultValue,
+      name: defaultValue,
+      roles: defaultValue,
+      user: defaultValue,
+      ...desiredProperties.emoji,
+    },
+    defaultReactionEmoji: {
+      emojiId: defaultValue,
+      emojiName: defaultValue,
+      ...desiredProperties.defaultReactionEmoji,
+    },
+    guild: {
+      afkTimeout: defaultValue,
+      approximateMemberCount: defaultValue,
+      approximatePresenceCount: defaultValue,
+      defaultMessageNotifications: defaultValue,
+      description: defaultValue,
+      explicitContentFilter: defaultValue,
+      maxMembers: defaultValue,
+      maxPresences: defaultValue,
+      maxVideoChannelUsers: defaultValue,
+      mfaLevel: defaultValue,
+      name: defaultValue,
+      channels: defaultValue,
+      emojis: defaultValue,
+      iconHash: defaultValue,
+      large: defaultValue,
+      members: defaultValue,
+      owner: defaultValue,
+      presences: defaultValue,
+      roles: defaultValue,
+      stickers: defaultValue,
+      threads: defaultValue,
+      toggles: defaultValue,
+      unavailable: defaultValue,
+      voiceStates: defaultValue,
+      widgetEnabled: defaultValue,
+      nsfwLevel: defaultValue,
+      preferredLocale: defaultValue,
+      premiumSubscriptionCount: defaultValue,
+      premiumTier: defaultValue,
+      stageInstances: defaultValue,
+      systemChannelFlags: defaultValue,
+      vanityUrlCode: defaultValue,
+      verificationLevel: defaultValue,
+      welcomeScreen: defaultValue,
+      discoverySplash: defaultValue,
+      joinedAt: defaultValue,
+      memberCount: defaultValue,
+      shardId: defaultValue,
+      icon: defaultValue,
+      banner: defaultValue,
+      splash: defaultValue,
+      id: defaultValue,
+      ownerId: defaultValue,
+      permissions: defaultValue,
+      afkChannelId: defaultValue,
+      widgetChannelId: defaultValue,
+      applicationId: defaultValue,
+      systemChannelId: defaultValue,
+      rulesChannelId: defaultValue,
+      publicUpdatesChannelId: defaultValue,
+      premiumProgressBarEnabled: defaultValue,
+      safetyAlertsChannelId: defaultValue,
+      ...desiredProperties.guild,
+    },
+    interaction: {
+      id: defaultValue,
+      applicationId: defaultValue,
+      type: defaultValue,
+      guild: defaultValue,
+      guildId: defaultValue,
+      channel: defaultValue,
+      channelId: defaultValue,
+      member: defaultValue,
+      user: defaultValue,
+      token: defaultValue,
+      version: defaultValue,
+      message: defaultValue,
+      data: defaultValue,
+      locale: defaultValue,
+      guildLocale: defaultValue,
+      appPermissions: defaultValue,
+      authorizingIntegrationOwners: defaultValue,
+      context: defaultValue,
+      ...desiredProperties.interaction,
+    },
+    invite: {
+      type: defaultValue,
+      channelId: defaultValue,
+      code: defaultValue,
+      createdAt: defaultValue,
+      guildId: defaultValue,
+      inviter: defaultValue,
+      maxAge: defaultValue,
+      maxUses: defaultValue,
+      targetType: defaultValue,
+      targetUser: defaultValue,
+      targetApplication: defaultValue,
+      temporary: defaultValue,
+      uses: defaultValue,
+      approximateMemberCount: defaultValue,
+      approximatePresenceCount: defaultValue,
+      guildScheduledEvent: defaultValue,
+      stageInstance: defaultValue,
+      expiresAt: defaultValue,
+      ...desiredProperties.invite,
+    },
+    member: {
+      id: defaultValue,
+      guildId: defaultValue,
+      user: defaultValue,
+      nick: defaultValue,
+      roles: defaultValue,
+      joinedAt: defaultValue,
+      premiumSince: defaultValue,
+      avatar: defaultValue,
+      permissions: defaultValue,
+      communicationDisabledUntil: defaultValue,
+      deaf: defaultValue,
+      mute: defaultValue,
+      pending: defaultValue,
+      flags: defaultValue,
+      avatarDecorationData: defaultValue,
+      ...desiredProperties.member,
+    },
+    message: {
+      activity: defaultValue,
+      application: defaultValue,
+      applicationId: defaultValue,
+      attachments: defaultValue,
+      author: defaultValue,
+      channelId: defaultValue,
+      components: defaultValue,
+      content: defaultValue,
+      editedTimestamp: defaultValue,
+      embeds: defaultValue,
+      guildId: defaultValue,
+      id: defaultValue,
+      interactionMetadata: defaultValue,
+      interaction: defaultValue,
+      member: defaultValue,
+      mentionedChannelIds: defaultValue,
+      mentionedRoleIds: defaultValue,
+      mentions: defaultValue,
+      messageReference: defaultValue,
+      nonce: defaultValue,
+      reactions: defaultValue,
+      stickerItems: defaultValue,
+      thread: defaultValue,
+      type: defaultValue,
+      webhookId: defaultValue,
+      poll: defaultValue,
+      call: defaultValue,
+      ...desiredProperties.message,
+    },
+    messageInteractionMetadata: {
+      id: defaultValue,
+      type: defaultValue,
+      user: defaultValue,
+      authorizingIntegrationOwners: defaultValue,
+      originalResponseMessageId: defaultValue,
+      interactedMessageId: defaultValue,
+      triggeringInteractionMetadata: defaultValue,
+      ...desiredProperties.messageInteractionMetadata,
+    },
+    messageInteraction: {
+      id: defaultValue,
+      member: defaultValue,
+      name: defaultValue,
+      type: defaultValue,
+      user: defaultValue,
+      ...desiredProperties.messageInteraction,
+    },
+    messageReference: {
+      messageId: defaultValue,
+      channelId: defaultValue,
+      guildId: defaultValue,
+      ...desiredProperties.messageReference,
+    },
+    messageCall: {
+      participants: defaultValue,
+      endedTimestamp: defaultValue,
+      ...desiredProperties.messageCall,
+    },
+    role: {
+      name: defaultValue,
+      guildId: defaultValue,
+      position: defaultValue,
+      color: defaultValue,
+      id: defaultValue,
+      botId: defaultValue,
+      integrationId: defaultValue,
+      permissions: defaultValue,
+      icon: defaultValue,
+      unicodeEmoji: defaultValue,
+      mentionable: defaultValue,
+      hoist: defaultValue,
+      managed: defaultValue,
+      subscriptionListingId: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.role,
+    },
+    scheduledEvent: {
+      id: defaultValue,
+      guildId: defaultValue,
+      channelId: defaultValue,
+      creatorId: defaultValue,
+      scheduledStartTime: defaultValue,
+      scheduledEndTime: defaultValue,
+      entityId: defaultValue,
+      creator: defaultValue,
+      name: defaultValue,
+      description: defaultValue,
+      privacyLevel: defaultValue,
+      status: defaultValue,
+      entityType: defaultValue,
+      userCount: defaultValue,
+      location: defaultValue,
+      image: defaultValue,
+      ...desiredProperties.scheduledEvent,
+    },
+    stageInstance: {
+      id: defaultValue,
+      guildId: defaultValue,
+      channelId: defaultValue,
+      topic: defaultValue,
+      guildScheduledEventId: defaultValue,
+      ...desiredProperties.stageInstance,
+    },
+    inviteStageInstance: {
+      members: defaultValue,
+      participantCount: defaultValue,
+      speakerCount: defaultValue,
+      topic: defaultValue,
+      ...desiredProperties.inviteStageInstance,
+    },
+    sticker: {
+      id: defaultValue,
+      packId: defaultValue,
+      name: defaultValue,
+      description: defaultValue,
+      tags: defaultValue,
+      type: defaultValue,
+      formatType: defaultValue,
+      available: defaultValue,
+      guildId: defaultValue,
+      user: defaultValue,
+      sortValue: defaultValue,
+      ...desiredProperties.sticker,
+    },
+    user: {
+      username: defaultValue,
+      globalName: defaultValue,
+      locale: defaultValue,
+      flags: defaultValue,
+      premiumType: defaultValue,
+      publicFlags: defaultValue,
+      accentColor: defaultValue,
+      id: defaultValue,
+      discriminator: defaultValue,
+      avatar: defaultValue,
+      bot: defaultValue,
+      system: defaultValue,
+      mfaEnabled: defaultValue,
+      verified: defaultValue,
+      email: defaultValue,
+      banner: defaultValue,
+      avatarDecorationData: defaultValue,
+      ...desiredProperties.user,
+    },
+    avatarDecorationData: {
+      asset: defaultValue,
+      skuId: defaultValue,
+      ...desiredProperties.avatarDecorationData,
+    },
+    webhook: {
+      id: defaultValue,
+      type: defaultValue,
+      guildId: defaultValue,
+      channelId: defaultValue,
+      user: defaultValue,
+      name: defaultValue,
+      avatar: defaultValue,
+      token: defaultValue,
+      applicationId: defaultValue,
+      sourceGuild: defaultValue,
+      sourceChannel: defaultValue,
+      url: defaultValue,
+      ...desiredProperties.webhook,
+    },
+    guildOnboarding: {
+      defaultChannelIds: defaultValue,
+      enabled: defaultValue,
+      guildId: defaultValue,
+      mode: defaultValue,
+      prompts: defaultValue,
+      ...desiredProperties.guildOnboarding,
+    },
+    guildOnboardingPrompt: {
+      id: defaultValue,
+      inOnboarding: defaultValue,
+      options: defaultValue,
+      required: defaultValue,
+      singleSelect: defaultValue,
+      title: defaultValue,
+      type: defaultValue,
+      ...desiredProperties.guildOnboardingPrompt,
+    },
+    guildOnboardingPromptOption: {
+      channelIds: defaultValue,
+      description: defaultValue,
+      emoji: defaultValue,
+      id: defaultValue,
+      roleIds: defaultValue,
+      title: defaultValue,
+      ...desiredProperties.guildOnboardingPromptOption,
+    },
+    entitlement: {
+      id: defaultValue,
+      skuId: defaultValue,
+      userId: defaultValue,
+      guildId: defaultValue,
+      applicationId: defaultValue,
+      type: defaultValue,
+      deleted: defaultValue,
+      startsAt: defaultValue,
+      endsAt: defaultValue,
+      consumed: defaultValue,
+      ...desiredProperties.entitlement,
+    },
+    sku: {
+      id: defaultValue,
+      type: defaultValue,
+      applicationId: defaultValue,
+      name: defaultValue,
+      slug: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.sku,
+    },
+    voiceState: {
+      requestToSpeakTimestamp: defaultValue,
+      channelId: defaultValue,
+      guildId: defaultValue,
+      toggles: defaultValue,
+      sessionId: defaultValue,
+      userId: defaultValue,
+      ...desiredProperties.voiceState,
+    },
+    poll: {
+      question: defaultValue,
+      answers: defaultValue,
+      expiry: defaultValue,
+      layoutType: defaultValue,
+      allowMultiselect: defaultValue,
+      results: defaultValue,
+      ...desiredProperties.poll,
+    },
+    pollAnswer: {
+      answerId: defaultValue,
+      pollMedia: defaultValue,
+      ...desiredProperties.pollAnswer,
+    },
+    pollResult: {
+      isFinalized: defaultValue,
+      answerCounts: defaultValue,
+      ...desiredProperties.pollResult,
+    },
+    pollAnswerCount: {
+      id: defaultValue,
+      count: defaultValue,
+      meVoted: defaultValue,
+      ...desiredProperties.pollAnswerCount,
+    },
+    pollMedia: {
+      text: defaultValue,
+      emoji: defaultValue,
+      ...desiredProperties.pollMedia,
+    },
   }
 }

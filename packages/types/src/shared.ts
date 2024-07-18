@@ -1162,3 +1162,5 @@ export type Snakelize<T> = T extends any[]
     : T
 
 export type PickPartial<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]: T[P] }
+
+export type RecursivePartial<T> = T extends object ? { [K in keyof T]?: RecursivePartial<T[K]> } : Partial<T>
