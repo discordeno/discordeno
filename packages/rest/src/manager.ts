@@ -32,7 +32,6 @@ import {
   type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
-  type DiscordPartialGuild,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -1169,7 +1168,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           }
         : undefined
 
-      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions)
+      return await rest.get<Partial<DiscordGuild>[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions)
     },
 
     async getGuildApplicationCommand(commandId, guildId) {

@@ -119,7 +119,6 @@ import type {
   DiscordModifyGuildWelcomeScreen,
   DiscordOptionalAuditEntryInfo,
   DiscordOverwrite,
-  DiscordPartialGuild,
   DiscordPoll,
   DiscordPollAnswer,
   DiscordPollAnswerCount,
@@ -208,7 +207,6 @@ export type CamelizedDiscordWebhook = Camelize<DiscordWebhook>
 export interface CamelizedDiscordIncomingWebhook extends Camelize<DiscordIncomingWebhook> {}
 export interface CamelizedDiscordApplicationWebhook extends Camelize<DiscordApplicationWebhook> {}
 export interface CamelizedDiscordGuild extends Camelize<DiscordGuild> {}
-export interface CamelizedDiscordPartialGuild extends Camelize<DiscordPartialGuild> {}
 export interface CamelizedDiscordRole extends Camelize<DiscordRole> {}
 export interface CamelizedDiscordRoleTags extends Camelize<DiscordRoleTags> {}
 export interface CamelizedDiscordEmoji extends Camelize<DiscordEmoji> {}

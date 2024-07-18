@@ -906,25 +906,6 @@ export interface DiscordGuild {
   safety_alerts_channel_id: string | null
 }
 
-export interface DiscordPartialGuild {
-  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
-  name: string
-  /** Guild id */
-  id: string
-  /** Icon hash */
-  icon: string | null
-  /** true if the user is the owner of the guild */
-  owner: boolean
-  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
-  permissions: string
-  /** Enabled guild features */
-  features: GuildFeatures[]
-  /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
-  approximate_member_count?: number
-  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
-  approximate_presence_count?: number
-}
-
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface DiscordRole {
   /** Role id */
