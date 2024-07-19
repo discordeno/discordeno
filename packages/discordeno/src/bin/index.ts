@@ -10,8 +10,22 @@ program.name('discordeno').description('CLI to discordeno utilities').version('0
 program
   .command('generate')
   .description('Generate types/schema for discordeno')
-  .action(async () => {
-    const typesFile = await findUp('node_modules/@discordeno/bot/dist/types/transformers/types.d.ts', { allowSymlinks: true })
+  .option('-c, --config <path>', 'Path to the config file', 'discordeno.config.js')
+  .action(async (options) => {
+    console.log('using %s for config', options.config)
+    const configFile = await findUp(options.config, { allowSymlinks: true, type: 'file' })
+
+    if (!configFile) {
+      throw new Error('Could not find the config file')
+    }
+
+    const configModule = await import(configFile)
+
+    if (!configModule.default) {
+      throw new Error('The config file does not provide a default export')
+    }
+
+    const typesFile = await findUp('node_modules/@discordeno/bot/dist/types/transformers/types.d.ts', { allowSymlinks: true, type: 'file' })
 
     if (!typesFile) {
       throw new Error('Could not find @discordeno/bot transformer types file.')
@@ -42,7 +56,7 @@ program
       await rename(typesFile, oldTypesFile)
     }
 
-    generateNewFile(oldTypesFile, typesFile)
+    generateNewFile(configModule.default, oldTypesFile, typesFile)
   })
 
 program.parse()

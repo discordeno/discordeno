@@ -1,2 +1,2 @@
 export * from '@discordeno/bot'
-export * from './bin/generate/config.js'
+export * from './bin/config.js'
