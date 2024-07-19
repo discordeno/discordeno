@@ -27,6 +27,7 @@ import type {
   CamelizedDiscordVanityUrl,
   CamelizedDiscordVoiceRegion,
   CreateApplicationCommand,
+  CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
   CreateEntitlement,
@@ -78,6 +79,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   MfaLevels,
+  ModifyApplicationEmoji,
   ModifyChannel,
   ModifyGuild,
   ModifyGuildChannelPositions,
@@ -130,6 +132,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     },
     createEmoji: async (guildId, options, reason) => {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.createEmoji(guildId, options, reason)))
+    },
+    createApplicationEmoji: async (options) => {
+      return bot.transformers.emoji(bot, snakelize(await bot.rest.createApplicationEmoji(options)))
     },
     createForumThread: async (channelId, options, reason) => {
       return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.createForumThread(channelId, options, reason)) })
@@ -184,6 +189,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     },
     editEmoji: async (guildId, id, options, reason) => {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.editEmoji(guildId, id, options, reason)))
+    },
+    editApplicationEmoji: async (id, options) => {
+      return bot.transformers.emoji(bot, snakelize(await bot.rest.editApplicationEmoji(id, options)))
     },
     editFollowupMessage: async (token, messageId, options) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.editFollowupMessage(token, messageId, options)))
@@ -321,8 +329,18 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getEmoji: async (guildId, emojiId) => {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.getEmoji(guildId, emojiId)))
     },
+    getApplicationEmoji: async (emojiId) => {
+      return bot.transformers.emoji(bot, snakelize(await bot.rest.getApplicationEmoji(emojiId)))
+    },
     getEmojis: async (guildId) => {
       return (await bot.rest.getEmojis(guildId)).map((res) => bot.transformers.emoji(bot, snakelize(res)))
+    },
+    getApplicationEmojis: async () => {
+      const res = await bot.rest.getApplicationEmojis()
+
+      return {
+        items: res.items.map((item) => bot.transformers.emoji(bot, snakelize(item))),
+      }
     },
     getFollowupMessage: async (token, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getFollowupMessage(token, messageId)))
@@ -575,6 +593,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     deleteEmoji: async (guildId, id, reason) => {
       return await bot.rest.deleteEmoji(guildId, id, reason)
     },
+    deleteApplicationEmoji: async (id) => {
+      return await bot.rest.deleteApplicationEmoji(id)
+    },
     deleteFollowupMessage: async (token, messageId) => {
       return await bot.rest.deleteFollowupMessage(token, messageId)
     },
@@ -720,6 +741,7 @@ export interface BotHelpers {
   createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions, reason?: string) => Promise<AutoModerationRule>
   createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<Channel>
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<Emoji>
+  createApplicationEmoji: (options: CreateApplicationEmoji) => Promise<Emoji>
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage, reason?: string) => Promise<Channel>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
   createGuild: (options: CreateGuild) => Promise<Guild>
@@ -751,6 +773,7 @@ export interface BotHelpers {
   editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<User>
   editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<Channel>
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<Emoji>
+  editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<Emoji>
   editFollowupMessage: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<Message>
   editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<ApplicationCommand>
   editGuild: (guildId: BigString, options: ModifyGuild, reason?: string) => Promise<Guild>
@@ -806,7 +829,9 @@ export interface BotHelpers {
   getDmChannel: (userId: BigString) => Promise<Channel>
   getGroupDmChannel: (options: GetGroupDmOptions) => Promise<Channel>
   getEmoji: (guildId: BigString, emojiId: BigString) => Promise<Emoji>
+  getApplicationEmoji: (emojiId: BigString) => Promise<Emoji>
   getEmojis: (guildId: BigString) => Promise<Emoji[]>
+  getApplicationEmojis: () => Promise<{ items: Emoji[] }>
   getFollowupMessage: (token: string, messageId: BigString) => Promise<Message>
   getGatewayBot: () => Promise<CamelizedDiscordGetGatewayBot>
   getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>
@@ -893,6 +918,7 @@ export interface BotHelpers {
   deleteChannel: (channelId: BigString, reason?: string) => Promise<void>
   deleteChannelPermissionOverride: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
   deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
+  deleteApplicationEmoji: (id: BigString) => Promise<void>
   deleteFollowupMessage: (token: string, messageId: BigString) => Promise<void>
   deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
   deleteGuild: (guildId: BigString) => Promise<void>

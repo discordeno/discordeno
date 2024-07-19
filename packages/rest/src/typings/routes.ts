@@ -273,9 +273,13 @@ export interface RestRoutes {
     /** Route to list the SKUs */
     skus: (applicationId: BigString) => string
   }
+  /** Route to list / create an application emoji */
+  applicationEmojis: (applicationId: BigString) => string
+  /** Route to get / edit / delete an application emoji */
+  applicationEmoji: (applicationId: BigString, emojiId: BigString) => string
   /** Get information about the current OAuth2 user / bot user. If used with a OAuth2 token requires the `identify` OAuth2 scope */
   currentUser: () => string
-  /**  Route to get and edit information about the current application. */
+  /** Route to get and edit information about the current application. */
   application: () => string
   /** Route for handling a sticker. */
   sticker: (stickerId: BigString) => string
