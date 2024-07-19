@@ -2,6 +2,7 @@ import assert from 'node:assert'
 import { type WriteStream, createWriteStream } from 'node:fs'
 import ts from 'typescript'
 import { DesiredProprietiesBehavior, desiredProprietiesBehavior, isProprietyDesired } from './config.js'
+import { writeInterfaceMember, writeJSDoc } from './emitter.js'
 
 export const typescriptOptions: ts.CompilerOptions = {
   target: ts.ScriptTarget.ES2022,
@@ -50,19 +51,15 @@ function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, checker:
 
   assert(symbol.members)
 
-  writeStream.write('\n')
-
-  writeJSDoc(writeStream, symbol.getDocumentationComment(checker), symbol.getJsDocTags(checker))
-
   const interfaceName = symbol.getName()
 
+  writeStream.write('\n')
+  writeJSDoc(writeStream, symbol.getDocumentationComment(checker), symbol.getJsDocTags(checker))
   writeStream.write(`export interface ${interfaceName} {\n`)
 
   // Generate the interface in the output file
-  for (const [, member] of symbol.members) {
+  for (const member of symbol.members.values()) {
     const memberName = member.getName()
-    const isDesired = isProprietyDesired(interfaceName, memberName)
-
     const valueDeclaration = member.valueDeclaration
     assert(valueDeclaration)
 
@@ -71,36 +68,20 @@ function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, checker:
     assert(typeNode)
 
     // Since we are getting the type directly from the sourceFile it may have a trailing space, so we remove them
-    let typeText = typeNode.getFullText().trim()
+    const typeText = typeNode.getFullText().trim()
     const jsDoc = member.getJsDocTags(checker)
-    const isOptionalQuestionMark = member.getFlags() & ts.SymbolFlags.Optional ? '?' : ''
+    const docs = member.getDocumentationComment(checker)
+    const isOptional = Boolean(member.getFlags() & ts.SymbolFlags.Optional)
 
-    if (!isDesired) {
-      switch (desiredProprietiesBehavior) {
-        case DesiredProprietiesBehavior.Remove: {
-          continue
-        }
-        case DesiredProprietiesBehavior.TypeAsNever: {
-          jsDoc.push({
-            name: 'remarks',
-            text: [
-              {
-                kind: 'text',
-                text: `This property is not desired according to your Desired Properties configuration.\n\nOriginal type: ${typeText}`,
-              },
-            ],
-          })
+    if (isProprietyDesired(interfaceName, memberName)) {
+      writeJSDoc(writeStream, docs, jsDoc, '  ')
+      writeInterfaceMember(writeStream, memberName, typeText, isOptional)
 
-          typeText = 'never'
-
-          break
-        }
-      }
+      continue
     }
 
-    writeJSDoc(writeStream, member.getDocumentationComment(checker), jsDoc, '  ')
-
-    writeStream.write(`  ${memberName}${isOptionalQuestionMark}: ${typeText}\n`)
+    // The property is undesired
+    handleUndesiredProperty(writeStream, docs, jsDoc, memberName, typeText, isOptional)
   }
 
   writeStream.write('}\n')
@@ -118,51 +99,26 @@ function processImportNode(node: ts.ImportDeclaration, writeStream: WriteStream)
   writeStream.write('\n')
 }
 
-function writeJSDoc(stream: WriteStream, docs: ts.SymbolDisplayPart[], jsDocTags: ts.JSDocTagInfo[], ident = ''): void {
-  const withDocs = docs.length > 0
-  const withJSdoc = jsDocTags.length > 0
+function handleUndesiredProperty(
+  stream: WriteStream,
+  docs: ts.SymbolDisplayPart[],
+  jsDoc: ts.JSDocTagInfo[],
+  memberName: string,
+  typeText: string,
+  isOptional: boolean,
+) {
+  if (desiredProprietiesBehavior === DesiredProprietiesBehavior.Remove) return
 
-  if (!withDocs && !withJSdoc) return
+  jsDoc.push({
+    name: 'remarks',
+    text: [
+      {
+        kind: 'text',
+        text: `This property is not desired according to your Desired Properties configuration.\n\nOriginal type: ${typeText}`,
+      },
+    ],
+  })
 
-  stream.write(`${ident}/**`)
-
-  if (withDocs && withJSdoc) {
-    stream.write(`\n${ident} *`)
-  }
-
-  if (withDocs) {
-    writeSymbolDisplayParts(stream, docs, ident)
-  }
-
-  for (const jsDoc of jsDocTags) {
-    if (withDocs) {
-      stream.write(`\n${ident} *`)
-    }
-
-    stream.write(`\n${ident} *`)
-    stream.write(` @${jsDoc.name}\n${ident} *`)
-
-    if (jsDoc.text) {
-      writeSymbolDisplayParts(stream, jsDoc.text, ident)
-    }
-  }
-
-  if (withJSdoc) {
-    stream.write(`\n${ident}`)
-  }
-
-  stream.write(' */\n')
-}
-
-function writeSymbolDisplayParts(stream: WriteStream, documentation: ts.SymbolDisplayPart[], ident: string): void {
-  const docs = documentation.reduce((acc, cur) => `${acc}${cur.kind === 'linkText' ? ' | ' : ''}${cur.text}`, '')
-  const splitted = docs.split('\n')
-
-  stream.write(' ')
-  stream.write(splitted[0])
-
-  for (const text of splitted.slice(1)) {
-    stream.write(`\n${ident} * `)
-    stream.write(text)
-  }
+  writeJSDoc(stream, docs, jsDoc, '  ')
+  writeInterfaceMember(stream, memberName, 'never', isOptional)
 }

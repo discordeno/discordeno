@@ -1,27 +1,26 @@
 import { type TransformersDesiredProprieties, createDesiredProprietiesObject } from '@discordeno/bot'
 import type { RecursivePartial } from '@discordeno/types'
+import { findUp } from 'find-up'
 
 export enum DesiredProprietiesBehavior {
   Remove,
   TypeAsNever,
 }
 
-// TODO: source these values from the config file
-const config = defineConfig({
-  desiredProperties: {
-    behavior: DesiredProprietiesBehavior.TypeAsNever,
-    properties: {
-      message: {
-        id: true,
-      },
-    },
-  },
-})
+// TODO: all this stuff should be in a function and provably on the command itself, not here
+const configFile = await findUp('discordeno.config.js', { allowSymlinks: true, type: 'file' })
 
-export const desiredProprietiesBehavior: DesiredProprietiesBehavior = config.desiredProperties.behavior
+if (!configFile) throw new Error('Could not find the config file')
+
+const configModule = await import(configFile)
+
+if (!configModule.default) throw new Error('The config file does not provide a default export')
+
+export const desiredProprietiesBehavior: DesiredProprietiesBehavior = configModule.default.desiredProperties.behavior
 
 export function isProprietyDesired(interfaceName: string, memberName: string): boolean {
-  const interfaceProps = config.desiredProperties.properties[pascalCaseToCamelCase(interfaceName) as keyof typeof config.desiredProperties.properties]
+  const desiredProprieties = configModule.default.desiredProperties.properties
+  const interfaceProps = desiredProprieties[pascalCaseToCamelCase(interfaceName) as keyof typeof desiredProprieties]
 
   // This interface does not support desired proprieties, so we include them
   if (!interfaceProps) {
@@ -31,11 +30,11 @@ export function isProprietyDesired(interfaceName: string, memberName: string): b
   return interfaceProps[memberName as keyof typeof interfaceProps] ?? false
 }
 
-export function defineConfig(config: DiscordenoConfig): DiscordenoConfig {
+export function defineConfig(config: RecursivePartial<DiscordenoConfig>): DiscordenoConfig {
   return {
     desiredProperties: {
-      behavior: config.desiredProperties.behavior,
-      properties: createDesiredProprietiesObject(config.desiredProperties.properties),
+      behavior: config.desiredProperties?.behavior ?? DesiredProprietiesBehavior.TypeAsNever,
+      properties: createDesiredProprietiesObject(config.desiredProperties?.properties ?? {}),
     },
   }
 }
