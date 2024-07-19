@@ -2,7 +2,9 @@ import { expect } from 'chai'
 import { findUp } from 'find-up'
 import { describe, it } from 'mocha'
 import ts from 'typescript'
+import { getPropertyDependencies, isPropertyDesired } from '../src/bin/generate/desiredProperty.js'
 import { typescriptOptions } from '../src/bin/generate/typescript.js'
+import { defineConfig } from '../src/index.js'
 
 describe('discordeno generate', () => {
   it('will emit without errors', async function () {
@@ -31,5 +33,56 @@ describe('discordeno generate', () => {
     const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
 
     expect(allDiagnostics).to.be.an('array').that.is.empty
+  })
+
+  it('can get propriety dependencies', () => {
+    const deps = getPropertyDependencies('member', 'mute')
+
+    expect(deps).to.have.members(['toggles'])
+  })
+
+  it('can get desired status for a prop', () => {
+    const config = defineConfig({
+      desiredProperties: {
+        properties: {
+          channel: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    // desired
+    const idProp = isPropertyDesired(config, 'channel', 'id')
+    expect(idProp).to.be.equal(true)
+
+    // not desired
+    const nameProp = isPropertyDesired(config, 'channel', 'name')
+    expect(nameProp).to.be.equal(false)
+  })
+
+  it('can get computed desired status for a prop', () => {
+    const config = defineConfig({
+      desiredProperties: {
+        properties: {
+          interaction: {
+            type: true,
+            token: true,
+          },
+        },
+      },
+    })
+
+    // missing all deps
+    const threadMetadata = isPropertyDesired(config, 'channel', 'threadMetadata')
+    expect(threadMetadata).to.be.equal(false)
+
+    // missing one dep
+    const respond = isPropertyDesired(config, 'interaction', 'respond')
+    expect(respond).to.be.equal(false)
+
+    // having all deps
+    const interactionDelete = isPropertyDesired(config, 'interaction', 'delete')
+    expect(interactionDelete).to.be.equal(true)
   })
 })
