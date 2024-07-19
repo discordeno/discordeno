@@ -24,9 +24,7 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   const user: User = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 
-  if (props.bot || props.system || props.mfaEnabled || props.verified) {
-    user.toggles = new UserToggles(payload)
-  }
+  if (props.toggles) user.toggles = new UserToggles(payload)
   if (props.flags) user.flags = new ToggleBitfield(payload.flags)
   if (props.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
   if (props.id && payload.id) user.id = bot.transformers.snowflake(payload.id)

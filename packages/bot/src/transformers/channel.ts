@@ -57,9 +57,9 @@ export const baseChannel = {
       archiveTimestamp: this.internalThreadMetadata?.archiveTimestamp,
       createTimestamp: this.internalThreadMetadata?.createTimestamp,
       autoArchiveDuration: this.internalThreadMetadata?.autoArchiveDuration,
-      locked: this.locked,
-      invitable: this.invitable,
-      archived: this.archived,
+      locked: !!this.toggles?.locked,
+      invitable: !!this.toggles?.invitable,
+      archived: !!this.toggles?.archived,
     }
   },
 } as Channel

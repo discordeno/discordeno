@@ -12,7 +12,6 @@ program
   .description('Generate types/schema for discordeno')
   .option('-c, --config <path>', 'Path to the config file', 'discordeno.config.js')
   .action(async (options) => {
-    console.log('using %s for config', options.config)
     const configFile = await findUp(options.config, { allowSymlinks: true, type: 'file' })
 
     if (!configFile) {

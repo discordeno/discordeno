@@ -52,15 +52,14 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
   if (props.icon && payload.role.icon) role.icon = iconHashToBigInt(payload.role.icon)
   if (props.unicodeEmoji && payload.role.unicode_emoji) role.unicodeEmoji = payload.role.unicode_emoji
   if (props.flags) role.flags = payload.role.flags
-  if ((props.botId || props.integrationId || props.subscriptionListingId) && payload.role.tags) {
+  if (props.tags && payload.role.tags) {
     role.internalTags = {}
-    if (props.botId && payload.role.tags.bot_id) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
-    if (props.integrationId && payload.role.tags.integration_id)
-      role.internalTags.integrationId = bot.transformers.snowflake(payload.role.tags.integration_id)
-    if (props.subscriptionListingId && payload.role.tags.subscription_listing_id)
+    if (payload.role.tags.bot_id) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
+    if (payload.role.tags.integration_id) role.internalTags.integrationId = bot.transformers.snowflake(payload.role.tags.integration_id)
+    if (payload.role.tags.subscription_listing_id)
       role.internalTags.subscriptionListingId = bot.transformers.snowflake(payload.role.tags.subscription_listing_id)
   }
-  if (props.hoist || props.managed || props.mentionable) {
+  if (props.toggles) {
     role.toggles = new RoleToggles(payload.role)
   }
 

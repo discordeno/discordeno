@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { type WriteStream, createWriteStream } from 'node:fs'
 import ts from 'typescript'
 import { DesiredProprietiesBehavior, type DiscordenoConfig } from '../config.js'
-import { isProprietyDesired } from './config.js'
+import { getPropertyDependencies, isPropertyDesired } from './desiredProperty.js'
 import { writeInterfaceMember, writeJSDoc } from './emitter.js'
 
 export const typescriptOptions: ts.CompilerOptions = {
@@ -72,9 +72,11 @@ function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, config: 
     const typeText = typeNode.getFullText().trim()
     const jsDoc = member.getJsDocTags(checker)
     const docs = member.getDocumentationComment(checker)
-    const isOptional = Boolean(member.getFlags() & ts.SymbolFlags.Optional)
+    const isOptional = !!(member.getFlags() & ts.SymbolFlags.Optional)
+    const isInternal = !!jsDoc.find((x) => x.name === 'internal')
 
-    if (isProprietyDesired(config, interfaceName, memberName)) {
+    // If the propriety is internal then we don't want to apply the desired propriety logic to it
+    if (isInternal || isPropertyDesired(config, interfaceName, memberName)) {
       writeJSDoc(writeStream, docs, jsDoc, '  ')
       writeInterfaceMember(writeStream, memberName, typeText, isOptional)
 
@@ -82,7 +84,7 @@ function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, config: 
     }
 
     // The property is undesired
-    handleUndesiredProperty(writeStream, config, docs, jsDoc, memberName, typeText, isOptional)
+    handleUndesiredProperty(writeStream, config, docs, jsDoc, interfaceName, memberName, typeText, isOptional)
   }
 
   writeStream.write('}\n')
@@ -105,21 +107,26 @@ function handleUndesiredProperty(
   config: DiscordenoConfig,
   docs: ts.SymbolDisplayPart[],
   jsDoc: ts.JSDocTagInfo[],
+  interfaceName: string,
   memberName: string,
   typeText: string,
   isOptional: boolean,
 ) {
   if (config.desiredProperties.behavior === DesiredProprietiesBehavior.Remove) return
 
-  jsDoc.push({
+  const dependencies = getPropertyDependencies(interfaceName, memberName)
+
+  const additionalJsDocTag: ts.JSDocTagInfo = {
     name: 'remarks',
     text: [
       {
         kind: 'text',
-        text: `This property is not desired according to your Desired Properties configuration.\n\nOriginal type: ${typeText}`,
+        text: `This property is not desired according to your Desired Properties configuration.\n\nOriginal type: ${typeText}${dependencies ? `\n\nThis value requires other values to be enabled, those are: ${dependencies.join(', ')}` : ''}`,
       },
     ],
-  })
+  }
+
+  jsDoc.push(additionalJsDocTag)
 
   writeJSDoc(stream, docs, jsDoc, '  ')
   writeInterfaceMember(stream, memberName, 'never', isOptional)

@@ -494,10 +494,8 @@ export interface TransformersDesiredProprieties {
     avatar: boolean
     permissions: boolean
     communicationDisabledUntil: boolean
-    deaf: boolean
-    mute: boolean
-    pending: boolean
     flags: boolean
+    toggles: boolean
     avatarDecorationData: boolean
   }
   message: {
@@ -560,16 +558,12 @@ export interface TransformersDesiredProprieties {
     position: boolean
     color: boolean
     id: boolean
-    botId: boolean
-    integrationId: boolean
     permissions: boolean
     icon: boolean
     unicodeEmoji: boolean
-    mentionable: boolean
-    hoist: boolean
-    managed: boolean
-    subscriptionListingId: boolean
     flags: boolean
+    tags: boolean
+    toggles: boolean
   }
   scheduledEvent: {
     id: boolean
@@ -626,13 +620,10 @@ export interface TransformersDesiredProprieties {
     id: boolean
     discriminator: boolean
     avatar: boolean
-    bot: boolean
-    system: boolean
-    mfaEnabled: boolean
-    verified: boolean
     email: boolean
     banner: boolean
     avatarDecorationData: boolean
+    toggles: boolean
   }
   avatarDecorationData: {
     asset: boolean
@@ -974,7 +965,10 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
   }
 }
 
-export function createDesiredProprietiesObject(desiredProperties: RecursivePartial<TransformersDesiredProprieties>, defaultValue = false) {
+export function createDesiredProprietiesObject(
+  desiredProperties: RecursivePartial<TransformersDesiredProprieties>,
+  defaultValue = false,
+): TransformersDesiredProprieties {
   return {
     attachment: {
       id: defaultValue,
@@ -1166,10 +1160,8 @@ export function createDesiredProprietiesObject(desiredProperties: RecursiveParti
       avatar: defaultValue,
       permissions: defaultValue,
       communicationDisabledUntil: defaultValue,
-      deaf: defaultValue,
-      mute: defaultValue,
-      pending: defaultValue,
       flags: defaultValue,
+      toggles: defaultValue,
       avatarDecorationData: defaultValue,
       ...desiredProperties.member,
     },
@@ -1238,16 +1230,12 @@ export function createDesiredProprietiesObject(desiredProperties: RecursiveParti
       position: defaultValue,
       color: defaultValue,
       id: defaultValue,
-      botId: defaultValue,
-      integrationId: defaultValue,
       permissions: defaultValue,
       icon: defaultValue,
       unicodeEmoji: defaultValue,
-      mentionable: defaultValue,
-      hoist: defaultValue,
-      managed: defaultValue,
-      subscriptionListingId: defaultValue,
       flags: defaultValue,
+      tags: defaultValue,
+      toggles: defaultValue,
       ...desiredProperties.role,
     },
     scheduledEvent: {
@@ -1309,13 +1297,10 @@ export function createDesiredProprietiesObject(desiredProperties: RecursiveParti
       id: defaultValue,
       discriminator: defaultValue,
       avatar: defaultValue,
-      bot: defaultValue,
-      system: defaultValue,
-      mfaEnabled: defaultValue,
-      verified: defaultValue,
       email: defaultValue,
       banner: defaultValue,
       avatarDecorationData: defaultValue,
+      toggles: defaultValue,
       ...desiredProperties.user,
     },
     avatarDecorationData: {

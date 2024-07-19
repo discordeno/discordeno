@@ -47,9 +47,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
   if (props.avatar && payload.avatar) member.avatar = iconHashToBigInt(payload.avatar)
   if (props.permissions && payload.permissions) member.permissions = new Permissions(payload.permissions)
-  if (props.deaf || props.mute || props.pending || props.flags) {
-    member.toggles = new MemberToggles(payload)
-  }
+  if (props.toggles) member.toggles = new MemberToggles(payload)
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 

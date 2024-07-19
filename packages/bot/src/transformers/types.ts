@@ -1,5 +1,3 @@
-/** @import { DiscordPollResult, InteractionResponseTypes } from '@discordeno/types' */
-
 import type {
   ActivityTypes,
   ApplicationCommandOptionTypes,
@@ -888,46 +886,33 @@ export interface Interaction {
    * Sends a response to an interaction.
    *
    * @remarks
-   * This will send a {@link InteractionResponseTypes.ChannelMessageWithSource}, {@link InteractionResponseTypes.ApplicationCommandAutocompleteResult} or {@link InteractionResponseTypes.Modal} response based on the type of the interaction you are responding to.
+   * This will send a ChannelMessageWithSource, ApplicationCommandAutocompleteResult or Modal response based on the type of the interaction you are responding to.
    *
    * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
    */
   respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<Message | void>
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
    * @remarks
-   * This will edit the original interaction response or, if the interaction has not yet been acknowledged and the type of the interaction is {@link InteractionTypes.MessageComponent} it will instead send a {@link InteractionResponseTypes.UpdateMessage} response instead.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
+   * This will edit the original interaction response or, if the interaction has not yet been acknowledged and the type of the interaction is MessageComponent it will instead send a UpdateMessage response instead.
    */
   edit: (response: string | InteractionCallbackData, messageId?: BigString) => Promise<Message | void>
   /**
    * Defer the interaction for updating the referenced message at a later time with {@link edit}.
    *
    * @remarks
-   * This will send a {@link InteractionResponseTypes.DeferredUpdateMessage} response.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
+   * This will send a DeferredUpdateMessage response.
    */
   deferEdit: () => Promise<void>
   /**
    * Defer the interaction for updating the response at a later time with {@link edit}.
    *
    * @remarks
-   * This will send a {@link InteractionResponseTypes.DeferredChannelMessageWithSource} response.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
+   * This will send a DeferredChannelMessageWithSource response.
    */
   defer: (isPrivate?: boolean) => Promise<void>
-  /**
-   * Delete the original interaction response or a followup if the message id is provided.
-   *
-   * @remarks
-   * Uses `interaction.type` and `interaction.token`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
+  /** Delete the original interaction response or a followup if the message id is provided. */
   delete: (messageId?: BigString) => Promise<void>
 }
 
@@ -1274,7 +1259,7 @@ export interface Poll {
    *
    * @remarks
    * This value will not be sent by discord under specific conditions where they don't fetch them on their backend. When this value is missing it should be interpreted as "Unknown results" and not as "No results"
-   * The results may not be totally accurate while the poll has not ended. When it ends discord will re-calculate all the results and set {@link DiscordPollResult.is_finalized} to true
+   * The results may not be totally accurate while the poll has not ended. When it ends discord will re-calculate all the results and set is_finalized to true
    */
   results?: PollResult
 }
