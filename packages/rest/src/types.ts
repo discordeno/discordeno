@@ -56,6 +56,7 @@ import type {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ChannelTypes,
   CreateApplicationCommand,
+  CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
   CreateEntitlement,
@@ -115,6 +116,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   MfaLevels,
+  ModifyApplicationEmoji,
   ModifyChannel,
   ModifyGuild,
   ModifyGuildChannelPositions,
@@ -416,6 +418,15 @@ export interface RestManager {
    */
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<CamelizedDiscordEmoji>
   /**
+   * Creates an emoji for the application.
+   *
+   * @param options - The parameters for the creation of the emoji.
+   * @returns An instance of the created {@link CamelizedDiscordEmoji}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#create-application-emoji}
+   */
+  createApplicationEmoji: (options: CreateApplicationEmoji) => Promise<CamelizedDiscordEmoji>
+  /**
    * Creates a new thread in a forum channel or media channel, and sends a message within the created thread.
    *
    * @param channelId - The ID of the forum channel to create the thread within.
@@ -693,6 +704,14 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/emoji#delete-guild-emoji}
    */
   deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
+  /**
+   * Deletes an emoji from the application.
+   *
+   * @param id - The ID of the emoji to delete.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#delete-application-emoji}
+   */
+  deleteApplicationEmoji: (id: BigString) => Promise<void>
   /**
    * Deletes a follow-up message to an interaction.
    *
@@ -1121,6 +1140,16 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
    */
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<CamelizedDiscordEmoji>
+  /**
+   * Edits an application emoji.
+   *
+   * @param id - The ID of the emoji to edit.
+   * @param options - The parameters for the edit of the emoji.
+   * @returns An instance of the updated {@link CamelizedDiscordEmoji}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#modify-application-emoji}
+   */
+  editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<CamelizedDiscordEmoji>
   /**
    * Edits a follow-up message to an interaction.
    *
@@ -1766,6 +1795,18 @@ export interface RestManager {
    */
   getEmoji: (guildId: BigString, emojiId: BigString) => Promise<CamelizedDiscordEmoji>
   /**
+   * Gets an application emoji by its ID.
+   *
+   * @param emojiId - The ID of the emoji to get.
+   * @returns An instance of {@link CamelizedDiscordEmoji}.
+   *
+   * @remarks
+   * Always includes the `user` object for the team member that uploaded the emoji from the app's settings, or for the bot user if uploaded using the API.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#get-application-emoji}
+   */
+  getApplicationEmoji: (emojiId: BigString) => Promise<CamelizedDiscordEmoji>
+  /**
    * Gets the list of emojis for a guild.
    *
    * @param guildId - The ID of the guild which to get the emojis of.
@@ -1777,6 +1818,17 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
   getEmojis: (guildId: BigString) => Promise<CamelizedDiscordEmoji[]>
+  /**
+   * Gets the list of emojis for an application.
+   *
+   * @returns An object with the array of {@link CamelizedDiscordEmoji} objects.
+   *
+   * @remarks
+   * Always includes the `user` object for the team member that uploaded the emoji from the app's settings, or for the bot user if uploaded using the API.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#list-application-emojis}
+   */
+  getApplicationEmojis: () => Promise<{ items: CamelizedDiscordEmoji[] }>
   /**
    * Gets a follow-up message to an interaction by the ID of the message.
    *

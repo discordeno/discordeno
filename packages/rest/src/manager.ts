@@ -633,6 +633,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason })
     },
 
+    async createApplicationEmoji(body) {
+      return await rest.post<DiscordEmoji>(rest.routes.applicationEmojis(rest.applicationId), { body })
+    },
+
     async createGlobalApplicationCommand(body, options) {
       const restOptions: MakeRequestOptions = { body }
 
@@ -731,6 +735,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteEmoji(guildId, id, reason) {
       await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
+    },
+
+    async deleteApplicationEmoji(id) {
+      await rest.delete(rest.routes.applicationEmoji(rest.applicationId, id))
     },
 
     async deleteFollowupMessage(token, messageId) {
@@ -873,6 +881,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editEmoji(guildId, id, body, reason) {
       return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body, reason })
+    },
+
+    async editApplicationEmoji(id, body) {
+      return await rest.patch<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, id), { body })
     },
 
     async editFollowupMessage(token, messageId, body) {
@@ -1149,8 +1161,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId))
     },
 
+    async getApplicationEmoji(emojiId) {
+      return await rest.get<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, emojiId))
+    },
+
     async getEmojis(guildId) {
       return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
+    },
+
+    async getApplicationEmojis() {
+      return await rest.get<{ items: DiscordEmoji[] }>(rest.routes.applicationEmojis(rest.applicationId))
     },
 
     async getFollowupMessage(token, messageId) {

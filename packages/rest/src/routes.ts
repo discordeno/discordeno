@@ -595,6 +595,14 @@ export function createRoutes(): RestRoutes {
       },
     },
 
+    applicationEmoji(applicationId, emojiId) {
+      return `/applications/${applicationId}/emojis/${emojiId}`
+    },
+
+    applicationEmojis(applicationId) {
+      return `/applications/${applicationId}/emojis`
+    },
+
     // User endpoints
     user(userId) {
       return `/users/${userId}`
