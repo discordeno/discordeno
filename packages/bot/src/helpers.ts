@@ -20,7 +20,6 @@ import type {
   CamelizedDiscordInvite,
   CamelizedDiscordInviteMetadata,
   CamelizedDiscordModifyGuildWelcomeScreen,
-  CamelizedDiscordPartialGuild,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordTokenExchange,
   CamelizedDiscordTokenRevocation,
@@ -343,7 +342,8 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.getGuild(guildId, options)), shardId: 0 })
     },
     getGuilds: async (bearerToken, options) => {
-      return await bot.rest.getGuilds(bearerToken, options)
+      // @ts-expect-error getGuilds returns partial guilds
+      return (await bot.rest.getGuilds(bearerToken, options)).map((res) => bot.transformers.guild(bot, { guild: snakelize(res), shardId: 0 }))
     },
     getGuildApplicationCommand: async (commandId, guildId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGuildApplicationCommand(commandId, guildId)))
@@ -818,7 +818,7 @@ export interface BotHelpers {
   getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>
   getGlobalApplicationCommands: () => Promise<ApplicationCommand[]>
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<Guild>
-  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
+  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<Guild>[]>
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>
   getGuildApplicationCommands: (guildId: BigString) => Promise<ApplicationCommand[]>
   getGuildPreview: (guildId: BigString) => Promise<CamelizedDiscordGuildPreview>

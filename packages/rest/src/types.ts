@@ -36,7 +36,6 @@ import type {
   CamelizedDiscordMemberWithUser,
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
-  CamelizedDiscordPartialGuild,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -1829,14 +1828,14 @@ export interface RestManager {
    *
    * @param bearerToken - The access token of the user, if unspecified the bot token is used instead
    * @param options - The parameters for the fetching of the guild.
-   * @returns An instance of {@link CamelizedDiscordGuild}.
+   * @returns An array of partial {@link CamelizedDiscordGuild}.
    *
    * @remarks
    * If used with an access token, the token needs to have the `guilds` scope
    *
    * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
    */
-  getGuilds: (bearerToken?: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
+  getGuilds: (bearerToken?: string, options?: GetUserGuilds) => Promise<Partial<CamelizedDiscordGuild>[]>
   /**
    * Gets a guild application command by its ID.
    *
