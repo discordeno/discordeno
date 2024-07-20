@@ -15,6 +15,8 @@
     "dotenv": "npm:dotenv",
     "node:zlib": "https://deno.land/std@0.176.0/node/zlib.ts",
     "node:assert": "https://deno.land/std@0.176.0/node/assert.ts",
+    "node:path": "https://deno.land/std@0.176.0/node/path.ts",
+    "node:url": "https://deno.land/std@0.176.0/node/url.ts",
     "@discordeno/utils": "./packages/utils/dist/esm/index.js",
     "@discordeno/types": "./packages/types/dist/esm/index.js",
     "@discordeno/rest": "./packages/rest/dist/esm/index.js",
