@@ -1,4 +1,4 @@
-import { type Bot, type DiscordAvatarDecorationData, iconHashToBigInt } from '../index.js'
+import { type AvatarDecorationData, type Bot, type DiscordAvatarDecorationData, iconHashToBigInt } from '../index.js'
 
 export function transformAvatarDecorationData(bot: Bot, payload: DiscordAvatarDecorationData): AvatarDecorationData {
   const data = {} as AvatarDecorationData
@@ -8,11 +8,4 @@ export function transformAvatarDecorationData(bot: Bot, payload: DiscordAvatarDe
   if (props.skuId && payload.sku_id) data.skuId = bot.transformers.snowflake(payload.sku_id)
 
   return data
-}
-
-export interface AvatarDecorationData {
-  /** the avatar decoration hash */
-  asset: bigint
-  /** id of the avatar decoration's SKU */
-  skuId: bigint
 }

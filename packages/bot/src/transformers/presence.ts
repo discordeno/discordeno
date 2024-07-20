@@ -1,5 +1,5 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { Activity, Bot, User } from '../index.js'
+import type { Bot, PresenceUpdate } from '../index.js'
 
 export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
   const presence = {
@@ -13,14 +13,4 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): Pre
   } as PresenceUpdate
 
   return bot.transformers.customizers.presence(bot, payload, presence)
-}
-
-export interface PresenceUpdate {
-  desktop?: string
-  mobile?: string
-  web?: string
-  user: User
-  guildId: bigint
-  status: PresenceStatus
-  activities: Activity[]
 }

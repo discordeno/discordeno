@@ -1,6 +1,5 @@
 import type { DiscordEmoji } from '@discordeno/types'
-import type { Bot } from '../../index.js'
-import type { Emoji } from '../emoji.js'
+import type { Bot, Emoji } from '../../index.js'
 
 export function transformEmojiToDiscordEmoji(bot: Bot, payload: Emoji): DiscordEmoji {
   return {

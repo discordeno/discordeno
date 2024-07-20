@@ -7,7 +7,7 @@
     "require": "./dist/cjs/index.cjs",
     "types": "./dist/types/index.d.ts"
   },
-  "bin": "./bin/disocrdeno.js",
+  "bin": "./bin/discordeno.js",
   "types": "./dist/types/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
@@ -24,6 +24,7 @@
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js discordeno",
     "test:deno-unit": "swc --strip-leading-paths tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
+    "test:bun-unit": "node ../../scripts/fixBunTestExtension.js && bun test bunTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
     "test:test-type": "tsc --project tests/tsconfig.json"
@@ -34,7 +35,9 @@
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "find-up": "^7.0.0",
+    "typescript": "^5.5.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
@@ -49,7 +52,6 @@
     "mocha": "^10.5.1",
     "sinon": "^18.0.0",
     "ts-node": "^10.9.2",
-    "tsconfig": "*",
-    "typescript": "^5.5.3"
+    "tsconfig": "*"
   }
 }

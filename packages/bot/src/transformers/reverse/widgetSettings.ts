@@ -1,6 +1,5 @@
 import type { DiscordGuildWidgetSettings } from '@discordeno/types'
-import type { Bot } from '../../index.js'
-import type { GuildWidgetSettings } from '../widgetSettings.js'
+import type { Bot, GuildWidgetSettings } from '../../index.js'
 
 export function transformWidgetSettingsToDiscordWidgetSettings(_bot: Bot, payload: GuildWidgetSettings): DiscordGuildWidgetSettings {
   return {

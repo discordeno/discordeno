@@ -1,8 +1,7 @@
 import type { DiscordMember, DiscordUser } from '@discordeno/types'
 import { iconBigintToHash } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
-import type { Member } from '../member.js'
-import type { User } from '../user.js'
+import type { Member, User } from '../types.js'
 
 export function transformUserToDiscordUser(_bot: Bot, payload: User): DiscordUser {
   return {

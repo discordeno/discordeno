@@ -1,5 +1,5 @@
-import type { AttachmentFlags, DiscordAttachment } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordAttachment } from '@discordeno/types'
+import type { Attachment, Bot } from '../index.js'
 
 export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attachment {
   const props = bot.transformers.desiredProperties.attachment
@@ -21,39 +21,4 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
   if (props.flags) attachment.flags = payload.flags
 
   return bot.transformers.customizers.attachment(bot, payload, attachment)
-}
-
-export interface Attachment {
-  /** Name of file attached */
-  filename: string
-  /** The title of the file */
-  title?: string
-  /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
-  contentType?: string
-  /** Size of file in bytes */
-  size: number
-  /** Source url of file */
-  url: string
-  /** A proxied url of file */
-  proxyUrl: string
-  /** Attachment id */
-  id: bigint
-  /** description for the file (max 1024 characters) */
-  description?: string
-  /** Height of file (if image) */
-  height?: number
-  /** Width of file (if image) */
-  width?: number
-  /**
-   * whether this attachment is ephemeral.
-   * Ephemeral attachments will automatically be removed after a set period of time.
-   * Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
-   */
-  ephemeral?: boolean
-  /** The duration of the audio file for a voice message */
-  duration_secs?: number
-  /** A base64 encoded bytearray representing a sampled waveform for a voice message */
-  waveform?: string
-  /** Attachment flags combined as a bitfield */
-  flags?: AttachmentFlags
 }

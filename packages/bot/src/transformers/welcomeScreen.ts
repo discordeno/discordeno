@@ -1,5 +1,5 @@
 import type { DiscordWelcomeScreen } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { Bot, WelcomeScreen } from '../index.js'
 
 export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen): WelcomeScreen {
   const welcomeScreen = {
@@ -13,14 +13,4 @@ export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen):
   } as WelcomeScreen
 
   return bot.transformers.customizers.welcomeScreen(bot, payload, welcomeScreen)
-}
-
-export interface WelcomeScreen {
-  description?: string
-  welcomeChannels: Array<{
-    channelId: bigint
-    description: string
-    emojiId?: bigint
-    emojiName?: string
-  }>
 }

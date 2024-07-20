@@ -1,11 +1,5 @@
-import type {
-  DiscordGuildOnboarding,
-  DiscordGuildOnboardingMode,
-  DiscordGuildOnboardingPrompt,
-  DiscordGuildOnboardingPromptOption,
-  DiscordGuildOnboardingPromptType,
-} from '@discordeno/types'
-import { type Bot, type Emoji } from '../index.js'
+import type { DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordGuildOnboardingPromptOption } from '@discordeno/types'
+import { type Bot, type GuildOnboarding, type GuildOnboardingPrompt, type GuildOnboardingPromptOption } from '../index.js'
 
 export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboarding): GuildOnboarding {
   const props = bot.transformers.desiredProperties.guildOnboarding
@@ -22,7 +16,7 @@ export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboardi
 }
 
 export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOnboardingPrompt): GuildOnboardingPrompt {
-  const props = bot.transformers.desiredProperties.guildOnboarding.prompts
+  const props = bot.transformers.desiredProperties.guildOnboardingPrompt
   const prompt = {} as GuildOnboardingPrompt
 
   if (props.id && payload.id) prompt.id = bot.transformers.snowflake(prompt.id)
@@ -37,7 +31,7 @@ export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOn
 }
 
 export function transformGuildOnboardingPromptOption(bot: Bot, payload: DiscordGuildOnboardingPromptOption): GuildOnboardingPromptOption {
-  const props = bot.transformers.desiredProperties.guildOnboarding.prompts.options
+  const props = bot.transformers.desiredProperties.guildOnboardingPromptOption
   const option = {} as GuildOnboardingPromptOption
 
   if (props.id && payload.id) option.id = bot.transformers.snowflake(payload.id)
@@ -48,49 +42,4 @@ export function transformGuildOnboardingPromptOption(bot: Bot, payload: DiscordG
   if (props.description && payload.description) option.description = payload.description
 
   return option
-}
-
-export interface GuildOnboarding {
-  /** ID of the guild this onboarding is part of */
-  guildId: bigint
-  /** Prompts shown during onboarding and in customize community */
-  prompts: GuildOnboardingPrompt[]
-  /** Channel IDs that members get opted into automatically */
-  defaultChannelIds: bigint[]
-  /** Whether onboarding is enabled in the guild */
-  enabled: boolean
-  /** Current mode of onboarding */
-  mode: DiscordGuildOnboardingMode
-}
-
-export interface GuildOnboardingPrompt {
-  /** ID of the prompt */
-  id: bigint
-  /** Type of prompt */
-  type: DiscordGuildOnboardingPromptType
-  /** Options available within the prompt */
-  options: GuildOnboardingPromptOption[]
-  /** Title of the prompt */
-  title: string
-  /** Indicates whether users are limited to selecting one option for the prompt */
-  singleSelect: boolean
-  /** Indicates whether the prompt is required before a user completes the onboarding flow */
-  required: boolean
-  /** Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab */
-  inOnboarding: boolean
-}
-
-export interface GuildOnboardingPromptOption {
-  /** ID of the prompt option */
-  id: bigint
-  /** IDs for channels a member is added to when the option is selected */
-  channelIds: bigint[]
-  /** IDs for roles assigned to a member when the option is selected */
-  roleIds: bigint[]
-  /** Emoji of the option */
-  emoji: Emoji
-  /** Title of the option */
-  title: string
-  /** Description of the option */
-  description: string | undefined
 }

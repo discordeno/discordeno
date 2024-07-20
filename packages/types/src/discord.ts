@@ -2836,29 +2836,32 @@ export interface DiscordTemplate {
   /** The Id of the guild this template is based on */
   source_guild_id: string
   /** The guild snapshot this template contains */
-  serialized_source_guild: Omit<
-    PickPartial<
-      DiscordGuild,
-      | 'name'
-      | 'description'
-      | 'verification_level'
-      | 'default_message_notifications'
-      | 'explicit_content_filter'
-      | 'preferred_locale'
-      | 'afk_timeout'
-      | 'channels'
-      | 'afk_channel_id'
-      | 'system_channel_id'
-      | 'system_channel_flags'
-    >,
-    'roles'
-  > & {
-    roles: Array<
-      Omit<PickPartial<DiscordRole, 'name' | 'color' | 'hoist' | 'mentionable' | 'permissions' | 'icon' | 'unicode_emoji'>, 'id'> & { id: number }
-    >
-  }
-  /** Whether the template has un-synced changes */
+  serialized_source_guild: DiscordTemplateSerializedSourceGuild
   is_dirty: boolean | null
+}
+
+export type DiscordTemplateSerializedSourceGuild = Omit<
+  PickPartial<
+    DiscordGuild,
+    | 'name'
+    | 'description'
+    | 'verification_level'
+    | 'default_message_notifications'
+    | 'explicit_content_filter'
+    | 'preferred_locale'
+    | 'afk_timeout'
+    | 'channels'
+    | 'afk_channel_id'
+    | 'system_channel_id'
+    | 'system_channel_flags'
+  >,
+  'roles'
+> & {
+  roles: Array<
+    Omit<PickPartial<DiscordRole, 'name' | 'color' | 'hoist' | 'mentionable' | 'permissions' | 'icon' | 'unicode_emoji'>, 'id'> & {
+      id: number
+    }
+  >
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-add */
@@ -3385,7 +3388,7 @@ export interface DiscordGuildOnboardingPromptOption {
   /** Title of the option */
   title: string
   /** Description of the option */
-  description: string | undefined
+  description: string | null
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types */

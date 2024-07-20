@@ -14,7 +14,7 @@
       "outputs": ["coverage/**"]
     },
     "test:unit": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build", "build:type"],
       "outputs": ["coverage/**"]
     },
     "test:integration": {
@@ -25,11 +25,11 @@
       "dependsOn": ["^build:type"]
     },
     "test:deno-unit": {
-      "dependsOn": ["build", "^build"],
+      "dependsOn": ["^build", "build", "build:type"],
       "outputs": ["denoTestsDist/**"]
     },
     "test:bun-unit": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build", "build:type"],
       "outputs": ["bunTestsDist/**"]
     },
     "test:e2e": {

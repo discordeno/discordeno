@@ -1,9 +1,8 @@
-import type { Bot, DiscordGuildApplicationCommandPermissions } from '../../index.js'
-import type { ApplicationCommandPermission } from '../applicationCommandPermission.js'
+import type { Bot, DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions } from '../../index.js'
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission(
   bot: Bot,
-  payload: ApplicationCommandPermission,
+  payload: GuildApplicationCommandPermissions,
 ): DiscordGuildApplicationCommandPermissions {
   return {
     id: bot.transformers.reverse.snowflake(payload.id),

@@ -29,6 +29,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
     "chokidar-cli": "^3.0.0",
+    "discordeno": "19.0.0-alpha.1",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "turbo": "^2.0.6",

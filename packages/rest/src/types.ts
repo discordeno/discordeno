@@ -1,7 +1,6 @@
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
-  ApplicationCommandPermissions,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
@@ -10,6 +9,7 @@ import type {
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
+  CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordApplicationRoleConnection,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
@@ -1013,7 +1013,7 @@ export interface RestManager {
     guildId: BigString,
     commandId: BigString,
     bearerToken: string,
-    options: ApplicationCommandPermissions[],
+    options: CamelizedDiscordApplicationCommandPermissions[],
   ) => Promise<CamelizedDiscordGuildApplicationCommandPermissions>
   /**
    * Edits an automod rule.

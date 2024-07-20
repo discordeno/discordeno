@@ -1,5 +1,5 @@
 import type { BigString, DiscordInviteStageInstance, DiscordMember } from '@discordeno/types'
-import type { Bot, Member } from '../index.js'
+import type { Bot, InviteStageInstance } from '../index.js'
 
 export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }): InviteStageInstance {
   const props = bot.transformers.desiredProperties.inviteStageInstance
@@ -20,15 +20,4 @@ export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteSta
   if (props.topic && payload.topic) inviteStageInstance.topic = payload.topic
 
   return bot.transformers.customizers.inviteStageInstance(bot, payload, inviteStageInstance)
-}
-
-export interface InviteStageInstance {
-  /** The members speaking in the Stage */
-  members: Partial<Member>[]
-  /** The number of users in the Stage */
-  participantCount: number
-  /** The number of users speaking in the Stage */
-  speakerCount: number
-  /** The topic of the Stage instance (1-120 characters) */
-  topic: string
 }

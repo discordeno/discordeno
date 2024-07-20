@@ -1,6 +1,5 @@
 import type { DiscordTeam } from '@discordeno/types'
-import { type Bot, iconBigintToHash } from '../../index.js'
-import type { Team } from '../team.js'
+import { type Bot, type Team, iconBigintToHash } from '../../index.js'
 
 export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam {
   const id = payload.id.toString()

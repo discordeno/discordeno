@@ -1,11 +1,5 @@
-import type {
-  DiscordScheduledEvent,
-  DiscordScheduledEventEntityMetadata,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-} from '@discordeno/types'
-import { type Bot, type User, iconHashToBigInt } from '../index.js'
+import type { DiscordScheduledEvent } from '@discordeno/types'
+import { type Bot, type ScheduledEvent, iconHashToBigInt } from '../index.js'
 
 export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {
   const props = bot.transformers.desiredProperties.scheduledEvent
@@ -29,39 +23,4 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
   if (props.image && payload.image) scheduledEvent.image = iconHashToBigInt(payload.image)
 
   return bot.transformers.customizers.scheduledEvent(bot, payload, scheduledEvent)
-}
-
-export interface ScheduledEvent {
-  /** the id of the scheduled event */
-  id: bigint
-  /** the guild id which the scheduled event belongs to */
-  guildId: bigint
-  /** the channel id in which the scheduled event will be hosted if specified */
-  channelId?: bigint
-  /** the id of the user that created the scheduled event */
-  creatorId?: bigint
-  /** the name of the scheduled event */
-  name: string
-  /** the description of the scheduled event */
-  description?: string
-  /** the time the scheduled event will start */
-  scheduledStartTime: number
-  /** the time the scheduled event will end if it does end. */
-  scheduledEndTime?: number
-  /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel
-  /** the status of the scheduled event */
-  status: ScheduledEventStatus
-  /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType
-  /** any additional id of the hosting entity associated with event */
-  entityId?: bigint
-  /** the location for the scheduled event */
-  location?: DiscordScheduledEventEntityMetadata['location']
-  /** the user that created the scheduled event */
-  creator?: User
-  /** the number of users subscribed to the scheduled event */
-  userCount?: number
-  /** the cover image hash of the scheduled event */
-  image?: bigint
 }

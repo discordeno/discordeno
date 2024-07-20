@@ -1,5 +1,4 @@
-import type { Bot, DiscordApplicationCommandOption } from '../../index.js'
-import type { ApplicationCommandOption } from '../applicationCommandOption.js'
+import type { ApplicationCommandOption, Bot, DiscordApplicationCommandOption } from '../../index.js'
 
 export function transformApplicationCommandOptionToDiscordApplicationCommandOption(
   bot: Bot,

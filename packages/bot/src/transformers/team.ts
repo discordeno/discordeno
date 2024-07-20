@@ -1,5 +1,5 @@
-import type { DiscordTeam, DiscordTeamMemberRole, TeamMembershipStates } from '@discordeno/types'
-import { type Bot, type User, iconHashToBigInt } from '../index.js'
+import type { DiscordTeam } from '@discordeno/types'
+import { type Bot, type Team, iconHashToBigInt } from '../index.js'
 
 export function transformTeam(bot: Bot, payload: DiscordTeam): Team {
   const id = bot.transformers.snowflake(payload.id)
@@ -18,17 +18,4 @@ export function transformTeam(bot: Bot, payload: DiscordTeam): Team {
   } as Team
 
   return bot.transformers.customizers.team(bot, payload, team)
-}
-
-export interface Team {
-  icon?: bigint | undefined
-  id: bigint
-  name: string
-  ownerUserId: bigint
-  members: Array<{
-    membershipState: TeamMembershipStates
-    teamId: bigint
-    user: User
-    role: DiscordTeamMemberRole
-  }>
 }

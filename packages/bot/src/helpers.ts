@@ -2,11 +2,11 @@ import type { CreateWebhook } from '@discordeno/rest'
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
-  ApplicationCommandPermissions,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
   CamelizedDiscordAccessTokenResponse,
+  CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordApplicationRoleConnection,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
@@ -94,31 +94,34 @@ import type {
 } from '@discordeno/types'
 import { snakelize } from '@discordeno/utils'
 import type { Bot } from './bot.js'
-import type { Application } from './transformers/application.js'
-import type { ApplicationCommand } from './transformers/applicationCommand.js'
-import type { ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
-import type { AutoModerationRule } from './transformers/automodRule.js'
-import type { Channel } from './transformers/channel.js'
-import type { Emoji } from './transformers/emoji.js'
-import { type Entitlement } from './transformers/entitlement.js'
-import type { Guild } from './transformers/guild.js'
-import type { Integration } from './transformers/integration.js'
-import type { Invite } from './transformers/invite.js'
-import type { Member } from './transformers/member.js'
-import type { Message } from './transformers/message.js'
-import type { GuildOnboarding } from './transformers/onboarding.js'
-import type { Role } from './transformers/role.js'
-import type { ScheduledEvent } from './transformers/scheduledEvent.js'
-import type { Sku } from './transformers/sku.js'
-import type { StageInstance } from './transformers/stageInstance.js'
-import type { Sticker, StickerPack } from './transformers/sticker.js'
-import type { Template } from './transformers/template.js'
-import type { ThreadMember } from './transformers/threadMember.js'
-import type { User } from './transformers/user.js'
-import type { Webhook } from './transformers/webhook.js'
-import type { WelcomeScreen } from './transformers/welcomeScreen.js'
-import type { GuildWidget } from './transformers/widget.js'
-import type { GuildWidgetSettings } from './transformers/widgetSettings.js'
+import type {
+  Application,
+  ApplicationCommand,
+  AutoModerationRule,
+  Channel,
+  Emoji,
+  Entitlement,
+  Guild,
+  GuildApplicationCommandPermissions,
+  GuildOnboarding,
+  GuildWidget,
+  GuildWidgetSettings,
+  Integration,
+  Invite,
+  Member,
+  Message,
+  Role,
+  ScheduledEvent,
+  Sku,
+  StageInstance,
+  Sticker,
+  StickerPack,
+  Template,
+  ThreadMember,
+  User,
+  Webhook,
+  WelcomeScreen,
+} from './transformers/index.js'
 
 export function createBotHelpers(bot: Bot): BotHelpers {
   return {
@@ -740,8 +743,8 @@ export interface BotHelpers {
     guildId: BigString,
     commandId: BigString,
     bearerToken: string,
-    options: ApplicationCommandPermissions[],
-  ) => Promise<ApplicationCommandPermission>
+    options: CamelizedDiscordApplicationCommandPermissions[],
+  ) => Promise<GuildApplicationCommandPermissions>
   editAutomodRule: (
     guildId: BigString,
     ruleId: BigString,
@@ -791,8 +794,11 @@ export interface BotHelpers {
     guildId: BigString,
     commandId: BigString,
     options?: GetApplicationCommandPermissionOptions,
-  ) => Promise<ApplicationCommandPermission>
-  getApplicationCommandPermissions: (guildId: BigString, options?: GetApplicationCommandPermissionOptions) => Promise<ApplicationCommandPermission[]>
+  ) => Promise<GuildApplicationCommandPermissions>
+  getApplicationCommandPermissions: (
+    guildId: BigString,
+    options?: GetApplicationCommandPermissionOptions,
+  ) => Promise<GuildApplicationCommandPermissions[]>
   getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<CamelizedDiscordAuditLog>
   getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<AutoModerationRule>
   getAutomodRules: (guildId: BigString) => Promise<AutoModerationRule[]>

@@ -1,5 +1,5 @@
 import type { DiscordGuildWidgetSettings } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { Bot, GuildWidgetSettings } from '../index.js'
 
 export function transformWidgetSettings(bot: Bot, payload: DiscordGuildWidgetSettings): GuildWidgetSettings {
   const widget = {
@@ -8,9 +8,4 @@ export function transformWidgetSettings(bot: Bot, payload: DiscordGuildWidgetSet
   }
 
   return bot.transformers.customizers.widgetSettings(bot, payload, widget)
-}
-
-export interface GuildWidgetSettings {
-  channelId?: string
-  enabled: boolean
 }

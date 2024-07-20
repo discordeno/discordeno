@@ -1,5 +1,5 @@
 import type { DiscordGuildWidget } from '@discordeno/types'
-import { type Bot, iconHashToBigInt } from '../index.js'
+import { type Bot, type GuildWidget, iconHashToBigInt } from '../index.js'
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWidget {
   const widget = {
@@ -23,24 +23,4 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWid
   } as GuildWidget
 
   return bot.transformers.customizers.widget(bot, payload, widget)
-}
-
-export interface GuildWidget {
-  id: bigint
-  name: string
-  members: Array<{
-    id: bigint
-    username: string
-    discriminator: string
-    avatar?: bigint
-    status: string
-    avatarUrl: string
-  }>
-  channels: Array<{
-    id: bigint
-    name: string
-    position: number
-  }>
-  instant_invite: string
-  presenceCount: number
 }
