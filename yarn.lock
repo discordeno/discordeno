@@ -179,7 +179,7 @@ __metadata:
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
-    chai-as-promised: "npm:^7.1.1"
+    chai-as-promised: "npm:^8.0.0"
     dotenv: "npm:^16.4.5"
     mocha: "npm:^10.5.1"
     sinon: "npm:^18.0.0"
@@ -1119,14 +1119,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai-as-promised@npm:^7.1.1":
-  version: 7.1.1
-  resolution: "chai-as-promised@npm:7.1.1"
+"chai-as-promised@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "chai-as-promised@npm:8.0.0"
   dependencies:
-    check-error: "npm:^1.0.2"
+    check-error: "npm:^2.0.0"
   peerDependencies:
-    chai: ">= 2.1.2 < 5"
-  checksum: 5d9ecab37b313047f5ea25d00b1cb6e7f2710c6e2f57d91aed7cfed5008d995cb65ea723af4e5d782bafd9a6eff5a4267af53dfe7212dc10dd1d92b9127bc531
+    chai: ">= 2.1.2 < 6"
+  checksum: 91d6a49caac7965440b8f8af421ebe6f060a3b5523599ae143816d08fc19d9a971ea2bc5401f82ce88d15d8bc7b64d356bf3e53542ace9e2f25cc454164d3247
   languageName: node
   linkType: hard
 
@@ -1160,14 +1160,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"check-error@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "check-error@npm:1.0.2"
-  checksum: 011e74b2eac49bd42c5610f15d6949d982e7ec946247da0276278a90e7476e6b88d25d3c605a4115d5e3575312e1f5a11e91c82290c8a47ca275c92f5d0981db
-  languageName: node
-  linkType: hard
-
-"check-error@npm:^2.1.1":
+"check-error@npm:^2.0.0, check-error@npm:^2.1.1":
   version: 2.1.1
   resolution: "check-error@npm:2.1.1"
   checksum: d785ed17b1d4a4796b6e75c765a9a290098cf52ff9728ce0756e8ffd4293d2e419dd30c67200aee34202463b474306913f2fcfaf1890641026d9fc6966fea27a
