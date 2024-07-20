@@ -2,8 +2,8 @@ import { expect } from 'chai'
 import { findUp } from 'find-up'
 import { describe, it } from 'mocha'
 import ts from 'typescript'
+import { typescriptOptions } from '../src/bin/config.js'
 import { getPropertyDependencies, isPropertyDesired } from '../src/bin/generate/desiredProperty.js'
-import { typescriptOptions } from '../src/bin/generate/typescript.js'
 import { defineConfig } from '../src/index.js'
 
 describe('discordeno generate', () => {
@@ -26,7 +26,10 @@ describe('discordeno generate', () => {
       throw new Error('Transformers types file not found!')
     }
 
-    const program = ts.createProgram([typesFile], typescriptOptions)
+    const program = ts.createProgram([typesFile], {
+      ...typescriptOptions,
+      noEmit: true,
+    })
 
     // Check if typescript is producing type errors for the program
     const emitResult = program.emit()
