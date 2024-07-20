@@ -1529,7 +1529,7 @@ __metadata:
     lint-staged: "npm:^15.2.7"
     turbo: "npm:^2.0.6"
     typedoc: "npm:^0.26.4"
-    typedoc-plugin-markdown: "npm:^4.1.2"
+    typedoc-plugin-markdown: "npm:^4.2.1"
     typescript: "npm:^5.5.3"
   languageName: unknown
   linkType: soft
@@ -3963,12 +3963,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc-plugin-markdown@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "typedoc-plugin-markdown@npm:4.1.2"
+"typedoc-plugin-markdown@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "typedoc-plugin-markdown@npm:4.2.1"
   peerDependencies:
     typedoc: 0.26.x
-  checksum: 6e62150209aae7d55804fe5df83639ffe7625bd5bac80840a6650af40ed8c9b0e560d106a4b2912e167fc73762c3beaef5e154fa44457b7f67cf9fced90b5037
+  checksum: 472f4ef986db7719bf0af1275c40657abe811f0b3d8b2361434f387163c0eb9318e890b57d60f06796269fcf2823e40232ba0e5f12fed70e3471e7d8894a169d
   languageName: node
   linkType: hard
 

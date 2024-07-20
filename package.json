@@ -34,7 +34,7 @@
     "lint-staged": "^15.2.7",
     "turbo": "^2.0.6",
     "typedoc": "^0.26.4",
-    "typedoc-plugin-markdown": "^4.1.2",
+    "typedoc-plugin-markdown": "^4.2.1",
     "typescript": "^5.5.3"
   },
   "engines": {
