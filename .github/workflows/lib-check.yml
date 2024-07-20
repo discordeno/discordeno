@@ -137,6 +137,7 @@ jobs:
     name: Bot
     needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
+    secrets: inherit
     with:
       package: bot
   # https://github.com/orgs/community/discussions/12835
@@ -152,6 +153,7 @@ jobs:
     name: Bot
     needs: bot-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
+    secrets: inherit
     with:
       package: bot
 
@@ -159,12 +161,14 @@ jobs:
     name: Discordeno
     needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
+    secrets: inherit
     with:
       package: discordeno
   discordeno-other-runtime-test:
     name: Discordeno
     needs: discordeno-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
+    secrets: inherit
     with:
       package: discordeno
 
@@ -172,18 +176,21 @@ jobs:
     name: Gateway
     needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
+    secrets: inherit
     with:
       package: gateway
   gateway-integration-test:
     name: Gateway
     needs: build-dist
     uses: ./.github/workflows/integration-test.yml
+    secrets: inherit
     with:
       package: gateway
   gateway-other-runtime-test:
     name: Gateway
     needs: [gateway-unit-test, gateway-integration-test]
     uses: ./.github/workflows/other-runtime-unit-test.yml
+    secrets: inherit
     with:
       package: gateway
 
@@ -191,6 +198,7 @@ jobs:
     name: Rest
     needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
+    secrets: inherit
     with:
       package: rest
   # https://github.com/orgs/community/discussions/12835
@@ -206,6 +214,7 @@ jobs:
     name: Rest
     needs: rest-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
+    secrets: inherit
     with:
       package: rest
 
@@ -213,12 +222,14 @@ jobs:
     name: Types
     needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
+    secrets: inherit
     with:
       package: types
   types-other-runtime-test:
     name: Types
     needs: types-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
+    secrets: inherit
     with:
       package: types
 
@@ -226,11 +237,13 @@ jobs:
     name: Utils
     needs: [build-dist, build-type-and-test]
     uses: ./.github/workflows/unit-test.yml
+    secrets: inherit
     with:
       package: utils
   utils-other-runtime-test:
     name: Utils
     needs: utils-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
+    secrets: inherit
     with:
       package: utils
