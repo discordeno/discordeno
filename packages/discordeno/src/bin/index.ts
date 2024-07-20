@@ -10,9 +10,9 @@ program.name('discordeno').description('CLI to discordeno utilities').version('0
 program
   .command('generate')
   .description('Generate types/schema for discordeno')
-  .option('-c, --config <path>', 'Path to the config file', 'discordeno.config.js')
+  .option('-c, --config [path]', 'Path to the config file')
   .action(async (options) => {
-    const configFile = await findUp(options.config, { allowSymlinks: true, type: 'file' })
+    const configFile = await findUp([options.config, 'discordeno.config.js', 'discordeno.config.mjs'], { allowSymlinks: true, type: 'file' })
 
     if (!configFile) {
       throw new Error('Could not find the config file')
