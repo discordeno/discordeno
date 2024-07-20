@@ -73,13 +73,8 @@ async function importConfig(file: string) {
 function buildConfig(path: string) {
   const createdFiles: Record<string, string> = {}
 
-  const host = ts.createCompilerHost(typescriptOptions)
-  host.writeFile = (fileName: string, contents: string) => {
-    createdFiles[fileName] = contents
-  }
-
-  const program = ts.createProgram([path], typescriptOptions, host)
-  program.emit()
+  const program = ts.createProgram([path], typescriptOptions)
+  program.emit(undefined, (file, text) => (createdFiles[file] = text))
 
   const outFileName = path.replaceAll('\\', '/').replace(/\.m?[tj]s/i, '.js')
   return createdFiles[outFileName]
