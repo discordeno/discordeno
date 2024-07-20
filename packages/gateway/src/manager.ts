@@ -66,16 +66,16 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         )
       },
       async checkIfReshardingIsNeeded() {
-        logger.warn(`[Resharding] Checking if resharding is needed.`)
+        gateway.logger.warn(`[Resharding] Checking if resharding is needed.`)
         // Resharding is disabled.
         if (!gateway.resharding.enabled) return { needed: false }
-        logger.warn(`[Resharding] Resharding is enabled.`)
+        gateway.logger.warn(`[Resharding] Resharding is enabled.`)
 
         const sessionInfo = await gateway.resharding.getSessionInfo()
-        logger.warn(`[Resharding] Session info retrieved.`)
+        gateway.logger.warn(`[Resharding] Session info retrieved.`)
         // Don't have enough identify limits to try resharding
         if (sessionInfo.sessionStartLimit.remaining < sessionInfo.shards) return { needed: false, info: sessionInfo }
-        logger.warn(`[Resharding] Able to reshard, checking whether necessary now.`)
+        gateway.logger.warn(`[Resharding] Able to reshard, checking whether necessary now.`)
 
         // 2500 is the max amount of guilds a single shard can handle
         // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
@@ -83,12 +83,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         const percentage = ((2500 * sessionInfo.shards) / (gateway.totalShards * 1000)) * 100
         // Less than necessary% being used so do nothing
         if (percentage < gateway.resharding.shardsFullPercentage) return { needed: false, info: sessionInfo }
-        logger.warn(`[Resharding] Resharding is needed.`)
+        gateway.logger.warn(`[Resharding] Resharding is needed.`)
 
         return { needed: true, info: sessionInfo }
       },
       async reshard(info) {
-        logger.warn(`[Resharding] Starting the reshard process. Previous total shards. ${gateway.totalShards}`)
+        gateway.logger.warn(`[Resharding] Starting the reshard process. Previous total shards. ${gateway.totalShards}`)
         // Set values on gateway
         gateway.totalShards = info.shards
         // Handles preparing mid sized bots for LBS
@@ -97,7 +97,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         if (typeof info.firstShardId === 'number') gateway.firstShardId = info.firstShardId
         // Set last shard id if provided in info
         if (typeof info.lastShardId === 'number') gateway.lastShardId = info.lastShardId
-        logger.warn(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
+        gateway.logger.warn(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
 
         // Resetting buckets
         gateway.buckets.clear()
@@ -114,7 +114,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         })
       },
       async tellWorkerToPrepare(workerId, shardId, bucketId) {
-        logger.warn(`[Resharding] Telling worker to prepare. Worker: ${workerId} | Shard: ${shardId} | Bucket: ${bucketId}`)
+        gateway.logger.warn(`[Resharding] Telling worker to prepare. Worker: ${workerId} | Shard: ${shardId} | Bucket: ${bucketId}`)
         const shard = new Shard({
           id: shardId,
           connection: {
@@ -141,9 +141,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             await gateway.identify(shardId)
           },
           shardIsReady: async () => {
-            logger.debug(`[Shard] Shard #${shardId} is ready`)
+            gateway.logger.debug(`[Shard] Shard #${shardId} is ready`)
             await delay(gateway.spawnShardDelay)
-            logger.debug(`[Shard] Resolving shard identify request`)
+            gateway.logger.debug(`[Shard] Resolving shard identify request`)
             gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
         })
@@ -162,7 +162,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         return await new Promise((resolve) => {
           // Mark that we are making an identify request so another is not made.
           bucket.identifyRequests.push(resolve)
-          logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+          gateway.logger.debug(`[Gateway] identifying shard #(${shardId}).`)
           // This will trigger identify and when READY is received it will resolve the above request.
           shard?.identify().then(async () => {
             // Tell the manager that this shard is online
@@ -171,17 +171,17 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         })
       },
       async updateGuildsShardId(guildIds, shardId) {
-        logger.debug(
+        gateway.logger.debug(
           `[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}. Override this function to update your cache if you need to.`,
         )
       },
       async shardIsPending(shard) {
         // Save this in pending at the moment, until all shards are online
         gateway.resharding.pendingShards.set(shard.id, shard)
-        logger.warn(`[Resharding] Shard #${shard.id} is now pending`)
+        gateway.logger.warn(`[Resharding] Shard #${shard.id} is now pending`)
         // Check if all shards are now online.
         if (gateway.lastShardId - gateway.firstShardId + 1 > gateway.resharding.pendingShards.size) return
-        logger.warn(`[Resharding] All shards are now online.`)
+        gateway.logger.warn(`[Resharding] All shards are now online.`)
 
         // New shards start processing events
         for (const shard of gateway.resharding.pendingShards.values()) {
@@ -207,10 +207,10 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           }
         }
 
-        logger.warn(`[Resharding] Shutting down old shards.`)
+        gateway.logger.warn(`[Resharding] Shutting down old shards.`)
         // Close old shards
         await gateway.shutdown(ShardSocketCloseCodes.Resharded, 'Resharded!', false)
-        logger.warn(`[Resharding] Completed.`)
+        gateway.logger.warn(`[Resharding] Completed.`)
 
         // Replace old shards
         gateway.shards = gateway.resharding.shards
