@@ -27,7 +27,7 @@
     "setup-dd": "husky"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.0",
+    "@biomejs/biome": "^1.8.3",
     "chokidar-cli": "^3.0.0",
     "discordeno": "19.0.0-alpha.1",
     "husky": "^9.0.11",
