@@ -30,7 +30,7 @@
     "@biomejs/biome": "^1.8.3",
     "chokidar-cli": "^3.0.0",
     "discordeno": "19.0.0-alpha.1",
-    "husky": "^9.0.11",
+    "husky": "^9.1.1",
     "lint-staged": "^15.2.7",
     "turbo": "^2.0.6",
     "typedoc": "^0.26.4",
