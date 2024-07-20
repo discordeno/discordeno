@@ -31,17 +31,17 @@ export class Queue {
   /** The timeout for the deletion of this queue */
   deleteQueueTimeout?: NodeJS.Timeout
   /**
-   * The authorization being used for the requests in this queue
+   * The identifier for this request, may be the request authorization or fallback to the bot auth
    *
    * @remarks
-   * This is also used to get the key this queue is stored as in the queue mapping of the rest manager
+   * This is used to get the identify this queue from the queue mapping of the rest manager
    */
-  requestAuthorization: string
+  identifier: string
 
   constructor(rest: RestManager, options: QueueOptions) {
     this.rest = rest
     this.url = options.url
-    this.requestAuthorization = options.requestAuthorization
+    this.identifier = options.identifier
 
     if (options.interval) this.interval = options.interval
     if (options.max) this.max = options.max
@@ -77,7 +77,7 @@ export class Queue {
     this.processing = true
 
     while (this.waiting.length > 0) {
-      this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url} process waiting while loop ran.`)
+      this.rest.logger.debug(`[Queue] ${this.queueType} ${this.url} process waiting while loop ran.`)
       if (this.isRequestAllowed()) {
         // Resolve the next item in the queue
         this.waiting.shift()?.()
@@ -99,7 +99,7 @@ export class Queue {
     this.processingPending = true
 
     while (this.pending.length > 0) {
-      this.rest.logger.debug(`Queue ${this.getQueueType()} ${this.url} process pending while loop ran with ${this.pending.length}.`)
+      this.rest.logger.debug(`Queue ${this.queueType} ${this.url} process pending while loop ran with ${this.pending.length}.`)
       if (!this.firstRequest && !this.isRequestAllowed()) {
         const now = Date.now()
         const future = this.frozenAt + this.interval
@@ -112,11 +112,11 @@ export class Queue {
         const basicURL = this.rest.simplifyUrl(request.route, request.method)
 
         // If this url is still rate limited, try again
-        const urlResetIn = this.rest.checkRateLimits(basicURL, this.requestAuthorization)
+        const urlResetIn = this.rest.checkRateLimits(basicURL, this.identifier)
         if (urlResetIn) await delay(urlResetIn)
 
         // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId, this.requestAuthorization) : false
+        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId, this.identifier) : false
         if (bucketResetIn) await delay(bucketResetIn)
 
         this.firstRequest = false
@@ -134,8 +134,6 @@ export class Queue {
         // Check if this request is able to be made globally
         await this.rest.invalidBucket.waitUntilRequestAvailable()
 
-        if (request.requestBodyOptions?.headers?.authorization) request.requestBodyOptions.headers.authorization = this.requestAuthorization
-
         await this.rest
           .sendRequest(request)
           // Should be handled in sendRequest, this catch just prevents bots from dying
@@ -143,7 +141,7 @@ export class Queue {
       }
     }
 
-    this.rest.logger.debug(`Queue ${this.getQueueType()} ${this.url} process pending while loop exited with ${this.pending.length}.`)
+    this.rest.logger.debug(`Queue ${this.queueType} ${this.url} process pending while loop exited with ${this.pending.length}.`)
 
     // Mark as false so next pending request can be triggered by new loop.
     this.processingPending = false
@@ -182,26 +180,26 @@ export class Queue {
       return
     }
 
-    this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
+    this.rest.logger.debug(`[Queue] ${this.queueType} ${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
 
     // Delete in a minute giving a bit of time to allow new requests that may reuse this queue
     clearTimeout(this.deleteQueueTimeout)
     this.deleteQueueTimeout = setTimeout(() => {
       if (!this.isQueueClearable()) {
-        this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. is not clearable. Restarting processing of queue.`)
+        this.rest.logger.debug(`[Queue] ${this.queueType} ${this.url}. is not clearable. Restarting processing of queue.`)
         this.processPending()
         return
       }
 
-      this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Deleting`)
+      this.rest.logger.debug(`[Queue] ${this.queueType} ${this.url}. Deleting`)
 
       if (this.timeoutId) clearTimeout(this.timeoutId)
 
       // No requests have been requested for this queue so we nuke this queue
-      this.rest.queues.delete(`${this.requestAuthorization}${this.url}`)
+      this.rest.queues.delete(`${this.identifier}${this.url}`)
       this.rest.logger.debug(
-        `[Queue] ${this.getQueueType()} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
-        [...this.rest.queues.values()].map((queue) => `${queue.getQueueType()}${queue.url}`),
+        `[Queue] ${this.queueType} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
+        [...this.rest.queues.values()].map((queue) => `${queue.queueType}${queue.url}`),
       )
     }, this.deleteQueueDelay)
   }
@@ -217,8 +215,8 @@ export class Queue {
     return true
   }
 
-  getQueueType(): string {
-    return this.requestAuthorization.split(' ')[0]
+  get queueType(): string {
+    return this.identifier.slice(0, this.identifier.indexOf(' '))
   }
 }
 
@@ -236,5 +234,5 @@ export interface QueueOptions {
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay?: number
   /** The base key that identifies this queue in the rest manager */
-  requestAuthorization: string
+  identifier: string
 }

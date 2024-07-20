@@ -102,8 +102,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
     },
 
-    checkRateLimits(url, requestAuthorization) {
-      const ratelimited = rest.rateLimitedPaths.get(`${requestAuthorization}${url}`)
+    checkRateLimits(url, identifier) {
+      const ratelimited = rest.rateLimitedPaths.get(`${identifier}${url}`)
 
       const global = rest.rateLimitedPaths.get('global')
       const now = Date.now()
@@ -147,16 +147,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const newAuthorization = `Bearer ${newToken}`
+      const newIdentifier = `Bearer ${newToken}`
 
       // Update all the queues
       for (const [key, queue] of rest.queues.entries()) {
         if (!key.startsWith(`Bearer ${oldToken}`)) continue
 
         rest.queues.delete(key)
-        queue.requestAuthorization = newAuthorization
+        queue.identifier = newIdentifier
 
-        const newKey = `${newAuthorization}${queue.url}`
+        const newKey = `${newIdentifier}${queue.url}`
         const newQueue = rest.queues.get(newKey)
 
         // Merge the queues
@@ -176,10 +176,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       for (const [key, ratelimitPath] of rest.rateLimitedPaths.entries()) {
         if (!key.startsWith(`Bearer ${oldToken}`)) continue
 
-        rest.rateLimitedPaths.set(`${newAuthorization}${ratelimitPath.url}`, ratelimitPath)
+        rest.rateLimitedPaths.set(`${newIdentifier}${ratelimitPath.url}`, ratelimitPath)
 
         if (ratelimitPath.bucketId) {
-          rest.rateLimitedPaths.set(`${newAuthorization}${ratelimitPath.bucketId}`, ratelimitPath)
+          rest.rateLimitedPaths.set(`${newIdentifier}${ratelimitPath.bucketId}`, ratelimitPath)
         }
       }
     },
@@ -320,7 +320,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-    processHeaders(url, headers, requestAuthorization) {
+    processHeaders(url, headers, identifier) {
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
@@ -332,7 +332,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
-      rest.queues.get(`${requestAuthorization}${url}`)?.handleCompletedRequest({
+      // If we didn't received the identifier, fallback to the bot token
+      identifier ??= `Bot ${rest.token}`
+
+      rest.queues.get(`${identifier}${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
@@ -343,7 +346,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(`${requestAuthorization}${url}`, {
+        rest.rateLimitedPaths.set(`${identifier}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -351,7 +354,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
+          rest.rateLimitedPaths.set(`${identifier}${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -380,7 +383,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (bucketId) {
-          rest.rateLimitedPaths.set(requestAuthorization, {
+          rest.rateLimitedPaths.set(identifier, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
@@ -499,18 +502,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const authorization = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
+      // If we the request has a token, use it
+      // Else fallback to prefix with the bot token
+      const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
 
-      const queue = rest.queues.get(`${authorization}${url}`)
+      const queue = rest.queues.get(`${queueIdentifier}${url}`)
 
       if (queue !== undefined) {
         queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, requestAuthorization: authorization })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, identifier: queueIdentifier })
 
         // Save queue
-        rest.queues.set(`${authorization}${url}`, bucketQueue)
+        rest.queues.set(`${queueIdentifier}${url}`, bucketQueue)
 
         // Add request to queue
         bucketQueue.makeRequest(request)
@@ -821,7 +826,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhookWithToken(webhookId, token) {
-      await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
+      await rest.delete(rest.routes.webhooks.webhook(webhookId, token), {
+        unauthorized: true,
+      })
     },
 
     async editApplicationCommandPermissions(guildId, commandId, bearerToken, permissions) {
@@ -964,11 +971,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
         body: options,
         files: options.files,
+        unauthorized: true,
       })
     },
 
     async editWebhookWithToken(webhookId, token, body) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), { body })
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
+        body,
+        unauthorized: true,
+      })
     },
 
     async editWelcomeScreen(guildId, body, reason) {
@@ -980,7 +991,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async executeWebhook(webhookId, token, options) {
-      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), { body: options })
+      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
+        body: options,
+        unauthorized: true,
+      })
     },
 
     async followAnnouncement(sourceChannelId, targetChannelId, reason) {
@@ -1056,6 +1070,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           'content-type': 'application/x-www-form-urlencoded',
           authorization: `Basic ${basicCredentials.toString('base64')}`,
         },
+        runThroughQueue: false,
         unauthorized: true,
       }
 
@@ -1336,11 +1351,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options))
+      return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
+        unauthorized: true,
+      })
     },
 
     async getWebhookWithToken(webhookId, token) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token))
+      return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
+        unauthorized: true,
+      })
     },
 
     async getWelcomeScreen(guildId) {
