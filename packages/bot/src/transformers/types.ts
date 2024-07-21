@@ -1068,6 +1068,13 @@ export interface Message {
   mentionedRoleIds?: bigint[]
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   messageReference?: MessageReference
+  /**
+   * The message associated with the `message_reference`
+   * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
+   */
+  referencedMessage?: Message
+  /** The message associated with the `message_reference`. This is a minimal subset of fields in a message (e.g. `author` is excluded.)  */
+  messageSnapshots?: MessageSnapshot[]
   nonce?: string | number
   /** Reactions on this message. */
   reactions?: Reaction[]
@@ -1146,6 +1153,11 @@ export interface MessageReference {
   guildId?: bigint
   /** id of the originating message */
   messageId?: bigint
+}
+
+export interface MessageSnapshot {
+  /** Minimal subset of fields in the forwarded message */
+  message: Pick<Message, 'type' | 'content' | 'embeds' | 'attachments' | 'timestamp' | 'editedTimestamp' | 'flags' | 'mentions' | 'mentionedRoleIds'>
 }
 
 export interface MessageInteractionMetadata {

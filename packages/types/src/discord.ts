@@ -1330,7 +1330,7 @@ export interface DiscordMessage {
   application?: Partial<DiscordApplication>
   /** if the message is an Interaction or application-owned webhook, this is the id of the application */
   application_id?: string
-  /** Data showing the source of a crossposted channel follow add, pin or reply message */
+  /** Data showing the source of a crosspost, channel follow add, pin, or reply message */
   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
   /** Message flags combined as a bitfield */
   flags?: MessageFlags
@@ -1344,6 +1344,8 @@ export interface DiscordMessage {
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
    */
   referenced_message?: DiscordMessage
+  /** The message associated with the `message_reference`. This is a minimal subset of fields in a message (e.g. `author` is excluded.)  */
+  message_snapshots?: DiscordMessageSnapshot[]
   /** sent if the message is sent as a result of an interaction */
   interaction_metadata?: DiscordMessageInteractionMetadata
   /**
@@ -1426,6 +1428,8 @@ export interface DiscordMessageActivity {
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
 export interface DiscordMessageReference {
+  /** Type of reference */
+  type?: DiscordMessageReferenceType
   /** id of the originating message */
   message_id?: string
   /**
@@ -1437,6 +1441,37 @@ export interface DiscordMessageReference {
   guild_id?: string
   /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
   fail_if_not_exists: boolean
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-types */
+export enum DiscordMessageReferenceType {
+  /**
+   * A standard reference used by replies.
+   *
+   * @remarks
+   * When the type is set to this value, the field {@link DiscordMessage.referenced_message} will be present
+   */
+  Default,
+  /**
+   * Reference used to point to a message at a point in time.
+   *
+   * @remarks
+   * When the type is set to this value, the field {@link DiscordMessage.message_snapshot} will be present in the
+   *
+   * This value can only be used for basic messages;
+   * i.e. messages which do not have strong bindings to a non global entity.
+   * Thus we support only messages with `DEFAULT` or `REPLY` types, but disallowed if there are any polls, calls, or components.
+   */
+  Forward,
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-snapshot-object-message-snapshot-structure */
+export interface DiscordMessageSnapshot {
+  /** Minimal subset of fields in the forwarded message */
+  message: Pick<
+    DiscordMessage,
+    'type' | 'content' | 'embeds' | 'attachments' | 'timestamp' | 'edited_timestamp' | 'flags' | 'mentions' | 'mention_roles'
+  >
 }
 
 /** https://discord.com/developers/docs/resources/poll#poll-object */

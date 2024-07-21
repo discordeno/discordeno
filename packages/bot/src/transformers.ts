@@ -36,6 +36,7 @@ import type {
   DiscordMessage,
   DiscordMessageCall,
   DiscordMessageInteractionMetadata,
+  DiscordMessageSnapshot,
   DiscordPoll,
   DiscordPollMedia,
   DiscordPresenceUpdate,
@@ -90,6 +91,7 @@ import {
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
+  type MessageSnapshot,
   type Poll,
   type PollMedia,
   type PresenceUpdate,
@@ -147,6 +149,7 @@ import {
   transformMessage,
   transformMessageCall,
   transformMessageInteractionMetadata,
+  transformMessageSnapshot,
   transformPoll,
   transformPollMedia,
   transformPresence,
@@ -184,6 +187,7 @@ export interface Transformers {
     forumTag: (bot: Bot, payload: DiscordForumTag, forumTag: ForumTag) => any
     interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
+    messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot, messageSnapshot: MessageSnapshot) => any
     messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
     messageCall: (bot: Bot, payload: DiscordMessageCall, call: MessageCall) => any
     user: (bot: Bot, payload: DiscordUser, user: User) => any
@@ -267,6 +271,7 @@ export interface Transformers {
   user: (bot: Bot, payload: DiscordUser) => User
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
+  messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot) => MessageSnapshot
   messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
   messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
@@ -518,6 +523,8 @@ export interface TransformersDesiredProprieties {
     mentionedRoleIds: boolean
     mentions: boolean
     messageReference: boolean
+    referencedMessage: boolean
+    messageSnapshots: boolean
     nonce: boolean
     reactions: boolean
     stickerItems: boolean
@@ -526,6 +533,9 @@ export interface TransformersDesiredProprieties {
     webhookId: boolean
     poll: boolean
     call: boolean
+  }
+  messageSnapshot: {
+    message: boolean
   }
   messageInteractionMetadata: {
     id: boolean
@@ -756,6 +766,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       message(_bot, _payload, message) {
         return message
       },
+      messageSnapshot(_bot, _payload, messageSnapshot) {
+        return messageSnapshot
+      },
       messageInteractionMetadata(_bot, _payload, metadata) {
         return metadata
       },
@@ -929,6 +942,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     invite: options.invite ?? transformInvite,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
+    messageSnapshot: options.messageSnapshot ?? transformMessageSnapshot,
     messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
     messageCall: options.messageCall ?? transformMessageCall,
     presence: options.presence ?? transformPresence,
@@ -1185,6 +1199,8 @@ export function createDesiredProprietiesObject(
       mentionedRoleIds: defaultValue,
       mentions: defaultValue,
       messageReference: defaultValue,
+      messageSnapshots: defaultValue,
+      referencedMessage: defaultValue,
       nonce: defaultValue,
       reactions: defaultValue,
       stickerItems: defaultValue,
@@ -1194,6 +1210,10 @@ export function createDesiredProprietiesObject(
       poll: defaultValue,
       call: defaultValue,
       ...desiredProperties.message,
+    },
+    messageSnapshot: {
+      message: defaultValue,
+      ...desiredProperties.messageSnapshot,
     },
     messageInteractionMetadata: {
       id: defaultValue,
