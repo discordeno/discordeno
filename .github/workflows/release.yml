@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ['gateway', 'rest', 'types', 'utils', 'bot']
+        package: ['gateway', 'rest', 'types', 'utils', 'bot', 'discordeno']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
