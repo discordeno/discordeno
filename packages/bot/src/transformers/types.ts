@@ -66,6 +66,8 @@ import type {
   EmojiToggles,
   GuildFeatureKeys,
   GuildToggles,
+  InteractionResolvedChannel,
+  InteractionResolvedMember,
   MemberToggles,
   Permissions,
   RoleToggles,
@@ -932,9 +934,9 @@ export interface InteractionData {
 export interface InteractionDataResolved {
   messages?: Collection<bigint, Message>
   users?: Collection<bigint, User>
-  members?: Collection<bigint, Member>
+  members?: Collection<bigint, InteractionResolvedMember>
   roles?: Collection<bigint, Role>
-  channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>
+  channels?: Collection<bigint, InteractionResolvedChannel>
   attachments?: Collection<bigint, Attachment>
 }
 
