@@ -68,7 +68,7 @@ export function createBot(options: CreateBotOptions): Bot {
   const bot: Bot = {
     id,
     applicationId: id,
-    transformers: createTransformers(options.transformers ?? {}, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
+    transformers: createTransformers(options.transformers, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
     handlers: createBotGatewayHandlers(options.handlers ?? {}),
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
