@@ -1163,4 +1163,5 @@ export type Snakelize<T> = T extends any[]
 
 export type PickPartial<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]: T[P] }
 
-export type RecursivePartial<T> = T extends object ? { [K in keyof T]?: RecursivePartial<T[K]> } : Partial<T>
+// Functions are objects for TS, so we need to check for them explicitly
+export type RecursivePartial<T> = T extends object ? (T extends (...args: never[]) => unknown ? T : { [K in keyof T]?: RecursivePartial<T[K]> }) : T

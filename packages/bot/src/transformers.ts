@@ -737,7 +737,9 @@ export interface CreateTransformerOptions {
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
-export function createTransformers(options: Partial<Transformers>, opts?: CreateTransformerOptions): Transformers {
+const defaultCustomizer = (_bot: unknown, _payload: unknown, structure: unknown) => structure
+
+export function createTransformers(options: RecursivePartial<Transformers>, opts?: CreateTransformerOptions): Transformers {
   if (opts?.defaultDesiredPropertiesValue) {
     const log = opts.logger ?? logger
 
@@ -751,161 +753,59 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
 
   return {
     customizers: {
-      channel(_bot, _payload, channel) {
-        return channel
-      },
-      forumTag(_bot, _payload, forumTag) {
-        return forumTag
-      },
-      interaction(_bot, _payload, interaction) {
-        return interaction
-      },
-      member(_bot, _payload, member) {
-        return member
-      },
-      message(_bot, _payload, message) {
-        return message
-      },
-      messageSnapshot(_bot, _payload, messageSnapshot) {
-        return messageSnapshot
-      },
-      messageInteractionMetadata(_bot, _payload, metadata) {
-        return metadata
-      },
-      messageCall(_bot, _payload, call) {
-        return call
-      },
-      role(_bot, _payload, role) {
-        return role
-      },
-      user(_bot, _payload, user) {
-        return user
-      },
-      activity(_bot, _payload, activity) {
-        return activity
-      },
-      application(_bot, _payload, application) {
-        return application
-      },
-      applicationCommand(_bot, _payload, applicationCommand) {
-        return applicationCommand
-      },
-      applicationCommandOption(_bot, _payload, applicationCommandOption) {
-        return applicationCommandOption
-      },
-      applicationCommandOptionChoice(_bot, _payload, applicationCommandOptionChoice) {
-        return applicationCommandOptionChoice
-      },
-      applicationCommandPermission(_bot, _payload, applicationCommandPermission) {
-        return applicationCommandPermission
-      },
-      attachment(_bot, _payload, attachment) {
-        return attachment
-      },
-      auditLogEntry(_bot, _payload, auditLogEntry) {
-        return auditLogEntry
-      },
-      automodActionExecution(_bot, _payload, automodActionExecution) {
-        return automodActionExecution
-      },
-      automodRule(_bot, _payload, automodRule) {
-        return automodRule
-      },
-      component(_bot, _payload, component) {
-        return component
-      },
-      embed(_bot, _payload, embed) {
-        return embed
-      },
-      emoji(_bot, _payload, emoji) {
-        return emoji
-      },
-      defaultReactionEmoji(_bot, _payload, defaultReactionEmoji) {
-        return defaultReactionEmoji
-      },
-      guild(_bot, _payload, guild) {
-        return guild
-      },
-      integration(_bot, _payload, integration) {
-        return integration
-      },
-      interactionDataOptions(_bot, _payload, interactionDataOptions) {
-        return interactionDataOptions
-      },
-      invite(_bot, _payload, invite) {
-        return invite
-      },
-      presence(_bot, _payload, presence) {
-        return presence
-      },
-      scheduledEvent(_bot, _payload, scheduledEvent) {
-        return scheduledEvent
-      },
-      stageInstance(_bot, _payload, stageInstance) {
-        return stageInstance
-      },
-      inviteStageInstance(_bot, _payload, inviteStageInstance) {
-        return inviteStageInstance
-      },
-      sticker(_bot, _payload, sticker) {
-        return sticker
-      },
-      stickerPack(_bot, _payload, stickerPack) {
-        return stickerPack
-      },
-      team(_bot, _payload, team) {
-        return team
-      },
-      template(_bot, _payload, template) {
-        return template
-      },
-      threadMember(_bot, _payload, threadMember) {
-        return threadMember
-      },
-      threadMemberGuildCreate(_bot, _payload, threadMemberGuildCreate) {
-        return threadMemberGuildCreate
-      },
-      voiceRegion(_bot, _payload, voiceRegion) {
-        return voiceRegion
-      },
-      voiceState(_bot, _payload, voiceState) {
-        return voiceState
-      },
-      gatewayBot(_bot, _payload, getGatewayBot) {
-        return getGatewayBot
-      },
-      webhook(_bot, _payload, webhook) {
-        return webhook
-      },
-      welcomeScreen(_bot, _payload, welcomeScreen) {
-        return welcomeScreen
-      },
-      widget(_bot, _payload, widget) {
-        return widget
-      },
-      widgetSettings(_bot, _payload, widgetSettings) {
-        return widgetSettings
-      },
-      guildOnboarding(_bot, _payload, onboarding) {
-        return onboarding
-      },
-      entitlement(_bot, _payload, entitlement) {
-        return entitlement
-      },
-      sku(_bot, _payload, sku) {
-        return sku
-      },
-      poll(_bot, _payload, poll) {
-        return poll
-      },
-      pollMedia(_bot, _payload, pollMedia) {
-        return pollMedia
-      },
-      avatarDecorationData(_bot, _payload, avatarDecorationData) {
-        return avatarDecorationData
-      },
+      channel: options.customizers?.channel ?? defaultCustomizer,
+      forumTag: options.customizers?.forumTag ?? defaultCustomizer,
+      interaction: options.customizers?.interaction ?? defaultCustomizer,
+      member: options.customizers?.member ?? defaultCustomizer,
+      message: options.customizers?.message ?? defaultCustomizer,
+      messageSnapshot: options.customizers?.messageSnapshot ?? defaultCustomizer,
+      messageInteractionMetadata: options.customizers?.messageInteractionMetadata ?? defaultCustomizer,
+      messageCall: options.customizers?.messageCall ?? defaultCustomizer,
+      role: options.customizers?.role ?? defaultCustomizer,
+      user: options.customizers?.user ?? defaultCustomizer,
+      activity: options.customizers?.activity ?? defaultCustomizer,
+      application: options.customizers?.application ?? defaultCustomizer,
+      applicationCommand: options.customizers?.applicationCommand ?? defaultCustomizer,
+      applicationCommandOption: options.customizers?.applicationCommandOption ?? defaultCustomizer,
+      applicationCommandOptionChoice: options.customizers?.applicationCommandOptionChoice ?? defaultCustomizer,
+      applicationCommandPermission: options.customizers?.applicationCommandPermission ?? defaultCustomizer,
+      attachment: options.customizers?.attachment ?? defaultCustomizer,
+      auditLogEntry: options.customizers?.auditLogEntry ?? defaultCustomizer,
+      automodActionExecution: options.customizers?.automodActionExecution ?? defaultCustomizer,
+      automodRule: options.customizers?.automodRule ?? defaultCustomizer,
+      component: options.customizers?.component ?? defaultCustomizer,
+      embed: options.customizers?.embed ?? defaultCustomizer,
+      emoji: options.customizers?.emoji ?? defaultCustomizer,
+      defaultReactionEmoji: options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
+      guild: options.customizers?.guild ?? defaultCustomizer,
+      integration: options.customizers?.integration ?? defaultCustomizer,
+      interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
+      invite: options.customizers?.invite ?? defaultCustomizer,
+      presence: options.customizers?.presence ?? defaultCustomizer,
+      scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
+      stageInstance: options.customizers?.stageInstance ?? defaultCustomizer,
+      inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
+      sticker: options.customizers?.sticker ?? defaultCustomizer,
+      stickerPack: options.customizers?.stickerPack ?? defaultCustomizer,
+      team: options.customizers?.team ?? defaultCustomizer,
+      template: options.customizers?.template ?? defaultCustomizer,
+      threadMember: options.customizers?.threadMember ?? defaultCustomizer,
+      threadMemberGuildCreate: options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
+      voiceRegion: options.customizers?.voiceRegion ?? defaultCustomizer,
+      voiceState: options.customizers?.voiceState ?? defaultCustomizer,
+      gatewayBot: options.customizers?.gatewayBot ?? defaultCustomizer,
+      webhook: options.customizers?.webhook ?? defaultCustomizer,
+      welcomeScreen: options.customizers?.welcomeScreen ?? defaultCustomizer,
+      widget: options.customizers?.widget ?? defaultCustomizer,
+      widgetSettings: options.customizers?.widgetSettings ?? defaultCustomizer,
+      guildOnboarding: options.customizers?.guildOnboarding ?? defaultCustomizer,
+      entitlement: options.customizers?.entitlement ?? defaultCustomizer,
+      sku: options.customizers?.sku ?? defaultCustomizer,
+      poll: options.customizers?.poll ?? defaultCustomizer,
+      pollMedia: options.customizers?.pollMedia ?? defaultCustomizer,
+      avatarDecorationData: options.customizers?.avatarDecorationData ?? defaultCustomizer,
     },
-    desiredProperties: createDesiredProprietiesObject({}, opts?.defaultDesiredPropertiesValue ?? false),
+    desiredProperties: createDesiredProprietiesObject(options.desiredProperties ?? {}, opts?.defaultDesiredPropertiesValue ?? false),
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
