@@ -130,7 +130,7 @@ export interface DiscordInteractionDataResolved {
   /** The Ids and Role objects */
   roles?: Record<string, DiscordRole>
   /** The Ids and partial Channel objects */
-  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
+  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions' | 'thread_metadata' | 'parent_id'>>
   /** The Ids and attachments objects */
   attachments?: Record<string, DiscordAttachment>
 }
