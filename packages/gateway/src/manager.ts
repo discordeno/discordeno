@@ -89,11 +89,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         gateway.logger.warn('[Resharding] Able to reshard, checking whether necessary now.')
 
-        // FIXME: this calculation is clearly wrong to some degree, using 2 shards and 5000 guilds the % should be 100, but is 250
         // 2500 is the max amount of guilds a single shard can handle
         // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
         // This algo helps check if your bot has grown enough to reshard.
-        const percentage = ((2500 * sessionInfo.shards) / (gateway.totalShards * 1000)) * 100
+        // While this is imprecise as discord changes the recommended number of shard every 1000 guilds it is good enough
+        // The alternative is to store the guild count for each shard and require the Guilds intent for `GUILD_CREATE` and `GUILD_DELETE` events
+        const percentage = (sessionInfo.shards / ((gateway.totalShards * 2500) / 1000)) * 100
 
         // Less than necessary% being used so do nothing
         if (percentage < gateway.resharding.shardsFullPercentage) {
