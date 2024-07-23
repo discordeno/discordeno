@@ -663,6 +663,11 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     enabled: boolean
     /**
      * The % of how full a shard is when resharding should be triggered.
+     *
+     * @remarks
+     * The value is not accurate. We use discord recommended shard value to get an approximation of the shard full percentage that it then compared with this value.
+     * So the bot may not reshard when exactly at the percentage provided but when the percentage is a bit higher and discord has updated the recommended shard count.
+     *
      * @default 80 as in 80%
      */
     shardsFullPercentage: number
