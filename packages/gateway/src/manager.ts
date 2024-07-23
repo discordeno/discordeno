@@ -230,10 +230,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         gateway.logger.warn(`[Resharding] Completed.`)
 
         // Replace old shards
-        gateway.shards.clear()
-        for (const shard of gateway.resharding.shards.values()) {
-          gateway.shards.set(shard.id, shard)
-        }
+        gateway.shards = new Collection(gateway.resharding.shards)
 
         // Clear our collections and keep only one reference to the shards, the one in gateway.shards
         gateway.resharding.shards.clear()
