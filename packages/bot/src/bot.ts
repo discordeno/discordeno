@@ -221,7 +221,7 @@ export interface EventHandlers {
   messageCreate: (message: Message) => unknown
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: Message) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown
-  messageUpdate: (message: Message, oldMessage?: Message) => unknown
+  messageUpdate: (message: Message) => unknown
   reactionAdd: (payload: {
     userId: bigint
     channelId: bigint
