@@ -107,7 +107,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         return { needed: true, info: sessionInfo }
       },
       async reshard(info) {
-        const oldShardNumber = gateway.totalShards
         gateway.logger.warn(`[Resharding] Starting the reshard process. Previous total shards. ${gateway.totalShards}`)
         // Set values on gateway
         gateway.totalShards = info.shards
