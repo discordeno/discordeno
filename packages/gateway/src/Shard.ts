@@ -226,7 +226,7 @@ export class DiscordenoShard {
       },
       true,
     )
-    this.logger.debug(`[Gateway] Resuming Shard #${this.id} after send resumg`)
+    this.logger.debug(`[Gateway] Resuming Shard #${this.id} after send resume`)
 
     return await new Promise((resolve) => {
       this.resolves.set('RESUMED', () => resolve())
@@ -501,7 +501,8 @@ export class DiscordenoShard {
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
-    this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id}`)
+    this.logger.debug(`[Shard] Start heartbeating on shard #${this.id}`)
+
     // If old heartbeast exist like after resume, clear the old ones.
     if (this.heart.intervalId) clearInterval(this.heart.intervalId)
     if (this.heart.timeoutId) clearTimeout(this.heart.timeoutId)
@@ -511,7 +512,7 @@ export class DiscordenoShard {
     // Only set the shard's state to `Unidentified`
     // if heartbeating has not been started due to an identify or resume action.
     if ([ShardState.Disconnected, ShardState.Offline].includes(this.state)) {
-      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} a`)
+      this.logger.debug(`[Shard] Shard is disconnected or offline but the heartbeat was started #${this.id}`)
       this.state = ShardState.Unidentified
     }
 
@@ -520,10 +521,13 @@ export class DiscordenoShard {
     // `Math.random()` can be `0` so we use `0.5` if this happens
     // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating
     const jitter = Math.ceil(this.heart.interval * (Math.random() || 0.5))
+
     this.heart.timeoutId = setTimeout(() => {
-      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} b`)
+      this.logger.debug(`[Shard] Beginning heartbeating process for shard #${this.id}`)
+
       if (!this.isOpen()) return
-      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} c ${this.previousSequenceNumber!}`)
+
+      this.logger.debug(`[Shard] Heartbeating on #${this.id}. Previous sequence number: ${this.previousSequenceNumber}`)
 
       // Using a direct socket.send call here because heartbeat requests are reserved by us.
       this.socket?.send(
@@ -533,33 +537,29 @@ export class DiscordenoShard {
         }),
       )
 
-      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} d`)
       this.heart.lastBeat = Date.now()
       this.heart.acknowledged = false
 
       // After the random heartbeat jitter we can start a normal interval.
       this.heart.intervalId = setInterval(async () => {
-        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} e`)
-        if (!this.isOpen()) return
-        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} f`)
-        // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
-
-        // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
+        if (!this.isOpen()) {
+          this.logger.debug(`[Shard] Shard #${this.id} is not open, but attempted heartbeat, ignoring.`)
+          return
+        }
 
         // The Shard did not receive a heartbeat ACK from Discord in time,
         // therefore we have to assume that the connection has failed or got "zombied".
         // The Shard needs to start a re-identify action accordingly.
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
-          this.logger.debug(`[Shard] Heartbeat not acknowledged for shard #${this.id}.`)
+          this.logger.debug(`[Shard] Heartbeat not acknowledged for shard #${this.id}. Assuming zombied connection.`)
           this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           return await this.identify()
         }
 
-        this.heart.acknowledged = false
+        this.logger.debug(`[Shard] Heartbeating on #${this.id}. Previous sequence number: ${this.previousSequenceNumber}`)
 
-        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} g`)
         // Using a direct socket.send call here because heartbeat requests are reserved by us.
         this.socket?.send(
           JSON.stringify({
@@ -567,9 +567,9 @@ export class DiscordenoShard {
             d: this.previousSequenceNumber,
           }),
         )
-        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} h`)
 
         this.heart.lastBeat = Date.now()
+        this.heart.acknowledged = false
 
         this.events.heartbeat?.(this)
       }, this.heart.interval)
