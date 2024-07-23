@@ -77,12 +77,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         const sessionInfo = await gateway.resharding.getSessionInfo()
 
-        if (!sessionInfo) {
-          gateway.logger.warn("[Resharding] Resharding is enabled however the session info couldn't be fetched.")
-
-          return { needed: false }
-        }
-
         gateway.logger.warn('[Resharding] Session info retrieved.')
         gateway.logger.debug(`[Resharding] Session info details: ${JSON.stringify(sessionInfo)}`)
 
