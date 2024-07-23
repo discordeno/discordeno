@@ -2,11 +2,11 @@ import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/ga
 import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
-import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
+import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents, RecursivePartial } from '@discordeno/types'
 import { type Collection, createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
-import { type Transformers, createTransformers } from './transformers.js'
+import { type Transformers, type TransformersDesiredProprieties, createTransformers } from './transformers.js'
 import type {
   AuditLogEntry,
   AutoModerationActionExecution,
@@ -38,6 +38,8 @@ import type { BotGatewayHandlerOptions } from './typings.js'
  * @returns Bot
  */
 export function createBot(options: CreateBotOptions): Bot {
+  if (!options.transformers) options.transformers = {}
+  if (!options.transformers.desiredProperties) options.transformers.desiredProperties = options.desiredProperties
   if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
   if (!options.rest.token) options.rest.token = options.token
   if (!options.rest.logger && options.loggerFactory) options.rest.logger = options.loggerFactory('REST')
@@ -66,7 +68,7 @@ export function createBot(options: CreateBotOptions): Bot {
   const bot: Bot = {
     id,
     applicationId: id,
-    transformers: createTransformers(options.transformers ?? {}, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
+    transformers: createTransformers(options.transformers, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
     handlers: createBotGatewayHandlers(options.handlers ?? {}),
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
@@ -114,7 +116,7 @@ export interface CreateBotOptions {
   /** The event handlers. */
   events?: Partial<EventHandlers>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers?: Partial<Transformers>
+  transformers?: RecursivePartial<Transformers>
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
   handlers?: Partial<BotGatewayHandlerOptions>
   /**
@@ -126,6 +128,12 @@ export interface CreateBotOptions {
    * @default false
    */
   defaultDesiredPropertiesValue?: boolean
+  /**
+   * Set the desired proprieties for the bot
+   *
+   * @default {}
+   */
+  desiredProperties?: RecursivePartial<TransformersDesiredProprieties>
   /**
    * This factory will be invoked to create the logger for gateway, rest and bot
    *
