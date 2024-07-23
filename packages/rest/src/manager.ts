@@ -204,12 +204,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               case 'deny':
                 newObj[key] = typeof value === 'string' ? value : calculateBits(value)
                 continue
+              case 'default_member_permissions':
               case 'defaultMemberPermissions':
                 newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value)
                 continue
+              case 'name_localizations':
               case 'nameLocalizations':
                 newObj.name_localizations = value
                 continue
+              case 'name_localizations':
               case 'descriptionLocalizations':
                 newObj.description_localizations = value
                 continue
