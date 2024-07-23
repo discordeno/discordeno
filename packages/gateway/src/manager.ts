@@ -213,11 +213,14 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           const oldHandler = shard.events.message
 
           // Change with spread operator to not affect new shards, as changing anything on shard.events will directly change options.events, which changes new shards' events
-          shard.events.message = async (shard, message) => {
-            // Member checks need to continue but others can stop
-            if (message.t === 'GUILD_MEMBERS_CHUNK') {
-              oldHandler?.(shard, message)
-            }
+          shard.events = {
+            ...shard.events,
+            message: async function (_, message) {
+              // Member checks need to continue but others can stop
+              if (message.t === 'GUILD_MEMBERS_CHUNK') {
+                oldHandler?.(shard, message)
+              }
+            },
           }
         }
 
