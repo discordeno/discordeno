@@ -14,6 +14,7 @@ import {
   type Interaction,
   type InteractionDataOption,
   type InteractionDataResolved,
+  type InteractionResolvedChannel,
   type Member,
   type Message,
 } from '../index.js'
@@ -205,23 +206,9 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (resolved.channels) {
     transformed.channels = new Collection(
-      Object.entries(resolved.channels).map(([key, value]) => {
-        const id = bot.transformers.snowflake(key)
-        const channel = value as {
-          id: string
-          name: string
-          type: ChannelTypes
-          permissions: string
-        }
-        return [
-          id,
-          {
-            id,
-            name: channel.name,
-            type: channel.type,
-            permissions: bot.transformers.snowflake(channel.permissions),
-          },
-        ]
+      Object.entries(resolved.channels).map(([_id, value]) => {
+        const channel = bot.transformers.channel(bot, { channel: value }) as InteractionResolvedChannel
+        return [channel.id, channel]
       }),
     )
   }

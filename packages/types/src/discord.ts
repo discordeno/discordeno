@@ -1064,11 +1064,11 @@ export interface DiscordChannel {
   /** The set of tags that can be used in a GUILD_FORUM channel */
   available_tags?: DiscordForumTag[]
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
-  applied_tags: string[]
+  applied_tags?: string[]
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
   default_reaction_emoji?: DiscordDefaultReactionEmoji | null
   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
-  default_thread_rate_limit_per_user: number
+  default_thread_rate_limit_per_user?: number
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
