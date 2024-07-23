@@ -61,11 +61,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       shards: new Collection(),
       pendingShards: new Collection(),
       async getSessionInfo() {
-        gateway.logger.error(
+        throw new Error(
           '[Resharding] was enabled but no getSessionInfo handler was provided. Please set a handler like: gateway.resharding.getSessionInfo = async () => { // insert code here to fetch getSessionInfo from rest process. }',
         )
-
-        return null
       },
       async checkIfReshardingIsNeeded() {
         if (!gateway.resharding.enabled) {
@@ -692,13 +690,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     shards: Collection<number, Shard>
     /** Holds the pending shards that have been created and are pending all shards finish loading. */
     pendingShards: Collection<number, Shard>
-    /**
-     * Handler to get shard count and other session info.
-     *
-     * @remarks
-     * Should never return null. Returning null will skip the resharding
-     */
-    getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot> | null>
+    /** Handler to get shard count and other session info. */
+    getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
     /** Handler to edit the shard id on any cached guilds. */
     updateGuildsShardId: (guildIds: string[], shardId: number) => Promise<void>
     /** Handler to check if resharding is necessary. */
