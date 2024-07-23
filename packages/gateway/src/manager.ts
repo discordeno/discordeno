@@ -66,19 +66,19 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         )
       },
       async checkIfReshardingIsNeeded() {
+        gateway.logger.warn('[Resharding] Checking if resharding is needed.')
+
         if (!gateway.resharding.enabled) {
           gateway.logger.debug('[Resharding] Resharding is disabled.')
 
           return { needed: false }
         }
 
-        gateway.logger.warn('[Resharding] Checking if resharding is needed.')
         gateway.logger.warn('[Resharding] Resharding is enabled.')
 
         const sessionInfo = await gateway.resharding.getSessionInfo()
 
-        gateway.logger.warn('[Resharding] Session info retrieved.')
-        gateway.logger.debug(`[Resharding] Session info details: ${JSON.stringify(sessionInfo)}`)
+        gateway.logger.debug(`[Resharding] Session info retrieved: ${JSON.stringify(sessionInfo)}`)
 
         // Don't have enough identify limits to try resharding
         if (sessionInfo.sessionStartLimit.remaining < sessionInfo.shards) {
@@ -226,6 +226,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         }
 
         gateway.logger.warn(`[Resharding] Shutting down old shards.`)
+        // Close old shards
         await gateway.shutdown(ShardSocketCloseCodes.Resharded, 'Resharded!', false)
 
         gateway.logger.warn(`[Resharding] Completed.`)
