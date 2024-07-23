@@ -119,12 +119,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         if (typeof info.lastShardId === 'number') gateway.lastShardId = info.lastShardId
         gateway.logger.warn(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
 
-        if (oldShardNumber === gateway.totalShards) {
-          gateway.logger.warn('[Resharding] Aborting the reshard process. The total number of shards is the same')
-
-          return
-        }
-
         // Resetting buckets
         gateway.buckets.clear()
         // Refilling buckets with new values
