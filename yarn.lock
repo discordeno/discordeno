@@ -125,7 +125,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.16"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -148,7 +148,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.16"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.10"
     c8: "npm:^9.1.0"
@@ -175,7 +175,7 @@ __metadata:
     "@types/chai": "npm:^4.3.16"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -197,7 +197,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.4.2"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     c8: "npm:^9.1.0"
     mocha: "npm:^10.7.0"
     ts-node: "npm:^10.9.2"
@@ -216,7 +216,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.16"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -705,12 +705,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.14.10":
-  version: 20.14.10
-  resolution: "@types/node@npm:20.14.10"
+"@types/node@npm:^20.14.11":
+  version: 20.14.11
+  resolution: "@types/node@npm:20.14.11"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 672892cf94d0d95cf052f11271990686a0fd204cd1e5fe7a4ef240e5315e06711765dc47b9ec98627d3adac18b8c92bb7e2d8db21d18faa20bc3e3203a143e79
+  checksum: 344e1ce1ed16c86ed1c4209ab4d1de67db83dd6b694a6fabe295c47144dde2c58dabddae9f39a0a2bdd246e95f8d141ccfe848e464884b48b8918df4f7788025
   languageName: node
   linkType: hard
 
@@ -955,7 +955,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.4.2"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     benchmark: "npm:^2.1.4"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -1534,7 +1534,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.16"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
