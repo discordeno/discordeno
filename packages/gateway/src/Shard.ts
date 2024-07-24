@@ -226,7 +226,7 @@ export class DiscordenoShard {
       },
       true,
     )
-    this.logger.debug(`[Gateway] Resuming Shard #${this.id} after send resume`)
+    this.logger.debug(`[Shard] Resuming Shard #${this.id} after send resume`)
 
     return await new Promise((resolve) => {
       this.resolves.set('RESUMED', () => resolve())
