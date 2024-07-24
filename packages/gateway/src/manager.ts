@@ -325,6 +325,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
       // Check and reshard automatically if auto resharding is enabled.
       if (gateway.resharding.enabled && gateway.resharding.checkInterval !== -1) {
+        // It is better to ensure there is always only one
+        clearInterval(gateway.resharding.checkIntervalId)
+
         gateway.resharding.checkIntervalId = setInterval(async () => {
           const reshardingInfo = await gateway.resharding.checkIfReshardingIsNeeded()
 
@@ -665,8 +668,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
      * The % of how full a shard is when resharding should be triggered.
      *
      * @remarks
-     * The value is not accurate. We use discord recommended shard value to get an approximation of the shard full percentage that it then compared with this value.
-     * So the bot may not reshard when exactly at the percentage provided but when the percentage is a bit higher and discord has updated the recommended shard count.
+     * We use discord recommended shard value to get an **approximation** of the shard full percentage to compare with this value so the bot may not reshard at the exact percentage provided but may reshard when it is a bit higher than the provided percentage.
+     * For accurate calculation, you may override the `checkIfReshardingIsNeeded` function
      *
      * @default 80 as in 80%
      */
