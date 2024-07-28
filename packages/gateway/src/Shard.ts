@@ -3,8 +3,15 @@ import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discord
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import NodeWebSocket from 'ws'
-import { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
-import { ShardSocketCloseCodes, ShardState } from './types.js'
+import {
+  type BotStatusUpdate,
+  type ShardEvents,
+  type ShardGatewayConfig,
+  type ShardHeart,
+  ShardSocketCloseCodes,
+  type ShardSocketRequest,
+  ShardState,
+} from './types.js'
 
 export class DiscordenoShard {
   /** The id of the shard */
