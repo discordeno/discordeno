@@ -3,10 +3,8 @@ import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discord
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import NodeWebSocket from 'ws'
-import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
+import { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
-
-declare let WebSocket: any
 
 export class DiscordenoShard {
   /** The id of the shard */
@@ -24,7 +22,7 @@ export class DiscordenoShard {
   /** Current session id of the shard if present. */
   sessionId?: string
   /** This contains the WebSocket connection to Discord, if currently connected. */
-  socket?: NodeWebSocket
+  socket?: WebSocket
   /** Current internal state of the this. */
   state = ShardState.Offline
   /** The url provided by discord to use when resuming a connection for this this. */
@@ -105,29 +103,29 @@ export class DiscordenoShard {
     if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
       this.state = ShardState.Connecting
     }
+
     this.events.connecting?.(this)
 
     const url = new URL(this.connectionUrl)
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    const socket: NodeWebSocket =
-      // @ts-expect-error Deno
-      globalThis.Deno !== undefined && Reflect.has(globalThis, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
+    // We check for built-in WebSocket implementations before fallback-ing to ws as Deno and Bun have a WebSocket implementation and NodeJS as for v22 has one as well
+    // @ts-expect-error NodeWebSocket doesn't support "dispatchEvent", and while we don't use it it is required on the "WebSocket" type
+    const socket: WebSocket = Reflect.has(globalThis, 'WebSocket') ? new WebSocket(url) : new NodeWebSocket(url)
     this.socket = socket
 
-    // TODO: proper event handling
-    socket.onerror = (event: NodeWebSocket.ErrorEvent) => console.log({ error: event, shardId: this.id })
-    socket.onclose = async (event: NodeWebSocket.CloseEvent) => await this.handleClose(event)
-    socket.onmessage = async (message: NodeWebSocket.MessageEvent) => await this.handleMessage(message)
+    socket.onerror = (event) => this.handleError(event)
+    socket.onclose = async (closeEvent) => await this.handleClose(closeEvent)
+    socket.onmessage = async (messageEvent) => await this.handleMessage(messageEvent)
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-        // Only set the shard to `Unidentified` state,
-        // if the connection request does not come from an identify or resume action.
+        // Only set the shard to `Unidentified` state, if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
+
         this.events.connected?.(this)
 
         resolve(this)
@@ -262,12 +260,15 @@ export class DiscordenoShard {
     this.state = ShardState.Offline
   }
 
-  /** Handle a gateway connection close. */
-  async handleClose(close: NodeWebSocket.CloseEvent): Promise<void> {
-    //   gateway.debug("GW CLOSED", { shardId, payload: event });
+  /** Handle a gateway connection error */
+  handleError(error: Event): void {
+    this.logger.error(`[Shard] There was an error connecting shard ${this.id}.`, error)
+  }
 
+  /** Handle a gateway connection close. */
+  async handleClose(close: CloseEvent): Promise<void> {
     this.stopHeartbeating()
-    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code}.`)
+    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
@@ -325,6 +326,22 @@ export class DiscordenoShard {
         return await this.resume()
       }
     }
+  }
+
+  /** Handle an incoming gateway message. */
+  async handleMessage(message: MessageEvent): Promise<void> {
+    let preProcessMessage = message.data
+
+    // If message compression is enabled,
+    // Discord might send zlib compressed payloads.
+    if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
+      preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
+    }
+
+    // Safeguard incase decompression failed to make a string.
+    if (typeof preProcessMessage !== 'string') return
+
+    return await this.handleDiscordPacket(JSON.parse(preProcessMessage) as DiscordGatewayPayload)
   }
 
   /** Handles a incoming gateway packet. */
@@ -467,23 +484,6 @@ export class DiscordenoShard {
     // Now the event can be safely forwarded.
     this.events.message?.(this, camelize(packet))
   }
-
-  /** Handle an incoming gateway message. */
-  async handleMessage(message: NodeWebSocket.MessageEvent): Promise<void> {
-    let preProcessMessage = message.data
-
-    // If message compression is enabled,
-    // Discord might send zlib compressed payloads.
-    if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-      preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
-    }
-
-    // Safeguard incase decompression failed to make a string.
-    if (typeof preProcessMessage !== 'string') return
-
-    return await this.handleDiscordPacket(JSON.parse(preProcessMessage) as DiscordGatewayPayload)
-  }
-
   /**
    * Override in order to make the shards presence.
    * async in case devs create the presence based on eg. database values.
