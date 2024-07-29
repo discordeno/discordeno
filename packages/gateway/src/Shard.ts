@@ -1,12 +1,26 @@
-import { inflateSync } from 'node:zlib'
+import { Buffer } from 'node:buffer'
+import { once } from 'node:events'
+import stream, { pipeline } from 'node:stream'
+import { json } from 'node:stream/consumers'
+import { Inflate, InflateRaw, createInflate, createInflateRaw, inflateRawSync, inflateSync } from 'node:zlib'
+import zlib from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import { decompress as decompressZstd } from 'fzstd'
 import NodeWebSocket from 'ws'
-import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
-import { ShardSocketCloseCodes, ShardState } from './types.js'
+import {
+  type BotStatusUpdate,
+  type ShardEvents,
+  type ShardGatewayConfig,
+  type ShardHeart,
+  ShardSocketCloseCodes,
+  type ShardSocketRequest,
+  ShardState,
+  TransportCompression,
+} from './types.js'
 
-declare let WebSocket: any
+const ZLIB_SYNC_FLUSH = new Uint8Array([0x0, 0x0, 0xff, 0xff])
 
 export class DiscordenoShard {
   /** The id of the shard */
@@ -24,7 +38,7 @@ export class DiscordenoShard {
   /** Current session id of the shard if present. */
   sessionId?: string
   /** This contains the WebSocket connection to Discord, if currently connected. */
-  socket?: NodeWebSocket
+  socket?: WebSocket
   /** Current internal state of the this. */
   state = ShardState.Offline
   /** The url provided by discord to use when resuming a connection for this this. */
@@ -39,6 +53,12 @@ export class DiscordenoShard {
   bucket: LeakyBucket
   /** Logger for the bucket */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /** Text decoder used for compressed payloads */
+  textDecoder = new TextDecoder()
+  /** ZLib Inflate instance for ZLib-stream transport payloads */
+  inflate?: Inflate
+  /** Buffer for ZLib-stream transport payloads */
+  buffer: Uint8Array | null = null
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -105,29 +125,32 @@ export class DiscordenoShard {
     if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
       this.state = ShardState.Connecting
     }
+
     this.events.connecting?.(this)
 
     const url = new URL(this.connectionUrl)
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    const socket: NodeWebSocket =
+    // @ts-expect-error TS gets confused with this ternary
+    const socket: WebSocket =
       // @ts-expect-error Deno
       globalThis.Deno !== undefined && Reflect.has(globalThis, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
     this.socket = socket
 
-    // TODO: proper event handling
-    socket.onerror = (event: NodeWebSocket.ErrorEvent) => console.log({ error: event, shardId: this.id })
-    socket.onclose = async (event: NodeWebSocket.CloseEvent) => await this.handleClose(event)
-    socket.onmessage = async (message: NodeWebSocket.MessageEvent) => await this.handleMessage(message)
+    socket.binaryType = 'arraybuffer'
+
+    socket.onerror = (event) => this.handleError(event)
+    socket.onclose = (closeEvent) => this.handleClose(closeEvent)
+    socket.onmessage = (messageEvent) => this.handleMessage(messageEvent)
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-        // Only set the shard to `Unidentified` state,
-        // if the connection request does not come from an identify or resume action.
+        // Only set the shard to `Unidentified` state, if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
+
         this.events.connected?.(this)
 
         resolve(this)
@@ -262,12 +285,19 @@ export class DiscordenoShard {
     this.state = ShardState.Offline
   }
 
-  /** Handle a gateway connection close. */
-  async handleClose(close: NodeWebSocket.CloseEvent): Promise<void> {
-    //   gateway.debug("GW CLOSED", { shardId, payload: event });
+  /** Handle a gateway connection error */
+  handleError(error: Event): void {
+    this.logger.error(`[Shard] There was an error connecting shard ${this.id}.`, error)
+  }
 
+  /** Handle a gateway connection close. */
+  async handleClose(close: CloseEvent): Promise<void> {
     this.stopHeartbeating()
-    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code}.`)
+
+    this.inflate = undefined
+    this.buffer = null
+
+    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
@@ -325,6 +355,73 @@ export class DiscordenoShard {
         return await this.resume()
       }
     }
+  }
+
+  /** Handle an incoming gateway message. */
+  async handleMessage(message: MessageEvent): Promise<void> {
+    let data = message.data
+
+    // If message compression is enabled, Discord might send zlib/zstd compressed payloads.
+    // The ws npm package will use a Buffer, while the global functions (for all Deno, Bun and Node) will use Blob
+    if (this.gatewayConfig.compressMode && (data instanceof ArrayBuffer || data instanceof Buffer)) {
+      const compressedData = new Uint8Array(data)
+
+      if (this.gatewayConfig.compressMode === TransportCompression.zlib) {
+        if (!this.inflate) {
+          this.inflate = createInflate({
+            finishFlush: zlib.constants.Z_SYNC_FLUSH,
+            chunkSize: 64 * 1024,
+          })
+
+          this.inflate.on('error', (e) => {
+            this.logger.error('The was an error in decompressing a ZLib compressed payload', e)
+          })
+
+          let pastIncompleteChunk: string | null = null
+
+          this.inflate.on('data', (data) => {
+            const decodedData = `${pastIncompleteChunk ? pastIncompleteChunk : ''}${this.textDecoder.decode(data)}`
+
+            try {
+              const parsedData = JSON.parse(decodedData)
+
+              // If we could parse the data, then remove the past chunk
+              pastIncompleteChunk = null
+
+              this.handleDiscordPacket(parsedData as DiscordGatewayPayload)
+            } catch (error) {
+              // The error was created by JSON.parse
+              if (error instanceof SyntaxError && error.message.includes('JSON')) {
+                this.logger.debug('Could not parse data as JSON, retrying at the next ZLib chunk.')
+
+                pastIncompleteChunk = decodedData
+                return
+              }
+
+              throw error
+            }
+          })
+        }
+
+        this.buffer = this.buffer ? extendBuffer(this.buffer, compressedData) : compressedData
+
+        if (!endsWithMarker(this.buffer, ZLIB_SYNC_FLUSH)) return
+
+        this.inflate.write(compressedData, 'binary')
+        this.buffer = null
+
+        // TODO: i would like a better way
+        // The handleDiscordPacket method is called by the data event on the inflate instance
+        data = null
+      } else {
+        data = this.textDecoder.decode(decompressZstd(compressedData))
+      }
+    }
+
+    // Safeguard incase decompression failed to make a string.
+    if (typeof data !== 'string') return
+
+    await this.handleDiscordPacket(JSON.parse(data) as DiscordGatewayPayload)
   }
 
   /** Handles a incoming gateway packet. */
@@ -468,22 +565,6 @@ export class DiscordenoShard {
     this.events.message?.(this, camelize(packet))
   }
 
-  /** Handle an incoming gateway message. */
-  async handleMessage(message: NodeWebSocket.MessageEvent): Promise<void> {
-    let preProcessMessage = message.data
-
-    // If message compression is enabled,
-    // Discord might send zlib compressed payloads.
-    if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-      preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
-    }
-
-    // Safeguard incase decompression failed to make a string.
-    if (typeof preProcessMessage !== 'string') return
-
-    return await this.handleDiscordPacket(JSON.parse(preProcessMessage) as DiscordGatewayPayload)
-  }
-
   /**
    * Override in order to make the shards presence.
    * async in case devs create the presence based on eg. database values.
@@ -584,6 +665,27 @@ export class DiscordenoShard {
     // To go safe we should clear the related timeout too.
     clearTimeout(this.heart.timeoutId)
   }
+}
+
+/** Check if the buffer ends with the marker */
+function endsWithMarker(buffer: Uint8Array, marker: Uint8Array) {
+  if (buffer.length < marker.length) return false
+
+  for (let i = 0; i < marker.length; i++) {
+    if (buffer[buffer.length - marker.length + i] !== marker[i]) return false
+  }
+
+  return true
+}
+
+/** Extend the ZLib buffer for the decompression */
+function extendBuffer(buffer: Uint8Array, newData: Uint8Array) {
+  const newBuffer = new Uint8Array(buffer.length + newData.length)
+
+  newBuffer.set(buffer)
+  newBuffer.set(newData, buffer.length)
+
+  return newBuffer
 }
 
 export interface ShardCreateOptions {

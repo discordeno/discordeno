@@ -18,12 +18,19 @@ export enum ShardState {
   Offline = 6,
 }
 
+export enum TransportCompression {
+  zlib = 'zlib-stream',
+  zstd = 'zstd-stream',
+}
+
 export interface ShardGatewayConfig {
   /** Whether incoming payloads are compressed using zlib.
    *
    * @default false
    */
   compress: boolean
+  /** What transport compression should be used */
+  compressMode?: TransportCompression
   /** The calculated intent value of the events which the shard should receive.
    *
    * @default 0
@@ -120,7 +127,8 @@ export enum ShardSocketCloseCodes {
   Shutdown = 3000,
   /** A resume has been requested and therefore the old connection needs to be closed. */
   ResumeClosingOldConnection = 3024,
-  /** Did not receive a heartbeat ACK in time.
+  /**
+   * Did not receive a heartbeat ACK in time.
    * Closing the shard and creating a new session.
    */
   ZombiedConnection = 3010,
