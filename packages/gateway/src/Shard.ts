@@ -117,8 +117,8 @@ export class DiscordenoShard {
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    // We check for built-in WebSocket implementations before fallback-ing to ws as Deno and Bun have a WebSocket implementation and NodeJS as for v22 has one as well
-    // @ts-expect-error NodeWebSocket doesn't support "dispatchEvent", and while we don't use it it is required on the "WebSocket" type
+    // We check for built-in WebSocket implementations before falling back to ws, as Deno and Bun have a WebSocket implementation and NodeJS as for v22 has one as well
+    // @ts-expect-error NodeWebSocket doesn't support "dispatchEvent", and while we don't use it, it is required on the "WebSocket" type
     const socket: WebSocket = Reflect.has(globalThis, 'WebSocket') ? new WebSocket(url) : new NodeWebSocket(url)
     this.socket = socket
 
@@ -128,7 +128,7 @@ export class DiscordenoShard {
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-        // Only set the shard to `Unidentified` state, if the connection request does not come from an identify or resume action.
+        // Only set the shard to `Unidentified` state if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
@@ -339,8 +339,7 @@ export class DiscordenoShard {
   async handleMessage(message: MessageEvent): Promise<void> {
     let preProcessMessage = message.data
 
-    // If message compression is enabled,
-    // Discord might send zlib compressed payloads.
+    // If message compression is enabled, Discord might send zlib compressed payloads.
     if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
       preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
     }
