@@ -425,7 +425,7 @@ export class DiscordenoShard {
 
   /** Handle an incoming gateway message. */
   async handleMessage(message: MessageEvent): Promise<void> {
-    // The ws npm package will use a Buffer, while the global functions (for all Deno, Bun and Node) will use Blob
+    // The ws npm package will use a Buffer, while the global functions (for all Deno, Bun and Node) will use ArrayBuffer
     const isCompressed = message.data instanceof ArrayBuffer || message.data instanceof Buffer
 
     const data: DiscordGatewayPayload = isCompressed ? await this.decompressPacket(message.data) : JSON.parse(message.data)
