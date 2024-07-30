@@ -53,6 +53,7 @@ export class DiscordenoShard {
   textDecoder = new TextDecoder()
   /** ZLib Inflate instance for ZLib-stream transport payloads */
   inflate?: Inflate
+  decompressionPromiseQueues: ((data: DiscordGatewayPayload) => void)[] = []
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -354,7 +355,7 @@ export class DiscordenoShard {
 
   /** Handle an incoming gateway message. */
   async handleMessage(message: MessageEvent): Promise<void> {
-    let data = message.data
+    let data: any = message.data
 
     // If message compression is enabled, Discord might send zlib/zstd compressed payloads.
     // The ws npm package will use a Buffer, while the global functions (for all Deno, Bun and Node) will use Blob
@@ -383,7 +384,7 @@ export class DiscordenoShard {
               // If we could parse the data, then remove the past chunk
               pastIncompleteChunk = null
 
-              this.handleDiscordPacket(parsedData as DiscordGatewayPayload)
+              this.decompressionPromiseQueues.shift()?.(parsedData)
             } catch (error) {
               // The error was created by JSON.parse
               if (error instanceof SyntaxError && error.message.includes('JSON')) {
@@ -402,18 +403,20 @@ export class DiscordenoShard {
 
         if (!endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return
 
-        // TODO: i would like a better way
-        // The handleDiscordPacket method is called by the data event on the inflate instance
-        data = null
+        const decompressionPromise = new Promise((r) => this.decompressionPromiseQueues.push(r))
+
+        data = await decompressionPromise
       } else {
         data = this.textDecoder.decode(decompressZstd(compressedData))
       }
+    } else {
+      data = JSON.parse(data)
     }
 
     // Safeguard incase decompression failed to make a string.
-    if (typeof data !== 'string') return
+    if (typeof data !== 'object' || !data) return
 
-    await this.handleDiscordPacket(JSON.parse(data) as DiscordGatewayPayload)
+    await this.handleDiscordPacket(data as DiscordGatewayPayload)
   }
 
   /** Handles a incoming gateway packet. */
