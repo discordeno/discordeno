@@ -237,7 +237,7 @@ export interface EventHandlers {
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji; burst: boolean }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown
-  presenceUpdate: (presence: PresenceUpdate, oldPresence?: PresenceUpdate) => unknown
+  presenceUpdate: (presence: PresenceUpdate) => unknown
   voiceServerUpdate: (payload: { token: string; endpoint?: string; guildId: bigint }) => unknown
   voiceStateUpdate: (voiceState: VoiceState) => unknown
   channelCreate: (channel: Channel) => unknown
