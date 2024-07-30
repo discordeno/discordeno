@@ -88,6 +88,12 @@ export function createBot(options: CreateBotOptions): Bot {
         if (!options.gateway?.lastShardId && !options.gateway?.totalShards) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
       }
 
+      if (!bot.gateway.resharding.getSessionInfo) {
+        bot.gateway.resharding.getSessionInfo = async () => {
+          return await bot.rest.getGatewayBot()
+        }
+      }
+
       await bot.gateway.spawnShards()
     },
 
