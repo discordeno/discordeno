@@ -147,23 +147,23 @@ const config: Config = {
           items: [
             {
               label: 'Bot package',
-              to: '/api_reference/category/bot-3',
+              to: '/api_reference/category/bot-1',
             },
             {
               label: 'Gateway package',
-              to: '/api_reference/category/gateway-3',
+              to: '/api_reference/category/gateway-1',
             },
             {
               label: 'Rest package',
-              to: '/api_reference/category/rest-3',
+              to: '/api_reference/category/rest-1',
             },
             {
               label: 'Utils package',
-              to: '/api_reference/category/utils-3',
+              to: '/api_reference/category/utils-1',
             },
             {
               label: 'Types package',
-              to: '/api_reference/category/types-3',
+              to: '/api_reference/category/types-1',
             },
           ],
         },
