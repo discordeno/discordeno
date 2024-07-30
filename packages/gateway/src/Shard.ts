@@ -154,8 +154,6 @@ export class DiscordenoShard {
           this.logger.error('The was an error in decompressing a ZLib compressed payload', e)
         })
 
-        // let pastIncompleteChunk: string | null = null
-
         this.inflate.on('data', (data) => {
           if (!(data instanceof Uint8Array)) return
 
@@ -169,25 +167,6 @@ export class DiscordenoShard {
           }
 
           this.inflateBuffer = data
-
-          // const decodedData = `${pastIncompleteChunk ? pastIncompleteChunk : ''}${this.textDecoder.decode(data)}`
-
-          // try {
-          //   this.parsePacket(decodedData)
-
-          //   // If we could parse the data, then remove the past chunk
-          //   pastIncompleteChunk = null
-          // } catch (error) {
-          //   // The error was created by JSON.parse
-          //   if (error instanceof SyntaxError && error.message.includes('JSON')) {
-          //     this.logger.debug('Could not parse data as JSON, retrying at the next ZLib chunk.')
-
-          //     pastIncompleteChunk = decodedData
-          //     return
-          //   }
-
-          //   throw error
-          // }
         })
       }
 
