@@ -32,7 +32,7 @@ export class DiscordenoShard {
   /** The shard related event handlers. */
   events: ShardEvents = {}
   /** Cache for pending gateway requests which should have been send while the gateway went offline. */
-  offlineSendQueue: Array<(_?: unknown) => void> = []
+  offlineSendQueue: (() => void)[] = []
   /** Resolve internal waiting states. Mapped by SelectedEvents => ResolveFunction */
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
@@ -82,13 +82,13 @@ export class DiscordenoShard {
   }
 
   async checkOffline(highPriority: boolean): Promise<void> {
-    if (!this.isOpen()) {
-      await new Promise((resolve) => {
-        // Higher priority requests get added at the beginning of the array.
-        if (highPriority) this.offlineSendQueue.unshift(resolve)
-        else this.offlineSendQueue.push(resolve)
-      })
-    }
+    if (this.isOpen()) return
+
+    return await new Promise<void>((resolve) => {
+      // Higher priority requests get added at the beginning of the array.
+      if (highPriority) this.offlineSendQueue.unshift(resolve)
+      else this.offlineSendQueue.push(resolve)
+    })
   }
 
   /** Close the socket connection to discord if present. */
@@ -428,7 +428,9 @@ export class DiscordenoShard {
         this.events.resumed?.(this)
 
         // Continue the requests which have been queued since the shard went offline.
-        this.offlineSendQueue.map((resolve) => resolve())
+        this.offlineSendQueue.forEach((resolve) => resolve())
+        // Setting the length to 0 will delete the elements in it
+        this.offlineSendQueue.length = 0
 
         this.resolves.get('RESUMED')?.(packet)
         this.resolves.delete('RESUMED')
@@ -444,7 +446,9 @@ export class DiscordenoShard {
 
         // Continue the requests which have been queued since the shard went offline.
         // Important when this is a re-identify
-        this.offlineSendQueue.map((resolve) => resolve())
+        this.offlineSendQueue.forEach((resolve) => resolve())
+        // Setting the length to 0 will delete the elements in it
+        this.offlineSendQueue.length = 0
 
         this.resolves.get('READY')?.(packet)
         this.resolves.delete('READY')
