@@ -441,8 +441,9 @@ export class DiscordenoShard {
    *
    * @private
    */
-  async decompressPacket(data: ArrayBuffer): Promise<DiscordGatewayPayload | null> {
-    const compressedData = new Uint8Array(data)
+  async decompressPacket(data: ArrayBuffer | Buffer): Promise<DiscordGatewayPayload | null> {
+    // A buffer is Uint8Array under the hood. An ArrayBuffer is generic, so we need to create the Uint8Array that uses the whole ArrayBuffer
+    const compressedData: Uint8Array = data instanceof Buffer ? data : new Uint8Array(data)
 
     if (this.gatewayConfig.transportCompression === TransportCompression.zlib) {
       if (!this.inflate) {
@@ -455,7 +456,6 @@ export class DiscordenoShard {
       if (!endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return null
 
       const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromisesQueue.push(r))
-
       return await decompressionPromise
     }
 
@@ -468,7 +468,6 @@ export class DiscordenoShard {
       this.zstdDecompress.push(compressedData)
 
       const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromisesQueue.push(r))
-
       return await decompressionPromise
     }
 
