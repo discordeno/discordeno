@@ -3,7 +3,7 @@ import { Inflate, createInflate, constants as zlibConstants } from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
-import { decompress as decompressZstd } from 'fzstd'
+import { Decompress as DecompressZstd } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {
   type BotStatusUpdate,
@@ -53,6 +53,8 @@ export class DiscordenoShard {
   textDecoder = new TextDecoder()
   /** ZLib Inflate instance for ZLib-stream transport payloads */
   inflate?: Inflate
+  /** ZStd Decompress instance for ZStd-stream transport payloads */
+  zstdDecompress?: DecompressZstd
   decompressionPromiseQueues: ((data: DiscordGatewayPayload) => void)[] = []
 
   constructor(options: ShardCreateOptions) {
@@ -292,6 +294,7 @@ export class DiscordenoShard {
     this.stopHeartbeating()
 
     this.inflate = undefined
+    this.zstdDecompress = undefined
 
     this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
 
@@ -355,7 +358,7 @@ export class DiscordenoShard {
 
   /** Handle an incoming gateway message. */
   async handleMessage(message: MessageEvent): Promise<void> {
-    let data: any = message.data
+    let data = message.data
 
     // If message compression is enabled, Discord might send zlib/zstd compressed payloads.
     // The ws npm package will use a Buffer, while the global functions (for all Deno, Bun and Node) will use Blob
@@ -407,13 +410,24 @@ export class DiscordenoShard {
 
         data = await decompressionPromise
       } else {
-        data = this.textDecoder.decode(decompressZstd(compressedData))
+        this.zstdDecompress ??= new DecompressZstd((data) => {
+          const decodedData = this.textDecoder.decode(data)
+          const parsedData = JSON.parse(decodedData)
+
+          this.decompressionPromiseQueues.shift()?.(parsedData)
+        })
+
+        this.zstdDecompress.push(compressedData)
+
+        const decompressionPromise = new Promise((r) => this.decompressionPromiseQueues.push(r))
+
+        data = await decompressionPromise
       }
     } else {
       data = JSON.parse(data)
     }
 
-    // Safeguard incase decompression failed to make a string.
+    // Safeguard incase decompression failed.
     if (typeof data !== 'object' || !data) return
 
     await this.handleDiscordPacket(data as DiscordGatewayPayload)
