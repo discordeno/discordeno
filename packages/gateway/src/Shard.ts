@@ -60,9 +60,11 @@ export class DiscordenoShard {
   textDecoder = new TextDecoder()
   /** ZLib Inflate instance for ZLib-stream transport payloads */
   inflate?: Inflate
+  /** ZLib inflate buffer */
+  inflateBuffer: Uint8Array | null = null
   /** ZStd Decompress instance for ZStd-stream transport payloads */
   zstdDecompress?: ZstdDecompress
-  /** Queue for compressed payloads for Zlib Inflate and Zstd Decompress */
+  /** Queue for compressed payloads for Zstd Decompress */
   decompressionPromisesQueue: ((data: DiscordGatewayPayload) => void)[] = []
 
   constructor(options: ShardCreateOptions) {
@@ -142,6 +144,7 @@ export class DiscordenoShard {
       url.searchParams.set('compress', this.gatewayConfig.transportCompression)
 
       if (this.gatewayConfig.transportCompression === TransportCompression.zlib) {
+        this.inflateBuffer = null
         this.inflate = createInflate({
           finishFlush: zlibConstants.Z_SYNC_FLUSH,
           chunkSize: 64 * 1024,
@@ -151,27 +154,40 @@ export class DiscordenoShard {
           this.logger.error('The was an error in decompressing a ZLib compressed payload', e)
         })
 
-        let pastIncompleteChunk: string | null = null
+        // let pastIncompleteChunk: string | null = null
 
         this.inflate.on('data', (data) => {
-          const decodedData = `${pastIncompleteChunk ? pastIncompleteChunk : ''}${this.textDecoder.decode(data)}`
+          if (!(data instanceof Uint8Array)) return
 
-          try {
-            this.parsePacket(decodedData)
+          if (this.inflateBuffer) {
+            const newBuffer = new Uint8Array(this.inflateBuffer.byteLength + data.byteLength)
+            newBuffer.set(this.inflateBuffer)
+            newBuffer.set(data, this.inflateBuffer.byteLength)
+            this.inflateBuffer = newBuffer
 
-            // If we could parse the data, then remove the past chunk
-            pastIncompleteChunk = null
-          } catch (error) {
-            // The error was created by JSON.parse
-            if (error instanceof SyntaxError && error.message.includes('JSON')) {
-              this.logger.debug('Could not parse data as JSON, retrying at the next ZLib chunk.')
-
-              pastIncompleteChunk = decodedData
-              return
-            }
-
-            throw error
+            return
           }
+
+          this.inflateBuffer = data
+
+          // const decodedData = `${pastIncompleteChunk ? pastIncompleteChunk : ''}${this.textDecoder.decode(data)}`
+
+          // try {
+          //   this.parsePacket(decodedData)
+
+          //   // If we could parse the data, then remove the past chunk
+          //   pastIncompleteChunk = null
+          // } catch (error) {
+          //   // The error was created by JSON.parse
+          //   if (error instanceof SyntaxError && error.message.includes('JSON')) {
+          //     this.logger.debug('Could not parse data as JSON, retrying at the next ZLib chunk.')
+
+          //     pastIncompleteChunk = decodedData
+          //     return
+          //   }
+
+          //   throw error
+          // }
         })
       }
 
@@ -186,7 +202,8 @@ export class DiscordenoShard {
         if (fzstd) {
           this.zstdDecompress = new fzstd.Decompress((data) => {
             const decodedData = this.textDecoder.decode(data)
-            this.parsePacket(decodedData)
+            const parsedData = JSON.parse(decodedData)
+            this.decompressionPromisesQueue.shift()?.(parsedData)
           })
         }
       }
@@ -451,12 +468,26 @@ export class DiscordenoShard {
         return null
       }
 
-      this.inflate.write(compressedData, 'binary')
+      // Alias, used to avoid some null checks in the Promise constructor
+      const inflate = this.inflate
+
+      const writePromise = new Promise<void>((resolve, reject) => {
+        inflate.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()))
+      })
 
       if (!endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return null
 
-      const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromisesQueue.push(r))
-      return await decompressionPromise
+      await writePromise
+
+      if (!this.inflateBuffer) {
+        this.logger.warn('[Shard] The ZLib inflate buffer was cleared at an unexpected moment.')
+        return null
+      }
+
+      const decodedData = this.textDecoder.decode(this.inflateBuffer)
+      this.inflateBuffer = null
+
+      return JSON.parse(decodedData)
     }
 
     if (this.gatewayConfig.transportCompression === TransportCompression.zstd) {
@@ -479,16 +510,6 @@ export class DiscordenoShard {
     }
 
     return null
-  }
-
-  /**
-   * Parse a decompressed JSON and resolve the promise in the queue
-   *
-   * @private
-   */
-  parsePacket(data: string) {
-    const parsedData = JSON.parse(data)
-    this.decompressionPromisesQueue.shift()?.(parsedData)
   }
 
   /** Handles a incoming gateway packet. */
