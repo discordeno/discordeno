@@ -212,7 +212,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               case 'nameLocalizations':
                 newObj.name_localizations = value
                 continue
-              case 'name_localizations':
+              case 'description_localizations':
               case 'descriptionLocalizations':
                 newObj.description_localizations = value
                 continue
