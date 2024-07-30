@@ -62,7 +62,8 @@ export class DiscordenoShard {
   inflate?: Inflate
   /** ZStd Decompress instance for ZStd-stream transport payloads */
   zstdDecompress?: ZstdDecompress
-  decompressionPromiseQueues: ((data: DiscordGatewayPayload) => void)[] = []
+  /** Queue for compressed payloads for Zlib Inflate and Zstd Decompress */
+  decompressionPromisesQueue: ((data: DiscordGatewayPayload) => void)[] = []
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -453,7 +454,7 @@ export class DiscordenoShard {
 
       if (!endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return null
 
-      const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromiseQueues.push(r))
+      const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromisesQueue.push(r))
 
       return await decompressionPromise
     }
@@ -466,7 +467,7 @@ export class DiscordenoShard {
 
       this.zstdDecompress.push(compressedData)
 
-      const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromiseQueues.push(r))
+      const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromisesQueue.push(r))
 
       return await decompressionPromise
     }
@@ -488,7 +489,7 @@ export class DiscordenoShard {
    */
   parsePacket(data: string) {
     const parsedData = JSON.parse(data)
-    this.decompressionPromiseQueues.shift()?.(parsedData)
+    this.decompressionPromisesQueue.shift()?.(parsedData)
   }
 
   /** Handles a incoming gateway packet. */
