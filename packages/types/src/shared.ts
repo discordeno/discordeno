@@ -409,7 +409,7 @@ export enum VideoQualityModes {
 
 /** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
-  Game = 0,
+  Playing = 0,
   Streaming = 1,
   Listening = 2,
   Watching = 3,
