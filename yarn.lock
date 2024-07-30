@@ -161,6 +161,9 @@ __metadata:
     typescript: "npm:^5.5.3"
     uWebSockets.js: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
     ws: "npm:^8.18.0"
+  dependenciesMeta:
+    fzstd:
+      optional: true
   languageName: unknown
   linkType: soft
 

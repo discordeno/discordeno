@@ -35,7 +35,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
   const gateway: GatewayManager = {
     events: options.events ?? {},
     compress: options.compress ?? false,
-    compressMode: options.compressMode ?? null,
+    transportCompression: options.transportCompression ?? null,
     intents: options.intents ?? 0,
     properties: {
       os: options.properties?.os ?? process.platform,
@@ -127,7 +127,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           id: shardId,
           connection: {
             compress: gateway.compress,
-            compressMode: gateway.compressMode ?? undefined,
+            transportCompression: gateway.transportCompression ?? null,
             intents: gateway.intents,
             properties: gateway.properties,
             token: gateway.token,
@@ -347,7 +347,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           id: shardId,
           connection: {
             compress: this.compress,
-            compressMode: gateway.compressMode ?? undefined,
+            transportCompression: gateway.transportCompression,
             intents: this.intents,
             properties: this.properties,
             token: this.token,
@@ -574,7 +574,7 @@ export interface CreateGatewayManagerOptions {
    */
   compress?: boolean
   /** What transport compression should be used */
-  compressMode?: TransportCompression | null
+  transportCompression?: TransportCompression | null
   /** The calculated intent value of the events which the shard should receive.
    *
    * @default 0
