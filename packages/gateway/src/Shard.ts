@@ -1,9 +1,5 @@
 import { Buffer } from 'node:buffer'
-import { once } from 'node:events'
-import stream, { pipeline } from 'node:stream'
-import { json } from 'node:stream/consumers'
-import { Inflate, InflateRaw, createInflate, createInflateRaw, inflateRawSync, inflateSync } from 'node:zlib'
-import zlib from 'node:zlib'
+import { Inflate, createInflate, constants as zlibConstants } from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
@@ -57,8 +53,6 @@ export class DiscordenoShard {
   textDecoder = new TextDecoder()
   /** ZLib Inflate instance for ZLib-stream transport payloads */
   inflate?: Inflate
-  /** Buffer for ZLib-stream transport payloads */
-  buffer: Uint8Array | null = null
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -131,6 +125,8 @@ export class DiscordenoShard {
     const url = new URL(this.connectionUrl)
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
+
+    if (this.gatewayConfig.compressMode) url.searchParams.set('compress', this.gatewayConfig.compressMode)
 
     // @ts-expect-error TS gets confused with this ternary
     const socket: WebSocket =
@@ -295,7 +291,6 @@ export class DiscordenoShard {
     this.stopHeartbeating()
 
     this.inflate = undefined
-    this.buffer = null
 
     this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
 
@@ -369,7 +364,7 @@ export class DiscordenoShard {
       if (this.gatewayConfig.compressMode === TransportCompression.zlib) {
         if (!this.inflate) {
           this.inflate = createInflate({
-            finishFlush: zlib.constants.Z_SYNC_FLUSH,
+            finishFlush: zlibConstants.Z_SYNC_FLUSH,
             chunkSize: 64 * 1024,
           })
 
@@ -403,12 +398,9 @@ export class DiscordenoShard {
           })
         }
 
-        this.buffer = this.buffer ? extendBuffer(this.buffer, compressedData) : compressedData
-
-        if (!endsWithMarker(this.buffer, ZLIB_SYNC_FLUSH)) return
-
         this.inflate.write(compressedData, 'binary')
-        this.buffer = null
+
+        if (!endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return
 
         // TODO: i would like a better way
         // The handleDiscordPacket method is called by the data event on the inflate instance
@@ -676,16 +668,6 @@ function endsWithMarker(buffer: Uint8Array, marker: Uint8Array) {
   }
 
   return true
-}
-
-/** Extend the ZLib buffer for the decompression */
-function extendBuffer(buffer: Uint8Array, newData: Uint8Array) {
-  const newBuffer = new Uint8Array(buffer.length + newData.length)
-
-  newBuffer.set(buffer)
-  newBuffer.set(newData, buffer.length)
-
-  return newBuffer
 }
 
 export interface ShardCreateOptions {
