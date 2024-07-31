@@ -91,13 +91,6 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
-          sidebarId: 'tutorial',
-          position: 'left',
-          label: 'Tutorial',
-          docsPluginId: 'tutorial',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'api_reference',
           position: 'left',
           label: 'API Reference',
@@ -150,44 +143,27 @@ const config: Config = {
           ],
         },
         {
-          title: 'Tutorial',
-          items: [
-            {
-              label: 'Big Bot',
-              to: '/tutorial/big-bot-guide/step-by-step',
-            },
-            {
-              label: 'Node.js',
-              to: '/tutorial/nodejs/getting-started',
-            },
-            {
-              label: 'Amethyst',
-              to: '/tutorial/amethyst/intro',
-            },
-          ],
-        },
-        {
           title: 'API Reference',
           items: [
             {
               label: 'Bot package',
-              to: '/api_reference/category/bot-3',
+              to: '/api_reference/category/bot-1',
             },
             {
               label: 'Gateway package',
-              to: '/api_reference/category/gateway-3',
+              to: '/api_reference/category/gateway-1',
             },
             {
               label: 'Rest package',
-              to: '/api_reference/category/rest-3',
+              to: '/api_reference/category/rest-1',
             },
             {
               label: 'Utils package',
-              to: '/api_reference/category/utils-3',
+              to: '/api_reference/category/utils-1',
             },
             {
               label: 'Types package',
-              to: '/api_reference/category/types-3',
+              to: '/api_reference/category/types-1',
             },
           ],
         },
@@ -255,16 +231,6 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'tutorial',
-        path: 'tutorial',
-        routeBasePath: 'tutorial',
-        sidebarPath: require.resolve('./sidebars.js'),
-        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
-      } satisfies PluginContentDocs,
-    ],
-    [
-      '@docusaurus/plugin-content-docs',
-      {
         id: 'api_reference',
         path: 'api_reference',
         routeBasePath: 'api_reference',
@@ -277,10 +243,10 @@ const config: Config = {
       {
         indexDocs: true,
         indexPages: true,
-        docsRouteBasePath: ['/docs', '/tutorial', 'api_reference'],
+        docsRouteBasePath: ['/docs', 'api_reference'],
         language: ['en'],
         hashed: true,
-        docsDir: ['docs', 'tutorial', 'api_reference'],
+        docsDir: ['docs', 'api_reference'],
         blogDir: [],
         removeDefaultStopWordFilter: true,
         highlightSearchTermsOnTargetPage: true,
