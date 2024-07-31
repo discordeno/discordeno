@@ -221,7 +221,7 @@ export interface EventHandlers {
   messageCreate: (message: Message) => unknown
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: Message) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown
-  messageUpdate: (message: Message, oldMessage?: Message) => unknown
+  messageUpdate: (message: Message) => unknown
   reactionAdd: (payload: {
     userId: bigint
     channelId: bigint
@@ -237,7 +237,7 @@ export interface EventHandlers {
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji; burst: boolean }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown
-  presenceUpdate: (presence: PresenceUpdate, oldPresence?: PresenceUpdate) => unknown
+  presenceUpdate: (presence: PresenceUpdate) => unknown
   voiceServerUpdate: (payload: { token: string; endpoint?: string; guildId: bigint }) => unknown
   voiceStateUpdate: (voiceState: VoiceState) => unknown
   channelCreate: (channel: Channel) => unknown
