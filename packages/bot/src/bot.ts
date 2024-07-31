@@ -70,8 +70,8 @@ export function createBot(options: CreateBotOptions): Bot {
     applicationId: id,
     transformers: createTransformers(options.transformers, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
     handlers: createBotGatewayHandlers(options.handlers ?? {}),
-    rest: createRestManager(options.rest),
-    gateway: createGatewayManager(options.gateway),
+    rest: createRestManager(options.rest as CreateRestManagerOptions),
+    gateway: createGatewayManager(options.gateway as CreateGatewayManagerOptions),
     events: options.events ?? {},
     logger: options.loggerFactory ? options.loggerFactory('BOT') : createLogger({ name: 'BOT' }),
     // Set up helpers below.
@@ -116,9 +116,9 @@ export interface CreateBotOptions {
   /** The bot's intents that will be used to make a connection with discords gateway. */
   intents?: GatewayIntents
   /** Any options you wish to provide to the rest manager. */
-  rest?: CreateRestManagerOptions & Partial<Pick<CreateRestManagerOptions, 'token'>>
+  rest?: Omit<CreateRestManagerOptions, 'token'> & Partial<Pick<CreateRestManagerOptions, 'token'>>
   /** Any options you wish to provide to the gateway manager. */
-  gateway?: CreateGatewayManagerOptions & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
+  gateway?: Omit<CreateGatewayManagerOptions, 'token'> & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
   /** The event handlers. */
   events?: Partial<EventHandlers>
   /** The functions that should transform discord objects to discordeno shaped objects. */
