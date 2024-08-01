@@ -196,8 +196,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         for (const key of Object.keys(obj)) {
           const value = obj[key]
 
-          // If the key is already in camelCase we have no reason for the rest of the code to run.
-          if (!key.includes('_')) continue
+          // If the key is already in snake_case we have no reason for the rest of the code to run.
+          if (key.includes('_')) continue
 
           // Some falsy values should be allowed like null or 0
           if (value !== undefined) {
