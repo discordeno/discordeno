@@ -2142,100 +2142,69 @@ export interface DiscordAuditLogEntry {
   reason?: string
 }
 
+export type DiscordAuditLogChangeObject<T> = {
+  [K in keyof T]: {
+    new_value?: T[K]
+    old_value?: T[K]
+    key: K
+  }
+}[keyof T]
+
+// Done manually as it is clearer in this way
+/** Partial role audit log entry change exception */
+export type DiscordAuditLogChangePartialRole = { new_value: { id: string; name: string }[]; key: '$add' | '$remove' }
+
+/**
+ * Invite audit log entry change exception
+ *
+ * @remarks
+ * While the docs say that 'channel.id' will never exist, we keep it as it is very complex to remove, the user should not use it and use the provided 'channel_id' value instead
+ */
+export type DiscordAuditLogChangeInvite = DiscordAuditLogChangeObject<DiscordInvite> | DiscordAuditLogChangeObject<{ channel_id: string }>
+
+/**
+ * Invite Metadata audit log entry change exception
+ *
+ * @remarks
+ * While the docs say that 'channel.id' will never exist, we keep it as it is very complex to remove, the user should not use it and use the provided 'channel_id' value instead
+ */
+export type DiscordAuditLogChangeInviteMetadata =
+  | DiscordAuditLogChangeObject<DiscordInviteMetadata>
+  | DiscordAuditLogChangeObject<{ channel_id: string }>
+
+/** Webhook audit log entry change exception */
+export type DiscordAuditLogChangeWebhook =
+  | DiscordAuditLogChangeObject<Omit<DiscordWebhook, 'avatar'>>
+  | DiscordAuditLogChangeObject<{ avatar_hash: DiscordWebhook['avatar'] }>
+
+// Done manually as it is clearer in this way
+/** Command Permission audit log entry change exception */
+export type DiscordAuditLogChangeApplicationCommandPermissions = {
+  new_value?: DiscordApplicationCommandPermissions
+  old_value?: DiscordApplicationCommandPermissions
+  key: `${number}`
+}
+
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export type DiscordAuditLogChange =
-  | {
-      new_value: string
-      old_value: string
-      key:
-        | 'name'
-        | 'description'
-        | 'discovery_splash_hash'
-        | 'banner_hash'
-        | 'preferred_locale'
-        | 'rules_channel_id'
-        | 'public_updates_channel_id'
-        | 'icon_hash'
-        | 'image_hash'
-        | 'splash_hash'
-        | 'owner_id'
-        | 'region'
-        | 'afk_channel_id'
-        | 'vanity_url_code'
-        | 'widget_channel_id'
-        | 'system_channel_id'
-        | 'topic'
-        | 'application_id'
-        | 'permissions'
-        | 'allow'
-        | 'deny'
-        | 'code'
-        | 'channel_id'
-        | 'inviter_id'
-        | 'nick'
-        | 'avatar_hash'
-        | 'id'
-        | 'location'
-        | 'command_id'
-    }
-  | {
-      new_value: number
-      old_value: number
-      key:
-        | 'afk_timeout'
-        | 'mfa_level'
-        | 'verification_level'
-        | 'explicit_content_filter'
-        | 'default_message_notifications'
-        | 'prune_delete_days'
-        | 'position'
-        | 'bitrate'
-        | 'rate_limit_per_user'
-        | 'color'
-        | 'max_uses'
-        | 'uses'
-        | 'max_age'
-        | 'expire_behavior'
-        | 'expire_grace_period'
-        | 'user_limit'
-        | 'privacy_level'
-        | 'auto_archive_duration'
-        | 'default_auto_archive_duration'
-        | 'entity_type'
-        | 'status'
-        | 'communication_disabled_until'
-    }
-  | {
-      new_value: Partial<DiscordRole>[]
-      old_value?: Partial<DiscordRole>[]
-      key: '$add' | '$remove'
-    }
-  | {
-      new_value: boolean
-      old_value: boolean
-      key:
-        | 'widget_enabled'
-        | 'nsfw'
-        | 'hoist'
-        | 'mentionable'
-        | 'temporary'
-        | 'deaf'
-        | 'mute'
-        | 'enable_emoticons'
-        | 'archived'
-        | 'locked'
-        | 'invitable'
-    }
-  | {
-      new_value: DiscordOverwrite[]
-      old_value: DiscordOverwrite[]
-      key: 'permission_overwrites'
-    }
-  | {
-      new_value: string | number
-      old_value: string | number
-      key: 'type'
-    }
+  | DiscordAuditLogChangeObject<DiscordGuild>
+  | DiscordAuditLogChangeObject<DiscordChannel>
+  | DiscordAuditLogChangeObject<DiscordOverwrite>
+  | DiscordAuditLogChangeObject<DiscordMember>
+  | DiscordAuditLogChangePartialRole
+  | DiscordAuditLogChangeObject<DiscordRole>
+  | DiscordAuditLogChangeInvite
+  | DiscordAuditLogChangeInviteMetadata
+  | DiscordAuditLogChangeWebhook
+  | DiscordAuditLogChangeObject<DiscordEmoji>
+  | DiscordAuditLogChangeObject<DiscordIntegration>
+  | DiscordAuditLogChangeObject<DiscordStageInstance>
+  | DiscordAuditLogChangeObject<DiscordSticker>
+  | DiscordAuditLogChangeObject<DiscordThreadMetadata>
+  | DiscordAuditLogChangeApplicationCommandPermissions
+  | DiscordAuditLogChangeObject<DiscordAutoModerationRule>
+  | DiscordAuditLogChangeObject<DiscordGuildOnboardingPrompt>
+  | DiscordAuditLogChangeObject<DiscordGuildOnboarding>
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
@@ -2244,73 +2213,73 @@ export interface DiscordOptionalAuditEntryInfo {
    *
    * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
    */
-  application_id: string
+  application_id?: string
   /**
    * Name of the Auto Moderation rule that was triggered.
    *
    * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
    */
-  auto_moderation_rule_name: string
+  auto_moderation_rule_name?: string
   /**
    * Trigger type of the Auto Moderation rule that was triggered.
    *
    * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
    */
-  auto_moderation_rule_trigger_type: string
+  auto_moderation_rule_trigger_type?: string
   /**
    * Channel in which the entities were targeted.
    *
    * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
-  channel_id: string
+  channel_id?: string
   /**
    * Number of entities that were targeted.
    *
    * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
    */
-  count: string
+  count?: string
   /**
    * Number of days after which inactive members were kicked.
    *
    * Event types: `MEMBER_PRUNE`
    */
-  delete_member_days: string
+  delete_member_days?: string
   /**
    * ID of the overwritten entity.
    *
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  id: string
+  id?: string
   /**
    * Number of members removed by the prune.
    *
    * Event types: `MEMBER_PRUNE`
    */
-  members_removed: string
+  members_removed?: string
   /**
    * ID of the message that was targeted.
    *
    * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
-  message_id: string
+  message_id?: string
   /**
    * Name of the role if type is "0" (not present if type is "1").
    *
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  role_name: string
+  role_name?: string
   /**
    * Type of overwritten entity - "0", for "role", or "1" for "member".
    *
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  type: string
+  type?: string
   /**
    * The type of integration which performed the action
    *
    * Event types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
    */
-  integration_type: string
+  integration_type?: string
 }
 
 export interface DiscordScheduledEvent {
