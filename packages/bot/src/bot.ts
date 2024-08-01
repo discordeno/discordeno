@@ -6,7 +6,7 @@ import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents, Re
 import { type Collection, createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
-import { type Transformers, type TransformersDesiredProprieties, createTransformers } from './transformers.js'
+import { type Transformers, type TransformersDesiredProperties, createTransformers } from './transformers.js'
 import type {
   AuditLogEntry,
   AutoModerationActionExecution,
@@ -135,11 +135,11 @@ export interface CreateBotOptions {
    */
   defaultDesiredPropertiesValue?: boolean
   /**
-   * Set the desired proprieties for the bot
+   * Set the desired properties for the bot
    *
    * @default {}
    */
-  desiredProperties?: RecursivePartial<TransformersDesiredProprieties>
+  desiredProperties?: RecursivePartial<TransformersDesiredProperties>
   /**
    * This factory will be invoked to create the logger for gateway, rest and bot
    *

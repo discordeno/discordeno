@@ -1,7 +1,7 @@
 import { unlink, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { type TransformersDesiredProprieties, createDesiredProprietiesObject, gray } from '@discordeno/bot'
+import { type TransformersDesiredProperties, createDesiredPropertiesObject, gray } from '@discordeno/bot'
 import type { RecursivePartial } from '@discordeno/types'
 import { findUp } from 'find-up'
 import ts from 'typescript'
@@ -24,7 +24,7 @@ export function defineConfig(config: RecursivePartial<DiscordenoConfig>): Discor
   return {
     desiredProperties: {
       behavior: config.desiredProperties?.behavior ?? DesiredPropertiesBehavior.TypeAsNever,
-      properties: createDesiredProprietiesObject(config.desiredProperties?.properties ?? {}),
+      properties: createDesiredPropertiesObject(config.desiredProperties?.properties ?? {}),
     },
   }
 }
@@ -83,6 +83,6 @@ function buildConfig(path: string) {
 export interface DiscordenoConfig {
   desiredProperties: {
     behavior: DesiredPropertiesBehavior
-    properties: TransformersDesiredProprieties
+    properties: TransformersDesiredProperties
   }
 }

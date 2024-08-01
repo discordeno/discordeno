@@ -243,7 +243,7 @@ export interface Transformers {
     pollMedia: (bot: Bot, payload: DiscordPollMedia, pollMedia: PollMedia) => any
     avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData, avatarDecorationData: AvatarDecorationData) => any
   }
-  desiredProperties: TransformersDesiredProprieties
+  desiredProperties: TransformersDesiredProperties
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
     embed: (bot: Bot, payload: Embed) => DiscordEmbed
@@ -316,7 +316,7 @@ export interface Transformers {
   avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
 }
 
-export interface TransformersDesiredProprieties {
+export interface TransformersDesiredProperties {
   attachment: {
     id: boolean
     filename: boolean
@@ -805,7 +805,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       pollMedia: options.customizers?.pollMedia ?? defaultCustomizer,
       avatarDecorationData: options.customizers?.avatarDecorationData ?? defaultCustomizer,
     },
-    desiredProperties: createDesiredProprietiesObject(options.desiredProperties ?? {}, opts?.defaultDesiredPropertiesValue ?? false),
+    desiredProperties: createDesiredPropertiesObject(options.desiredProperties ?? {}, opts?.defaultDesiredPropertiesValue ?? false),
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
@@ -879,10 +879,10 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
   }
 }
 
-export function createDesiredProprietiesObject(
-  desiredProperties: RecursivePartial<TransformersDesiredProprieties>,
+export function createDesiredPropertiesObject(
+  desiredProperties: RecursivePartial<TransformersDesiredProperties>,
   defaultValue = false,
-): TransformersDesiredProprieties {
+): TransformersDesiredProperties {
   return {
     attachment: {
       id: defaultValue,

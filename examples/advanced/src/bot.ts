@@ -23,7 +23,7 @@ export const bot = createProxyCache(
 // By default, bot.logger will use an instance of the logger from @discordeno/bot, this logger supports depth and we need to change it, so we need to say to TS that we know what we are doing with as
 ;(bot.logger as typeof discordenoLogger).setDepth(LogDepth.Full)
 
-// Setup desired proprieties
+// Setup desired properties
 bot.transformers.desiredProperties.interaction.id = true
 bot.transformers.desiredProperties.interaction.type = true
 bot.transformers.desiredProperties.interaction.data = true
