@@ -196,6 +196,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         for (const key of Object.keys(obj)) {
           const value = obj[key]
 
+          // If the key is already in camelCase we have no reason for the rest of the code to run.
+          if (!key.includes('_')) continue
+
           // Some falsy values should be allowed like null or 0
           if (value !== undefined) {
             switch (key) {
@@ -204,15 +207,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               case 'deny':
                 newObj[key] = typeof value === 'string' ? value : calculateBits(value)
                 continue
-              case 'default_member_permissions':
               case 'defaultMemberPermissions':
                 newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value)
                 continue
-              case 'name_localizations':
               case 'nameLocalizations':
                 newObj.name_localizations = value
                 continue
-              case 'description_localizations':
               case 'descriptionLocalizations':
                 newObj.description_localizations = value
                 continue
