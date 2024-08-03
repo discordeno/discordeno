@@ -18,7 +18,7 @@ import {
 
 const ZLIB_SYNC_FLUSH = new Uint8Array([0x0, 0x0, 0xff, 0xff])
 
-let fzstd: typeof import('fzstd') | null
+let fzstd: typeof import('fzstd')
 
 /** Since fzstd is an optional dependency, we need to import it lazily */
 async function getFZStd() {
@@ -193,7 +193,7 @@ export class DiscordenoShard {
       this.gatewayConfig.compress = false
     }
 
-    // @ts-expect-error TS gets confused with this ternary
+    // @ts-expect-error NodeWebSocket doesn't support "dispatchEvent", and while we don't use it, it is required on the "WebSocket" type
     const socket: WebSocket =
       // @ts-expect-error Deno
       globalThis.Deno !== undefined && Reflect.has(globalThis, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
