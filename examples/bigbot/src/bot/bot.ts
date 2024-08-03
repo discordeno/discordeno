@@ -19,7 +19,7 @@ export const bot = createCustomBot(
 
 overrideGatewayImplementations(bot)
 
-// TEMPLATE-SETUP: Add/Remove the desired proprieties that you don't need
+// TEMPLATE-SETUP: Add/Remove the desired properties that you don't need
 const props = bot.transformers.desiredProperties
 
 props.interaction.id = true
@@ -32,7 +32,7 @@ props.interaction.guildId = true
 props.user.id = true
 props.user.username = true
 
-// TEMPLATE-SETUP: If you want/need to add any custom proprieties on the Bot type, you can do it in this function and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
+// TEMPLATE-SETUP: If you want/need to add any custom properties on the Bot type, you can do it in this function and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
 function createCustomBot<TBot extends Bot = Bot>(rawBot: TBot): CustomBot<TBot> {
   const bot = rawBot as CustomBot<TBot>
 

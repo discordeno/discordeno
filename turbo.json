@@ -34,7 +34,8 @@
     },
     "test:e2e": {
       "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**"],
+      "env": ["DISCORD_TOKEN", "E2E_TEST_GUILD_ID"]
     },
     "lint": {
       "dependsOn": ["build:type"],

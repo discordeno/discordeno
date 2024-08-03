@@ -7,7 +7,7 @@ const rawBot = createBot({
   intents: Intents.Guilds,
 })
 
-// Setup desired proprieties
+// Setup desired properties
 rawBot.transformers.desiredProperties.interaction.id = true
 rawBot.transformers.desiredProperties.interaction.type = true
 rawBot.transformers.desiredProperties.interaction.data = true

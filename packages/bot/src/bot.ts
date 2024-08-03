@@ -6,7 +6,7 @@ import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents, Re
 import { type Collection, createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
-import { type Transformers, type TransformersDesiredProprieties, createTransformers } from './transformers.js'
+import { type Transformers, type TransformersDesiredProperties, createTransformers } from './transformers.js'
 import type {
   AuditLogEntry,
   AutoModerationActionExecution,
@@ -70,8 +70,8 @@ export function createBot(options: CreateBotOptions): Bot {
     applicationId: id,
     transformers: createTransformers(options.transformers, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
     handlers: createBotGatewayHandlers(options.handlers ?? {}),
-    rest: createRestManager(options.rest),
-    gateway: createGatewayManager(options.gateway),
+    rest: createRestManager(options.rest as CreateRestManagerOptions),
+    gateway: createGatewayManager(options.gateway as CreateGatewayManagerOptions),
     events: options.events ?? {},
     logger: options.loggerFactory ? options.loggerFactory('BOT') : createLogger({ name: 'BOT' }),
     // Set up helpers below.
@@ -86,6 +86,12 @@ export function createBot(options: CreateBotOptions): Bot {
         if (!options.gateway?.totalShards) bot.gateway.totalShards = bot.gateway.connection.shards
 
         if (!options.gateway?.lastShardId && !options.gateway?.totalShards) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
+      }
+
+      if (!bot.gateway.resharding.getSessionInfo) {
+        bot.gateway.resharding.getSessionInfo = async () => {
+          return await bot.rest.getGatewayBot()
+        }
       }
 
       await bot.gateway.spawnShards()
@@ -110,9 +116,9 @@ export interface CreateBotOptions {
   /** The bot's intents that will be used to make a connection with discords gateway. */
   intents?: GatewayIntents
   /** Any options you wish to provide to the rest manager. */
-  rest?: CreateRestManagerOptions & Partial<Pick<CreateRestManagerOptions, 'token'>>
+  rest?: Omit<CreateRestManagerOptions, 'token'> & Partial<Pick<CreateRestManagerOptions, 'token'>>
   /** Any options you wish to provide to the gateway manager. */
-  gateway?: CreateGatewayManagerOptions & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
+  gateway?: Omit<CreateGatewayManagerOptions, 'token'> & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
   /** The event handlers. */
   events?: Partial<EventHandlers>
   /** The functions that should transform discord objects to discordeno shaped objects. */
@@ -129,11 +135,11 @@ export interface CreateBotOptions {
    */
   defaultDesiredPropertiesValue?: boolean
   /**
-   * Set the desired proprieties for the bot
+   * Set the desired properties for the bot
    *
    * @default {}
    */
-  desiredProperties?: RecursivePartial<TransformersDesiredProprieties>
+  desiredProperties?: RecursivePartial<TransformersDesiredProperties>
   /**
    * This factory will be invoked to create the logger for gateway, rest and bot
    *
@@ -215,7 +221,7 @@ export interface EventHandlers {
   messageCreate: (message: Message) => unknown
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: Message) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown
-  messageUpdate: (message: Message, oldMessage?: Message) => unknown
+  messageUpdate: (message: Message) => unknown
   reactionAdd: (payload: {
     userId: bigint
     channelId: bigint
@@ -231,7 +237,7 @@ export interface EventHandlers {
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji; burst: boolean }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown
-  presenceUpdate: (presence: PresenceUpdate, oldPresence?: PresenceUpdate) => unknown
+  presenceUpdate: (presence: PresenceUpdate) => unknown
   voiceServerUpdate: (payload: { token: string; endpoint?: string; guildId: bigint }) => unknown
   voiceStateUpdate: (voiceState: VoiceState) => unknown
   channelCreate: (channel: Channel) => unknown
