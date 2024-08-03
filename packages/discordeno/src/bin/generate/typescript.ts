@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { type WriteStream, createWriteStream } from 'node:fs'
 import ts from 'typescript'
-import { DesiredProprietiesBehavior, type DiscordenoConfig, typescriptOptions } from '../config.js'
+import { DesiredPropertiesBehavior, type DiscordenoConfig, typescriptOptions } from '../config.js'
 import { getPropertyDependencies, isPropertyDesired } from './desiredProperty.js'
 import { writeInterfaceMember, writeJSDoc } from './emitter.js'
 
@@ -102,7 +102,7 @@ function handleUndesiredProperty(
   typeText: string,
   isOptional: boolean,
 ) {
-  if (config.desiredProperties.behavior === DesiredProprietiesBehavior.Remove) return
+  if (config.desiredProperties.behavior === DesiredPropertiesBehavior.Remove) return
 
   const dependencies = getPropertyDependencies(interfaceName, memberName)
 

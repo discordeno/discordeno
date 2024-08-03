@@ -1,7 +1,7 @@
 import type { DiscordenoConfig } from '../config.js'
 
 /** Mapping to all the dependencies a specific getter has */
-const computedDesiredProprieties = {
+const computedDesiredProperties = {
   channel: {
     archived: ['toggles'],
     invitable: ['toggles'],
@@ -73,9 +73,9 @@ export function isPropertyDesired(config: DiscordenoConfig, interfaceName: strin
   const name = pascalCaseToCamelCase(interfaceName)
 
   const interfaceProps = desiredProperties[name as keyof typeof desiredProperties]
-  const computedProps = computedDesiredProprieties[name as keyof typeof computedDesiredProprieties]
+  const computedProps = computedDesiredProperties[name as keyof typeof computedDesiredProperties]
 
-  // This interface does not support desired proprieties, so we include them
+  // This interface does not support desired properties, so we include them
   if (!interfaceProps) {
     return true
   }
@@ -101,7 +101,7 @@ export function isPropertyDesired(config: DiscordenoConfig, interfaceName: strin
 
 export function getPropertyDependencies(interfaceName: string, memberName: string): string[] | undefined {
   const name = pascalCaseToCamelCase(interfaceName)
-  const computedProps = computedDesiredProprieties[name as keyof typeof computedDesiredProprieties]
+  const computedProps = computedDesiredProperties[name as keyof typeof computedDesiredProperties]
 
   if (!computedProps) return undefined
 

@@ -194,6 +194,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
+          // If the key is already in snake_case we have no reason for the rest of the code to run.
+          if (key.includes('_')) continue
+
           const value = obj[key]
 
           // Some falsy values should be allowed like null or 0
@@ -204,15 +207,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               case 'deny':
                 newObj[key] = typeof value === 'string' ? value : calculateBits(value)
                 continue
-              case 'default_member_permissions':
               case 'defaultMemberPermissions':
                 newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value)
                 continue
-              case 'name_localizations':
               case 'nameLocalizations':
                 newObj.name_localizations = value
                 continue
-              case 'description_localizations':
               case 'descriptionLocalizations':
                 newObj.description_localizations = value
                 continue
