@@ -18,7 +18,7 @@ export const bot = createProxyCache(
   },
 )
 
-// Setup desired proprieties
+// Setup desired properties
 bot.transformers.desiredProperties.interaction.id = true
 bot.transformers.desiredProperties.interaction.type = true
 bot.transformers.desiredProperties.interaction.data = true

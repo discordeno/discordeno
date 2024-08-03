@@ -1183,7 +1183,7 @@ export interface EditMessage {
   components?: MessageComponents
 }
 
-/** Additional proprieties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
+/** Additional properties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
   accessToken: string

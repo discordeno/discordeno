@@ -1,12 +1,12 @@
 import { unlink, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { type TransformersDesiredProprieties, createDesiredProprietiesObject, gray } from '@discordeno/bot'
+import { type TransformersDesiredProperties, createDesiredPropertiesObject, gray } from '@discordeno/bot'
 import type { RecursivePartial } from '@discordeno/types'
 import { findUp } from 'find-up'
 import ts from 'typescript'
 
-export enum DesiredProprietiesBehavior {
+export enum DesiredPropertiesBehavior {
   Remove,
   TypeAsNever,
 }
@@ -23,8 +23,8 @@ export const typescriptOptions: ts.CompilerOptions = {
 export function defineConfig(config: RecursivePartial<DiscordenoConfig>): DiscordenoConfig {
   return {
     desiredProperties: {
-      behavior: config.desiredProperties?.behavior ?? DesiredProprietiesBehavior.TypeAsNever,
-      properties: createDesiredProprietiesObject(config.desiredProperties?.properties ?? {}),
+      behavior: config.desiredProperties?.behavior ?? DesiredPropertiesBehavior.TypeAsNever,
+      properties: createDesiredPropertiesObject(config.desiredProperties?.properties ?? {}),
     },
   }
 }
@@ -82,7 +82,7 @@ function buildConfig(path: string) {
 
 export interface DiscordenoConfig {
   desiredProperties: {
-    behavior: DesiredProprietiesBehavior
-    properties: RecursivePartial<TransformersDesiredProprieties>
+    behavior: DesiredPropertiesBehavior
+    properties: TransformersDesiredProperties
   }
 }
