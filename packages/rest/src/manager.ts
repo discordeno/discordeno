@@ -194,10 +194,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
-          // If the key is already in snake_case we have no reason for the rest of the code to run.
-          if (key.includes('_')) continue
-
           const value = obj[key]
+
+          // If the key is already in snake_case we can assume it is already in the discord format.
+          if (key.includes('_')) {
+            newObj[key] = value
+            continue
+          }
 
           // Some falsy values should be allowed like null or 0
           if (value !== undefined) {
