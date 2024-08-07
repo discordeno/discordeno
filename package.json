@@ -32,7 +32,7 @@
     "discordeno": "19.0.0-alpha.1",
     "husky": "^9.1.1",
     "lint-staged": "^15.2.7",
-    "turbo": "^2.0.9",
+    "turbo": "^2.0.12",
     "typedoc": "^0.26.5",
     "typedoc-plugin-markdown": "^4.2.3",
     "typescript": "^5.5.4"
