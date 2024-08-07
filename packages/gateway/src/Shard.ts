@@ -8,7 +8,7 @@ import NodeWebSocket from 'ws'
 import {
   type BotStatusUpdate,
   type ShardEvents,
-  ShardGatewayConfig,
+  type ShardGatewayConfig,
   type ShardHeart,
   ShardSocketCloseCodes,
   type ShardSocketRequest,
@@ -209,7 +209,7 @@ export class DiscordenoShard {
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-        // Only set the shard to `Unidentified` state if the connection request does not come from an identify or resume action.
+        // Only set the shard to `Unidentified` state, if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
