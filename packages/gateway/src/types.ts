@@ -18,12 +18,47 @@ export enum ShardState {
   Offline = 6,
 }
 
+export enum TransportCompression {
+  /**
+   * ZLib-Stream Transport Compression.
+   *
+   * @remarks
+   * Uses `node:zlib` to decompress the payloads
+   *
+   * @see https://discord.com/developers/docs/topics/gateway#zlibstream
+   */
+  zlib = 'zlib-stream',
+  /**
+   * ZStd-Stream Transport Compression.
+   *
+   * @remarks
+   * Uses `fzstd` to decompress the payloads. `fzstd` is an optional dependency, it is required to be installed for this compression.
+   *
+   * @see https://discord.com/developers/docs/topics/gateway#zstdstream
+   */
+  zstd = 'zstd-stream',
+}
+
 export interface ShardGatewayConfig {
-  /** Whether incoming payloads are compressed using zlib.
+  /**
+   * Whatever to enable Payload compression.
+   *
+   * @remarks
+   * This is compatible with {@link transportCompression}
    *
    * @default false
+   *
+   * @see https://discord.com/developers/docs/topics/gateway#payload-compression
    */
   compress: boolean
+  /**
+   * What Transport Compression should be use
+   *
+   * @default null
+   *
+   * @see https://discord.com/developers/docs/topics/gateway#transport-compression
+   */
+  transportCompression: TransportCompression | null
   /** The calculated intent value of the events which the shard should receive.
    *
    * @default 0
@@ -120,7 +155,8 @@ export enum ShardSocketCloseCodes {
   Shutdown = 3000,
   /** A resume has been requested and therefore the old connection needs to be closed. */
   ResumeClosingOldConnection = 3024,
-  /** Did not receive a heartbeat ACK in time.
+  /**
+   * Did not receive a heartbeat ACK in time.
    * Closing the shard and creating a new session.
    */
   ZombiedConnection = 3010,
