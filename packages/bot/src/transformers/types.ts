@@ -14,6 +14,7 @@ import type {
   ChannelTypes,
   DefaultMessageNotificationLevels,
   DiscordApplicationIntegrationType,
+  DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordEntitlementType,
   DiscordGuildOnboardingMode,
@@ -254,96 +255,25 @@ export interface AuditLogEntry {
   id: bigint
   userId?: bigint
   reason?: string
-  changes?: AuditLogChange[]
+  changes?: DiscordAuditLogChange[]
   targetId?: bigint
   actionType: AuditLogEvents
   options?: OptionalAuditEntryInfo
 }
 
-export interface AuditLogChange {
-  new?: string | number | bigint | boolean | DiscordOverwrite[] | Partial<Role>[]
-  old?: string | number | bigint | boolean | DiscordOverwrite[] | Partial<Role>[]
-  key:
-    | 'id'
-    | 'name'
-    | 'description'
-    | 'type'
-    | 'permissions'
-    | 'locked'
-    | 'invitable'
-    | 'nsfw'
-    | 'archived'
-    | 'position'
-    | 'topic'
-    | 'bitrate'
-    | 'default_auto_archive_duration'
-    | 'auto_archive_duration'
-    | 'allow'
-    | 'deny'
-    | 'channel_id'
-    | 'deaf'
-    | 'mute'
-    | 'status'
-    | 'nick'
-    | 'communication_disabled_until'
-    | 'color'
-    | 'permission_overwrites'
-    | 'user_limit'
-    | 'rate_limit_per_user'
-    | 'owner_id'
-    | 'application_id'
-    | 'hoist'
-    | 'mentionable'
-    | 'location'
-    | 'verification_level'
-    | 'default_message_notifications'
-    | 'explicit_content_filter'
-    | 'preferred_locale'
-    | 'afk_timeout'
-    | 'afk_channel_id'
-    | 'system_channel_id'
-    | 'widget_enabled'
-    | 'mfa_level'
-    | 'vanity_url_code'
-    | 'icon_hash'
-    | 'widget_channel_id'
-    | 'rules_channel_id'
-    | 'public_updates_channel_id'
-    | 'code'
-    | 'region'
-    | 'privacy_level'
-    | 'entity_type'
-    | 'enable_emoticons'
-    | 'expire_behavior'
-    | 'expire_grace_period'
-    | 'uses'
-    | 'max_uses'
-    | 'max_age'
-    | 'temporary'
-    | 'discovery_splash_hash'
-    | 'banner_hash'
-    | 'image_hash'
-    | 'splash_hash'
-    | 'inviter_id'
-    | 'avatar_hash'
-    | 'command_id'
-    | 'prune_delete_days'
-    | '$add'
-    | '$remove'
-}
-
 export interface OptionalAuditEntryInfo {
-  id?: bigint
+  applicationId?: bigint
+  autoModerationRuleName?: string
+  autoModerationRuleTriggerType?: string
   channelId?: bigint
+  count?: number
+  deleteMemberDays?: number
+  id?: bigint
+  membersRemoved?: number
   messageId?: bigint
-  type: number
-  count: number
-  deleteMemberDays: number
-  membersRemoved: number
-  roleName: string
-  autoModerationRuleName: string
-  autoModerationRuleTriggerType: string
-  integrationType: string
+  roleName?: string
+  type?: number
+  integrationType?: string
 }
 
 export interface AutoModerationActionExecution {
