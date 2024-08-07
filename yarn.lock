@@ -123,7 +123,7 @@ __metadata:
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
-    "@types/chai": "npm:^4.3.16"
+    "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
@@ -146,7 +146,7 @@ __metadata:
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
-    "@types/chai": "npm:^4.3.16"
+    "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
@@ -172,7 +172,7 @@ __metadata:
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
-    "@types/chai": "npm:^4.3.16"
+    "@types/chai": "npm:^4.3.17"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.14.11"
@@ -214,7 +214,7 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
-    "@types/chai": "npm:^4.3.16"
+    "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
@@ -675,10 +675,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:^4.3.16":
-  version: 4.3.16
-  resolution: "@types/chai@npm:4.3.16"
-  checksum: f84a9049a7f13284f7237236872ed4afce5045dd6ea3926c8b0ac995490f5a524b247b2e70fcd3ebc85832201349a8f026bd0c336b90b5baca9eed0c7a4dbd3f
+"@types/chai@npm:^4.3.17":
+  version: 4.3.17
+  resolution: "@types/chai@npm:4.3.17"
+  checksum: 0d8504af08761e1d2f282213f02ad14d463cbbded4dcd80b405c092777e2643ea4e4384179f81b72e784d5f361774ee02b10a6f1862bd7198585fdaf07f60ad8
   languageName: node
   linkType: hard
 
@@ -1560,7 +1560,7 @@ __metadata:
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
-    "@types/chai": "npm:^4.3.16"
+    "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.14.11"
     "@types/sinon": "npm:^17.0.3"
