@@ -37,7 +37,7 @@
     "@discordeno/utils": "19.0.0-beta.1",
     "commander": "^12.1.0",
     "find-up": "^7.0.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
