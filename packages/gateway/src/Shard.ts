@@ -193,10 +193,11 @@ export class DiscordenoShard {
       this.gatewayConfig.compress = false
     }
 
+    // We check for built-in WebSocket implementations in Bun or Deno, NodeJS v22 has an implementation too but it seems to be less optimized so for now it is better to use the ws npm package
+    const shouldUseBuiltin = Reflect.has(globalThis, 'WebSocket') && (Reflect.has(globalThis, 'Bun') || Reflect.has(globalThis, 'Deno'))
+
     // @ts-expect-error NodeWebSocket doesn't support "dispatchEvent", and while we don't use it, it is required on the "WebSocket" type
-    const socket: WebSocket =
-      // @ts-expect-error Deno
-      globalThis.Deno !== undefined && Reflect.has(globalThis, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
+    const socket: WebSocket = shouldUseBuiltin ? new WebSocket(url) : new NodeWebSocket(url)
     this.socket = socket
 
     // By default WebSocket will give us a Blob, this changes it so that it gives us an ArrayBuffer
@@ -208,7 +209,7 @@ export class DiscordenoShard {
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-        // Only set the shard to `Unidentified` state, if the connection request does not come from an identify or resume action.
+        // Only set the shard to `Unidentified` state if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
@@ -356,10 +357,15 @@ export class DiscordenoShard {
   async handleClose(close: CloseEvent): Promise<void> {
     this.stopHeartbeating()
 
+    // Clear the zlib/zstd data
     this.inflate = undefined
     this.zstdDecompress = undefined
+    this.inflateBuffer = null
+    this.decompressionPromisesQueue = []
 
-    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
+    this.logger.debug(
+      `[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}) (${close.reason || '<No reason provided>'}).`,
+    )
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
@@ -421,10 +427,10 @@ export class DiscordenoShard {
 
   /** Handle an incoming gateway message. */
   async handleMessage(message: MessageEvent): Promise<void> {
-    // The ws npm package will use a Buffer, while the global functions (for all Deno, Bun and Node) will use ArrayBuffer
+    // The ws npm package will use a Buffer, while the global built-in will use ArrayBuffer
     const isCompressed = message.data instanceof ArrayBuffer || message.data instanceof Buffer
 
-    const data: DiscordGatewayPayload = isCompressed ? await this.decompressPacket(message.data) : JSON.parse(message.data)
+    const data = isCompressed ? await this.decompressPacket(message.data) : (JSON.parse(message.data) as DiscordGatewayPayload)
 
     // Check if the decompression was not successful
     if (!data) return
@@ -438,7 +444,7 @@ export class DiscordenoShard {
    * @private
    */
   async decompressPacket(data: ArrayBuffer | Buffer): Promise<DiscordGatewayPayload | null> {
-    // A buffer is Uint8Array under the hood. An ArrayBuffer is generic, so we need to create the Uint8Array that uses the whole ArrayBuffer
+    // A buffer is a Uint8Array under the hood. An ArrayBuffer is generic, so we need to create the Uint8Array that uses the whole ArrayBuffer
     const compressedData: Uint8Array = data instanceof Buffer ? data : new Uint8Array(data)
 
     if (this.gatewayConfig.transportCompression === TransportCompression.zlib) {
