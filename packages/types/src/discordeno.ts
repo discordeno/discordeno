@@ -21,6 +21,7 @@ import type {
   DiscordPollMedia,
   DiscordReactionType,
   DiscordRole,
+  DiscordScheduledEventRecurrenceRule,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
@@ -1122,6 +1123,10 @@ export interface CreateScheduledEvent {
   privacyLevel?: ScheduledEventPrivacyLevel
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType
+  /** the cover image of the scheduled event */
+  image?: string
+  /** the definition for how often this event should recur */
+  recurrence_rule?: DiscordScheduledEventRecurrenceRule
 }
 
 export interface EditScheduledEvent {
@@ -1143,6 +1148,10 @@ export interface EditScheduledEvent {
   entityType: ScheduledEventEntityType
   /** the status of the scheduled event */
   status: ScheduledEventStatus
+  /** the cover image of the scheduled event */
+  image?: string
+  /** the definition for how often this event should recur */
+  recurrence_rule?: DiscordScheduledEventRecurrenceRule
 }
 
 export interface GetScheduledEvents {

@@ -1,5 +1,5 @@
-import type { DiscordScheduledEvent } from '@discordeno/types'
-import { type Bot, type ScheduledEvent, iconHashToBigInt } from '../index.js'
+import type { DiscordScheduledEvent, DiscordScheduledEventRecurrenceRule } from '@discordeno/types'
+import { type Bot, type ScheduledEvent, type ScheduledEventRecurrenceRule, iconHashToBigInt } from '../index.js'
 
 export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {
   const props = bot.transformers.desiredProperties.scheduledEvent
@@ -21,6 +21,26 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
   if (props.userCount) scheduledEvent.userCount = payload.user_count ?? 0
   if (props.location && payload.entity_metadata?.location) scheduledEvent.location = payload.entity_metadata.location
   if (props.image && payload.image) scheduledEvent.image = iconHashToBigInt(payload.image)
+  if (props.recurrenceRule && payload.recurrence_rule)
+    scheduledEvent.recurrenceRule = bot.transformers.scheduledEventRecurrenceRule(bot, payload.recurrence_rule)
 
   return bot.transformers.customizers.scheduledEvent(bot, payload, scheduledEvent)
+}
+
+export function transformScheduledEventRecurrenceRule(bot: Bot, payload: DiscordScheduledEventRecurrenceRule): ScheduledEventRecurrenceRule {
+  const props = bot.transformers.desiredProperties.scheduledEventRecurrenceRule
+  const recurrenceRule = {} as ScheduledEventRecurrenceRule
+
+  if (props.start && payload.start) recurrenceRule.start = Date.parse(payload.start)
+  if (props.end && payload.end) recurrenceRule.end = Date.parse(payload.end)
+  if (props.frequency && payload.frequency) recurrenceRule.frequency = payload.frequency
+  if (props.interval && payload.interval) recurrenceRule.interval = payload.interval
+  if (props.byWeekday && payload.by_weekday) recurrenceRule.byWeekday = payload.by_weekday
+  if (props.byNWeekday && payload.by_n_weekday) recurrenceRule.byNWeekday = payload.by_n_weekday
+  if (props.byMonth && payload.by_month) recurrenceRule.byMonth = payload.by_month
+  if (props.byMonthDay && payload.by_month_day) recurrenceRule.byMonthDay = payload.by_month_day
+  if (props.byYearDay && payload.by_year_day) recurrenceRule.byYearDay = payload.by_year_day
+  if (props.count && payload.count) recurrenceRule.count = payload.count
+
+  return bot.transformers.customizers.scheduledEventRecurrenceRule(bot, payload, recurrenceRule)
 }

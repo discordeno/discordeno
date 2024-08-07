@@ -22,6 +22,10 @@ import type {
   DiscordInviteType,
   DiscordOverwrite,
   DiscordPollLayoutType,
+  DiscordScheduledEventRecurrenceRuleFrequency,
+  DiscordScheduledEventRecurrenceRuleMonth,
+  DiscordScheduledEventRecurrenceRuleNWeekday,
+  DiscordScheduledEventRecurrenceRuleWeekday,
   DiscordSkuType,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
@@ -1437,6 +1441,31 @@ export interface ScheduledEvent {
   userCount?: number
   /** the cover image hash of the scheduled event */
   image?: bigint
+  /** the definition for how often this event should recur */
+  recurrenceRule?: ScheduledEventRecurrenceRule
+}
+
+export interface ScheduledEventRecurrenceRule {
+  /** Starting time of the recurrence interval */
+  start: number
+  /** Ending time of the recurrence interval */
+  end: number | null
+  /** How often the event occurs */
+  frequency: DiscordScheduledEventRecurrenceRuleFrequency
+  /** The spacing between the events, defined by `frequency`. For example, `frequency` of `Weekly` and an `interval` of `2` would be "every-other week" */
+  interval: number
+  /** Set of specific days within a week for the event to recur on */
+  byWeekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null
+  /** List of specific days within a specific week (1-5) to recur on */
+  byNWeekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null
+  /** Set of specific months to recur on */
+  byMonth: DiscordScheduledEventRecurrenceRuleMonth[] | null
+  /** Set of specific dates within a month to recur on */
+  byMonthDay: number[] | null
+  /** Set of days within a year to recur on (1-364) */
+  byYearDay: number[] | null
+  /** The total amount of times that the event is allowed to recur before stopping */
+  count: number | null
 }
 
 export interface Sku {
