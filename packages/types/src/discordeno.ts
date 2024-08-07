@@ -41,6 +41,7 @@ import type {
   MessageFlags,
   OverwriteTypes,
   PermissionStrings,
+  PickPartial,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
@@ -80,6 +81,7 @@ export interface CreateMessageOptions {
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
     failIfNotExists: boolean
   }
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
   /** The contents of the files being sent */
   files?: FileContent[]
   /** The components you would like to have sent in this message */
@@ -1178,7 +1180,7 @@ export interface EditMessage {
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
-  attachments?: Camelize<DiscordAttachment>[]
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
   /** The components you would like to have sent in this message */
   components?: MessageComponents
 }
