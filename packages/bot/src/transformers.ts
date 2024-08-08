@@ -275,7 +275,7 @@ export interface Transformers {
   messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
   messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
-  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
+  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) => VoiceState
   interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
