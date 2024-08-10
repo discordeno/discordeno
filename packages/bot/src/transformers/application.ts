@@ -30,12 +30,22 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
       : undefined,
     team: payload.application.team ? bot.transformers.team(bot, payload.application.team) : undefined,
     guildId: payload.application.guild_id ? bot.transformers.snowflake(payload.application.guild_id) : undefined,
+    customInstallUrl: payload.application.custom_install_url,
     // @ts-expect-error the partial here wont break anything
     guild: payload.application.guild ? bot.transformers.guild(bot, { guild: payload.application.guild, shardId: payload.shardId }) : undefined,
     approximateGuildCount: payload.application.approximate_guild_count,
+    approximateUserInstallCount: payload.application.approximate_user_install_count,
     bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot as DiscordUser) : undefined,
     interactionsEndpointUrl: payload.application.interactions_endpoint_url,
     redirectUris: payload.application.redirect_uris,
+    roleConnectionsVerificationUrl: payload.application.role_connections_verification_url,
+    tags: payload.application.tags,
+    installParams: payload.application.install_params
+      ? {
+          scopes: payload.application.install_params.scopes,
+          permissions: bot.transformers.snowflake(payload.application.install_params.permissions),
+        }
+      : undefined,
     integrationTypesConfig: payload.application.integration_types_config
       ? {
           [DiscordApplicationIntegrationType.GuildInstall]: payload.application.integration_types_config['0']?.oauth2_install_params
