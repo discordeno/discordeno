@@ -1256,6 +1256,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options))
     },
 
+    async getStickerPack(stickerPackId) {
+      return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId))
+    },
+
     async getStickerPacks() {
       return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks())
     },

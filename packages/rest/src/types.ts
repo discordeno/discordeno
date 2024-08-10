@@ -2045,6 +2045,14 @@ export interface RestManager {
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<CamelizedDiscordMessage[]>
   /**
+   * Returns a sticker pack for the given ID.
+   *
+   * @returns A {@link CamelizedDiscordStickerPack} object.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#get-sticker-pack}
+   */
+  getStickerPack: (stickerPackId: BigString) => Promise<CamelizedDiscordStickerPack>
+  /**
    * Returns the list of sticker packs available.
    *
    * @returns A collection of {@link CamelizedDiscordStickerPack} objects assorted by sticker ID.

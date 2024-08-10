@@ -620,6 +620,10 @@ export function createRoutes(): RestRoutes {
       return '/gateway/bot'
     },
 
+    stickerPack(stickerPackId) {
+      return `/sticker-packs/${stickerPackId}`
+    },
+
     stickerPacks() {
       return '/sticker-packs'
     },

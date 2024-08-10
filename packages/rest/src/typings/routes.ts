@@ -21,6 +21,7 @@ export interface RestRoutes {
   gatewayBot: () => string
   // Standard Sticker Packs
   stickerPacks: () => string
+  stickerPack: (stickerPackId: BigString) => string
   /** Routes for webhook related routes. */
   webhooks: {
     /** Route for managing the original message sent by a webhook. */
