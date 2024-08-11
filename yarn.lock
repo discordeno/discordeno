@@ -1551,7 +1551,7 @@ __metadata:
     "@biomejs/biome": "npm:^1.8.3"
     chokidar-cli: "npm:^3.0.0"
     discordeno: "npm:19.0.0-alpha.1"
-    husky: "npm:^9.1.1"
+    husky: "npm:^9.1.4"
     lint-staged: "npm:^15.2.8"
     turbo: "npm:^2.0.12"
     typedoc: "npm:^0.26.5"
@@ -2182,12 +2182,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^9.1.1":
-  version: 9.1.1
-  resolution: "husky@npm:9.1.1"
+"husky@npm:^9.1.4":
+  version: 9.1.4
+  resolution: "husky@npm:9.1.4"
   bin:
     husky: bin.js
-  checksum: c3be0392071b78c680fc6b9fd7978f52c26e18238a2840c6eabfc0db395e19fcd798da8eff0e31a9e76c479d6019a567d83a8de80f360d28552bc83bd1839b7c
+  checksum: c43aa7cbf98246d4f347bc3da807049555b5003af7c6e1658c5cea44a9743b4d0683c72973a4fe02a4ccceb81031a664ecaa7a1a86efe4d37a80a0af17c988ea
   languageName: node
   linkType: hard
 
