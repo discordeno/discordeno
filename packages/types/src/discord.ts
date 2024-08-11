@@ -395,6 +395,8 @@ export interface DiscordApplication {
   role_connections_verification_url?: string
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number
+  /** Approximate count of users that have installed the app. */
+  approximate_user_install_count?: number
   /** Partial user object for the bot user associated with the app */
   bot?: Partial<DiscordUser>
   /** Array of redirect URIs for the app */
@@ -410,12 +412,7 @@ export interface DiscordApplicationIntegrationTypeConfiguration {
    *
    * https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
    */
-  oauth2_install_params?: {
-    /** Scopes to add the application to the server with */
-    scopes: OAuth2Scope[]
-    /** Permissions to request for the bot role */
-    permissions: string
-  }
+  oauth2_install_params?: DiscordInstallParams
 }
 
 export enum DiscordApplicationIntegrationType {
@@ -2346,11 +2343,75 @@ export interface DiscordScheduledEvent {
   user_count?: number
   /** the cover image hash of the scheduled event */
   image?: string | null
+  /** the definition for how often this event should recur */
+  recurrence_rule: DiscordScheduledEventRecurrenceRule | null
 }
 
 export interface DiscordScheduledEventEntityMetadata {
   /** location of the event */
   location?: string
+}
+
+export interface DiscordScheduledEventRecurrenceRule {
+  /** Starting time of the recurrence interval */
+  start: string
+  /** Ending time of the recurrence interval */
+  end: string | null
+  /** How often the event occurs */
+  frequency: DiscordScheduledEventRecurrenceRuleFrequency
+  /** The spacing between the events, defined by `frequency`. For example, `frequency` of `Weekly` and an `interval` of `2` would be "every-other week" */
+  interval: number
+  /** Set of specific days within a week for the event to recur on */
+  by_weekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null
+  /** List of specific days within a specific week (1-5) to recur on */
+  by_n_weekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null
+  /** Set of specific months to recur on */
+  by_month: DiscordScheduledEventRecurrenceRuleMonth[] | null
+  /** Set of specific dates within a month to recur on */
+  by_month_day: number[] | null
+  /** Set of days within a year to recur on (1-364) */
+  by_year_day: number[] | null
+  /** The total amount of times that the event is allowed to recur before stopping */
+  count: number | null
+}
+
+export enum DiscordScheduledEventRecurrenceRuleFrequency {
+  Yearly,
+  Monthly,
+  Weekly,
+  Daily,
+}
+
+export enum DiscordScheduledEventRecurrenceRuleWeekday {
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}
+
+export interface DiscordScheduledEventRecurrenceRuleNWeekday {
+  /** The week to reoccur on. 1 - 5 */
+  n: number
+  /** The day within the week to reoccur on */
+  day: DiscordScheduledEventRecurrenceRuleWeekday
+}
+
+export enum DiscordScheduledEventRecurrenceRuleMonth {
+  January = 1,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  September,
+  October,
+  November,
+  December,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */

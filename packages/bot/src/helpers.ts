@@ -120,6 +120,7 @@ import type {
   Template,
   ThreadMember,
   User,
+  VoiceState,
   Webhook,
   WelcomeScreen,
 } from './transformers/index.js'
@@ -405,6 +406,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getMessages: async (channelId, options) => {
       return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)))
     },
+    getStickerPack: async (stickerPackId) => {
+      return bot.transformers.stickerPack(bot, snakelize(await bot.rest.getStickerPack(stickerPackId)))
+    },
     getStickerPacks: async () => {
       return (await bot.rest.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
     },
@@ -452,6 +456,12 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     },
     getStageInstance: async (channelId) => {
       return bot.transformers.stageInstance(bot, snakelize(await bot.rest.getStageInstance(channelId)))
+    },
+    getOwnVoiceState: async (guildId) => {
+      return bot.transformers.voiceState(bot, { guildId, voiceState: snakelize(await bot.rest.getOwnVoiceState(guildId)) })
+    },
+    getUserVoiceState: async (guildId, userId) => {
+      return bot.transformers.voiceState(bot, { guildId, voiceState: snakelize(await bot.rest.getUserVoiceState(guildId, userId)) })
     },
     getSticker: async (stickerId) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.getSticker(stickerId)))
@@ -857,6 +867,7 @@ export interface BotHelpers {
   getInvites: (guildId: BigString) => Promise<Invite[]>
   getMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Message[]>
+  getStickerPack: (stickerPackId: BigString) => Promise<StickerPack>
   getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<Message>
   getPinnedMessages: (channelId: BigString) => Promise<Message[]>
@@ -874,6 +885,8 @@ export interface BotHelpers {
   ) => Promise<Array<{ user: User; member?: Member }>>
   getSessionInfo: () => Promise<CamelizedDiscordGetGatewayBot>
   getStageInstance: (channelId: BigString) => Promise<StageInstance>
+  getOwnVoiceState: (guildId: BigString) => Promise<VoiceState>
+  getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<VoiceState>
   getSticker: (stickerId: BigString) => Promise<Sticker>
   getThreadMember: (channelId: BigString, userId: BigString) => Promise<ThreadMember>
   getThreadMembers: (channelId: BigString) => Promise<ThreadMember[]>

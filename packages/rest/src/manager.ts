@@ -44,6 +44,7 @@ import {
   type DiscordUser,
   type DiscordVanityUrl,
   type DiscordVoiceRegion,
+  type DiscordVoiceState,
   type DiscordWebhook,
   type DiscordWelcomeScreen,
   InteractionResponseTypes,
@@ -1256,6 +1257,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options))
     },
 
+    async getStickerPack(stickerPackId) {
+      return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId))
+    },
+
     async getStickerPacks() {
       return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks())
     },
@@ -1306,6 +1311,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getStageInstance(channelId) {
       return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId))
+    },
+
+    async getOwnVoiceState(guildId) {
+      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId))
+    },
+
+    async getUserVoiceState(guildId, userId) {
+      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId, userId))
     },
 
     async getSticker(stickerId: BigString) {

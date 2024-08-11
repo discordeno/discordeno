@@ -50,6 +50,7 @@ import type {
   CamelizedDiscordUser,
   CamelizedDiscordVanityUrl,
   CamelizedDiscordVoiceRegion,
+  CamelizedDiscordVoiceState,
   CamelizedDiscordWebhook,
   CamelizedDiscordWelcomeScreen,
   // Type required for typedoc
@@ -1321,7 +1322,7 @@ export interface RestManager {
    * If attempting to request to speak:
    * - Requires the `REQUEST_TO_SPEAK` permission.
    *
-   * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
+   * @see {@link https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state}
    */
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>
   /**
@@ -1409,7 +1410,7 @@ export interface RestManager {
    *
    * Requires the `MUTE_MEMBERS` permission.
    *
-   * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
+   * @see {@link https://discord.com/developers/docs/resources/voice#modify-user-voice-state}
    */
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   /**
@@ -2045,6 +2046,14 @@ export interface RestManager {
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<CamelizedDiscordMessage[]>
   /**
+   * Returns a sticker pack for the given ID.
+   *
+   * @returns A {@link CamelizedDiscordStickerPack} object.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#get-sticker-pack}
+   */
+  getStickerPack: (stickerPackId: BigString) => Promise<CamelizedDiscordStickerPack>
+  /**
    * Returns the list of sticker packs available.
    *
    * @returns A collection of {@link CamelizedDiscordStickerPack} objects assorted by sticker ID.
@@ -2213,6 +2222,25 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
    */
   getStageInstance: (channelId: BigString) => Promise<CamelizedDiscordStageInstance>
+  /**
+   * Returns the current user's voice state in the guild.
+   *
+   * @param guildId - The ID of the guild to get the voice state from.
+   * @returns An instance of {@link CamelizedDiscordVoiceState}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/voice#get-current-user-voice-state}
+   */
+  getOwnVoiceState: (guildId: BigString) => Promise<CamelizedDiscordVoiceState>
+  /**
+   * Returns the specified user's voice state in the guild.
+   *
+   * @param guildId - The ID of the guild to get the voice state from.
+   * @param userId - The ID of the user to get the voice state from
+   * @returns An instance of {@link CamelizedDiscordVoiceState}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/voice#get-user-voice-state}
+   */
+  getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordVoiceState>
   /**
    * Returns a sticker object for the given sticker ID.
    *
