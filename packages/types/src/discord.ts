@@ -395,6 +395,8 @@ export interface DiscordApplication {
   role_connections_verification_url?: string
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number
+  /** Approximate count of users that have installed the app. */
+  approximate_user_install_count?: number
   /** Partial user object for the bot user associated with the app */
   bot?: Partial<DiscordUser>
   /** Array of redirect URIs for the app */
@@ -410,12 +412,7 @@ export interface DiscordApplicationIntegrationTypeConfiguration {
    *
    * https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
    */
-  oauth2_install_params?: {
-    /** Scopes to add the application to the server with */
-    scopes: OAuth2Scope[]
-    /** Permissions to request for the bot role */
-    permissions: string
-  }
+  oauth2_install_params?: DiscordInstallParams
 }
 
 export enum DiscordApplicationIntegrationType {

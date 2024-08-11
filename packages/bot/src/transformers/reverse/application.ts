@@ -14,6 +14,7 @@ export function transformApplicationToDiscordApplication(bot: Bot, payload: Appl
     slug: payload.slug,
     cover_image: payload.coverImage ? iconBigintToHash(payload.coverImage) : undefined,
     flags: payload.flags,
+    approximate_user_install_count: payload.approximateUserInstallCount,
 
     id: payload.id.toString(),
     icon: payload.icon ? iconBigintToHash(payload.icon) : null,

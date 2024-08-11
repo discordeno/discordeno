@@ -136,11 +136,16 @@ export interface Application {
   botPublic: boolean
   botRequireCodeGrant: boolean
   verifyKey: string
+  customInstallUrl?: string
   approximateGuildCount?: number
+  approximateUserInstallCount?: number
+  installParams?: ApplicationInstallParams
   bot?: User
   redirectUris?: string[]
   interactionsEndpointUrl?: string
   integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>
+  roleConnectionsVerificationUrl: string
+  tags: string[]
 }
 
 export interface ApplicationIntegrationTypeConfiguration {
