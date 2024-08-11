@@ -42,6 +42,7 @@ import type {
   DiscordPresenceUpdate,
   DiscordRole,
   DiscordScheduledEvent,
+  DiscordScheduledEventRecurrenceRule,
   DiscordSku,
   DiscordStageInstance,
   DiscordSticker,
@@ -97,6 +98,7 @@ import {
   type PresenceUpdate,
   type Role,
   type ScheduledEvent,
+  type ScheduledEventRecurrenceRule,
   type Sku,
   type StageInstance,
   type Sticker,
@@ -155,6 +157,7 @@ import {
   transformPresence,
   transformRole,
   transformScheduledEvent,
+  transformScheduledEventRecurrenceRule,
   transformSku,
   transformStageInstance,
   transformSticker,
@@ -219,6 +222,7 @@ export interface Transformers {
       applicationCommandPermission: GuildApplicationCommandPermissions,
     ) => any
     scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
+    scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule, scheduledEvent: ScheduledEventRecurrenceRule) => any
     threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
     threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
     welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
@@ -295,6 +299,7 @@ export interface Transformers {
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
   applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => GuildApplicationCommandPermissions
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
+  scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule) => ScheduledEventRecurrenceRule
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
   threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
@@ -592,6 +597,19 @@ export interface TransformersDesiredProperties {
     userCount: boolean
     location: boolean
     image: boolean
+    recurrenceRule: boolean
+  }
+  scheduledEventRecurrenceRule: {
+    start: boolean
+    end: boolean
+    frequency: boolean
+    interval: boolean
+    byWeekday: boolean
+    byNWeekday: boolean
+    byMonth: boolean
+    byMonthDay: boolean
+    byYearDay: boolean
+    count: boolean
   }
   stageInstance: {
     id: boolean
@@ -783,6 +801,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       invite: options.customizers?.invite ?? defaultCustomizer,
       presence: options.customizers?.presence ?? defaultCustomizer,
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
+      scheduledEventRecurrenceRule: options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
       stageInstance: options.customizers?.stageInstance ?? defaultCustomizer,
       inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
       sticker: options.customizers?.sticker ?? defaultCustomizer,
@@ -857,6 +876,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     applicationCommandOption: options.applicationCommandOption ?? transformApplicationCommandOption,
     applicationCommandPermission: options.applicationCommandPermission ?? transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
+    scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
     threadMember: options.threadMember ?? transformThreadMember,
     threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
     welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
@@ -1175,7 +1195,21 @@ export function createDesiredPropertiesObject(
       userCount: defaultValue,
       location: defaultValue,
       image: defaultValue,
+      recurrenceRule: defaultValue,
       ...desiredProperties.scheduledEvent,
+    },
+    scheduledEventRecurrenceRule: {
+      start: defaultValue,
+      end: defaultValue,
+      frequency: defaultValue,
+      interval: defaultValue,
+      byWeekday: defaultValue,
+      byNWeekday: defaultValue,
+      byMonth: defaultValue,
+      byMonthDay: defaultValue,
+      byYearDay: defaultValue,
+      count: defaultValue,
+      ...desiredProperties.scheduledEventRecurrenceRule,
     },
     stageInstance: {
       id: defaultValue,
