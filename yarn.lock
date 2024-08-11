@@ -125,7 +125,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -148,7 +148,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.12"
     c8: "npm:^10.1.2"
@@ -175,7 +175,7 @@ __metadata:
     "@types/chai": "npm:^4.3.17"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -197,7 +197,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     c8: "npm:^10.1.2"
     mocha: "npm:^10.7.0"
     ts-node: "npm:^10.9.2"
@@ -216,7 +216,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -728,12 +728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.1.0":
-  version: 22.1.0
-  resolution: "@types/node@npm:22.1.0"
+"@types/node@npm:^22.2.0":
+  version: 22.2.0
+  resolution: "@types/node@npm:22.2.0"
   dependencies:
     undici-types: "npm:~6.13.0"
-  checksum: c2ac1340509646b6c673b27fae2a46e501a97e540e7221be4dd2e0be7a0f61efefb5bf3be8bedf2dbce245fa49cfc49bba77bce73fa3c4296d0d19521ced3222
+  checksum: 2957c5c81f1a07a1210f28382adae65c11070c301e395fa819448516f1a2a710054b29e0ec7d8e28624afbcd90dae810403a497109545dea835b554fc76edf6c
   languageName: node
   linkType: hard
 
@@ -978,7 +978,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     benchmark: "npm:^2.1.4"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -1574,7 +1574,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.2.0"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
