@@ -60,15 +60,10 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       checkInterval: 28800000, // 8 hours
       shards: new Collection(),
       pendingShards: new Collection(),
-      async getSessionInfo() {
-        throw new Error(
-          '[Resharding] was enabled but no getSessionInfo handler was provided. Please set a handler like: gateway.resharding.getSessionInfo = async () => { // insert code here to fetch getSessionInfo from rest process. }',
-        )
-      },
       async checkIfReshardingIsNeeded() {
         gateway.logger.warn('[Resharding] Checking if resharding is needed.')
 
-        if (!gateway.resharding.enabled) {
+        if (!gateway.resharding.enabled || !gateway.resharding.getSessionInfo) {
           gateway.logger.debug('[Resharding] Resharding is disabled.')
 
           return { needed: false }
@@ -327,6 +322,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       if (gateway.resharding.enabled && gateway.resharding.checkInterval !== -1) {
         // It is better to ensure there is always only one
         clearInterval(gateway.resharding.checkIntervalId)
+
+        if (!gateway.resharding.getSessionInfo) {
+          gateway.resharding.enabled = false
+          gateway.logger.warn('[Resharding] Disabling resharding as getSessionInfo was not provided.')
+
+          return
+        }
 
         gateway.resharding.checkIntervalId = setInterval(async () => {
           const reshardingInfo = await gateway.resharding.checkIfReshardingIsNeeded()
@@ -688,7 +690,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     /** Holds the pending shards that have been created and are pending all shards finish loading. */
     pendingShards: Collection<number, Shard>
     /** Handler to get shard count and other session info. */
-    getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
+    getSessionInfo?: () => Promise<Camelize<DiscordGetGatewayBot>>
     /** Handler to edit the shard id on any cached guilds. */
     updateGuildsShardId: (guildIds: string[], shardId: number) => Promise<void>
     /** Handler to check if resharding is necessary. */
