@@ -52,8 +52,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.ts'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/discordeno/discordeno/tree/main/website/',
         },
         blog: {
@@ -67,7 +65,6 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
     image: 'img/links-embed-image.png',
     navbar: {
       title: 'Discordeno',

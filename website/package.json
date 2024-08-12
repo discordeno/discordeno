@@ -42,7 +42,7 @@
     "esbuild-loader": "^4.2.2",
     "terser-webpack-plugin": "^5.3.10",
     "typescript": "5.5.4",
-    "webpack": "^5.93.0"
+    "webpack": "5.89.0"
   },
   "browserslist": {
     "production": [
