@@ -20,19 +20,18 @@ const config: Config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'discordeno', // Usually your GitHub org/user name.
   projectName: 'discordeno', // Usually your repo name.
-  deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
   webpack: {
-    // jsLoader: (isServer) => ({
-    //   loader: require.resolve('esbuild-loader'),
-    //   options: {
-    //     loader: 'tsx',
-    //     jsx: 'automatic',
-    //     format: isServer ? 'cjs' : undefined,
-    //     target: isServer ? 'node12' : 'es2017',
-    //   },
-    // }),
+    jsLoader: (isServer) => ({
+      loader: require.resolve('esbuild-loader'),
+      options: {
+        loader: 'tsx',
+        jsx: 'automatic',
+        format: isServer ? 'cjs' : undefined,
+        target: isServer ? 'node12' : 'es2017',
+      },
+    }),
   },
 
   markdown: {
@@ -41,6 +40,7 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+  onBrokenAnchors: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -255,7 +255,6 @@ const config: Config = {
         searchResultContextMaxLength: 50,
       },
     ],
-    // './webpack-docusaurus-plugin.ts',
   ],
 }
 
