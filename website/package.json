@@ -18,31 +18,31 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@docusaurus/core": "3.0.1",
-    "@docusaurus/preset-classic": "3.0.1",
-    "@docusaurus/theme-common": "3.0.1",
-    "@easyops-cn/docusaurus-search-local": "^0.40.1",
-    "@mdx-js/react": "^3.0.0",
-    "chart.js": "^4.4.1",
-    "clsx": "^2.1.0",
+    "@docusaurus/core": "3.5.1",
+    "@docusaurus/preset-classic": "3.5.1",
+    "@docusaurus/theme-common": "3.5.1",
+    "@easyops-cn/docusaurus-search-local": "^0.44.5",
+    "@mdx-js/react": "^3.0.1",
+    "chart.js": "^4.4.3",
+    "clsx": "^2.1.1",
     "prism-react-renderer": "^2.3.1",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18.2.0",
-    "reactflow": "^11.10.1",
-    "styled-components": "^6.1.6"
+    "react-dom": "^18.3.1",
+    "reactflow": "^11.11.4",
+    "styled-components": "^6.1.12"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
-    "@docusaurus/module-type-aliases": "3.0.1",
-    "@docusaurus/tsconfig": "3.0.1",
-    "@docusaurus/types": "3.0.1",
-    "@types/react": "^18.2.47",
-    "esbuild": "^0.19.11",
-    "esbuild-loader": "^4.0.2",
+    "@biomejs/biome": "^1.8.3",
+    "@docusaurus/module-type-aliases": "3.5.1",
+    "@docusaurus/tsconfig": "3.5.1",
+    "@docusaurus/types": "3.5.1",
+    "@types/react": "^18.3.3",
+    "esbuild": "^0.23.0",
+    "esbuild-loader": "^4.2.2",
     "terser-webpack-plugin": "^5.3.10",
-    "typescript": "5.3.3",
-    "webpack": "^5.89.0"
+    "typescript": "5.5.4",
+    "webpack": "^5.93.0"
   },
   "browserslist": {
     "production": [
