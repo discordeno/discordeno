@@ -329,7 +329,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         if (!gateway.resharding.getSessionInfo) {
           gateway.resharding.enabled = false
-          gateway.logger.warn('[Resharding] Disabling resharding as getSessionInfo was not provided.')
+          gateway.logger.warn("[Resharding] Resharding is enabled but 'resharding.getSessionInfo()' was not provided. Disabling resharding.")
 
           return
         }
