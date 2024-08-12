@@ -32,8 +32,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
   }
 
-  const makePresence = options.makePresence ?? (() => Promise.resolve(undefined))
-
   const gateway: GatewayManager = {
     events: options.events ?? {},
     compress: options.compress ?? false,
@@ -63,7 +61,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       },
     },
     logger: options.logger ?? logger,
-    makePresence,
+    makePresence: options.makePresence ?? (() => Promise.resolve(undefined)),
     resharding: {
       enabled: true,
       shardsFullPercentage: 80,
