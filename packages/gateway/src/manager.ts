@@ -63,10 +63,14 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       async checkIfReshardingIsNeeded() {
         gateway.logger.warn('[Resharding] Checking if resharding is needed.')
 
-        if (!gateway.resharding.enabled || !gateway.resharding.getSessionInfo) {
+        if (!gateway.resharding.enabled) {
           gateway.logger.debug('[Resharding] Resharding is disabled.')
 
           return { needed: false }
+        }
+
+        if (!gateway.resharding.getSessionInfo) {
+          throw new Error("[Resharding] Resharding is enabled but no 'resharding.getSessionInfo()' is not provided.")
         }
 
         gateway.logger.warn('[Resharding] Resharding is enabled.')
