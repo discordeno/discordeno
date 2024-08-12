@@ -33,7 +33,7 @@
     "@types/mocha": "^10.0.7",
     "@types/node": "^22.1.0",
     "c8": "^10.1.2",
-    "mocha": "^10.7.0",
+    "mocha": "^10.7.3",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "^5.5.4"
