@@ -82,7 +82,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         // Don't have enough identify limits to try resharding
         if (sessionInfo.sessionStartLimit.remaining < sessionInfo.shards) {
-          gateway.logger.debug('[Resharding] Not enough identify limits to try resharding.')
+          gateway.logger.debug('[Resharding] Not enough session start limits left to reshard.')
 
           return { needed: false, info: sessionInfo }
         }
@@ -108,7 +108,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         return { needed: true, info: sessionInfo }
       },
       async reshard(info) {
-        gateway.logger.info(`[Resharding] Starting the reshard process. Previous total shards. ${gateway.totalShards}`)
+        gateway.logger.info(`[Resharding] Starting the reshard process. Previous total shards: ${gateway.totalShards}`)
         // Set values on gateway
         gateway.totalShards = info.shards
         // Handles preparing mid sized bots for LBS
@@ -117,7 +117,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         if (typeof info.firstShardId === 'number') gateway.firstShardId = info.firstShardId
         // Set last shard id if provided in info
         if (typeof info.lastShardId === 'number') gateway.lastShardId = info.lastShardId
-        gateway.logger.info(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
+        gateway.logger.info(`[Resharding] Starting the reshard process. New total shards: ${gateway.totalShards}`)
 
         // Resetting buckets
         gateway.buckets.clear()
@@ -134,7 +134,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         })
       },
       async tellWorkerToPrepare(workerId, shardId, bucketId) {
-        gateway.logger.debug(`[Resharding] Telling worker to prepare. Worker: ${workerId} | Shard: ${shardId} | Bucket: ${bucketId}`)
+        gateway.logger.debug(`[Resharding] Telling worker to prepare. Worker: ${workerId} | Shard: ${shardId} | Bucket: ${bucketId}.`)
         const shard = new Shard({
           id: shardId,
           connection: {
@@ -195,7 +195,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       async shardIsPending(shard) {
         // Save this in pending at the moment, until all shards are online
         gateway.resharding.pendingShards.set(shard.id, shard)
-        gateway.logger.debug(`[Resharding] Shard #${shard.id} is now pending`)
+        gateway.logger.debug(`[Resharding] Shard #${shard.id} is now pending.`)
 
         // Check if all shards are now online.
         if (gateway.lastShardId - gateway.firstShardId >= gateway.resharding.pendingShards.size) return
