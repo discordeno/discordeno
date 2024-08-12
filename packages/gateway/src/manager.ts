@@ -55,11 +55,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
     logger: options.logger ?? logger,
     resharding: {
-      enabled: true,
-      shardsFullPercentage: 80,
-      checkInterval: 28800000, // 8 hours
+      enabled: options.resharding?.enabled ?? true,
+      shardsFullPercentage: options.resharding?.shardsFullPercentage ?? 80,
+      checkInterval: options.resharding?.checkInterval ?? 28800000, // 8 hours
       shards: new Collection(),
       pendingShards: new Collection(),
+      getSessionInfo: options.resharding?.getSessionInfo,
+      updateGuildsShardId: options.resharding?.updateGuildsShardId,
       async checkIfReshardingIsNeeded() {
         gateway.logger.debug('[Resharding] Checking if resharding is needed.')
 
@@ -149,7 +151,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           events: {
             async message(_shard, payload) {
               if (payload.t === 'READY') {
-                await gateway.resharding.updateGuildsShardId(
+                await gateway.resharding.updateGuildsShardId?.(
                   (payload.d as DiscordReady).guilds.map((g) => g.id),
                   shardId,
                 )
@@ -190,7 +192,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           })
         })
       },
-      async updateGuildsShardId(_guildIds, _shardId) {},
       async shardIsPending(shard) {
         // Save this in pending at the moment, until all shards are online
         gateway.resharding.pendingShards.set(shard.id, shard)
@@ -643,28 +644,12 @@ export interface CreateGatewayManagerOptions {
     }
   }
   /**
-   * The logger that the gateway manager will use
+   * The logger that the gateway manager will use.
    * @default logger // The logger exported by `@discordeno/utils`
    */
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
-}
-
-export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
-  /** The max concurrency buckets. Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called. */
-  buckets: Map<
-    number,
-    {
-      workers: Array<{ id: number; queue: number[] }>
-      /** Requests to identify shards are made based on whether it is available to be made. */
-      identifyRequests: Array<(value: void | PromiseLike<void>) => void>
-    }
-  >
-  /** The shards that are created. */
-  shards: Map<number, Shard>
-  /** The logger for the gateway manager */
-  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
-  /** Everything related to resharding. */
-  resharding: {
+  /** Options related to resharding. */
+  resharding?: {
     /**
      * Whether or not automated resharding should be enabled.
      * @default true
@@ -685,6 +670,29 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
      * @default 28800000 (8 hours)
      */
     checkInterval: number
+    /** Handler to get shard count and other session info. */
+    getSessionInfo?: () => Promise<Camelize<DiscordGetGatewayBot>>
+    /** Handler to edit the shard id on any cached guilds. */
+    updateGuildsShardId?: (guildIds: string[], shardId: number) => Promise<void>
+  }
+}
+
+export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
+  /** The max concurrency buckets. Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called. */
+  buckets: Map<
+    number,
+    {
+      workers: Array<{ id: number; queue: number[] }>
+      /** Requests to identify shards are made based on whether it is available to be made. */
+      identifyRequests: Array<(value: void | PromiseLike<void>) => void>
+    }
+  >
+  /** The shards that are created. */
+  shards: Map<number, Shard>
+  /** The logger for the gateway manager. */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /** Everything related to resharding. */
+  resharding: CreateGatewayManagerOptions['resharding'] & {
     /**
      * The interval id of the check interval. This is used to clear the interval when the manager is shutdown.
      */
@@ -693,10 +701,6 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     shards: Collection<number, Shard>
     /** Holds the pending shards that have been created and are pending all shards finish loading. */
     pendingShards: Collection<number, Shard>
-    /** Handler to get shard count and other session info. */
-    getSessionInfo?: () => Promise<Camelize<DiscordGetGatewayBot>>
-    /** Handler to edit the shard id on any cached guilds. */
-    updateGuildsShardId: (guildIds: string[], shardId: number) => Promise<void>
     /** Handler to check if resharding is necessary. */
     checkIfReshardingIsNeeded: () => Promise<{ needed: boolean; info?: Camelize<DiscordGetGatewayBot> }>
     /** Handler to begin resharding. */
