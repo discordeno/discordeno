@@ -1293,6 +1293,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId))
     },
 
+    async getRole(guildId, roleId) {
+      return await rest.get<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId))
+    },
+
     async getScheduledEvent(guildId, eventId, options) {
       return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount))
     },
