@@ -24,6 +24,8 @@ import type {
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
   DiscordGuildOnboarding,
+  DiscordGuildOnboardingPrompt,
+  DiscordGuildOnboardingPromptOption,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
@@ -81,11 +83,14 @@ import {
   type Guild,
   type GuildApplicationCommandPermissions,
   type GuildOnboarding,
+  type GuildOnboardingPrompt,
+  type GuildOnboardingPromptOption,
   type GuildWidget,
   type GuildWidgetSettings,
   type Integration,
   type Interaction,
   type InteractionDataOption,
+  type InteractionDataResolved,
   type Invite,
   type InviteStageInstance,
   type Member,
@@ -141,9 +146,12 @@ import {
   transformGatewayBot,
   transformGuild,
   transformGuildOnboarding,
+  transformGuildOnboardingPrompt,
+  transformGuildOnboardingPromptOption,
   transformIntegration,
   transformInteraction,
   transformInteractionDataOption,
+  transformInteractionDataResolved,
   transformInvite,
   transformInviteStageInstance,
   transformMember,
@@ -181,7 +189,13 @@ import {
   transformCreateApplicationCommandToDiscordCreateApplicationCommand,
   transformInteractionResponseToDiscordInteractionResponse,
 } from './transformers/reverse/index.js'
-import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
+import type {
+  BotInteractionResponse,
+  DiscordComponent,
+  DiscordInteractionDataResolved,
+  DiscordInteractionResponse,
+  DiscordThreadMemberGuildCreate,
+} from './typings.js'
 import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
 export interface Transformers {
@@ -189,6 +203,12 @@ export interface Transformers {
     channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
     forumTag: (bot: Bot, payload: DiscordForumTag, forumTag: ForumTag) => any
     interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
+    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
+    interactionDataResolved: (
+      bot: Bot,
+      payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
+      interactionDataResolved: InteractionDataResolved,
+    ) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
     messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot, messageSnapshot: MessageSnapshot) => any
     messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
@@ -200,7 +220,6 @@ export interface Transformers {
     automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
     guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
     voiceState: (bot: Bot, payload: DiscordVoiceState, voiceState: VoiceState) => any
-    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
     integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
     invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
     application: (bot: Bot, payload: DiscordApplication, application: Application) => any
@@ -241,6 +260,8 @@ export interface Transformers {
     ) => any
     template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
     guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
+    guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt, onboardingPrompt: GuildOnboardingPrompt) => any
+    guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption, onboardingPromptOption: GuildOnboardingPromptOption) => any
     entitlement: (bot: Bot, payload: DiscordEntitlement, entitlement: Entitlement) => any
     sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
     poll: (bot: Bot, payload: DiscordPoll, poll: Poll) => any
@@ -282,6 +303,7 @@ export interface Transformers {
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) => VoiceState
   interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
+  interactionDataResolved: (bot: Bot, payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint }) => InteractionDataResolved
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
   invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
   application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
@@ -314,6 +336,8 @@ export interface Transformers {
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
   template: (bot: Bot, payload: DiscordTemplate) => Template
   guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
+  guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt) => GuildOnboardingPrompt
+  guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
   entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
   sku: (bot: Bot, payload: DiscordSku) => Sku
   poll: (bot: Bot, payload: DiscordPoll) => Poll
@@ -774,6 +798,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       channel: options.customizers?.channel ?? defaultCustomizer,
       forumTag: options.customizers?.forumTag ?? defaultCustomizer,
       interaction: options.customizers?.interaction ?? defaultCustomizer,
+      interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
+      interactionDataResolved: options.customizers?.interactionDataResolved ?? defaultCustomizer,
       member: options.customizers?.member ?? defaultCustomizer,
       message: options.customizers?.message ?? defaultCustomizer,
       messageSnapshot: options.customizers?.messageSnapshot ?? defaultCustomizer,
@@ -797,7 +823,6 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       defaultReactionEmoji: options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       guild: options.customizers?.guild ?? defaultCustomizer,
       integration: options.customizers?.integration ?? defaultCustomizer,
-      interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
       invite: options.customizers?.invite ?? defaultCustomizer,
       presence: options.customizers?.presence ?? defaultCustomizer,
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
@@ -818,6 +843,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       widget: options.customizers?.widget ?? defaultCustomizer,
       widgetSettings: options.customizers?.widgetSettings ?? defaultCustomizer,
       guildOnboarding: options.customizers?.guildOnboarding ?? defaultCustomizer,
+      guildOnboardingPrompt: options.customizers?.guildOnboardingPrompt ?? defaultCustomizer,
+      guildOnboardingPromptOption: options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       entitlement: options.customizers?.entitlement ?? defaultCustomizer,
       sku: options.customizers?.sku ?? defaultCustomizer,
       poll: options.customizers?.poll ?? defaultCustomizer,
@@ -858,6 +885,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
     interactionDataOptions: options.interactionDataOptions ?? transformInteractionDataOption,
+    interactionDataResolved: options.interactionDataResolved ?? transformInteractionDataResolved,
     invite: options.invite ?? transformInvite,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
@@ -891,6 +919,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     applicationCommandOptionChoice: options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
     template: options.template ?? transformTemplate,
     guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
+    guildOnboardingPrompt: options.guildOnboardingPrompt ?? transformGuildOnboardingPrompt,
+    guildOnboardingPromptOption: options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     entitlement: options.entitlement ?? transformEntitlement,
     sku: options.sku ?? transformSku,
     poll: options.poll ?? transformPoll,
