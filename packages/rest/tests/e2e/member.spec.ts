@@ -54,7 +54,9 @@ describe('Member tests', () => {
     expect(member2.nick).to.null
   })
 
-  it('Send a direct message', async () => {
+  it('Send a direct message', async function () {
+    this.timeout(60000)
+
     // DM test only on dd unit testing bot
     if (rest.applicationId.toString() !== '770381961553510451') return
     // Itoh Alt ID
