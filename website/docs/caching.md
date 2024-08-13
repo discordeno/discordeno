@@ -92,9 +92,9 @@ Each cache will be in their own property under `bot.cache` and each of them have
 
 ### Important Points To Note
 
--   Make sure to include the correct `BOT.transformers.desiredProperties` somewhere in your code, this must include at least **all** the properties from `BOT.cache.options.desiredProps` for it to cache all those properties you want to cache.
--   It's not recommended to dynamically change `BOT.cache.options.cacheInMemory` or `BOT.cache.options.cacheOutsideMemory` since it may not cache newly added cache if events for that isn't setup. If you need to do so, you need to manually rerun the `setupDummyEvents` function.
-    -   You should also avoid directly replacing `BOT.events` (like `BOT.events = { ready: ReadyFunction }`) since it'll override the dummy events setup by the cache proxy, which may make it unable to cache data. Instead, assign to individual event properties, like `BOT.events.ready = ReadyFunction`, `BOT.events.messageCreate = MessageCreateFunction` etc.
+-   Make sure to include the correct `bot.transformers.desiredProperties` somewhere in your code, this must include at least **all** the properties from `bot.cache.options.desiredProps` for it to cache all those properties you want to cache.
+-   It's not recommended to dynamically change `bot.cache.options.cacheInMemory` or `bot.cache.options.cacheOutsideMemory` since it may not cache newly added cache if events for that isn't setup. If you need to do so, you need to manually rerun the `setupDummyEvents` function.
+    -   You should also avoid directly replacing `bot.events` (like `bot.events = { ready: ReadyFunction }`) since it'll override the dummy events setup by the cache proxy, which may make it unable to cache data. Instead, assign to individual event properties, like `bot.events.ready = ReadyFunction`, `bot.events.messageCreate = MessageCreateFunction` etc.
 
 ### Useful Options To Note
 
@@ -135,14 +135,14 @@ Lets you define the interval (in milliseconds) in which the cache sweeper should
 
 Every structure that you receive from Discord through the API or the Gateway will be passed onto something called `customizers`, making it the easiest place to cache them all by simply overriding them.
 
-Customizers are found under `BOT.transformers`. For each structure, we have a customizer function that gets run every time the library sees the structure. For example, every guild received through gateway events like `GUILD_CREATE`, `GUILD_UPDATE` or REST functions like `REST.getGuild()`, `REST.editGuild()` (as response) etc. will be passed onto `BOT.transformers.customizers.guild`. This means that if we override this function, we'll have access to the guild object whenever it's created or updated.
+Customizers are found under `bot.transformers`. For each structure, we have a customizer function that gets run every time the library sees the structure. For example, every guild received through gateway events like `GUILD_CREATE`, `GUILD_UPDATE` or REST functions like `REST.getGuild()`, `REST.editGuild()` (as response) etc. will be passed onto `bot.transformers.customizers.guild`. This means that if we override this function, we'll have access to the guild object whenever it's created or updated.
 
 ### Adding Into Cache
 
-Override the `BOT.transformers.customizers.guild` function, inside which insert the code to store the guild into the cache of your choice:
+Override the `bot.transformers.customizers.guild` function, inside which insert the code to store the guild into the cache of your choice:
 
 ```js
-BOT.transformers.customizers.guild = (bot, payload, guild) => {
+bot.transformers.customizers.guild = (bot, payload, guild) => {
   // Store the guild into cache
   guilds.set(guild.id, guild);
 };
@@ -157,7 +157,7 @@ Now we also need to consider for guilds that gets removed, we can do this by ove
 ```js
 const { GUILD_DELETE } = bot.handlers;
 
-BOT.handlers.GUILD_DELETE = (bot, data, shardId) => {
+bot.handlers.GUILD_DELETE = (bot, data, shardId) => {
   const payload = data.d as DiscordUnavailableGuild;
   const id = bot.transformers.snowflake(payload.id);
 
@@ -176,8 +176,8 @@ That's all for guild, now we repeat these steps for every other structure that w
 
 Discordeno is designed to be minimal, this means that it won't handle the events that you don't have a function attached to. This means that it won't run customizers on those events.
 
-For example, let's say that you have a function set to `BOT.events.guildCreate` but not `BOT.events.guildUpdate`, then `BOT.transformers.customizers.guild` will be run whenever there's a `GUILD_CREATE` event but not on `GUILD_UPDATE` event. This will lead to your cached guild not being up to date if that guild is updated.
+For example, let's say that you have a function set to `bot.events.guildCreate` but not `bot.events.guildUpdate`, then `bot.transformers.customizers.guild` will be run whenever there's a `GUILD_CREATE` event but not on `GUILD_UPDATE` event. This will lead to your cached guild not being up to date if that guild is updated.
 
-To solve this issue, you should attach a dummy function to all events that could update the cached object. For a guild, there are only 2 events: `GUILD_CREATE` and `GUILD_UPDATE`. Since in this example you already have a `BOT.events.guildCreate` and lack a `BOT.events.guildUpdate`, you can simply do like: `BOT.events.guildUpdate = () => {}` to make Discordeno handle this event, which in turn calls the `BOT.transformers.customizers.guild` function, which will let you update your cache on `GUILD_UPDATE` event.
+To solve this issue, you should attach a dummy function to all events that could update the cached object. For a guild, there are only 2 events: `GUILD_CREATE` and `GUILD_UPDATE`. Since in this example you already have a `bot.events.guildCreate` and lack a `bot.events.guildUpdate`, you can simply do like: `bot.events.guildUpdate = () => {}` to make Discordeno handle this event, which in turn calls the `bot.transformers.customizers.guild` function, which will let you update your cache on `GUILD_UPDATE` event.
 
-Now there's an easy way to go about and find all the events that would run the customizer you're working with. Simply go to [Discordeno's codebase](https://github.com/discordeno/discordeno), Ctrl + F and enter `transformers.<YOUR_CACHED_OBJECT_NAME>` and look into the files that are in the directory `package/bot/src/handlers/**`. All the files displayed there are the events you're looking for to add to your `BOT.events`. You can take a look at [how we handle it at dd-cache-proxy](https://github.com/AwesomeStickz/dd-cache-proxy/blob/main/setupDummyEvents.ts) to get a better idea of this.
+Now there's an easy way to go about and find all the events that would run the customizer you're working with. Simply go to [Discordeno's codebase](https://github.com/discordeno/discordeno), Ctrl + F and enter `transformers.<YOUR_CACHED_OBJECT_NAME>` and look into the files that are in the directory `package/bot/src/handlers/**`. All the files displayed there are the events you're looking for to add to your `bot.events`. You can take a look at [how we handle it at dd-cache-proxy](https://github.com/AwesomeStickz/dd-cache-proxy/blob/main/setupDummyEvents.ts) to get a better idea of this.
