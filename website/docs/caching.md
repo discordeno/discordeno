@@ -92,9 +92,9 @@ Each cache will be in their own property under `bot.cache` and each of them have
 
 ### Important Points To Note
 
--   Make sure to include the correct `client.transformers.desiredProperties` somewhere in your code, this must include at least **all** the properties from `client.cache.options.desiredProps` for it to cache all those properties you want to cache.
--   It's not recommended to dynamically change `client.cache.options.cacheInMemory` or `client.cache.options.cacheOutsideMemory` since it may not cache newly added cache if events for that isn't setup. If you need to do so, you need to manually rerun the `setupDummyEvents` function.
-    -   You should also avoid directly replacing `client.events` (like `client.events = { ready: ReadyFunction }`) since it'll override the dummy events setup by the cache proxy, which may make it unable to cache data. Instead, assign to individual event properties, like `client.events.ready = ReadyFunction`, `client.events.messageCreate = MessageCreateFunction` etc.
+-   Make sure to include the correct `BOT.transformers.desiredProperties` somewhere in your code, this must include at least **all** the properties from `BOT.cache.options.desiredProps` for it to cache all those properties you want to cache.
+-   It's not recommended to dynamically change `BOT.cache.options.cacheInMemory` or `BOT.cache.options.cacheOutsideMemory` since it may not cache newly added cache if events for that isn't setup. If you need to do so, you need to manually rerun the `setupDummyEvents` function.
+    -   You should also avoid directly replacing `BOT.events` (like `BOT.events = { ready: ReadyFunction }`) since it'll override the dummy events setup by the cache proxy, which may make it unable to cache data. Instead, assign to individual event properties, like `BOT.events.ready = ReadyFunction`, `BOT.events.messageCreate = MessageCreateFunction` etc.
 
 ### Useful Options To Note
 
