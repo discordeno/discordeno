@@ -229,6 +229,8 @@ export interface Transformers {
     gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
     guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
     guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
+    guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt, onboardingPrompt: GuildOnboardingPrompt) => any
+    guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption, onboardingPromptOption: GuildOnboardingPromptOption) => any
     integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
     interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
     interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
@@ -305,6 +307,8 @@ export interface Transformers {
   gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
   guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
+  guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt) => GuildOnboardingPrompt
+  guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
   interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
@@ -811,6 +815,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       gatewayBot: options.customizers?.gatewayBot ?? defaultCustomizer,
       guild: options.customizers?.guild ?? defaultCustomizer,
       guildOnboarding: options.customizers?.guildOnboarding ?? defaultCustomizer,
+      guildOnboardingPrompt: options.customizers?.guildOnboardingPrompt ?? defaultCustomizer,
+      guildOnboardingPromptOption: options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       integration: options.customizers?.integration ?? defaultCustomizer,
       interaction: options.customizers?.interaction ?? defaultCustomizer,
       interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
@@ -884,6 +890,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     gatewayBot: options.gatewayBot ?? transformGatewayBot,
     guild: options.guild ?? transformGuild,
     guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
+    guildOnboardingPrompt: options.guildOnboardingPrompt ?? transformGuildOnboardingPrompt,
+    guildOnboardingPromptOption: options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
     interactionDataOptions: options.interactionDataOptions ?? transformInteractionDataOption,
