@@ -2828,6 +2828,34 @@ export interface DiscordVoiceServerUpdate {
   endpoint: string | null
 }
 
+/** https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send-voice-channel-effect-send-event-fields */
+export interface DiscordVoiceChannelEffectSend {
+  /** ID of the channel the effect was sent in */
+  channel_id: string
+  /** ID of the guild the effect was sent in */
+  guild_id: string
+  /** ID of the user who sent the effect */
+  user_id: string
+  /** The emoji sent, for emoji reaction and soundboard effects */
+  emoji?: DiscordEmoji | null
+  /** The type of emoji animation, for emoji reaction and soundboard effects */
+  animation_type?: DiscordVoiceChannelEffectAnimationType | null
+  /** The ID of the emoji animation, for emoji reaction and soundboard effects */
+  animation_id?: number | null
+  /** The ID of the soundboard sound, for soundboard effects */
+  sound_id?: string | number
+  /** The volume of the soundboard sound, from 0 to 1, for soundboard effects */
+  sound_volume?: number
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send-animation-types */
+export enum DiscordVoiceChannelEffectAnimationType {
+  /** A fun animation, sent by a Nitro subscriber */
+  Premium = 0,
+  /** The standard animation */
+  Basic = 1,
+}
+
 /** https://discord.com/developers/docs/topics/gateway#invite-create */
 export interface DiscordInviteCreate {
   /** The channel the invite is for */

@@ -2,7 +2,14 @@ import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/ga
 import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
-import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents, RecursivePartial } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordGatewayPayload,
+  DiscordReady,
+  DiscordVoiceChannelEffectAnimationType,
+  GatewayIntents,
+  RecursivePartial,
+} from '@discordeno/types'
 import { type Collection, createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
@@ -238,6 +245,16 @@ export interface EventHandlers {
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown
   presenceUpdate: (presence: PresenceUpdate) => unknown
+  voiceChannelEffectSend: (payload: {
+    channelId: bigint
+    guildId: bigint
+    userId: bigint
+    emoji?: Emoji
+    animationType?: DiscordVoiceChannelEffectAnimationType
+    animationId?: number
+    soundId?: bigint | number
+    soundVolume?: number
+  }) => unknown
   voiceServerUpdate: (payload: { token: string; endpoint?: string; guildId: bigint }) => unknown
   voiceStateUpdate: (voiceState: VoiceState) => unknown
   channelCreate: (channel: Channel) => unknown
