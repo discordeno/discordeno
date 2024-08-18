@@ -2171,6 +2171,16 @@ export interface RestManager {
    */
   getRoles: (guildId: BigString) => Promise<CamelizedDiscordRole[]>
   /**
+   * Gets a role by id for a guild.
+   *
+   * @param guildId - The ID of the guild to get role for.
+   * @param roleID - The ID of the role.
+   * @returns A {@link CamelizedDiscordRole} object.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-role}
+   */
+  getRole: (guildId: BigString, roleId: BigString) => Promise<CamelizedDiscordRole>
+  /**
    * Gets a scheduled event by its ID.
    *
    * @param guildId - The ID of the guild to get the scheduled event from.

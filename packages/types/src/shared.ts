@@ -788,7 +788,7 @@ export enum GatewayCloseEventCodes {
   UnknownOpcode,
   /** You sent an invalid [payload](https://discord.com/developers/docs/topics/gateway#sending-payloads) to us. Don't do that! */
   DecodeError,
-  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway-events#identify). */
+  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway-events#identify), or this session has been invalidated. */
   NotAuthenticated,
   /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway-events#identify) is incorrect. */
   AuthenticationFailed,
