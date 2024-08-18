@@ -437,6 +437,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getRoles: async (guildId) => {
       return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, { role, guildId }))
     },
+    getRole: async (guildId, roleId) => {
+      return bot.transformers.role(bot, { role: snakelize(await bot.rest.getRole(guildId, roleId)), guildId })
+    },
     getScheduledEvent: async (guildId, eventId, options) => {
       return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.getScheduledEvent(guildId, eventId, options)))
     },
@@ -876,6 +879,7 @@ export interface BotHelpers {
   getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<CamelizedDiscordPrunedCount>
   getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
   getRoles: (guildId: BigString) => Promise<Role[]>
+  getRole: (guildId: BigString, roleId: BigString) => Promise<Role>
   getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<ScheduledEvent>
   getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<ScheduledEvent[]>
   getScheduledEventUsers: (
