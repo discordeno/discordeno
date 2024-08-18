@@ -614,15 +614,29 @@ RabbitMQ setup guide here.
 
 ## Resharding
 
-Now let's enable resharding on our bot so we don't need to deal with it. Remember, Discord stops allowing your bot to be added to new servers when you max out your existing max shards. Consider a bot started with 150 shards operating on 150,000 servers. Your shards support a maximum of 150 \* 2500 = 375,000 servers. Your bot will be unable to join new servers once it reaches this point until it re-shards. Discordeno provides 2 types of re-sharding: Automated and Manual. You can also have both.
+Now let's enable resharding on our bot so we don't need to deal with it. Remember, Discord stops allowing your bot to be added to new servers when you max out your existing max shards. Consider a bot started with 150 shards operating on 150,000 servers. Your shards support a maximum of 150 \* 2500 = 375,000 servers. Your bot will be unable to join new servers once it reaches this point until it reshards. Discordeno provides 2 types of resharding: Automated and Manual. You can also have both.
 
 - Automated: This system will automatically begin a Zero-downtime resharding process behind the scenes when you
   reach 80% of your maximum servers allowed by your shards. For example, since 375,000 was the max, at 300,000 we
-  would begin re-sharding behind the scenes with ZERO DOWNTIME.
-  - 80% of maximum servers reached (The % of 80% is customizable.)
-  - Identify limits have room to allow re-sharding. (Also customizable)
-- Manual: You can also trigger this manually, should you choose.
-  - When discord releases a new API version, updates your gateways to new version with no downtime.
+  would begin resharding behind the scenes with ZERO DOWNTIME.
+- Manual: You can also trigger this manually, should you choose. For example, when discord releases a new API version, you can update your gateway to new version with no downtime.
+
+By default, automated resharding is enabled with 80% shards full percentage that checks every 8 hours once. You may disable or change it as you want. You can change settings for your resharder inside `createGatewayManager`:
+
+```js
+const GATEWAY = createGatewayManager({
+  ...
+  resharding: {
+    enabled: true,
+    shardsFullPercentage: 80,
+    checkInterval: 28800000, // 8 hours
+    getSessionInfo: REST.getSessionInfo(), // This option is necessary for gateway proxies (which is the case here)
+  }
+})
+```
+
+Take your time to check out all the other properties and methods you can change inside `GATEWAY.resharding`.
+  
 
 ## Evals
 
