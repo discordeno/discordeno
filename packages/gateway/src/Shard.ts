@@ -58,6 +58,7 @@ export class DiscordenoShard {
 
     if (options.requestIdentify) this.requestIdentify = options.requestIdentify
     if (options.shardIsReady) this.shardIsReady = options.shardIsReady
+    if (options.makePresence) this.makePresence = options.makePresence
 
     this.bucket = new LeakyBucket({
       max: this.calculateSafeRequests(),
@@ -611,6 +612,8 @@ export interface ShardCreateOptions {
   requestIdentify?: () => Promise<void>
   /** The handler to alert the gateway manager that this shard has received a READY event. */
   shardIsReady?: () => Promise<void>
+  /** Function to create the bot status to send on Identify requests */
+  makePresence?: () => Promise<BotStatusUpdate | undefined>
 }
 
 export default DiscordenoShard
