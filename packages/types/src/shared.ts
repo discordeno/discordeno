@@ -233,7 +233,7 @@ export enum WebhookTypes {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link'
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -455,6 +455,7 @@ export enum MessageTypes {
   GuildIncidentReportRaid,
   GuildIncidentReportFalseAlarm,
   PurchaseNotification = 44,
+  PollResult = 46,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
