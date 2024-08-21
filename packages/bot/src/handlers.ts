@@ -63,6 +63,7 @@ export function createBotGatewayHandlers(
     THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
     TYPING_START: options.TYPING_START ?? handlers.handleTypingStart,
     USER_UPDATE: options.USER_UPDATE ?? handlers.handleUserUpdate,
+    VOICE_CHANNEL_EFFECT_SEND: options.VOICE_CHANNEL_EFFECT_SEND ?? handlers.handleVoiceChannelEffectSend,
     VOICE_SERVER_UPDATE: options.VOICE_SERVER_UPDATE ?? handlers.handleVoiceServerUpdate,
     VOICE_STATE_UPDATE: options.VOICE_STATE_UPDATE ?? handlers.handleVoiceStateUpdate,
     WEBHOOKS_UPDATE: options.WEBHOOKS_UPDATE ?? handlers.handleWebhooksUpdate,

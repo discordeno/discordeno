@@ -897,6 +897,7 @@ export type GatewayDispatchEventNames =
   | 'STAGE_INSTANCE_DELETE'
   | 'TYPING_START'
   | 'USER_UPDATE'
+  | 'VOICE_CHANNEL_EFFECT_SEND'
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
@@ -970,6 +971,7 @@ export enum GatewayIntents {
   GuildInvites = 1 << 6,
   /**
    * - VOICE_STATE_UPDATE
+   * - VOICE_CHANNEL_EFFECT_SEND
    */
   GuildVoiceStates = 1 << 7,
   /**

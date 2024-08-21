@@ -143,10 +143,11 @@ export function transformInteraction(bot: Bot, payload: { interaction: DiscordIn
       values: payload.interaction.data.values,
       id: payload.interaction.data.id ? bot.transformers.snowflake(payload.interaction.data.id) : undefined,
       name: payload.interaction.data.name,
-      resolved: payload.interaction.data.resolved ? transformInteractionDataResolved(bot, payload.interaction.data.resolved, guildId) : undefined,
+      resolved: payload.interaction.data.resolved
+        ? bot.transformers.interactionDataResolved(bot, { resolved: payload.interaction.data.resolved, guildId })
+        : undefined,
       options: payload.interaction.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
       targetId: payload.interaction.data.target_id ? bot.transformers.snowflake(payload.interaction.data.target_id) : undefined,
-      // guildId: payload.interaction.data.guild_id ? bot.transformers.snowflake(payload.interaction.data.guild_id) : undefined,
     }
   }
 
@@ -165,62 +166,65 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
   return bot.transformers.customizers.interactionDataOptions(bot, option, opt)
 }
 
-export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint): InteractionDataResolved {
+export function transformInteractionDataResolved(
+  bot: Bot,
+  payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
+): InteractionDataResolved {
   const transformed: InteractionDataResolved = {}
 
-  if (resolved.messages) {
+  if (payload.resolved.messages) {
     transformed.messages = new Collection(
-      Object.entries(resolved.messages).map(([_id, value]) => {
+      Object.entries(payload.resolved.messages).map(([_id, value]) => {
         const message: Message = bot.transformers.message(bot, value)
         return [message.id, message]
       }),
     )
   }
 
-  if (resolved.users) {
+  if (payload.resolved.users) {
     transformed.users = new Collection(
-      Object.entries(resolved.users).map(([_id, value]) => {
+      Object.entries(payload.resolved.users).map(([_id, value]) => {
         const user = bot.transformers.user(bot, value)
         return [user.id, user]
       }),
     )
   }
 
-  if (guildId && resolved.members) {
+  if (payload.guildId && payload.resolved.members) {
     transformed.members = new Collection(
-      Object.entries(resolved.members).map(([id, value]) => {
-        const member: Member = bot.transformers.member(bot, value, guildId, bot.transformers.snowflake(id))
+      Object.entries(payload.resolved.members).map(([id, value]) => {
+        const member: Member = bot.transformers.member(bot, value, payload.guildId!, bot.transformers.snowflake(id))
         return [member.id, member]
       }),
     )
   }
 
-  if (guildId && resolved.roles) {
+  if (payload.guildId && payload.resolved.roles) {
     transformed.roles = new Collection(
-      Object.entries(resolved.roles).map(([_id, value]) => {
-        const role = bot.transformers.role(bot, { role: value, guildId })
+      Object.entries(payload.resolved.roles).map(([_id, value]) => {
+        const role = bot.transformers.role(bot, { role: value, guildId: payload.guildId! })
         return [role.id, role]
       }),
     )
   }
 
-  if (resolved.channels) {
+  if (payload.resolved.channels) {
     transformed.channels = new Collection(
-      Object.entries(resolved.channels).map(([_id, value]) => {
+      Object.entries(payload.resolved.channels).map(([_id, value]) => {
         const channel = bot.transformers.channel(bot, { channel: value }) as InteractionResolvedChannel
         return [channel.id, channel]
       }),
     )
   }
 
-  if (resolved.attachments) {
+  if (payload.resolved.attachments) {
     transformed.attachments = new Collection(
-      Object.entries(resolved.attachments).map(([key, value]) => {
+      Object.entries(payload.resolved.attachments).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
         return [id, bot.transformers.attachment(bot, value)]
       }),
     )
   }
 
-  return transformed
+  return bot.transformers.customizers.interactionDataResolved(bot, payload, transformed)
 }

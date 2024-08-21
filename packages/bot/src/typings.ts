@@ -197,6 +197,7 @@ export interface BotGatewayHandlerOptions {
   PRESENCE_UPDATE: typeof handlers.handlePresenceUpdate
   TYPING_START: typeof handlers.handleTypingStart
   USER_UPDATE: typeof handlers.handleUserUpdate
+  VOICE_CHANNEL_EFFECT_SEND: typeof handlers.handleVoiceChannelEffectSend
   VOICE_SERVER_UPDATE: typeof handlers.handleVoiceServerUpdate
   VOICE_STATE_UPDATE: typeof handlers.handleVoiceStateUpdate
   WEBHOOKS_UPDATE: typeof handlers.handleWebhooksUpdate

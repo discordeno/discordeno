@@ -11,7 +11,14 @@ import {
 } from '@discordeno/types'
 import { Collection, delay, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
-import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type StatusUpdate, type UpdateVoiceState } from './types.js'
+import {
+  type BotStatusUpdate,
+  type ShardEvents,
+  ShardSocketCloseCodes,
+  type ShardSocketRequest,
+  type StatusUpdate,
+  type UpdateVoiceState,
+} from './types.js'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   const connectionOptions = options.connection ?? {
@@ -54,6 +61,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       },
     },
     logger: options.logger ?? logger,
+    makePresence: options.makePresence ?? (() => Promise.resolve(undefined)),
     resharding: {
       enabled: options.resharding?.enabled ?? true,
       shardsFullPercentage: options.resharding?.shardsFullPercentage ?? 80,
@@ -168,6 +176,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             gateway.logger.debug(`[Shard] Resolving shard identify request`)
             gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
+          makePresence: gateway.makePresence,
         })
 
         if (gateway.preferSnakeCase) {
@@ -389,6 +398,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             gateway.logger.debug(`[Shard] Resolving shard identify request`)
             gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
+          makePresence: gateway.makePresence,
         })
 
         if (this.preferSnakeCase) {
@@ -648,6 +658,13 @@ export interface CreateGatewayManagerOptions {
    * @default logger // The logger exported by `@discordeno/utils`
    */
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /**
+   * Make the presence for when the bot connects to the gateway
+   *
+   * @remarks
+   * This function will be called each time a Shard is going to identify
+   */
+  makePresence?: () => Promise<BotStatusUpdate | undefined>
   /** Options related to resharding. */
   resharding?: {
     /**
