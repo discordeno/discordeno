@@ -1126,7 +1126,7 @@ export interface CreateScheduledEvent {
   /** the cover image of the scheduled event */
   image?: string
   /** the definition for how often this event should recur */
-  recurrence_rule?: DiscordScheduledEventRecurrenceRule
+  recurrenceRule?: DiscordScheduledEventRecurrenceRule
 }
 
 export interface EditScheduledEvent {
@@ -1151,7 +1151,7 @@ export interface EditScheduledEvent {
   /** the cover image of the scheduled event */
   image?: string
   /** the definition for how often this event should recur */
-  recurrence_rule?: DiscordScheduledEventRecurrenceRule
+  recurrenceRule?: DiscordScheduledEventRecurrenceRule | null
 }
 
 export interface GetScheduledEvents {
