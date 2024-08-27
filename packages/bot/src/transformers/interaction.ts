@@ -2,7 +2,10 @@ import {
   type ChannelTypes,
   DiscordApplicationIntegrationType,
   type DiscordInteraction,
+  type DiscordInteractionCallback,
+  type DiscordInteractionCallbackResponse,
   type DiscordInteractionDataOption,
+  type DiscordInteractionResource,
   InteractionResponseTypes,
   InteractionTypes,
   MessageFlags,
@@ -12,9 +15,12 @@ import {
   type Bot,
   type DiscordChannel,
   type Interaction,
+  type InteractionCallback,
+  type InteractionCallbackResponse,
   type InteractionDataOption,
   type InteractionDataResolved,
   type InteractionResolvedChannel,
+  type InteractionResource,
   type Member,
   type Message,
 } from '../index.js'
@@ -40,9 +46,9 @@ const baseInteraction = {
       throw new Error('Cannot respond to a modal interaction with another modal.')
 
     this.acknowledged = true
-    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type, data: response })
+    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type, data: response }, { withResponse: options?.withResponse })
   },
-  async edit(response, messageId) {
+  async edit(response, messageId, options) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
 
     // If user provides a string, change it to a response object
@@ -57,12 +63,17 @@ const baseInteraction = {
         throw new Error("This interaction has not been responded to yet and this isn't a MessageComponent interaction.")
 
       this.acknowledged = true
-      return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UpdateMessage, data: response })
+      return await this.bot.helpers.sendInteractionResponse(
+        this.id,
+        this.token,
+        { type: InteractionResponseTypes.UpdateMessage, data: response },
+        options,
+      )
     }
 
     return await this.bot.helpers.editOriginalInteractionResponse(this.token, response)
   },
-  async deferEdit() {
+  async deferEdit(options) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
 
@@ -70,18 +81,23 @@ const baseInteraction = {
       throw new Error("Cannot defer to then edit an interaction that isn't a MessageComponent interaction.")
 
     this.acknowledged = true
-    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DeferredUpdateMessage })
+    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DeferredUpdateMessage }, options)
   },
-  async defer(isPrivate) {
+  async defer(isPrivate, options) {
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
 
     this.acknowledged = true
-    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, {
-      type: InteractionResponseTypes.DeferredChannelMessageWithSource,
-      data: {
-        flags: isPrivate ? MessageFlags.Ephemeral : undefined,
+    return await this.bot.helpers.sendInteractionResponse(
+      this.id,
+      this.token,
+      {
+        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+        data: {
+          flags: isPrivate ? MessageFlags.Ephemeral : undefined,
+        },
       },
-    })
+      options,
+    )
   },
   async delete(messageId) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
@@ -227,4 +243,39 @@ export function transformInteractionDataResolved(
   }
 
   return bot.transformers.customizers.interactionDataResolved(bot, payload, transformed)
+}
+
+export function transformInteractionCallbackResponse(bot: Bot, payload: DiscordInteractionCallbackResponse): InteractionCallbackResponse {
+  const props = bot.transformers.desiredProperties.interactionCallbackResponse
+  const response = {} as InteractionCallbackResponse
+
+  if (props.interaction && payload.interaction) response.interaction = bot.transformers.interactionCallback(bot, payload.interaction)
+  if (props.resource && payload.resource) response.resource = bot.transformers.interactionResource(bot, payload.resource)
+
+  return bot.transformers.customizers.interactionCallbackResponse(bot, payload, response)
+}
+
+export function transformInteractionCallback(bot: Bot, payload: DiscordInteractionCallback): InteractionCallback {
+  const props = bot.transformers.desiredProperties.interactionCallback
+  const callback = {} as InteractionCallback
+
+  if (props.id && payload.id) callback.id = bot.transformers.snowflake(payload.id)
+  if (props.type && payload.type) callback.type = payload.type
+  if (props.activityInstanceId && payload.activity_instance_id) callback.activityInstanceId = payload.activity_instance_id
+  if (props.responseMessageId && payload.response_message_id) callback.responseMessageId = bot.transformers.snowflake(payload.response_message_id)
+  if (props.responseMessageEphemeral && payload.response_message_ephemeral) callback.responseMessageEphemeral = payload.response_message_ephemeral
+  if (props.responseMessageLoading && payload.response_message_loading) callback.responseMessageLoading = payload.response_message_loading
+
+  return bot.transformers.customizers.interactionCallback(bot, payload, callback)
+}
+
+export function transformInteractionResource(bot: Bot, payload: DiscordInteractionResource): InteractionResource {
+  const props = bot.transformers.desiredProperties.interactionResource
+  const resource = {} as InteractionResource
+
+  if (props.type && payload.type) resource.type = payload.type
+  if (props.activityInstance && payload.activity_instance) resource.activityInstance = payload.activity_instance
+  if (props.message && payload.message) resource.message = bot.transformers.message(bot, payload.message)
+
+  return bot.transformers.customizers.interactionResource(bot, payload, resource)
 }
