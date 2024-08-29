@@ -175,6 +175,10 @@ BOT.gateway.requestMembers = async function (guildId, options) {
 
 This will now send a request to our gateway manager whenever the bot makes a request to fetch members.
 
+## Caching
+
+Now that you've set up your bot process, you might want to cache certain structures for your bot to use. A detailed guide for that is provided [here](/docs/caching). Take your time to understand and implement it.
+
 ## Optimizing For Scale
 
 Now think back at how many shards we created in this guide. We had built this with the idea that we had 5,000 shards, in other words 5,000,000 servers. This means that there are 5,000 shards or 5,000,000 servers sending events all to this one little bot listener. This needs to scale much better. So we have several options available. Remember if you went the serverless route, none of this is needed because that is already scaled. However, should you not have the money to afford serverless infrastructure, we will make it work.

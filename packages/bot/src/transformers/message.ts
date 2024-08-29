@@ -147,7 +147,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (props.guildId && guildId) message.guildId = guildId
   if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
   if (props.interactionMetadata && payload.interaction_metadata)
-    message.interactionMetadata = transformMessageInteractionMetadata(bot, payload.interaction_metadata)
+    message.interactionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.interaction_metadata)
   if (props.interaction && payload.interaction) {
     const interaction = {} as NonNullable<Message['interaction']>
     const messageInteractionProps = bot.transformers.desiredProperties.messageInteraction
@@ -267,7 +267,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
   if (props.originalResponseMessageId && payload.original_response_message_id)
     metadata.originalResponseMessageId = bot.transformers.snowflake(payload.original_response_message_id)
   if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
-    metadata.triggeringInteractionMetadata = transformMessageInteractionMetadata(bot, payload.triggering_interaction_metadata)
+    metadata.triggeringInteractionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.triggering_interaction_metadata)
   if (props.type) metadata.type = payload.type
   if (props.user && payload.user) metadata.user = bot.transformers.user(bot, payload.user)
 
