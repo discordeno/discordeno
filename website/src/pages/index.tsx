@@ -8,15 +8,10 @@ import DiscordenoReviews from '../components/home/reviews'
 import { MainPage } from '../styling'
 
 export default function Home(): JSX.Element {
-  // Use loading to give time to JS to load
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-
-      // give it a small timeout to make sure the loading screen is shown
-    }, 1000)
+    setLoading(false)
   }, [])
 
   if (loading)
