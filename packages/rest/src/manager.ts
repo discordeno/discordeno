@@ -39,6 +39,7 @@ import {
   type DiscordStageInstance,
   type DiscordSticker,
   type DiscordStickerPack,
+  type DiscordSubscription,
   type DiscordTemplate,
   type DiscordThreadMember,
   type DiscordUser,
@@ -1621,6 +1622,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async listSkus(applicationId) {
       return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId))
+    },
+
+    async listSubscriptions(skuId, options) {
+      return await rest.get<DiscordSubscription[]>(rest.routes.monetization.subscriptions(skuId, options))
+    },
+
+    async getSubscription(skuId, subscriptionId) {
+      return await rest.get<DiscordSubscription>(rest.routes.monetization.subscription(skuId, subscriptionId))
     },
 
     preferSnakeCase(enabled: boolean) {

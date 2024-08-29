@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  Camelize,
   CamelizedDiscordAccessTokenResponse,
   CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordApplicationRoleConnection,
@@ -48,6 +49,7 @@ import type {
   DeleteWebhookMessageOptions,
   DiscordEntitlement,
   DiscordMessage,
+  DiscordSubscription,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -77,6 +79,7 @@ import type {
   InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
+  ListSkuSubscriptionsOptions,
   MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
@@ -750,6 +753,12 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     listSkus: async (applicationId) => {
       return (await bot.rest.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, snakelize(sku)))
     },
+    getSubscription: async (skuId, subscriptionId) => {
+      return await bot.rest.getSubscription(skuId, subscriptionId)
+    },
+    listSubscriptions: async (skuId, options) => {
+      return await bot.rest.listSubscriptions(skuId, options)
+    },
   }
 }
 
@@ -987,4 +996,6 @@ export interface BotHelpers {
   createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Entitlement>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   listSkus: (applicationId: BigString) => Promise<Sku[]>
+  listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<Camelize<DiscordSubscription[]>>
+  getSubscription: (skuId: BigString, subscriptionId: BigString) => Promise<Camelize<DiscordSubscription>>
 }
