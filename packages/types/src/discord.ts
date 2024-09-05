@@ -512,6 +512,7 @@ export interface DiscordConnection {
 
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
+  AmazonMusic = 'amazon-music',
   BattleNet = 'battlenet',
   Bungie = 'Bungie.net',
   Domain = 'domain',
