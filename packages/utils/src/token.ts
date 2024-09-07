@@ -1,5 +1,3 @@
-import { Buffer } from 'node:buffer'
-
 const validTokenPrefixes = ['Bot', 'Bearer']
 
 /** Removes the Bot/Bearer before the token. */
@@ -19,5 +17,5 @@ export function removeTokenPrefix(token?: string, type: 'GATEWAY' | 'REST' = 'RE
 
 /** Get the bot id from the bot token. WARNING: Discord staff has mentioned this may not be stable forever. Use at your own risk. However, note for over 5 years this has never broken. */
 export function getBotIdFromToken(token: string): bigint {
-  return BigInt(Buffer.from(token.split('.')[0], 'base64').toString())
+  return BigInt(atob(token.split('.')[0]))
 }
