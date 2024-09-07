@@ -282,6 +282,8 @@ export interface RestRoutes {
   currentUser: () => string
   /** Route to get and edit information about the current application. */
   application: () => string
+  /** Route for get an activity instance */
+  applicationActivityInstance: (applicationId: BigString, instanceId: string) => string
   /** Route for handling a sticker. */
   sticker: (stickerId: BigString) => string
   /** Route for handling all voice regions. */
