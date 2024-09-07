@@ -460,6 +460,8 @@ export class DiscordenoShard {
         this.state = ShardState.Connected
         this.events.resumed?.(this)
 
+        this.logger.debug(`[Shard] Shard #${this.id} received RESUMED`)
+
         // Continue the requests which have been queued since the shard went offline.
         this.offlineSendQueue.forEach((resolve) => resolve())
         // Setting the length to 0 will delete the elements in it
@@ -476,6 +478,8 @@ export class DiscordenoShard {
         this.sessionId = payload.session_id
 
         this.state = ShardState.Connected
+
+        this.logger.debug(`[Shard] Shard #${this.id} received READY`)
 
         // Continue the requests which have been queued since the shard went offline.
         // Important when this is a re-identify
