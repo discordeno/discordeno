@@ -193,7 +193,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         return await new Promise((resolve) => {
           // Mark that we are making an identify request so another is not made.
           bucket.identifyRequests.push(resolve)
-          gateway.logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+          gateway.logger.debug(`[Gateway] identifying shard #${shardId}.`)
           // This will trigger identify and when READY is received it will resolve the above request.
           shard?.identify().then(async () => {
             // Tell the manager that this shard is online
@@ -416,7 +416,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return await new Promise((resolve) => {
         // Mark that we are making an identify request so another is not made.
         bucket.identifyRequests.push(resolve)
-        gateway.logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+        gateway.logger.debug(`[Gateway] identifying shard #${shardId}.`)
         // This will trigger identify and when READY is received it will resolve the above request.
         shard?.identify()
       })
@@ -424,21 +424,15 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
       if (!shard) {
-        return gateway.logger.debug(`[Gateway] kill shard but not found (${shardId})`)
+        return gateway.logger.debug(`[Gateway] A kill for shard #${shardId} was requested, but the shard could not be found`)
       }
 
-      gateway.logger.debug(`[Gateway] kill shard (${shardId})`)
+      gateway.logger.debug(`[Gateway] Killing shard #${shardId}`)
       this.shards.delete(shardId)
       await shard.shutdown()
     },
     async requestIdentify(_shardId: number) {
       gateway.logger.debug(`[Gateway] requesting identify`)
-      // const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
-      // if (!bucket) return
-
-      // return await new Promise((resolve) => {
-      //   bucket.identifyRequests.push(resolve)
-      // })
     },
 
     // Helpers methods below this
