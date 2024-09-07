@@ -1193,7 +1193,20 @@ export interface MessageReference {
 
 export interface MessageSnapshot {
   /** Minimal subset of fields in the forwarded message */
-  message: Pick<Message, 'type' | 'content' | 'embeds' | 'attachments' | 'timestamp' | 'editedTimestamp' | 'flags' | 'mentions' | 'mentionedRoleIds'>
+  message: Pick<
+    Message,
+    | 'type'
+    | 'content'
+    | 'embeds'
+    | 'attachments'
+    | 'timestamp'
+    | 'editedTimestamp'
+    | 'flags'
+    | 'mentions'
+    | 'mentionedRoleIds'
+    | 'stickerItems'
+    | 'components'
+  >
 }
 
 export interface MessageInteractionMetadata {

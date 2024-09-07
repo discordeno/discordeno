@@ -1501,7 +1501,18 @@ export interface DiscordMessageSnapshot {
   /** Minimal subset of fields in the forwarded message */
   message: Pick<
     DiscordMessage,
-    'type' | 'content' | 'embeds' | 'attachments' | 'timestamp' | 'edited_timestamp' | 'flags' | 'mentions' | 'mention_roles'
+    | 'type'
+    | 'content'
+    | 'embeds'
+    | 'attachments'
+    | 'timestamp'
+    | 'edited_timestamp'
+    | 'flags'
+    | 'mentions'
+    | 'mention_roles'
+    | 'stickers'
+    | 'sticker_items'
+    | 'components'
   >
 }
 
