@@ -612,6 +612,10 @@ export function createRoutes(): RestRoutes {
       return '/applications/@me'
     },
 
+    applicationActivityInstance(applicationId, instanceId) {
+      return `/applications/${applicationId}/activity-instances/${instanceId}`
+    },
+
     currentUser() {
       return '/users/@me'
     },
