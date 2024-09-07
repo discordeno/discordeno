@@ -113,7 +113,12 @@ export interface ActionRow {
   /** Action rows are a group of buttons. */
   type: MessageComponentTypes.ActionRow
   /** The components in this row */
-  components: Exclude<MessageComponent, ActionRow>[]
+  components:
+    | [Exclude<MessageComponent, ActionRow>]
+    | [ButtonComponent, ButtonComponent]
+    | [ButtonComponent, ButtonComponent, ButtonComponent]
+    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
