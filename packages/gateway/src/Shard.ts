@@ -195,7 +195,7 @@ export class DiscordenoShard {
 
   /** Check whether the connection to Discord is currently open. */
   isOpen(): boolean {
-    return this.socket?.readyState === WebSocket.OPEN
+    return this.socket?.readyState === NodeWebSocket.OPEN
   }
 
   /** Attempt to resume the previous shards session with the gateway. */
