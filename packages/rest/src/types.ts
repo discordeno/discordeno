@@ -77,6 +77,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordActivityInstance,
   // Type required for typedoc
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   DiscordApplicationIntegrationType,
@@ -2855,7 +2856,13 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
    */
   getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<CamelizedDiscordMemberWithUser[]>
-
+  /**
+   * Returns a serialized activity instance, if it exists. Useful for preventing unwanted activity sessions.
+   *
+   * @param applicationId - The ID of the application
+   * @param instanceId - The ID of the activity instance
+   */
+  getApplicationActivityInstance: (applicationId: BigString, instanceId: string) => Promise<Camelize<DiscordActivityInstance>>
   /**
    * Kicks a member from a guild.
    *

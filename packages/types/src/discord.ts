@@ -1182,6 +1182,40 @@ export interface DiscordActivity {
   buttons?: DiscordActivityButton[]
 }
 
+/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-instance-object */
+export interface DiscordActivityInstance {
+  /** Application ID */
+  application_id: string
+  /** Activity Instance ID */
+  instance_id: string
+  /** Unique identifier for the launch */
+  launch_id: string
+  /** The Location the instance is runnning in */
+  location: DiscordActivityLocation
+  /** The IDs of the Users currently connected to the instance */
+  users: string[]
+}
+
+/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-location-object */
+export interface DiscordActivityLocation {
+  /** The unique identifier for the location */
+  id: string
+  /** Enum describing kind of location */
+  kind: DiscordActivityLocationKind
+  /** The id of the Channel */
+  channel_id: string
+  /** The id of the Guild */
+  guild_id?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-location-kind-enum */
+export enum DiscordActivityLocationKind {
+  /** The Location is a Guild Channel */
+  GuildChannel = 'gc',
+  /** The Location is a Private Channel, such as a DM or GDM */
+  PrivateChannel = 'pc',
+}
+
 /** https://discord.com/developers/docs/topics/gateway#client-status-object */
 export interface DiscordClientStatus {
   /** The user's status set for an active desktop (Windows, Linux, Mac) application session */

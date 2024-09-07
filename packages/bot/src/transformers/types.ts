@@ -13,6 +13,7 @@ import type {
   ButtonStyles,
   ChannelTypes,
   DefaultMessageNotificationLevels,
+  DiscordActivityLocationKind,
   DiscordApplicationIntegrationType,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordEntitlementType,
@@ -115,6 +116,30 @@ export interface ActivityEmoji {
 export interface ActivityButton {
   url: string
   label: string
+}
+
+export interface ActivityInstance {
+  /** Application ID */
+  applicationId: bigint
+  /** Activity Instance ID */
+  instanceId: string
+  /** Unique identifier for the launch */
+  launchId: bigint
+  /** The Location the instance is runnning in */
+  location: ActivityLocation
+  /** The IDs of the Users currently connected to the instance */
+  users: bigint[]
+}
+
+export interface ActivityLocation {
+  /** The unique identifier for the location */
+  id: string
+  /** Enum describing kind of location */
+  kind: DiscordActivityLocationKind
+  /** The id of the Channel */
+  channelId: bigint
+  /** The id of the Guild */
+  guildId?: bigint
 }
 
 export interface Application {
