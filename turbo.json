@@ -18,11 +18,11 @@
       "outputs": ["coverage/**"]
     },
     "test:integration": {
-      "dependsOn": ["^build", "build"],
+      "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
     "test:test-type": {
-      "dependsOn": ["^build:type", "build:type"]
+      "dependsOn": ["^build:type"]
     },
     "test:deno-unit": {
       "dependsOn": ["^build", "build", "build:type"],
@@ -33,7 +33,7 @@
       "outputs": ["bunTestsDist/**"]
     },
     "test:e2e": {
-      "dependsOn": ["^build", "build"],
+      "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "env": ["DISCORD_TOKEN", "E2E_TEST_GUILD_ID"]
     },
