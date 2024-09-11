@@ -401,6 +401,7 @@ export class DiscordenoShard {
             max: this.calculateSafeRequests(),
             refillInterval: 60000,
             refillAmount: this.calculateSafeRequests(),
+            logger: this.logger,
           })
 
           // Queue should not be lost on a re-identify.
