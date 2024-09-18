@@ -74,13 +74,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/env@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "@fastify/env@npm:4.4.0"
+"@fastify/env@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@fastify/env@npm:5.0.0"
   dependencies:
     env-schema: "npm:^6.0.0"
-    fastify-plugin: "npm:^4.0.0"
-  checksum: 425a3e3d7be9b412e2115c51da6fccdbdd92a0c6a583bdd748e2c33827f0dad9e483b8008b2fff6a7cee2b6585bbb5d4220e25ab0fcdffdb61066452e37b9ae8
+    fastify-plugin: "npm:^5.0.0"
+  checksum: d3572d55a8194b66d5d7d0a9b3198ccc1c2a9f18497a0ba8b97b4a52983bb73bf076c01eb1021d4fbdc6e944cdfdae610855a1c8c73353ef003c9cfb4319089f
   languageName: node
   linkType: hard
 
@@ -1324,6 +1324,13 @@ __metadata:
   version: 4.5.1
   resolution: "fastify-plugin@npm:4.5.1"
   checksum: 7c6d777ada0f01c8a1166a2a669cccfd6074c7764121f07cce997745f198227a271c7a317aaf0da273b329f24307f0eba3f093d872d29b839b33deb525bbafe2
+  languageName: node
+  linkType: hard
+
+"fastify-plugin@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "fastify-plugin@npm:5.0.0"
+  checksum: a350840e82f7c36150db2bf3463adffce7abe3e960f95417bf89ae47dca8a9b9efdb28fc575d0bca73d6168c8ec820b53f45ace2c82d561ec8322cd8e9bc9d1b
   languageName: node
   linkType: hard
 
@@ -2591,7 +2598,7 @@ __metadata:
   resolution: "rest-passthrough@workspace:."
   dependencies:
     "@discordeno/rest": "npm:19.0.0-next.9194740"
-    "@fastify/env": "npm:^4.4.0"
+    "@fastify/env": "npm:^5.0.0"
     "@fastify/helmet": "npm:^11.1.1"
     "@fastify/multipart": "npm:^8.3.0"
     "@favware/cliff-jumper": "npm:^4.1.0"
