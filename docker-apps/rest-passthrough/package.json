@@ -14,7 +14,7 @@
     "@discordeno/rest": "19.0.0-next.9194740",
     "@fastify/env": "^4.4.0",
     "@fastify/helmet": "^11.1.1",
-    "@fastify/multipart": "^8.3.0",
+    "@fastify/multipart": "^9.0.0",
     "fastify": "^4.28.1"
   },
   "devDependencies": {
