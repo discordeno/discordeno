@@ -558,6 +558,35 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         },
       })
     },
+
+    async requestSoundboardSounds(guildIds) {
+      /**
+       * Discord will send the events for the guilds that are "under the shard" that sends the opcode.
+       * For this reason we need to group the ids with the shard the calculateShardId method gives
+       */
+
+      const map = new Map<number, BigString[]>()
+
+      for (const guildId of guildIds) {
+        const shardId = gateway.calculateShardId(guildId)
+
+        const ids = map.get(shardId) ?? []
+        map.set(shardId, ids)
+
+        ids.push(guildId)
+      }
+
+      await Promise.all(
+        [...map.entries()].map(([shardId, ids]) =>
+          gateway.sendPayload(shardId, {
+            op: GatewayOpcodes.RequestSoundboardSounds,
+            d: {
+              guild_ids: ids,
+            },
+          }),
+        ),
+      )
+    },
   }
 
   return gateway
@@ -816,6 +845,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>
+  requestSoundboardSounds: (guildIds: BigString[]) => Promise<void>
   /** This managers cache related settings. */
   cache: {
     requestMembers: {

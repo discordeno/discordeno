@@ -31,6 +31,7 @@ import type {
   PresenceUpdate,
   Role,
   ScheduledEvent,
+  SoundboardSound,
   Sticker,
   ThreadMember,
   User,
@@ -284,4 +285,9 @@ export interface EventHandlers {
   entitlementDelete: (entitlement: Entitlement) => unknown
   messagePollVoteAdd: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
   messagePollVoteRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
+  soundboardSoundCreate: (payload: SoundboardSound) => unknown
+  soundboardSoundUpdate: (payload: SoundboardSound) => unknown
+  soundboardSoundDelete: (payload: { soundId: bigint; guildId: bigint }) => unknown
+  soundboardSoundsUpdate: (payload: SoundboardSound[]) => unknown
+  soundboardSounds: (payload: { soundboardSounds: SoundboardSound[]; guildId: bigint }) => unknown
 }

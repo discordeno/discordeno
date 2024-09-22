@@ -209,4 +209,9 @@ export interface BotGatewayHandlerOptions {
   ENTITLEMENT_DELETE: typeof handlers.handleEntitlementDelete
   MESSAGE_POLL_VOTE_ADD: typeof handlers.handleMessagePollVoteAdd
   MESSAGE_POLL_VOTE_REMOVE: typeof handlers.handleMessagePollVoteRemove
+  GUILD_SOUNDBOARD_SOUND_CREATE: typeof handlers.handleGuildSoundboardSoundCreate
+  GUILD_SOUNDBOARD_SOUND_DELETE: typeof handlers.handleGuildSoundboardSoundDelete
+  GUILD_SOUNDBOARD_SOUND_UPDATE: typeof handlers.handleGuildSoundboardSoundUpdate
+  GUILD_SOUNDBOARD_SOUNDS_UPDATE: typeof handlers.handleGuildSoundboardSoundsUpdate
+  SOUNDBOARD_SOUNDS: typeof handlers.handleSoundboardSounds
 }
