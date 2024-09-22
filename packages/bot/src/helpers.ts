@@ -41,6 +41,7 @@ import type {
   CreateGuildEmoji,
   CreateGuildFromTemplate,
   CreateGuildRole,
+  CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
   CreateMessageOptions,
   CreateScheduledEvent,
@@ -86,10 +87,12 @@ import type {
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
   ModifyGuildMember,
+  ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
   ModifyRolePositions,
   ModifyWebhook,
   SearchMembers,
+  SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   UpsertGlobalApplicationCommandOptions,
@@ -116,6 +119,7 @@ import type {
   Role,
   ScheduledEvent,
   Sku,
+  SoundboardSound,
   StageInstance,
   Sticker,
   StickerPack,
@@ -756,6 +760,31 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     listSkus: async (applicationId) => {
       return (await bot.rest.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, snakelize(sku)))
     },
+    sendSoundboardSound: async (channelId, options) => {
+      await bot.rest.sendSoundboardSound(channelId, options)
+    },
+    listDefaultSoundboardSounds: async () => {
+      return (await bot.rest.listDefaultSoundboardSounds()).map((sound) => bot.transformers.soundboardSound(bot, snakelize(sound)))
+    },
+    listGuildSoundboardSounds: async (guildId) => {
+      const res = await bot.rest.listGuildSoundboardSounds(guildId)
+
+      return {
+        items: res.items.map((sound) => bot.transformers.soundboardSound(bot, snakelize(sound))),
+      }
+    },
+    getGuildSoundboardSound: async (guildId, soundId) => {
+      return bot.transformers.soundboardSound(bot, snakelize(await bot.rest.getGuildSoundboardSound(guildId, soundId)))
+    },
+    createGuildSoundboardSound: async (guildId, options, reason) => {
+      return bot.transformers.soundboardSound(bot, snakelize(await bot.rest.createGuildSoundboardSound(guildId, options, reason)))
+    },
+    modifyGuildSoundboardSound: async (guildId, soundId, options, reason) => {
+      return bot.transformers.soundboardSound(bot, snakelize(await bot.rest.modifyGuildSoundboardSound(guildId, soundId, options, reason)))
+    },
+    deleteGuildSoundboardSound: async (guildId, soundId, reason) => {
+      await bot.rest.deleteGuildSoundboardSound(guildId, soundId, reason)
+    },
   }
 }
 
@@ -994,4 +1023,16 @@ export interface BotHelpers {
   createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Entitlement>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   listSkus: (applicationId: BigString) => Promise<Sku[]>
+  sendSoundboardSound: (channelId: BigString, options: SendSoundboardSound) => Promise<void>
+  listDefaultSoundboardSounds: () => Promise<SoundboardSound[]>
+  listGuildSoundboardSounds: (guildId: BigString) => Promise<{ items: SoundboardSound[] }>
+  getGuildSoundboardSound: (guildId: BigString, soundId: BigString) => Promise<SoundboardSound>
+  createGuildSoundboardSound: (guildId: BigString, options: CreateGuildSoundboardSound, reason?: string) => Promise<SoundboardSound>
+  modifyGuildSoundboardSound: (
+    guildId: BigString,
+    soundId: BigString,
+    options: ModifyGuildSoundboardSound,
+    reason?: string,
+  ) => Promise<SoundboardSound>
+  deleteGuildSoundboardSound: (guildId: BigString, soundId: BigString, reason?: string) => Promise<void>
 }
