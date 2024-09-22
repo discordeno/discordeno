@@ -845,6 +845,25 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>
+  /**
+   * Used to request soundboard sounds for a list of guilds.
+   *
+   * This function sends multiple (see remarks) _Request Soundboard Sounds_ gateway command over the gateway behind the scenes.
+   *
+   * @param guildIds - The guilds to get the sounds from
+   *
+   * @remarks
+   * Fires a _Soundboard Sounds_ gateway event.
+   *
+   * ⚠️ Discord will send the _Soundboard Sounds_ for each of the guild ids
+   * however you may not receive the same number of events as the ids passed to _Request Soundboard Sounds_ for one of the following reasons:
+   * - The bot is not in the server provided
+   * - The shard the message has been sent from does not receive events for the specified guild
+   *
+   * To avoid this Discordeno will automatically try to group the ids based on what shard they will need to be sent, but this involves sending multiple messages in multiple shards
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway-events#request-soundboard-sounds}
+   */
   requestSoundboardSounds: (guildIds: BigString[]) => Promise<void>
   /** This managers cache related settings. */
   cache: {
