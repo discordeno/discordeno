@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  Camelize,
   CamelizedDiscordAccessTokenResponse,
   CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordApplicationRoleConnection,
@@ -46,6 +47,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordActivityInstance,
   DiscordEntitlement,
   DiscordMessage,
   EditApplication,
@@ -580,6 +582,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
         failedUsers: res.failedUsers.map((x) => bot.transformers.snowflake(x)),
       }
     },
+    getApplicationActivityInstance: async (applicationId, instanceId) => {
+      return await bot.rest.getApplicationActivityInstance(applicationId, instanceId)
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction)
@@ -726,6 +731,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     banMember: async (guildId, userId, options, reason) => {
       return await bot.rest.banMember(guildId, userId, options, reason)
     },
+
     kickMember: async (guildId, userId, reason) => {
       return await bot.rest.kickMember(guildId, userId, reason)
     },
@@ -936,6 +942,7 @@ export interface BotHelpers {
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
   searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<Member[]>
   bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<{ bannedUsers: bigint[]; failedUsers: bigint[] }>
+  getApplicationActivityInstance: (applicationId: BigString, instanceId: string) => Promise<Camelize<DiscordActivityInstance>>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>

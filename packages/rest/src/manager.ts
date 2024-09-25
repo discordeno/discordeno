@@ -3,6 +3,7 @@ import {
   type BigString,
   type Camelize,
   type DiscordAccessTokenResponse,
+  type DiscordActivityInstance,
   type DiscordApplication,
   type DiscordApplicationCommand,
   type DiscordApplicationRoleConnection,
@@ -1517,6 +1518,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getMembers(guildId, options) {
       return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options))
+    },
+
+    async getApplicationActivityInstance(applicationId, instanceId) {
+      return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId))
     },
 
     async kickMember(guildId, userId, reason) {

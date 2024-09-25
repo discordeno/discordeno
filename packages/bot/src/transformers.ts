@@ -3,6 +3,8 @@ import type {
   BigString,
   CreateApplicationCommand,
   DiscordActivity,
+  DiscordActivityInstance,
+  DiscordActivityLocation,
   DiscordAllowedMentions,
   DiscordApplication,
   DiscordApplicationCommand,
@@ -66,6 +68,8 @@ import { logger } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import {
   type Activity,
+  type ActivityInstance,
+  type ActivityLocation,
   type Application,
   type ApplicationCommand,
   type ApplicationCommandOption,
@@ -124,6 +128,8 @@ import {
   type Webhook,
   type WelcomeScreen,
   transformActivity,
+  transformActivityInstance,
+  transformActivityLocation,
   transformActivityToDiscordActivity,
   transformApplication,
   transformApplicationCommand,
@@ -210,6 +216,8 @@ import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 export interface Transformers {
   customizers: {
     activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
+    activityInstance: (bot: Bot, payload: DiscordActivityInstance, activityInstance: ActivityInstance) => any
+    activityLocation: (bot: Bot, payload: DiscordActivityLocation, activityLocation: ActivityLocation) => any
     application: (bot: Bot, payload: DiscordApplication, application: Application) => any
     applicationCommand: (bot: Bot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
     applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
@@ -303,6 +311,8 @@ export interface Transformers {
     user: (bot: Bot, payload: User) => DiscordUser
   }
   activity: (bot: Bot, payload: DiscordActivity) => Activity
+  activityInstance: (bot: Bot, payload: DiscordActivityInstance) => ActivityInstance
+  activityLocation: (bot: Bot, payload: DiscordActivityLocation) => ActivityLocation
   application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
   applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
@@ -364,6 +374,19 @@ export interface Transformers {
 }
 
 export interface TransformersDesiredProperties {
+  activityInstance: {
+    applicationId: boolean
+    instanceId: boolean
+    launchId: boolean
+    location: boolean
+    users: boolean
+  }
+  activityLocation: {
+    id: boolean
+    kind: boolean
+    channelId: boolean
+    guildId: boolean
+  }
   attachment: {
     id: boolean
     filename: boolean
@@ -831,6 +854,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
   return {
     customizers: {
       activity: options.customizers?.activity ?? defaultCustomizer,
+      activityInstance: options.customizers?.activityInstance ?? defaultCustomizer,
+      activityLocation: options.customizers?.activityLocation ?? defaultCustomizer,
       application: options.customizers?.application ?? defaultCustomizer,
       applicationCommand: options.customizers?.applicationCommand ?? defaultCustomizer,
       applicationCommandOption: options.customizers?.applicationCommandOption ?? defaultCustomizer,
@@ -909,6 +934,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       user: options.reverse?.user ?? transformUserToDiscordUser,
     },
     activity: options.activity ?? transformActivity,
+    activityInstance: options.activityInstance ?? transformActivityInstance,
+    activityLocation: options.activityLocation ?? transformActivityLocation,
     application: options.application ?? transformApplication,
     applicationCommand: options.applicationCommand ?? transformApplicationCommand,
     applicationCommandOption: options.applicationCommandOption ?? transformApplicationCommandOption,
@@ -975,6 +1002,21 @@ export function createDesiredPropertiesObject(
   defaultValue = false,
 ): TransformersDesiredProperties {
   return {
+    activityInstance: {
+      applicationId: defaultValue,
+      instanceId: defaultValue,
+      launchId: defaultValue,
+      location: defaultValue,
+      users: defaultValue,
+      ...desiredProperties.activityInstance,
+    },
+    activityLocation: {
+      channelId: defaultValue,
+      guildId: defaultValue,
+      id: defaultValue,
+      kind: defaultValue,
+      ...desiredProperties.activityLocation,
+    },
     attachment: {
       id: defaultValue,
       filename: defaultValue,
