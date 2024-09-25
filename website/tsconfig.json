@@ -4,5 +4,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "downlevelIteration": true
-  }
+  },
+  "exclude": ["node_modules", ".docusarus", "build"]
 }

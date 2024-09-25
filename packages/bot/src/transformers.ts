@@ -3,6 +3,8 @@ import type {
   BigString,
   CreateApplicationCommand,
   DiscordActivity,
+  DiscordActivityInstance,
+  DiscordActivityLocation,
   DiscordAllowedMentions,
   DiscordApplication,
   DiscordApplicationCommand,
@@ -24,6 +26,8 @@ import type {
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
   DiscordGuildOnboarding,
+  DiscordGuildOnboardingPrompt,
+  DiscordGuildOnboardingPromptOption,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
@@ -61,6 +65,8 @@ import { logger } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import {
   type Activity,
+  type ActivityInstance,
+  type ActivityLocation,
   type Application,
   type ApplicationCommand,
   type ApplicationCommandOption,
@@ -81,11 +87,14 @@ import {
   type Guild,
   type GuildApplicationCommandPermissions,
   type GuildOnboarding,
+  type GuildOnboardingPrompt,
+  type GuildOnboardingPromptOption,
   type GuildWidget,
   type GuildWidgetSettings,
   type Integration,
   type Interaction,
   type InteractionDataOption,
+  type InteractionDataResolved,
   type Invite,
   type InviteStageInstance,
   type Member,
@@ -113,6 +122,8 @@ import {
   type Webhook,
   type WelcomeScreen,
   transformActivity,
+  transformActivityInstance,
+  transformActivityLocation,
   transformActivityToDiscordActivity,
   transformApplication,
   transformApplicationCommand,
@@ -141,9 +152,12 @@ import {
   transformGatewayBot,
   transformGuild,
   transformGuildOnboarding,
+  transformGuildOnboardingPrompt,
+  transformGuildOnboardingPromptOption,
   transformIntegration,
   transformInteraction,
   transformInteractionDataOption,
+  transformInteractionDataResolved,
   transformInvite,
   transformInviteStageInstance,
   transformMember,
@@ -181,147 +195,179 @@ import {
   transformCreateApplicationCommandToDiscordCreateApplicationCommand,
   transformInteractionResponseToDiscordInteractionResponse,
 } from './transformers/reverse/index.js'
-import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
+import type {
+  BotInteractionResponse,
+  DiscordComponent,
+  DiscordInteractionDataResolved,
+  DiscordInteractionResponse,
+  DiscordThreadMemberGuildCreate,
+} from './typings.js'
 import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
 export interface Transformers {
   customizers: {
-    channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
-    forumTag: (bot: Bot, payload: DiscordForumTag, forumTag: ForumTag) => any
-    interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
-    message: (bot: Bot, payload: DiscordMessage, message: Message) => any
-    messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot, messageSnapshot: MessageSnapshot) => any
-    messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
-    messageCall: (bot: Bot, payload: DiscordMessageCall, call: MessageCall) => any
-    user: (bot: Bot, payload: DiscordUser, user: User) => any
-    member: (bot: Bot, payload: DiscordMember, member: Member) => any
-    role: (bot: Bot, payload: DiscordRole, role: Role) => any
-    automodRule: (bot: Bot, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
-    automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
-    guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
-    voiceState: (bot: Bot, payload: DiscordVoiceState, voiceState: VoiceState) => any
-    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
-    integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
-    invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
-    application: (bot: Bot, payload: DiscordApplication, application: Application) => any
-    team: (bot: Bot, payload: DiscordTeam, team: Team) => any
-    emoji: (bot: Bot, payload: DiscordEmoji, emoji: Emoji) => any
-    defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji, defaultReactionEmoji: DefaultReactionEmoji) => any
     activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
-    presence: (bot: Bot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
-    attachment: (bot: Bot, payload: DiscordAttachment, attachment: Attachment) => any
-    embed: (bot: Bot, payload: DiscordEmbed, embed: Embed) => any
-    component: (bot: Bot, payload: DiscordComponent, component: Component) => any
-    webhook: (bot: Bot, payload: DiscordWebhook, webhook: Webhook) => any
-    auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
+    activityInstance: (bot: Bot, payload: DiscordActivityInstance, activityInstance: ActivityInstance) => any
+    activityLocation: (bot: Bot, payload: DiscordActivityLocation, activityLocation: ActivityLocation) => any
+    application: (bot: Bot, payload: DiscordApplication, application: Application) => any
     applicationCommand: (bot: Bot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
     applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
-    applicationCommandPermission: (
-      bot: Bot,
-      payload: DiscordGuildApplicationCommandPermissions,
-      applicationCommandPermission: GuildApplicationCommandPermissions,
-    ) => any
-    scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
-    scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule, scheduledEvent: ScheduledEventRecurrenceRule) => any
-    threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
-    threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
-    welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
-    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
-    gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
-    widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
-    widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
-    stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
-    inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance, inviteStageInstance: InviteStageInstance) => any
-    sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
-    stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
     applicationCommandOptionChoice: (
       bot: Bot,
       payload: DiscordApplicationCommandOptionChoice,
       applicationCommandOptionChoice: ApplicationCommandOptionChoice,
     ) => any
-    template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
-    guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
+    applicationCommandPermission: (
+      bot: Bot,
+      payload: DiscordGuildApplicationCommandPermissions,
+      applicationCommandPermission: GuildApplicationCommandPermissions,
+    ) => any
+    attachment: (bot: Bot, payload: DiscordAttachment, attachment: Attachment) => any
+    auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
+    automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
+    automodRule: (bot: Bot, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
+    avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData, avatarDecorationData: AvatarDecorationData) => any
+    channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
+    component: (bot: Bot, payload: DiscordComponent, component: Component) => any
+    defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji, defaultReactionEmoji: DefaultReactionEmoji) => any
+    embed: (bot: Bot, payload: DiscordEmbed, embed: Embed) => any
+    emoji: (bot: Bot, payload: DiscordEmoji, emoji: Emoji) => any
     entitlement: (bot: Bot, payload: DiscordEntitlement, entitlement: Entitlement) => any
-    sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
+    forumTag: (bot: Bot, payload: DiscordForumTag, forumTag: ForumTag) => any
+    gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
+    guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
+    guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
+    guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt, onboardingPrompt: GuildOnboardingPrompt) => any
+    guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption, onboardingPromptOption: GuildOnboardingPromptOption) => any
+    integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
+    interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
+    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
+    interactionDataResolved: (
+      bot: Bot,
+      payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
+      interactionDataResolved: InteractionDataResolved,
+    ) => any
+    invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
+    inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance, inviteStageInstance: InviteStageInstance) => any
+    member: (bot: Bot, payload: DiscordMember, member: Member) => any
+    message: (bot: Bot, payload: DiscordMessage, message: Message) => any
+    messageCall: (bot: Bot, payload: DiscordMessageCall, call: MessageCall) => any
+    messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
+    messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot, messageSnapshot: MessageSnapshot) => any
     poll: (bot: Bot, payload: DiscordPoll, poll: Poll) => any
     pollMedia: (bot: Bot, payload: DiscordPollMedia, pollMedia: PollMedia) => any
-    avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData, avatarDecorationData: AvatarDecorationData) => any
+    presence: (bot: Bot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
+    role: (bot: Bot, payload: DiscordRole, role: Role) => any
+    scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
+    scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule, scheduledEvent: ScheduledEventRecurrenceRule) => any
+    sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
+    stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
+    sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
+    stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    team: (bot: Bot, payload: DiscordTeam, team: Team) => any
+    template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
+    threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
+    user: (bot: Bot, payload: DiscordUser, user: User) => any
+    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
+    voiceState: (bot: Bot, payload: DiscordVoiceState, voiceState: VoiceState) => any
+    webhook: (bot: Bot, payload: DiscordWebhook, webhook: Webhook) => any
+    welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
+    widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
+    widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
   }
   desiredProperties: TransformersDesiredProperties
   reverse: {
-    allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
-    embed: (bot: Bot, payload: Embed) => DiscordEmbed
-    component: (bot: Bot, payload: Component) => DiscordComponent
     activity: (bot: Bot, payload: Activity) => DiscordActivity
-    member: (bot: Bot, payload: Member) => DiscordMember
-    user: (bot: Bot, payload: User) => DiscordUser
-    team: (bot: Bot, payload: Team) => DiscordTeam
+    allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
     application: (bot: Bot, payload: Application) => DiscordApplication
-    snowflake: (snowflake: BigString) => string
-    createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
     applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand
     applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
     applicationCommandOptionChoice: (bot: Bot, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
-    interactionResponse: (bot: Bot, payload: BotInteractionResponse) => DiscordInteractionResponse
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment
+    component: (bot: Bot, payload: Component) => DiscordComponent
+    createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
+    embed: (bot: Bot, payload: Embed) => DiscordEmbed
+    interactionResponse: (bot: Bot, payload: BotInteractionResponse) => DiscordInteractionResponse
+    member: (bot: Bot, payload: Member) => DiscordMember
+    snowflake: (snowflake: BigString) => string
+    team: (bot: Bot, payload: Team) => DiscordTeam
+    user: (bot: Bot, payload: User) => DiscordUser
   }
-  snowflake: (snowflake: BigString) => bigint
-  gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
-  automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
-  automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
-  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
-  forumTag: (bot: Bot, payload: DiscordForumTag) => ForumTag
-  guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
-  user: (bot: Bot, payload: DiscordUser) => User
-  member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
-  message: (bot: Bot, payload: DiscordMessage) => Message
-  messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot) => MessageSnapshot
-  messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
-  messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
-  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
-  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) => VoiceState
-  interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
-  interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
-  integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
-  invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
-  application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
-  team: (bot: Bot, payload: DiscordTeam) => Team
-  emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
-  defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji) => DefaultReactionEmoji
   activity: (bot: Bot, payload: DiscordActivity) => Activity
-  presence: (bot: Bot, payload: DiscordPresenceUpdate) => PresenceUpdate
-  attachment: (bot: Bot, payload: DiscordAttachment) => Attachment
-  embed: (bot: Bot, payload: DiscordEmbed) => Embed
-  component: (bot: Bot, payload: DiscordComponent) => Component
-  webhook: (bot: Bot, payload: DiscordWebhook) => Webhook
-  auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry
+  activityInstance: (bot: Bot, payload: DiscordActivityInstance) => ActivityInstance
+  activityLocation: (bot: Bot, payload: DiscordActivityLocation) => ActivityLocation
+  application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
   applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
-  applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => GuildApplicationCommandPermissions
-  scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
-  scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule) => ScheduledEventRecurrenceRule
-  threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
-  threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
-  welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
-  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
-  widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
-  widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
-  stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
-  inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
-
-  sticker: (bot: Bot, payload: DiscordSticker) => Sticker
-  stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
-  template: (bot: Bot, payload: DiscordTemplate) => Template
-  guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
+  applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => GuildApplicationCommandPermissions
+  attachment: (bot: Bot, payload: DiscordAttachment) => Attachment
+  auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry
+  automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
+  automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
+  avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
+  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
+  component: (bot: Bot, payload: DiscordComponent) => Component
+  defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji) => DefaultReactionEmoji
+  embed: (bot: Bot, payload: DiscordEmbed) => Embed
+  emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
   entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
-  sku: (bot: Bot, payload: DiscordSku) => Sku
+  forumTag: (bot: Bot, payload: DiscordForumTag) => ForumTag
+  gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
+  guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
+  guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
+  guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt) => GuildOnboardingPrompt
+  guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
+  integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
+  interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
+  interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
+  interactionDataResolved: (bot: Bot, payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint }) => InteractionDataResolved
+  invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
+  inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
+  member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
+  message: (bot: Bot, payload: DiscordMessage) => Message
+  messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
+  messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
+  messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot) => MessageSnapshot
   poll: (bot: Bot, payload: DiscordPoll) => Poll
   pollMedia: (bot: Bot, payload: DiscordPollMedia) => PollMedia
-  avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
+  presence: (bot: Bot, payload: DiscordPresenceUpdate) => PresenceUpdate
+  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
+  scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
+  scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule) => ScheduledEventRecurrenceRule
+  sku: (bot: Bot, payload: DiscordSku) => Sku
+  snowflake: (snowflake: BigString) => bigint
+  stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
+  sticker: (bot: Bot, payload: DiscordSticker) => Sticker
+  stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
+  team: (bot: Bot, payload: DiscordTeam) => Team
+  template: (bot: Bot, payload: DiscordTemplate) => Template
+  threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
+  threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
+  user: (bot: Bot, payload: DiscordUser) => User
+  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
+  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) => VoiceState
+  webhook: (bot: Bot, payload: DiscordWebhook) => Webhook
+  welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
+  widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
+  widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
 }
 
 export interface TransformersDesiredProperties {
+  activityInstance: {
+    applicationId: boolean
+    instanceId: boolean
+    launchId: boolean
+    location: boolean
+    users: boolean
+  }
+  activityLocation: {
+    id: boolean
+    kind: boolean
+    channelId: boolean
+    guildId: boolean
+  }
   attachment: {
     id: boolean
     filename: boolean
@@ -771,17 +817,9 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
 
   return {
     customizers: {
-      channel: options.customizers?.channel ?? defaultCustomizer,
-      forumTag: options.customizers?.forumTag ?? defaultCustomizer,
-      interaction: options.customizers?.interaction ?? defaultCustomizer,
-      member: options.customizers?.member ?? defaultCustomizer,
-      message: options.customizers?.message ?? defaultCustomizer,
-      messageSnapshot: options.customizers?.messageSnapshot ?? defaultCustomizer,
-      messageInteractionMetadata: options.customizers?.messageInteractionMetadata ?? defaultCustomizer,
-      messageCall: options.customizers?.messageCall ?? defaultCustomizer,
-      role: options.customizers?.role ?? defaultCustomizer,
-      user: options.customizers?.user ?? defaultCustomizer,
       activity: options.customizers?.activity ?? defaultCustomizer,
+      activityInstance: options.customizers?.activityInstance ?? defaultCustomizer,
+      activityLocation: options.customizers?.activityLocation ?? defaultCustomizer,
       application: options.customizers?.application ?? defaultCustomizer,
       applicationCommand: options.customizers?.applicationCommand ?? defaultCustomizer,
       applicationCommandOption: options.customizers?.applicationCommandOption ?? defaultCustomizer,
@@ -791,111 +829,129 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       auditLogEntry: options.customizers?.auditLogEntry ?? defaultCustomizer,
       automodActionExecution: options.customizers?.automodActionExecution ?? defaultCustomizer,
       automodRule: options.customizers?.automodRule ?? defaultCustomizer,
+      avatarDecorationData: options.customizers?.avatarDecorationData ?? defaultCustomizer,
+      channel: options.customizers?.channel ?? defaultCustomizer,
       component: options.customizers?.component ?? defaultCustomizer,
+      defaultReactionEmoji: options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       embed: options.customizers?.embed ?? defaultCustomizer,
       emoji: options.customizers?.emoji ?? defaultCustomizer,
-      defaultReactionEmoji: options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
+      entitlement: options.customizers?.entitlement ?? defaultCustomizer,
+      forumTag: options.customizers?.forumTag ?? defaultCustomizer,
+      gatewayBot: options.customizers?.gatewayBot ?? defaultCustomizer,
       guild: options.customizers?.guild ?? defaultCustomizer,
+      guildOnboarding: options.customizers?.guildOnboarding ?? defaultCustomizer,
+      guildOnboardingPrompt: options.customizers?.guildOnboardingPrompt ?? defaultCustomizer,
+      guildOnboardingPromptOption: options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       integration: options.customizers?.integration ?? defaultCustomizer,
+      interaction: options.customizers?.interaction ?? defaultCustomizer,
       interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
+      interactionDataResolved: options.customizers?.interactionDataResolved ?? defaultCustomizer,
       invite: options.customizers?.invite ?? defaultCustomizer,
+      inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
+      member: options.customizers?.member ?? defaultCustomizer,
+      message: options.customizers?.message ?? defaultCustomizer,
+      messageCall: options.customizers?.messageCall ?? defaultCustomizer,
+      messageInteractionMetadata: options.customizers?.messageInteractionMetadata ?? defaultCustomizer,
+      messageSnapshot: options.customizers?.messageSnapshot ?? defaultCustomizer,
+      poll: options.customizers?.poll ?? defaultCustomizer,
+      pollMedia: options.customizers?.pollMedia ?? defaultCustomizer,
       presence: options.customizers?.presence ?? defaultCustomizer,
+      role: options.customizers?.role ?? defaultCustomizer,
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sku: options.customizers?.sku ?? defaultCustomizer,
       stageInstance: options.customizers?.stageInstance ?? defaultCustomizer,
-      inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
       sticker: options.customizers?.sticker ?? defaultCustomizer,
       stickerPack: options.customizers?.stickerPack ?? defaultCustomizer,
       team: options.customizers?.team ?? defaultCustomizer,
       template: options.customizers?.template ?? defaultCustomizer,
       threadMember: options.customizers?.threadMember ?? defaultCustomizer,
       threadMemberGuildCreate: options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
+      user: options.customizers?.user ?? defaultCustomizer,
       voiceRegion: options.customizers?.voiceRegion ?? defaultCustomizer,
       voiceState: options.customizers?.voiceState ?? defaultCustomizer,
-      gatewayBot: options.customizers?.gatewayBot ?? defaultCustomizer,
       webhook: options.customizers?.webhook ?? defaultCustomizer,
       welcomeScreen: options.customizers?.welcomeScreen ?? defaultCustomizer,
       widget: options.customizers?.widget ?? defaultCustomizer,
       widgetSettings: options.customizers?.widgetSettings ?? defaultCustomizer,
-      guildOnboarding: options.customizers?.guildOnboarding ?? defaultCustomizer,
-      entitlement: options.customizers?.entitlement ?? defaultCustomizer,
-      sku: options.customizers?.sku ?? defaultCustomizer,
-      poll: options.customizers?.poll ?? defaultCustomizer,
-      pollMedia: options.customizers?.pollMedia ?? defaultCustomizer,
-      avatarDecorationData: options.customizers?.avatarDecorationData ?? defaultCustomizer,
     },
     desiredProperties: createDesiredPropertiesObject(options.desiredProperties ?? {}, opts?.defaultDesiredPropertiesValue ?? false),
     reverse: {
-      allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
-      embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
-      component: options.reverse?.component ?? transformComponentToDiscordComponent,
       activity: options.reverse?.activity ?? transformActivityToDiscordActivity,
-      member: options.reverse?.member ?? transformMemberToDiscordMember,
-      user: options.reverse?.user ?? transformUserToDiscordUser,
-      team: options.reverse?.team ?? transformTeamToDiscordTeam,
+      allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       application: options.reverse?.application ?? transformApplicationToDiscordApplication,
-      snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
-      createApplicationCommand: options.reverse?.createApplicationCommand ?? transformCreateApplicationCommandToDiscordCreateApplicationCommand,
       applicationCommand: options.reverse?.applicationCommand ?? transformApplicationCommandToDiscordApplicationCommand,
       applicationCommandOption: options.reverse?.applicationCommandOption ?? transformApplicationCommandOptionToDiscordApplicationCommandOption,
       applicationCommandOptionChoice:
         options.reverse?.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
-      interactionResponse: options.reverse?.interactionResponse ?? transformInteractionResponseToDiscordInteractionResponse,
       attachment: options.reverse?.attachment ?? transformAttachmentToDiscordAttachment,
+      component: options.reverse?.component ?? transformComponentToDiscordComponent,
+      createApplicationCommand: options.reverse?.createApplicationCommand ?? transformCreateApplicationCommandToDiscordCreateApplicationCommand,
+      embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
+      interactionResponse: options.reverse?.interactionResponse ?? transformInteractionResponseToDiscordInteractionResponse,
+      member: options.reverse?.member ?? transformMemberToDiscordMember,
+      snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
+      team: options.reverse?.team ?? transformTeamToDiscordTeam,
+      user: options.reverse?.user ?? transformUserToDiscordUser,
     },
-    automodRule: options.automodRule ?? transformAutoModerationRule,
-    automodActionExecution: options.automodActionExecution ?? transformAutoModerationActionExecution,
     activity: options.activity ?? transformActivity,
+    activityInstance: options.activityInstance ?? transformActivityInstance,
+    activityLocation: options.activityLocation ?? transformActivityLocation,
     application: options.application ?? transformApplication,
+    applicationCommand: options.applicationCommand ?? transformApplicationCommand,
+    applicationCommandOption: options.applicationCommandOption ?? transformApplicationCommandOption,
+    applicationCommandOptionChoice: options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
+    applicationCommandPermission: options.applicationCommandPermission ?? transformApplicationCommandPermission,
     attachment: options.attachment ?? transformAttachment,
+    auditLogEntry: options.auditLogEntry ?? transformAuditLogEntry,
+    automodActionExecution: options.automodActionExecution ?? transformAutoModerationActionExecution,
+    automodRule: options.automodRule ?? transformAutoModerationRule,
+    avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: options.channel ?? transformChannel,
-    forumTag: options.forumTag ?? transformForumTag,
     component: options.component ?? transformComponent,
+    defaultReactionEmoji: options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     embed: options.embed ?? transformEmbed,
     emoji: options.emoji ?? transformEmoji,
-    defaultReactionEmoji: options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
+    entitlement: options.entitlement ?? transformEntitlement,
+    forumTag: options.forumTag ?? transformForumTag,
+    gatewayBot: options.gatewayBot ?? transformGatewayBot,
     guild: options.guild ?? transformGuild,
+    guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
+    guildOnboardingPrompt: options.guildOnboardingPrompt ?? transformGuildOnboardingPrompt,
+    guildOnboardingPromptOption: options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
     interactionDataOptions: options.interactionDataOptions ?? transformInteractionDataOption,
+    interactionDataResolved: options.interactionDataResolved ?? transformInteractionDataResolved,
     invite: options.invite ?? transformInvite,
+    inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
-    messageSnapshot: options.messageSnapshot ?? transformMessageSnapshot,
-    messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
     messageCall: options.messageCall ?? transformMessageCall,
-    presence: options.presence ?? transformPresence,
-    role: options.role ?? transformRole,
-    user: options.user ?? transformUser,
-    team: options.team ?? transformTeam,
-    voiceState: options.voiceState ?? transformVoiceState,
-    snowflake: options.snowflake ?? snowflakeToBigint,
-    webhook: options.webhook ?? transformWebhook,
-    auditLogEntry: options.auditLogEntry ?? transformAuditLogEntry,
-    applicationCommand: options.applicationCommand ?? transformApplicationCommand,
-    applicationCommandOption: options.applicationCommandOption ?? transformApplicationCommandOption,
-    applicationCommandPermission: options.applicationCommandPermission ?? transformApplicationCommandPermission,
-    scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
-    scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
-    threadMember: options.threadMember ?? transformThreadMember,
-    threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
-    welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
-    voiceRegion: options.voiceRegion ?? transformVoiceRegion,
-    widget: options.widget ?? transformWidget,
-    widgetSettings: options.widgetSettings ?? transformWidgetSettings,
-    stageInstance: options.stageInstance ?? transformStageInstance,
-    inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
-    sticker: options.sticker ?? transformSticker,
-    stickerPack: options.stickerPack ?? transformStickerPack,
-    gatewayBot: options.gatewayBot ?? transformGatewayBot,
-    applicationCommandOptionChoice: options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
-    template: options.template ?? transformTemplate,
-    guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
-    entitlement: options.entitlement ?? transformEntitlement,
-    sku: options.sku ?? transformSku,
+    messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
+    messageSnapshot: options.messageSnapshot ?? transformMessageSnapshot,
     poll: options.poll ?? transformPoll,
     pollMedia: options.pollMedia ?? transformPollMedia,
-    avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
+    presence: options.presence ?? transformPresence,
+    role: options.role ?? transformRole,
+    scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
+    scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sku: options.sku ?? transformSku,
+    snowflake: options.snowflake ?? snowflakeToBigint,
+    stageInstance: options.stageInstance ?? transformStageInstance,
+    sticker: options.sticker ?? transformSticker,
+    stickerPack: options.stickerPack ?? transformStickerPack,
+    team: options.team ?? transformTeam,
+    template: options.template ?? transformTemplate,
+    threadMember: options.threadMember ?? transformThreadMember,
+    threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
+    user: options.user ?? transformUser,
+    voiceRegion: options.voiceRegion ?? transformVoiceRegion,
+    voiceState: options.voiceState ?? transformVoiceState,
+    webhook: options.webhook ?? transformWebhook,
+    welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
+    widget: options.widget ?? transformWidget,
+    widgetSettings: options.widgetSettings ?? transformWidgetSettings,
   }
 }
 
@@ -904,6 +960,21 @@ export function createDesiredPropertiesObject(
   defaultValue = false,
 ): TransformersDesiredProperties {
   return {
+    activityInstance: {
+      applicationId: defaultValue,
+      instanceId: defaultValue,
+      launchId: defaultValue,
+      location: defaultValue,
+      users: defaultValue,
+      ...desiredProperties.activityInstance,
+    },
+    activityLocation: {
+      channelId: defaultValue,
+      guildId: defaultValue,
+      id: defaultValue,
+      kind: defaultValue,
+      ...desiredProperties.activityLocation,
+    },
     attachment: {
       id: defaultValue,
       filename: defaultValue,

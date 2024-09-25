@@ -20,7 +20,6 @@ const config: Config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'discordeno', // Usually your GitHub org/user name.
   projectName: 'discordeno', // Usually your repo name.
-  deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
   webpack: {
@@ -35,8 +34,13 @@ const config: Config = {
     }),
   },
 
+  markdown: {
+    format: 'detect',
+  },
+
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+  onBrokenAnchors: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -52,8 +56,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.ts'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/discordeno/discordeno/tree/main/website/',
         },
         blog: {
@@ -67,7 +69,6 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
     image: 'img/links-embed-image.png',
     navbar: {
       title: 'Discordeno',
@@ -254,7 +255,6 @@ const config: Config = {
         searchResultContextMaxLength: 50,
       },
     ],
-    './webpack-docusaurus-plugin.ts',
   ],
 }
 

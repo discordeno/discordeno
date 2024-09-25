@@ -3,6 +3,7 @@ import {
   type BigString,
   type Camelize,
   type DiscordAccessTokenResponse,
+  type DiscordActivityInstance,
   type DiscordApplication,
   type DiscordApplicationCommand,
   type DiscordApplicationRoleConnection,
@@ -954,7 +955,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.patch(rest.routes.guilds.voice(guildId), {
         body: {
           ...options,
-          request_to_speak_timestamp: options.requestToSpeakTimestamp
+          requestToSpeakTimestamp: options.requestToSpeakTimestamp
             ? new Date(options.requestToSpeakTimestamp).toISOString()
             : options.requestToSpeakTimestamp,
         },
@@ -1018,7 +1019,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async followAnnouncement(sourceChannelId, targetChannelId, reason) {
       return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
         body: {
-          webhook_channel_id: targetChannelId,
+          webhookChannelId: targetChannelId,
         },
         reason,
       })
@@ -1154,7 +1155,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getDmChannel(userId) {
       return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
-        body: { recipient_id: userId },
+        body: { recipientId: userId },
       })
     },
 
@@ -1291,6 +1292,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getRoles(guildId) {
       return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId))
+    },
+
+    async getRole(guildId, roleId) {
+      return await rest.get<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId))
     },
 
     async getScheduledEvent(guildId, eventId, options) {
@@ -1512,6 +1517,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getMembers(guildId, options) {
       return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options))
+    },
+
+    async getApplicationActivityInstance(applicationId, instanceId) {
+      return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId))
     },
 
     async kickMember(guildId, userId, reason) {

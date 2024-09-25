@@ -58,6 +58,41 @@ export enum MemberFlags {
    * This value is not editable
    */
   StartedOnboarding = 1 << 3,
+  /**
+   * Member is a guest and can only access the voice channel they were invited to
+   *
+   * @remarks
+   * This value is not editable
+   */
+  IsGuest = 1 << 4,
+  /**
+   * Member has started Server Guide new member actions
+   *
+   * @remarks
+   * This value is not editable
+   */
+  StartedHomeActions = 1 << 5,
+  /**
+   * Member has completed Server Guide new member actions
+   *
+   * @remarks
+   * This value is not editable
+   */
+  CompletedHomeActions = 1 << 6,
+  /**
+   * Member's username, display name, or nickname is blocked by AutoMod
+   *
+   * @remarks
+   * This value is not editable
+   */
+  AutomodQuarantinedUsername = 1 << 7,
+  /**
+   * Member has dismissed the DM settings upsell
+   *
+   * @remarks
+   * This value is not editable
+   */
+  DmSettingsUpsellAcknowledged = 1 << 9,
 }
 
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
@@ -233,7 +268,7 @@ export enum WebhookTypes {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link'
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -455,6 +490,7 @@ export enum MessageTypes {
   GuildIncidentReportRaid,
   GuildIncidentReportFalseAlarm,
   PurchaseNotification = 44,
+  PollResult = 46,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
@@ -788,7 +824,7 @@ export enum GatewayCloseEventCodes {
   UnknownOpcode,
   /** You sent an invalid [payload](https://discord.com/developers/docs/topics/gateway#sending-payloads) to us. Don't do that! */
   DecodeError,
-  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway-events#identify). */
+  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway-events#identify), or this session has been invalidated. */
   NotAuthenticated,
   /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway-events#identify) is incorrect. */
   AuthenticationFailed,
@@ -896,6 +932,7 @@ export type GatewayDispatchEventNames =
   | 'STAGE_INSTANCE_DELETE'
   | 'TYPING_START'
   | 'USER_UPDATE'
+  | 'VOICE_CHANNEL_EFFECT_SEND'
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
@@ -969,6 +1006,7 @@ export enum GatewayIntents {
   GuildInvites = 1 << 6,
   /**
    * - VOICE_STATE_UPDATE
+   * - VOICE_CHANNEL_EFFECT_SEND
    */
   GuildVoiceStates = 1 << 7,
   /**
