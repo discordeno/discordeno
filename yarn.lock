@@ -125,7 +125,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -148,7 +148,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.12"
     c8: "npm:^10.1.2"
@@ -175,7 +175,7 @@ __metadata:
     "@types/chai": "npm:^4.3.17"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -197,7 +197,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     c8: "npm:^10.1.2"
     mocha: "npm:^10.7.0"
     ts-node: "npm:^10.9.2"
@@ -216,7 +216,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -728,12 +728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.1.0":
-  version: 22.1.0
-  resolution: "@types/node@npm:22.1.0"
+"@types/node@npm:^22.7.2":
+  version: 22.7.2
+  resolution: "@types/node@npm:22.7.2"
   dependencies:
-    undici-types: "npm:~6.13.0"
-  checksum: c2ac1340509646b6c673b27fae2a46e501a97e540e7221be4dd2e0be7a0f61efefb5bf3be8bedf2dbce245fa49cfc49bba77bce73fa3c4296d0d19521ced3222
+    undici-types: "npm:~6.19.2"
+  checksum: 78cfa59bfa7a7d287aede017400006059c07e0220c9eed3ab380409972711f5a2d972f8a86d6adaf2343bc66a6e9619a4dfbc71e86a2335f54bb9cd59ff0ce11
   languageName: node
   linkType: hard
 
@@ -978,7 +978,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.3"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     benchmark: "npm:^2.1.4"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -1574,7 +1574,7 @@ __metadata:
     "@swc/core": "npm:^1.7.3"
     "@types/chai": "npm:^4.3.17"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.2"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
@@ -4151,10 +4151,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.13.0":
-  version: 6.13.0
-  resolution: "undici-types@npm:6.13.0"
-  checksum: da52e37cbc6da3a75da86fa08dd795ca8924430deb91005eb884b840e46e19013ccd4c1c289f70018e8cf0c338add24a500e7c3acfcd49b1ffb27ff9f91e38b9
+"undici-types@npm:~6.19.2":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: cf0b48ed4fc99baf56584afa91aaffa5010c268b8842f62e02f752df209e3dea138b372a60a963b3b2576ed932f32329ce7ddb9cb5f27a6c83040d8cd74b7a70
   languageName: node
   linkType: hard
 
