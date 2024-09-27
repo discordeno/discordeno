@@ -173,7 +173,7 @@ export class DiscordenoShard {
 
       if (this.gatewayConfig.transportCompression === TransportCompression.zstd) {
         const fzstd = await getFZStd().catch(() => {
-          this.logger.warn('[Shard] "fzstd" is not installed. Disabling transport compression.')
+          this.logger.warn('[Shard] "fzstd" is not installed. Disabled transport compression.')
           url.searchParams.delete('compress')
 
           return null
@@ -210,7 +210,7 @@ export class DiscordenoShard {
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-        // Only set the shard to `Unidentified` state, if the connection request does not come from an identify or resume action.
+        // Only set the shard to `Unidentified` state if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
@@ -365,7 +365,7 @@ export class DiscordenoShard {
     this.decompressionPromisesQueue = []
 
     this.logger.debug(
-      `[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}) (${close.reason || '<No reason provided>'}).`,
+      `[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`,
     )
 
     switch (close.code) {
@@ -450,7 +450,7 @@ export class DiscordenoShard {
 
     if (this.gatewayConfig.transportCompression === TransportCompression.zlib) {
       if (!this.inflate) {
-        this.logger.fatal('[Shard] zlib-stream transport compression was enabled. But no instance of Inflate was found.')
+        this.logger.fatal('[Shard] zlib-stream transport compression was enabled but no instance of Inflate was found.')
         return null
       }
 
@@ -478,7 +478,7 @@ export class DiscordenoShard {
 
     if (this.gatewayConfig.transportCompression === TransportCompression.zstd) {
       if (!this.zstdDecompress) {
-        this.logger.fatal('[Shard] zstd-stream transport compression was enabled. But no instance of Decompress was found.')
+        this.logger.fatal('[Shard] zstd-stream transport compression was enabled but no instance of Decompress was found.')
         return null
       }
 
