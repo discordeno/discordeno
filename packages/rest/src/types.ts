@@ -1184,7 +1184,6 @@ export interface RestManager {
    * Edits a guild's settings.
    *
    * @param guildId - The ID of the guild to edit.
-   * @param shardId - The ID of the shard the guild is in.
    * @param options - The parameters for the edit of the guild.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link CamelizedDiscordGuild}.
@@ -2175,7 +2174,7 @@ export interface RestManager {
    * Gets a role by id for a guild.
    *
    * @param guildId - The ID of the guild to get role for.
-   * @param roleID - The ID of the role.
+   * @param roleId - The ID of the role.
    * @returns A {@link CamelizedDiscordRole} object.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-role}
@@ -2981,7 +2980,7 @@ export interface RestManager {
    *
    * Onboarding enforces constraints when enabled. These constraints are:
    *  - at least 7 default channels
-   *  - at least 5 of the 7 channels must allow sending messages to the @everyone role
+   *  - at least 5 of the 7 channels must allow sending messages to the \@everyone role
    *
    * The `mode` field modifies what is considered when enforcing these constraints.
    */
