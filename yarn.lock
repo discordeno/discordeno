@@ -153,13 +153,17 @@ __metadata:
     "@types/ws": "npm:^8.5.12"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
+    fzstd: "npm:^0.1.1"
     mocha: "npm:^10.7.0"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^5.5.4"
-    uWebSockets.js: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
+    uWebSockets.js: "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
     ws: "npm:^8.18.0"
+  dependenciesMeta:
+    fzstd:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -1943,6 +1947,13 @@ __metadata:
   dependencies:
     node-gyp: "npm:latest"
   conditions: os=darwin
+  languageName: node
+  linkType: hard
+
+"fzstd@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "fzstd@npm:0.1.1"
+  checksum: 455b968aeb764f06d9c39a5c8b45eefd645f7ee9129896e890eafb8ab367482f8495de12907021a32f6544494305a42a2056c30c63efac06181e6efcdab3fe78
   languageName: node
   linkType: hard
 
@@ -4127,10 +4138,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28":
-  version: 20.19.0
-  resolution: "uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
-  checksum: 099aabc375f4b667a3706c4120c124767fc57a43129217b8822bea8c5469eb54b4382ad742233d6a5f71538a8a023d02f5850e7e20e9a427ff9df112087097e7
+"uWebSockets.js@uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901":
+  version: 20.47.0
+  resolution: "uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=54e5db370db746ed1c85021bdf215578a2164901"
+  checksum: c6ed6796b1ed86118e7ea32fa5e486a9aa8d2cc5e3757eb20e8a3120779b47130c318c5f84bbdfbb744c816af272ea7c0220e163ff1c7b85bcd848b04d521408
   languageName: node
   linkType: hard
 

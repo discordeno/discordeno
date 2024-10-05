@@ -33,6 +33,9 @@
     "@discordeno/utils": "19.0.0-beta.1",
     "ws": "^8.18.0"
   },
+  "optionalDependencies": {
+    "fzstd": "^0.1.1"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@swc/cli": "^0.4.0",
@@ -49,6 +52,6 @@
     "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "^5.5.4",
-    "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
+    "uWebSockets.js": "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
   }
 }
