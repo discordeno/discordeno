@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  Camelize,
   CamelizedDiscordAccessTokenResponse,
   CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordApplicationRoleConnection,
@@ -46,6 +47,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordActivityInstance,
   DiscordEntitlement,
   DiscordMessage,
   EditApplication,
@@ -437,6 +439,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getRoles: async (guildId) => {
       return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, { role, guildId }))
     },
+    getRole: async (guildId, roleId) => {
+      return bot.transformers.role(bot, { role: snakelize(await bot.rest.getRole(guildId, roleId)), guildId })
+    },
     getScheduledEvent: async (guildId, eventId, options) => {
       return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.getScheduledEvent(guildId, eventId, options)))
     },
@@ -574,6 +579,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
         bannedUsers: res.bannedUsers.map((x) => bot.transformers.snowflake(x)),
         failedUsers: res.failedUsers.map((x) => bot.transformers.snowflake(x)),
       }
+    },
+    getApplicationActivityInstance: async (applicationId, instanceId) => {
+      return await bot.rest.getApplicationActivityInstance(applicationId, instanceId)
     },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
@@ -717,6 +725,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     banMember: async (guildId, userId, options, reason) => {
       return await bot.rest.banMember(guildId, userId, options, reason)
     },
+
     kickMember: async (guildId, userId, reason) => {
       return await bot.rest.kickMember(guildId, userId, reason)
     },
@@ -876,6 +885,7 @@ export interface BotHelpers {
   getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<CamelizedDiscordPrunedCount>
   getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
   getRoles: (guildId: BigString) => Promise<Role[]>
+  getRole: (guildId: BigString, roleId: BigString) => Promise<Role>
   getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<ScheduledEvent>
   getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<ScheduledEvent[]>
   getScheduledEventUsers: (
@@ -926,6 +936,7 @@ export interface BotHelpers {
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
   searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<Member[]>
   bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<{ bannedUsers: bigint[]; failedUsers: bigint[] }>
+  getApplicationActivityInstance: (applicationId: BigString, instanceId: string) => Promise<Camelize<DiscordActivityInstance>>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>

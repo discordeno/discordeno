@@ -1182,6 +1182,40 @@ export interface DiscordActivity {
   buttons?: DiscordActivityButton[]
 }
 
+/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-instance-object */
+export interface DiscordActivityInstance {
+  /** Application ID */
+  application_id: string
+  /** Activity Instance ID */
+  instance_id: string
+  /** Unique identifier for the launch */
+  launch_id: string
+  /** The Location the instance is runnning in */
+  location: DiscordActivityLocation
+  /** The IDs of the Users currently connected to the instance */
+  users: string[]
+}
+
+/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-location-object */
+export interface DiscordActivityLocation {
+  /** The unique identifier for the location */
+  id: string
+  /** Enum describing kind of location */
+  kind: DiscordActivityLocationKind
+  /** The id of the Channel */
+  channel_id: string
+  /** The id of the Guild */
+  guild_id?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-location-kind-enum */
+export enum DiscordActivityLocationKind {
+  /** The Location is a Guild Channel */
+  GuildChannel = 'gc',
+  /** The Location is a Private Channel, such as a DM or GDM */
+  PrivateChannel = 'pc',
+}
+
 /** https://discord.com/developers/docs/topics/gateway#client-status-object */
 export interface DiscordClientStatus {
   /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
@@ -1467,7 +1501,18 @@ export interface DiscordMessageSnapshot {
   /** Minimal subset of fields in the forwarded message */
   message: Pick<
     DiscordMessage,
-    'type' | 'content' | 'embeds' | 'attachments' | 'timestamp' | 'edited_timestamp' | 'flags' | 'mentions' | 'mention_roles'
+    | 'type'
+    | 'content'
+    | 'embeds'
+    | 'attachments'
+    | 'timestamp'
+    | 'edited_timestamp'
+    | 'flags'
+    | 'mentions'
+    | 'mention_roles'
+    | 'stickers'
+    | 'sticker_items'
+    | 'components'
   >
 }
 
@@ -2826,6 +2871,34 @@ export interface DiscordVoiceServerUpdate {
   guild_id: string
   /** The voice server host */
   endpoint: string | null
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send-voice-channel-effect-send-event-fields */
+export interface DiscordVoiceChannelEffectSend {
+  /** ID of the channel the effect was sent in */
+  channel_id: string
+  /** ID of the guild the effect was sent in */
+  guild_id: string
+  /** ID of the user who sent the effect */
+  user_id: string
+  /** The emoji sent, for emoji reaction and soundboard effects */
+  emoji?: DiscordEmoji | null
+  /** The type of emoji animation, for emoji reaction and soundboard effects */
+  animation_type?: DiscordVoiceChannelEffectAnimationType | null
+  /** The ID of the emoji animation, for emoji reaction and soundboard effects */
+  animation_id?: number | null
+  /** The ID of the soundboard sound, for soundboard effects */
+  sound_id?: string | number
+  /** The volume of the soundboard sound, from 0 to 1, for soundboard effects */
+  sound_volume?: number
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send-animation-types */
+export enum DiscordVoiceChannelEffectAnimationType {
+  /** A fun animation, sent by a Nitro subscriber */
+  Premium = 0,
+  /** The standard animation */
+  Basic = 1,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create */
