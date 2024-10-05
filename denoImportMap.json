@@ -6,6 +6,7 @@
     "node:events": "https://deno.land/std@0.176.0/node/events.ts",
     "tweetnacl": "npm:tweetnacl",
     "ws": "npm:ws",
+    "fzstd": "npm:fzstd",
     "mocha": "https://deno.land/std@0.168.0/testing/bdd.ts",
     "chai": "https://cdn.skypack.dev/chai@4.3.4?dts",
     "sinon": "https://cdn.skypack.dev/sinon@15.0.0?dts",
