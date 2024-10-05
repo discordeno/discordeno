@@ -31,7 +31,7 @@
     "chokidar-cli": "^3.0.0",
     "discordeno": "19.0.0-alpha.1",
     "husky": "^9.1.1",
-    "lint-staged": "^15.2.8",
+    "lint-staged": "^15.2.10",
     "turbo": "^2.0.12",
     "typedoc": "^0.26.5",
     "typedoc-plugin-markdown": "^4.2.3",
