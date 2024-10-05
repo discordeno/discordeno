@@ -153,6 +153,7 @@ __metadata:
     "@types/ws": "npm:^8.5.12"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
+    fzstd: "npm:^0.1.1"
     mocha: "npm:^10.7.0"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
@@ -160,6 +161,9 @@ __metadata:
     typescript: "npm:^5.5.4"
     uWebSockets.js: "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
     ws: "npm:^8.18.0"
+  dependenciesMeta:
+    fzstd:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -1943,6 +1947,13 @@ __metadata:
   dependencies:
     node-gyp: "npm:latest"
   conditions: os=darwin
+  languageName: node
+  linkType: hard
+
+"fzstd@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "fzstd@npm:0.1.1"
+  checksum: 455b968aeb764f06d9c39a5c8b45eefd645f7ee9129896e890eafb8ab367482f8495de12907021a32f6544494305a42a2056c30c63efac06181e6efcdab3fe78
   languageName: node
   linkType: hard
 
