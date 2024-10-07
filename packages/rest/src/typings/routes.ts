@@ -10,6 +10,7 @@ import type {
   GetReactions,
   GetScheduledEventUsers,
   GetUserGuilds,
+  InteractionCallbackOptions,
   ListArchivedThreads,
   ListGuildMembers,
 } from '@discordeno/types'
@@ -241,7 +242,7 @@ export interface RestRoutes {
     /** Routes for interaction response related endpoints. */
     responses: {
       /** Route for handling a callback response with id and token. */
-      callback: (interactionId: BigString, token: string) => string
+      callback: (interactionId: BigString, token: string, options?: InteractionCallbackOptions) => string
       /** Route for handling the original response using id and token. */
       original: (interactionId: BigString, token: string) => string
       /** Route for handling a followup message from a interaction response. */

@@ -17,6 +17,7 @@ import {
   ShardSocketCloseCodes,
   type ShardSocketRequest,
   type StatusUpdate,
+  type TransportCompression,
   type UpdateVoiceState,
 } from './types.js'
 
@@ -35,6 +36,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
   const gateway: GatewayManager = {
     events: options.events ?? {},
     compress: options.compress ?? false,
+    transportCompression: options.transportCompression ?? null,
     intents: options.intents ?? 0,
     properties: {
       os: options.properties?.os ?? process.platform,
@@ -148,6 +150,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           id: shardId,
           connection: {
             compress: gateway.compress,
+            transportCompression: gateway.transportCompression ?? null,
             intents: gateway.intents,
             properties: gateway.properties,
             token: gateway.token,
@@ -380,6 +383,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           id: shardId,
           connection: {
             compress: this.compress,
+            transportCompression: gateway.transportCompression,
             intents: this.intents,
             properties: this.properties,
             token: this.token,
@@ -635,6 +639,8 @@ export interface CreateGatewayManagerOptions {
    * @default false
    */
   compress?: boolean
+  /** What transport compression should be used */
+  transportCompression?: TransportCompression | null
   /** The calculated intent value of the events which the shard should receive.
    *
    * @default 0

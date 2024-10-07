@@ -26,6 +26,7 @@ import {
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
   type DiscordIntegration,
+  type DiscordInteractionCallbackResponse,
   type DiscordInvite,
   type DiscordInviteMetadata,
   type DiscordListActiveThreads,
@@ -1454,8 +1455,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async sendInteractionResponse(interactionId, token, options) {
-      return await rest.post(rest.routes.interactions.responses.callback(interactionId, token), {
+    async sendInteractionResponse(interactionId, token, options, params) {
+      return await rest.post<void | DiscordInteractionCallbackResponse>(rest.routes.interactions.responses.callback(interactionId, token, params), {
         body: options,
         files: options.data?.files,
         runThroughQueue: false,

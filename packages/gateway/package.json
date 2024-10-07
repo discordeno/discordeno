@@ -33,22 +33,25 @@
     "@discordeno/utils": "19.0.0-beta.1",
     "ws": "^8.18.0"
   },
+  "optionalDependencies": {
+    "fzstd": "^0.1.1"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@swc/cli": "^0.4.0",
-    "@swc/core": "^1.7.3",
+    "@swc/core": "^1.7.26",
     "@types/chai": "^4.3.17",
-    "@types/mocha": "^10.0.7",
-    "@types/node": "^22.1.0",
+    "@types/mocha": "^10.0.8",
+    "@types/node": "^22.7.4",
     "@types/sinon": "^17.0.3",
     "@types/ws": "^8.5.12",
     "c8": "^10.1.2",
     "chai": "^5.1.1",
-    "mocha": "^10.7.0",
+    "mocha": "^10.7.3",
     "sinon": "^18.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "^5.5.4",
-    "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
+    "uWebSockets.js": "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
   }
 }

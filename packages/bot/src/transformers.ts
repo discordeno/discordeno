@@ -32,7 +32,10 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
+  DiscordInteractionCallback,
+  DiscordInteractionCallbackResponse,
   DiscordInteractionDataOption,
+  DiscordInteractionResource,
   DiscordInviteCreate,
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
@@ -94,8 +97,11 @@ import {
   type GuildWidgetSettings,
   type Integration,
   type Interaction,
+  type InteractionCallback,
+  type InteractionCallbackResponse,
   type InteractionDataOption,
   type InteractionDataResolved,
+  type InteractionResource,
   type Invite,
   type InviteStageInstance,
   type Member,
@@ -158,8 +164,11 @@ import {
   transformGuildOnboardingPromptOption,
   transformIntegration,
   transformInteraction,
+  transformInteractionCallback,
+  transformInteractionCallbackResponse,
   transformInteractionDataOption,
   transformInteractionDataResolved,
+  transformInteractionResource,
   transformInvite,
   transformInviteStageInstance,
   transformMember,
@@ -244,12 +253,19 @@ export interface Transformers {
     guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption, onboardingPromptOption: GuildOnboardingPromptOption) => any
     integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
     interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
+    interactionCallback: (bot: Bot, payload: DiscordInteractionCallback, interactionCallback: InteractionCallback) => any
+    interactionCallbackResponse: (
+      bot: Bot,
+      payload: DiscordInteractionCallbackResponse,
+      interactionCallbackResponse: InteractionCallbackResponse,
+    ) => any
     interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
     interactionDataResolved: (
       bot: Bot,
       payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
       interactionDataResolved: InteractionDataResolved,
     ) => any
+    interactionResource: (bot: Bot, payload: DiscordInteractionResource, interactionResource: InteractionResource) => any
     invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
     inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance, inviteStageInstance: InviteStageInstance) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
@@ -325,8 +341,11 @@ export interface Transformers {
   guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
   interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
+  interactionCallback: (bot: Bot, payload: DiscordInteractionCallback) => InteractionCallback
+  interactionCallbackResponse: (bot: Bot, payload: DiscordInteractionCallbackResponse) => InteractionCallbackResponse
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   interactionDataResolved: (bot: Bot, payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint }) => InteractionDataResolved
+  interactionResource: (bot: Bot, payload: DiscordInteractionResource) => InteractionResource
   invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
   inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
@@ -523,6 +542,23 @@ export interface TransformersDesiredProperties {
     appPermissions: boolean
     authorizingIntegrationOwners: boolean
     context: boolean
+  }
+  interactionCallback: {
+    id: boolean
+    type: boolean
+    activityInstanceId: boolean
+    responseMessageId: boolean
+    responseMessageLoading: boolean
+    responseMessageEphemeral: boolean
+  }
+  interactionCallbackResponse: {
+    interaction: boolean
+    resource: boolean
+  }
+  interactionResource: {
+    type: boolean
+    activityInstance: boolean
+    message: boolean
   }
   invite: {
     type: boolean
@@ -859,8 +895,11 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       guildOnboardingPromptOption: options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       integration: options.customizers?.integration ?? defaultCustomizer,
       interaction: options.customizers?.interaction ?? defaultCustomizer,
+      interactionCallback: options.customizers?.interactionCallback ?? defaultCustomizer,
+      interactionCallbackResponse: options.customizers?.interactionCallbackResponse ?? defaultCustomizer,
       interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
       interactionDataResolved: options.customizers?.interactionDataResolved ?? defaultCustomizer,
+      interactionResource: options?.customizers?.interactionResource ?? defaultCustomizer,
       invite: options.customizers?.invite ?? defaultCustomizer,
       inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
       member: options.customizers?.member ?? defaultCustomizer,
@@ -937,8 +976,11 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     guildOnboardingPromptOption: options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
+    interactionCallback: options.interactionCallback ?? transformInteractionCallback,
+    interactionCallbackResponse: options.interactionCallbackResponse ?? transformInteractionCallbackResponse,
     interactionDataOptions: options.interactionDataOptions ?? transformInteractionDataOption,
     interactionDataResolved: options.interactionDataResolved ?? transformInteractionDataResolved,
+    interactionResource: options.interactionResource ?? transformInteractionResource,
     invite: options.invite ?? transformInvite,
     inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
     member: options.member ?? transformMember,
@@ -1149,6 +1191,26 @@ export function createDesiredPropertiesObject(
       authorizingIntegrationOwners: defaultValue,
       context: defaultValue,
       ...desiredProperties.interaction,
+    },
+    interactionCallback: {
+      type: defaultValue,
+      id: defaultValue,
+      activityInstanceId: defaultValue,
+      responseMessageEphemeral: defaultValue,
+      responseMessageId: defaultValue,
+      responseMessageLoading: defaultValue,
+      ...desiredProperties.interactionCallback,
+    },
+    interactionCallbackResponse: {
+      interaction: defaultValue,
+      resource: defaultValue,
+      ...desiredProperties.interactionCallbackResponse,
+    },
+    interactionResource: {
+      type: defaultValue,
+      activityInstance: defaultValue,
+      message: defaultValue,
+      ...desiredProperties.interactionResource,
     },
     invite: {
       type: defaultValue,

@@ -77,6 +77,7 @@ import type {
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
+  InteractionCallbackOptions,
   InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
@@ -113,6 +114,7 @@ import type {
   GuildWidget,
   GuildWidgetSettings,
   Integration,
+  InteractionCallbackResponse,
   Invite,
   Member,
   Message,
@@ -720,8 +722,12 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     removeDmRecipient: async (channelId, userId) => {
       return await bot.rest.removeDmRecipient(channelId, userId)
     },
-    sendInteractionResponse: async (interactionId, token, options) => {
-      return await bot.rest.sendInteractionResponse(interactionId, token, options)
+    sendInteractionResponse: async (interactionId, token, options, params) => {
+      const response = await bot.rest.sendInteractionResponse(interactionId, token, options, params)
+
+      if (!response) return
+
+      return bot.transformers.interactionCallbackResponse(bot, snakelize(response))
     },
     triggerTypingIndicator: async (channelId) => {
       return await bot.rest.triggerTypingIndicator(channelId)
@@ -1010,7 +1016,12 @@ export interface BotHelpers {
   removeRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
   removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
   removeDmRecipient: (channelId: BigString, userId: BigString) => Promise<void>
-  sendInteractionResponse: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
+  sendInteractionResponse: (
+    interactionId: BigString,
+    token: string,
+    options: InteractionResponse,
+    params?: InteractionCallbackOptions,
+  ) => Promise<void | InteractionCallbackResponse>
   triggerTypingIndicator: (channelId: BigString) => Promise<void>
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
   kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
