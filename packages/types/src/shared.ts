@@ -702,6 +702,8 @@ export enum ApplicationCommandTypes {
   User,
   /** A UI-based command that shows up when you right click or tap on a message */
   Message,
+  /** A UI-based command that represents the primary way to invoke an app's Activity */
+  PrimaryEntryPoint,
 }
 
 export enum ApplicationCommandPermissionTypes {
@@ -1115,6 +1117,13 @@ export enum InteractionResponseTypes {
    * @deprecated You should migrate to the premium button components
    */
   PremiumRequired = 10,
+  /**
+   * Launch the Activity associated with the app.
+   *
+   * @remarks
+   * Only available for apps with Activities enabled
+   */
+  LaunchActivity = 12,
 }
 
 export enum SortOrderTypes {

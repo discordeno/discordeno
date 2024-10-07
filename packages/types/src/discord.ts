@@ -18,6 +18,7 @@ import {
   type GuildFeatures,
   type GuildNsfwLevel,
   type IntegrationExpireBehaviors,
+  type InteractionResponseTypes,
   type InteractionTypes,
   type Localization,
   type MessageActivityTypes,
@@ -392,7 +393,7 @@ export interface DiscordApplication {
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
-  role_connections_verification_url?: string
+  role_connections_verification_url?: string | null
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number
   /** Approximate count of users that have installed the app. */
@@ -402,7 +403,7 @@ export interface DiscordApplication {
   /** Array of redirect URIs for the app */
   redirect_uris?: string[]
   /** Interactions endpoint URL for the app */
-  interactions_endpoint_url?: string
+  interactions_endpoint_url?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object-application-integration-type-configuration-object */
@@ -512,6 +513,7 @@ export interface DiscordConnection {
 
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
+  AmazonMusic = 'amazon-music',
   BattleNet = 'battlenet',
   Bungie = 'Bungie.net',
   Domain = 'domain',
@@ -1690,19 +1692,25 @@ export interface DiscordMessageInteractionMetadata {
   triggering_interaction_metadata?: DiscordMessageInteractionMetadata
 }
 
-export type DiscordMessageComponents = DiscordActionRow[]
+export type DiscordMessageComponents = DiscordMessageComponent[]
+export type DiscordMessageComponent = DiscordActionRow | DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
-  type: 1
+  type: MessageComponentTypes.ActionRow
   /** The components in this row */
-  components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
+  components: Exclude<DiscordMessageComponent, DiscordActionRow>[]
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#select-menu-object */
 export interface DiscordSelectMenuComponent {
-  type: MessageComponentTypes.SelectMenu
+  type:
+    | MessageComponentTypes.SelectMenu
+    | MessageComponentTypes.SelectMenuChannels
+    | MessageComponentTypes.SelectMenuRoles
+    | MessageComponentTypes.SelectMenuUsers
+    | MessageComponentTypes.SelectMenuUsersAndRoles
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -1711,10 +1719,23 @@ export interface DiscordSelectMenuComponent {
   min_values?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number
+  /**
+   * List of default values for auto-populated select menu components
+   *
+   * @remarks
+   * The number of default values must be in the range defined by min_values and max_values
+   */
+  default_values?: DiscordSelectMenuDefaultValue[]
   /** List of channel types to include in a channel select menu options list */
-  channelTypes?: ChannelTypes[]
+  channel_types?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
-  options: DiscordSelectOption[]
+  options?: DiscordSelectOption[]
+  /**
+   * Whether select menu is disabled
+   *
+   * @default false
+   */
+  disabled?: boolean
 }
 
 export interface DiscordSelectOption {
@@ -1892,6 +1913,53 @@ export interface DiscordInteraction {
   authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object */
+export interface DiscordInteractionCallbackResponse {
+  /** The interaction object associated with the interaction response */
+  interaction: DiscordInteractionCallback
+  /** The resource that was created by the interaction response. */
+  resource?: DiscordInteractionResource
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-object */
+export interface DiscordInteractionCallback {
+  id: string
+  type: InteractionTypes
+  /** Instance ID of the Activity if one was launched or joined */
+  activity_instance_id?: string
+  /** ID of the message that was created by the interaction */
+  response_message_id?: string
+  /** Whether or not the message is in a loading state */
+  response_message_loading?: boolean
+  /** Whether or not the response message was ephemeral */
+  response_message_ephemeral?: boolean
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-resource-object */
+export interface DiscordInteractionResource {
+  type: InteractionResponseTypes
+  /**
+   * Represents the Activity launched by this interaction.
+   *
+   * @remarks
+   * Only present if type is `LAUNCH_ACTIVITY`.
+   */
+  activity_instance?: DiscordActivityInstanceResource
+  /**
+   * Message created by the interaction.
+   *
+   * @remarks
+   * Only present if type is either `CHANNEL_MESSAGE_WITH_SOURCE` or `UPDATE_MESSAGE`.
+   */
+  message?: DiscordMessage
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-activity-instance-resource */
+export interface DiscordActivityInstanceResource {
+  /** Instance ID of the Activity if one was launched or joined. */
+  id: string
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -2184,100 +2252,69 @@ export interface DiscordAuditLogEntry {
   reason?: string
 }
 
+export type DiscordAuditLogChangeObject<T> = {
+  [K in keyof T]: {
+    new_value?: T[K]
+    old_value?: T[K]
+    key: K
+  }
+}[keyof T]
+
+// Done manually as it is clearer in this way
+/** Partial role audit log entry change exception */
+export type DiscordAuditLogChangePartialRole = { new_value: { id: string; name: string }[]; key: '$add' | '$remove' }
+
+/**
+ * Invite audit log entry change exception
+ *
+ * @remarks
+ * While the docs say that 'channel.id' will never exist, we keep it as it is very complex to remove, the user should not use it and use the provided 'channel_id' value instead
+ */
+export type DiscordAuditLogChangeInvite = DiscordAuditLogChangeObject<DiscordInvite> | DiscordAuditLogChangeObject<{ channel_id: string }>
+
+/**
+ * Invite Metadata audit log entry change exception
+ *
+ * @remarks
+ * While the docs say that 'channel.id' will never exist, we keep it as it is very complex to remove, the user should not use it and use the provided 'channel_id' value instead
+ */
+export type DiscordAuditLogChangeInviteMetadata =
+  | DiscordAuditLogChangeObject<DiscordInviteMetadata>
+  | DiscordAuditLogChangeObject<{ channel_id: string }>
+
+/** Webhook audit log entry change exception */
+export type DiscordAuditLogChangeWebhook =
+  | DiscordAuditLogChangeObject<Omit<DiscordWebhook, 'avatar'>>
+  | DiscordAuditLogChangeObject<{ avatar_hash: DiscordWebhook['avatar'] }>
+
+// Done manually as it is clearer in this way
+/** Command Permission audit log entry change exception */
+export type DiscordAuditLogChangeApplicationCommandPermissions = {
+  new_value?: DiscordApplicationCommandPermissions
+  old_value?: DiscordApplicationCommandPermissions
+  key: `${number}`
+}
+
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export type DiscordAuditLogChange =
-  | {
-      new_value: string
-      old_value: string
-      key:
-        | 'name'
-        | 'description'
-        | 'discovery_splash_hash'
-        | 'banner_hash'
-        | 'preferred_locale'
-        | 'rules_channel_id'
-        | 'public_updates_channel_id'
-        | 'icon_hash'
-        | 'image_hash'
-        | 'splash_hash'
-        | 'owner_id'
-        | 'region'
-        | 'afk_channel_id'
-        | 'vanity_url_code'
-        | 'widget_channel_id'
-        | 'system_channel_id'
-        | 'topic'
-        | 'application_id'
-        | 'permissions'
-        | 'allow'
-        | 'deny'
-        | 'code'
-        | 'channel_id'
-        | 'inviter_id'
-        | 'nick'
-        | 'avatar_hash'
-        | 'id'
-        | 'location'
-        | 'command_id'
-    }
-  | {
-      new_value: number
-      old_value: number
-      key:
-        | 'afk_timeout'
-        | 'mfa_level'
-        | 'verification_level'
-        | 'explicit_content_filter'
-        | 'default_message_notifications'
-        | 'prune_delete_days'
-        | 'position'
-        | 'bitrate'
-        | 'rate_limit_per_user'
-        | 'color'
-        | 'max_uses'
-        | 'uses'
-        | 'max_age'
-        | 'expire_behavior'
-        | 'expire_grace_period'
-        | 'user_limit'
-        | 'privacy_level'
-        | 'auto_archive_duration'
-        | 'default_auto_archive_duration'
-        | 'entity_type'
-        | 'status'
-        | 'communication_disabled_until'
-    }
-  | {
-      new_value: Partial<DiscordRole>[]
-      old_value?: Partial<DiscordRole>[]
-      key: '$add' | '$remove'
-    }
-  | {
-      new_value: boolean
-      old_value: boolean
-      key:
-        | 'widget_enabled'
-        | 'nsfw'
-        | 'hoist'
-        | 'mentionable'
-        | 'temporary'
-        | 'deaf'
-        | 'mute'
-        | 'enable_emoticons'
-        | 'archived'
-        | 'locked'
-        | 'invitable'
-    }
-  | {
-      new_value: DiscordOverwrite[]
-      old_value: DiscordOverwrite[]
-      key: 'permission_overwrites'
-    }
-  | {
-      new_value: string | number
-      old_value: string | number
-      key: 'type'
-    }
+  | DiscordAuditLogChangeObject<DiscordGuild>
+  | DiscordAuditLogChangeObject<DiscordChannel>
+  | DiscordAuditLogChangeObject<DiscordOverwrite>
+  | DiscordAuditLogChangeObject<DiscordMember>
+  | DiscordAuditLogChangePartialRole
+  | DiscordAuditLogChangeObject<DiscordRole>
+  | DiscordAuditLogChangeInvite
+  | DiscordAuditLogChangeInviteMetadata
+  | DiscordAuditLogChangeWebhook
+  | DiscordAuditLogChangeObject<DiscordEmoji>
+  | DiscordAuditLogChangeObject<DiscordIntegration>
+  | DiscordAuditLogChangeObject<DiscordStageInstance>
+  | DiscordAuditLogChangeObject<DiscordSticker>
+  | DiscordAuditLogChangeObject<DiscordThreadMetadata>
+  | DiscordAuditLogChangeApplicationCommandPermissions
+  | DiscordAuditLogChangeObject<DiscordAutoModerationRule>
+  | DiscordAuditLogChangeObject<DiscordGuildOnboardingPrompt>
+  | DiscordAuditLogChangeObject<DiscordGuildOnboarding>
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
@@ -2286,73 +2323,73 @@ export interface DiscordOptionalAuditEntryInfo {
    *
    * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
    */
-  application_id: string
+  application_id?: string
   /**
    * Name of the Auto Moderation rule that was triggered.
    *
    * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
    */
-  auto_moderation_rule_name: string
+  auto_moderation_rule_name?: string
   /**
    * Trigger type of the Auto Moderation rule that was triggered.
    *
    * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
    */
-  auto_moderation_rule_trigger_type: string
+  auto_moderation_rule_trigger_type?: string
   /**
    * Channel in which the entities were targeted.
    *
    * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
-  channel_id: string
+  channel_id?: string
   /**
    * Number of entities that were targeted.
    *
    * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
    */
-  count: string
+  count?: string
   /**
    * Number of days after which inactive members were kicked.
    *
    * Event types: `MEMBER_PRUNE`
    */
-  delete_member_days: string
+  delete_member_days?: string
   /**
    * ID of the overwritten entity.
    *
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  id: string
+  id?: string
   /**
    * Number of members removed by the prune.
    *
    * Event types: `MEMBER_PRUNE`
    */
-  members_removed: string
+  members_removed?: string
   /**
    * ID of the message that was targeted.
    *
    * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
-  message_id: string
+  message_id?: string
   /**
    * Name of the role if type is "0" (not present if type is "1").
    *
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  role_name: string
+  role_name?: string
   /**
    * Type of overwritten entity - "0", for "role", or "1" for "member".
    *
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  type: string
+  type?: string
   /**
    * The type of integration which performed the action
    *
    * Event types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
    */
-  integration_type: string
+  integration_type?: string
 }
 
 export interface DiscordScheduledEvent {
@@ -2599,6 +2636,20 @@ export interface DiscordCreateApplicationCommand {
   nsfw?: boolean
   /** Auto incrementing version identifier updated during substantial record changes */
   version?: string
+  /**
+   * Determines whether the interaction is handled by the app's interactions handler or by Discord
+   *
+   * @remarks
+   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   */
+  handler?: DiscordInteractionEntryPointCommandHandlerType
+}
+
+export enum DiscordInteractionEntryPointCommandHandlerType {
+  /** The app handles the interaction using an interaction token */
+  AppHandler = 1,
+  /** Discord handles the interaction by launching an Activity and sending a follow-up message without coordinating with the app */
+  DiscordLaunchActivity = 2,
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */

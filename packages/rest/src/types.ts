@@ -85,6 +85,7 @@ import type {
   // Type required for typedoc
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   DiscordInteraction,
+  DiscordInteractionCallbackResponse,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -114,6 +115,7 @@ import type {
   GetWebhookMessageOptions,
   GuildFeatures,
   InteractionCallbackData,
+  InteractionCallbackOptions,
   InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
@@ -2589,7 +2591,8 @@ export interface RestManager {
    * @param interactionId - The ID of the interaction to respond to.
    * @param token - The interaction token to use, provided in the original interaction.
    * @param options - The parameters for the creation of the message.
-   * @returns An instance of the created {@link CamelizedDiscordMessage}.
+   * @param params - The query parameters for the response of the callback
+   * @returns Nothing or the {@link DiscordInteractionCallbackResponse} if withResponse param is true
    *
    * @remarks
    * ⚠️ Interaction tokens are only valid for _15 minutes_.
@@ -2604,7 +2607,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
    */
-  sendInteractionResponse: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
+  sendInteractionResponse: (
+    interactionId: BigString,
+    token: string,
+    options: InteractionResponse,
+    params?: InteractionCallbackOptions,
+  ) => Promise<void | Camelize<DiscordInteractionCallbackResponse>>
   /**
    * Creates a thread, using an existing message as its point of origin.
    *
