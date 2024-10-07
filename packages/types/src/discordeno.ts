@@ -15,6 +15,7 @@ import type {
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
   DiscordInteractionContextType,
+  DiscordInteractionEntryPointCommandHandlerType,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -97,7 +98,16 @@ export interface CreateMessageOptions {
   poll?: CreatePoll
 }
 
-export type MessageComponents = ActionRow[]
+export type MessageComponents = MessageComponent[]
+export type MessageComponent =
+  | ActionRow
+  | ButtonComponent
+  | InputTextComponent
+  | SelectMenuComponent
+  | SelectMenuChannelsComponent
+  | SelectMenuRolesComponent
+  | SelectMenuUsersComponent
+  | SelectMenuUsersAndRolesComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
@@ -105,15 +115,7 @@ export interface ActionRow {
   type: MessageComponentTypes.ActionRow
   /** The components in this row */
   components:
-    | [
-        | ButtonComponent
-        | InputTextComponent
-        | SelectMenuComponent
-        | SelectMenuChannelsComponent
-        | SelectMenuRolesComponent
-        | SelectMenuUsersComponent
-        | SelectMenuUsersAndRolesComponent,
-      ]
+    | [Exclude<MessageComponent, ActionRow>]
     | [ButtonComponent, ButtonComponent]
     | [ButtonComponent, ButtonComponent, ButtonComponent]
     | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
@@ -500,6 +502,13 @@ export interface CreateSlashApplicationCommand {
   dmPermission?: boolean
   /** Indicates whether the command is age-restricted, defaults to `false` */
   nsfw?: boolean
+  /**
+   * Determines whether the interaction is handled by the app's interactions handler or by Discord
+   *
+   * @remarks
+   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   */
+  handler?: DiscordInteractionEntryPointCommandHandlerType
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
@@ -530,6 +539,8 @@ export interface InteractionCallbackData {
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
+  /** Details about the poll */
+  poll?: CreatePoll
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
@@ -538,6 +549,11 @@ export interface InteractionResponse {
   type: InteractionResponseTypes
   /** An optional response message */
   data?: InteractionCallbackData
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params */
+export interface InteractionCallbackOptions {
+  withResponse?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

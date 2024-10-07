@@ -533,8 +533,8 @@ export function createRoutes(): RestRoutes {
 
       responses: {
         // Interaction Endpoints
-        callback: (interactionId, token) => {
-          return `/interactions/${interactionId}/${token}/callback`
+        callback: (interactionId, token, options) => {
+          return `/interactions/${interactionId}/${token}/callback?with_response=${!!options?.withResponse}`
         },
         original: (interactionId, token) => {
           return `/webhooks/${interactionId}/${token}/messages/@original`
@@ -627,6 +627,10 @@ export function createRoutes(): RestRoutes {
 
     application() {
       return '/applications/@me'
+    },
+
+    applicationActivityInstance(applicationId, instanceId) {
+      return `/applications/${applicationId}/activity-instances/${instanceId}`
     },
 
     currentUser() {

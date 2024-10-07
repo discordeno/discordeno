@@ -3,6 +3,7 @@ import {
   type BigString,
   type Camelize,
   type DiscordAccessTokenResponse,
+  type DiscordActivityInstance,
   type DiscordApplication,
   type DiscordApplicationCommand,
   type DiscordApplicationRoleConnection,
@@ -25,6 +26,7 @@ import {
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
   type DiscordIntegration,
+  type DiscordInteractionCallbackResponse,
   type DiscordInvite,
   type DiscordInviteMetadata,
   type DiscordListActiveThreads,
@@ -1453,8 +1455,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async sendInteractionResponse(interactionId, token, options) {
-      return await rest.post(rest.routes.interactions.responses.callback(interactionId, token), {
+    async sendInteractionResponse(interactionId, token, options, params) {
+      return await rest.post<void | DiscordInteractionCallbackResponse>(rest.routes.interactions.responses.callback(interactionId, token, params), {
         body: options,
         files: options.data?.files,
         runThroughQueue: false,
@@ -1517,6 +1519,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getMembers(guildId, options) {
       return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options))
+    },
+
+    async getApplicationActivityInstance(applicationId, instanceId) {
+      return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId))
     },
 
     async kickMember(guildId, userId, reason) {

@@ -58,6 +58,41 @@ export enum MemberFlags {
    * This value is not editable
    */
   StartedOnboarding = 1 << 3,
+  /**
+   * Member is a guest and can only access the voice channel they were invited to
+   *
+   * @remarks
+   * This value is not editable
+   */
+  IsGuest = 1 << 4,
+  /**
+   * Member has started Server Guide new member actions
+   *
+   * @remarks
+   * This value is not editable
+   */
+  StartedHomeActions = 1 << 5,
+  /**
+   * Member has completed Server Guide new member actions
+   *
+   * @remarks
+   * This value is not editable
+   */
+  CompletedHomeActions = 1 << 6,
+  /**
+   * Member's username, display name, or nickname is blocked by AutoMod
+   *
+   * @remarks
+   * This value is not editable
+   */
+  AutomodQuarantinedUsername = 1 << 7,
+  /**
+   * Member has dismissed the DM settings upsell
+   *
+   * @remarks
+   * This value is not editable
+   */
+  DmSettingsUpsellAcknowledged = 1 << 9,
 }
 
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
@@ -667,6 +702,8 @@ export enum ApplicationCommandTypes {
   User,
   /** A UI-based command that shows up when you right click or tap on a message */
   Message,
+  /** A UI-based command that represents the primary way to invoke an app's Activity */
+  PrimaryEntryPoint,
 }
 
 export enum ApplicationCommandPermissionTypes {
@@ -1083,6 +1120,13 @@ export enum InteractionResponseTypes {
    * @deprecated You should migrate to the premium button components
    */
   PremiumRequired = 10,
+  /**
+   * Launch the Activity associated with the app.
+   *
+   * @remarks
+   * Only available for apps with Activities enabled
+   */
+  LaunchActivity = 12,
 }
 
 export enum SortOrderTypes {

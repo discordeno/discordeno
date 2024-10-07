@@ -122,14 +122,14 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
+    "@swc/core": "npm:^1.7.26"
     "@types/chai": "npm:^4.3.17"
-    "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/mocha": "npm:^10.0.8"
+    "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
-    mocha: "npm:^10.7.0"
+    mocha: "npm:^10.7.3"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -145,21 +145,25 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
+    "@swc/core": "npm:^1.7.26"
     "@types/chai": "npm:^4.3.17"
-    "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/mocha": "npm:^10.0.8"
+    "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.12"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
-    mocha: "npm:^10.7.0"
+    fzstd: "npm:^0.1.1"
+    mocha: "npm:^10.7.3"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^5.5.4"
-    uWebSockets.js: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
+    uWebSockets.js: "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
     ws: "npm:^8.18.0"
+  dependenciesMeta:
+    fzstd:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -171,17 +175,17 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
+    "@swc/core": "npm:^1.7.26"
     "@types/chai": "npm:^4.3.17"
     "@types/chai-as-promised": "npm:^7.1.8"
-    "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/mocha": "npm:^10.0.8"
+    "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
     chai-as-promised: "npm:^8.0.0"
     dotenv: "npm:^16.4.5"
-    mocha: "npm:^10.7.0"
+    mocha: "npm:^10.7.3"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -195,11 +199,11 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:^1.8.3"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
-    "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@swc/core": "npm:^1.7.26"
+    "@types/mocha": "npm:^10.0.8"
+    "@types/node": "npm:^22.7.4"
     c8: "npm:^10.1.2"
-    mocha: "npm:^10.7.0"
+    mocha: "npm:^10.7.3"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^5.5.4"
@@ -213,14 +217,14 @@ __metadata:
     "@biomejs/biome": "npm:^1.8.3"
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
+    "@swc/core": "npm:^1.7.26"
     "@types/chai": "npm:^4.3.17"
-    "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/mocha": "npm:^10.0.8"
+    "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
-    mocha: "npm:^10.7.0"
+    mocha: "npm:^10.7.3"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -457,90 +461,90 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-darwin-arm64@npm:1.7.3"
+"@swc/core-darwin-arm64@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-darwin-arm64@npm:1.7.28"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-darwin-x64@npm:1.7.3"
+"@swc/core-darwin-x64@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-darwin-x64@npm:1.7.28"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.7.3"
+"@swc/core-linux-arm-gnueabihf@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.7.28"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.7.3"
+"@swc/core-linux-arm64-gnu@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.7.28"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-linux-arm64-musl@npm:1.7.3"
+"@swc/core-linux-arm64-musl@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-linux-arm64-musl@npm:1.7.28"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-linux-x64-gnu@npm:1.7.3"
+"@swc/core-linux-x64-gnu@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-linux-x64-gnu@npm:1.7.28"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-linux-x64-musl@npm:1.7.3"
+"@swc/core-linux-x64-musl@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-linux-x64-musl@npm:1.7.28"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.7.3"
+"@swc/core-win32-arm64-msvc@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.7.28"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.7.3"
+"@swc/core-win32-ia32-msvc@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.7.28"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core-win32-x64-msvc@npm:1.7.3"
+"@swc/core-win32-x64-msvc@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@swc/core-win32-x64-msvc@npm:1.7.28"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@swc/core@npm:1.7.3"
+"@swc/core@npm:^1.7.26":
+  version: 1.7.28
+  resolution: "@swc/core@npm:1.7.28"
   dependencies:
-    "@swc/core-darwin-arm64": "npm:1.7.3"
-    "@swc/core-darwin-x64": "npm:1.7.3"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.7.3"
-    "@swc/core-linux-arm64-gnu": "npm:1.7.3"
-    "@swc/core-linux-arm64-musl": "npm:1.7.3"
-    "@swc/core-linux-x64-gnu": "npm:1.7.3"
-    "@swc/core-linux-x64-musl": "npm:1.7.3"
-    "@swc/core-win32-arm64-msvc": "npm:1.7.3"
-    "@swc/core-win32-ia32-msvc": "npm:1.7.3"
-    "@swc/core-win32-x64-msvc": "npm:1.7.3"
+    "@swc/core-darwin-arm64": "npm:1.7.28"
+    "@swc/core-darwin-x64": "npm:1.7.28"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.7.28"
+    "@swc/core-linux-arm64-gnu": "npm:1.7.28"
+    "@swc/core-linux-arm64-musl": "npm:1.7.28"
+    "@swc/core-linux-x64-gnu": "npm:1.7.28"
+    "@swc/core-linux-x64-musl": "npm:1.7.28"
+    "@swc/core-win32-arm64-msvc": "npm:1.7.28"
+    "@swc/core-win32-ia32-msvc": "npm:1.7.28"
+    "@swc/core-win32-x64-msvc": "npm:1.7.28"
     "@swc/counter": "npm:^0.1.3"
     "@swc/types": "npm:^0.1.12"
   peerDependencies:
@@ -569,7 +573,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: e2cf5203522f8c4d23e36c7c025d82eb91cb22dbf901f71fd864255f5fffb2d4a715fdcc6ea7edac09c6be84b426cea9bc4998c3a5192f990ada18609401ad4f
+  checksum: a477e79387ecc8b68c2bdbbdc88cc61f27a02c5d00f0d77134f9e2de166786a4ee9f7388d6ffd44fc01bfef5311a15cc3132052bab72fb43246dc42705fedb60
   languageName: node
   linkType: hard
 
@@ -714,10 +718,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mocha@npm:^10.0.7":
-  version: 10.0.7
-  resolution: "@types/mocha@npm:10.0.7"
-  checksum: 4494871e8a867633d818b00d6f29d47379f9e23655b89ca728166ff2f0a406b97d376fcc3e7a570a3840f72abb03c886c5e66f50ae0f018376e4dc10ed179564
+"@types/mocha@npm:^10.0.8":
+  version: 10.0.8
+  resolution: "@types/mocha@npm:10.0.8"
+  checksum: c9ba73a6c444085193a84da4bfb8d2af64cb1baf6f678ed5a40b782171092dc0e4aebeaf4eba00fc48f22d328b3e3075a566ca15f8da1e0765cc3cf7657621d2
   languageName: node
   linkType: hard
 
@@ -728,12 +732,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.1.0":
-  version: 22.1.0
-  resolution: "@types/node@npm:22.1.0"
+"@types/node@npm:^22.7.4":
+  version: 22.7.4
+  resolution: "@types/node@npm:22.7.4"
   dependencies:
-    undici-types: "npm:~6.13.0"
-  checksum: c2ac1340509646b6c673b27fae2a46e501a97e540e7221be4dd2e0be7a0f61efefb5bf3be8bedf2dbce245fa49cfc49bba77bce73fa3c4296d0d19521ced3222
+    undici-types: "npm:~6.19.2"
+  checksum: 19ddab80c4eba2253c855ed67c9bbc47417183049d01e59010a738bd80d47338bab79fd1f44ae51516bd63a1db4bf21ddb38b16bf6401a2e93252068ec52e88b
   languageName: node
   linkType: hard
 
@@ -976,9 +980,9 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
+    "@swc/core": "npm:^1.7.26"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^22.1.0"
+    "@types/node": "npm:^22.7.4"
     benchmark: "npm:^2.1.4"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -1043,7 +1047,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"braces@npm:^3.0.2, braces@npm:^3.0.3, braces@npm:~3.0.2":
+"braces@npm:^3.0.3, braces@npm:~3.0.2":
   version: 3.0.3
   resolution: "braces@npm:3.0.3"
   dependencies:
@@ -1551,8 +1555,8 @@ __metadata:
     "@biomejs/biome": "npm:^1.8.3"
     chokidar-cli: "npm:^3.0.0"
     discordeno: "npm:19.0.0-alpha.1"
-    husky: "npm:^9.1.1"
-    lint-staged: "npm:^15.2.8"
+    husky: "npm:^9.1.6"
+    lint-staged: "npm:^15.2.10"
     turbo: "npm:^2.0.12"
     typedoc: "npm:^0.26.5"
     typedoc-plugin-markdown: "npm:^4.2.3"
@@ -1571,16 +1575,16 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.4.0"
-    "@swc/core": "npm:^1.7.3"
+    "@swc/core": "npm:^1.7.26"
     "@types/chai": "npm:^4.3.17"
-    "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^22.1.0"
+    "@types/mocha": "npm:^10.0.8"
+    "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.1"
     commander: "npm:^12.1.0"
     find-up: "npm:^7.0.0"
-    mocha: "npm:^10.7.0"
+    mocha: "npm:^10.7.3"
     sinon: "npm:^18.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -1946,6 +1950,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fzstd@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "fzstd@npm:0.1.1"
+  checksum: 455b968aeb764f06d9c39a5c8b45eefd645f7ee9129896e890eafb8ab367482f8495de12907021a32f6544494305a42a2056c30c63efac06181e6efcdab3fe78
+  languageName: node
+  linkType: hard
+
 "gauge@npm:^4.0.3":
   version: 4.0.4
   resolution: "gauge@npm:4.0.4"
@@ -2182,12 +2193,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^9.1.1":
-  version: 9.1.1
-  resolution: "husky@npm:9.1.1"
+"husky@npm:^9.1.6":
+  version: 9.1.6
+  resolution: "husky@npm:9.1.6"
   bin:
     husky: bin.js
-  checksum: c3be0392071b78c680fc6b9fd7978f52c26e18238a2840c6eabfc0db395e19fcd798da8eff0e31a9e76c479d6019a567d83a8de80f360d28552bc83bd1839b7c
+  checksum: 421ccd8850378231aaefd70dbe9e4f1549b84ffe3a6897f93a202242bbc04e48bd498169aef43849411105d9fcf7c192b757d42661e28d06b934a609a4eb8771
   languageName: node
   linkType: hard
 
@@ -2472,9 +2483,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^15.2.8":
-  version: 15.2.8
-  resolution: "lint-staged@npm:15.2.8"
+"lint-staged@npm:^15.2.10":
+  version: 15.2.10
+  resolution: "lint-staged@npm:15.2.10"
   dependencies:
     chalk: "npm:~5.3.0"
     commander: "npm:~12.1.0"
@@ -2482,13 +2493,13 @@ __metadata:
     execa: "npm:~8.0.1"
     lilconfig: "npm:~3.1.2"
     listr2: "npm:~8.2.4"
-    micromatch: "npm:~4.0.7"
+    micromatch: "npm:~4.0.8"
     pidtree: "npm:~0.6.0"
     string-argv: "npm:~0.3.2"
     yaml: "npm:~2.5.0"
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: cabeb0540775cafa71d8d55be74b6854f65f083efa43886a5b47bfad36d23bc302c70c67dc952303ffa646e5563cfb92005a5d5ea3944c71f7ee3ff5b7bdcd71
+  checksum: ab6930cd633dbb5b6ec7c81fc06c65df41e9f80d93dd22e0d79c6e272cdfd8110a0fbdec60303d46a06b30bcd92261153630e2c937531b77ec5ae41e7e9d90d3
   languageName: node
   linkType: hard
 
@@ -2727,23 +2738,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.4":
-  version: 4.0.5
-  resolution: "micromatch@npm:4.0.5"
-  dependencies:
-    braces: "npm:^3.0.2"
-    picomatch: "npm:^2.3.1"
-  checksum: a749888789fc15cac0e03273844dbd749f9f8e8d64e70c564bcf06a033129554c789bb9e30d7566d7ff6596611a08e58ac12cf2a05f6e3c9c47c50c4c7e12fa2
-  languageName: node
-  linkType: hard
-
-"micromatch@npm:~4.0.7":
-  version: 4.0.7
-  resolution: "micromatch@npm:4.0.7"
+"micromatch@npm:^4.0.4, micromatch@npm:~4.0.8":
+  version: 4.0.8
+  resolution: "micromatch@npm:4.0.8"
   dependencies:
     braces: "npm:^3.0.3"
     picomatch: "npm:^2.3.1"
-  checksum: a11ed1cb67dcbbe9a5fc02c4062cf8bb0157d73bf86956003af8dcfdf9b287f9e15ec0f6d6925ff6b8b5b496202335e497b01de4d95ef6cf06411bc5e5c474a0
+  checksum: 6bf2a01672e7965eb9941d1f02044fad2bd12486b5553dc1116ff24c09a8723157601dc992e74c911d896175918448762df3b3fd0a6b61037dd1a9766ddfbf58
   languageName: node
   linkType: hard
 
@@ -2918,9 +2919,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^10.7.0":
-  version: 10.7.0
-  resolution: "mocha@npm:10.7.0"
+"mocha@npm:^10.7.3":
+  version: 10.7.3
+  resolution: "mocha@npm:10.7.3"
   dependencies:
     ansi-colors: "npm:^4.1.3"
     browser-stdout: "npm:^1.3.1"
@@ -2945,7 +2946,7 @@ __metadata:
   bin:
     _mocha: bin/_mocha
     mocha: bin/mocha.js
-  checksum: dc97c37b1f42d4aa9a6e0fb67752e46d2496519efe229712a5dd4d117edad05022d4dec35d3a6167a609b97092e295cba90c6c7a86fad66470afdf42beb6ff18
+  checksum: 5757aeb320df2507338bfba41731070ce16d27177c5876672fff4bcc4f7b7bcf1afe6ec761bfded43a5d28032d7b797b8b905b5b44c9420203f3ee71457732c1
   languageName: node
   linkType: hard
 
@@ -3294,9 +3295,9 @@ __metadata:
   linkType: hard
 
 "path-to-regexp@npm:^6.2.1":
-  version: 6.2.2
-  resolution: "path-to-regexp@npm:6.2.2"
-  checksum: f7d11c1a9e02576ce0294f4efdc523c11b73894947afdf7b23a0d0f7c6465d7a7772166e770ddf1495a8017cc0ee99e3e8a15ed7302b6b948b89a6dd4eea895e
+  version: 6.3.0
+  resolution: "path-to-regexp@npm:6.3.0"
+  checksum: 6822f686f01556d99538b350722ef761541ec0ce95ca40ce4c29e20a5b492fe8361961f57993c71b2418de12e604478dcf7c430de34b2c31a688363a7a944d9c
   languageName: node
   linkType: hard
 
@@ -4137,10 +4138,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28":
-  version: 20.19.0
-  resolution: "uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
-  checksum: 099aabc375f4b667a3706c4120c124767fc57a43129217b8822bea8c5469eb54b4382ad742233d6a5f71538a8a023d02f5850e7e20e9a427ff9df112087097e7
+"uWebSockets.js@uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901":
+  version: 20.47.0
+  resolution: "uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=54e5db370db746ed1c85021bdf215578a2164901"
+  checksum: c6ed6796b1ed86118e7ea32fa5e486a9aa8d2cc5e3757eb20e8a3120779b47130c318c5f84bbdfbb744c816af272ea7c0220e163ff1c7b85bcd848b04d521408
   languageName: node
   linkType: hard
 
@@ -4151,10 +4152,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.13.0":
-  version: 6.13.0
-  resolution: "undici-types@npm:6.13.0"
-  checksum: da52e37cbc6da3a75da86fa08dd795ca8924430deb91005eb884b840e46e19013ccd4c1c289f70018e8cf0c338add24a500e7c3acfcd49b1ffb27ff9f91e38b9
+"undici-types@npm:~6.19.2":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: cf0b48ed4fc99baf56584afa91aaffa5010c268b8842f62e02f752df209e3dea138b372a60a963b3b2576ed932f32329ce7ddb9cb5f27a6c83040d8cd74b7a70
   languageName: node
   linkType: hard
 

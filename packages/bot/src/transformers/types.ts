@@ -13,7 +13,10 @@ import type {
   ButtonStyles,
   ChannelTypes,
   DefaultMessageNotificationLevels,
+  DiscordActivityInstanceResource,
+  DiscordActivityLocationKind,
   DiscordApplicationIntegrationType,
+  DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordEntitlementType,
   DiscordGuildOnboardingMode,
@@ -36,6 +39,8 @@ import type {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
+  InteractionCallbackOptions,
+  InteractionResponseTypes,
   InteractionTypes,
   Locales,
   Localization,
@@ -116,6 +121,30 @@ export interface ActivityEmoji {
 export interface ActivityButton {
   url: string
   label: string
+}
+
+export interface ActivityInstance {
+  /** Application ID */
+  applicationId: bigint
+  /** Activity Instance ID */
+  instanceId: string
+  /** Unique identifier for the launch */
+  launchId: bigint
+  /** The Location the instance is runnning in */
+  location: ActivityLocation
+  /** The IDs of the Users currently connected to the instance */
+  users: bigint[]
+}
+
+export interface ActivityLocation {
+  /** The unique identifier for the location */
+  id: string
+  /** Enum describing kind of location */
+  kind: DiscordActivityLocationKind
+  /** The id of the Channel */
+  channelId: bigint
+  /** The id of the Guild */
+  guildId?: bigint
 }
 
 export interface Application {
@@ -264,96 +293,25 @@ export interface AuditLogEntry {
   id: bigint
   userId?: bigint
   reason?: string
-  changes?: AuditLogChange[]
+  changes?: DiscordAuditLogChange[]
   targetId?: bigint
   actionType: AuditLogEvents
   options?: OptionalAuditEntryInfo
 }
 
-export interface AuditLogChange {
-  new?: string | number | bigint | boolean | DiscordOverwrite[] | Partial<Role>[]
-  old?: string | number | bigint | boolean | DiscordOverwrite[] | Partial<Role>[]
-  key:
-    | 'id'
-    | 'name'
-    | 'description'
-    | 'type'
-    | 'permissions'
-    | 'locked'
-    | 'invitable'
-    | 'nsfw'
-    | 'archived'
-    | 'position'
-    | 'topic'
-    | 'bitrate'
-    | 'default_auto_archive_duration'
-    | 'auto_archive_duration'
-    | 'allow'
-    | 'deny'
-    | 'channel_id'
-    | 'deaf'
-    | 'mute'
-    | 'status'
-    | 'nick'
-    | 'communication_disabled_until'
-    | 'color'
-    | 'permission_overwrites'
-    | 'user_limit'
-    | 'rate_limit_per_user'
-    | 'owner_id'
-    | 'application_id'
-    | 'hoist'
-    | 'mentionable'
-    | 'location'
-    | 'verification_level'
-    | 'default_message_notifications'
-    | 'explicit_content_filter'
-    | 'preferred_locale'
-    | 'afk_timeout'
-    | 'afk_channel_id'
-    | 'system_channel_id'
-    | 'widget_enabled'
-    | 'mfa_level'
-    | 'vanity_url_code'
-    | 'icon_hash'
-    | 'widget_channel_id'
-    | 'rules_channel_id'
-    | 'public_updates_channel_id'
-    | 'code'
-    | 'region'
-    | 'privacy_level'
-    | 'entity_type'
-    | 'enable_emoticons'
-    | 'expire_behavior'
-    | 'expire_grace_period'
-    | 'uses'
-    | 'max_uses'
-    | 'max_age'
-    | 'temporary'
-    | 'discovery_splash_hash'
-    | 'banner_hash'
-    | 'image_hash'
-    | 'splash_hash'
-    | 'inviter_id'
-    | 'avatar_hash'
-    | 'command_id'
-    | 'prune_delete_days'
-    | '$add'
-    | '$remove'
-}
-
 export interface OptionalAuditEntryInfo {
-  id?: bigint
+  applicationId?: bigint
+  autoModerationRuleName?: string
+  autoModerationRuleTriggerType?: string
   channelId?: bigint
+  count?: number
+  deleteMemberDays?: number
+  id?: bigint
+  membersRemoved?: number
   messageId?: bigint
-  type: number
-  count: number
-  deleteMemberDays: number
-  membersRemoved: number
-  roleName: string
-  autoModerationRuleName: string
-  autoModerationRuleTriggerType: string
-  integrationType: string
+  roleName?: string
+  type?: number
+  integrationType?: string
 }
 
 export interface AutoModerationActionExecution {
@@ -902,30 +860,72 @@ export interface Interaction {
    *
    * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
    */
-  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<Message | void>
+  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean; withResponse?: boolean }) => Promise<Message | void>
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
    * @remarks
    * This will edit the original interaction response or, if the interaction has not yet been acknowledged and the type of the interaction is MessageComponent it will instead send a UpdateMessage response instead.
    */
-  edit: (response: string | InteractionCallbackData, messageId?: BigString) => Promise<Message | void>
+  edit: (
+    response: string | InteractionCallbackData,
+    messageId?: BigString,
+    options?: InteractionCallbackOptions,
+  ) => Promise<Message | InteractionCallbackResponse | void>
   /**
    * Defer the interaction for updating the referenced message at a later time with {@link edit}.
    *
    * @remarks
    * This will send a DeferredUpdateMessage response.
    */
-  deferEdit: () => Promise<void>
+  deferEdit: (options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>
   /**
    * Defer the interaction for updating the response at a later time with {@link edit}.
    *
    * @remarks
    * This will send a DeferredChannelMessageWithSource response.
    */
-  defer: (isPrivate?: boolean) => Promise<void>
+  defer: (isPrivate?: boolean, options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>
   /** Delete the original interaction response or a followup if the message id is provided. */
   delete: (messageId?: BigString) => Promise<void>
+}
+
+export interface InteractionCallbackResponse {
+  /** The interaction object associated with the interaction response */
+  interaction: InteractionCallback
+  /** The resource that was created by the interaction response. */
+  resource?: InteractionResource
+}
+
+export interface InteractionCallback {
+  id: bigint
+  type: InteractionTypes
+  /** Instance ID of the Activity if one was launched or joined */
+  activityInstanceId?: string
+  /** ID of the message that was created by the interaction */
+  responseMessageId?: bigint
+  /** Whether or not the message is in a loading state */
+  responseMessageLoading?: boolean
+  /** Whether or not the response message was ephemeral */
+  responseMessageEphemeral?: boolean
+}
+
+export interface InteractionResource {
+  type: InteractionResponseTypes
+  /**
+   * Represents the Activity launched by this interaction.
+   *
+   * @remarks
+   * Only present if type is `LAUNCH_ACTIVITY`.
+   */
+  activityInstance?: DiscordActivityInstanceResource
+  /**
+   * Message created by the interaction.
+   *
+   * @remarks
+   * Only present if type is either `CHANNEL_MESSAGE_WITH_SOURCE` or `UPDATE_MESSAGE`.
+   */
+  message?: Message
 }
 
 export interface InteractionData {
@@ -1169,7 +1169,20 @@ export interface MessageReference {
 
 export interface MessageSnapshot {
   /** Minimal subset of fields in the forwarded message */
-  message: Pick<Message, 'type' | 'content' | 'embeds' | 'attachments' | 'timestamp' | 'editedTimestamp' | 'flags' | 'mentions' | 'mentionedRoleIds'>
+  message: Pick<
+    Message,
+    | 'type'
+    | 'content'
+    | 'embeds'
+    | 'attachments'
+    | 'timestamp'
+    | 'editedTimestamp'
+    | 'flags'
+    | 'mentions'
+    | 'mentionedRoleIds'
+    | 'stickerItems'
+    | 'components'
+  >
 }
 
 export interface MessageInteractionMetadata {

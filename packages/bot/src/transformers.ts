@@ -3,6 +3,8 @@ import type {
   BigString,
   CreateApplicationCommand,
   DiscordActivity,
+  DiscordActivityInstance,
+  DiscordActivityLocation,
   DiscordAllowedMentions,
   DiscordApplication,
   DiscordApplicationCommand,
@@ -30,7 +32,10 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
+  DiscordInteractionCallback,
+  DiscordInteractionCallbackResponse,
   DiscordInteractionDataOption,
+  DiscordInteractionResource,
   DiscordInviteCreate,
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
@@ -64,6 +69,8 @@ import { logger } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import {
   type Activity,
+  type ActivityInstance,
+  type ActivityLocation,
   type Application,
   type ApplicationCommand,
   type ApplicationCommandOption,
@@ -90,8 +97,11 @@ import {
   type GuildWidgetSettings,
   type Integration,
   type Interaction,
+  type InteractionCallback,
+  type InteractionCallbackResponse,
   type InteractionDataOption,
   type InteractionDataResolved,
+  type InteractionResource,
   type Invite,
   type InviteStageInstance,
   type Member,
@@ -120,6 +130,8 @@ import {
   type Webhook,
   type WelcomeScreen,
   transformActivity,
+  transformActivityInstance,
+  transformActivityLocation,
   transformActivityToDiscordActivity,
   transformApplication,
   transformApplicationCommand,
@@ -152,8 +164,11 @@ import {
   transformGuildOnboardingPromptOption,
   transformIntegration,
   transformInteraction,
+  transformInteractionCallback,
+  transformInteractionCallbackResponse,
   transformInteractionDataOption,
   transformInteractionDataResolved,
+  transformInteractionResource,
   transformInvite,
   transformInviteStageInstance,
   transformMember,
@@ -204,6 +219,8 @@ import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 export interface Transformers {
   customizers: {
     activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
+    activityInstance: (bot: Bot, payload: DiscordActivityInstance, activityInstance: ActivityInstance) => any
+    activityLocation: (bot: Bot, payload: DiscordActivityLocation, activityLocation: ActivityLocation) => any
     application: (bot: Bot, payload: DiscordApplication, application: Application) => any
     applicationCommand: (bot: Bot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
     applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
@@ -236,12 +253,19 @@ export interface Transformers {
     guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption, onboardingPromptOption: GuildOnboardingPromptOption) => any
     integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
     interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
+    interactionCallback: (bot: Bot, payload: DiscordInteractionCallback, interactionCallback: InteractionCallback) => any
+    interactionCallbackResponse: (
+      bot: Bot,
+      payload: DiscordInteractionCallbackResponse,
+      interactionCallbackResponse: InteractionCallbackResponse,
+    ) => any
     interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
     interactionDataResolved: (
       bot: Bot,
       payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
       interactionDataResolved: InteractionDataResolved,
     ) => any
+    interactionResource: (bot: Bot, payload: DiscordInteractionResource, interactionResource: InteractionResource) => any
     invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
     inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance, inviteStageInstance: InviteStageInstance) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
@@ -291,6 +315,8 @@ export interface Transformers {
     user: (bot: Bot, payload: User) => DiscordUser
   }
   activity: (bot: Bot, payload: DiscordActivity) => Activity
+  activityInstance: (bot: Bot, payload: DiscordActivityInstance) => ActivityInstance
+  activityLocation: (bot: Bot, payload: DiscordActivityLocation) => ActivityLocation
   application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
   applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
@@ -315,8 +341,11 @@ export interface Transformers {
   guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
   interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
+  interactionCallback: (bot: Bot, payload: DiscordInteractionCallback) => InteractionCallback
+  interactionCallbackResponse: (bot: Bot, payload: DiscordInteractionCallbackResponse) => InteractionCallbackResponse
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   interactionDataResolved: (bot: Bot, payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint }) => InteractionDataResolved
+  interactionResource: (bot: Bot, payload: DiscordInteractionResource) => InteractionResource
   invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
   inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
@@ -350,6 +379,19 @@ export interface Transformers {
 }
 
 export interface TransformersDesiredProperties {
+  activityInstance: {
+    applicationId: boolean
+    instanceId: boolean
+    launchId: boolean
+    location: boolean
+    users: boolean
+  }
+  activityLocation: {
+    id: boolean
+    kind: boolean
+    channelId: boolean
+    guildId: boolean
+  }
   attachment: {
     id: boolean
     filename: boolean
@@ -500,6 +542,23 @@ export interface TransformersDesiredProperties {
     appPermissions: boolean
     authorizingIntegrationOwners: boolean
     context: boolean
+  }
+  interactionCallback: {
+    id: boolean
+    type: boolean
+    activityInstanceId: boolean
+    responseMessageId: boolean
+    responseMessageLoading: boolean
+    responseMessageEphemeral: boolean
+  }
+  interactionCallbackResponse: {
+    interaction: boolean
+    resource: boolean
+  }
+  interactionResource: {
+    type: boolean
+    activityInstance: boolean
+    message: boolean
   }
   invite: {
     type: boolean
@@ -811,6 +870,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
   return {
     customizers: {
       activity: options.customizers?.activity ?? defaultCustomizer,
+      activityInstance: options.customizers?.activityInstance ?? defaultCustomizer,
+      activityLocation: options.customizers?.activityLocation ?? defaultCustomizer,
       application: options.customizers?.application ?? defaultCustomizer,
       applicationCommand: options.customizers?.applicationCommand ?? defaultCustomizer,
       applicationCommandOption: options.customizers?.applicationCommandOption ?? defaultCustomizer,
@@ -835,8 +896,11 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       guildOnboardingPromptOption: options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       integration: options.customizers?.integration ?? defaultCustomizer,
       interaction: options.customizers?.interaction ?? defaultCustomizer,
+      interactionCallback: options.customizers?.interactionCallback ?? defaultCustomizer,
+      interactionCallbackResponse: options.customizers?.interactionCallbackResponse ?? defaultCustomizer,
       interactionDataOptions: options.customizers?.interactionDataOptions ?? defaultCustomizer,
       interactionDataResolved: options.customizers?.interactionDataResolved ?? defaultCustomizer,
+      interactionResource: options?.customizers?.interactionResource ?? defaultCustomizer,
       invite: options.customizers?.invite ?? defaultCustomizer,
       inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
       member: options.customizers?.member ?? defaultCustomizer,
@@ -887,6 +951,8 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       user: options.reverse?.user ?? transformUserToDiscordUser,
     },
     activity: options.activity ?? transformActivity,
+    activityInstance: options.activityInstance ?? transformActivityInstance,
+    activityLocation: options.activityLocation ?? transformActivityLocation,
     application: options.application ?? transformApplication,
     applicationCommand: options.applicationCommand ?? transformApplicationCommand,
     applicationCommandOption: options.applicationCommandOption ?? transformApplicationCommandOption,
@@ -911,8 +977,11 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     guildOnboardingPromptOption: options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
+    interactionCallback: options.interactionCallback ?? transformInteractionCallback,
+    interactionCallbackResponse: options.interactionCallbackResponse ?? transformInteractionCallbackResponse,
     interactionDataOptions: options.interactionDataOptions ?? transformInteractionDataOption,
     interactionDataResolved: options.interactionDataResolved ?? transformInteractionDataResolved,
+    interactionResource: options.interactionResource ?? transformInteractionResource,
     invite: options.invite ?? transformInvite,
     inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
     member: options.member ?? transformMember,
@@ -951,6 +1020,21 @@ export function createDesiredPropertiesObject(
   defaultValue = false,
 ): TransformersDesiredProperties {
   return {
+    activityInstance: {
+      applicationId: defaultValue,
+      instanceId: defaultValue,
+      launchId: defaultValue,
+      location: defaultValue,
+      users: defaultValue,
+      ...desiredProperties.activityInstance,
+    },
+    activityLocation: {
+      channelId: defaultValue,
+      guildId: defaultValue,
+      id: defaultValue,
+      kind: defaultValue,
+      ...desiredProperties.activityLocation,
+    },
     attachment: {
       id: defaultValue,
       filename: defaultValue,
@@ -1108,6 +1192,26 @@ export function createDesiredPropertiesObject(
       authorizingIntegrationOwners: defaultValue,
       context: defaultValue,
       ...desiredProperties.interaction,
+    },
+    interactionCallback: {
+      type: defaultValue,
+      id: defaultValue,
+      activityInstanceId: defaultValue,
+      responseMessageEphemeral: defaultValue,
+      responseMessageId: defaultValue,
+      responseMessageLoading: defaultValue,
+      ...desiredProperties.interactionCallback,
+    },
+    interactionCallbackResponse: {
+      interaction: defaultValue,
+      resource: defaultValue,
+      ...desiredProperties.interactionCallbackResponse,
+    },
+    interactionResource: {
+      type: defaultValue,
+      activityInstance: defaultValue,
+      message: defaultValue,
+      ...desiredProperties.interactionResource,
     },
     invite: {
       type: defaultValue,

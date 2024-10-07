@@ -10,6 +10,7 @@ import type {
   GetReactions,
   GetScheduledEventUsers,
   GetUserGuilds,
+  InteractionCallbackOptions,
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
@@ -242,7 +243,7 @@ export interface RestRoutes {
     /** Routes for interaction response related endpoints. */
     responses: {
       /** Route for handling a callback response with id and token. */
-      callback: (interactionId: BigString, token: string) => string
+      callback: (interactionId: BigString, token: string, options?: InteractionCallbackOptions) => string
       /** Route for handling the original response using id and token. */
       original: (interactionId: BigString, token: string) => string
       /** Route for handling a followup message from a interaction response. */
@@ -287,6 +288,8 @@ export interface RestRoutes {
   currentUser: () => string
   /** Route to get and edit information about the current application. */
   application: () => string
+  /** Route for get an activity instance */
+  applicationActivityInstance: (applicationId: BigString, instanceId: string) => string
   /** Route for handling a sticker. */
   sticker: (stickerId: BigString) => string
   /** Route for handling all voice regions. */

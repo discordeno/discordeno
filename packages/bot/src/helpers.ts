@@ -47,6 +47,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordActivityInstance,
   DiscordEntitlement,
   DiscordMessage,
   DiscordSubscription,
@@ -76,6 +77,7 @@ import type {
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
+  InteractionCallbackOptions,
   InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
@@ -111,6 +113,7 @@ import type {
   GuildWidget,
   GuildWidgetSettings,
   Integration,
+  InteractionCallbackResponse,
   Invite,
   Member,
   Message,
@@ -581,6 +584,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
         failedUsers: res.failedUsers.map((x) => bot.transformers.snowflake(x)),
       }
     },
+    getApplicationActivityInstance: async (applicationId, instanceId) => {
+      return await bot.rest.getApplicationActivityInstance(applicationId, instanceId)
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction)
@@ -714,8 +720,12 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     removeDmRecipient: async (channelId, userId) => {
       return await bot.rest.removeDmRecipient(channelId, userId)
     },
-    sendInteractionResponse: async (interactionId, token, options) => {
-      return await bot.rest.sendInteractionResponse(interactionId, token, options)
+    sendInteractionResponse: async (interactionId, token, options, params) => {
+      const response = await bot.rest.sendInteractionResponse(interactionId, token, options, params)
+
+      if (!response) return
+
+      return bot.transformers.interactionCallbackResponse(bot, snakelize(response))
     },
     triggerTypingIndicator: async (channelId) => {
       return await bot.rest.triggerTypingIndicator(channelId)
@@ -723,6 +733,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     banMember: async (guildId, userId, options, reason) => {
       return await bot.rest.banMember(guildId, userId, options, reason)
     },
+
     kickMember: async (guildId, userId, reason) => {
       return await bot.rest.kickMember(guildId, userId, reason)
     },
@@ -939,6 +950,7 @@ export interface BotHelpers {
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
   searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<Member[]>
   bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<{ bannedUsers: bigint[]; failedUsers: bigint[] }>
+  getApplicationActivityInstance: (applicationId: BigString, instanceId: string) => Promise<Camelize<DiscordActivityInstance>>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>
@@ -983,7 +995,12 @@ export interface BotHelpers {
   removeRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
   removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
   removeDmRecipient: (channelId: BigString, userId: BigString) => Promise<void>
-  sendInteractionResponse: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
+  sendInteractionResponse: (
+    interactionId: BigString,
+    token: string,
+    options: InteractionResponse,
+    params?: InteractionCallbackOptions,
+  ) => Promise<void | InteractionCallbackResponse>
   triggerTypingIndicator: (channelId: BigString) => Promise<void>
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
   kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
