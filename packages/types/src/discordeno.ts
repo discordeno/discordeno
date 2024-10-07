@@ -98,7 +98,16 @@ export interface CreateMessageOptions {
   poll?: CreatePoll
 }
 
-export type MessageComponents = ActionRow[]
+export type MessageComponents = MessageComponent[]
+export type MessageComponent =
+  | ActionRow
+  | ButtonComponent
+  | InputTextComponent
+  | SelectMenuComponent
+  | SelectMenuChannelsComponent
+  | SelectMenuRolesComponent
+  | SelectMenuUsersComponent
+  | SelectMenuUsersAndRolesComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
@@ -106,15 +115,7 @@ export interface ActionRow {
   type: MessageComponentTypes.ActionRow
   /** The components in this row */
   components:
-    | [
-        | ButtonComponent
-        | InputTextComponent
-        | SelectMenuComponent
-        | SelectMenuChannelsComponent
-        | SelectMenuRolesComponent
-        | SelectMenuUsersComponent
-        | SelectMenuUsersAndRolesComponent,
-      ]
+    | [Exclude<MessageComponent, ActionRow>]
     | [ButtonComponent, ButtonComponent]
     | [ButtonComponent, ButtonComponent, ButtonComponent]
     | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]

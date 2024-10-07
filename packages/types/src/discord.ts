@@ -1692,19 +1692,25 @@ export interface DiscordMessageInteractionMetadata {
   triggering_interaction_metadata?: DiscordMessageInteractionMetadata
 }
 
-export type DiscordMessageComponents = DiscordActionRow[]
+export type DiscordMessageComponents = DiscordMessageComponent[]
+export type DiscordMessageComponent = DiscordActionRow | DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
-  type: 1
+  type: MessageComponentTypes.ActionRow
   /** The components in this row */
-  components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
+  components: Exclude<DiscordMessageComponent, DiscordActionRow>[]
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#select-menu-object */
 export interface DiscordSelectMenuComponent {
-  type: MessageComponentTypes.SelectMenu
+  type:
+    | MessageComponentTypes.SelectMenu
+    | MessageComponentTypes.SelectMenuChannels
+    | MessageComponentTypes.SelectMenuRoles
+    | MessageComponentTypes.SelectMenuUsers
+    | MessageComponentTypes.SelectMenuUsersAndRoles
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -1713,10 +1719,23 @@ export interface DiscordSelectMenuComponent {
   min_values?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number
+  /**
+   * List of default values for auto-populated select menu components
+   *
+   * @remarks
+   * The number of default values must be in the range defined by min_values and max_values
+   */
+  default_values?: DiscordSelectMenuDefaultValue[]
   /** List of channel types to include in a channel select menu options list */
-  channelTypes?: ChannelTypes[]
+  channel_types?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
-  options: DiscordSelectOption[]
+  options?: DiscordSelectOption[]
+  /**
+   * Whether select menu is disabled
+   *
+   * @default false
+   */
+  disabled?: boolean
 }
 
 export interface DiscordSelectOption {
