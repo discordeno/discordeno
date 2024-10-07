@@ -539,6 +539,8 @@ export interface InteractionCallbackData {
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
+  /** Details about the poll */
+  poll?: CreatePoll
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
