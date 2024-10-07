@@ -18,6 +18,7 @@ import {
   type GuildFeatures,
   type GuildNsfwLevel,
   type IntegrationExpireBehaviors,
+  type InteractionResponseTypes,
   type InteractionTypes,
   type Localization,
   type MessageActivityTypes,
@@ -1894,6 +1895,53 @@ export interface DiscordInteraction {
   context?: DiscordInteractionContextType
 }
 
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object */
+export interface DiscordInteractionCallbackResponse {
+  /** The interaction object associated with the interaction response */
+  interaction: DiscordInteractionCallback
+  /** The resource that was created by the interaction response. */
+  resource?: DiscordInteractionResource
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-object */
+export interface DiscordInteractionCallback {
+  id: string
+  type: InteractionTypes
+  /** Instance ID of the Activity if one was launched or joined */
+  activity_instance_id?: string
+  /** ID of the message that was created by the interaction */
+  response_message_id?: string
+  /** Whether or not the message is in a loading state */
+  response_message_loading?: boolean
+  /** Whether or not the response message was ephemeral */
+  response_message_ephemeral?: boolean
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-resource-object */
+export interface DiscordInteractionResource {
+  type: InteractionResponseTypes
+  /**
+   * Represents the Activity launched by this interaction.
+   *
+   * @remarks
+   * Only present if type is `LAUNCH_ACTIVITY`.
+   */
+  activity_instance?: DiscordActivityInstanceResource
+  /**
+   * Message created by the interaction.
+   *
+   * @remarks
+   * Only present if type is either `CHANNEL_MESSAGE_WITH_SOURCE` or `UPDATE_MESSAGE`.
+   */
+  message?: DiscordMessage
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-activity-instance-resource */
+export interface DiscordActivityInstanceResource {
+  /** Instance ID of the Activity if one was launched or joined. */
+  id: string
+}
+
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
 export interface DiscordInteractionMember extends DiscordMemberWithUser {
   /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
@@ -2568,6 +2616,20 @@ export interface DiscordCreateApplicationCommand {
   nsfw?: boolean
   /** Auto incrementing version identifier updated during substantial record changes */
   version?: string
+  /**
+   * Determines whether the interaction is handled by the app's interactions handler or by Discord
+   *
+   * @remarks
+   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   */
+  handler?: DiscordInteractionEntryPointCommandHandlerType
+}
+
+export enum DiscordInteractionEntryPointCommandHandlerType {
+  /** The app handles the interaction using an interaction token */
+  AppHandler = 1,
+  /** Discord handles the interaction by launching an Activity and sending a follow-up message without coordinating with the app */
+  DiscordLaunchActivity = 2,
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */

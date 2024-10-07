@@ -15,6 +15,7 @@ import type {
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
   DiscordInteractionContextType,
+  DiscordInteractionEntryPointCommandHandlerType,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -500,6 +501,13 @@ export interface CreateSlashApplicationCommand {
   dmPermission?: boolean
   /** Indicates whether the command is age-restricted, defaults to `false` */
   nsfw?: boolean
+  /**
+   * Determines whether the interaction is handled by the app's interactions handler or by Discord
+   *
+   * @remarks
+   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   */
+  handler?: DiscordInteractionEntryPointCommandHandlerType
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
@@ -538,6 +546,11 @@ export interface InteractionResponse {
   type: InteractionResponseTypes
   /** An optional response message */
   data?: InteractionCallbackData
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params */
+export interface InteractionCallbackOptions {
+  withResponse?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

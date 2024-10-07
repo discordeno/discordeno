@@ -6,6 +6,7 @@ import type {
   DiscordActivityAssets,
   DiscordActivityButton,
   DiscordActivityEmoji,
+  DiscordActivityInstanceResource,
   DiscordActivityParty,
   DiscordActivitySecrets,
   DiscordActivityTimestamps,
@@ -90,9 +91,12 @@ import type {
   DiscordIntegrationCreateUpdate,
   DiscordIntegrationDelete,
   DiscordInteraction,
+  DiscordInteractionCallback,
+  DiscordInteractionCallbackResponse,
   DiscordInteractionData,
   DiscordInteractionDataOption,
   DiscordInteractionMember,
+  DiscordInteractionResource,
   DiscordInvite,
   DiscordInviteCreate,
   DiscordInviteDelete,
@@ -251,6 +255,10 @@ export interface CamelizedDiscordInputTextComponent extends Camelize<DiscordInpu
 export interface CamelizedDiscordStickerItem extends Camelize<DiscordStickerItem> {}
 export interface CamelizedDiscordStickerPack extends Camelize<DiscordStickerPack> {}
 export interface CamelizedDiscordInteraction extends Camelize<DiscordInteraction> {}
+export interface CamelizedDiscordInteractionCallbackResponse extends Camelize<DiscordInteractionCallbackResponse> {}
+export interface CamelizedDiscordInteractionCallback extends Camelize<DiscordInteractionCallback> {}
+export interface CamelizedDiscordInteractionResource extends Camelize<DiscordInteractionResource> {}
+export interface CamelizedDiscordActivityInstanceResource extends Camelize<DiscordActivityInstanceResource> {}
 export interface CamelizedDiscordInteractionMember extends Camelize<DiscordInteractionMember> {}
 export interface CamelizedDiscordInteractionData extends Camelize<DiscordInteractionData> {}
 export interface CamelizedDiscordInteractionDataOption extends Camelize<DiscordInteractionDataOption> {}

@@ -13,6 +13,7 @@ import type {
   ButtonStyles,
   ChannelTypes,
   DefaultMessageNotificationLevels,
+  DiscordActivityInstanceResource,
   DiscordActivityLocationKind,
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
@@ -37,6 +38,8 @@ import type {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
+  InteractionCallbackOptions,
+  InteractionResponseTypes,
   InteractionTypes,
   Locales,
   Localization,
@@ -856,30 +859,72 @@ export interface Interaction {
    *
    * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
    */
-  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<Message | void>
+  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean; withResponse?: boolean }) => Promise<Message | void>
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
    * @remarks
    * This will edit the original interaction response or, if the interaction has not yet been acknowledged and the type of the interaction is MessageComponent it will instead send a UpdateMessage response instead.
    */
-  edit: (response: string | InteractionCallbackData, messageId?: BigString) => Promise<Message | void>
+  edit: (
+    response: string | InteractionCallbackData,
+    messageId?: BigString,
+    options?: InteractionCallbackOptions,
+  ) => Promise<Message | InteractionCallbackResponse | void>
   /**
    * Defer the interaction for updating the referenced message at a later time with {@link edit}.
    *
    * @remarks
    * This will send a DeferredUpdateMessage response.
    */
-  deferEdit: () => Promise<void>
+  deferEdit: (options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>
   /**
    * Defer the interaction for updating the response at a later time with {@link edit}.
    *
    * @remarks
    * This will send a DeferredChannelMessageWithSource response.
    */
-  defer: (isPrivate?: boolean) => Promise<void>
+  defer: (isPrivate?: boolean, options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>
   /** Delete the original interaction response or a followup if the message id is provided. */
   delete: (messageId?: BigString) => Promise<void>
+}
+
+export interface InteractionCallbackResponse {
+  /** The interaction object associated with the interaction response */
+  interaction: InteractionCallback
+  /** The resource that was created by the interaction response. */
+  resource?: InteractionResource
+}
+
+export interface InteractionCallback {
+  id: bigint
+  type: InteractionTypes
+  /** Instance ID of the Activity if one was launched or joined */
+  activityInstanceId?: string
+  /** ID of the message that was created by the interaction */
+  responseMessageId?: bigint
+  /** Whether or not the message is in a loading state */
+  responseMessageLoading?: boolean
+  /** Whether or not the response message was ephemeral */
+  responseMessageEphemeral?: boolean
+}
+
+export interface InteractionResource {
+  type: InteractionResponseTypes
+  /**
+   * Represents the Activity launched by this interaction.
+   *
+   * @remarks
+   * Only present if type is `LAUNCH_ACTIVITY`.
+   */
+  activityInstance?: DiscordActivityInstanceResource
+  /**
+   * Message created by the interaction.
+   *
+   * @remarks
+   * Only present if type is either `CHANNEL_MESSAGE_WITH_SOURCE` or `UPDATE_MESSAGE`.
+   */
+  message?: Message
 }
 
 export interface InteractionData {
