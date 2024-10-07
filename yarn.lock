@@ -1556,7 +1556,7 @@ __metadata:
     chokidar-cli: "npm:^3.0.0"
     discordeno: "npm:19.0.0-alpha.1"
     husky: "npm:^9.1.1"
-    lint-staged: "npm:^15.2.8"
+    lint-staged: "npm:^15.2.10"
     turbo: "npm:^2.0.12"
     typedoc: "npm:^0.26.5"
     typedoc-plugin-markdown: "npm:^4.2.3"
@@ -2483,9 +2483,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^15.2.8":
-  version: 15.2.8
-  resolution: "lint-staged@npm:15.2.8"
+"lint-staged@npm:^15.2.10":
+  version: 15.2.10
+  resolution: "lint-staged@npm:15.2.10"
   dependencies:
     chalk: "npm:~5.3.0"
     commander: "npm:~12.1.0"
@@ -2493,13 +2493,13 @@ __metadata:
     execa: "npm:~8.0.1"
     lilconfig: "npm:~3.1.2"
     listr2: "npm:~8.2.4"
-    micromatch: "npm:~4.0.7"
+    micromatch: "npm:~4.0.8"
     pidtree: "npm:~0.6.0"
     string-argv: "npm:~0.3.2"
     yaml: "npm:~2.5.0"
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: cabeb0540775cafa71d8d55be74b6854f65f083efa43886a5b47bfad36d23bc302c70c67dc952303ffa646e5563cfb92005a5d5ea3944c71f7ee3ff5b7bdcd71
+  checksum: ab6930cd633dbb5b6ec7c81fc06c65df41e9f80d93dd22e0d79c6e272cdfd8110a0fbdec60303d46a06b30bcd92261153630e2c937531b77ec5ae41e7e9d90d3
   languageName: node
   linkType: hard
 
@@ -2738,7 +2738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.4, micromatch@npm:~4.0.7":
+"micromatch@npm:^4.0.4, micromatch@npm:~4.0.8":
   version: 4.0.8
   resolution: "micromatch@npm:4.0.8"
   dependencies:
