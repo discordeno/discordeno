@@ -393,7 +393,7 @@ export interface DiscordApplication {
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
-  role_connections_verification_url?: string
+  role_connections_verification_url?: string | null
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number
   /** Approximate count of users that have installed the app. */
@@ -403,7 +403,7 @@ export interface DiscordApplication {
   /** Array of redirect URIs for the app */
   redirect_uris?: string[]
   /** Interactions endpoint URL for the app */
-  interactions_endpoint_url?: string
+  interactions_endpoint_url?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object-application-integration-type-configuration-object */
