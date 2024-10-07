@@ -1013,7 +1013,7 @@ export interface CreateStageInstance {
   channelId: BigString
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
-  /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
+  /** Notify \@everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean
   /** The guild scheduled event associated with this Stage instance */
   guildScheduledEventId?: BigString
