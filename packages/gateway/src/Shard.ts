@@ -364,9 +364,7 @@ export class DiscordenoShard {
     this.inflateBuffer = null
     this.decompressionPromisesQueue = []
 
-    this.logger.debug(
-      `[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`,
-    )
+    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
