@@ -196,7 +196,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         return await new Promise((resolve) => {
           // Mark that we are making an identify request so another is not made.
           bucket.identifyRequests.push(resolve)
-          gateway.logger.debug(`[Gateway] identifying shard #${shardId}.`)
+          gateway.logger.debug(`[Gateway] Identifying Shard #${shardId}.`)
           // This will trigger identify and when READY is received it will resolve the above request.
           shard?.identify().then(async () => {
             // Tell the manager that this shard is online
@@ -371,12 +371,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       await shard.send(payload)
     },
     async tellWorkerToIdentify(workerId, shardId, bucketId) {
-      gateway.logger.debug(`[Gateway] tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
+      gateway.logger.debug(`[Gateway] Tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
       await gateway.identify(shardId)
     },
     async identify(shardId: number) {
       let shard = this.shards.get(shardId)
-      gateway.logger.debug(`[Gateway] identifying ${shard ? 'existing' : 'new'} shard (${shardId})`)
+      gateway.logger.debug(`[Gateway] Identifying ${shard ? 'existing' : 'new'} shard (${shardId})`)
 
       if (!shard) {
         shard = new Shard({
@@ -420,7 +420,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return await new Promise((resolve) => {
         // Mark that we are making an identify request so another is not made.
         bucket.identifyRequests.push(resolve)
-        gateway.logger.debug(`[Gateway] identifying shard #${shardId}.`)
+        gateway.logger.debug(`[Gateway] Identifying Shard #${shardId}.`)
         // This will trigger identify and when READY is received it will resolve the above request.
         shard?.identify()
       })
@@ -428,15 +428,15 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
       if (!shard) {
-        return gateway.logger.debug(`[Gateway] A kill for shard #${shardId} was requested, but the shard could not be found`)
+        return gateway.logger.debug(`[Gateway] A kill for Shard #${shardId} was requested, but the shard could not be found`)
       }
 
-      gateway.logger.debug(`[Gateway] Killing shard #${shardId}`)
+      gateway.logger.debug(`[Gateway] Killing Shard #${shardId}`)
       this.shards.delete(shardId)
       await shard.shutdown()
     },
     async requestIdentify(_shardId: number) {
-      gateway.logger.debug(`[Gateway] requesting identify`)
+      gateway.logger.debug(`[Gateway] Requesting identify`)
     },
 
     // Helpers methods below this
