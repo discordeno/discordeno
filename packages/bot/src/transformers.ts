@@ -51,6 +51,7 @@ import type {
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
   DiscordSku,
+  DiscordSoundboardSound,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerPack,
@@ -115,6 +116,7 @@ import {
   type ScheduledEvent,
   type ScheduledEventRecurrenceRule,
   type Sku,
+  type SoundboardSound,
   type StageInstance,
   type Sticker,
   type StickerPack,
@@ -204,6 +206,7 @@ import {
   transformCreateApplicationCommandToDiscordCreateApplicationCommand,
   transformInteractionResponseToDiscordInteractionResponse,
 } from './transformers/reverse/index.js'
+import { transformSoundboardSound } from './transformers/soundboardSound.js'
 import type {
   BotInteractionResponse,
   DiscordComponent,
@@ -277,6 +280,7 @@ export interface Transformers {
     scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
     scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule, scheduledEvent: ScheduledEventRecurrenceRule) => any
     sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
+    soundboardSound: (bot: Bot, payload: DiscordSoundboardSound, soundboardSound: SoundboardSound) => any
     stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
     sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
     stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
@@ -356,6 +360,7 @@ export interface Transformers {
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule) => ScheduledEventRecurrenceRule
   sku: (bot: Bot, payload: DiscordSku) => Sku
+  soundboardSound: (bot: Bot, payload: DiscordSoundboardSound) => SoundboardSound
   snowflake: (snowflake: BigString) => bigint
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
@@ -830,6 +835,16 @@ export interface TransformersDesiredProperties {
     text: boolean
     emoji: boolean
   }
+  soundboardSound: {
+    name: boolean
+    soundId: boolean
+    volume: boolean
+    emojiId: boolean
+    emojiName: boolean
+    guildId: boolean
+    available: boolean
+    user: boolean
+  }
 }
 
 export interface CreateTransformerOptions {
@@ -899,6 +914,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
       sku: options.customizers?.sku ?? defaultCustomizer,
+      soundboardSound: options.customizers?.soundboardSound ?? defaultCustomizer,
       stageInstance: options.customizers?.stageInstance ?? defaultCustomizer,
       sticker: options.customizers?.sticker ?? defaultCustomizer,
       stickerPack: options.customizers?.stickerPack ?? defaultCustomizer,
@@ -979,6 +995,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
     sku: options.sku ?? transformSku,
+    soundboardSound: options.soundboardSound ?? transformSoundboardSound,
     snowflake: options.snowflake ?? snowflakeToBigint,
     stageInstance: options.stageInstance ?? transformStageInstance,
     sticker: options.sticker ?? transformSticker,
@@ -1497,6 +1514,17 @@ export function createDesiredPropertiesObject(
       text: defaultValue,
       emoji: defaultValue,
       ...desiredProperties.pollMedia,
+    },
+    soundboardSound: {
+      name: defaultValue,
+      soundId: defaultValue,
+      volume: defaultValue,
+      emojiId: defaultValue,
+      emojiName: defaultValue,
+      guildId: defaultValue,
+      available: defaultValue,
+      user: defaultValue,
+      ...desiredProperties.soundboardSound,
     },
   }
 }
