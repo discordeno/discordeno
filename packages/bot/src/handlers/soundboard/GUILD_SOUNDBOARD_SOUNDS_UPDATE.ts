@@ -6,5 +6,5 @@ export async function handleGuildSoundboardSoundsUpdate(bot: Bot, data: DiscordG
 
   const payload = data.d as DiscordSoundboardSound[]
 
-  bot.events.soundboardSoundsUpdate(payload.map((x) => bot.transformers.soundboardSound(bot, x)))
+  bot.events.soundboardSoundsUpdate(payload.map((sound) => bot.transformers.soundboardSound(bot, sound)))
 }

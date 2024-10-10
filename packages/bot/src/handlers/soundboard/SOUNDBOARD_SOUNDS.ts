@@ -8,6 +8,6 @@ export async function handleSoundboardSounds(bot: Bot, data: DiscordGatewayPaylo
 
   bot.events.soundboardSounds({
     guildId: bot.transformers.snowflake(payload.guild_id),
-    soundboardSounds: payload.soundboard_sounds.map((x) => bot.transformers.soundboardSound(bot, x)),
+    soundboardSounds: payload.soundboard_sounds.map((sound) => bot.transformers.soundboardSound(bot, sound)),
   })
 }
