@@ -13,6 +13,7 @@ import type {
   InteractionCallbackOptions,
   ListArchivedThreads,
   ListGuildMembers,
+  ListSkuSubscriptionsOptions,
 } from '@discordeno/types'
 
 export interface RestRoutes {
@@ -274,6 +275,10 @@ export interface RestRoutes {
     consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => string
     /** Route to list the SKUs */
     skus: (applicationId: BigString) => string
+    /** Route to list the SKU subscriptions */
+    subscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => string
+    /** Route to get a SKU subscription */
+    subscription: (skuId: BigString, subscriptionId: BigString) => string
   }
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string

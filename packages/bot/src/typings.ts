@@ -207,6 +207,9 @@ export interface BotGatewayHandlerOptions {
   ENTITLEMENT_CREATE: typeof handlers.handleEntitlementCreate
   ENTITLEMENT_UPDATE: typeof handlers.handleEntitlementUpdate
   ENTITLEMENT_DELETE: typeof handlers.handleEntitlementDelete
+  SUBSCRIPTION_CREATE: typeof handlers.handleSubscriptionCreate
+  SUBSCRIPTION_UPDATE: typeof handlers.handleSubscriptionUpdate
+  SUBSCRIPTION_DELETE: typeof handlers.handleSubscriptionDelete
   MESSAGE_POLL_VOTE_ADD: typeof handlers.handleMessagePollVoteAdd
   MESSAGE_POLL_VOTE_REMOVE: typeof handlers.handleMessagePollVoteRemove
 }
