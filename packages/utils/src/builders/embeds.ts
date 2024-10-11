@@ -11,10 +11,6 @@ import type {
 /**
  * A builder to help create Discord embeds.
  *
- * @export
- * @class EmbedsBuilder
- * @typedef {EmbedsBuilder}
- * @extends {Array<DiscordEmbed>}
  * @example
  * const embeds = new EmbedBuilder()
  *  .setTitle('My Embed')
