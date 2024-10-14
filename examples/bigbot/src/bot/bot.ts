@@ -2,11 +2,13 @@ import { type Bot, Collection, LogDepth, createBot, type logger } from '@discord
 import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
 import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'
+import discordenoConfig from './discordeno.config.js'
 
 export const bot = createCustomBot(
   createBot({
     token: DISCORD_TOKEN,
     intents: GATEWAY_INTENTS,
+    desiredProperties: discordenoConfig.desiredProperties.properties,
     rest: {
       token: DISCORD_TOKEN,
       proxy: {
@@ -18,19 +20,6 @@ export const bot = createCustomBot(
 )
 
 overrideGatewayImplementations(bot)
-
-// TEMPLATE-SETUP: Add/Remove the desired properties that you don't need
-const props = bot.transformers.desiredProperties
-
-props.interaction.id = true
-props.interaction.data = true
-props.interaction.type = true
-props.interaction.user = true
-props.interaction.token = true
-props.interaction.guildId = true
-
-props.user.id = true
-props.user.username = true
 
 // TEMPLATE-SETUP: If you want/need to add any custom properties on the Bot type, you can do it in this function and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
 function createCustomBot<TBot extends Bot = Bot>(rawBot: TBot): CustomBot<TBot> {

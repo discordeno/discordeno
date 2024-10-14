@@ -1,4 +1,5 @@
 import { type EventHandlers, type Interaction, InteractionTypes, MessageComponentTypes, commandOptionsParser } from '@discordeno/bot'
+import { bot } from '../bot.js'
 import type ItemCollector from '../collector.js'
 import commands from '../commands/index.js'
 
@@ -38,14 +39,14 @@ export const event: EventHandlers['interactionCreate'] = async (interaction) => 
 
     try {
       if (alreadyHasRole) {
-        await interaction.bot.helpers.removeRole(interaction.guildId, interaction.user.id, roleId, `Reaction role button for role id ${roleId}`)
+        await bot.helpers.removeRole(interaction.guildId, interaction.user.id, roleId, `Reaction role button for role id ${roleId}`)
         await interaction.respond(`I removed from you the <@&${roleId}> role.`, { isPrivate: true })
         return
       }
 
       // You will get an invalid request made if the bot attempts to give a bot role, a role higher then him hightest role, a link role or if it does not have the Manage Roles permission
       // This could be prevented by checking for the roles that the bot owns and the role that the bot is trying to add
-      await interaction.bot.helpers.addRole(interaction.guildId, interaction.user.id, roleId, `Reaction role button for role id ${roleId}`)
+      await bot.helpers.addRole(interaction.guildId, interaction.user.id, roleId, `Reaction role button for role id ${roleId}`)
       await interaction.respond(`I added to you the <@&${roleId}> role.`, { isPrivate: true })
     } catch {
       // Respond with an error message

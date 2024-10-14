@@ -6,6 +6,23 @@ export const bot = createProxyCache(
   createBot({
     token: configs.token,
     intents: Intents.Guilds,
+    desiredProperties: {
+      interaction: {
+        id: true,
+        type: true,
+        data: true,
+        user: true,
+        token: true,
+        guildId: true,
+      },
+      guild: {
+        id: true,
+        name: true,
+      },
+      user: {
+        username: true,
+      },
+    },
   }),
   {
     desiredProps: {
@@ -17,16 +34,3 @@ export const bot = createProxyCache(
     },
   },
 )
-
-// Setup desired properties
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.user = true
-bot.transformers.desiredProperties.interaction.token = true
-bot.transformers.desiredProperties.interaction.guildId = true
-
-bot.transformers.desiredProperties.guild.id = true
-bot.transformers.desiredProperties.guild.name = true
-
-bot.transformers.desiredProperties.user.username = true

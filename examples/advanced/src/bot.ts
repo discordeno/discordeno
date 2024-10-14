@@ -6,6 +6,38 @@ export const bot = createProxyCache(
   createBot({
     token: configs.token,
     intents: Intents.Guilds,
+    desiredProperties: {
+      interaction: {
+        id: true,
+        type: true,
+        data: true,
+        token: true,
+        guildId: true,
+        member: true,
+      },
+      guild: {
+        id: true,
+        name: true,
+        roles: true,
+      },
+      role: {
+        id: true,
+        guildId: true,
+        permissions: true,
+      },
+      member: {
+        id: true,
+        roles: true,
+      },
+      channel: {
+        id: true,
+      },
+      user: {
+        id: true,
+        username: true,
+        discriminator: true,
+      },
+    },
   }),
   {
     desiredProps: {
@@ -22,28 +54,3 @@ export const bot = createProxyCache(
 
 // By default, bot.logger will use an instance of the logger from @discordeno/bot, this logger supports depth and we need to change it, so we need to say to TS that we know what we are doing with as
 ;(bot.logger as typeof discordenoLogger).setDepth(LogDepth.Full)
-
-// Setup desired properties
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.token = true
-bot.transformers.desiredProperties.interaction.guildId = true
-bot.transformers.desiredProperties.interaction.member = true
-
-bot.transformers.desiredProperties.guild.id = true
-bot.transformers.desiredProperties.guild.name = true
-bot.transformers.desiredProperties.guild.roles = true
-
-bot.transformers.desiredProperties.role.id = true
-bot.transformers.desiredProperties.role.guildId = true
-bot.transformers.desiredProperties.role.permissions = true
-
-bot.transformers.desiredProperties.member.id = true
-bot.transformers.desiredProperties.member.roles = true
-
-bot.transformers.desiredProperties.channel.id = true
-
-bot.transformers.desiredProperties.user.id = true
-bot.transformers.desiredProperties.user.username = true
-bot.transformers.desiredProperties.user.discriminator = true

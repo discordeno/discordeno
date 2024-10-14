@@ -5,13 +5,15 @@ import type { Command } from './types/commands.js'
 const rawBot = createBot({
   token: configs.token,
   intents: Intents.Guilds,
+  desiredProperties: {
+    interaction: {
+      id: true,
+      type: true,
+      data: true,
+      token: true,
+    },
+  },
 })
-
-// Setup desired properties
-rawBot.transformers.desiredProperties.interaction.id = true
-rawBot.transformers.desiredProperties.interaction.type = true
-rawBot.transformers.desiredProperties.interaction.data = true
-rawBot.transformers.desiredProperties.interaction.token = true
 
 export const bot = rawBot as BotWithCommands
 

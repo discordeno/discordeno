@@ -9,9 +9,9 @@ import {
   TextStyles,
 } from '@discordeno/bot'
 import { ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types'
+import { bot } from '../bot.js'
 import ItemCollector from '../collector.js'
 import { collectors } from '../events/interactionCreate.js'
-import { bot } from '../index.js'
 import type { Command } from './index.js'
 
 const command: Command = {
