@@ -5,54 +5,56 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@discordeno/bot@npm:19.0.0-next.92bf166":
-  version: 19.0.0-next.92bf166
-  resolution: "@discordeno/bot@npm:19.0.0-next.92bf166"
+"@discordeno/bot@npm:19.0.0-next.76ad81d":
+  version: 19.0.0-next.76ad81d
+  resolution: "@discordeno/bot@npm:19.0.0-next.76ad81d"
   dependencies:
-    "@discordeno/gateway": "npm:19.0.0-next.92bf166"
-    "@discordeno/rest": "npm:19.0.0-next.92bf166"
-    "@discordeno/types": "npm:19.0.0-next.92bf166"
-    "@discordeno/utils": "npm:19.0.0-next.92bf166"
-  checksum: 3020e74c774eae34307d434ad38f983e90839dc5fad7578f3cda4fba6c1efb7a22c4f4cdcfff58c54b62cc14976ad974256955d5117e490f78ec9e835e02c682
+    "@discordeno/gateway": "npm:19.0.0-next.76ad81d"
+    "@discordeno/rest": "npm:19.0.0-next.76ad81d"
+    "@discordeno/types": "npm:19.0.0-next.76ad81d"
+    "@discordeno/utils": "npm:19.0.0-next.76ad81d"
+  checksum: a5b3d266d28e2d3bde744a4aca820adaf1622f55a75bc6c0bb53ccb461adaede743aa56a85829084df10fd7449c37779cb6bdf9bae56252f39f9f8ed39442439
   languageName: node
   linkType: hard
 
-"@discordeno/gateway@npm:19.0.0-next.92bf166":
-  version: 19.0.0-next.92bf166
-  resolution: "@discordeno/gateway@npm:19.0.0-next.92bf166"
+"@discordeno/gateway@npm:19.0.0-next.76ad81d":
+  version: 19.0.0-next.76ad81d
+  resolution: "@discordeno/gateway@npm:19.0.0-next.76ad81d"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.92bf166"
-    "@discordeno/utils": "npm:19.0.0-next.92bf166"
-    ws: "npm:^8.16.0"
-  checksum: 6a11ca7a4cb98f48726664d0baa27d04e26342bf94d6e439494e462636af20d17b567e9d3e2e478465aabcecb98a21e54b860b39b9f1022eef922e76d947ddcb
+    "@discordeno/types": "npm:19.0.0-next.76ad81d"
+    "@discordeno/utils": "npm:19.0.0-next.76ad81d"
+    fzstd: "npm:^0.1.1"
+    ws: "npm:^8.18.0"
+  dependenciesMeta:
+    fzstd:
+      optional: true
+  checksum: 527e7074ef903b3a35be2f9afc262b4dac5d0f1058e4a0a160b542b7a7dac4da9eb13a8b74e3d30bda720026bcdfbd8689e844f3446ed5b4cd253cbf56386817
   languageName: node
   linkType: hard
 
-"@discordeno/rest@npm:19.0.0-next.92bf166":
-  version: 19.0.0-next.92bf166
-  resolution: "@discordeno/rest@npm:19.0.0-next.92bf166"
+"@discordeno/rest@npm:19.0.0-next.76ad81d":
+  version: 19.0.0-next.76ad81d
+  resolution: "@discordeno/rest@npm:19.0.0-next.76ad81d"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.92bf166"
-    "@discordeno/utils": "npm:19.0.0-next.92bf166"
-    dotenv: "npm:^16.4.5"
-  checksum: 45f6ba4791003b77c883e991ad348597197d70e25e335b8628a03bd2effa8e2047a2f987f4c0b6ee8b17c01f77055d7a1ddc9f5350eb8f1c8ff8c8d39f91d787
+    "@discordeno/types": "npm:19.0.0-next.76ad81d"
+    "@discordeno/utils": "npm:19.0.0-next.76ad81d"
+  checksum: a2c5b36563631c002c50d5a6e01ad3e1c300d618fe3c81ab325d62b68b80e146b6ec2c7f6a0126c0c1f589eafc2bd7053cefac1b09819f9a408ba820f4fa56cc
   languageName: node
   linkType: hard
 
-"@discordeno/types@npm:19.0.0-next.92bf166":
-  version: 19.0.0-next.92bf166
-  resolution: "@discordeno/types@npm:19.0.0-next.92bf166"
-  checksum: f88e78a18e51c179b94ef14e8bcdd6b5e6c5f25bdd6c4308bec121e5e59533612b36ed0e7a447daedc009053e1e30c6c8e13b2276bb1ce7e2f840ff58473a2ef
+"@discordeno/types@npm:19.0.0-next.76ad81d":
+  version: 19.0.0-next.76ad81d
+  resolution: "@discordeno/types@npm:19.0.0-next.76ad81d"
+  checksum: e9c56b45fce06b0b923188a6b18e13160a12df7b5fbcb421c8baa4f5a7aac929959f1b221091e7c5267b4187fc0ab2bc4b3257cbc60a70893f54bad5e521136f
   languageName: node
   linkType: hard
 
-"@discordeno/utils@npm:19.0.0-next.92bf166":
-  version: 19.0.0-next.92bf166
-  resolution: "@discordeno/utils@npm:19.0.0-next.92bf166"
+"@discordeno/utils@npm:19.0.0-next.76ad81d":
+  version: 19.0.0-next.76ad81d
+  resolution: "@discordeno/utils@npm:19.0.0-next.76ad81d"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.92bf166"
-    tweetnacl: "npm:^1.0.3"
-  checksum: 7962a057ba5908936e4224df70b9ceaffcb8ec7ad220a999b36fc0601365b380bb0de01b6adfa4c36250247e3d15e22215fc63bbe3634b932434411c5f4ca13d
+    "@discordeno/types": "npm:19.0.0-next.76ad81d"
+  checksum: 13bc7ad5308130a8117704818fc75d1020ec0a37c41b5a1397a6ec7629f17080b5bb5893cdcb34b0ae36ece159fc9e3856b13637a33b0f7ba2dccd35d122996a
   languageName: node
   linkType: hard
 
@@ -612,7 +614,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dd-advanced-bot@workspace:."
   dependencies:
-    "@discordeno/bot": "npm:19.0.0-next.92bf166"
+    "@discordeno/bot": "npm:19.0.0-next.76ad81d"
     "@swc/cli": "npm:^0.3.12"
     "@swc/core": "npm:^1.6.3"
     "@types/node": "npm:^20.14.6"
@@ -887,6 +889,13 @@ __metadata:
   dependencies:
     minipass: "npm:^7.0.3"
   checksum: af143246cf6884fe26fa281621d45cfe111d34b30535a475bfa38dafe343dadb466c047a924ffc7d6b7b18265df4110224ce3803806dbb07173bf2087b648d7f
+  languageName: node
+  linkType: hard
+
+"fzstd@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "fzstd@npm:0.1.1"
+  checksum: 455b968aeb764f06d9c39a5c8b45eefd645f7ee9129896e890eafb8ab367482f8495de12907021a32f6544494305a42a2056c30c63efac06181e6efcdab3fe78
   languageName: node
   linkType: hard
 
@@ -1973,13 +1982,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tweetnacl@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "tweetnacl@npm:1.0.3"
-  checksum: ca122c2f86631f3c0f6d28efb44af2a301d4a557a62a3e2460286b08e97567b258c2212e4ad1cfa22bd6a57edcdc54ba76ebe946847450ab0999e6d48ccae332
-  languageName: node
-  linkType: hard
-
 "typescript@npm:^5.5.2":
   version: 5.5.2
   resolution: "typescript@npm:5.5.2"
@@ -2094,7 +2096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.16.0":
+"ws@npm:^8.18.0":
   version: 8.18.0
   resolution: "ws@npm:8.18.0"
   peerDependencies:
