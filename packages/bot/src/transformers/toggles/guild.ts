@@ -16,6 +16,7 @@ const featureNames = [
   'invitesDisabled',
   'inviteSplash',
   'memberVerificationGateEnabled',
+  'moreSoundboard',
   'moreStickers',
   'news',
   'partnered',
@@ -44,7 +45,7 @@ export const GuildToggle = {
   premiumProgressBarEnabled: 1n << 4n,
 
   // GUILD FEATURES ARE BELOW THIS
-  // MISSING VALUES IN THE BITFIELD: 24, 25, 26
+  // MISSING VALUES IN THE BITFIELD: 26, 35+
 
   /** Whether the guild has access to set an animated guild banner image */
   animatedBanner: 1n << 11n,
@@ -74,6 +75,8 @@ export const GuildToggle = {
   inviteSplash: 1n << 5n,
   /** Whether the guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
   memberVerificationGateEnabled: 1n << 19n,
+  /** Whether the guild has more soundboard sound slot */
+  moreSoundboard: 1n << 24n,
   /** Whether the guild has increased custom sticker slots */
   moreStickers: 1n << 23n,
   /** Whether the guild has access to create news channels */
@@ -90,6 +93,8 @@ export const GuildToggle = {
   roleSubscriptionsAvailableForPurchase: 1n << 33n,
   /** Whether the guild has enabled role subscriptions. */
   roleSubscriptionsEnabled: 1n << 34n,
+  /** Whether the guild has created soundboard sounds. */
+  soundboard: 1n << 25n,
   /** Whether the guild has enabled ticketed events */
   ticketedEventsEnabled: 1n << 21n,
   /** Whether the guild has access to set a vanity URL */
@@ -132,6 +137,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled)
       if (guild.features.includes(GuildFeatures.InviteSplash)) this.add(GuildToggle.inviteSplash)
       if (guild.features.includes(GuildFeatures.MemberVerificationGateEnabled)) this.add(GuildToggle.memberVerificationGateEnabled)
+      if (guild.features.includes(GuildFeatures.MoreSoundboard)) this.add(GuildToggle.moreSoundboard)
       if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers)
       if (guild.features.includes(GuildFeatures.News)) this.add(GuildToggle.news)
       if (guild.features.includes(GuildFeatures.Partnered)) this.add(GuildToggle.partnered)
@@ -140,6 +146,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons)
       if (guild.features.includes(GuildFeatures.RoleSubscriptionsAvailableForPurchase)) this.add(GuildToggle.roleSubscriptionsAvailableForPurchase)
       if (guild.features.includes(GuildFeatures.RoleSubscriptionsEnabled)) this.add(GuildToggle.roleSubscriptionsEnabled)
+      if (guild.features.includes(GuildFeatures.Soundboard)) this.add(GuildToggle.soundboard)
       if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) this.add(GuildToggle.ticketedEventsEnabled)
       if (guild.features.includes(GuildFeatures.VanityUrl)) this.add(GuildToggle.vanityUrl)
       if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified)
@@ -260,6 +267,11 @@ export class GuildToggles extends ToggleBitfieldBigint {
     return this.has('memberVerificationGateEnabled')
   }
 
+  /** Whether the guild has more soundboard sound slot */
+  get moreSoundboard(): boolean {
+    return this.has('moreSoundboard')
+  }
+
   /** Whether the guild can be previewed before joining via Membership Screening or the directory */
   get previewEnabled(): boolean {
     return this.has('previewEnabled')
@@ -318,6 +330,11 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild has enabled role subscriptions. */
   get roleSubscriptionsEnabled(): boolean {
     return this.has('roleSubscriptionsEnabled')
+  }
+
+  /** Whether the guild has created soundboard sounds. */
+  get soundboard(): boolean {
+    return this.has('soundboard')
   }
 
   /** Checks whether or not the permissions exist in this */
