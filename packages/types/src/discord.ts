@@ -3748,6 +3748,14 @@ export interface DiscordSoundboardSoundDelete {
   guild_id: string
 }
 
+/** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
+export interface DiscordSoundboardSoundsUpdate {
+  /** The guild's soundboard sounds */
+  soundboard_sounds: DiscordSoundboardSound[]
+  /** ID of the guild the sound was in */
+  guild_id: string
+}
+
 /** https://discord.com/developers/docs/topics/gateway-events#soundboard-sounds-soundboard-sounds-event-fields */
 export interface DiscordSoundboardSounds {
   /** The guild's soundboard sounds */

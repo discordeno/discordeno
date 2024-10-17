@@ -288,6 +288,6 @@ export interface EventHandlers {
   soundboardSoundCreate: (payload: SoundboardSound) => unknown
   soundboardSoundUpdate: (payload: SoundboardSound) => unknown
   soundboardSoundDelete: (payload: { soundId: bigint; guildId: bigint }) => unknown
-  soundboardSoundsUpdate: (payload: SoundboardSound[]) => unknown
+  soundboardSoundsUpdate: (payload: { soundboardSounds: SoundboardSound[]; guildId: bigint }) => unknown
   soundboardSounds: (payload: { soundboardSounds: SoundboardSound[]; guildId: bigint }) => unknown
 }
