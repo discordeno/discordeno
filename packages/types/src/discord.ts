@@ -1925,7 +1925,9 @@ export interface DiscordInteractionCallbackResponse {
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-object */
 export interface DiscordInteractionCallback {
+  /** ID of the interaction */
   id: string
+  /** Interaction type */
   type: InteractionTypes
   /** Instance ID of the Activity if one was launched or joined */
   activity_instance_id?: string
