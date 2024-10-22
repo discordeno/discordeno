@@ -86,6 +86,7 @@ import type {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   DiscordInteraction,
   DiscordInteractionCallbackResponse,
+  DiscordSubscription,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -119,6 +120,7 @@ import type {
   InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
+  ListSkuSubscriptionsOptions,
   MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
@@ -3028,6 +3030,18 @@ export interface RestManager {
    * @param applicationId - The id of the application to get the SKUs
    */
   listSkus: (applicationId: BigString) => Promise<CamelizedDiscordSku[]>
+  /**
+   * Returns all subscriptions containing the SKU, filtered by user.
+   *
+   * @param skuId - The id of the sku of get the subscriptions for
+   */
+  listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<Camelize<DiscordSubscription[]>>
+  /**
+   * Get a subscription by its ID.
+   *
+   * @param skuId - The id of the sku of get the subscriptions for
+   */
+  getSubscription: (skuId: BigString, subscriptionId: BigString) => Promise<Camelize<DiscordSubscription>>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'

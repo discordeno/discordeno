@@ -593,6 +593,23 @@ export function createRoutes(): RestRoutes {
       skus: (applicationId) => {
         return `/applications/${applicationId}/skus`
       },
+
+      subscription: (skuId, subscriptionId) => {
+        return `/skus/${skuId}/subscriptions/${subscriptionId}`
+      },
+
+      subscriptions: (skuId, options) => {
+        let url = `/skus/${skuId}/subscriptions?`
+
+        if (options) {
+          if (options.after) url += `after=${options.after}`
+          if (options.before) url += `&before=${options.before}`
+          if (options.userId) url += `&user_id=${options.userId}`
+          if (options.limit) url += `&limit=${options.limit}`
+        }
+
+        return url
+      },
     },
 
     applicationEmoji(applicationId, emojiId) {
