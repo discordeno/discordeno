@@ -13,7 +13,7 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-next.92bf166",
+    "@discordeno/bot": "19.0.0-next.76ad81d",
     "dd-cache-proxy": "^2.1.1",
     "dotenv": "^16.4.5"
   },
