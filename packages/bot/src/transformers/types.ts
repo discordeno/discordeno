@@ -1009,6 +1009,8 @@ export interface Member {
   nick?: string
   /** The members custom avatar for this server. */
   avatar?: bigint
+  /** The members custom banner for this server. */
+  banner?: bigint
   /** Array of role object ids */
   roles: bigint[]
   /** When the user joined the guild */

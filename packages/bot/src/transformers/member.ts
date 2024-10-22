@@ -46,6 +46,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   if (props.communicationDisabledUntil && payload.communication_disabled_until)
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
   if (props.avatar && payload.avatar) member.avatar = iconHashToBigInt(payload.avatar)
+  if (props.banner && payload.banner) member.banner = iconHashToBigInt(payload.banner)
   if (props.permissions && payload.permissions) member.permissions = new Permissions(payload.permissions)
   if (props.toggles) member.toggles = new MemberToggles(payload)
   if (props.avatarDecorationData && payload.avatar_decoration_data)
