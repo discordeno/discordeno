@@ -33,7 +33,7 @@
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "turbo": "^2.0.12",
-    "typedoc": "^0.26.5",
+    "typedoc": "^0.26.10",
     "typedoc-plugin-markdown": "^4.2.3",
     "typescript": "^5.5.4"
   },
