@@ -2368,7 +2368,7 @@ export interface RestManager {
    * @returns An instance of {@link CamelizedDiscordWebhook}.
    *
    * @remarks
-   * Requires the `MANAGE_WEBHOOKS` permission.
+   * Requires the `MANAGE_WEBHOOKS` permission unless the application making the request owns the webhook.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
    */
