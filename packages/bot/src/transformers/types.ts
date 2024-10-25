@@ -544,6 +544,16 @@ export interface Component {
   maxLength?: number
   /** a list of child components */
   components?: Component[]
+  defaultValues?: DiscordComponentDefaultValue[]
+  /** SKU for premium buttons that can navigate a user to the application shop. */
+  skuId?: bigint
+}
+
+export interface DiscordComponentDefaultValue {
+  /** ID of a user, role, or channel */
+  id: bigint
+  /** Type of value that id represents. */
+  type: 'user' | 'role' | 'channel'
 }
 
 export interface Embed {

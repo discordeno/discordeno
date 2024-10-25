@@ -1632,3 +1632,10 @@ export interface ModifyGuildSoundboardSound {
   /** The unicode character of a standard emoji for the soundboard sound */
   emojiName: string | null
 }
+
+export interface CreateWebhook {
+  /** Name of the webhook (1-80 characters) */
+  name: string
+  /** Image url for the default webhook avatar */
+  avatar?: string | null
+}

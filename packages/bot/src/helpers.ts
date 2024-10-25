@@ -1,4 +1,3 @@
-import type { CreateWebhook } from '@discordeno/rest'
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
@@ -47,6 +46,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordActivityInstance,
   DiscordEntitlement,

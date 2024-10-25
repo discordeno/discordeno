@@ -77,6 +77,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordActivityInstance,
   // Type required for typedoc
@@ -3131,13 +3132,6 @@ export interface RestManager {
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
 export type ApiVersions = 9 | 10
 
-export interface CreateWebhook {
-  /** Name of the webhook (1-80 characters) */
-  name: string
-  /** Image url for the default webhook avatar */
-  avatar?: string | null
-}
-
 export interface CreateRequestBodyOptions {
   headers?: Record<string, string>
   body?: any
@@ -3182,43 +3176,6 @@ export interface RestRateLimitedPath {
   url: string
   resetTimestamp: number
   bucketId?: string
-}
-
-export interface WebhookMessageEditor {
-  /**
-   * Edits a webhook message.
-   *
-   * @param webhookId - The ID of the webhook to edit the message of.
-   * @param token - The webhook token, used to edit the message.
-   * @param messageId - The ID of the message to edit.
-   * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
-   *
-   * @remarks
-   * Fires a _Message Update_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-   */
-  (
-    webhookId: BigString,
-    token: string,
-    messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString },
-  ): Promise<CamelizedDiscordMessage>
-  /**
-   * Edits the original webhook message.
-   *
-   * @param webhookId - The ID of the webhook to edit the original message of.
-   * @param token - The webhook token, used to edit the message.
-   * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
-   *
-   * @remarks
-   * Fires a _Message Update_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-   */
-  original: (webhookId: BigString, token: string, options: InteractionCallbackData & { threadId?: BigString }) => Promise<CamelizedDiscordMessage>
 }
 
 export interface RestRequestResponse {

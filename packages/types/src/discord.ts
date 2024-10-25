@@ -1822,7 +1822,7 @@ export interface DiscordSelectOption {
 /** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure */
 export interface DiscordSelectMenuDefaultValue {
   /** ID of a user, role, or channel */
-  id: bigint
+  id: string
   /** Type of value that id represents. */
   type: 'user' | 'role' | 'channel'
 }
@@ -2047,26 +2047,28 @@ export interface DiscordInteractionData {
   /** the type of the invoked command */
   type: ApplicationCommandTypes
   /** Converted users + roles + channels + attachments */
-  resolved?: {
-    /** The Ids and Message objects */
-    messages?: Record<string, DiscordMessage>
-    /** The Ids and User objects */
-    users?: Record<string, DiscordUser>
-    /** The Ids and partial Member objects */
-    members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
-    /** The Ids and Role objects */
-    roles?: Record<string, DiscordRole>
-    /** The Ids and partial Channel objects */
-    channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
-    /** The ids and attachment objects */
-    attachments: Record<string, DiscordAttachment>
-  }
+  resolved?: DiscordInteractionDataResolved
   /** The params + values from the user */
   options?: DiscordInteractionDataOption[]
   /** The target id if this is a context menu command. */
   target_id?: string
   /** the id of the guild the command is registered to */
   guild_id?: string
+}
+
+export interface DiscordInteractionDataResolved {
+  /** The Ids and Message objects */
+  messages?: Record<string, DiscordMessage>
+  /** The Ids and User objects */
+  users?: Record<string, DiscordUser>
+  /** The Ids and partial Member objects */
+  members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
+  /** The Ids and Role objects */
+  roles?: Record<string, DiscordRole>
+  /** The Ids and partial Channel objects */
+  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
+  /** The ids and attachment objects */
+  attachments: Record<string, DiscordAttachment>
 }
 
 export interface DiscordInteractionDataOption {
@@ -3929,4 +3931,28 @@ export interface DiscordEventWebhookApplicationAuthorizedBody {
   scopes: OAuth2Scope[]
   /** Server which app was authorized for (when integration type is 0) */
   guild?: DiscordGuild
+}
+
+export interface DiscordThreadMemberGuildCreate {
+  /** Any user-thread settings, currently only used for notifications */
+  flags: number
+  /** The time the current user last joined the thread */
+  join_timestamp: string
+}
+
+export interface DiscordInteractionResponse {
+  type: InteractionResponseTypes
+  data?: DiscordInteractionCallbackData
+}
+
+export interface DiscordInteractionCallbackData {
+  tts?: boolean
+  title?: string
+  flags?: number
+  content?: string
+  choices?: DiscordApplicationCommandOptionChoice[]
+  custom_id?: string
+  embeds?: DiscordEmbed[]
+  allowed_mentions?: DiscordAllowedMentions
+  components?: DiscordMessageComponent[]
 }

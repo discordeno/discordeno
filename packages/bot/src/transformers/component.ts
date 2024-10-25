@@ -1,13 +1,48 @@
+import {
+  type DiscordActionRow,
+  type DiscordButtonComponent,
+  type DiscordInputTextComponent,
+  type DiscordMessageComponent,
+  type DiscordSelectMenuComponent,
+  MessageComponentTypes,
+} from '@discordeno/types'
 import type { Bot, Component } from '../index.js'
-import type { DiscordComponent } from '../typings.js'
 
-export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
-  const component = {
-    type: payload.type,
-    customId: payload.custom_id,
-    disabled: payload.disabled,
-    style: payload.style,
+export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
+  let component: Component
+
+  // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
+  switch (payload.type) {
+    case MessageComponentTypes.ActionRow:
+      component = transformActionRow(bot, payload)
+    case MessageComponentTypes.Button:
+      component = transformButtonComponent(bot, payload as DiscordButtonComponent)
+    case MessageComponentTypes.InputText:
+      component = transformInputTextComponent(bot, payload as DiscordInputTextComponent)
+    case MessageComponentTypes.SelectMenu:
+    case MessageComponentTypes.SelectMenuChannels:
+    case MessageComponentTypes.SelectMenuRoles:
+    case MessageComponentTypes.SelectMenuUsers:
+    case MessageComponentTypes.SelectMenuUsersAndRoles:
+      component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
+  }
+
+  return bot.transformers.customizers.component(bot, payload, component)
+}
+
+function transformActionRow(bot: Bot, payload: DiscordActionRow): Component {
+  return {
+    type: MessageComponentTypes.ActionRow,
+    components: payload.components.map((component) => bot.transformers.component(bot, component)),
+  }
+}
+
+function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent): Component {
+  return {
+    type: MessageComponentTypes.Button,
     label: payload.label,
+    customId: payload.custom_id,
+    style: payload.style,
     emoji: payload.emoji
       ? {
           id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
@@ -16,6 +51,36 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
         }
       : undefined,
     url: payload.url,
+    disabled: payload.disabled,
+    skuId: payload.sku_id ? bot.transformers.snowflake(payload.sku_id) : undefined,
+  }
+}
+
+function transformInputTextComponent(_bot: Bot, payload: DiscordInputTextComponent): Component {
+  return {
+    type: MessageComponentTypes.InputText,
+    style: payload.style,
+    required: payload.required,
+    customId: payload.custom_id,
+    label: payload.label,
+    placeholder: payload.placeholder,
+    minLength: payload.min_length,
+    maxLength: payload.max_length,
+    value: payload.value,
+  }
+}
+
+function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent): Component {
+  return {
+    type: payload.type,
+    customId: payload.custom_id,
+    placeholder: payload.placeholder,
+    minValues: payload.min_values,
+    maxValues: payload.max_values,
+    defaultValues: payload.default_values?.map((defaultValue) => ({
+      id: bot.transformers.snowflake(defaultValue.id),
+      type: defaultValue.type,
+    })),
     channelTypes: payload.channel_types,
     options: payload.options?.map((option) => ({
       label: option.label,
@@ -30,14 +95,6 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
         : undefined,
       default: option.default,
     })),
-    placeholder: payload.placeholder,
-    minValues: payload.min_values,
-    maxValues: payload.max_values,
-    minLength: payload.min_length,
-    maxLength: payload.max_length,
-    value: payload.value,
-    components: payload.components?.map((component) => bot.transformers.component(bot, component)),
+    disabled: payload.disabled,
   }
-
-  return bot.transformers.customizers.component(bot, payload, component)
 }

@@ -1,10 +1,10 @@
 import {
-  type ChannelTypes,
   DiscordApplicationIntegrationType,
   type DiscordInteraction,
   type DiscordInteractionCallback,
   type DiscordInteractionCallbackResponse,
   type DiscordInteractionDataOption,
+  DiscordInteractionDataResolved,
   type DiscordInteractionResource,
   InteractionResponseTypes,
   InteractionTypes,
@@ -24,7 +24,6 @@ import {
   type Member,
   type Message,
 } from '../index.js'
-import type { DiscordInteractionDataResolved } from '../typings.js'
 
 const baseInteraction = {
   async respond(response, options) {
