@@ -3,8 +3,8 @@ import { delay, logger, snakeToCamelCase } from '@discordeno/utils'
 import { use as chaiUse } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import type { EventHandlers } from '../../src/bot.js'
 import { createBot } from '../../src/bot.js'
+import type { EventHandlers } from '../../src/events.js'
 import { token } from './constants.js'
 chaiUse(chaiAsPromised)
 
