@@ -15,6 +15,7 @@ import type {
   DefaultMessageNotificationLevels,
   DiscordActivityInstanceResource,
   DiscordActivityLocationKind,
+  DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
@@ -32,6 +33,7 @@ import type {
   DiscordSkuType,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
+  DiscordWebhookEventType,
   EmbedTypes,
   ExplicitContentFilterLevels,
   ForumLayout,
@@ -175,6 +177,9 @@ export interface Application {
   integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>
   roleConnectionsVerificationUrl: string
   tags: string[]
+  eventWebhooksUrl?: string
+  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
+  eventWebhooksTypes?: DiscordWebhookEventType[]
 }
 
 export interface ApplicationIntegrationTypeConfiguration {

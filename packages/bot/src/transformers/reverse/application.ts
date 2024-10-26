@@ -21,5 +21,8 @@ export function transformApplicationToDiscordApplication(bot: Bot, payload: Appl
     owner: payload.owner ? bot.transformers.reverse.user(bot, payload.owner) : undefined,
     team: payload.team ? bot.transformers.reverse.team(bot, payload.team) : null,
     guild_id: payload.guildId?.toString(),
+    event_webhooks_url: payload.eventWebhooksUrl,
+    event_webhooks_status: payload.eventWebhooksStatus,
+    event_webhooks_types: payload.eventWebhooksTypes,
   }
 }
