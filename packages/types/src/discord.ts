@@ -3939,20 +3939,3 @@ export interface DiscordThreadMemberGuildCreate {
   /** The time the current user last joined the thread */
   join_timestamp: string
 }
-
-export interface DiscordInteractionResponse {
-  type: InteractionResponseTypes
-  data?: DiscordInteractionCallbackData
-}
-
-export interface DiscordInteractionCallbackData {
-  tts?: boolean
-  title?: string
-  flags?: number
-  content?: string
-  choices?: DiscordApplicationCommandOptionChoice[]
-  custom_id?: string
-  embeds?: DiscordEmbed[]
-  allowed_mentions?: DiscordAllowedMentions
-  components?: DiscordMessageComponent[]
-}

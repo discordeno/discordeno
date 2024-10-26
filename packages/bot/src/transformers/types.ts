@@ -544,6 +544,7 @@ export interface Component {
   maxLength?: number
   /** a list of child components */
   components?: Component[]
+  /** List of default values for auto-populated select menu components */
   defaultValues?: DiscordComponentDefaultValue[]
   /** SKU for premium buttons that can navigate a user to the application shop. */
   skuId?: bigint
