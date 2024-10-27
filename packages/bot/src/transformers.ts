@@ -326,7 +326,7 @@ export interface Transformers {
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
-  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
+  channel: (bot: Bot, payload: { channel: DiscordChannel; guildId?: BigString }) => Channel
   component: (bot: Bot, payload: DiscordMessageComponent) => Component
   defaultReactionEmoji: (bot: Bot, payload: DiscordDefaultReactionEmoji) => DefaultReactionEmoji
   embed: (bot: Bot, payload: DiscordEmbed) => Embed
@@ -334,28 +334,34 @@ export interface Transformers {
   entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
   forumTag: (bot: Bot, payload: DiscordForumTag) => ForumTag
   gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
-  guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
+  guild: (bot: Bot, payload: { guild: DiscordGuild; shardId: number }) => Guild
   guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
   guildOnboardingPrompt: (bot: Bot, payload: DiscordGuildOnboardingPrompt) => GuildOnboardingPrompt
   guildOnboardingPromptOption: (bot: Bot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
   interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
   interactionCallback: (bot: Bot, payload: DiscordInteractionCallback) => InteractionCallback
-  interactionCallbackResponse: (bot: Bot, payload: DiscordInteractionCallbackResponse) => InteractionCallbackResponse
+  interactionCallbackResponse: (
+    bot: Bot,
+    payload: { interactionCallbackResponse: DiscordInteractionCallbackResponse; shardId: number },
+  ) => InteractionCallbackResponse
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
-  interactionDataResolved: (bot: Bot, payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint }) => InteractionDataResolved
-  interactionResource: (bot: Bot, payload: DiscordInteractionResource) => InteractionResource
+  interactionDataResolved: (
+    bot: Bot,
+    payload: { resolved: DiscordInteractionDataResolved; shardId: number; guildId?: bigint },
+  ) => InteractionDataResolved
+  interactionResource: (bot: Bot, payload: { interactionResource: DiscordInteractionResource; shardId: number }) => InteractionResource
   invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
   inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
-  message: (bot: Bot, payload: DiscordMessage) => Message
+  message: (bot: Bot, payload: { message: DiscordMessage; shardId: number }) => Message
   messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
   messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
-  messageSnapshot: (bot: Bot, payload: DiscordMessageSnapshot) => MessageSnapshot
+  messageSnapshot: (bot: Bot, payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number }) => MessageSnapshot
   poll: (bot: Bot, payload: DiscordPoll) => Poll
   pollMedia: (bot: Bot, payload: DiscordPollMedia) => PollMedia
   presence: (bot: Bot, payload: DiscordPresenceUpdate) => PresenceUpdate
-  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
+  role: (bot: Bot, payload: { role: DiscordRole; guildId: BigString }) => Role
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule) => ScheduledEventRecurrenceRule
   sku: (bot: Bot, payload: DiscordSku) => Sku
@@ -371,7 +377,7 @@ export interface Transformers {
   threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   user: (bot: Bot, payload: DiscordUser) => User
   voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
-  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) => VoiceState
+  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState; guildId: BigString }) => VoiceState
   webhook: (bot: Bot, payload: DiscordWebhook) => Webhook
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget

@@ -207,7 +207,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.editApplicationEmoji(id, options)))
     },
     editFollowupMessage: async (token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editFollowupMessage(token, messageId, options)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.editFollowupMessage(token, messageId, options)), shardId: 0 })
     },
     editGlobalApplicationCommand: async (commandId, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.editGlobalApplicationCommand(commandId, options)))
@@ -225,13 +225,19 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.template(bot, snakelize(await bot.rest.editGuildTemplate(guildId, templateCode, options)))
     },
     editMessage: async (channelId, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editMessage(channelId, messageId, options)) as DiscordMessage)
+      return bot.transformers.message(bot, {
+        message: snakelize(await bot.rest.editMessage(channelId, messageId, options)) as DiscordMessage,
+        shardId: 0,
+      })
     },
     editOriginalInteractionResponse: async (token, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalInteractionResponse(token, options)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.editOriginalInteractionResponse(token, options)), shardId: 0 })
     },
     editOriginalWebhookMessage: async (webhookId, token, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)) as DiscordMessage)
+      return bot.transformers.message(bot, {
+        message: snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)) as DiscordMessage,
+        shardId: 0,
+      })
     },
     editRole: async (guildId, roleId, options, reason) => {
       return bot.transformers.role(bot, { role: snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), guildId })
@@ -249,7 +255,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhook(webhookId, options, reason)))
     },
     editWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)) as DiscordMessage)
+      return bot.transformers.message(bot, {
+        message: snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)) as DiscordMessage,
+        shardId: 0,
+      })
     },
     editWebhookWithToken: async (webhookId, token, options) => {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhookWithToken(webhookId, token, options)))
@@ -264,7 +273,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       const result = await bot.rest.executeWebhook(webhookId, token, options)
       if (!result) return
 
-      return bot.transformers.message(bot, snakelize(result) as DiscordMessage)
+      return bot.transformers.message(bot, { message: snakelize(result) as DiscordMessage, shardId: 0 })
     },
     followAnnouncement: async (sourceChannelId, targetChannelId) => {
       return await bot.rest.followAnnouncement(sourceChannelId, targetChannelId)
@@ -356,7 +365,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       }
     },
     getFollowupMessage: async (token, messageId) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getFollowupMessage(token, messageId)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getFollowupMessage(token, messageId)), shardId: 0 })
     },
     getGatewayBot: async () => {
       return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getGatewayBot()))
@@ -411,10 +420,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, { invite: snakelize(res), shardId: 0 }))
     },
     getMessage: async (channelId, messageId) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getMessage(channelId, messageId)), shardId: 0 })
     },
     getMessages: async (channelId, options) => {
-      return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)))
+      return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, { message: snakelize(res), shardId: 0 }))
     },
     getStickerPack: async (stickerPackId) => {
       return bot.transformers.stickerPack(bot, snakelize(await bot.rest.getStickerPack(stickerPackId)))
@@ -423,26 +432,22 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return (await bot.rest.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
     },
     getOriginalInteractionResponse: async (token) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getOriginalInteractionResponse(token)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getOriginalInteractionResponse(token)), shardId: 0 })
     },
     getPinnedMessages: async (channelId) => {
-      return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, snakelize(res)))
+      return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, { message: snakelize(res), shardId: 0 }))
     },
     getPrivateArchivedThreads: async (channelId, options) => {
       return await bot.rest.getPrivateArchivedThreads(channelId, options)
-      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPrivateArchivedThreads(channelId, options)))
     },
     getPrivateJoinedArchivedThreads: async (channelId, options) => {
       return await bot.rest.getPrivateJoinedArchivedThreads(channelId, options)
-      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPrivateJoinedArchivedThreads(channelId, options)))
     },
     getPruneCount: async (guildId, options) => {
       return await bot.rest.getPruneCount(guildId, options)
-      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPruneCount(guildId, options)))
     },
     getPublicArchivedThreads: async (channelId, options) => {
       return await bot.rest.getPublicArchivedThreads(channelId, options)
-      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPublicArchivedThreads(channelId, options)))
     },
     getRoles: async (guildId) => {
       return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, { role, guildId }))
@@ -510,7 +515,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.getWebhook(webhookId)))
     },
     getWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getWebhookMessage(webhookId, token, messageId, options)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getWebhookMessage(webhookId, token, messageId, options)), shardId: 0 })
     },
     getWebhookWithToken: async (webhookId, token) => {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.getWebhookWithToken(webhookId, token)))
@@ -525,13 +530,13 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)))
     },
     publishMessage: async (channelId, messageId) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.publishMessage(channelId, messageId)), shardId: 0 })
     },
     sendMessage: async (channelId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.sendMessage(channelId, options)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.sendMessage(channelId, options)), shardId: 0 })
     },
     sendFollowupMessage: async (token, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.sendFollowupMessage(token, options)))
+      return bot.transformers.message(bot, { message: snakelize(await bot.rest.sendFollowupMessage(token, options)), shardId: 0 })
     },
     startThreadWithMessage: async (channelId, messageId, options, reason) => {
       return bot.transformers.channel(bot, {
@@ -729,7 +734,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
 
       if (!response) return
 
-      return bot.transformers.interactionCallbackResponse(bot, snakelize(response))
+      return bot.transformers.interactionCallbackResponse(bot, { interactionCallbackResponse: snakelize(response), shardId: 0 })
     },
     triggerTypingIndicator: async (channelId) => {
       return await bot.rest.triggerTypingIndicator(channelId)

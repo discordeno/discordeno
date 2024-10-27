@@ -34,6 +34,8 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.maxMembers && payload.guild.max_members) guild.maxMembers = payload.guild.max_members
   if (props.maxPresences && payload.guild.max_presences) guild.maxPresences = payload.guild.max_presences ?? undefined
   if (props.maxVideoChannelUsers && payload.guild.max_video_channel_users) guild.maxVideoChannelUsers = payload.guild.max_video_channel_users
+  if (props.maxStageVideoChannelUsers && payload.guild.max_stage_video_channel_users)
+    guild.maxStageVideoChannelUsers = payload.guild.max_stage_video_channel_users
   if (props.mfaLevel) guild.mfaLevel = payload.guild.mfa_level
   if (props.name && payload.guild.name) guild.name = payload.guild.name
   if (props.nsfwLevel) guild.nsfwLevel = payload.guild.nsfw_level

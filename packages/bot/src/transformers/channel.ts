@@ -86,13 +86,13 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (props.videoQualityMode && payload.channel.video_quality_mode) channel.videoQualityMode = payload.channel.video_quality_mode
   if (props.messageCount) channel.messageCount = payload.channel.message_count
   if (props.memberCount) channel.memberCount = payload.channel.member_count
-  if (props.archiveTimestamp || props.createTimestamp || props.autoArchiveDuration) {
+  if (props.threadMetadata) {
     channel.internalThreadMetadata = {} as NonNullable<Channel['internalThreadMetadata']>
-    if (props.archiveTimestamp && payload.channel.thread_metadata?.archive_timestamp)
+    if (payload.channel.thread_metadata?.archive_timestamp)
       channel.internalThreadMetadata.archiveTimestamp = Date.parse(payload.channel.thread_metadata.archive_timestamp)
-    if (props.createTimestamp && payload.channel.thread_metadata?.create_timestamp)
+    if (payload.channel.thread_metadata?.create_timestamp)
       channel.internalThreadMetadata.createTimestamp = Date.parse(payload.channel.thread_metadata.create_timestamp)
-    if (props.autoArchiveDuration && payload.channel.thread_metadata?.auto_archive_duration)
+    if (payload.channel.thread_metadata?.auto_archive_duration)
       channel.internalThreadMetadata.autoArchiveDuration = payload.channel.thread_metadata.auto_archive_duration
   }
   if (props.defaultAutoArchiveDuration && payload.channel.default_auto_archive_duration)

@@ -1,485 +1,197 @@
 import type { RecursivePartial } from '@discordeno/types'
+import type {
+  ActivityInstance,
+  ActivityLocation,
+  Attachment,
+  AvatarDecorationData,
+  Channel,
+  DefaultReactionEmoji,
+  Emoji,
+  Entitlement,
+  ForumTag,
+  Guild,
+  GuildOnboarding,
+  GuildOnboardingPrompt,
+  GuildOnboardingPromptOption,
+  Interaction,
+  InteractionCallback,
+  InteractionCallbackResponse,
+  InteractionResource,
+  Invite,
+  InviteStageInstance,
+  Member,
+  Message,
+  MessageCall,
+  MessageInteraction,
+  MessageInteractionMetadata,
+  MessageReference,
+  MessageSnapshot,
+  Poll,
+  PollAnswer,
+  PollAnswerCount,
+  PollMedia,
+  PollResult,
+  Role,
+  ScheduledEvent,
+  ScheduledEventRecurrenceRule,
+  Sku,
+  SoundboardSound,
+  StageInstance,
+  Sticker,
+  Subscription,
+  User,
+  VoiceState,
+  Webhook,
+} from './transformers/index.js'
 
-export interface TransformersDesiredProperties {
-  activityInstance: {
-    applicationId: boolean
-    instanceId: boolean
-    launchId: boolean
-    location: boolean
-    users: boolean
-  }
-  activityLocation: {
-    id: boolean
-    kind: boolean
-    channelId: boolean
-    guildId: boolean
-  }
-  attachment: {
-    id: boolean
-    filename: boolean
-    title: boolean
-    contentType: boolean
-    size: boolean
-    url: boolean
-    proxyUrl: boolean
-    height: boolean
-    width: boolean
-    ephemeral: boolean
-    description: boolean
-    duration_secs: boolean
-    waveform: boolean
-    flags: boolean
-  }
+/** All the objects that support desired proprieties */
+interface TransformersObjects {
+  activityInstance: ActivityInstance
+  activityLocation: ActivityLocation
+  attachment: Attachment
+  avatarDecorationData: AvatarDecorationData
+  channel: Channel
+  defaultReactionEmoji: DefaultReactionEmoji
+  emoji: Emoji
+  entitlement: Entitlement
+  forumTag: ForumTag
+  guild: Guild
+  guildOnboarding: GuildOnboarding
+  guildOnboardingPrompt: GuildOnboardingPrompt
+  guildOnboardingPromptOption: GuildOnboardingPromptOption
+  interaction: Interaction
+  interactionCallback: InteractionCallback
+  interactionCallbackResponse: InteractionCallbackResponse
+  interactionResource: InteractionResource
+  invite: Invite
+  inviteStageInstance: InviteStageInstance
+  member: Member
+  message: Message
+  messageCall: MessageCall
+  messageInteraction: MessageInteraction
+  messageInteractionMetadata: MessageInteractionMetadata
+  messageReference: MessageReference
+  messageSnapshot: MessageSnapshot
+  poll: Poll
+  pollAnswer: PollAnswer
+  pollAnswerCount: PollAnswerCount
+  pollMedia: PollMedia
+  pollResult: PollResult
+  role: Role
+  scheduledEvent: ScheduledEvent
+  scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule
+  sku: Sku
+  stageInstance: StageInstance
+  sticker: Sticker
+  user: User
+  voiceState: VoiceState
+  webhook: Webhook
+  subscription: Subscription
+  soundboardSound: SoundboardSound
+}
+
+// NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredProprietiesMetadata
+//       internal proprieties needs to be in the alwaysPresents array, depending on an always present value is accepted
+
+/** Metadata for typescript to create the correct types for desired proprieties */
+interface TransformersDesiredPropertiesMetadata extends DesiredProprietiesMetadata {
   channel: {
-    type: boolean
-    position: boolean
-    name: boolean
-    topic: boolean
-    nsfw: boolean
-    bitrate: boolean
-    userLimit: boolean
-    rateLimitPerUser: boolean
-    rtcRegion: boolean
-    videoQualityMode: boolean
-    guildId: boolean
-    lastPinTimestamp: boolean
-    permissionOverwrites: boolean
-    id: boolean
-    permissions: boolean
-    lastMessageId: boolean
-    ownerId: boolean
-    applicationId: boolean
-    managed: boolean
-    parentId: boolean
-    memberCount: boolean
-    messageCount: boolean
-    archiveTimestamp: boolean
-    defaultAutoArchiveDuration: boolean
-    autoArchiveDuration: boolean
-    botIsMember: boolean
-    archived: boolean
-    locked: boolean
-    invitable: boolean
-    createTimestamp: boolean
-    newlyCreated: boolean
-    flags: boolean
-    recipients: boolean
-    icon: boolean
-    member: boolean
-    totalMessageSent: boolean
-    availableTags: boolean
-    appliedTags: boolean
-    defaultReactionEmoji: boolean
-    defaultThreadRateLimitPerUser: boolean
-    defaultSortOrder: boolean
-    defaultForumLayout: boolean
+    dependencies: {
+      archived: ['toggles']
+      invitable: ['toggles']
+      locked: ['toggles']
+      nsfw: ['toggles']
+      newlyCreated: ['toggles']
+      managed: ['toggles']
+    }
+    alwaysPresents: ['toggles', 'internalOverwrites', 'internalThreadMetadata']
   }
-  forumTag: {
-    id: boolean
-    name: boolean
-    moderated: boolean
-    emojiId: boolean
-    emojiName: boolean
-  }
-  emoji: {
-    id: boolean
-    name: boolean
-    roles: boolean
-    user: boolean
-  }
-  defaultReactionEmoji: {
-    emojiId: boolean
-    emojiName: boolean
-  }
+
   guild: {
-    afkTimeout: boolean
-    approximateMemberCount: boolean
-    approximatePresenceCount: boolean
-    defaultMessageNotifications: boolean
-    description: boolean
-    explicitContentFilter: boolean
-    maxMembers: boolean
-    maxPresences: boolean
-    maxVideoChannelUsers: boolean
-    mfaLevel: boolean
-    name: boolean
-    nsfwLevel: boolean
-    preferredLocale: boolean
-    premiumSubscriptionCount: boolean
-    premiumTier: boolean
-    toggles: boolean
-    stageInstances: boolean
-    channels: boolean
-    members: boolean
-    roles: boolean
-    emojis: boolean
-    stickers: boolean
-    threads: boolean
-    voiceStates: boolean
-    large: boolean
-    owner: boolean
-    widgetEnabled: boolean
-    unavailable: boolean
-    iconHash: boolean
-    presences: boolean
-    systemChannelFlags: boolean
-    vanityUrlCode: boolean
-    verificationLevel: boolean
-    welcomeScreen: boolean
-    discoverySplash: boolean
-    joinedAt: boolean
-    memberCount: boolean
-    shardId: boolean
-    icon: boolean
-    banner: boolean
-    splash: boolean
-    id: boolean
-    ownerId: boolean
-    permissions: boolean
-    afkChannelId: boolean
-    widgetChannelId: boolean
-    applicationId: boolean
-    systemChannelId: boolean
-    rulesChannelId: boolean
-    publicUpdatesChannelId: boolean
-    premiumProgressBarEnabled: boolean
-    safetyAlertsChannelId: boolean
+    dependencies: {
+      threads: ['channels']
+      features: ['toggles']
+    }
+    alwaysPresents: []
   }
+
   interaction: {
-    id: boolean
-    applicationId: boolean
-    type: boolean
-    guild: boolean
-    guildId: boolean
-    channel: boolean
-    channelId: boolean
-    member: boolean
-    user: boolean
-    token: boolean
-    version: boolean
-    message: boolean
-    data: boolean
-    locale: boolean
-    guildLocale: boolean
-    appPermissions: boolean
-    authorizingIntegrationOwners: boolean
-    context: boolean
+    dependencies: {
+      respond: ['type', 'token', 'id']
+      edit: ['type', 'token', 'id']
+      deferEdit: ['type', 'token', 'id']
+      defer: ['type', 'token', 'id']
+      delete: ['type', 'token']
+    }
+    alwaysPresents: ['bot', 'acknowledged']
   }
-  interactionCallback: {
-    id: boolean
-    type: boolean
-    activityInstanceId: boolean
-    responseMessageId: boolean
-    responseMessageLoading: boolean
-    responseMessageEphemeral: boolean
-  }
-  interactionCallbackResponse: {
-    interaction: boolean
-    resource: boolean
-  }
-  interactionResource: {
-    type: boolean
-    activityInstance: boolean
-    message: boolean
-  }
-  invite: {
-    type: boolean
-    channelId: boolean
-    code: boolean
-    createdAt: boolean
-    guildId: boolean
-    inviter: boolean
-    maxAge: boolean
-    maxUses: boolean
-    targetType: boolean
-    targetUser: boolean
-    targetApplication: boolean
-    temporary: boolean
-    uses: boolean
-    approximateMemberCount: boolean
-    approximatePresenceCount: boolean
-    guildScheduledEvent: boolean
-    stageInstance: boolean
-    expiresAt: boolean
-  }
+
   member: {
-    id: boolean
-    guildId: boolean
-    user: boolean
-    nick: boolean
-    roles: boolean
-    joinedAt: boolean
-    premiumSince: boolean
-    avatar: boolean
-    banner: boolean
-    permissions: boolean
-    communicationDisabledUntil: boolean
-    flags: boolean
-    toggles: boolean
-    avatarDecorationData: boolean
+    dependencies: {
+      deaf: ['toggles']
+      mute: ['toggles']
+      pending: ['toggles']
+      flags: ['toggles']
+      didRejoin: ['toggles']
+      startedOnboarding: ['toggles']
+      bypassesVerification: ['toggles']
+      completedOnboarding: ['toggles']
+    }
+    alwaysPresents: []
   }
+
   message: {
-    activity: boolean
-    application: boolean
-    applicationId: boolean
-    attachments: boolean
-    author: boolean
-    channelId: boolean
-    components: boolean
-    content: boolean
-    editedTimestamp: boolean
-    embeds: boolean
-    guildId: boolean
-    id: boolean
-    interactionMetadata: boolean
-    interaction: boolean
-    member: boolean
-    mentionedChannelIds: boolean
-    mentionedRoleIds: boolean
-    mentions: boolean
-    messageReference: boolean
-    referencedMessage: boolean
-    messageSnapshots: boolean
-    nonce: boolean
-    reactions: boolean
-    stickerItems: boolean
-    thread: boolean
-    type: boolean
-    webhookId: boolean
-    poll: boolean
-    call: boolean
+    dependencies: {
+      crossposted: ['flags']
+      ephemeral: ['flags']
+      failedToMentionSomeRolesInThread: ['flags']
+      hasThread: ['flags']
+      isCrosspost: ['flags']
+      loading: ['flags']
+      mentionedUserIds: ['mentions']
+      mentionEveryone: ['bitfield']
+      pinned: ['bitfield']
+      sourceMessageDeleted: ['flags']
+      suppressEmbeds: ['flags']
+      suppressNotifications: ['flags']
+      timestamp: ['id']
+      tts: ['bitfield']
+      urgent: ['flags']
+    }
+    alwaysPresents: ['bitfield', 'flags']
   }
-  messageSnapshot: {
-    message: boolean
-  }
-  messageInteractionMetadata: {
-    id: boolean
-    type: boolean
-    user: boolean
-    authorizingIntegrationOwners: boolean
-    originalResponseMessageId: boolean
-    interactedMessageId: boolean
-    triggeringInteractionMetadata: boolean
-    targetUser: boolean
-    targetMessageId: boolean
-  }
-  messageInteraction: {
-    id: boolean
-    member: boolean
-    name: boolean
-    user: boolean
-    type: boolean
-  }
-  messageReference: {
-    messageId: boolean
-    channelId: boolean
-    guildId: boolean
-  }
-  messageCall: {
-    participants: boolean
-    endedTimestamp: boolean
-  }
+
   role: {
-    name: boolean
-    guildId: boolean
-    position: boolean
-    color: boolean
-    id: boolean
-    permissions: boolean
-    icon: boolean
-    unicodeEmoji: boolean
-    flags: boolean
-    tags: boolean
-    toggles: boolean
+    dependencies: {
+      hoist: ['toggles']
+      managed: ['toggles']
+      mentionable: ['toggles']
+      premiumSubscriber: ['toggles']
+      availableForPurchase: ['toggles']
+      guildConnections: ['toggles']
+    }
+    alwaysPresents: ['internalTags']
   }
-  scheduledEvent: {
-    id: boolean
-    guildId: boolean
-    channelId: boolean
-    creatorId: boolean
-    scheduledStartTime: boolean
-    scheduledEndTime: boolean
-    entityId: boolean
-    creator: boolean
-    name: boolean
-    description: boolean
-    privacyLevel: boolean
-    status: boolean
-    entityType: boolean
-    userCount: boolean
-    location: boolean
-    image: boolean
-    recurrenceRule: boolean
-  }
-  scheduledEventRecurrenceRule: {
-    start: boolean
-    end: boolean
-    frequency: boolean
-    interval: boolean
-    byWeekday: boolean
-    byNWeekday: boolean
-    byMonth: boolean
-    byMonthDay: boolean
-    byYearDay: boolean
-    count: boolean
-  }
-  stageInstance: {
-    id: boolean
-    guildId: boolean
-    channelId: boolean
-    topic: boolean
-    guildScheduledEventId: boolean
-  }
-  inviteStageInstance: {
-    members: boolean
-    participantCount: boolean
-    speakerCount: boolean
-    topic: boolean
-  }
-  sticker: {
-    id: boolean
-    packId: boolean
-    name: boolean
-    description: boolean
-    tags: boolean
-    type: boolean
-    formatType: boolean
-    available: boolean
-    guildId: boolean
-    user: boolean
-    sortValue: boolean
-  }
-  subscription: {
-    id: boolean
-    userId: boolean
-    skuIds: boolean
-    entitlementIds: boolean
-    currentPeriodStart: boolean
-    currentPeriodEnd: boolean
-    status: boolean
-    canceledAt: boolean
-    country: boolean
-  }
+
   user: {
-    username: boolean
-    globalName: boolean
-    locale: boolean
-    flags: boolean
-    premiumType: boolean
-    publicFlags: boolean
-    accentColor: boolean
-    id: boolean
-    discriminator: boolean
-    avatar: boolean
-    email: boolean
-    banner: boolean
-    avatarDecorationData: boolean
-    toggles: boolean
+    dependencies: {
+      tag: ['username', 'discriminator']
+      bot: ['toggles']
+      system: ['toggles']
+      mfaEnabled: ['toggles']
+      verified: ['toggles']
+    }
+    alwaysPresents: []
   }
-  avatarDecorationData: {
-    asset: boolean
-    skuId: boolean
-  }
-  webhook: {
-    id: boolean
-    type: boolean
-    guildId: boolean
-    channelId: boolean
-    user: boolean
-    name: boolean
-    avatar: boolean
-    token: boolean
-    applicationId: boolean
-    sourceGuild: boolean
-    sourceChannel: boolean
-    url: boolean
-  }
-  guildOnboarding: {
-    guildId: boolean
-    prompts: boolean
-    defaultChannelIds: boolean
-    enabled: boolean
-    mode: boolean
-  }
-  guildOnboardingPrompt: {
-    id: boolean
-    type: boolean
-    options: boolean
-    title: boolean
-    singleSelect: boolean
-    required: boolean
-    inOnboarding: boolean
-  }
-  guildOnboardingPromptOption: {
-    id: boolean
-    channelIds: boolean
-    roleIds: boolean
-    emoji: boolean
-    title: boolean
-    description: boolean
-  }
-  entitlement: {
-    id: boolean
-    skuId: boolean
-    userId: boolean
-    guildId: boolean
-    applicationId: boolean
-    type: boolean
-    deleted: boolean
-    startsAt: boolean
-    endsAt: boolean
-    consumed: boolean
-  }
-  sku: {
-    id: boolean
-    type: boolean
-    applicationId: boolean
-    name: boolean
-    slug: boolean
-    flags: boolean
-  }
-  voiceState: {
-    requestToSpeakTimestamp: boolean
-    channelId: boolean
-    guildId: boolean
-    toggles: boolean
-    sessionId: boolean
-    userId: boolean
-  }
-  poll: {
-    question: boolean
-    answers: boolean
-    expiry: boolean
-    allowMultiselect: boolean
-    layoutType: boolean
-    results: boolean
-  }
-  pollAnswer: {
-    answerId: boolean
-    pollMedia: boolean
-  }
-  pollResult: {
-    isFinalized: boolean
-    answerCounts: boolean
-  }
-  pollAnswerCount: {
-    id: boolean
-    count: boolean
-    meVoted: boolean
-  }
-  pollMedia: {
-    text: boolean
-    emoji: boolean
-  }
-  soundboardSound: {
-    name: boolean
-    soundId: boolean
-    volume: boolean
-    emojiId: boolean
-    emojiName: boolean
-    guildId: boolean
-    available: boolean
-    user: boolean
+
+  emoji: {
+    dependencies: {
+      animated: ['toggles']
+      available: ['toggles']
+      managed: ['toggles']
+      requireColons: ['toggles']
+    }
+    alwaysPresents: ['toggles']
   }
 }
 
@@ -525,7 +237,6 @@ export function createDesiredPropertiesObject(
       position: defaultValue,
       name: defaultValue,
       topic: defaultValue,
-      nsfw: defaultValue,
       bitrate: defaultValue,
       userLimit: defaultValue,
       rateLimitPerUser: defaultValue,
@@ -539,19 +250,10 @@ export function createDesiredPropertiesObject(
       lastMessageId: defaultValue,
       ownerId: defaultValue,
       applicationId: defaultValue,
-      managed: defaultValue,
       parentId: defaultValue,
       memberCount: defaultValue,
       messageCount: defaultValue,
-      archiveTimestamp: defaultValue,
       defaultAutoArchiveDuration: defaultValue,
-      autoArchiveDuration: defaultValue,
-      botIsMember: defaultValue,
-      archived: defaultValue,
-      locked: defaultValue,
-      invitable: defaultValue,
-      createTimestamp: defaultValue,
-      newlyCreated: defaultValue,
       flags: defaultValue,
       appliedTags: defaultValue,
       availableTags: defaultValue,
@@ -563,6 +265,7 @@ export function createDesiredPropertiesObject(
       member: defaultValue,
       recipients: defaultValue,
       totalMessageSent: defaultValue,
+      threadMetadata: defaultValue,
       ...desiredProperties.channel,
     },
     forumTag: {
@@ -606,7 +309,6 @@ export function createDesiredPropertiesObject(
       presences: defaultValue,
       roles: defaultValue,
       stickers: defaultValue,
-      threads: defaultValue,
       toggles: defaultValue,
       unavailable: defaultValue,
       voiceStates: defaultValue,
@@ -638,6 +340,7 @@ export function createDesiredPropertiesObject(
       publicUpdatesChannelId: defaultValue,
       premiumProgressBarEnabled: defaultValue,
       safetyAlertsChannelId: defaultValue,
+      maxStageVideoChannelUsers: defaultValue,
       ...desiredProperties.guild,
     },
     interaction: {
@@ -714,7 +417,6 @@ export function createDesiredPropertiesObject(
       banner: defaultValue,
       permissions: defaultValue,
       communicationDisabledUntil: defaultValue,
-      flags: defaultValue,
       toggles: defaultValue,
       avatarDecorationData: defaultValue,
       ...desiredProperties.member,
@@ -763,8 +465,8 @@ export function createDesiredPropertiesObject(
       originalResponseMessageId: defaultValue,
       interactedMessageId: defaultValue,
       triggeringInteractionMetadata: defaultValue,
-      targetUser: defaultValue,
       targetMessageId: defaultValue,
+      targetUser: defaultValue,
       ...desiredProperties.messageInteractionMetadata,
     },
     messageInteraction: {
@@ -861,18 +563,6 @@ export function createDesiredPropertiesObject(
       user: defaultValue,
       sortValue: defaultValue,
       ...desiredProperties.sticker,
-    },
-    subscription: {
-      id: defaultValue,
-      userId: defaultValue,
-      skuIds: defaultValue,
-      entitlementIds: defaultValue,
-      currentPeriodStart: defaultValue,
-      currentPeriodEnd: defaultValue,
-      status: defaultValue,
-      canceledAt: defaultValue,
-      country: defaultValue,
-      ...desiredProperties.subscription,
     },
     user: {
       username: defaultValue,
@@ -999,16 +689,132 @@ export function createDesiredPropertiesObject(
       emoji: defaultValue,
       ...desiredProperties.pollMedia,
     },
+    subscription: {
+      canceledAt: defaultValue,
+      country: defaultValue,
+      currentPeriodEnd: defaultValue,
+      currentPeriodStart: defaultValue,
+      entitlementIds: defaultValue,
+      id: defaultValue,
+      skuIds: defaultValue,
+      status: defaultValue,
+      userId: defaultValue,
+      ...desiredProperties.subscription,
+    },
     soundboardSound: {
-      name: defaultValue,
-      soundId: defaultValue,
-      volume: defaultValue,
+      available: defaultValue,
       emojiId: defaultValue,
       emojiName: defaultValue,
       guildId: defaultValue,
-      available: defaultValue,
+      name: defaultValue,
+      soundId: defaultValue,
       user: defaultValue,
+      volume: defaultValue,
       ...desiredProperties.soundboardSound,
     },
   }
+}
+
+type KeyByValue<TObj, TValue> = {
+  [Key in keyof TObj]: TObj[Key] extends TValue ? Key : never
+}[keyof TObj]
+
+type Complete<TObj, TDefault> = {
+  [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
+}
+
+type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]
+  ? R['length'] extends 0
+    ? F
+    : `${F}${TDelimiter}${JoinTuple<R, TDelimiter>}`
+  : ''
+
+type DesiredProprietiesMetadata = {
+  [K in keyof TransformersObjects]: {
+    dependencies?: {
+      [Key in keyof TransformersObjects[K]]?: (keyof TransformersObjects[K])[]
+    }
+    alwaysPresents?: (keyof TransformersObjects[K])[]
+  }
+}
+
+type DesirableProprieties<
+  T extends TransformersObjects[keyof TransformersObjects],
+  TKey extends keyof TransformersObjects = KeyByValue<TransformersObjects, T>,
+> = Exclude<
+  keyof T,
+  // Exclude the props that depend on something else from the desirable proprieties
+  | keyof TransformersDesiredPropertiesMetadata[TKey]['dependencies']
+  // Check if all the keys are "always presents", if this is the case it means we did not specify any always present key
+  | (keyof T extends NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number]
+      ? never
+      : NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number])
+>
+
+type DesiredProprietiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
+  [Key in DesirableProprieties<T>]: boolean
+}
+
+type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
+  [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : K
+}
+
+type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TKey extends keyof TProps // The key has a desired props?
+  ? // Yes, is it true?
+    TProps[TKey] extends true
+    ? // Yes, this is a key to include
+      true
+    : // No, this is a key to exclude
+      `This key is not desired by your desired proprieties configuration`
+  : // No, it is a props with dependencies?
+    TKey extends keyof TDependencies
+    ? // Yes, has all of its dependencies satisfied?
+      AreDependenciesSatisfied<TDependencies[TKey], TDependencies, TProps> extends true[]
+      ? // Yes, this is a key to include
+        true
+      : // No, this is a key to not include
+        `This key depends on ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all these values are enabled`
+    : // No, we include it but it does not have neither props nor dependencies
+      true
+
+/** The behavior it should be used when resolving an undesired propriety */
+export enum DesiredProprietiesBehavior {
+  /** When this behavior is used the key will be missing completely */
+  RemoveKey,
+  /** When this behavior is used the key will be a string explaining why the propriety is disabled */
+  ChangeType,
+}
+
+type RemoveKeyWhenUndesired<Key, T, TProps> = IsKeyDesired<
+  Key,
+  TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
+  TProps
+> extends true
+  ? Key
+  : never
+
+type GetErrorWhenUndesired<
+  Key extends keyof T,
+  T,
+  TProps,
+  TIsDesired = IsKeyDesired<Key, TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'], TProps>,
+> = TIsDesired extends true ? T[Key] : TIsDesired
+
+export type SetupDesiredProps<
+  T extends TransformersObjects[keyof TransformersObjects],
+  TProps extends DesiredProprietiesMapper<T>,
+  TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
+> = {
+  [Key in keyof T as TBehavior extends DesiredProprietiesBehavior.RemoveKey
+    ? RemoveKeyWhenUndesired<Key, T, TProps>
+    : Key]: TBehavior extends DesiredProprietiesBehavior.ChangeType ? GetErrorWhenUndesired<Key, T, TProps> : T[Key]
+}
+
+export type TransformersDesiredProperties = {
+  [Key in keyof TransformersObjects]: DesiredProprietiesMapper<TransformersObjects[Key]>
+}
+
+/** @internal This is subject to breaking changes without notices */
+export type CompleteDesiredProprieties<T extends RecursivePartial<TransformersDesiredProperties>> = {
+  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], false>
 }
