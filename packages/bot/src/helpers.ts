@@ -5,26 +5,6 @@ import type {
   BeginGuildPrune,
   BigString,
   Camelize,
-  CamelizedDiscordAccessTokenResponse,
-  CamelizedDiscordApplicationCommandPermissions,
-  CamelizedDiscordApplicationRoleConnection,
-  CamelizedDiscordArchivedThreads,
-  CamelizedDiscordAuditLog,
-  CamelizedDiscordBan,
-  CamelizedDiscordConnection,
-  CamelizedDiscordCurrentAuthorization,
-  CamelizedDiscordFollowedChannel,
-  CamelizedDiscordGetGatewayBot,
-  CamelizedDiscordGuildPreview,
-  CamelizedDiscordGuildWidgetSettings,
-  CamelizedDiscordInvite,
-  CamelizedDiscordInviteMetadata,
-  CamelizedDiscordModifyGuildWelcomeScreen,
-  CamelizedDiscordPrunedCount,
-  CamelizedDiscordTokenExchange,
-  CamelizedDiscordTokenRevocation,
-  CamelizedDiscordVanityUrl,
-  CamelizedDiscordVoiceRegion,
   CreateApplicationCommand,
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
@@ -48,10 +28,30 @@ import type {
   CreateTemplate,
   CreateWebhook,
   DeleteWebhookMessageOptions,
+  DiscordAccessTokenResponse,
   DiscordActivityInstance,
+  DiscordApplicationCommandPermissions,
+  DiscordApplicationRoleConnection,
+  DiscordArchivedThreads,
+  DiscordAuditLog,
+  DiscordBan,
+  DiscordConnection,
+  DiscordCurrentAuthorization,
   DiscordEntitlement,
+  DiscordFollowedChannel,
+  DiscordGetGatewayBot,
+  DiscordGuildPreview,
+  DiscordGuildWidgetSettings,
+  DiscordInvite,
+  DiscordInviteMetadata,
   DiscordMessage,
+  DiscordModifyGuildWelcomeScreen,
+  DiscordPrunedCount,
   DiscordSubscription,
+  DiscordTokenExchange,
+  DiscordTokenRevocation,
+  DiscordVanityUrl,
+  DiscordVoiceRegion,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -818,7 +818,7 @@ export interface BotHelpers {
   createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<Guild>
   createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions, reason?: string) => Promise<Sticker>
   createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>
-  createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<CamelizedDiscordInvite>
+  createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<Camelize<DiscordInvite>>
   createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<Role>
   createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent, reason?: string) => Promise<ScheduledEvent>
   createStageInstance: (options: CreateStageInstance, reason?: string) => Promise<StageInstance>
@@ -827,7 +827,7 @@ export interface BotHelpers {
     guildId: BigString,
     commandId: BigString,
     bearerToken: string,
-    options: CamelizedDiscordApplicationCommandPermissions[],
+    options: Camelize<DiscordApplicationCommandPermissions>[],
   ) => Promise<GuildApplicationCommandPermissions>
   editAutomodRule: (
     guildId: BigString,
@@ -860,21 +860,21 @@ export interface BotHelpers {
     options: InteractionCallbackData & { threadId?: BigString },
   ) => Promise<Message>
   editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Webhook>
-  editWelcomeScreen: (guildId: BigString, options: CamelizedDiscordModifyGuildWelcomeScreen, reason?: string) => Promise<WelcomeScreen>
-  editWidgetSettings: (guildId: BigString, options: CamelizedDiscordGuildWidgetSettings, reason?: string) => Promise<GuildWidgetSettings>
+  editWelcomeScreen: (guildId: BigString, options: Camelize<DiscordModifyGuildWelcomeScreen>, reason?: string) => Promise<WelcomeScreen>
+  editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>, reason?: string) => Promise<GuildWidgetSettings>
   editUserApplicationRoleConnection: (
     bearerToken: string,
     applicationId: BigString,
-    options: CamelizedDiscordApplicationRoleConnection,
-  ) => Promise<CamelizedDiscordApplicationRoleConnection>
+    options: Camelize<DiscordApplicationRoleConnection>,
+  ) => Promise<Camelize<DiscordApplicationRoleConnection>>
   executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Message | undefined>
-  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
+  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
   getActiveThreads: (guildId: BigString) => Promise<{ threads: Channel[]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
   editApplicationInfo: (body: EditApplication) => Promise<Application>
-  getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
-  exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
-  revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>
+  getCurrentAuthenticationInfo: (bearerToken: string) => Promise<Camelize<DiscordCurrentAuthorization>>
+  exchangeToken: (clientId: BigString, clientSecret: string, options: Camelize<DiscordTokenExchange>) => Promise<Camelize<DiscordAccessTokenResponse>>
+  revokeToken: (clientId: BigString, clientSecret: string, options: Camelize<DiscordTokenRevocation>) => Promise<void>
   getApplicationCommandPermission: (
     guildId: BigString,
     commandId: BigString,
@@ -884,14 +884,14 @@ export interface BotHelpers {
     guildId: BigString,
     options?: GetApplicationCommandPermissionOptions,
   ) => Promise<GuildApplicationCommandPermissions[]>
-  getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<CamelizedDiscordAuditLog>
+  getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<Camelize<DiscordAuditLog>>
   getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<AutoModerationRule>
   getAutomodRules: (guildId: BigString) => Promise<AutoModerationRule[]>
-  getAvailableVoiceRegions: () => Promise<CamelizedDiscordVoiceRegion[]>
-  getBan: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordBan>
-  getBans: (guildId: BigString, options?: GetBans) => Promise<CamelizedDiscordBan[]>
+  getAvailableVoiceRegions: () => Promise<Camelize<DiscordVoiceRegion>[]>
+  getBan: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordBan>>
+  getBans: (guildId: BigString, options?: GetBans) => Promise<Camelize<DiscordBan>[]>
   getChannel: (channelId: BigString) => Promise<Channel>
-  getChannelInvites: (channelId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
+  getChannelInvites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata>[]>
   getChannels: (guildId: BigString) => Promise<Channel[]>
   getChannelWebhooks: (channelId: BigString) => Promise<Webhook[]>
   getDmChannel: (userId: BigString) => Promise<Channel>
@@ -901,14 +901,14 @@ export interface BotHelpers {
   getEmojis: (guildId: BigString) => Promise<Emoji[]>
   getApplicationEmojis: () => Promise<{ items: Emoji[] }>
   getFollowupMessage: (token: string, messageId: BigString) => Promise<Message>
-  getGatewayBot: () => Promise<CamelizedDiscordGetGatewayBot>
+  getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>
   getGlobalApplicationCommands: () => Promise<ApplicationCommand[]>
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<Guild>
   getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<Guild>[]>
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>
   getGuildApplicationCommands: (guildId: BigString) => Promise<ApplicationCommand[]>
-  getGuildPreview: (guildId: BigString) => Promise<CamelizedDiscordGuildPreview>
+  getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>
   getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<Sticker>
   getGuildStickers: (guildId: BigString) => Promise<Sticker[]>
   getGuildTemplate: (templateCode: string) => Promise<Template>
@@ -923,10 +923,10 @@ export interface BotHelpers {
   getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<Message>
   getPinnedMessages: (channelId: BigString) => Promise<Message[]>
-  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
-  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
-  getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<CamelizedDiscordPrunedCount>
-  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<Camelize<DiscordPrunedCount>>
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   getRoles: (guildId: BigString) => Promise<Role[]>
   getRole: (guildId: BigString, roleId: BigString) => Promise<Role>
   getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<ScheduledEvent>
@@ -936,7 +936,7 @@ export interface BotHelpers {
     eventId: BigString,
     options?: GetScheduledEventUsers,
   ) => Promise<Array<{ user: User; member?: Member }>>
-  getSessionInfo: () => Promise<CamelizedDiscordGetGatewayBot>
+  getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
   getStageInstance: (channelId: BigString) => Promise<StageInstance>
   getOwnVoiceState: (guildId: BigString) => Promise<VoiceState>
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<VoiceState>
@@ -946,10 +946,10 @@ export interface BotHelpers {
   getReactions: (channelId: BigString, messageId: BigString, reaction: string, options?: GetReactions) => Promise<User[]>
   getUser: (id: BigString) => Promise<User>
   getCurrentUser: (bearerToken: string) => Promise<User>
-  getUserConnections: (bearerToken: string) => Promise<CamelizedDiscordConnection[]>
-  getUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<CamelizedDiscordApplicationRoleConnection>
-  getVanityUrl: (guildId: BigString) => Promise<CamelizedDiscordVanityUrl>
-  getVoiceRegions: (guildId: BigString) => Promise<CamelizedDiscordVoiceRegion[]>
+  getUserConnections: (bearerToken: string) => Promise<Camelize<DiscordConnection>[]>
+  getUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<Camelize<DiscordApplicationRoleConnection>>
+  getVanityUrl: (guildId: BigString) => Promise<Camelize<DiscordVanityUrl>>
+  getVoiceRegions: (guildId: BigString) => Promise<Camelize<DiscordVoiceRegion>[]>
   getWebhook: (webhookId: BigString) => Promise<Webhook>
   getWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: GetWebhookMessageOptions) => Promise<Message>
   getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Webhook>
