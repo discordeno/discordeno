@@ -1005,11 +1005,11 @@ export interface Member {
   guildId: bigint
   /** The user this guild member represents */
   user?: User
-  /** This users guild nickname */
+  /** This user's guild nickname */
   nick?: string
-  /** The members custom avatar for this server. */
+  /** The member's custom avatar for this server. */
   avatar?: bigint
-  /** The members custom banner for this server. */
+  /** The member's custom banner for this server. */
   banner?: bigint
   /** Array of role object ids */
   roles: bigint[]

@@ -318,9 +318,9 @@ export interface DiscordMember {
   pending?: boolean
   /** The user this guild member represents */
   user?: DiscordUser
-  /** This users guild nickname */
+  /** This user's guild nickname */
   nick?: string | null
-  /** The members custom avatar for this server. */
+  /** The member's custom avatar for this server. */
   avatar?: string
   /** The member's guild banner */
   banner?: string
