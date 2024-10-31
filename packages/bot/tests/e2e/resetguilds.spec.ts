@@ -12,6 +12,12 @@ describe('[Bot] Delete any guild owned guilds', () => {
   it('Start the bot', async () => {
     const bot = createBot({
       token,
+      desiredProperties: {
+        guild: {
+          joinedAt: true,
+          ownerId: true,
+        },
+      },
       gateway: {
         token,
         events: {
@@ -25,7 +31,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
             await bot.events.dispatchRequirements?.(data, shard.id)
 
             const eventName = snakeToCamelCase(data.t)
-            bot.events[eventName as keyof EventHandlers]?.(data.d as never, shard as never)
+            bot.events[eventName as keyof typeof bot.events]?.(data.d as never, shard as never)
           },
         },
         intents: Intents.Guilds,
