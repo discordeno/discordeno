@@ -1,12 +1,5 @@
 import { type DiscordButtonComponent, type DiscordMessageComponent, MessageComponentTypes, type TextStyles } from '@discordeno/types'
-import {
-  type Bot,
-  type ButtonStyles,
-  type Component,
-  type DiscordActionRow,
-  type DiscordInputTextComponent,
-  type DiscordSelectMenuComponent,
-} from '../../index.js'
+import type { Bot, ButtonStyles, Component, DiscordActionRow, DiscordInputTextComponent, DiscordSelectMenuComponent } from '../../index.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordMessageComponent {
   // This switch should include all cases

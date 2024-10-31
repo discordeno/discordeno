@@ -5,9 +5,6 @@ import type {
   BeginGuildPrune,
   BigString,
   Camelize,
-  // Type required for typedoc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ChannelTypes,
   CreateApplicationCommand,
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
@@ -37,9 +34,6 @@ import type {
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
-  // Type required for typedoc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  DiscordApplicationIntegrationType,
   DiscordApplicationRoleConnection,
   DiscordArchivedThreads,
   DiscordAuditLog,
@@ -61,9 +55,6 @@ import type {
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegration,
-  // Type required for typedoc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  DiscordInteraction,
   DiscordInteractionCallbackResponse,
   DiscordInvite,
   DiscordInviteMetadata,
@@ -117,7 +108,6 @@ import type {
   GetScheduledEvents,
   GetUserGuilds,
   GetWebhookMessageOptions,
-  GuildFeatures,
   InteractionCallbackData,
   InteractionCallbackOptions,
   InteractionResponse,
@@ -135,8 +125,6 @@ import type {
   ModifyGuildTemplate,
   ModifyRolePositions,
   ModifyWebhook,
-  ScheduledEventEntityType,
-  ScheduledEventStatus,
   SearchMembers,
   SendSoundboardSound,
   StartThreadWithMessage,

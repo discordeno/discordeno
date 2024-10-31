@@ -1,8 +1,7 @@
 import * as handlers from './handlers/index.js'
-import type { GatewayDispatchEventNames } from './index.js'
-import type { BotGatewayHandler } from './typings.js'
+import type { Bot, DiscordGatewayPayload, GatewayDispatchEventNames } from './index.js'
 
-export function createBotGatewayHandlers(options: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler>>): GatewayHandlers {
+export function createBotGatewayHandlers(options: Partial<GatewayHandlers>): GatewayHandlers {
   return {
     APPLICATION_COMMAND_PERMISSIONS_UPDATE: options.APPLICATION_COMMAND_PERMISSIONS_UPDATE ?? handlers.handleApplicationCommandPermissionsUpdate,
     AUTO_MODERATION_ACTION_EXECUTION: options.AUTO_MODERATION_ACTION_EXECUTION ?? handlers.handleAutoModerationActionExecution,
@@ -81,4 +80,5 @@ export function createBotGatewayHandlers(options: Partial<Record<GatewayDispatch
   }
 }
 
-export interface GatewayHandlers extends Record<GatewayDispatchEventNames, BotGatewayHandler> {}
+export type GatewayHandlers = Record<GatewayDispatchEventNames, BotGatewayHandler>
+export type BotGatewayHandler = (bot: Bot, data: DiscordGatewayPayload, shardId: number) => unknown

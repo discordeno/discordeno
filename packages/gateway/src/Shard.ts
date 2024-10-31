@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer'
-import { Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
+import { type Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
@@ -364,9 +364,7 @@ export class DiscordenoShard {
     this.inflateBuffer = null
     this.decompressionPromisesQueue = []
 
-    this.logger.debug(
-      `[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`,
-    )
+    this.logger.debug(`[Shard] Gateway connection closed with code ${close.code} (${close.reason || '<No reason provided>'}).`)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {

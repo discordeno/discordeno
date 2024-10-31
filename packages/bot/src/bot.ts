@@ -6,10 +6,9 @@ import type { BigString, GatewayDispatchEventNames, GatewayIntents, RecursivePar
 import { createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
 import type { TransformersDesiredProperties } from './desiredProprieties.js'
 import type { EventHandlers } from './events.js'
-import { createBotGatewayHandlers } from './handlers.js'
+import { type GatewayHandlers, createBotGatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
 import { type Transformers, createTransformers } from './transformers.js'
-import type { BotGatewayHandler } from './typings.js'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -36,7 +35,7 @@ export function createBot(options: CreateBotOptions): Bot {
 
       // RUN DISPATCH CHECK
       await bot.events.dispatchRequirements?.(data, shard.id)
-      bot.handlers[data.t as keyof ReturnType<typeof createBotGatewayHandlers>]?.(bot, data, shard.id)
+      bot.handlers[data.t as GatewayDispatchEventNames]?.(bot, data, shard.id)
     }
   }
 
@@ -104,7 +103,7 @@ export interface CreateBotOptions {
   /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers?: RecursivePartial<Transformers>
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler>>
+  handlers?: Partial<GatewayHandlers>
   /**
    * @deprecated Use with caution
    *
@@ -147,7 +146,7 @@ export interface Bot {
   /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers: Transformers
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers: ReturnType<typeof createBotGatewayHandlers>
+  handlers: GatewayHandlers
   helpers: BotHelpers
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>

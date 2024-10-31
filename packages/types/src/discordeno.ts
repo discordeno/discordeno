@@ -45,7 +45,6 @@ import type {
   MessageFlags,
   OverwriteTypes,
   PermissionStrings,
-  PickPartial,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,

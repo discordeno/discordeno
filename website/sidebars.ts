@@ -9,7 +9,7 @@
  Create as many sidebars as you want.
  */
 
-import { type SidebarsConfig } from '@docusaurus/plugin-content-docs'
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs'
 
 const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
