@@ -1,7 +1,9 @@
 import * as handlers from './handlers/index.js'
-import type { Bot, DiscordGatewayPayload, GatewayDispatchEventNames } from './index.js'
+import type { Bot, DesiredProprietiesBehavior, DiscordGatewayPayload, GatewayDispatchEventNames, TransformersDesiredProperties } from './index.js'
 
-export function createBotGatewayHandlers(options: Partial<GatewayHandlers>): GatewayHandlers {
+export function createBotGatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior>(
+  options: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<TProps, TBehavior>>>,
+): GatewayHandlers<TProps, TBehavior> {
   return {
     APPLICATION_COMMAND_PERMISSIONS_UPDATE: options.APPLICATION_COMMAND_PERMISSIONS_UPDATE ?? handlers.handleApplicationCommandPermissionsUpdate,
     AUTO_MODERATION_ACTION_EXECUTION: options.AUTO_MODERATION_ACTION_EXECUTION ?? handlers.handleAutoModerationActionExecution,
@@ -77,8 +79,16 @@ export function createBotGatewayHandlers(options: Partial<GatewayHandlers>): Gat
     GUILD_SOUNDBOARD_SOUND_UPDATE: options.GUILD_SOUNDBOARD_SOUND_UPDATE ?? handlers.handleGuildSoundboardSoundUpdate,
     GUILD_SOUNDBOARD_SOUNDS_UPDATE: options.GUILD_SOUNDBOARD_SOUNDS_UPDATE ?? handlers.handleGuildSoundboardSoundsUpdate,
     SOUNDBOARD_SOUNDS: options.SOUNDBOARD_SOUNDS ?? handlers.handleSoundboardSounds,
-  }
+  } as GatewayHandlers<TProps, TBehavior>
 }
 
-export type GatewayHandlers = Record<GatewayDispatchEventNames, BotGatewayHandler>
-export type BotGatewayHandler = (bot: Bot, data: DiscordGatewayPayload, shardId: number) => unknown
+export type GatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior> = Record<
+  GatewayDispatchEventNames,
+  BotGatewayHandler<TProps, TBehavior>
+>
+
+export type BotGatewayHandler<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior> = (
+  bot: Bot<TProps, TBehavior>,
+  data: DiscordGatewayPayload,
+  shardId: number,
+) => unknown

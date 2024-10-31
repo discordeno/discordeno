@@ -1,5 +1,5 @@
 import type { BigString, DiscordRole } from '@discordeno/types'
-import { type Bot, type Role, iconHashToBigInt } from '../index.js'
+import { type InternalBot, type Role, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
@@ -40,7 +40,7 @@ const baseRole = {
   },
 } as Role
 
-export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }): Role {
+export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferRole {
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)

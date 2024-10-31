@@ -1,5 +1,5 @@
 import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types'
-import { type Bot, type Channel, type ForumTag, calculatePermissions, iconHashToBigInt } from '../index.js'
+import { type Channel, type ForumTag, type InternalBot, calculatePermissions, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 
@@ -64,7 +64,7 @@ export const baseChannel = {
   },
 } as Channel
 
-export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
+export function transformChannel(bot: InternalBot, payload: { channel: DiscordChannel; guildId?: BigString }): typeof bot.transformers.$inferChannel {
   const channel = Object.create(baseChannel) as Channel
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
@@ -121,7 +121,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
 
-export function transformForumTag(bot: Bot, payload: DiscordForumTag): ForumTag {
+export function transformForumTag(bot: InternalBot, payload: DiscordForumTag): typeof bot.transformers.$inferForumTag {
   const props = bot.transformers.desiredProperties.forumTag
   const forumTag = {} as ForumTag
 

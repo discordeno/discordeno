@@ -1,7 +1,7 @@
 import type { DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordGuildOnboardingPromptOption } from '@discordeno/types'
-import type { Bot, GuildOnboarding, GuildOnboardingPrompt, GuildOnboardingPromptOption } from '../index.js'
+import type { GuildOnboarding, GuildOnboardingPrompt, GuildOnboardingPromptOption, InternalBot } from '../index.js'
 
-export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboarding): GuildOnboarding {
+export function transformGuildOnboarding(bot: InternalBot, payload: DiscordGuildOnboarding): typeof bot.transformers.$inferGuildOnboarding {
   const props = bot.transformers.desiredProperties.guildOnboarding
   const guildOnboarding = {} as GuildOnboarding
 
@@ -15,7 +15,10 @@ export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboardi
   return bot.transformers.customizers.guildOnboarding(bot, payload, guildOnboarding)
 }
 
-export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOnboardingPrompt): GuildOnboardingPrompt {
+export function transformGuildOnboardingPrompt(
+  bot: InternalBot,
+  payload: DiscordGuildOnboardingPrompt,
+): typeof bot.transformers.$inferGuildOnboardingPrompt {
   const props = bot.transformers.desiredProperties.guildOnboardingPrompt
   const prompt = {} as GuildOnboardingPrompt
 
@@ -30,7 +33,10 @@ export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOn
   return bot.transformers.customizers.guildOnboardingPrompt(bot, payload, prompt)
 }
 
-export function transformGuildOnboardingPromptOption(bot: Bot, payload: DiscordGuildOnboardingPromptOption): GuildOnboardingPromptOption {
+export function transformGuildOnboardingPromptOption(
+  bot: InternalBot,
+  payload: DiscordGuildOnboardingPromptOption,
+): typeof bot.transformers.$inferGuildOnboardingPromptOption {
   const props = bot.transformers.desiredProperties.guildOnboardingPromptOption
   const option = {} as GuildOnboardingPromptOption
 

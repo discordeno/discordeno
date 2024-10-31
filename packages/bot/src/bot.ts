@@ -4,9 +4,15 @@ import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { BigString, GatewayDispatchEventNames, GatewayIntents, RecursivePartial } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
-import type { TransformersDesiredProperties } from './desiredProperties.js'
+import type {
+  CompleteDesiredProprieties,
+  DesiredProprietiesBehavior,
+  SetupDesiredProps,
+  TransformersDesiredProperties,
+  TransformersObjects,
+} from './desiredProperties.js'
 import type { EventHandlers } from './events.js'
-import { type GatewayHandlers, createBotGatewayHandlers } from './handlers.js'
+import { type BotGatewayHandler, type GatewayHandlers, createBotGatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
 import { type Transformers, createTransformers } from './transformers.js'
 
@@ -16,7 +22,13 @@ import { type Transformers, createTransformers } from './transformers.js'
  * @param options Configurations options used to manage this bot.
  * @returns Bot
  */
-export function createBot(options: CreateBotOptions): Bot {
+export function createBot<
+  TProps extends RecursivePartial<TransformersDesiredProperties>,
+  TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
+>(options: CreateBotOptions<TProps, TBehavior>): Bot<CompleteDesiredProprieties<TProps>, TBehavior> {
+  type CompleteProps = CompleteDesiredProprieties<TProps>
+  type TypedBot = Bot<CompleteProps, TBehavior>
+
   if (!options.transformers) options.transformers = {}
   if (!options.transformers.desiredProperties) options.transformers.desiredProperties = options.desiredProperties
   if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
@@ -44,17 +56,19 @@ export function createBot(options: CreateBotOptions): Bot {
 
   const id = getBotIdFromToken(options.token)
 
-  const bot: Bot = {
+  const bot: TypedBot = {
     id,
     applicationId: id,
-    transformers: createTransformers(options.transformers, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
-    handlers: createBotGatewayHandlers(options.handlers ?? {}),
+    transformers: createTransformers(options.transformers, {
+      defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false,
+    }) as TypedBot['transformers'],
+    handlers: createBotGatewayHandlers<CompleteProps, TBehavior>(options.handlers ?? {}),
     rest: createRestManager(options.rest as CreateRestManagerOptions),
     gateway: createGatewayManager(options.gateway as CreateGatewayManagerOptions),
     events: options.events ?? {},
     logger: options.loggerFactory ? options.loggerFactory('BOT') : createLogger({ name: 'BOT' }),
     // Set up helpers below.
-    helpers: {} as BotHelpers,
+    helpers: {} as BotHelpers<CompleteProps, TBehavior>,
     async start() {
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
@@ -87,7 +101,7 @@ export function createBot(options: CreateBotOptions): Bot {
   return bot
 }
 
-export interface CreateBotOptions {
+export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDesiredProperties>, TBehavior extends DesiredProprietiesBehavior> {
   /** The bot's token. */
   token: string
   /** Application Id of the bot incase it is an old bot token. */
@@ -99,11 +113,12 @@ export interface CreateBotOptions {
   /** Any options you wish to provide to the gateway manager. */
   gateway?: Omit<CreateGatewayManagerOptions, 'token'> & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
   /** The event handlers. */
-  events?: Partial<EventHandlers>
+  events?: Partial<EventHandlers<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers?: RecursivePartial<Transformers>
+  transformers?: RecursivePartial<Transformers<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers?: Partial<GatewayHandlers>
+  handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>>
+  // TODO: either remove this or document that this will not work with the type-level desired proprieties
   /**
    * @deprecated Use with caution
    *
@@ -118,7 +133,13 @@ export interface CreateBotOptions {
    *
    * @default {}
    */
-  desiredProperties?: RecursivePartial<TransformersDesiredProperties>
+  desiredProperties?: TProps
+  /**
+   * Set the desired properties behavior for undesired proprieties
+   *
+   * @default DesiredProprietiesBehavior.ChangeKey
+   */
+  desiredPropertiesBehavior?: TBehavior
   /**
    * This factory will be invoked to create the logger for gateway, rest and bot
    *
@@ -130,7 +151,10 @@ export interface CreateBotOptions {
   loggerFactory?: (name: 'REST' | 'GATEWAY' | 'BOT') => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
-export interface Bot {
+export interface Bot<
+  TProps extends TransformersDesiredProperties = TransformersDesiredProperties,
+  TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
+> {
   /** The id of the bot. */
   id: bigint
   /** The application id of the bot. This is usually the same as id but in the case of old bots can be different. */
@@ -140,16 +164,23 @@ export interface Bot {
   /** The gateway manager. */
   gateway: GatewayManager
   /** The event handlers. */
-  events: Partial<EventHandlers>
+  events: Partial<EventHandlers<TProps, TBehavior>>
   /** A logger utility to make it easy to log nice and useful things in the bot code. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers: Transformers
+  transformers: Transformers<TProps, TBehavior> & {
+    [K in keyof TransformersObjects as `$infer${Capitalize<K>}`]: SetupDesiredProps<TransformersObjects[K], TProps, TBehavior>
+  }
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers: GatewayHandlers
-  helpers: BotHelpers
+  handlers: GatewayHandlers<TProps, TBehavior>
+  helpers: BotHelpers<TProps, TBehavior>
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */
   shutdown: () => Promise<void>
 }
+
+type Capitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : S
+
+/** @internal This is subject to breaking changes without notice */
+export type InternalBot = Bot<CompleteDesiredProprieties<{}, true>, DesiredProprietiesBehavior.RemoveKey>

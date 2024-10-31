@@ -1,7 +1,10 @@
 import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
-import { type Bot, type Invite, isInviteWithMetadata } from '../index.js'
+import { type InternalBot, type Invite, isInviteWithMetadata } from '../index.js'
 
-export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }): Invite {
+export function transformInvite(
+  bot: InternalBot,
+  payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number },
+): typeof bot.transformers.$inferInvite {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
 

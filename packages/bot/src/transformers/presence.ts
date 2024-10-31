@@ -1,7 +1,7 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { Bot, PresenceUpdate } from '../index.js'
+import type { InternalBot, PresenceUpdate } from '../index.js'
 
-export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
+export function transformPresence(bot: InternalBot, payload: DiscordPresenceUpdate): PresenceUpdate {
   const presence = {
     user: bot.transformers.user(bot, payload.user),
     guildId: bot.transformers.snowflake(payload.guild_id),

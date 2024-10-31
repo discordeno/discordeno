@@ -8,7 +8,14 @@ import {
   MessageFlags,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { type Bot, type Message, type MessageCall, type MessageInteractionMetadata, type MessageSnapshot, snowflakeToTimestamp } from '../index.js'
+import {
+  type InternalBot,
+  type Message,
+  type MessageCall,
+  type MessageInteractionMetadata,
+  type MessageSnapshot,
+  snowflakeToTimestamp,
+} from '../index.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
@@ -126,7 +133,7 @@ const baseMessage = {
   },
 } as Message
 
-export function transformMessage(bot: Bot, payload: { message: DiscordMessage; shardId: number }): Message {
+export function transformMessage(bot: InternalBot, payload: { message: DiscordMessage; shardId: number }): typeof bot.transformers.$inferMessage {
   const guildId = payload.message.guild_id ? bot.transformers.snowflake(payload.message.guild_id) : undefined
   const userId = payload.message.author?.id ? bot.transformers.snowflake(payload.message.author.id) : undefined
 
@@ -248,7 +255,10 @@ export function transformMessage(bot: Bot, payload: { message: DiscordMessage; s
   return bot.transformers.customizers.message(bot, payload.message, message)
 }
 
-export function transformMessageSnapshot(bot: Bot, payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number }): MessageSnapshot {
+export function transformMessageSnapshot(
+  bot: InternalBot,
+  payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
+): typeof bot.transformers.$inferMessageSnapshot {
   const props = bot.transformers.desiredProperties.messageSnapshot
   const messageSnapshot = {} as MessageSnapshot
 
@@ -258,7 +268,10 @@ export function transformMessageSnapshot(bot: Bot, payload: { messageSnapshot: D
   return bot.transformers.customizers.messageSnapshot(bot, payload.messageSnapshot, messageSnapshot)
 }
 
-export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {
+export function transformMessageInteractionMetadata(
+  bot: InternalBot,
+  payload: DiscordMessageInteractionMetadata,
+): typeof bot.transformers.$inferMessageInteractionMetadata {
   const props = bot.transformers.desiredProperties.messageInteractionMetadata
   const metadata = {} as MessageInteractionMetadata
 
@@ -297,7 +310,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }
 
-export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): MessageCall {
+export function transformMessageCall(bot: InternalBot, payload: DiscordMessageCall): typeof bot.transformers.$inferMessageCall {
   const call = {} as MessageCall
   const props = bot.transformers.desiredProperties.messageCall
 

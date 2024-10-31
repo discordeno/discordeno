@@ -1,6 +1,6 @@
 import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
-import type { Bot, Channel, Guild } from '../index.js'
+import type { Channel, Guild, InternalBot } from '../index.js'
 import { GuildToggles } from './toggles/guild.js'
 
 const baseGuild = {
@@ -18,7 +18,7 @@ const baseGuild = {
   },
 } as Guild
 
-export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }): Guild {
+export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild; shardId: number }): typeof bot.transformers.$inferGuild {
   const guildId = bot.transformers.snowflake(payload.guild.id)
   const props = bot.transformers.desiredProperties.guild
   const guild: Guild = Object.create(baseGuild)

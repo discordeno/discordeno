@@ -1,7 +1,7 @@
 import type { DiscordSubscription } from '@discordeno/types'
-import type { Bot, Subscription } from '../index.js'
+import type { InternalBot, Subscription } from '../index.js'
 
-export function transformSubscription(bot: Bot, payload: DiscordSubscription): Subscription {
+export function transformSubscription(bot: InternalBot, payload: DiscordSubscription): typeof bot.transformers.$inferSubscription {
   const props = bot.transformers.desiredProperties.subscription
   const subscription = {} as Subscription
 

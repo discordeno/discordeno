@@ -1,7 +1,7 @@
 import type { DiscordWebhook } from '@discordeno/types'
-import { type Bot, type Webhook, iconHashToBigInt } from '../index.js'
+import { type InternalBot, type Webhook, iconHashToBigInt } from '../index.js'
 
-export function transformWebhook(bot: Bot, payload: DiscordWebhook): Webhook {
+export function transformWebhook(bot: InternalBot, payload: DiscordWebhook): typeof bot.transformers.$inferWebhook {
   const props = bot.transformers.desiredProperties.webhook
   const webhook = {} as Webhook
 

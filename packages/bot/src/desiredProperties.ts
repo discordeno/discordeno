@@ -1,4 +1,5 @@
 import type { RecursivePartial } from '@discordeno/types'
+import type { Collection } from '@discordeno/utils'
 import type {
   ActivityInstance,
   ActivityLocation,
@@ -44,8 +45,12 @@ import type {
   Webhook,
 } from './transformers/index.js'
 
-/** All the objects that support desired proprieties */
-interface TransformersObjects {
+/**
+ * All the objects that support desired proprieties
+ *
+ * @internal This is subject to breaking changes at any time
+ */
+export interface TransformersObjects {
   activityInstance: ActivityInstance
   activityLocation: ActivityLocation
   attachment: Attachment
@@ -751,12 +756,13 @@ type DesirableProprieties<
       : NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number])
 >
 
-type DesiredProprietiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
+/** @internal This is subject to breaking changes without notices */
+export type DesiredProprietiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
   [Key in DesirableProprieties<T>]: boolean
 }
 
 type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
-  [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : K
+  [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : false
 }
 
 type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TKey extends keyof TProps // The key has a desired props?
@@ -785,10 +791,10 @@ export enum DesiredProprietiesBehavior {
   ChangeType,
 }
 
-type RemoveKeyWhenUndesired<Key, T, TProps> = IsKeyDesired<
+type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredProperties> = IsKeyDesired<
   Key,
   TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
-  TProps
+  TProps[KeyByValue<TransformersObjects, T>]
 > extends true
   ? Key
   : never
@@ -796,18 +802,47 @@ type RemoveKeyWhenUndesired<Key, T, TProps> = IsKeyDesired<
 type GetErrorWhenUndesired<
   Key extends keyof T,
   T,
-  TProps,
-  TIsDesired = IsKeyDesired<Key, TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'], TProps>,
-> = TIsDesired extends true ? T[Key] : TIsDesired
+  TProps extends TransformersDesiredProperties,
+  TBehavior extends DesiredProprietiesBehavior,
+  // This generic value is used as an alias
+  TIsDesired = IsKeyDesired<
+    Key,
+    TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
+    TProps[KeyByValue<TransformersObjects, T>]
+  >,
+> = TIsDesired extends true ? TransformNestedProps<T[Key], TProps, TBehavior> : TIsDesired
+
+// If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
+type TransformNestedProps<
+  T,
+  TProps extends TransformersDesiredProperties,
+  TBehavior extends DesiredProprietiesBehavior,
+> = T extends TransformersObjects[keyof TransformersObjects] // is T a transformed object?
+  ? // Yes, apply the desired props
+    SetupDesiredProps<T, TProps, TBehavior>
+  : // No, is it a collection of transformed objects?
+    T extends Collection<infer U, infer UObj extends TransformersObjects[keyof TransformersObjects]>
+    ? // Yes, apply the desired props
+      Collection<U, SetupDesiredProps<UObj, TProps, TBehavior>>
+    : // No, is it an array of transformed objects?
+      T extends Array<infer U extends TransformersObjects[keyof TransformersObjects]>
+      ? // Yes, apply the desired props
+        SetupDesiredProps<U, TProps, TBehavior>[]
+      : // No, this is a normal value such as string / bigint / number
+        T
 
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],
-  TProps extends DesiredProprietiesMapper<T>,
+  TProps extends TransformersDesiredProperties,
   TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
 > = {
+  // When the behavior is to remove the key we use the RemoveKeyIfUndesired type helper else return the Key as is
   [Key in keyof T as TBehavior extends DesiredProprietiesBehavior.RemoveKey
-    ? RemoveKeyWhenUndesired<Key, T, TProps>
-    : Key]: TBehavior extends DesiredProprietiesBehavior.ChangeType ? GetErrorWhenUndesired<Key, T, TProps> : T[Key]
+    ? RemoveKeyIfUndesired<Key, T, TProps>
+    : Key]: // When the behavior is to change the type we use the GetErrorWhenUndesired type helper else apply the desired props to the key and return
+  TBehavior extends DesiredProprietiesBehavior.ChangeType
+    ? GetErrorWhenUndesired<Key, T, TProps, TBehavior>
+    : TransformNestedProps<T[Key], TProps, TBehavior>
 }
 
 export type TransformersDesiredProperties = {
@@ -815,6 +850,6 @@ export type TransformersDesiredProperties = {
 }
 
 /** @internal This is subject to breaking changes without notices */
-export type CompleteDesiredProprieties<T extends RecursivePartial<TransformersDesiredProperties>> = {
-  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], false>
+export type CompleteDesiredProprieties<T extends RecursivePartial<TransformersDesiredProperties>, TDefault extends boolean = false> = {
+  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TDefault>
 }

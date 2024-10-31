@@ -1,6 +1,6 @@
 import type { DiscordUser } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { type Bot, ToggleBitfield, type User, UserToggles } from '../index.js'
+import { type InternalBot, ToggleBitfield, type User, UserToggles } from '../index.js'
 
 const baseUser = {
   get tag() {
@@ -20,7 +20,7 @@ const baseUser = {
   },
 } as User
 
-export function transformUser(bot: Bot, payload: DiscordUser): User {
+export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bot.transformers.$inferUser {
   const user: User = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 

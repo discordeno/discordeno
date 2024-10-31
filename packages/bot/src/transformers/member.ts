@@ -1,6 +1,6 @@
 import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
+import type { InternalBot } from '../bot.js'
 import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
 import type { Member } from './types.js'
@@ -32,7 +32,12 @@ const baseMember = {
   },
 } as Member
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString): Member {
+export function transformMember(
+  bot: InternalBot,
+  payload: DiscordMember,
+  guildId: BigString,
+  userId: BigString,
+): typeof bot.transformers.$inferMember {
   const member: Member = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 
