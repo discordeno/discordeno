@@ -850,6 +850,6 @@ export type TransformersDesiredProperties = {
 }
 
 /** @internal This is subject to breaking changes without notices */
-export type CompleteDesiredProprieties<T extends RecursivePartial<TransformersDesiredProperties>, TDefault extends boolean = false> = {
-  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TDefault>
+export type CompleteDesiredProprieties<T extends RecursivePartial<TransformersDesiredProperties>, TTDefault extends boolean = false> = {
+  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TTDefault>
 }
