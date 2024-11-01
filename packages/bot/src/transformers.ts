@@ -69,7 +69,6 @@ import type {
   DiscordWelcomeScreen,
   RecursivePartial,
 } from '@discordeno/types'
-import { logger } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import { type DesiredProprietiesBehavior, type TransformersDesiredProperties, createDesiredPropertiesObject } from './desiredProperties.js'
 import {
@@ -395,28 +394,11 @@ export interface Transformers<
   widgetSettings: (bot: TBot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
 }
 
-export interface CreateTransformerOptions {
-  defaultDesiredPropertiesValue: boolean
-  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
-}
-
 const defaultCustomizer = (_bot: unknown, _payload: unknown, structure: unknown) => structure
 
 export function createTransformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior>(
   options: RecursivePartial<Transformers<TProps, TBehavior>>,
-  opts?: CreateTransformerOptions,
 ): Transformers<TProps, TBehavior> {
-  if (opts?.defaultDesiredPropertiesValue) {
-    const log = opts.logger ?? logger
-
-    log.warn('[Transformers] WARNING WARNING WARNING!')
-    log.warn(
-      '[Transformers] The defaultDesiredPropertiesValue property is being used and it is NOT RECOMMENDED. In fact it was WARNED AGAINST. It is extremely bad practice.',
-    )
-    log.warn('[Transformers] It is a bit painful to work with and get started, but it has massive long term benefits.')
-    log.warn('[Transformers] ----------------------------------------------------------------')
-  }
-
   return {
     customizers: {
       activity: options.customizers?.activity ?? defaultCustomizer,
@@ -482,7 +464,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       widget: options.customizers?.widget ?? defaultCustomizer,
       widgetSettings: options.customizers?.widgetSettings ?? defaultCustomizer,
     },
-    desiredProperties: createDesiredPropertiesObject(options.desiredProperties ?? {}, opts?.defaultDesiredPropertiesValue ?? false),
+    desiredProperties: createDesiredPropertiesObject(options.desiredProperties ?? {}),
     reverse: {
       activity: options.reverse?.activity ?? transformActivityToDiscordActivity,
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,

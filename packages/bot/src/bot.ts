@@ -59,9 +59,7 @@ export function createBot<
   const bot: TypedBot = {
     id,
     applicationId: id,
-    transformers: createTransformers(options.transformers, {
-      defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false,
-    }) as TypedBot['transformers'],
+    transformers: createTransformers(options.transformers) as TypedBot['transformers'],
     handlers: createBotGatewayHandlers<CompleteProps, TBehavior>(options.handlers ?? {}),
     rest: createRestManager(options.rest as CreateRestManagerOptions),
     gateway: createGatewayManager(options.gateway as CreateGatewayManagerOptions),
@@ -118,16 +116,6 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   transformers?: RecursivePartial<Transformers<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
   handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>>
-  // TODO: either remove this or document that this will not work with the type-level desired proprieties
-  /**
-   * @deprecated Use with caution
-   *
-   * This property will be removed in the near future when the CLI is complete. It is not recommended to use whatsoever.
-   * Although it is harder to create your bot without this, it is still highly recommended to do it that way.
-   *
-   * @default false
-   */
-  defaultDesiredPropertiesValue?: boolean
   /**
    * Set the desired properties for the bot
    *
