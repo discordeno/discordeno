@@ -262,14 +262,25 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
         payload.authorizing_integration_owners['1'],
       )
   }
-  if (props.interactedMessageId && payload.interacted_message_id)
-    metadata.interactedMessageId = bot.transformers.snowflake(payload.interacted_message_id)
   if (props.originalResponseMessageId && payload.original_response_message_id)
     metadata.originalResponseMessageId = bot.transformers.snowflake(payload.original_response_message_id)
-  if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
-    metadata.triggeringInteractionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.triggering_interaction_metadata)
   if (props.type) metadata.type = payload.type
   if (props.user && payload.user) metadata.user = bot.transformers.user(bot, payload.user)
+  // Application command metadata
+  if ('target_user' in payload) {
+    if (props.targetUser && payload.target_user) metadata.targetUser = bot.transformers.user(bot, payload.target_user)
+    if (props.targetMessageId && payload.target_message_id) metadata.targetMessageId = bot.transformers.snowflake(payload.target_message_id)
+  }
+  // Message component metadata
+  if ('interacted_message_id' in payload) {
+    if (props.interactedMessageId && payload.interacted_message_id)
+      metadata.interactedMessageId = bot.transformers.snowflake(payload.interacted_message_id)
+  }
+  // Modal submit metadata
+  if ('triggering_interaction_metadata' in payload) {
+    if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
+      metadata.triggeringInteractionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.triggering_interaction_metadata)
+  }
 
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }

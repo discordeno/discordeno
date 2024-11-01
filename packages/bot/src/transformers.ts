@@ -632,6 +632,8 @@ export interface TransformersDesiredProperties {
     originalResponseMessageId: boolean
     interactedMessageId: boolean
     triggeringInteractionMetadata: boolean
+    targetUser: boolean
+    targetMessageId: boolean
   }
   messageInteraction: {
     id: boolean
@@ -1276,6 +1278,8 @@ export function createDesiredPropertiesObject(
       originalResponseMessageId: defaultValue,
       interactedMessageId: defaultValue,
       triggeringInteractionMetadata: defaultValue,
+      targetMessageId: defaultValue,
+      targetUser: defaultValue,
       ...desiredProperties.messageInteractionMetadata,
     },
     messageInteraction: {
