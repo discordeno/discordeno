@@ -3758,7 +3758,7 @@ export interface DiscordEventWebhookEventBody {
   /** Timestamp of when the event occurred in ISO8601 format */
   timestamp: string
   /** Data for the event. The shape depends on the event type */
-  data?: unknown
+  data?: DiscordEventWebhookApplicationAuthorizedBody | DiscordEntitlement
 }
 
 /** https://discord.com/developers/docs/events/webhook-events#event-types */
