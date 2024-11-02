@@ -1544,7 +1544,7 @@ export interface EditApplication {
   tags?: string[]
   /** Event webhook URL for the app to receive webhook events */
   eventWebhooksUrl?: string
-  /** If webhook events are enabled for the app. */
+  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
   eventWebhooksStatus: DiscordApplicationEventWebhookStatus
   /** List of Webhook event types the app subscribes to */
   eventWebhooksTypes?: DiscordWebhookEventType[]

@@ -406,7 +406,7 @@ export interface DiscordApplication {
   interactions_endpoint_url?: string | null
   /** Event webhook URL for the app to receive webhook events */
   event_webhooks_url?: string | null
-  /** If webhook events are enabled for the app. */
+  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
   event_webhooks_status: DiscordApplicationEventWebhookStatus
   /** List of Webhook event types the app subscribes to */
   event_webhooks_types?: DiscordWebhookEventType[]
@@ -435,7 +435,7 @@ export enum DiscordApplicationEventWebhookStatus {
   Disabled = 1,
   /** Webhook events are enabled by developer */
   Enabled = 2,
-  /** Webhook events are disabled by Discord, usually do to inactivity */
+  /** Webhook events are disabled by Discord, usually due to inactivity */
   DisabledByDiscord = 3,
 }
 
@@ -3773,7 +3773,7 @@ export enum DiscordWebhookEventType {
 
 /** https://discord.com/developers/docs/events/webhook-events#application-authorized-application-authorized-structure */
 export interface DiscordEventWebhookApplicationAuthorizedBody {
-  /** Installation context for the authorization. */
+  /** Installation context for the authorization. Either guild (0) if installed to a server or user (1) if installed to a user's account */
   integration_type?: DiscordApplicationIntegrationType
   /** User who authorized the app */
   user: DiscordUser
