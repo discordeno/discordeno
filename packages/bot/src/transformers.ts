@@ -54,6 +54,7 @@ import type {
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerPack,
+  DiscordSubscription,
   DiscordTeam,
   DiscordTemplate,
   DiscordThreadMember,
@@ -118,6 +119,7 @@ import {
   type StageInstance,
   type Sticker,
   type StickerPack,
+  type Subscription,
   type Team,
   type Template,
   type ThreadMember,
@@ -204,6 +206,7 @@ import {
   transformCreateApplicationCommandToDiscordCreateApplicationCommand,
   transformInteractionResponseToDiscordInteractionResponse,
 } from './transformers/reverse/index.js'
+import { transformSubscription } from './transformers/subscription.js'
 import type {
   BotInteractionResponse,
   DiscordComponent,
@@ -280,6 +283,7 @@ export interface Transformers {
     stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
     sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
     stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    subscription: (bot: Bot, payload: DiscordSubscription, subscription: Subscription) => any
     team: (bot: Bot, payload: DiscordTeam, team: Team) => any
     template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
     threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
@@ -360,6 +364,7 @@ export interface Transformers {
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
+  subscription: (bot: Bot, payload: DiscordSubscription) => Subscription
   team: (bot: Bot, payload: DiscordTeam) => Team
   template: (bot: Bot, payload: DiscordTemplate) => Template
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
@@ -722,6 +727,17 @@ export interface TransformersDesiredProperties {
     user: boolean
     sortValue: boolean
   }
+  subscription: {
+    id: boolean
+    userId: boolean
+    skuIds: boolean
+    entitlementIds: boolean
+    currentPeriodStart: boolean
+    currentPeriodEnd: boolean
+    status: boolean
+    canceledAt: boolean
+    country: boolean
+  }
   user: {
     username: boolean
     globalName: boolean
@@ -905,6 +921,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       stageInstance: options.customizers?.stageInstance ?? defaultCustomizer,
       sticker: options.customizers?.sticker ?? defaultCustomizer,
       stickerPack: options.customizers?.stickerPack ?? defaultCustomizer,
+      subscription: options.customizers?.subscription ?? defaultCustomizer,
       team: options.customizers?.team ?? defaultCustomizer,
       template: options.customizers?.template ?? defaultCustomizer,
       threadMember: options.customizers?.threadMember ?? defaultCustomizer,
@@ -986,6 +1003,7 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     stageInstance: options.stageInstance ?? transformStageInstance,
     sticker: options.sticker ?? transformSticker,
     stickerPack: options.stickerPack ?? transformStickerPack,
+    subscription: options.subscription ?? transformSubscription,
     team: options.team ?? transformTeam,
     template: options.template ?? transformTemplate,
     threadMember: options.threadMember ?? transformThreadMember,
@@ -1378,6 +1396,18 @@ export function createDesiredPropertiesObject(
       user: defaultValue,
       sortValue: defaultValue,
       ...desiredProperties.sticker,
+    },
+    subscription: {
+      id: defaultValue,
+      userId: defaultValue,
+      skuIds: defaultValue,
+      entitlementIds: defaultValue,
+      currentPeriodStart: defaultValue,
+      currentPeriodEnd: defaultValue,
+      status: defaultValue,
+      canceledAt: defaultValue,
+      country: defaultValue,
+      ...desiredProperties.subscription,
     },
     user: {
       username: defaultValue,

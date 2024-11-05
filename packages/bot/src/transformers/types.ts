@@ -31,6 +31,7 @@ import type {
   DiscordScheduledEventRecurrenceRuleNWeekday,
   DiscordScheduledEventRecurrenceRuleWeekday,
   DiscordSkuType,
+  DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
   DiscordWebhookEventType,
@@ -1740,4 +1741,25 @@ export interface GuildWidget {
 export interface GuildWidgetSettings {
   channelId?: string
   enabled: boolean
+}
+
+export interface Subscription {
+  /** ID of the subscription */
+  id: bigint
+  /** ID of the user who is subscribed */
+  userId: bigint
+  /** List of SKUs subscribed to */
+  skuIds: bigint[]
+  /** List of entitlements granted for this subscription */
+  entitlementIds: bigint[]
+  /** Start of the current subscription period */
+  currentPeriodStart: number
+  /** End of the current subscription period */
+  currentPeriodEnd: number
+  /** Current status of the subscription */
+  status: DiscordSubscriptionStatus
+  /** When the subscription was canceled */
+  canceledAt: number
+  /** ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope. */
+  country?: string
 }
