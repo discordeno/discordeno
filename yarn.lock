@@ -150,7 +150,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.8"
     "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
-    "@types/ws": "npm:^8.5.12"
+    "@types/ws": "npm:^8.5.13"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.2"
     fzstd: "npm:^0.1.1"
@@ -823,12 +823,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.5.12":
-  version: 8.5.12
-  resolution: "@types/ws@npm:8.5.12"
+"@types/ws@npm:^8.5.13":
+  version: 8.5.13
+  resolution: "@types/ws@npm:8.5.13"
   dependencies:
     "@types/node": "npm:*"
-  checksum: d8a3ddfb5ff8fea992a043113579d61ac1ea21e8464415af9e2b01b205ed19d817821ad64ca1b3a90062d1df1c23b0f586d8351d25ca6728844df99a74e8f76d
+  checksum: 21369beafa75c91ae3b00d3a2671c7408fceae1d492ca2abd5ac7c8c8bf4596d513c1599ebbddeae82c27c4a2d248976d0d714c4b3d34362b2ae35b964e2e637
   languageName: node
   linkType: hard
 
