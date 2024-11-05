@@ -143,6 +143,7 @@ import type {
   DiscordSelectOption,
   DiscordSessionStartLimit,
   DiscordSku,
+  DiscordSoundboardSound,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerItem,
@@ -346,3 +347,4 @@ export interface CamelizedDiscordGuildOnboardingOption extends Camelize<DiscordG
 export interface CamelizedDiscordEntitlement extends Camelize<DiscordEntitlement> {}
 export interface CamelizedDiscordSku extends Camelize<DiscordSku> {}
 export interface CamelizedDiscordBulkBan extends Camelize<DiscordBulkBan> {}
+export interface CamelizedDiscordSoundboardSound extends Camelize<DiscordSoundboardSound> {}

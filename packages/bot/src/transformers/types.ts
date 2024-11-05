@@ -1763,3 +1763,23 @@ export interface Subscription {
   /** ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope. */
   country?: string
 }
+
+/** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
+export interface SoundboardSound {
+  /** The name of this sound */
+  name: string
+  /** The id of this sound */
+  soundId: bigint
+  /** The volume of this sound, from 0 to 1 */
+  volume: number
+  /** The id of this sound's custom emoji */
+  emojiId?: bigint
+  /** The unicode character of this sound's standard emoji */
+  emojiName?: string
+  /** The id of the guild this sound is in */
+  guildId?: bigint
+  /** Whether this sound can be used, may be false due to loss of Server Boosts */
+  available: boolean
+  /** The user who created this sound */
+  user?: User
+}

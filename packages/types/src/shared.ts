@@ -336,6 +336,8 @@ export enum GuildFeatures {
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
   /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
   MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
+  /** Guild has increased custom soundboard sound slots. */
+  MoreSoundboard = 'MORE_SOUNDBOARD',
   /** Guild can be previewed before joining via Membership Screening or the directory */
   PreviewEnabled = 'PREVIEW_ENABLED',
   /** Guild has enabled ticketed events */
@@ -348,6 +350,8 @@ export enum GuildFeatures {
   RoleSubscriptionsAvailableForPurchase = 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
   /** Guild has enabled role subscriptions. */
   RoleSubscriptionsEnabled = 'ROLE_SUBSCRIPTIONS_ENABLED',
+  /** Guild has created soundboard sounds. */
+  Soundboard = 'SOUNDBOARD',
   /** Guild has set up auto moderation rules */
   AutoModeration = 'AUTO_MODERATION',
   /** Guild has paused invites, preventing new users from joining */
@@ -639,6 +643,12 @@ export enum AuditLogEvents {
   ThreadDelete,
   /** Permissions were updated for a command */
   ApplicationCommandPermissionUpdate = 121,
+  /** Soundboard sound was created */
+  SoundboardSoundCreate = 130,
+  /** Soundboard sound was updated */
+  SoundboardSoundUpdate,
+  /** Soundboard sound was deleted */
+  SoundboardSoundDelete,
   /** Auto moderation rule was created */
   AutoModerationRuleCreate = 140,
   /** Auto moderation rule was updated */
@@ -874,6 +884,8 @@ export enum GatewayOpcodes {
   Hello,
   /** Sent in response to receiving a heartbeat to acknowledge that it has been received. */
   HeartbeatACK,
+  /** Used to request soundboard sounds for a list of guilds. */
+  RequestSoundboardSounds = 31,
 }
 
 export type GatewayDispatchEventNames =
@@ -914,6 +926,11 @@ export type GatewayDispatchEventNames =
   | 'GUILD_SCHEDULED_EVENT_DELETE'
   | 'GUILD_SCHEDULED_EVENT_USER_ADD'
   | 'GUILD_SCHEDULED_EVENT_USER_REMOVE'
+  | 'GUILD_SOUNDBOARD_SOUND_CREATE'
+  | 'GUILD_SOUNDBOARD_SOUND_UPDATE'
+  | 'GUILD_SOUNDBOARD_SOUND_DELETE'
+  | 'GUILD_SOUNDBOARD_SOUNDS_UPDATE'
+  | 'SOUNDBOARD_SOUNDS'
   | 'INTEGRATION_CREATE'
   | 'INTEGRATION_UPDATE'
   | 'INTEGRATION_DELETE'
@@ -991,8 +1008,12 @@ export enum GatewayIntents {
   /**
    * - GUILD_EMOJIS_UPDATE
    * - GUILD_STICKERS_UPDATE
+   * - GUILD_SOUNDBOARD_SOUND_CREATE
+   * - GUILD_SOUNDBOARD_SOUND_UPDATE
+   * - GUILD_SOUNDBOARD_SOUND_DELETE
+   * - GUILD_SOUNDBOARD_SOUNDS_UPDATE
    */
-  GuildEmojisAndStickers = 1 << 3,
+  GuildExpressions = 1 << 3,
   /**
    * - GUILD_INTEGRATIONS_UPDATE
    * - INTEGRATION_CREATE

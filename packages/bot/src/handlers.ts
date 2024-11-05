@@ -75,6 +75,11 @@ export function createBotGatewayHandlers(
     SUBSCRIPTION_CREATE: options.SUBSCRIPTION_CREATE ?? handlers.handleSubscriptionCreate,
     SUBSCRIPTION_UPDATE: options.SUBSCRIPTION_UPDATE ?? handlers.handleSubscriptionUpdate,
     SUBSCRIPTION_DELETE: options.SUBSCRIPTION_DELETE ?? handlers.handleSubscriptionDelete,
+    GUILD_SOUNDBOARD_SOUND_CREATE: options.GUILD_SOUNDBOARD_SOUND_CREATE ?? handlers.handleGuildSoundboardSoundCreate,
+    GUILD_SOUNDBOARD_SOUND_DELETE: options.GUILD_SOUNDBOARD_SOUND_DELETE ?? handlers.handleGuildSoundboardSoundDelete,
+    GUILD_SOUNDBOARD_SOUND_UPDATE: options.GUILD_SOUNDBOARD_SOUND_UPDATE ?? handlers.handleGuildSoundboardSoundUpdate,
+    GUILD_SOUNDBOARD_SOUNDS_UPDATE: options.GUILD_SOUNDBOARD_SOUNDS_UPDATE ?? handlers.handleGuildSoundboardSoundsUpdate,
+    SOUNDBOARD_SOUNDS: options.SOUNDBOARD_SOUNDS ?? handlers.handleSoundboardSounds,
   }
 }
 

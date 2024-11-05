@@ -612,6 +612,21 @@ export function createRoutes(): RestRoutes {
       },
     },
 
+    soundboard: {
+      sendSound: (channelId) => {
+        return `/channels/${channelId}`
+      },
+      listDefault: () => {
+        return `/soundboard-default-sounds`
+      },
+      guildSounds: (guildId) => {
+        return `/guilds/${guildId}/soundboard-sounds`
+      },
+      guildSound: (guildId, soundId) => {
+        return `/guilds/${guildId}/soundboard-sounds/${soundId}`
+      },
+    },
+
     applicationEmoji(applicationId, emojiId) {
       return `/applications/${applicationId}/emojis/${emojiId}`
     },

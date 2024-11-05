@@ -71,6 +71,7 @@ import type {
   CreateGuildEmoji,
   CreateGuildFromTemplate,
   CreateGuildRole,
+  CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
   CreateMessageOptions,
   CreateScheduledEvent,
@@ -86,6 +87,7 @@ import type {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   DiscordInteraction,
   DiscordInteractionCallbackResponse,
+  DiscordSoundboardSound,
   DiscordSubscription,
   EditApplication,
   EditAutoModerationRuleOptions,
@@ -128,12 +130,14 @@ import type {
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
   ModifyGuildMember,
+  ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
   ModifyRolePositions,
   ModifyWebhook,
   ScheduledEventEntityType,
   ScheduledEventStatus,
   SearchMembers,
+  SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   UpsertGlobalApplicationCommandOptions,
@@ -3042,6 +3046,86 @@ export interface RestManager {
    * @param skuId - The id of the sku of get the subscriptions for
    */
   getSubscription: (skuId: BigString, subscriptionId: BigString) => Promise<Camelize<DiscordSubscription>>
+  /**
+   * Send a soundboard sound to a voice channel the user is connected to.
+   *
+   * @param channelId - The id of the voice channel
+   *
+   * @remarks
+   * Fires a _Voice Channel Effect Send_ Gateway event.
+   *
+   * Requires the `SPEAK` and `USE_SOUNDBOARD` permissions, and also the `USE_EXTERNAL_SOUNDS` permission if the sound is from a different server.
+   * Additionally, requires the user to be connected to the voice channel, having a voice state without `deaf`, `self_deaf`, `mute`, or `suppress` enabled.
+   */
+  sendSoundboardSound: (channelId: BigString, options: SendSoundboardSound) => Promise<void>
+  /** Returns an array of soundboard sound objects that can be used by all users. */
+  listDefaultSoundboardSounds: () => Promise<Camelize<DiscordSoundboardSound>[]>
+  /**
+   * Returns a list of the guild's soundboard sounds.
+   *
+   * @param guildId - The guild to get the sounds from
+   *
+   * @remarks
+   * Includes `user` fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   */
+  listGuildSoundboardSounds: (guildId: BigString) => Promise<{ items: Camelize<DiscordSoundboardSound>[] }>
+  /**
+   * Returns a soundboard sound object for the given sound id.
+   *
+   * @param guildId - The guild to get the sounds from
+   * @param soundId - The sound id
+   *
+   * @remarks
+   * Includes `user` fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   */
+  getGuildSoundboardSound: (guildId: BigString, soundId: BigString) => Promise<Camelize<DiscordSoundboardSound>>
+  /**
+   * Create a new soundboard sound for the guild.
+   *
+   * @param guildId - The guild to create the sounds in
+   * @param options - The options to create the sound
+   * @param reason - The audit log reason
+   *
+   * @remarks
+   * Fires a _Guild Soundboard Sound Create_ Gateway event.
+   *
+   * Requires the `CREATE_GUILD_EXPRESSIONS` permission.
+   */
+  createGuildSoundboardSound: (guildId: BigString, options: CreateGuildSoundboardSound, reason?: string) => Promise<Camelize<DiscordSoundboardSound>>
+  /**
+   * Modify the given soundboard sound.
+   *
+   * @param guildId - The guild to create the sounds in
+   * @param soundId - The sound id to update
+   * @param options - The options to update the sound
+   * @param reason - The audit log reason
+   *
+   * @remarks
+   * Fires a _Guild Soundboard Sound Update_ Gateway event.
+   *
+   * For sounds created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other sounds, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
+   */
+  modifyGuildSoundboardSound: (
+    guildId: BigString,
+    soundId: BigString,
+    options: ModifyGuildSoundboardSound,
+    reason?: string,
+  ) => Promise<Camelize<DiscordSoundboardSound>>
+  /**
+   * Delete the given soundboard sound.
+   *
+   * @param guildId - The guild to create the sounds in
+   * @param soundId - The sound id to delete
+   * @param reason - The audit log reason
+   *
+   * @remarks
+   * Fires a _Guild Soundboard Sound Delete_ Gateway event.
+   *
+   * For sounds created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other sounds, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
+   */
+  deleteGuildSoundboardSound: (guildId: BigString, soundId: BigString, reason?: string) => Promise<void>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
