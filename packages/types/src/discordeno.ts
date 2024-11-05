@@ -4,6 +4,7 @@ import type {
   AutoModerationTriggerTypes,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
@@ -15,6 +16,7 @@ import type {
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
   DiscordInteractionContextType,
+  DiscordInteractionEntryPointCommandHandlerType,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -22,6 +24,7 @@ import type {
   DiscordReactionType,
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
+  DiscordWebhookEventType,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
@@ -97,7 +100,16 @@ export interface CreateMessageOptions {
   poll?: CreatePoll
 }
 
-export type MessageComponents = ActionRow[]
+export type MessageComponents = MessageComponent[]
+export type MessageComponent =
+  | ActionRow
+  | ButtonComponent
+  | InputTextComponent
+  | SelectMenuComponent
+  | SelectMenuChannelsComponent
+  | SelectMenuRolesComponent
+  | SelectMenuUsersComponent
+  | SelectMenuUsersAndRolesComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
@@ -105,15 +117,7 @@ export interface ActionRow {
   type: MessageComponentTypes.ActionRow
   /** The components in this row */
   components:
-    | [
-        | ButtonComponent
-        | InputTextComponent
-        | SelectMenuComponent
-        | SelectMenuChannelsComponent
-        | SelectMenuRolesComponent
-        | SelectMenuUsersComponent
-        | SelectMenuUsersAndRolesComponent,
-      ]
+    | [Exclude<MessageComponent, ActionRow>]
     | [ButtonComponent, ButtonComponent]
     | [ButtonComponent, ButtonComponent, ButtonComponent]
     | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
@@ -500,6 +504,13 @@ export interface CreateSlashApplicationCommand {
   dmPermission?: boolean
   /** Indicates whether the command is age-restricted, defaults to `false` */
   nsfw?: boolean
+  /**
+   * Determines whether the interaction is handled by the app's interactions handler or by Discord
+   *
+   * @remarks
+   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   */
+  handler?: DiscordInteractionEntryPointCommandHandlerType
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
@@ -530,6 +541,8 @@ export interface InteractionCallbackData {
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
+  /** Details about the poll */
+  poll?: CreatePoll
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
@@ -538,6 +551,11 @@ export interface InteractionResponse {
   type: InteractionResponseTypes
   /** An optional response message */
   data?: InteractionCallbackData
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params */
+export interface InteractionCallbackOptions {
+  withResponse?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
@@ -997,7 +1015,7 @@ export interface CreateStageInstance {
   channelId: BigString
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
-  /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
+  /** Notify \@everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean
   /** The guild scheduled event associated with this Stage instance */
   guildScheduledEventId?: BigString
@@ -1524,6 +1542,12 @@ export interface EditApplication {
    * There can only be a max of 5 tags
    */
   tags?: string[]
+  /** Event webhook URL for the app to receive webhook events */
+  eventWebhooksUrl?: string
+  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
+  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
+  /** List of Webhook event types the app subscribes to */
+  eventWebhooksTypes?: DiscordWebhookEventType[]
 }
 
 /** https://discord.com/developers/docs/resources/poll#poll-create-request-object */

@@ -36,7 +36,7 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
     approximateGuildCount: payload.application.approximate_guild_count,
     approximateUserInstallCount: payload.application.approximate_user_install_count,
     bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot as DiscordUser) : undefined,
-    interactionsEndpointUrl: payload.application.interactions_endpoint_url,
+    interactionsEndpointUrl: payload.application.interactions_endpoint_url ? payload.application.interactions_endpoint_url : undefined,
     redirectUris: payload.application.redirect_uris,
     roleConnectionsVerificationUrl: payload.application.role_connections_verification_url,
     tags: payload.application.tags,
@@ -66,6 +66,9 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
             : undefined,
         }
       : undefined,
+    eventWebhooksUrl: payload.application.event_webhooks_url,
+    eventWebhooksStatus: payload.application.event_webhooks_status,
+    eventWebhooksTypes: payload.application.event_webhooks_types,
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)

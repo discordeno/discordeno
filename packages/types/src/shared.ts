@@ -184,13 +184,13 @@ export enum TeamMembershipStates {
 export enum ApplicationFlags {
   /** Indicates if an app uses the Auto Moderation API. */
   ApplicationAutoModerationRuleCreateBadge = 1 << 6,
-  /** Intent required for bots in **100 or more servers** to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update) */
+  /** Intent required for bots in **100 or more servers** to receive 'presence_update' events */
   GatewayPresence = 1 << 12,
-  /** Intent required for bots in under 100 servers to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update), found in Bot Settings */
+  /** Intent required for bots in under 100 servers to receive 'presence_update' events */
   GatewayPresenceLimited = 1 << 13,
-  /** Intent required for bots in **100 or more servers** to receive member-related events like `guild_member_add`. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
+  /** Intent required for bots in **100 or more servers** to receive member-related events like 'guild_member_add'. */
   GatewayGuildMembers = 1 << 14,
-  /** Intent required for bots in under 100 servers to receive member-related events like `guild_member_add`, found in Bot Settings. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
+  /** Intent required for bots in under 100 servers to receive member-related events like 'guild_member_add'.  */
   GatewayGuildMembersLimited = 1 << 15,
   /** Indicates unusual growth of an app that prevents verification */
   VerificationPendingGuildLimit = 1 << 16,
@@ -253,7 +253,7 @@ export enum AllowedMentionsTypes {
   RoleMentions = 'roles',
   /** Controls user mentions */
   UserMentions = 'users',
-  /** Controls @everyone and @here mentions */
+  /** Controls \@everyone and \@here mentions */
   EveryoneMentions = 'everyone',
 }
 
@@ -274,7 +274,7 @@ export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link
 export enum DefaultMessageNotificationLevels {
   /** Members will receive notifications for all messages by default */
   AllMessages,
-  /** Members will receive notifications only for messages that @mention them by default */
+  /** Members will receive notifications only for messages that \@mention them by default */
   OnlyMentions,
 }
 
@@ -702,6 +702,8 @@ export enum ApplicationCommandTypes {
   User,
   /** A UI-based command that shows up when you right click or tap on a message */
   Message,
+  /** A UI-based command that represents the primary way to invoke an app's Activity */
+  PrimaryEntryPoint,
 }
 
 export enum ApplicationCommandPermissionTypes {
@@ -746,7 +748,7 @@ export const BitwisePermissionFlags = {
   ATTACH_FILES: 1n << 15n,
   /** Allows for reading of message history */
   READ_MESSAGE_HISTORY: 1n << 16n,
-  /** Allows for using the @everyone tag to notify all users in a channel, and the @here tag to notify all online users in a channel */
+  /** Allows for using the \@everyone tag to notify all users in a channel, and the \@here tag to notify all online users in a channel */
   MENTION_EVERYONE: 1n << 17n,
   /** Allows the usage of custom emojis from other servers */
   USE_EXTERNAL_EMOJIS: 1n << 18n,
@@ -1115,6 +1117,13 @@ export enum InteractionResponseTypes {
    * @deprecated You should migrate to the premium button components
    */
   PremiumRequired = 10,
+  /**
+   * Launch the Activity associated with the app.
+   *
+   * @remarks
+   * Only available for apps with Activities enabled
+   */
+  LaunchActivity = 12,
 }
 
 export enum SortOrderTypes {
