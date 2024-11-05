@@ -3845,7 +3845,8 @@ export interface DiscordSoundboardSounds {
   soundboard_sounds: DiscordSoundboardSound[]
   /** ID of the guild the sound was in */
   guild_id: string
-=======
+}
+
 /** https://discord.com/developers/docs/events/webhook-events#payload-structure */
 export interface DiscordEventWebhookEvent {
   /** Version scheme for the webhook event. Currently always 1 */
