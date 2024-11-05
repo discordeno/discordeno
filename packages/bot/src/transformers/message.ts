@@ -127,7 +127,7 @@ const baseMessage = {
 
 export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const userId = bot.transformers.snowflake(payload.author.id)
+  const userId = payload.author?.id ? bot.transformers.snowflake(payload.author.id) : undefined
 
   const message: Message = Object.create(baseMessage)
   message.bitfield = new ToggleBitfield()
@@ -171,7 +171,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
 
     message.interaction = interaction
   }
-  if (props.member && guildId && payload.member) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
+  if (props.member && guildId && userId && payload.member) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
   if (payload.mention_everyone) message.mentionEveryone = true
   if (props.mentionedChannelIds && payload.mention_channels?.length) {
     message.mentionedChannelIds = [
