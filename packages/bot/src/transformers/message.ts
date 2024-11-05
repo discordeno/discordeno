@@ -141,7 +141,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
     message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
   if (props.channelId && payload.channel_id) message.channelId = bot.transformers.snowflake(payload.channel_id)
   if (props.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
-  if (props.content && payload.content) message.content = payload.content ?? EMPTY_STRING
+  if (props.content) message.content = payload.content ?? EMPTY_STRING
   if (props.editedTimestamp && payload.edited_timestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
   if (props.embeds && payload.embeds?.length) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (props.guildId && guildId) message.guildId = guildId
