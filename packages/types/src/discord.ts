@@ -318,10 +318,12 @@ export interface DiscordMember {
   pending?: boolean
   /** The user this guild member represents */
   user?: DiscordUser
-  /** This users guild nickname */
+  /** This user's guild nickname */
   nick?: string | null
-  /** The members custom avatar for this server. */
+  /** The member's custom avatar for this server. */
   avatar?: string
+  /** The member's guild banner */
+  banner?: string
   /** Array of role object ids */
   roles: string[]
   /** When the user joined the guild */
@@ -3223,6 +3225,8 @@ export interface DiscordGuildMemberUpdate {
   nick?: string | null
   /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */
   avatar: string
+  /** the member's guild banner hash */
+  banner: string
   /** When the user joined the guild */
   joined_at: string
   /** When the user starting boosting the guild */

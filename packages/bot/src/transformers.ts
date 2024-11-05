@@ -584,6 +584,7 @@ export interface TransformersDesiredProperties {
     joinedAt: boolean
     premiumSince: boolean
     avatar: boolean
+    banner: boolean
     permissions: boolean
     communicationDisabledUntil: boolean
     flags: boolean
@@ -1227,6 +1228,7 @@ export function createDesiredPropertiesObject(
       joinedAt: defaultValue,
       premiumSince: defaultValue,
       avatar: defaultValue,
+      banner: defaultValue,
       permissions: defaultValue,
       communicationDisabledUntil: defaultValue,
       flags: defaultValue,
