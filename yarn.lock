@@ -177,7 +177,7 @@ __metadata:
     "@swc/cli": "npm:^0.4.0"
     "@swc/core": "npm:^1.7.26"
     "@types/chai": "npm:^5.0.1"
-    "@types/chai-as-promised": "npm:^7.1.8"
+    "@types/chai-as-promised": "npm:^8.0.1"
     "@types/mocha": "npm:^10.0.8"
     "@types/node": "npm:^22.7.4"
     "@types/sinon": "npm:^17.0.3"
@@ -706,12 +706,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai-as-promised@npm:^7.1.8":
-  version: 7.1.8
-  resolution: "@types/chai-as-promised@npm:7.1.8"
+"@types/chai-as-promised@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "@types/chai-as-promised@npm:8.0.1"
   dependencies:
     "@types/chai": "npm:*"
-  checksum: 88e2d42f14d1de19ba1c7b5c35f263fef37d3ad241c71f5eb59b10763706f3902f4131b93854c9c6ed520081c7e36be555849f202418357f905bea71178b7d02
+  checksum: 827f7d8d5af15761e4b4c0ef08134e12835b28b6da91dd75e4d3e76c856cee9f3dd8bef45d4c1219237951e3e588c3f70d7271b38e626415126c63b057bf2fba
   languageName: node
   linkType: hard
 
