@@ -66,6 +66,9 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
             : undefined,
         }
       : undefined,
+    eventWebhooksUrl: payload.application.event_webhooks_url,
+    eventWebhooksStatus: payload.application.event_webhooks_status,
+    eventWebhooksTypes: payload.application.event_webhooks_types,
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)

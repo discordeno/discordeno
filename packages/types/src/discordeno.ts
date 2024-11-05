@@ -4,6 +4,7 @@ import type {
   AutoModerationTriggerTypes,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
@@ -23,6 +24,7 @@ import type {
   DiscordReactionType,
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
+  DiscordWebhookEventType,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
@@ -1540,6 +1542,12 @@ export interface EditApplication {
    * There can only be a max of 5 tags
    */
   tags?: string[]
+  /** Event webhook URL for the app to receive webhook events */
+  eventWebhooksUrl?: string
+  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
+  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
+  /** List of Webhook event types the app subscribes to */
+  eventWebhooksTypes?: DiscordWebhookEventType[]
 }
 
 /** https://discord.com/developers/docs/resources/poll#poll-create-request-object */
