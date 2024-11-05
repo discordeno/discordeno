@@ -33,6 +33,7 @@ import type {
   ScheduledEvent,
   SoundboardSound,
   Sticker,
+  Subscription,
   ThreadMember,
   User,
   VoiceState,
@@ -283,6 +284,9 @@ export interface EventHandlers {
   entitlementCreate: (entitlement: Entitlement) => unknown
   entitlementUpdate: (entitlement: Entitlement) => unknown
   entitlementDelete: (entitlement: Entitlement) => unknown
+  subscriptionCreate: (subscription: Subscription) => unknown
+  subscriptionUpdate: (subscription: Subscription) => unknown
+  subscriptionDelete: (subscription: Subscription) => unknown
   messagePollVoteAdd: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
   messagePollVoteRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
   soundboardSoundCreate: (payload: SoundboardSound) => unknown
