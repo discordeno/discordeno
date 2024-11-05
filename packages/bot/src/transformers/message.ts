@@ -127,7 +127,7 @@ const baseMessage = {
 
 export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const userId = bot.transformers.snowflake(payload.author.id)
+  const userId = payload.author?.id ? bot.transformers.snowflake(payload.author.id) : undefined
 
   const message: Message = Object.create(baseMessage)
   message.bitfield = new ToggleBitfield()
@@ -141,7 +141,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
     message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
   if (props.channelId && payload.channel_id) message.channelId = bot.transformers.snowflake(payload.channel_id)
   if (props.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
-  if (props.content && payload.content) message.content = payload.content ?? EMPTY_STRING
+  if (props.content) message.content = payload.content ?? EMPTY_STRING
   if (props.editedTimestamp && payload.edited_timestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
   if (props.embeds && payload.embeds?.length) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (props.guildId && guildId) message.guildId = guildId
@@ -171,7 +171,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
 
     message.interaction = interaction
   }
-  if (props.member && guildId && payload.member) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
+  if (props.member && guildId && userId && payload.member) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
   if (payload.mention_everyone) message.mentionEveryone = true
   if (props.mentionedChannelIds && payload.mention_channels?.length) {
     message.mentionedChannelIds = [
@@ -262,14 +262,25 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
         payload.authorizing_integration_owners['1'],
       )
   }
-  if (props.interactedMessageId && payload.interacted_message_id)
-    metadata.interactedMessageId = bot.transformers.snowflake(payload.interacted_message_id)
   if (props.originalResponseMessageId && payload.original_response_message_id)
     metadata.originalResponseMessageId = bot.transformers.snowflake(payload.original_response_message_id)
-  if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
-    metadata.triggeringInteractionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.triggering_interaction_metadata)
   if (props.type) metadata.type = payload.type
   if (props.user && payload.user) metadata.user = bot.transformers.user(bot, payload.user)
+  // Application command metadata
+  if ('target_user' in payload) {
+    if (props.targetUser && payload.target_user) metadata.targetUser = bot.transformers.user(bot, payload.target_user)
+    if (props.targetMessageId && payload.target_message_id) metadata.targetMessageId = bot.transformers.snowflake(payload.target_message_id)
+  }
+  // Message component metadata
+  if ('interacted_message_id' in payload) {
+    if (props.interactedMessageId && payload.interacted_message_id)
+      metadata.interactedMessageId = bot.transformers.snowflake(payload.interacted_message_id)
+  }
+  // Modal submit metadata
+  if ('triggering_interaction_metadata' in payload) {
+    if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
+      metadata.triggeringInteractionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.triggering_interaction_metadata)
+  }
 
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }

@@ -32,17 +32,17 @@
     "@discordeno/types": "19.0.0-beta.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
+    "@biomejs/biome": "^1.9.4",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.26",
-    "@types/chai": "^4.3.17",
+    "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.8",
     "@types/node": "^22.7.4",
     "@types/sinon": "^17.0.3",
     "c8": "^10.1.2",
-    "chai": "^5.1.1",
+    "chai": "^5.1.2",
     "mocha": "^10.7.3",
-    "sinon": "^18.0.0",
+    "sinon": "^19.0.2",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "^5.5.4"

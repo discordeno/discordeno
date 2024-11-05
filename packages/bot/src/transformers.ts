@@ -589,6 +589,7 @@ export interface TransformersDesiredProperties {
     joinedAt: boolean
     premiumSince: boolean
     avatar: boolean
+    banner: boolean
     permissions: boolean
     communicationDisabledUntil: boolean
     flags: boolean
@@ -637,6 +638,8 @@ export interface TransformersDesiredProperties {
     originalResponseMessageId: boolean
     interactedMessageId: boolean
     triggeringInteractionMetadata: boolean
+    targetUser: boolean
+    targetMessageId: boolean
   }
   messageInteraction: {
     id: boolean
@@ -1242,6 +1245,7 @@ export function createDesiredPropertiesObject(
       joinedAt: defaultValue,
       premiumSince: defaultValue,
       avatar: defaultValue,
+      banner: defaultValue,
       permissions: defaultValue,
       communicationDisabledUntil: defaultValue,
       flags: defaultValue,
@@ -1293,6 +1297,8 @@ export function createDesiredPropertiesObject(
       originalResponseMessageId: defaultValue,
       interactedMessageId: defaultValue,
       triggeringInteractionMetadata: defaultValue,
+      targetMessageId: defaultValue,
+      targetUser: defaultValue,
       ...desiredProperties.messageInteractionMetadata,
     },
     messageInteraction: {

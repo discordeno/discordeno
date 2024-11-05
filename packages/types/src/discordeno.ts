@@ -4,6 +4,7 @@ import type {
   AutoModerationTriggerTypes,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
@@ -23,6 +24,7 @@ import type {
   DiscordReactionType,
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
+  DiscordWebhookEventType,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
@@ -1013,7 +1015,7 @@ export interface CreateStageInstance {
   channelId: BigString
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
-  /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
+  /** Notify \@everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean
   /** The guild scheduled event associated with this Stage instance */
   guildScheduledEventId?: BigString
@@ -1540,6 +1542,12 @@ export interface EditApplication {
    * There can only be a max of 5 tags
    */
   tags?: string[]
+  /** Event webhook URL for the app to receive webhook events */
+  eventWebhooksUrl?: string
+  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
+  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
+  /** List of Webhook event types the app subscribes to */
+  eventWebhooksTypes?: DiscordWebhookEventType[]
 }
 
 /** https://discord.com/developers/docs/resources/poll#poll-create-request-object */

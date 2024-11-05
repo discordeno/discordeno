@@ -15,6 +15,7 @@ import type {
   DefaultMessageNotificationLevels,
   DiscordActivityInstanceResource,
   DiscordActivityLocationKind,
+  DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
@@ -32,6 +33,7 @@ import type {
   DiscordSkuType,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
+  DiscordWebhookEventType,
   EmbedTypes,
   ExplicitContentFilterLevels,
   ForumLayout,
@@ -175,6 +177,9 @@ export interface Application {
   integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>
   roleConnectionsVerificationUrl: string
   tags: string[]
+  eventWebhooksUrl?: string
+  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
+  eventWebhooksTypes?: DiscordWebhookEventType[]
 }
 
 export interface ApplicationIntegrationTypeConfiguration {
@@ -1005,10 +1010,12 @@ export interface Member {
   guildId: bigint
   /** The user this guild member represents */
   user?: User
-  /** This users guild nickname */
+  /** This user's guild nickname */
   nick?: string
-  /** The members custom avatar for this server. */
+  /** The member's custom avatar for this server. */
   avatar?: bigint
+  /** The member's custom banner for this server. */
+  banner?: bigint
   /** Array of role object ids */
   roles: bigint[]
   /** When the user joined the guild */
@@ -1195,9 +1202,33 @@ export interface MessageInteractionMetadata {
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** ID of the original response message, present only on follow-up messages */
   originalResponseMessageId?: bigint
-  /** ID of the message that contained interactive component, present only on messages created from component interactions */
+  /**
+   * The user the command was run on, present only on user command interactions
+   *
+   * @remarks
+   * Only present when the interaction metadata is about an application command
+   */
+  targetUser?: User
+  /**
+   * The ID of the message the command was run on, present only on message command interactions. The original response message will also have message_reference and referenced_message pointing to this message.
+   *
+   * @remarks
+   * Only present when the interaction metadata is about an application command
+   */
+  targetMessageId?: bigint
+  /**
+   * ID of the message that contained interactive component, present only on messages created from component interactions
+   *
+   * @remarks
+   * Only present when the interaction metadata is about a message component
+   */
   interactedMessageId?: bigint
-  /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions */
+  /**
+   * Metadata for the interaction that was used to open the modal, present only on modal submit interactions
+   *
+   * @remarks
+   * Only present when the interaction metadata is about a modal submit
+   */
   triggeringInteractionMetadata?: MessageInteractionMetadata
 }
 
