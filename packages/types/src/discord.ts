@@ -1373,8 +1373,8 @@ export interface DiscordMessage {
    */
   stickers?: DiscordSticker[]
   /**
-   * The message associated with the `message_reference`
-   * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
+   * The message associated with the 'message_reference'
+   * Note: This field is only returned for messages with a 'type' of '19', '21', or '23'. If the message is one of these but the 'referenced_message' field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
    */
   referenced_message?: DiscordMessage
   /** The message associated with the `message_reference`. This is a minimal subset of fields in a message (e.g. `author` is excluded.)  */
@@ -1674,9 +1674,32 @@ export interface DiscordMessageInteraction {
   member?: Partial<DiscordMember>
 }
 
-/** https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object-message-interaction-metadata-structure */
-export interface DiscordMessageInteractionMetadata {
+/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object */
+export type DiscordMessageInteractionMetadata =
+  | DiscordApplicationCommandInteractionMetadata
+  | DiscordMessageComponentInteractionMetadata
+  | DiscordModalSubmitInteractionMetadata
+
+/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-application-command-interaction-metadata-structure */
+export interface DiscordApplicationCommandInteractionMetadata {
   /** Id of the interaction */
+  id: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** User who triggered the interaction */
+  user: DiscordUser
+  /** IDs for installation context(s) related to an interaction */
+  authorizing_integration_owners: Partial<Record<`${DiscordApplicationIntegrationType}`, string>>
+  /** ID of the original response message, present only on follow-up messages */
+  original_response_message_id?: string
+  /** The user the command was run on, present only on user command interactions */
+  target_user?: DiscordUser
+  /** The ID of the message the command was run on, present only on message command interactions. The original response message will also have message_reference and referenced_message pointing to this message. */
+  target_message_id?: string
+}
+
+/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-message-component-interaction-metadata-structure */
+export interface DiscordMessageComponentInteractionMetadata {
   id: string
   /** The type of interaction */
   type: InteractionTypes
@@ -1688,6 +1711,19 @@ export interface DiscordMessageInteractionMetadata {
   original_response_message_id?: string
   /** ID of the message that contained interactive component, present only on messages created from component interactions */
   interacted_message_id?: string
+}
+
+/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-modal-submit-interaction-metadata-structure */
+export interface DiscordModalSubmitInteractionMetadata {
+  id: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** User who triggered the interaction */
+  user: DiscordUser
+  /** IDs for installation context(s) related to an interaction */
+  authorizing_integration_owners: Partial<Record<`${DiscordApplicationIntegrationType}`, string>>
+  /** ID of the original response message, present only on follow-up messages */
+  original_response_message_id?: string
   /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions */
   triggering_interaction_metadata?: DiscordMessageInteractionMetadata
 }
