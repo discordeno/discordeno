@@ -1482,14 +1482,14 @@ export enum DiscordMessageReferenceType {
    * A standard reference used by replies.
    *
    * @remarks
-   * When the type is set to this value, the field {@link DiscordMessage.referenced_message} will be present
+   * When the type is set to this value, the field referenced_message on the message will be present
    */
   Default,
   /**
    * Reference used to point to a message at a point in time.
    *
    * @remarks
-   * When the type is set to this value, the field {@link DiscordMessage.message_snapshot} will be present in the
+   * When the type is set to this value, the field message_snapshot on the message will be present
    *
    * This value can only be used for basic messages;
    * i.e. messages which do not have strong bindings to a non global entity.
@@ -1925,7 +1925,9 @@ export interface DiscordInteractionCallbackResponse {
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-object */
 export interface DiscordInteractionCallback {
+  /** ID of the interaction */
   id: string
+  /** Interaction type */
   type: InteractionTypes
   /** Instance ID of the Activity if one was launched or joined */
   activity_instance_id?: string
