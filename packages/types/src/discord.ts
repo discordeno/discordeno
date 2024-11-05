@@ -3106,16 +3106,41 @@ export type DiscordTemplateSerializedSourceGuild = Omit<
     | 'explicit_content_filter'
     | 'preferred_locale'
     | 'afk_timeout'
-    | 'channels'
-    | 'afk_channel_id'
-    | 'system_channel_id'
     | 'system_channel_flags'
   >,
-  'roles'
+  'roles' | 'channels' | 'afk_channel_id' | 'system_channel_id'
 > & {
+  afk_channel_id: number | null
+  system_channel_id: number | null
   roles: Array<
     Omit<PickPartial<DiscordRole, 'name' | 'color' | 'hoist' | 'mentionable' | 'permissions' | 'icon' | 'unicode_emoji'>, 'id'> & {
       id: number
+    }
+  >
+  channels: Array<
+    Omit<
+      PickPartial<
+        DiscordChannel,
+        | 'name'
+        | 'type'
+        | 'position'
+        | 'topic'
+        | 'bitrate'
+        | 'user_limit'
+        | 'nsfw'
+        | 'rate_limit_per_user'
+        | 'default_auto_archive_duration'
+        | 'available_tags'
+        | 'default_reaction_emoji'
+        | 'default_thread_rate_limit_per_user'
+        | 'default_sort_order'
+        | 'default_forum_layout'
+      >,
+      'id' | 'permission_overwrites' | 'parent_id'
+    > & {
+      id: number
+      permission_overwrites: DiscordOverwrite & { id: number }
+      parent_id: number | null
     }
   >
 }
