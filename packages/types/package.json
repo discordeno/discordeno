@@ -30,10 +30,10 @@
     "@biomejs/biome": "^1.9.4",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.26",
-    "@types/mocha": "^10.0.8",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^22.7.4",
     "c8": "^10.1.2",
-    "mocha": "^10.7.3",
+    "mocha": "^10.8.2",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "^5.5.4"
