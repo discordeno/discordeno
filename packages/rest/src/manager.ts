@@ -38,9 +38,11 @@ import {
   type DiscordRole,
   type DiscordScheduledEvent,
   type DiscordSku,
+  type DiscordSoundboardSound,
   type DiscordStageInstance,
   type DiscordSticker,
   type DiscordStickerPack,
+  type DiscordSubscription,
   type DiscordTemplate,
   type DiscordThreadMember,
   type DiscordUser,
@@ -1627,6 +1629,52 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async listSkus(applicationId) {
       return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId))
+    },
+
+    async listSubscriptions(skuId, options) {
+      return await rest.get<DiscordSubscription[]>(rest.routes.monetization.subscriptions(skuId, options))
+    },
+
+    async getSubscription(skuId, subscriptionId) {
+      return await rest.get<DiscordSubscription>(rest.routes.monetization.subscription(skuId, subscriptionId))
+    },
+
+    async sendSoundboardSound(channelId, options) {
+      await rest.post(rest.routes.soundboard.sendSound(channelId), {
+        body: options,
+      })
+    },
+
+    async listDefaultSoundboardSounds() {
+      return await rest.get<DiscordSoundboardSound[]>(rest.routes.soundboard.listDefault())
+    },
+
+    async listGuildSoundboardSounds(guildId) {
+      return await rest.get<{ items: DiscordSoundboardSound[] }>(rest.routes.soundboard.guildSounds(guildId))
+    },
+
+    async getGuildSoundboardSound(guildId, soundId) {
+      return await rest.get<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId))
+    },
+
+    async createGuildSoundboardSound(guildId, options, reason) {
+      return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSounds(guildId), {
+        body: options,
+        reason,
+      })
+    },
+
+    async modifyGuildSoundboardSound(guildId, soundId, options, reason) {
+      return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
+        body: options,
+        reason,
+      })
+    },
+
+    async deleteGuildSoundboardSound(guildId, soundId, reason) {
+      return await rest.delete(rest.routes.soundboard.guildSound(guildId, soundId), {
+        reason,
+      })
     },
 
     preferSnakeCase(enabled: boolean) {

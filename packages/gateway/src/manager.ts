@@ -556,6 +556,35 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         },
       })
     },
+
+    async requestSoundboardSounds(guildIds) {
+      /**
+       * Discord will send the events for the guilds that are "under the shard" that sends the opcode.
+       * For this reason we need to group the ids with the shard the calculateShardId method gives
+       */
+
+      const map = new Map<number, BigString[]>()
+
+      for (const guildId of guildIds) {
+        const shardId = gateway.calculateShardId(guildId)
+
+        const ids = map.get(shardId) ?? []
+        map.set(shardId, ids)
+
+        ids.push(guildId)
+      }
+
+      await Promise.all(
+        [...map.entries()].map(([shardId, ids]) =>
+          gateway.sendPayload(shardId, {
+            op: GatewayOpcodes.RequestSoundboardSounds,
+            d: {
+              guild_ids: ids,
+            },
+          }),
+        ),
+      )
+    },
   }
 
   return gateway
@@ -816,6 +845,26 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>
+  /**
+   * Used to request soundboard sounds for a list of guilds.
+   *
+   * This function sends multiple (see remarks) _Request Soundboard Sounds_ gateway command over the gateway behind the scenes.
+   *
+   * @param guildIds - The guilds to get the sounds from
+   *
+   * @remarks
+   * Fires a _Soundboard Sounds_ gateway event.
+   *
+   * ⚠️ Discord will send the _Soundboard Sounds_ for each of the guild ids
+   * however you may not receive the same number of events as the ids passed to _Request Soundboard Sounds_ for one of the following reasons:
+   * - The bot is not in the server provided
+   * - The shard the message has been sent from does not receive events for the specified guild
+   *
+   * To avoid this Discordeno will automatically try to group the ids based on what shard they will need to be sent, but this involves sending multiple messages in multiple shards
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway-events#request-soundboard-sounds}
+   */
+  requestSoundboardSounds: (guildIds: BigString[]) => Promise<void>
   /** This managers cache related settings. */
   cache: {
     requestMembers: {

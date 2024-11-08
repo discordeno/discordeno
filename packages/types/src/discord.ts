@@ -922,6 +922,13 @@ export interface DiscordGuild {
   stickers?: DiscordSticker[]
   /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
   safety_alerts_channel_id: string | null
+  /**
+   * Soundboard sounds in the guild
+   *
+   * @remarks
+   * Only sent by the gateway
+   */
+  soundboard_sounds?: DiscordSoundboardSound[]
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
@@ -3778,6 +3785,38 @@ export enum DiscordSkuType {
   SubscriptionGroup = 6,
 }
 
+/** https://discord.com/developers/docs/resources/subscription#subscription-object */
+export interface DiscordSubscription {
+  /** ID of the subscription */
+  id: string
+  /** ID of the user who is subscribed */
+  user_id: string
+  /** List of SKUs subscribed to */
+  sku_ids: string[]
+  /** List of entitlements granted for this subscription */
+  entitlement_ids: string[]
+  /** Start of the current subscription period */
+  current_period_start: string
+  /** End of the current subscription period */
+  current_period_end: string
+  /** Current status of the subscription */
+  status: DiscordSubscriptionStatus
+  /** When the subscription was canceled */
+  canceled_at: string | null
+  /** ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope. */
+  country?: string
+}
+
+/** https://discord.com/developers/docs/resources/subscription#subscription-statuses */
+export enum DiscordSubscriptionStatus {
+  /** Subscription is active and scheduled to renew. */
+  Active,
+  /** Subscription is active but will not renew. */
+  Ending,
+  /** Subscription is inactive and not being charged. */
+  Inactive,
+}
+
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types */
 export enum DiscordInteractionContextType {
   /** Interaction can be used within servers */
@@ -3794,6 +3833,50 @@ export interface DiscordBulkBan {
   banned_users: string[]
   /** list of user ids, that were not banned */
   failed_users: string[]
+}
+
+/** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
+export interface DiscordSoundboardSound {
+  /** The name of this sound */
+  name: string
+  /** The id of this sound */
+  sound_id: string
+  /** The volume of this sound, from 0 to 1 */
+  volume: number
+  /** The id of this sound's custom emoji */
+  emoji_id: string | null
+  /** The unicode character of this sound's standard emoji */
+  emoji_name: string | null
+  /** The id of the guild this sound is in */
+  guild_id?: string
+  /** Whether this sound can be used, may be false due to loss of Server Boosts */
+  available: boolean
+  /** The user who created this sound */
+  user?: DiscordUser
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-delete-guild-soundboard-sound-delete-event-fields */
+export interface DiscordSoundboardSoundDelete {
+  /** ID of the sound that was deleted */
+  sound_id: string
+  /** ID of the guild the sound was in */
+  guild_id: string
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
+export interface DiscordSoundboardSoundsUpdate {
+  /** The guild's soundboard sounds */
+  soundboard_sounds: DiscordSoundboardSound[]
+  /** ID of the guild the sound was in */
+  guild_id: string
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#soundboard-sounds-soundboard-sounds-event-fields */
+export interface DiscordSoundboardSounds {
+  /** The guild's soundboard sounds */
+  soundboard_sounds: DiscordSoundboardSound[]
+  /** ID of the guild the sound was in */
+  guild_id: string
 }
 
 /** https://discord.com/developers/docs/events/webhook-events#payload-structure */

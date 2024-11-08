@@ -51,9 +51,11 @@ import type {
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
   DiscordSku,
+  DiscordSoundboardSound,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerPack,
+  DiscordSubscription,
   DiscordTeam,
   DiscordTemplate,
   DiscordThreadMember,
@@ -115,9 +117,11 @@ import {
   type ScheduledEvent,
   type ScheduledEventRecurrenceRule,
   type Sku,
+  type SoundboardSound,
   type StageInstance,
   type Sticker,
   type StickerPack,
+  type Subscription,
   type Team,
   type Template,
   type ThreadMember,
@@ -182,9 +186,11 @@ import {
   transformScheduledEvent,
   transformScheduledEventRecurrenceRule,
   transformSku,
+  transformSoundboardSound,
   transformStageInstance,
   transformSticker,
   transformStickerPack,
+  transformSubscription,
   transformTeam,
   transformTeamToDiscordTeam,
   transformTemplate,
@@ -277,9 +283,11 @@ export interface Transformers {
     scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
     scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule, scheduledEvent: ScheduledEventRecurrenceRule) => any
     sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
+    soundboardSound: (bot: Bot, payload: DiscordSoundboardSound, soundboardSound: SoundboardSound) => any
     stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
     sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
     stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    subscription: (bot: Bot, payload: DiscordSubscription, subscription: Subscription) => any
     team: (bot: Bot, payload: DiscordTeam, team: Team) => any
     template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
     threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
@@ -356,10 +364,12 @@ export interface Transformers {
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   scheduledEventRecurrenceRule: (bot: Bot, payload: DiscordScheduledEventRecurrenceRule) => ScheduledEventRecurrenceRule
   sku: (bot: Bot, payload: DiscordSku) => Sku
+  soundboardSound: (bot: Bot, payload: DiscordSoundboardSound) => SoundboardSound
   snowflake: (snowflake: BigString) => bigint
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
+  subscription: (bot: Bot, payload: DiscordSubscription) => Subscription
   team: (bot: Bot, payload: DiscordTeam) => Team
   template: (bot: Bot, payload: DiscordTemplate) => Template
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
@@ -722,6 +732,17 @@ export interface TransformersDesiredProperties {
     user: boolean
     sortValue: boolean
   }
+  subscription: {
+    id: boolean
+    userId: boolean
+    skuIds: boolean
+    entitlementIds: boolean
+    currentPeriodStart: boolean
+    currentPeriodEnd: boolean
+    status: boolean
+    canceledAt: boolean
+    country: boolean
+  }
   user: {
     username: boolean
     globalName: boolean
@@ -833,6 +854,16 @@ export interface TransformersDesiredProperties {
     text: boolean
     emoji: boolean
   }
+  soundboardSound: {
+    name: boolean
+    soundId: boolean
+    volume: boolean
+    emojiId: boolean
+    emojiName: boolean
+    guildId: boolean
+    available: boolean
+    user: boolean
+  }
 }
 
 export interface CreateTransformerOptions {
@@ -902,9 +933,11 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
       sku: options.customizers?.sku ?? defaultCustomizer,
+      soundboardSound: options.customizers?.soundboardSound ?? defaultCustomizer,
       stageInstance: options.customizers?.stageInstance ?? defaultCustomizer,
       sticker: options.customizers?.sticker ?? defaultCustomizer,
       stickerPack: options.customizers?.stickerPack ?? defaultCustomizer,
+      subscription: options.customizers?.subscription ?? defaultCustomizer,
       team: options.customizers?.team ?? defaultCustomizer,
       template: options.customizers?.template ?? defaultCustomizer,
       threadMember: options.customizers?.threadMember ?? defaultCustomizer,
@@ -982,10 +1015,12 @@ export function createTransformers(options: RecursivePartial<Transformers>, opts
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
     sku: options.sku ?? transformSku,
+    soundboardSound: options.soundboardSound ?? transformSoundboardSound,
     snowflake: options.snowflake ?? snowflakeToBigint,
     stageInstance: options.stageInstance ?? transformStageInstance,
     sticker: options.sticker ?? transformSticker,
     stickerPack: options.stickerPack ?? transformStickerPack,
+    subscription: options.subscription ?? transformSubscription,
     team: options.team ?? transformTeam,
     template: options.template ?? transformTemplate,
     threadMember: options.threadMember ?? transformThreadMember,
@@ -1379,6 +1414,18 @@ export function createDesiredPropertiesObject(
       sortValue: defaultValue,
       ...desiredProperties.sticker,
     },
+    subscription: {
+      id: defaultValue,
+      userId: defaultValue,
+      skuIds: defaultValue,
+      entitlementIds: defaultValue,
+      currentPeriodStart: defaultValue,
+      currentPeriodEnd: defaultValue,
+      status: defaultValue,
+      canceledAt: defaultValue,
+      country: defaultValue,
+      ...desiredProperties.subscription,
+    },
     user: {
       username: defaultValue,
       globalName: defaultValue,
@@ -1503,6 +1550,17 @@ export function createDesiredPropertiesObject(
       text: defaultValue,
       emoji: defaultValue,
       ...desiredProperties.pollMedia,
+    },
+    soundboardSound: {
+      name: defaultValue,
+      soundId: defaultValue,
+      volume: defaultValue,
+      emojiId: defaultValue,
+      emojiName: defaultValue,
+      guildId: defaultValue,
+      available: defaultValue,
+      user: defaultValue,
+      ...desiredProperties.soundboardSound,
     },
   }
 }

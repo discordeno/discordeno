@@ -31,6 +31,7 @@ import type {
   DiscordScheduledEventRecurrenceRuleNWeekday,
   DiscordScheduledEventRecurrenceRuleWeekday,
   DiscordSkuType,
+  DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
   DiscordWebhookEventType,
@@ -1740,4 +1741,45 @@ export interface GuildWidget {
 export interface GuildWidgetSettings {
   channelId?: string
   enabled: boolean
+}
+
+export interface Subscription {
+  /** ID of the subscription */
+  id: bigint
+  /** ID of the user who is subscribed */
+  userId: bigint
+  /** List of SKUs subscribed to */
+  skuIds: bigint[]
+  /** List of entitlements granted for this subscription */
+  entitlementIds: bigint[]
+  /** Start of the current subscription period */
+  currentPeriodStart: number
+  /** End of the current subscription period */
+  currentPeriodEnd: number
+  /** Current status of the subscription */
+  status: DiscordSubscriptionStatus
+  /** When the subscription was canceled */
+  canceledAt: number
+  /** ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope. */
+  country?: string
+}
+
+/** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
+export interface SoundboardSound {
+  /** The name of this sound */
+  name: string
+  /** The id of this sound */
+  soundId: bigint
+  /** The volume of this sound, from 0 to 1 */
+  volume: number
+  /** The id of this sound's custom emoji */
+  emojiId?: bigint
+  /** The unicode character of this sound's standard emoji */
+  emojiName?: string
+  /** The id of the guild this sound is in */
+  guildId?: bigint
+  /** Whether this sound can be used, may be false due to loss of Server Boosts */
+  available: boolean
+  /** The user who created this sound */
+  user?: User
 }

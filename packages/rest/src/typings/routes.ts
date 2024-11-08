@@ -13,6 +13,7 @@ import type {
   InteractionCallbackOptions,
   ListArchivedThreads,
   ListGuildMembers,
+  ListSkuSubscriptionsOptions,
 } from '@discordeno/types'
 
 export interface RestRoutes {
@@ -274,6 +275,21 @@ export interface RestRoutes {
     consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => string
     /** Route to list the SKUs */
     skus: (applicationId: BigString) => string
+    /** Route to list the SKU subscriptions */
+    subscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => string
+    /** Route to get a SKU subscription */
+    subscription: (skuId: BigString, subscriptionId: BigString) => string
+  }
+  /** Routes related to soundboard sounds */
+  soundboard: {
+    /** Send a soundboard sound to a voice channel the user is connected to. */
+    sendSound: (channelId: BigString) => string
+    /** List the discord default soundboard sounds */
+    listDefault: () => string
+    /** Route for list/create a guild sounds */
+    guildSounds: (guildId: BigString) => string
+    /** Route for get/edit/delete of a guild sound */
+    guildSound: (guildId: BigString, soundId: BigString) => string
   }
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string
