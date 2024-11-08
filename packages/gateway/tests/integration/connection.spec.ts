@@ -154,8 +154,7 @@ describe('gateway', () => {
     await connected
 
     uwsOptions.closing = true
-
-    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
+    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop', true)
 
     uWS.us_listen_socket_close(uwsToken)
   })
@@ -191,8 +190,7 @@ describe('gateway', () => {
     clearTimeout(timeout)
 
     uwsOptions.closing = true
-
-    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
+    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop', true)
 
     uWS.us_listen_socket_close(uwsToken)
   })
