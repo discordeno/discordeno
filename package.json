@@ -1,47 +1,57 @@
 {
-  "name": "discordeno-monorepo",
+  "name": "@discordeno/gateway",
   "version": "19.0.0-alpha.1",
-  "private": true,
+  "main": "./dist/esm/index.js",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.cjs",
+    "types": "./dist/types/index.d.ts"
+  },
+  "types": "./dist/types/index.d.ts",
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/discordeno/discordeno.git"
+  },
   "scripts": {
-    "build": "turbo run build",
-    "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"turbo run build build:type\"",
-    "build:doc": "typedoc --options ./typedoc.json && node scripts/finalizeTypedocs.js",
-    "build:type": "turbo run build:type",
-    "release-build": "turbo run build build:type",
-    "test:bun-unit": "turbo run test:bun-unit",
-    "test:deno-unit": "turbo run test:deno-unit",
-    "test:e2e": "turbo run test:e2e",
-    "test:integration": "turbo run test:integration",
-    "test:test-type": "turbo run test:test-type",
-    "test:type": "turbo run build:type",
-    "test:unit": "turbo run test:unit",
-    "test:unit-coverage": "turbo run test:unit-coverage",
-    "fmt": "turbo run fmt",
-    "format": "biome format --write",
-    "lint": "turbo run lint",
-    "prepare": "husky",
-    "setup-dd": "husky"
+    "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist/esm && swc --strip-leading-paths --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
+    "release-build": "yarn build && yarn build:type",
+    "fmt": "biome format --write",
+    "lint": "biome lint --write",
+    "test:unit-coverage": "c8 mocha --no-warnings 'tests/unit/**/*.spec.ts'",
+    "test:unit": "c8 --r lcov mocha --no-warnings 'tests/unit/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
+    "test:deno-unit": "swc --strip-leading-paths tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist/unit",
+    "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
+    "test:integration": "c8 --r lcov mocha --no-warnings 'tests/integration/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
+    "test:type": "tsc --noEmit",
+    "test:test-type": "tsc --project tests/tsconfig.json"
+  },
+  "dependencies": {
+    "@discordeno/types": "19.0.0-beta.1",
+    "@discordeno/utils": "19.0.0-beta.1",
+    "ws": "^8.18.0"
+  },
+  "optionalDependencies": {
+    "fzstd": "^0.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "chokidar-cli": "^3.0.0",
-    "discordeno": "19.0.0-alpha.1",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
-    "turbo": "^2.0.12",
-    "typedoc": "^0.26.11",
-    "typedoc-plugin-markdown": "^4.2.3",
-    "typescript": "^5.5.4"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "lint-staged": {
-    "*": "yarn biome check --no-errors-on-unmatched --write"
-  },
-  "packageManager": "yarn@4.0.2"
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.7.26",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.8",
+    "@types/node": "^22.7.4",
+    "@types/sinon": "^17.0.3",
+    "@types/ws": "^8.5.12",
+    "c8": "^10.1.2",
+    "chai": "^5.1.2",
+    "mocha": "^10.7.3",
+    "sinon": "^19.0.2",
+    "ts-node": "^10.9.2",
+    "tsconfig": "*",
+    "typescript": "^5.5.4",
+    "uWebSockets.js": "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
+  }
 }

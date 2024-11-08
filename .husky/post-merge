@@ -1,4 +1,0 @@
-if git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD | grep -q "yarn\|package.json"; then
-  echo "hook(post-merge) - Found changes to a yarn file or package.json, running Yarn."
-  yarn
-fi

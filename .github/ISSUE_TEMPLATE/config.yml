@@ -1,8 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name: Discordeno Discord
-    url: https://discord.gg/ddeno
-    about: Join our community and share your projects
-  - name: Documentation
-    url: https://discordeno.js.org/docs/intro
-    about: Our documentation
