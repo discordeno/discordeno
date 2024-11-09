@@ -1872,7 +1872,7 @@ export interface DiscordButtonComponent {
   /** Whether or not this button is disabled */
   disabled?: boolean
   /**
-   * SKU for {@link ButtonStyles.Premium | premium} buttons that can navigate a user to the application shop.
+   * Identifier for a purchasable SKU
    *
    * @remarks
    * Buttons of style {@link ButtonStyles.Premium | Premium} must have a sku_id, any other button with a different style can not have a a sku_id
