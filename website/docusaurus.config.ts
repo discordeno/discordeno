@@ -22,16 +22,8 @@ const config: Config = {
   projectName: 'discordeno', // Usually your repo name.
   trailingSlash: false,
 
-  webpack: {
-    jsLoader: (isServer) => ({
-      loader: require.resolve('esbuild-loader'),
-      options: {
-        loader: 'tsx',
-        jsx: 'automatic',
-        format: isServer ? 'cjs' : undefined,
-        target: isServer ? 'node12' : 'es2017',
-      },
-    }),
+  future: {
+    experimental_faster: true,
   },
 
   onBrokenLinks: 'throw',
