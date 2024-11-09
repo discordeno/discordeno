@@ -1424,7 +1424,7 @@ export interface Role {
   /** Role name */
   name: string
   /** Integer representation of hexadecimal color code */
-  color: number | undefined
+  color: number
   /** Position of this role */
   position: number
   /** role unicode emoji */
