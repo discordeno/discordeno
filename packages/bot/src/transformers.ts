@@ -71,7 +71,7 @@ import type {
 } from '@discordeno/types'
 import { logger } from '@discordeno/utils'
 import type { Bot } from './bot.js'
-import { type TransformersDesiredProperties, createDesiredPropertiesObject } from './desiredProprieties.js'
+import { type TransformersDesiredProperties, createDesiredPropertiesObject } from './desiredProperties.js'
 import {
   type Activity,
   type ActivityInstance,

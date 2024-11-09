@@ -65,7 +65,7 @@ function processInterfaceDeclarationNode(node: ts.InterfaceDeclaration, config: 
     const isOptional = !!(member.getFlags() & ts.SymbolFlags.Optional)
     const isInternal = !!jsDoc.find((x) => x.name === 'internal')
 
-    // If the propriety is internal then we don't want to apply the desired propriety logic to it
+    // If the property is internal then we don't want to apply the desired property logic to it
     if (isInternal || isPropertyDesired(config, interfaceName, memberName)) {
       writeJSDoc(writeStream, docs, jsDoc, '  ')
       writeInterfaceMember(writeStream, memberName, typeText, isOptional)
