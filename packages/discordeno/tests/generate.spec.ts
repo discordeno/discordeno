@@ -38,7 +38,7 @@ describe('discordeno generate', () => {
     expect(allDiagnostics).to.be.an('array').that.is.empty
   })
 
-  it('can get propriety dependencies', () => {
+  it('can get property dependencies', () => {
     const deps = getPropertyDependencies('member', 'mute')
 
     expect(deps).to.have.members(['toggles'])

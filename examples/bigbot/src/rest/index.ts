@@ -1,4 +1,4 @@
-import { type RequestMethods } from '@discordeno/bot'
+import type { RequestMethods } from '@discordeno/bot'
 import { REST_HOST, REST_PORT } from '../config.js'
 import { buildFastifyApp, parseMultiformBody } from './fastify.js'
 import restManager, { logger } from './restManager.js'
