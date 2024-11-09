@@ -36,6 +36,6 @@
     "mocha": "^10.8.2",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.3"
   }
 }
