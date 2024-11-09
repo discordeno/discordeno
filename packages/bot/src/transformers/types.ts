@@ -24,7 +24,6 @@ import type {
   DiscordGuildOnboardingPromptType,
   DiscordInteractionContextType,
   DiscordInviteType,
-  DiscordOverwrite,
   DiscordPollLayoutType,
   DiscordScheduledEventRecurrenceRuleFrequency,
   DiscordScheduledEventRecurrenceRuleMonth,
@@ -1414,7 +1413,7 @@ export interface Role {
   /** Role name */
   name: string
   /** Integer representation of hexadecimal color code */
-  color: number
+  color: number | undefined
   /** Position of this role */
   position: number
   /** role unicode emoji */
