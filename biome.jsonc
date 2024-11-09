@@ -16,11 +16,13 @@
     "rules": {
       "recommended": false,
       "correctness": {
-        "noUnusedVariables": "error"
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error"
       },
       "style": {
         "noNamespace": "error",
         "noNonNullAssertion": "off",
+        "useImportType": "error",
         "useConsistentArrayType": {
           "level": "error",
           "options": { "syntax": "shorthand" }

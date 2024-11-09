@@ -1,50 +1,50 @@
-import {
-  type ActivityTypes,
-  type AllowedMentionsTypes,
-  type ApplicationCommandOptionTypes,
-  type ApplicationCommandPermissionTypes,
-  type ApplicationCommandTypes,
-  type ApplicationFlags,
-  type AttachmentFlags,
-  type AuditLogEvents,
-  type ButtonStyles,
-  type ChannelFlags,
-  type ChannelTypes,
-  type DefaultMessageNotificationLevels,
-  type EmbedTypes,
-  type ExplicitContentFilterLevels,
-  type ForumLayout,
-  type GatewayEventNames,
-  type GuildFeatures,
-  type GuildNsfwLevel,
-  type IntegrationExpireBehaviors,
-  type InteractionResponseTypes,
-  type InteractionTypes,
-  type Localization,
-  type MessageActivityTypes,
-  type MessageComponentTypes,
-  type MessageFlags,
-  type MessageTypes,
-  type MfaLevels,
-  type OverwriteTypes,
-  type PickPartial,
-  type PremiumTiers,
-  type PremiumTypes,
-  type RoleFlags,
-  type ScheduledEventEntityType,
-  type ScheduledEventPrivacyLevel,
-  type ScheduledEventStatus,
-  type SkuFlags,
-  type SortOrderTypes,
-  type StickerFormatTypes,
-  type StickerTypes,
-  type SystemChannelFlags,
-  type TargetTypes,
-  type TeamMembershipStates,
-  type TextStyles,
-  type VerificationLevels,
-  type VideoQualityModes,
-  type WebhookTypes,
+import type {
+  ActivityTypes,
+  AllowedMentionsTypes,
+  ApplicationCommandOptionTypes,
+  ApplicationCommandPermissionTypes,
+  ApplicationCommandTypes,
+  ApplicationFlags,
+  AttachmentFlags,
+  AuditLogEvents,
+  ButtonStyles,
+  ChannelFlags,
+  ChannelTypes,
+  DefaultMessageNotificationLevels,
+  EmbedTypes,
+  ExplicitContentFilterLevels,
+  ForumLayout,
+  GatewayEventNames,
+  GuildFeatures,
+  GuildNsfwLevel,
+  IntegrationExpireBehaviors,
+  InteractionResponseTypes,
+  InteractionTypes,
+  Localization,
+  MessageActivityTypes,
+  MessageComponentTypes,
+  MessageFlags,
+  MessageTypes,
+  MfaLevels,
+  OverwriteTypes,
+  PickPartial,
+  PremiumTiers,
+  PremiumTypes,
+  RoleFlags,
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus,
+  SkuFlags,
+  SortOrderTypes,
+  StickerFormatTypes,
+  StickerTypes,
+  SystemChannelFlags,
+  TargetTypes,
+  TeamMembershipStates,
+  TextStyles,
+  VerificationLevels,
+  VideoQualityModes,
+  WebhookTypes,
 } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
@@ -1822,7 +1822,7 @@ export interface DiscordSelectOption {
 /** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure */
 export interface DiscordSelectMenuDefaultValue {
   /** ID of a user, role, or channel */
-  id: bigint
+  id: string
   /** Type of value that id represents. */
   type: 'user' | 'role' | 'channel'
 }
@@ -1872,7 +1872,7 @@ export interface DiscordButtonComponent {
   /** Whether or not this button is disabled */
   disabled?: boolean
   /**
-   * SKU for {@link ButtonStyles.Premium | premium} buttons that can navigate a user to the application shop.
+   * Identifier for a purchasable SKU
    *
    * @remarks
    * Buttons of style {@link ButtonStyles.Premium | Premium} must have a sku_id, any other button with a different style can not have a a sku_id
@@ -2047,26 +2047,28 @@ export interface DiscordInteractionData {
   /** the type of the invoked command */
   type: ApplicationCommandTypes
   /** Converted users + roles + channels + attachments */
-  resolved?: {
-    /** The Ids and Message objects */
-    messages?: Record<string, DiscordMessage>
-    /** The Ids and User objects */
-    users?: Record<string, DiscordUser>
-    /** The Ids and partial Member objects */
-    members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
-    /** The Ids and Role objects */
-    roles?: Record<string, DiscordRole>
-    /** The Ids and partial Channel objects */
-    channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
-    /** The ids and attachment objects */
-    attachments: Record<string, DiscordAttachment>
-  }
+  resolved?: DiscordInteractionDataResolved
   /** The params + values from the user */
   options?: DiscordInteractionDataOption[]
   /** The target id if this is a context menu command. */
   target_id?: string
   /** the id of the guild the command is registered to */
   guild_id?: string
+}
+
+export interface DiscordInteractionDataResolved {
+  /** The Ids and Message objects */
+  messages?: Record<string, DiscordMessage>
+  /** The Ids and User objects */
+  users?: Record<string, DiscordUser>
+  /** The Ids and partial Member objects */
+  members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
+  /** The Ids and Role objects */
+  roles?: Record<string, DiscordRole>
+  /** The Ids and partial Channel objects */
+  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
+  /** The ids and attachment objects */
+  attachments: Record<string, DiscordAttachment>
 }
 
 export interface DiscordInteractionDataOption {
@@ -3929,4 +3931,11 @@ export interface DiscordEventWebhookApplicationAuthorizedBody {
   scopes: OAuth2Scope[]
   /** Server which app was authorized for (when integration type is 0) */
   guild?: DiscordGuild
+}
+
+export interface DiscordThreadMemberGuildCreate {
+  /** Any user-thread settings, currently only used for notifications */
+  flags: number
+  /** The time the current user last joined the thread */
+  join_timestamp: string
 }

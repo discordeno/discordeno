@@ -24,7 +24,6 @@ import type {
   DiscordGuildOnboardingPromptType,
   DiscordInteractionContextType,
   DiscordInviteType,
-  DiscordOverwrite,
   DiscordPollLayoutType,
   DiscordScheduledEventRecurrenceRuleFrequency,
   DiscordScheduledEventRecurrenceRuleMonth,
@@ -544,6 +543,17 @@ export interface Component {
   maxLength?: number
   /** a list of child components */
   components?: Component[]
+  /** List of default values for auto-populated select menu components; number of default values must be in the range defined by min_values and max_values */
+  defaultValues?: DiscordComponentDefaultValue[]
+  /** Identifier for a purchasable SKU, only available when using premium-style buttons */
+  skuId?: bigint
+}
+
+export interface DiscordComponentDefaultValue {
+  /** ID of a user, role, or channel */
+  id: bigint
+  /** Type of value that id represents. */
+  type: 'user' | 'role' | 'channel'
 }
 
 export interface Embed {

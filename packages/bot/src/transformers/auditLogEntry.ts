@@ -1,5 +1,5 @@
 import type { DiscordAuditLogEntry } from '@discordeno/types'
-import { type AuditLogEntry, type Bot } from '../index.js'
+import type { AuditLogEntry, Bot } from '../index.js'
 
 export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry): AuditLogEntry {
   const auditLogEntry = {
