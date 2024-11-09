@@ -1,4 +1,4 @@
-import { type FeatureList } from '@site/src/types'
+import type { FeatureList } from '@site/src/types'
 import clsx from 'clsx'
 
 export default function Feature({ data }: FeatureList): JSX.Element {

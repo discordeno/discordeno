@@ -45,7 +45,6 @@ import type {
   MessageFlags,
   OverwriteTypes,
   PermissionStrings,
-  PickPartial,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
@@ -1631,4 +1630,11 @@ export interface ModifyGuildSoundboardSound {
   emojiId: BigString | null
   /** The unicode character of a standard emoji for the soundboard sound */
   emojiName: string | null
+}
+
+export interface CreateWebhook {
+  /** Name of the webhook (1-80 characters) */
+  name: string
+  /** Image url for the default webhook avatar */
+  avatar?: string | null
 }

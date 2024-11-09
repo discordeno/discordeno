@@ -1,4 +1,4 @@
-import { type BigString, type DiscordMember } from '@discordeno/types'
+import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import { Permissions } from './toggles/Permissions.js'

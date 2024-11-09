@@ -1,5 +1,5 @@
 import styles from '@site/src/styling/styles.module.css'
-import { type FeatureItem } from '@site/src/types'
+import type { FeatureItem } from '@site/src/types'
 import Feature from './feature'
 
 const FeatureList: FeatureItem[] = [
