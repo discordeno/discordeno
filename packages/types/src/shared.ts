@@ -964,7 +964,7 @@ export type GatewayDispatchEventNames =
   | 'MESSAGE_POLL_VOTE_ADD'
   | 'MESSAGE_POLL_VOTE_REMOVE'
 
-export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
+export type GatewayEventNames = GatewayDispatchEventNames | 'RESUMED'
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {

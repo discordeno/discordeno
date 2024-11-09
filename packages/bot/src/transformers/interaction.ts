@@ -1,30 +1,29 @@
 import {
-  type ChannelTypes,
   DiscordApplicationIntegrationType,
   type DiscordInteraction,
   type DiscordInteractionCallback,
   type DiscordInteractionCallbackResponse,
   type DiscordInteractionDataOption,
+  type DiscordInteractionDataResolved,
   type DiscordInteractionResource,
   InteractionResponseTypes,
   InteractionTypes,
   MessageFlags,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import {
-  type Bot,
-  type DiscordChannel,
-  type Interaction,
-  type InteractionCallback,
-  type InteractionCallbackResponse,
-  type InteractionDataOption,
-  type InteractionDataResolved,
-  type InteractionResolvedChannel,
-  type InteractionResource,
-  type Member,
-  type Message,
+import type {
+  Bot,
+  DiscordChannel,
+  Interaction,
+  InteractionCallback,
+  InteractionCallbackResponse,
+  InteractionDataOption,
+  InteractionDataResolved,
+  InteractionResolvedChannel,
+  InteractionResource,
+  Member,
+  Message,
 } from '../index.js'
-import type { DiscordInteractionDataResolved } from '../typings.js'
 
 const baseInteraction = {
   async respond(response, options) {
