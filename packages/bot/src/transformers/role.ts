@@ -47,7 +47,7 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
   if (props.name && payload.role.name) role.name = payload.role.name
   if (props.position) role.position = payload.role.position
   if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
-  if (props.color && payload.role.color) role.color = payload.role.color
+  if (props.color && payload.role.color !== undefined) role.color = payload.role.color
   if (props.permissions && payload.role.permissions) role.permissions = new Permissions(payload.role.permissions)
   if (props.icon && payload.role.icon) role.icon = iconHashToBigInt(payload.role.icon)
   if (props.unicodeEmoji && payload.role.unicode_emoji) role.unicodeEmoji = payload.role.unicode_emoji
