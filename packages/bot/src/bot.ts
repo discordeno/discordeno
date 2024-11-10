@@ -168,7 +168,5 @@ export interface Bot<
   shutdown: () => Promise<void>
 }
 
-type Capitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : S
-
 /** @internal This is subject to breaking changes without notice */
 export type InternalBot = Bot<CompleteDesiredProprieties<{}, true>, DesiredProprietiesBehavior.RemoveKey>
