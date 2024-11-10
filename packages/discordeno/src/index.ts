@@ -1,2 +1,3 @@
 export * from '@discordeno/bot'
-export * from './bin/config.js'
+// This needs to be explicit or else typescript gets confused
+export { DesiredPropertiesBehavior, type DiscordenoConfig, defineConfig, findConfig, typescriptOptions } from './bin/config.js'
