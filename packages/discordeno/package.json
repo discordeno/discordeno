@@ -29,7 +29,11 @@
     "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-beta.1"
+    "@discordeno/bot": "19.0.0-beta.1",
+    "@discordeno/gateway": "19.0.0-alpha.1",
+    "@discordeno/rest": "19.0.0-alpha.1",
+    "@discordeno/types": "19.0.0-beta.1",
+    "@discordeno/utils": "19.0.0-beta.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
