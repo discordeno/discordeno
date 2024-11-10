@@ -20,7 +20,10 @@ export function separateOverwrites(v: bigint): [number, bigint, bigint, bigint] 
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
-export const baseChannel = {
+export const baseChannel: Channel = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Channel),
+
   get archived() {
     return !!this.toggles?.archived
   },
@@ -62,7 +65,7 @@ export const baseChannel = {
       archived: !!this.toggles?.archived,
     }
   },
-} as Channel
+}
 
 export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
   const channel = Object.create(baseChannel) as Channel

@@ -3,7 +3,10 @@ import { type Bot, type Role, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-const baseRole = {
+const baseRole: Role = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Role),
+
   get tags() {
     return {
       botId: this.internalTags?.botId,
@@ -38,7 +41,7 @@ const baseRole = {
   get guildConnections() {
     return !!this.toggles?.has('guildConnections')
   },
-} as Role
+}
 
 export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }): Role {
   const role: Role = Object.create(baseRole)
