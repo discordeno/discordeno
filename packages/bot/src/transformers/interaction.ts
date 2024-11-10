@@ -116,7 +116,8 @@ export function transformInteraction(
 
   const interaction: Interaction = Object.create(baseInteraction)
   const props = bot.transformers.desiredProperties.interaction
-  interaction.bot = bot as typeof bot.transformers.$inferInteraction.bot
+  // Typescript has an hard time with this, so we need to tell him for sure this is a Bot
+  interaction.bot = bot as unknown as Bot
   interaction.acknowledged = false
 
   if (props.id && payload.interaction.id) interaction.id = bot.transformers.snowflake(payload.interaction.id)
@@ -171,7 +172,8 @@ export function transformInteraction(
     }
   }
 
-  return bot.transformers.customizers.interaction(bot, payload, interaction)
+  // Typescript has an hard time with interaction.bot, so we need to tell him for sure this interaction is the of the correct type
+  return bot.transformers.customizers.interaction(bot, payload, interaction as unknown as typeof bot.transformers.$inferInteraction)
 }
 
 export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption): InteractionDataOption {

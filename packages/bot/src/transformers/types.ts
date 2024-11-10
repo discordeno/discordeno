@@ -74,7 +74,6 @@ import type { Collection } from '@discordeno/utils'
 import type {
   Bot,
   ChannelToggles,
-  DesiredProprietiesBehavior,
   EmojiToggles,
   GuildFeatureKeys,
   GuildToggles,
@@ -84,7 +83,6 @@ import type {
   Permissions,
   RoleToggles,
   ToggleBitfield,
-  TransformersDesiredProperties,
   UserToggles,
   VoiceStateToggles,
 } from '../index.js'
@@ -824,11 +822,9 @@ export interface IntegrationAccount {
   name: string
 }
 
-export interface Interaction<
-  T extends Bot<TransformersDesiredProperties, DesiredProprietiesBehavior> = Bot<TransformersDesiredProperties, DesiredProprietiesBehavior>,
-> {
+export interface Interaction {
   /** The bot object */
-  bot: T
+  bot: Bot
   /** Whether or not this interaction has been responded to. */
   acknowledged: boolean
   /** Id of the interaction */

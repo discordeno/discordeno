@@ -1,5 +1,6 @@
 import type { RecursivePartial } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
+import type { Bot } from './bot.js'
 import type {
   ActivityInstance,
   ActivityLocation,
@@ -828,8 +829,12 @@ type TransformNestedProps<
       T extends Array<infer U extends TransformersObjects[keyof TransformersObjects]>
       ? // Yes, apply the desired props
         SetupDesiredProps<U, TProps, TBehavior>[]
-      : // No, this is a normal value such as string / bigint / number
-        T
+      : // No, is it a Bot?
+        T extends Bot
+        ? // Yes, return a bot with the correct set of props & behavior
+          Bot<TProps, TBehavior>
+        : // No, this is a normal value such as string / bigint / number
+          T
 
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],
