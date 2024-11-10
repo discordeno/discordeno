@@ -1,6 +1,6 @@
 import type { DiscordGatewayPayload, DiscordReady, DiscordVoiceChannelEffectAnimationType } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
-import type { DesiredProprietiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
+import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
 import type { Bot } from './index.js'
 import type {
   AuditLogEntry,
@@ -14,7 +14,7 @@ import type {
 
 export interface EventHandlers<
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior,
+  TBehavior extends DesiredPropertiesBehavior,
   TBot extends Bot<TProps, TBehavior> = Bot<TProps, TBehavior>,
 > {
   debug: (text: string, ...args: any[]) => unknown

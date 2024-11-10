@@ -5,8 +5,8 @@ import { createRestManager } from '@discordeno/rest'
 import type { BigString, GatewayDispatchEventNames, GatewayIntents, RecursivePartial } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type logger } from '@discordeno/utils'
 import type {
-  CompleteDesiredProprieties,
-  DesiredProprietiesBehavior,
+  CompleteDesiredProperties,
+  DesiredPropertiesBehavior,
   SetupDesiredProps,
   TransformersDesiredProperties,
   TransformersObjects,
@@ -24,9 +24,9 @@ import { type Transformers, createTransformers } from './transformers.js'
  */
 export function createBot<
   TProps extends RecursivePartial<TransformersDesiredProperties>,
-  TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
->(options: CreateBotOptions<TProps, TBehavior>): Bot<CompleteDesiredProprieties<TProps>, TBehavior> {
-  type CompleteProps = CompleteDesiredProprieties<TProps>
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.ChangeType,
+>(options: CreateBotOptions<TProps, TBehavior>): Bot<CompleteDesiredProperties<TProps>, TBehavior> {
+  type CompleteProps = CompleteDesiredProperties<TProps>
   type TypedBot = Bot<CompleteProps, TBehavior>
 
   if (!options.transformers) options.transformers = {}
@@ -99,7 +99,7 @@ export function createBot<
   return bot
 }
 
-export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDesiredProperties>, TBehavior extends DesiredProprietiesBehavior> {
+export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDesiredProperties>, TBehavior extends DesiredPropertiesBehavior> {
   /** The bot's token. */
   token: string
   /** Application Id of the bot incase it is an old bot token. */
@@ -111,11 +111,11 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   /** Any options you wish to provide to the gateway manager. */
   gateway?: Omit<CreateGatewayManagerOptions, 'token'> & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
   /** The event handlers. */
-  events?: Partial<EventHandlers<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>
+  events?: Partial<EventHandlers<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers?: RecursivePartial<Transformers<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>
+  transformers?: RecursivePartial<Transformers<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProprieties<NoInfer<TProps>>, TBehavior>>>
+  handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>>
   /**
    * Set the desired properties for the bot
    *
@@ -123,9 +123,9 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
    */
   desiredProperties?: TProps
   /**
-   * Set the desired properties behavior for undesired proprieties
+   * Set the desired properties behavior for undesired properties
    *
-   * @default DesiredProprietiesBehavior.ChangeKey
+   * @default DesiredPropertiesBehavior.ChangeKey
    */
   desiredPropertiesBehavior?: TBehavior
   /**
@@ -141,7 +141,7 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
 
 export interface Bot<
   TProps extends TransformersDesiredProperties = TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.ChangeType,
 > {
   /** The id of the bot. */
   id: bigint
@@ -169,4 +169,4 @@ export interface Bot<
 }
 
 /** @internal This is subject to breaking changes without notice */
-export type InternalBot = Bot<CompleteDesiredProprieties<{}, true>, DesiredProprietiesBehavior.RemoveKey>
+export type InternalBot = Bot<CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>

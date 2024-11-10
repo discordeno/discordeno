@@ -70,7 +70,7 @@ import type {
   RecursivePartial,
 } from '@discordeno/types'
 import type { Bot } from './bot.js'
-import { type DesiredProprietiesBehavior, type TransformersDesiredProperties, createDesiredPropertiesObject } from './desiredProperties.js'
+import { type DesiredPropertiesBehavior, type TransformersDesiredProperties, createDesiredPropertiesObject } from './desiredProperties.js'
 import {
   type Activity,
   type Application,
@@ -180,7 +180,7 @@ import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
 export interface Transformers<
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior,
+  TBehavior extends DesiredPropertiesBehavior,
   // This is just an alias, not an actual parameter
   TBot extends Bot<TProps, TBehavior> = Bot<TProps, TBehavior>,
 > {
@@ -396,7 +396,7 @@ export interface Transformers<
 
 const defaultCustomizer = (_bot: unknown, _payload: unknown, structure: unknown) => structure
 
-export function createTransformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior>(
+export function createTransformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   options: RecursivePartial<Transformers<TProps, TBehavior>>,
 ): Transformers<TProps, TBehavior> {
   return {

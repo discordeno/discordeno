@@ -47,7 +47,7 @@ import type {
 } from './transformers/index.js'
 
 /**
- * All the objects that support desired proprieties
+ * All the objects that support desired properties
  *
  * @internal This is subject to breaking changes at any time
  */
@@ -96,11 +96,11 @@ export interface TransformersObjects {
   soundboardSound: SoundboardSound
 }
 
-// NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredProprietiesMetadata
-//       internal proprieties needs to be in the alwaysPresents array, depending on an always present value is accepted
+// NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
+//       internal properties needs to be in the alwaysPresents array, depending on an always present value is accepted
 
-/** Metadata for typescript to create the correct types for desired proprieties */
-interface TransformersDesiredPropertiesMetadata extends DesiredProprietiesMetadata {
+/** Metadata for typescript to create the correct types for desired properties */
+interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadata {
   channel: {
     dependencies: {
       archived: ['toggles']
@@ -735,7 +735,7 @@ type JoinTuple<T extends string[], TDelimiter extends string> = T extends readon
     : `${F}${TDelimiter}${JoinTuple<R, TDelimiter>}`
   : ''
 
-type DesiredProprietiesMetadata = {
+type DesiredPropertiesMetadata = {
   [K in keyof TransformersObjects]: {
     dependencies?: {
       [Key in keyof TransformersObjects[K]]?: (keyof TransformersObjects[K])[]
@@ -744,12 +744,12 @@ type DesiredProprietiesMetadata = {
   }
 }
 
-type DesirableProprieties<
+type DesirableProperties<
   T extends TransformersObjects[keyof TransformersObjects],
   TKey extends keyof TransformersObjects = KeyByValue<TransformersObjects, T>,
 > = Exclude<
   keyof T,
-  // Exclude the props that depend on something else from the desirable proprieties
+  // Exclude the props that depend on something else from the desirable properties
   | keyof TransformersDesiredPropertiesMetadata[TKey]['dependencies']
   // Check if all the keys are "always presents", if this is the case it means we did not specify any always present key
   | (keyof T extends NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number]
@@ -758,8 +758,8 @@ type DesirableProprieties<
 >
 
 /** @internal This is subject to breaking changes without notices */
-export type DesiredProprietiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
-  [Key in DesirableProprieties<T>]: boolean
+export type DesiredPropertiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
+  [Key in DesirableProperties<T>]: boolean
 }
 
 type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
@@ -772,7 +772,7 @@ type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefin
     ? // Yes, this is a key to include
       true
     : // No, this is a key to exclude
-      `This key is not desired by your desired proprieties configuration`
+      `This key is not desired by your desired properties configuration`
   : // No, it is a props with dependencies?
     TKey extends keyof TDependencies
     ? // Yes, has all of its dependencies satisfied?
@@ -784,11 +784,11 @@ type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefin
     : // No, we include it but it does not have neither props nor dependencies
       true
 
-/** The behavior it should be used when resolving an undesired propriety */
-export enum DesiredProprietiesBehavior {
+/** The behavior it should be used when resolving an undesired property */
+export enum DesiredPropertiesBehavior {
   /** When this behavior is used the key will be missing completely */
   RemoveKey,
-  /** When this behavior is used the key will be a string explaining why the propriety is disabled */
+  /** When this behavior is used the key will be a string explaining why the property is disabled */
   ChangeType,
 }
 
@@ -804,7 +804,7 @@ type GetErrorWhenUndesired<
   Key extends keyof T,
   T,
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior,
+  TBehavior extends DesiredPropertiesBehavior,
   // This generic value is used as an alias
   TIsDesired = IsKeyDesired<
     Key,
@@ -817,7 +817,7 @@ type GetErrorWhenUndesired<
 type TransformNestedProps<
   T,
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior,
+  TBehavior extends DesiredPropertiesBehavior,
 > = T extends TransformersObjects[keyof TransformersObjects] // is T a transformed object?
   ? // Yes, apply the desired props
     SetupDesiredProps<T, TProps, TBehavior>
@@ -839,22 +839,22 @@ type TransformNestedProps<
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior = DesiredProprietiesBehavior.ChangeType,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.ChangeType,
 > = {
   // When the behavior is to remove the key we use the RemoveKeyIfUndesired type helper else return the Key as is
-  [Key in keyof T as TBehavior extends DesiredProprietiesBehavior.RemoveKey
+  [Key in keyof T as TBehavior extends DesiredPropertiesBehavior.RemoveKey
     ? RemoveKeyIfUndesired<Key, T, TProps>
     : Key]: // When the behavior is to change the type we use the GetErrorWhenUndesired type helper else apply the desired props to the key and return
-  TBehavior extends DesiredProprietiesBehavior.ChangeType
+  TBehavior extends DesiredPropertiesBehavior.ChangeType
     ? GetErrorWhenUndesired<Key, T, TProps, TBehavior>
     : TransformNestedProps<T[Key], TProps, TBehavior>
 }
 
 export type TransformersDesiredProperties = {
-  [Key in keyof TransformersObjects]: DesiredProprietiesMapper<TransformersObjects[Key]>
+  [Key in keyof TransformersObjects]: DesiredPropertiesMapper<TransformersObjects[Key]>
 }
 
 /** @internal This is subject to breaking changes without notices */
-export type CompleteDesiredProprieties<T extends RecursivePartial<TransformersDesiredProperties>, TTDefault extends boolean = false> = {
+export type CompleteDesiredProperties<T extends RecursivePartial<TransformersDesiredProperties>, TTDefault extends boolean = false> = {
   [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TTDefault>
 }

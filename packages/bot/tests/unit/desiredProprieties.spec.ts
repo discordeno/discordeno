@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { createDesiredPropertiesObject } from '../../src/index.js'
 
-describe('desired proprieties', () => {
+describe('desired properties', () => {
   it('fills defaults', () => {
     const desired = createDesiredPropertiesObject({})
 

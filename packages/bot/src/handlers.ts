@@ -1,7 +1,7 @@
 import * as handlers from './handlers/index.js'
-import type { Bot, DesiredProprietiesBehavior, DiscordGatewayPayload, GatewayDispatchEventNames, TransformersDesiredProperties } from './index.js'
+import type { Bot, DesiredPropertiesBehavior, DiscordGatewayPayload, GatewayDispatchEventNames, TransformersDesiredProperties } from './index.js'
 
-export function createBotGatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior>(
+export function createBotGatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   options: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<TProps, TBehavior>>>,
 ): GatewayHandlers<TProps, TBehavior> {
   return {
@@ -82,12 +82,12 @@ export function createBotGatewayHandlers<TProps extends TransformersDesiredPrope
   } as GatewayHandlers<TProps, TBehavior>
 }
 
-export type GatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior> = Record<
+export type GatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Record<
   GatewayDispatchEventNames,
   BotGatewayHandler<TProps, TBehavior>
 >
 
-export type BotGatewayHandler<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior> = (
+export type BotGatewayHandler<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = (
   bot: Bot<TProps, TBehavior>,
   data: DiscordGatewayPayload,
   shardId: number,

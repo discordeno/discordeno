@@ -101,7 +101,7 @@ import type {
 } from '@discordeno/types'
 import { snakelize } from '@discordeno/utils'
 import type { Bot } from './bot.js'
-import type { DesiredProprietiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
+import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
 import type {
   Application,
   ApplicationCommand,
@@ -116,7 +116,7 @@ import type {
   WelcomeScreen,
 } from './transformers/index.js'
 
-export function createBotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredProprietiesBehavior>(
+export function createBotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   bot: Bot<TProps, TBehavior>,
 ): BotHelpers<TProps, TBehavior> {
   return {
@@ -797,7 +797,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 
 export interface BotHelpers<
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredProprietiesBehavior,
+  TBehavior extends DesiredPropertiesBehavior,
   // This is just an alias, not an actual parameter
   TBot extends Bot<TProps, TBehavior> = Bot<TProps, TBehavior>,
 > {
