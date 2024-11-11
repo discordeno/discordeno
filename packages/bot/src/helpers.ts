@@ -1111,7 +1111,7 @@ export interface BotHelpers<
     token: string,
     options: InteractionResponse,
     params?: InteractionCallbackOptions,
-  ) => Promise<void | TBot['transformers']['$inferredTypes']['interactionCallbackResponse']>
+  ) => Promise<void | TBot['transformers']['$inferredTypes']['interactionCallbackResponse'] | TBot['transformers']['$inferredTypes']['message']>
   triggerTypingIndicator: (channelId: BigString) => Promise<void>
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
   kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
