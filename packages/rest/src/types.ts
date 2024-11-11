@@ -154,12 +154,12 @@ export interface CreateRestManagerOptions {
      */
     baseUrl: string
     /** The authorization header value to attach when sending requests to the proxy. */
-    authorization: string
+    authorization?: string
     /**
      * The authorization header name to use when sending requests to the proxy
      *
      * @remarks
-     * If the `authorization` header is used it will override any authorization that is given even if
+     * If the header name is set to `authorization`, it will override any authorization that is given even if
      * the requests uses OAuth2 Bearer tokens / Basic tokens
      *
      * @default "authorization" // For compatibility purposes

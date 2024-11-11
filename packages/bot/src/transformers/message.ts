@@ -20,7 +20,10 @@ import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
 
-const baseMessage = {
+const baseMessage: Message = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Message),
+
   get crossposted() {
     return this.flags?.contains(MessageFlags.Crossposted) ?? false
   },
@@ -131,7 +134,7 @@ const baseMessage = {
     if (value) this.flags.add(MessageFlags.Urgent)
     else this.flags.remove(MessageFlags.Urgent)
   },
-} as Message
+}
 
 export function transformMessage(
   bot: InternalBot,

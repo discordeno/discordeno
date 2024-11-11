@@ -5,7 +5,10 @@ import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
 import type { Member } from './types.js'
 
-const baseMember = {
+const baseMember: Member = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Member),
+
   get deaf() {
     return !!this.toggles?.has('deaf')
   },
@@ -30,7 +33,7 @@ const baseMember = {
   get completedOnboarding() {
     return !!this.toggles?.completedOnboarding
   },
-} as Member
+}
 
 export function transformMember(
   bot: InternalBot,

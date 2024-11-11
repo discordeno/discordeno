@@ -3,7 +3,10 @@ import { type InternalBot, type Role, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-const baseRole = {
+const baseRole: Role = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Role),
+
   get tags() {
     return {
       botId: this.internalTags?.botId,
@@ -38,7 +41,7 @@ const baseRole = {
   get guildConnections() {
     return !!this.toggles?.has('guildConnections')
   },
-} as Role
+}
 
 export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferredTypes.role {
   const role: Role = Object.create(baseRole)
@@ -47,7 +50,7 @@ export function transformRole(bot: InternalBot, payload: { role: DiscordRole; gu
   if (props.name && payload.role.name) role.name = payload.role.name
   if (props.position) role.position = payload.role.position
   if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
-  if (props.color && payload.role.color) role.color = payload.role.color
+  if (props.color && payload.role.color !== undefined) role.color = payload.role.color
   if (props.permissions && payload.role.permissions) role.permissions = new Permissions(payload.role.permissions)
   if (props.icon && payload.role.icon) role.icon = iconHashToBigInt(payload.role.icon)
   if (props.unicodeEmoji && payload.role.unicode_emoji) role.unicodeEmoji = payload.role.unicode_emoji

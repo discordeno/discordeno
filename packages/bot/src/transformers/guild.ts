@@ -3,7 +3,10 @@ import { Collection, iconHashToBigInt } from '@discordeno/utils'
 import type { Channel, Guild, InternalBot } from '../index.js'
 import { GuildToggles } from './toggles/guild.js'
 
-const baseGuild = {
+const baseGuild: Guild = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Guild),
+
   get threads() {
     if (!this.channels) return new Collection<bigint, Channel>()
 
@@ -16,7 +19,7 @@ const baseGuild = {
   get features() {
     return this.toggles.features
   },
-} as Guild
+}
 
 export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild; shardId: number }): typeof bot.transformers.$inferredTypes.guild {
   const guildId = bot.transformers.snowflake(payload.guild.id)

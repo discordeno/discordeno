@@ -534,7 +534,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async makeRequest(method, route, options) {
       if (rest.isProxied) {
-        if (rest.authorization !== undefined) {
+        if (rest.authorization) {
           options ??= {}
           options.headers ??= {}
           options.headers[rest.authorizationHeader] = rest.authorization
