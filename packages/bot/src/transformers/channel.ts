@@ -20,9 +20,9 @@ export function separateOverwrites(v: bigint): [number, bigint, bigint, bigint] 
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
-export const baseChannel: Channel = {
+export const baseChannel: InternalBot['transformers']['$inferredTypes']['channel'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as Channel),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['channel']),
 
   get archived() {
     return !!this.toggles?.archived

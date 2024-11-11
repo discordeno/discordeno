@@ -26,9 +26,9 @@ import type {
   Message,
 } from '../index.js'
 
-const baseInteraction: Interaction = {
+const baseInteraction: InternalBot['transformers']['$inferredTypes']['interaction'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as Interaction),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['interaction']),
 
   async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource

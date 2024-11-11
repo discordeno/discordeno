@@ -20,9 +20,9 @@ import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
 
-const baseMessage: Message = {
+const baseMessage: InternalBot['transformers']['$inferredTypes']['message'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as Message),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['message']),
 
   get crossposted() {
     return this.flags?.contains(MessageFlags.Crossposted) ?? false

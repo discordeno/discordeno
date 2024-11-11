@@ -3,9 +3,9 @@ import { type InternalBot, type Role, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-const baseRole: Role = {
+const baseRole: InternalBot['transformers']['$inferredTypes']['role'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as Role),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['role']),
 
   get tags() {
     return {

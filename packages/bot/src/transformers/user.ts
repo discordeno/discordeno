@@ -2,9 +2,9 @@ import type { DiscordUser } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import { type InternalBot, ToggleBitfield, type User, UserToggles } from '../index.js'
 
-const baseUser: User = {
+const baseUser: InternalBot['transformers']['$inferredTypes']['user'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as User),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['user']),
 
   get tag() {
     return `${this.username}#${this.discriminator}`
