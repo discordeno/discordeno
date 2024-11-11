@@ -64,7 +64,10 @@ export const baseChannel = {
   },
 } as Channel
 
-export function transformChannel(bot: InternalBot, payload: { channel: DiscordChannel; guildId?: BigString }): typeof bot.transformers.$inferChannel {
+export function transformChannel(
+  bot: InternalBot,
+  payload: { channel: DiscordChannel; guildId?: BigString },
+): typeof bot.transformers.$inferredTypes.channel {
   const channel = Object.create(baseChannel) as Channel
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
@@ -121,7 +124,7 @@ export function transformChannel(bot: InternalBot, payload: { channel: DiscordCh
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
 
-export function transformForumTag(bot: InternalBot, payload: DiscordForumTag): typeof bot.transformers.$inferForumTag {
+export function transformForumTag(bot: InternalBot, payload: DiscordForumTag): typeof bot.transformers.$inferredTypes.forumTag {
   const props = bot.transformers.desiredProperties.forumTag
   const forumTag = {} as ForumTag
 

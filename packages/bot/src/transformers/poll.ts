@@ -1,7 +1,7 @@
 import type { DiscordEmoji, DiscordPoll, DiscordPollMedia } from '@discordeno/types'
 import type { InternalBot, Poll, PollMedia, PollResult } from '../index.js'
 
-export function transformPoll(bot: InternalBot, payload: DiscordPoll): typeof bot.transformers.$inferPoll {
+export function transformPoll(bot: InternalBot, payload: DiscordPoll): typeof bot.transformers.$inferredTypes.poll {
   const props = bot.transformers.desiredProperties.poll
   const poll = {} as Poll
 
@@ -23,7 +23,7 @@ export function transformPoll(bot: InternalBot, payload: DiscordPoll): typeof bo
   return bot.transformers.customizers.poll(bot, payload, poll)
 }
 
-export function transformPollMedia(bot: InternalBot, payload: DiscordPollMedia): typeof bot.transformers.$inferPollMedia {
+export function transformPollMedia(bot: InternalBot, payload: DiscordPollMedia): typeof bot.transformers.$inferredTypes.pollMedia {
   const props = bot.transformers.desiredProperties.pollMedia
   const pollMedia = {} as PollMedia
 

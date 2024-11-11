@@ -1,7 +1,7 @@
 import type { DiscordScheduledEvent, DiscordScheduledEventRecurrenceRule } from '@discordeno/types'
 import { type InternalBot, type ScheduledEvent, type ScheduledEventRecurrenceRule, iconHashToBigInt } from '../index.js'
 
-export function transformScheduledEvent(bot: InternalBot, payload: DiscordScheduledEvent): typeof bot.transformers.$inferScheduledEvent {
+export function transformScheduledEvent(bot: InternalBot, payload: DiscordScheduledEvent): typeof bot.transformers.$inferredTypes.scheduledEvent {
   const props = bot.transformers.desiredProperties.scheduledEvent
   const scheduledEvent = {} as ScheduledEvent
 
@@ -30,7 +30,7 @@ export function transformScheduledEvent(bot: InternalBot, payload: DiscordSchedu
 export function transformScheduledEventRecurrenceRule(
   bot: InternalBot,
   payload: DiscordScheduledEventRecurrenceRule,
-): typeof bot.transformers.$inferScheduledEventRecurrenceRule {
+): typeof bot.transformers.$inferredTypes.scheduledEventRecurrenceRule {
   const props = bot.transformers.desiredProperties.scheduledEventRecurrenceRule
   const recurrenceRule = {} as ScheduledEventRecurrenceRule
 

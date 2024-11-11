@@ -37,7 +37,7 @@ export function transformMember(
   payload: DiscordMember,
   guildId: BigString,
   userId: BigString,
-): typeof bot.transformers.$inferMember {
+): typeof bot.transformers.$inferredTypes.member {
   const member: Member = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 

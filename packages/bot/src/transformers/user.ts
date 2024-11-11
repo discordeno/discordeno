@@ -20,7 +20,7 @@ const baseUser = {
   },
 } as User
 
-export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bot.transformers.$inferUser {
+export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bot.transformers.$inferredTypes.user {
   const user: User = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 

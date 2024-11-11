@@ -17,7 +17,7 @@ const baseEmoji = {
   },
 } as Emoji
 
-export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof bot.transformers.$inferEmoji {
+export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof bot.transformers.$inferredTypes.emoji {
   const props = bot.transformers.desiredProperties.emoji
   const emoji = Object.create(baseEmoji) as Emoji
 
@@ -34,7 +34,7 @@ export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof 
 export function transformDefaultReactionEmoji(
   bot: InternalBot,
   payload: DiscordDefaultReactionEmoji,
-): typeof bot.transformers.$inferDefaultReactionEmoji {
+): typeof bot.transformers.$inferredTypes.defaultReactionEmoji {
   const props = bot.transformers.desiredProperties.defaultReactionEmoji
   const defaultReactionEmoji = {} as DefaultReactionEmoji
 

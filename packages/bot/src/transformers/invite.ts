@@ -4,7 +4,7 @@ import { type InternalBot, type Invite, isInviteWithMetadata } from '../index.js
 export function transformInvite(
   bot: InternalBot,
   payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number },
-): typeof bot.transformers.$inferInvite {
+): typeof bot.transformers.$inferredTypes.invite {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
 

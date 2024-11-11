@@ -4,7 +4,7 @@ import type { InternalBot, InviteStageInstance } from '../index.js'
 export function transformInviteStageInstance(
   bot: InternalBot,
   payload: DiscordInviteStageInstance & { guildId: BigString },
-): typeof bot.transformers.$inferInviteStageInstance {
+): typeof bot.transformers.$inferredTypes.inviteStageInstance {
   const props = bot.transformers.desiredProperties.inviteStageInstance
   const inviteStageInstance = {} as InviteStageInstance
 

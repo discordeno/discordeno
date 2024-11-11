@@ -45,7 +45,10 @@ export function transformActivity(bot: Bot, payload: DiscordActivity): Activity 
   return bot.transformers.customizers.activity(bot, payload, activity)
 }
 
-export function transformActivityInstance(bot: InternalBot, payload: DiscordActivityInstance): typeof bot.transformers.$inferActivityInstance {
+export function transformActivityInstance(
+  bot: InternalBot,
+  payload: DiscordActivityInstance,
+): typeof bot.transformers.$inferredTypes.activityInstance {
   const props = bot.transformers.desiredProperties.activityInstance
   const activityInstance = {} as ActivityInstance
 
@@ -58,7 +61,10 @@ export function transformActivityInstance(bot: InternalBot, payload: DiscordActi
   return bot.transformers.customizers.activityInstance(bot, payload, activityInstance)
 }
 
-export function transformActivityLocation(bot: InternalBot, payload: DiscordActivityLocation): typeof bot.transformers.$inferActivityLocation {
+export function transformActivityLocation(
+  bot: InternalBot,
+  payload: DiscordActivityLocation,
+): typeof bot.transformers.$inferredTypes.activityLocation {
   const props = bot.transformers.desiredProperties.activityLocation
   const activityLocation = {} as ActivityLocation
 

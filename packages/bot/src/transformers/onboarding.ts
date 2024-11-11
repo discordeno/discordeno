@@ -1,7 +1,7 @@
 import type { DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordGuildOnboardingPromptOption } from '@discordeno/types'
 import type { GuildOnboarding, GuildOnboardingPrompt, GuildOnboardingPromptOption, InternalBot } from '../index.js'
 
-export function transformGuildOnboarding(bot: InternalBot, payload: DiscordGuildOnboarding): typeof bot.transformers.$inferGuildOnboarding {
+export function transformGuildOnboarding(bot: InternalBot, payload: DiscordGuildOnboarding): typeof bot.transformers.$inferredTypes.guildOnboarding {
   const props = bot.transformers.desiredProperties.guildOnboarding
   const guildOnboarding = {} as GuildOnboarding
 
@@ -18,7 +18,7 @@ export function transformGuildOnboarding(bot: InternalBot, payload: DiscordGuild
 export function transformGuildOnboardingPrompt(
   bot: InternalBot,
   payload: DiscordGuildOnboardingPrompt,
-): typeof bot.transformers.$inferGuildOnboardingPrompt {
+): typeof bot.transformers.$inferredTypes.guildOnboardingPrompt {
   const props = bot.transformers.desiredProperties.guildOnboardingPrompt
   const prompt = {} as GuildOnboardingPrompt
 
@@ -36,7 +36,7 @@ export function transformGuildOnboardingPrompt(
 export function transformGuildOnboardingPromptOption(
   bot: InternalBot,
   payload: DiscordGuildOnboardingPromptOption,
-): typeof bot.transformers.$inferGuildOnboardingPromptOption {
+): typeof bot.transformers.$inferredTypes.guildOnboardingPromptOption {
   const props = bot.transformers.desiredProperties.guildOnboardingPromptOption
   const option = {} as GuildOnboardingPromptOption
 

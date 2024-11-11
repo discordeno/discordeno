@@ -1,7 +1,7 @@
 import type { DiscordEntitlement } from '@discordeno/types'
 import type { Entitlement, InternalBot } from '../index.js'
 
-export function transformEntitlement(bot: InternalBot, payload: DiscordEntitlement): typeof bot.transformers.$inferEntitlement {
+export function transformEntitlement(bot: InternalBot, payload: DiscordEntitlement): typeof bot.transformers.$inferredTypes.entitlement {
   const props = bot.transformers.desiredProperties.entitlement
   const entitlement = {} as Entitlement
 

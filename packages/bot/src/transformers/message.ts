@@ -133,7 +133,10 @@ const baseMessage = {
   },
 } as Message
 
-export function transformMessage(bot: InternalBot, payload: { message: DiscordMessage; shardId: number }): typeof bot.transformers.$inferMessage {
+export function transformMessage(
+  bot: InternalBot,
+  payload: { message: DiscordMessage; shardId: number },
+): typeof bot.transformers.$inferredTypes.message {
   const guildId = payload.message.guild_id ? bot.transformers.snowflake(payload.message.guild_id) : undefined
   const userId = payload.message.author?.id ? bot.transformers.snowflake(payload.message.author.id) : undefined
 
@@ -258,7 +261,7 @@ export function transformMessage(bot: InternalBot, payload: { message: DiscordMe
 export function transformMessageSnapshot(
   bot: InternalBot,
   payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
-): typeof bot.transformers.$inferMessageSnapshot {
+): typeof bot.transformers.$inferredTypes.messageSnapshot {
   const props = bot.transformers.desiredProperties.messageSnapshot
   const messageSnapshot = {} as MessageSnapshot
 
@@ -271,7 +274,7 @@ export function transformMessageSnapshot(
 export function transformMessageInteractionMetadata(
   bot: InternalBot,
   payload: DiscordMessageInteractionMetadata,
-): typeof bot.transformers.$inferMessageInteractionMetadata {
+): typeof bot.transformers.$inferredTypes.messageInteractionMetadata {
   const props = bot.transformers.desiredProperties.messageInteractionMetadata
   const metadata = {} as MessageInteractionMetadata
 
@@ -310,7 +313,7 @@ export function transformMessageInteractionMetadata(
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }
 
-export function transformMessageCall(bot: InternalBot, payload: DiscordMessageCall): typeof bot.transformers.$inferMessageCall {
+export function transformMessageCall(bot: InternalBot, payload: DiscordMessageCall): typeof bot.transformers.$inferredTypes.messageCall {
   const call = {} as MessageCall
   const props = bot.transformers.desiredProperties.messageCall
 

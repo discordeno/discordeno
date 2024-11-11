@@ -5,7 +5,7 @@ import { VoiceStateToggles } from './toggles/voice.js'
 export function transformVoiceState(
   bot: InternalBot,
   payload: { voiceState: DiscordVoiceState; guildId: BigString },
-): typeof bot.transformers.$inferVoiceState {
+): typeof bot.transformers.$inferredTypes.voiceState {
   const props = bot.transformers.desiredProperties.voiceState
   const voiceState = {} as VoiceState
 

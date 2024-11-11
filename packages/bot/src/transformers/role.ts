@@ -40,7 +40,7 @@ const baseRole = {
   },
 } as Role
 
-export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferRole {
+export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferredTypes.role {
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)

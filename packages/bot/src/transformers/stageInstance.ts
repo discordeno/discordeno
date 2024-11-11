@@ -1,7 +1,7 @@
 import type { DiscordStageInstance } from '@discordeno/types'
 import type { InternalBot, StageInstance } from '../index.js'
 
-export function transformStageInstance(bot: InternalBot, payload: DiscordStageInstance): typeof bot.transformers.$inferStageInstance {
+export function transformStageInstance(bot: InternalBot, payload: DiscordStageInstance): typeof bot.transformers.$inferredTypes.stageInstance {
   const props = bot.transformers.desiredProperties.stageInstance
   const stageInstance = {} as StageInstance
 

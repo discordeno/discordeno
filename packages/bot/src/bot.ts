@@ -157,7 +157,9 @@ export interface Bot<
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers: Transformers<TProps, TBehavior> & {
-    [K in keyof TransformersObjects as `$infer${Capitalize<K>}`]: SetupDesiredProps<TransformersObjects[K], TProps, TBehavior>
+    $inferredTypes: {
+      [K in keyof TransformersObjects]: SetupDesiredProps<TransformersObjects[K], TProps, TBehavior>
+    }
   }
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
   handlers: GatewayHandlers<TProps, TBehavior>

@@ -363,7 +363,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.getGuild(guildId, options)), shardId: 0 })
     },
     getGuilds: async (bearerToken, options) => {
-      return (await bot.rest.getGuilds(bearerToken, options)).map<Partial<typeof bot.transformers.$inferGuild>>((res) =>
+      return (await bot.rest.getGuilds(bearerToken, options)).map<Partial<typeof bot.transformers.$inferredTypes.guild>>((res) =>
         // @ts-expect-error getGuilds returns partial guilds
         bot.transformers.guild(bot, { guild: snakelize(res), shardId: 0 }),
       )
@@ -752,7 +752,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     createTestEntitlement: async (applicationId, body) => {
       // @ts-expect-error createTestEntitlement gives a partial, and this method returns a partial
       return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body))) as Partial<
-        typeof bot.transformers.$inferEntitlement
+        typeof bot.transformers.$inferredTypes.entitlement
       >
     },
     deleteTestEntitlement: async (applicationId, entitlementId) => {
@@ -802,25 +802,37 @@ export interface BotHelpers<
   TBot extends Bot<TProps, TBehavior> = Bot<TProps, TBehavior>,
 > {
   createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions, reason?: string) => Promise<AutoModerationRule>
-  createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<TBot['transformers']['$inferChannel']>
-  createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<TBot['transformers']['$inferEmoji']>
-  createApplicationEmoji: (options: CreateApplicationEmoji) => Promise<TBot['transformers']['$inferEmoji']>
-  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage, reason?: string) => Promise<TBot['transformers']['$inferChannel']>
+  createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['channel']>
+  createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['emoji']>
+  createApplicationEmoji: (options: CreateApplicationEmoji) => Promise<TBot['transformers']['$inferredTypes']['emoji']>
+  createForumThread: (
+    channelId: BigString,
+    options: CreateForumPostWithMessage,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['channel']>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
-  createGuild: (options: CreateGuild) => Promise<TBot['transformers']['$inferGuild']>
+  createGuild: (options: CreateGuild) => Promise<TBot['transformers']['$inferredTypes']['guild']>
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand>
-  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<TBot['transformers']['$inferGuild']>
-  createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions, reason?: string) => Promise<TBot['transformers']['$inferSticker']>
+  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<TBot['transformers']['$inferredTypes']['guild']>
+  createGuildSticker: (
+    guildId: BigString,
+    options: CreateGuildStickerOptions,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['sticker']>
   createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>
   createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<Camelize<DiscordInvite>>
-  createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<TBot['transformers']['$inferRole']>
-  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent, reason?: string) => Promise<TBot['transformers']['$inferScheduledEvent']>
-  createStageInstance: (options: CreateStageInstance, reason?: string) => Promise<TBot['transformers']['$inferStageInstance']>
-  createWebhook: (channelId: BigString, options: CreateWebhook, reason?: string) => Promise<TBot['transformers']['$inferWebhook']>
+  createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['role']>
+  createScheduledEvent: (
+    guildId: BigString,
+    options: CreateScheduledEvent,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['scheduledEvent']>
+  createStageInstance: (options: CreateStageInstance, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['stageInstance']>
+  createWebhook: (channelId: BigString, options: CreateWebhook, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['webhook']>
   editApplicationCommandPermissions: (
     guildId: BigString,
     commandId: BigString,
@@ -833,49 +845,67 @@ export interface BotHelpers<
     options: Partial<EditAutoModerationRuleOptions>,
     reason?: string,
   ) => Promise<AutoModerationRule>
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<TBot['transformers']['$inferUser']>
-  editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<TBot['transformers']['$inferChannel']>
-  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<TBot['transformers']['$inferEmoji']>
-  editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<TBot['transformers']['$inferEmoji']>
-  editFollowupMessage: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<TBot['transformers']['$inferMessage']>
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<TBot['transformers']['$inferredTypes']['user']>
+  editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['channel']>
+  editEmoji: (
+    guildId: BigString,
+    id: BigString,
+    options: ModifyGuildEmoji,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['emoji']>
+  editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<TBot['transformers']['$inferredTypes']['emoji']>
+  editFollowupMessage: (
+    token: string,
+    messageId: BigString,
+    options: InteractionCallbackData,
+  ) => Promise<TBot['transformers']['$inferredTypes']['message']>
   editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<ApplicationCommand>
-  editGuild: (guildId: BigString, options: ModifyGuild, reason?: string) => Promise<TBot['transformers']['$inferGuild']>
+  editGuild: (guildId: BigString, options: ModifyGuild, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['guild']>
   editGuildApplicationCommand: (commandId: BigString, guildId: BigString, options: CreateApplicationCommand) => Promise<ApplicationCommand>
   editGuildSticker: (
     guildId: BigString,
     stickerId: BigString,
     options: AtLeastOne<EditGuildStickerOptions>,
     reason?: string,
-  ) => Promise<TBot['transformers']['$inferSticker']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['sticker']>
   editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
-  editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<TBot['transformers']['$inferMessage']>
-  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<TBot['transformers']['$inferMessage']>
+  editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<TBot['transformers']['$inferredTypes']['message']>
   editOriginalWebhookMessage: (
     webhookId: BigString,
     token: string,
     options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<TBot['transformers']['$inferMessage']>
-  editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string) => Promise<TBot['transformers']['$inferRole']>
-  editRolePositions: (guildId: BigString, options: ModifyRolePositions[], reason?: string) => Promise<TBot['transformers']['$inferRole'][]>
+  ) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  editRole: (
+    guildId: BigString,
+    roleId: BigString,
+    options: EditGuildRole,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['role']>
+  editRolePositions: (
+    guildId: BigString,
+    options: ModifyRolePositions[],
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['role'][]>
   editScheduledEvent: (
     guildId: BigString,
     eventId: BigString,
     options: Partial<EditScheduledEvent>,
     reason?: string,
-  ) => Promise<TBot['transformers']['$inferScheduledEvent']>
-  editStageInstance: (channelId: BigString, topic: string, reason?: string) => Promise<TBot['transformers']['$inferStageInstance']>
-  editWebhook: (webhookId: BigString, options: ModifyWebhook, reason?: string) => Promise<TBot['transformers']['$inferWebhook']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['scheduledEvent']>
+  editStageInstance: (channelId: BigString, topic: string, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['stageInstance']>
+  editWebhook: (webhookId: BigString, options: ModifyWebhook, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['webhook']>
   editWebhookMessage: (
     webhookId: BigString,
     token: string,
     messageId: BigString,
     options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<TBot['transformers']['$inferMessage']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['message']>
   editWebhookWithToken: (
     webhookId: BigString,
     token: string,
     options: Omit<ModifyWebhook, 'channelId'>,
-  ) => Promise<TBot['transformers']['$inferWebhook']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['webhook']>
   editWelcomeScreen: (guildId: BigString, options: Camelize<DiscordModifyGuildWelcomeScreen>, reason?: string) => Promise<WelcomeScreen>
   editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>, reason?: string) => Promise<GuildWidgetSettings>
   editUserApplicationRoleConnection: (
@@ -883,9 +913,13 @@ export interface BotHelpers<
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnection>,
   ) => Promise<Camelize<DiscordApplicationRoleConnection>>
-  executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<TBot['transformers']['$inferMessage'] | undefined>
+  executeWebhook: (
+    webhookId: BigString,
+    token: string,
+    options: ExecuteWebhook,
+  ) => Promise<TBot['transformers']['$inferredTypes']['message'] | undefined>
   followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
-  getActiveThreads: (guildId: BigString) => Promise<{ threads: TBot['transformers']['$inferChannel'][]; members: ThreadMember[] }>
+  getActiveThreads: (guildId: BigString) => Promise<{ threads: TBot['transformers']['$inferredTypes']['channel'][]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
   editApplicationInfo: (body: EditApplication) => Promise<Application>
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<Camelize<DiscordCurrentAuthorization>>
@@ -906,61 +940,61 @@ export interface BotHelpers<
   getAvailableVoiceRegions: () => Promise<Camelize<DiscordVoiceRegion>[]>
   getBan: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordBan>>
   getBans: (guildId: BigString, options?: GetBans) => Promise<Camelize<DiscordBan>[]>
-  getChannel: (channelId: BigString) => Promise<TBot['transformers']['$inferChannel']>
+  getChannel: (channelId: BigString) => Promise<TBot['transformers']['$inferredTypes']['channel']>
   getChannelInvites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata>[]>
-  getChannels: (guildId: BigString) => Promise<TBot['transformers']['$inferChannel'][]>
-  getChannelWebhooks: (channelId: BigString) => Promise<TBot['transformers']['$inferWebhook'][]>
-  getDmChannel: (userId: BigString) => Promise<TBot['transformers']['$inferChannel']>
-  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<TBot['transformers']['$inferChannel']>
-  getEmoji: (guildId: BigString, emojiId: BigString) => Promise<TBot['transformers']['$inferEmoji']>
-  getApplicationEmoji: (emojiId: BigString) => Promise<TBot['transformers']['$inferEmoji']>
-  getEmojis: (guildId: BigString) => Promise<TBot['transformers']['$inferEmoji'][]>
-  getApplicationEmojis: () => Promise<{ items: TBot['transformers']['$inferEmoji'][] }>
-  getFollowupMessage: (token: string, messageId: BigString) => Promise<TBot['transformers']['$inferMessage']>
+  getChannels: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['channel'][]>
+  getChannelWebhooks: (channelId: BigString) => Promise<TBot['transformers']['$inferredTypes']['webhook'][]>
+  getDmChannel: (userId: BigString) => Promise<TBot['transformers']['$inferredTypes']['channel']>
+  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<TBot['transformers']['$inferredTypes']['channel']>
+  getEmoji: (guildId: BigString, emojiId: BigString) => Promise<TBot['transformers']['$inferredTypes']['emoji']>
+  getApplicationEmoji: (emojiId: BigString) => Promise<TBot['transformers']['$inferredTypes']['emoji']>
+  getEmojis: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['emoji'][]>
+  getApplicationEmojis: () => Promise<{ items: TBot['transformers']['$inferredTypes']['emoji'][] }>
+  getFollowupMessage: (token: string, messageId: BigString) => Promise<TBot['transformers']['$inferredTypes']['message']>
   getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>
   getGlobalApplicationCommands: () => Promise<ApplicationCommand[]>
-  getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<TBot['transformers']['$inferGuild']>
-  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<TBot['transformers']['$inferGuild']>[]>
+  getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<TBot['transformers']['$inferredTypes']['guild']>
+  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<TBot['transformers']['$inferredTypes']['guild']>[]>
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>
   getGuildApplicationCommands: (guildId: BigString) => Promise<ApplicationCommand[]>
   getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>
-  getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<TBot['transformers']['$inferSticker']>
-  getGuildStickers: (guildId: BigString) => Promise<TBot['transformers']['$inferSticker'][]>
+  getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<TBot['transformers']['$inferredTypes']['sticker']>
+  getGuildStickers: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['sticker'][]>
   getGuildTemplate: (templateCode: string) => Promise<Template>
   getGuildTemplates: (guildId: BigString) => Promise<Template[]>
-  getGuildWebhooks: (guildId: BigString) => Promise<TBot['transformers']['$inferWebhook'][]>
+  getGuildWebhooks: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['webhook'][]>
   getIntegrations: (guildId: BigString) => Promise<Integration[]>
-  getInvite: (inviteCode: string, options?: GetInvite) => Promise<TBot['transformers']['$inferInvite']>
-  getInvites: (guildId: BigString) => Promise<TBot['transformers']['$inferInvite'][]>
-  getMessage: (channelId: BigString, messageId: BigString) => Promise<TBot['transformers']['$inferMessage']>
-  getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<TBot['transformers']['$inferMessage'][]>
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<TBot['transformers']['$inferredTypes']['invite']>
+  getInvites: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['invite'][]>
+  getMessage: (channelId: BigString, messageId: BigString) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<TBot['transformers']['$inferredTypes']['message'][]>
   getStickerPack: (stickerPackId: BigString) => Promise<StickerPack>
   getStickerPacks: () => Promise<StickerPack[]>
-  getOriginalInteractionResponse: (token: string) => Promise<TBot['transformers']['$inferMessage']>
-  getPinnedMessages: (channelId: BigString) => Promise<TBot['transformers']['$inferMessage'][]>
+  getOriginalInteractionResponse: (token: string) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  getPinnedMessages: (channelId: BigString) => Promise<TBot['transformers']['$inferredTypes']['message'][]>
   getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<Camelize<DiscordPrunedCount>>
   getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
-  getRoles: (guildId: BigString) => Promise<TBot['transformers']['$inferRole'][]>
-  getRole: (guildId: BigString, roleId: BigString) => Promise<TBot['transformers']['$inferRole']>
+  getRoles: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['role'][]>
+  getRole: (guildId: BigString, roleId: BigString) => Promise<TBot['transformers']['$inferredTypes']['role']>
   getScheduledEvent: (
     guildId: BigString,
     eventId: BigString,
     options?: { withUserCount?: boolean },
-  ) => Promise<TBot['transformers']['$inferScheduledEvent']>
-  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<TBot['transformers']['$inferScheduledEvent'][]>
+  ) => Promise<TBot['transformers']['$inferredTypes']['scheduledEvent']>
+  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<TBot['transformers']['$inferredTypes']['scheduledEvent'][]>
   getScheduledEventUsers: (
     guildId: BigString,
     eventId: BigString,
     options?: GetScheduledEventUsers,
-  ) => Promise<Array<{ user: TBot['transformers']['$inferUser']; member?: TBot['transformers']['$inferMember'] }>>
+  ) => Promise<Array<{ user: TBot['transformers']['$inferredTypes']['user']; member?: TBot['transformers']['$inferredTypes']['member'] }>>
   getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
-  getStageInstance: (channelId: BigString) => Promise<TBot['transformers']['$inferStageInstance']>
-  getOwnVoiceState: (guildId: BigString) => Promise<TBot['transformers']['$inferVoiceState']>
-  getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<TBot['transformers']['$inferVoiceState']>
-  getSticker: (stickerId: BigString) => Promise<TBot['transformers']['$inferSticker']>
+  getStageInstance: (channelId: BigString) => Promise<TBot['transformers']['$inferredTypes']['stageInstance']>
+  getOwnVoiceState: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['voiceState']>
+  getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<TBot['transformers']['$inferredTypes']['voiceState']>
+  getSticker: (stickerId: BigString) => Promise<TBot['transformers']['$inferredTypes']['sticker']>
   getThreadMember: (channelId: BigString, userId: BigString) => Promise<ThreadMember>
   getThreadMembers: (channelId: BigString) => Promise<ThreadMember[]>
   getReactions: (
@@ -968,38 +1002,38 @@ export interface BotHelpers<
     messageId: BigString,
     reaction: string,
     options?: GetReactions,
-  ) => Promise<TBot['transformers']['$inferUser'][]>
-  getUser: (id: BigString) => Promise<TBot['transformers']['$inferUser']>
-  getCurrentUser: (bearerToken: string) => Promise<TBot['transformers']['$inferUser']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['user'][]>
+  getUser: (id: BigString) => Promise<TBot['transformers']['$inferredTypes']['user']>
+  getCurrentUser: (bearerToken: string) => Promise<TBot['transformers']['$inferredTypes']['user']>
   getUserConnections: (bearerToken: string) => Promise<Camelize<DiscordConnection>[]>
   getUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<Camelize<DiscordApplicationRoleConnection>>
   getVanityUrl: (guildId: BigString) => Promise<Camelize<DiscordVanityUrl>>
   getVoiceRegions: (guildId: BigString) => Promise<Camelize<DiscordVoiceRegion>[]>
-  getWebhook: (webhookId: BigString) => Promise<TBot['transformers']['$inferWebhook']>
+  getWebhook: (webhookId: BigString) => Promise<TBot['transformers']['$inferredTypes']['webhook']>
   getWebhookMessage: (
     webhookId: BigString,
     token: string,
     messageId: BigString,
     options?: GetWebhookMessageOptions,
-  ) => Promise<TBot['transformers']['$inferMessage']>
-  getWebhookWithToken: (webhookId: BigString, token: string) => Promise<TBot['transformers']['$inferWebhook']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  getWebhookWithToken: (webhookId: BigString, token: string) => Promise<TBot['transformers']['$inferredTypes']['webhook']>
   getWelcomeScreen: (guildId: BigString) => Promise<WelcomeScreen>
   getWidget: (guildId: BigString) => Promise<GuildWidget>
   getWidgetSettings: (guildId: BigString) => Promise<GuildWidgetSettings>
-  publishMessage: (channelId: BigString, messageId: BigString) => Promise<TBot['transformers']['$inferMessage']>
-  sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<TBot['transformers']['$inferMessage']>
-  sendFollowupMessage: (token: string, options: InteractionCallbackData) => Promise<TBot['transformers']['$inferMessage']>
+  publishMessage: (channelId: BigString, messageId: BigString) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<TBot['transformers']['$inferredTypes']['message']>
+  sendFollowupMessage: (token: string, options: InteractionCallbackData) => Promise<TBot['transformers']['$inferredTypes']['message']>
   startThreadWithMessage: (
     channelId: BigString,
     messageId: BigString,
     options: StartThreadWithMessage,
     reason?: string,
-  ) => Promise<TBot['transformers']['$inferChannel']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['channel']>
   startThreadWithoutMessage: (
     channelId: BigString,
     options: StartThreadWithoutMessage,
     reason?: string,
-  ) => Promise<TBot['transformers']['$inferChannel']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['channel']>
   syncGuildTemplate: (guildId: BigString) => Promise<Template>
   upsertGlobalApplicationCommands: (
     commands: CreateApplicationCommand[],
@@ -1010,13 +1044,22 @@ export interface BotHelpers<
     commands: CreateApplicationCommand[],
     options?: UpsertGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand[]>
-  editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<TBot['transformers']['$inferMember']>
-  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember, reason?: string) => Promise<TBot['transformers']['$inferMember']>
-  getMember: (guildId: BigString, userId: BigString) => Promise<TBot['transformers']['$inferMember']>
-  getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<TBot['transformers']['$inferMember']>
-  getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<TBot['transformers']['$inferMember'][]>
+  editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<TBot['transformers']['$inferredTypes']['member']>
+  editMember: (
+    guildId: BigString,
+    userId: BigString,
+    options: ModifyGuildMember,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['member']>
+  getMember: (guildId: BigString, userId: BigString) => Promise<TBot['transformers']['$inferredTypes']['member']>
+  getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<TBot['transformers']['$inferredTypes']['member']>
+  getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<TBot['transformers']['$inferredTypes']['member'][]>
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
-  searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<TBot['transformers']['$inferMember'][]>
+  searchMembers: (
+    guildId: BigString,
+    query: string,
+    options?: Omit<SearchMembers, 'query'>,
+  ) => Promise<TBot['transformers']['$inferredTypes']['member'][]>
   bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<{ bannedUsers: bigint[]; failedUsers: bigint[] }>
   getApplicationActivityInstance: (applicationId: BigString, instanceId: string) => Promise<Camelize<DiscordActivityInstance>>
   // functions return Void so dont need any special handling
@@ -1068,35 +1111,42 @@ export interface BotHelpers<
     token: string,
     options: InteractionResponse,
     params?: InteractionCallbackOptions,
-  ) => Promise<void | TBot['transformers']['$inferInteractionCallbackResponse']>
+  ) => Promise<void | TBot['transformers']['$inferredTypes']['interactionCallbackResponse']>
   triggerTypingIndicator: (channelId: BigString) => Promise<void>
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
   kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   pinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   unbanMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
-  getGuildOnboarding: (guildId: BigString) => Promise<TBot['transformers']['$inferGuildOnboarding']>
-  editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<TBot['transformers']['$inferGuildOnboarding']>
-  listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<TBot['transformers']['$inferEntitlement'][]>
-  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<TBot['transformers']['$inferEntitlement']>>
+  getGuildOnboarding: (guildId: BigString) => Promise<TBot['transformers']['$inferredTypes']['guildOnboarding']>
+  editGuildOnboarding: (
+    guildId: BigString,
+    options: EditGuildOnboarding,
+    reason?: string,
+  ) => Promise<TBot['transformers']['$inferredTypes']['guildOnboarding']>
+  listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<TBot['transformers']['$inferredTypes']['entitlement'][]>
+  createTestEntitlement: (
+    applicationId: BigString,
+    body: CreateEntitlement,
+  ) => Promise<Partial<TBot['transformers']['$inferredTypes']['entitlement']>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
-  listSkus: (applicationId: BigString) => Promise<TBot['transformers']['$inferSku'][]>
-  listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<TBot['transformers']['$inferSubscription'][]>
-  getSubscription: (skuId: BigString, subscriptionId: BigString) => Promise<TBot['transformers']['$inferSubscription']>
+  listSkus: (applicationId: BigString) => Promise<TBot['transformers']['$inferredTypes']['sku'][]>
+  listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<TBot['transformers']['$inferredTypes']['subscription'][]>
+  getSubscription: (skuId: BigString, subscriptionId: BigString) => Promise<TBot['transformers']['$inferredTypes']['subscription']>
   sendSoundboardSound: (channelId: BigString, options: SendSoundboardSound) => Promise<void>
-  listDefaultSoundboardSounds: () => Promise<TBot['transformers']['$inferSoundboardSound'][]>
-  listGuildSoundboardSounds: (guildId: BigString) => Promise<{ items: TBot['transformers']['$inferSoundboardSound'][] }>
-  getGuildSoundboardSound: (guildId: BigString, soundId: BigString) => Promise<TBot['transformers']['$inferSoundboardSound']>
+  listDefaultSoundboardSounds: () => Promise<TBot['transformers']['$inferredTypes']['soundboardSound'][]>
+  listGuildSoundboardSounds: (guildId: BigString) => Promise<{ items: TBot['transformers']['$inferredTypes']['soundboardSound'][] }>
+  getGuildSoundboardSound: (guildId: BigString, soundId: BigString) => Promise<TBot['transformers']['$inferredTypes']['soundboardSound']>
   createGuildSoundboardSound: (
     guildId: BigString,
     options: CreateGuildSoundboardSound,
     reason?: string,
-  ) => Promise<TBot['transformers']['$inferSoundboardSound']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['soundboardSound']>
   modifyGuildSoundboardSound: (
     guildId: BigString,
     soundId: BigString,
     options: ModifyGuildSoundboardSound,
     reason?: string,
-  ) => Promise<TBot['transformers']['$inferSoundboardSound']>
+  ) => Promise<TBot['transformers']['$inferredTypes']['soundboardSound']>
   deleteGuildSoundboardSound: (guildId: BigString, soundId: BigString, reason?: string) => Promise<void>
 }

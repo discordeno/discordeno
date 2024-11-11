@@ -18,7 +18,7 @@ const baseGuild = {
   },
 } as Guild
 
-export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild; shardId: number }): typeof bot.transformers.$inferGuild {
+export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild; shardId: number }): typeof bot.transformers.$inferredTypes.guild {
   const guildId = bot.transformers.snowflake(payload.guild.id)
   const props = bot.transformers.desiredProperties.guild
   const guild: Guild = Object.create(baseGuild)

@@ -1,7 +1,7 @@
 import type { DiscordSticker, DiscordStickerPack } from '@discordeno/types'
 import type { InternalBot, Sticker, StickerPack } from '../index.js'
 
-export function transformSticker(bot: InternalBot, payload: DiscordSticker): typeof bot.transformers.$inferSticker {
+export function transformSticker(bot: InternalBot, payload: DiscordSticker): typeof bot.transformers.$inferredTypes.sticker {
   const props = bot.transformers.desiredProperties.sticker
   const sticker = {} as Sticker
 

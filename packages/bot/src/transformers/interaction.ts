@@ -110,7 +110,7 @@ const baseInteraction = {
 export function transformInteraction(
   bot: InternalBot,
   payload: { interaction: DiscordInteraction; shardId: number },
-): typeof bot.transformers.$inferInteraction {
+): typeof bot.transformers.$inferredTypes.interaction {
   const guildId = payload.interaction.guild_id ? bot.transformers.snowflake(payload.interaction.guild_id) : undefined
   const user = bot.transformers.user(bot, payload.interaction.member?.user ?? payload.interaction.user!)
 
@@ -173,7 +173,7 @@ export function transformInteraction(
   }
 
   // Typescript has an hard time with interaction.bot, so we need to tell him for sure this interaction is the of the correct type
-  return bot.transformers.customizers.interaction(bot, payload, interaction as unknown as typeof bot.transformers.$inferInteraction)
+  return bot.transformers.customizers.interaction(bot, payload, interaction as unknown as typeof bot.transformers.$inferredTypes.interaction)
 }
 
 export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption): InteractionDataOption {
@@ -254,7 +254,7 @@ export function transformInteractionDataResolved(
 export function transformInteractionCallbackResponse(
   bot: InternalBot,
   payload: { interactionCallbackResponse: DiscordInteractionCallbackResponse; shardId: number },
-): typeof bot.transformers.$inferInteractionCallbackResponse {
+): typeof bot.transformers.$inferredTypes.interactionCallbackResponse {
   const props = bot.transformers.desiredProperties.interactionCallbackResponse
   const response = {} as InteractionCallbackResponse
 
@@ -272,7 +272,7 @@ export function transformInteractionCallbackResponse(
 export function transformInteractionCallback(
   bot: InternalBot,
   payload: DiscordInteractionCallback,
-): typeof bot.transformers.$inferInteractionCallback {
+): typeof bot.transformers.$inferredTypes.interactionCallback {
   const props = bot.transformers.desiredProperties.interactionCallback
   const callback = {} as InteractionCallback
 
@@ -289,7 +289,7 @@ export function transformInteractionCallback(
 export function transformInteractionResource(
   bot: InternalBot,
   payload: { interactionResource: DiscordInteractionResource; shardId: number },
-): typeof bot.transformers.$inferInteractionResource {
+): typeof bot.transformers.$inferredTypes.interactionResource {
   const props = bot.transformers.desiredProperties.interactionResource
   const resource = {} as InteractionResource
 
