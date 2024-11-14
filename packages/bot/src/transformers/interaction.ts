@@ -25,7 +25,10 @@ import type {
   Message,
 } from '../index.js'
 
-const baseInteraction = {
+const baseInteraction: Interaction = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as Interaction),
+
   async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
 
@@ -104,7 +107,7 @@ const baseInteraction = {
     if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token, messageId)
     else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token)
   },
-} as Interaction
+}
 
 export function transformInteraction(bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }): Interaction {
   const guildId = payload.interaction.guild_id ? bot.transformers.snowflake(payload.interaction.guild_id) : undefined
