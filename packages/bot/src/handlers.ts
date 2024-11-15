@@ -2,7 +2,7 @@ import * as handlers from './handlers/index.js'
 import type { Bot, DesiredPropertiesBehavior, DiscordGatewayPayload, GatewayDispatchEventNames, TransformersDesiredProperties } from './index.js'
 
 export function createBotGatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
-  options: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<TProps, TBehavior>>>,
+  options: Partial<GatewayHandlers<TProps, TBehavior>>,
 ): GatewayHandlers<TProps, TBehavior> {
   return {
     APPLICATION_COMMAND_PERMISSIONS_UPDATE: options.APPLICATION_COMMAND_PERMISSIONS_UPDATE ?? handlers.handleApplicationCommandPermissionsUpdate,
