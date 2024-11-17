@@ -122,7 +122,7 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^22.7.4"
@@ -145,7 +145,7 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^22.7.4"
@@ -175,7 +175,7 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
     "@types/chai-as-promised": "npm:^8.0.1"
     "@types/mocha": "npm:^10.0.9"
@@ -199,7 +199,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^22.7.4"
     c8: "npm:^10.1.2"
@@ -217,7 +217,7 @@ __metadata:
     "@biomejs/biome": "npm:^1.9.4"
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^22.7.4"
@@ -486,92 +486,92 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-darwin-arm64@npm:1.7.28"
+"@swc/core-darwin-arm64@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-darwin-arm64@npm:1.9.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-darwin-x64@npm:1.7.28"
+"@swc/core-darwin-x64@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-darwin-x64@npm:1.9.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.7.28"
+"@swc/core-linux-arm-gnueabihf@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.9.2"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.7.28"
+"@swc/core-linux-arm64-gnu@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.9.2"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-linux-arm64-musl@npm:1.7.28"
+"@swc/core-linux-arm64-musl@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-linux-arm64-musl@npm:1.9.2"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-linux-x64-gnu@npm:1.7.28"
+"@swc/core-linux-x64-gnu@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-linux-x64-gnu@npm:1.9.2"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-linux-x64-musl@npm:1.7.28"
+"@swc/core-linux-x64-musl@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-linux-x64-musl@npm:1.9.2"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.7.28"
+"@swc/core-win32-arm64-msvc@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.9.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.7.28"
+"@swc/core-win32-ia32-msvc@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.9.2"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.7.28":
-  version: 1.7.28
-  resolution: "@swc/core-win32-x64-msvc@npm:1.7.28"
+"@swc/core-win32-x64-msvc@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core-win32-x64-msvc@npm:1.9.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.7.26":
-  version: 1.7.28
-  resolution: "@swc/core@npm:1.7.28"
+"@swc/core@npm:^1.9.2":
+  version: 1.9.2
+  resolution: "@swc/core@npm:1.9.2"
   dependencies:
-    "@swc/core-darwin-arm64": "npm:1.7.28"
-    "@swc/core-darwin-x64": "npm:1.7.28"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.7.28"
-    "@swc/core-linux-arm64-gnu": "npm:1.7.28"
-    "@swc/core-linux-arm64-musl": "npm:1.7.28"
-    "@swc/core-linux-x64-gnu": "npm:1.7.28"
-    "@swc/core-linux-x64-musl": "npm:1.7.28"
-    "@swc/core-win32-arm64-msvc": "npm:1.7.28"
-    "@swc/core-win32-ia32-msvc": "npm:1.7.28"
-    "@swc/core-win32-x64-msvc": "npm:1.7.28"
+    "@swc/core-darwin-arm64": "npm:1.9.2"
+    "@swc/core-darwin-x64": "npm:1.9.2"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.9.2"
+    "@swc/core-linux-arm64-gnu": "npm:1.9.2"
+    "@swc/core-linux-arm64-musl": "npm:1.9.2"
+    "@swc/core-linux-x64-gnu": "npm:1.9.2"
+    "@swc/core-linux-x64-musl": "npm:1.9.2"
+    "@swc/core-win32-arm64-msvc": "npm:1.9.2"
+    "@swc/core-win32-ia32-msvc": "npm:1.9.2"
+    "@swc/core-win32-x64-msvc": "npm:1.9.2"
     "@swc/counter": "npm:^0.1.3"
-    "@swc/types": "npm:^0.1.12"
+    "@swc/types": "npm:^0.1.15"
   peerDependencies:
     "@swc/helpers": "*"
   dependenciesMeta:
@@ -598,7 +598,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: a477e79387ecc8b68c2bdbbdc88cc61f27a02c5d00f0d77134f9e2de166786a4ee9f7388d6ffd44fc01bfef5311a15cc3132052bab72fb43246dc42705fedb60
+  checksum: 6793f2014a016f90b1c41a695f6d3a14d574e129e78f651fe3d6dbacbc6d0836ab7a7eb445d873a302b060b25ae34c4e09d0f94574a71da47c6424c5fa58aa10
   languageName: node
   linkType: hard
 
@@ -609,12 +609,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/types@npm:^0.1.12":
-  version: 0.1.12
-  resolution: "@swc/types@npm:0.1.12"
+"@swc/types@npm:^0.1.15":
+  version: 0.1.15
+  resolution: "@swc/types@npm:0.1.15"
   dependencies:
     "@swc/counter": "npm:^0.1.3"
-  checksum: 92dbbc70cd068ea30fb6fbdc1ae8599d6c058a5d09b2923d6e4e24fab5ad7c86a19dd01f349a8e03e300a9321e06911a24df18303b40e307fbd4109372cef2ef
+  checksum: d8bf063aeebac51290d1edf0cec52e2e5b5afced0dc6933510a86947e10f0f77976bc14c3efb5e8f265a9cbdeb0929e00e44b2f82c6d0f273997c5029417b769
   languageName: node
   linkType: hard
 
@@ -1037,7 +1037,7 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/benchmark": "npm:^2.1.5"
     "@types/node": "npm:^22.7.4"
     benchmark: "npm:^2.1.4"
@@ -1683,7 +1683,7 @@ __metadata:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
     "@swc/cli": "npm:^0.5.0"
-    "@swc/core": "npm:^1.7.26"
+    "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^22.7.4"
