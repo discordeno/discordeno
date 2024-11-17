@@ -1,7 +1,7 @@
 import type { DiscordGatewayPayload, DiscordGuildMemberAdd } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { InternalBot } from '../../index.js'
 
-export async function handleGuildMemberAdd(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
+export async function handleGuildMemberAdd(bot: InternalBot, data: DiscordGatewayPayload): Promise<void> {
   if (!bot.events.guildMemberAdd) return
 
   const payload = data.d as DiscordGuildMemberAdd

@@ -1,10 +1,25 @@
 import type { DiscordDefaultReactionEmoji, DiscordEmoji } from '@discordeno/types'
-import type { Bot, DefaultReactionEmoji, Emoji } from '../index.js'
+import type { DefaultReactionEmoji, Emoji, InternalBot } from '../index.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
-export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
+const baseEmoji = {
+  get animated() {
+    return this.toggles?.animated
+  },
+  get requireColons() {
+    return this.toggles?.requireColons
+  },
+  get managed() {
+    return this.toggles?.managed
+  },
+  get available() {
+    return this.toggles.available
+  },
+} as Emoji
+
+export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof bot.transformers.$inferredTypes.emoji {
   const props = bot.transformers.desiredProperties.emoji
-  const emoji = {} as Emoji
+  const emoji = Object.create(baseEmoji) as Emoji
 
   if (props.id && payload.id) emoji.id = bot.transformers.snowflake(payload.id)
   if (props.name && payload.name) emoji.name = payload.name
@@ -16,7 +31,10 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
   return bot.transformers.customizers.emoji(bot, payload, emoji)
 }
 
-export function transformDefaultReactionEmoji(bot: Bot, payload: DiscordDefaultReactionEmoji): DefaultReactionEmoji {
+export function transformDefaultReactionEmoji(
+  bot: InternalBot,
+  payload: DiscordDefaultReactionEmoji,
+): typeof bot.transformers.$inferredTypes.defaultReactionEmoji {
   const props = bot.transformers.desiredProperties.defaultReactionEmoji
   const defaultReactionEmoji = {} as DefaultReactionEmoji
 

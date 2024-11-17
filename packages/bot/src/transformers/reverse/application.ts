@@ -1,6 +1,6 @@
-import { type Application, type Bot, type DiscordApplication, iconBigintToHash } from '../../index.js'
+import { type Application, type DiscordApplication, type InternalBot, iconBigintToHash } from '../../index.js'
 
-export function transformApplicationToDiscordApplication(bot: Bot, payload: Application): DiscordApplication {
+export function transformApplicationToDiscordApplication(bot: InternalBot, payload: Application): DiscordApplication {
   return {
     name: payload.name,
     description: payload.description,

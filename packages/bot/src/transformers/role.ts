@@ -1,9 +1,12 @@
 import type { BigString, DiscordRole } from '@discordeno/types'
-import { type Bot, type Role, iconHashToBigInt } from '../index.js'
+import { type InternalBot, type Role, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-const baseRole = {
+const baseRole: InternalBot['transformers']['$inferredTypes']['role'] = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['role']),
+
   get tags() {
     return {
       botId: this.internalTags?.botId,
@@ -38,9 +41,9 @@ const baseRole = {
   get guildConnections() {
     return !!this.toggles?.has('guildConnections')
   },
-} as Role
+}
 
-export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }): Role {
+export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferredTypes.role {
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)

@@ -1,4 +1,5 @@
 import {
+  type DiscordApplication,
   DiscordApplicationIntegrationType,
   type DiscordMessage,
   type DiscordMessageCall,
@@ -7,12 +8,22 @@ import {
   MessageFlags,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { type Bot, type Message, type MessageCall, type MessageInteractionMetadata, type MessageSnapshot, snowflakeToTimestamp } from '../index.js'
+import {
+  type InternalBot,
+  type Message,
+  type MessageCall,
+  type MessageInteractionMetadata,
+  type MessageSnapshot,
+  snowflakeToTimestamp,
+} from '../index.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
 
-const baseMessage = {
+const baseMessage: InternalBot['transformers']['$inferredTypes']['message'] = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['message']),
+
   get crossposted() {
     return this.flags?.contains(MessageFlags.Crossposted) ?? false
   },
@@ -123,93 +134,106 @@ const baseMessage = {
     if (value) this.flags.add(MessageFlags.Urgent)
     else this.flags.remove(MessageFlags.Urgent)
   },
-} as Message
+}
 
-export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const userId = payload.author?.id ? bot.transformers.snowflake(payload.author.id) : undefined
+export function transformMessage(
+  bot: InternalBot,
+  payload: { message: DiscordMessage; shardId: number },
+): typeof bot.transformers.$inferredTypes.message {
+  const guildId = payload.message.guild_id ? bot.transformers.snowflake(payload.message.guild_id) : undefined
+  const userId = payload.message.author?.id ? bot.transformers.snowflake(payload.message.author.id) : undefined
 
   const message: Message = Object.create(baseMessage)
   message.bitfield = new ToggleBitfield()
-  message.flags = new ToggleBitfield(payload.flags)
+  message.flags = new ToggleBitfield(payload.message.flags)
 
   const props = bot.transformers.desiredProperties.message
 
-  if (props.author && payload.author) message.author = bot.transformers.user(bot, payload.author)
-  if (props.applicationId && payload.application_id) message.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (props.attachments && payload.attachments?.length)
-    message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
-  if (props.channelId && payload.channel_id) message.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (props.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
-  if (props.content) message.content = payload.content ?? EMPTY_STRING
-  if (props.editedTimestamp && payload.edited_timestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
-  if (props.embeds && payload.embeds?.length) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
+  if (props.author && payload.message.author) message.author = bot.transformers.user(bot, payload.message.author)
+  if (props.application && payload.message.application)
+    message.application = bot.transformers.application(bot, {
+      application: payload.message.application as DiscordApplication,
+      shardId: payload.shardId,
+    })
+  if (props.applicationId && payload.message.application_id) message.applicationId = bot.transformers.snowflake(payload.message.application_id)
+  if (props.attachments && payload.message.attachments?.length)
+    message.attachments = payload.message.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
+  if (props.channelId && payload.message.channel_id) message.channelId = bot.transformers.snowflake(payload.message.channel_id)
+  if (props.components && payload.message.components?.length)
+    message.components = payload.message.components.map((comp) => bot.transformers.component(bot, comp))
+  if (props.content) message.content = payload.message.content ?? EMPTY_STRING
+  if (props.editedTimestamp && payload.message.edited_timestamp) message.editedTimestamp = Date.parse(payload.message.edited_timestamp)
+  if (props.embeds && payload.message.embeds?.length) message.embeds = payload.message.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (props.guildId && guildId) message.guildId = guildId
-  if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
-  if (props.interactionMetadata && payload.interaction_metadata)
-    message.interactionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.interaction_metadata)
-  if (props.interaction && payload.interaction) {
+  if (props.id && payload.message.id) message.id = bot.transformers.snowflake(payload.message.id)
+  if (props.interactionMetadata && payload.message.interaction_metadata)
+    message.interactionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.message.interaction_metadata)
+  if (props.interaction && payload.message.interaction) {
     const interaction = {} as NonNullable<Message['interaction']>
     const messageInteractionProps = bot.transformers.desiredProperties.messageInteraction
 
     if (messageInteractionProps.id) {
-      interaction.id = bot.transformers.snowflake(payload.interaction.id)
+      interaction.id = bot.transformers.snowflake(payload.message.interaction.id)
     }
-    if (messageInteractionProps.member && payload.interaction.member) {
+    if (messageInteractionProps.member && payload.message.interaction.member) {
       // @ts-expect-error TODO: partial - check why this is partial and handle as needed
-      interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, payload.interaction.user.id)
+      interaction.member = bot.transformers.member(bot, payload.message.interaction.member, guildId, payload.message.interaction.user.id)
     }
     if (messageInteractionProps.name) {
-      interaction.name = payload.interaction.name
+      interaction.name = payload.message.interaction.name
     }
     if (messageInteractionProps.type) {
-      interaction.type = payload.interaction.type
+      interaction.type = payload.message.interaction.type
     }
     if (messageInteractionProps.user) {
-      interaction.user = bot.transformers.user(bot, payload.interaction.user)
+      interaction.user = bot.transformers.user(bot, payload.message.interaction.user)
     }
 
     message.interaction = interaction
   }
-  if (props.member && guildId && userId && payload.member) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
-  if (payload.mention_everyone) message.mentionEveryone = true
-  if (props.mentionedChannelIds && payload.mention_channels?.length) {
+  if (props.member && guildId && userId && payload.message.member)
+    message.member = bot.transformers.member(bot, payload.message.member, guildId, userId)
+  if (payload.message.mention_everyone) message.mentionEveryone = true
+  if (props.mentionedChannelIds && payload.message.mention_channels?.length) {
     message.mentionedChannelIds = [
       // Keep any ids tht discord sends
-      ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
+      ...(payload.message.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
-      ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
+      ...(payload.message.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1)),
       ),
     ]
   }
-  if (props.mentionedRoleIds && payload.mention_roles?.length)
-    message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id))
-  if (props.mentions && payload.mentions?.length) message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user))
-  if (props.messageReference && payload.message_reference) {
+  if (props.mentionedRoleIds && payload.message.mention_roles?.length)
+    message.mentionedRoleIds = payload.message.mention_roles.map((id) => bot.transformers.snowflake(id))
+  if (props.mentions && payload.message.mentions?.length) message.mentions = payload.message.mentions.map((user) => bot.transformers.user(bot, user))
+  if (props.messageReference && payload.message.message_reference) {
     const reference = {} as NonNullable<Message['messageReference']>
     const messageReferenceProps = bot.transformers.desiredProperties.messageReference
 
-    if (messageReferenceProps.channelId && payload.message_reference.channel_id) {
-      reference.channelId = bot.transformers.snowflake(payload.message_reference.channel_id)
+    if (messageReferenceProps.channelId && payload.message.message_reference.channel_id) {
+      reference.channelId = bot.transformers.snowflake(payload.message.message_reference.channel_id)
     }
-    if (messageReferenceProps.guildId && payload.message_reference.guild_id) {
-      reference.guildId = bot.transformers.snowflake(payload.message_reference.guild_id)
+    if (messageReferenceProps.guildId && payload.message.message_reference.guild_id) {
+      reference.guildId = bot.transformers.snowflake(payload.message.message_reference.guild_id)
     }
-    if (messageReferenceProps.messageId && payload.message_reference.message_id) {
-      reference.messageId = bot.transformers.snowflake(payload.message_reference.message_id)
+    if (messageReferenceProps.messageId && payload.message.message_reference.message_id) {
+      reference.messageId = bot.transformers.snowflake(payload.message.message_reference.message_id)
     }
 
     message.messageReference = reference
   }
-  if (props.referencedMessage && payload.referenced_message) message.referencedMessage = bot.transformers.message(bot, payload.referenced_message)
-  if (props.messageSnapshots && payload.message_snapshots)
-    message.messageSnapshots = payload.message_snapshots.map((snap) => bot.transformers.messageSnapshot(bot, snap))
-  if (props.nonce && payload.nonce) message.nonce = payload.nonce
-  if (payload.pinned) message.pinned = true
-  if (props.reactions && payload.reactions?.length) {
-    message.reactions = payload.reactions.map((reaction) => ({
+  if (props.referencedMessage && payload.message.referenced_message)
+    message.referencedMessage = bot.transformers.message(bot, { message: payload.message.referenced_message, shardId: payload.shardId })
+  if (props.messageSnapshots && payload.message.message_snapshots)
+    message.messageSnapshots = payload.message.message_snapshots.map((snap) =>
+      bot.transformers.messageSnapshot(bot, { messageSnapshot: snap, shardId: payload.shardId }),
+    )
+  if (props.nonce && payload.message.nonce) message.nonce = payload.message.nonce
+  if (payload.message.pinned) message.pinned = true
+  if (props.reactions && payload.message.reactions?.length) {
+    message.reactions = payload.message.reactions.map((reaction) => ({
       me: reaction.me,
       meBurst: reaction.me_burst,
       count: reaction.count,
@@ -221,32 +245,39 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
       burstColors: reaction.burst_colors,
     }))
   }
-  if (props.stickerItems && payload.sticker_items?.length)
-    message.stickerItems = payload.sticker_items.map((item) => ({
+  if (props.stickerItems && payload.message.sticker_items?.length)
+    message.stickerItems = payload.message.sticker_items.map((item) => ({
       id: bot.transformers.snowflake(item.id),
       name: item.name,
       formatType: item.format_type,
     }))
-  if (payload.tts) message.tts = true
-  if (props.thread && payload.thread) message.thread = bot.transformers.channel(bot, { channel: payload.thread, guildId })
-  if (props.type) message.type = payload.type
-  if (props.webhookId && payload.webhook_id) message.webhookId = bot.transformers.snowflake(payload.webhook_id)
-  if (props.poll && payload.poll) message.poll = bot.transformers.poll(bot, payload.poll)
-  if (props.call && payload.call) message.call = bot.transformers.messageCall(bot, payload.call)
+  if (payload.message.tts) message.tts = true
+  if (props.thread && payload.message.thread) message.thread = bot.transformers.channel(bot, { channel: payload.message.thread, guildId })
+  if (props.type) message.type = payload.message.type
+  if (props.webhookId && payload.message.webhook_id) message.webhookId = bot.transformers.snowflake(payload.message.webhook_id)
+  if (props.poll && payload.message.poll) message.poll = bot.transformers.poll(bot, payload.message.poll)
+  if (props.call && payload.message.call) message.call = bot.transformers.messageCall(bot, payload.message.call)
 
-  return bot.transformers.customizers.message(bot, payload, message)
+  return bot.transformers.customizers.message(bot, payload.message, message)
 }
 
-export function transformMessageSnapshot(bot: Bot, payload: DiscordMessageSnapshot): MessageSnapshot {
+export function transformMessageSnapshot(
+  bot: InternalBot,
+  payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
+): typeof bot.transformers.$inferredTypes.messageSnapshot {
   const props = bot.transformers.desiredProperties.messageSnapshot
   const messageSnapshot = {} as MessageSnapshot
 
-  if (props.message && payload.message) messageSnapshot.message = bot.transformers.message(bot, payload.message as DiscordMessage)
+  if (props.message && payload.messageSnapshot.message)
+    messageSnapshot.message = bot.transformers.message(bot, { message: payload.messageSnapshot.message as DiscordMessage, shardId: payload.shardId })
 
-  return bot.transformers.customizers.messageSnapshot(bot, payload, messageSnapshot)
+  return bot.transformers.customizers.messageSnapshot(bot, payload.messageSnapshot, messageSnapshot)
 }
 
-export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {
+export function transformMessageInteractionMetadata(
+  bot: InternalBot,
+  payload: DiscordMessageInteractionMetadata,
+): typeof bot.transformers.$inferredTypes.messageInteractionMetadata {
   const props = bot.transformers.desiredProperties.messageInteractionMetadata
   const metadata = {} as MessageInteractionMetadata
 
@@ -285,7 +316,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }
 
-export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): MessageCall {
+export function transformMessageCall(bot: InternalBot, payload: DiscordMessageCall): typeof bot.transformers.$inferredTypes.messageCall {
   const call = {} as MessageCall
   const props = bot.transformers.desiredProperties.messageCall
 

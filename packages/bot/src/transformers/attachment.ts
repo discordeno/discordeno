@@ -1,7 +1,7 @@
 import type { DiscordAttachment } from '@discordeno/types'
-import type { Attachment, Bot } from '../index.js'
+import type { Attachment, InternalBot } from '../index.js'
 
-export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attachment {
+export function transformAttachment(bot: InternalBot, payload: DiscordAttachment): typeof bot.transformers.$inferredTypes.attachment {
   const props = bot.transformers.desiredProperties.attachment
   const attachment = {} as Attachment
 

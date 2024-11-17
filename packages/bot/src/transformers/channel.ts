@@ -1,5 +1,5 @@
 import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types'
-import { type Bot, type Channel, type ForumTag, calculatePermissions, iconHashToBigInt } from '../index.js'
+import { type Channel, type ForumTag, type InternalBot, calculatePermissions, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 
@@ -20,7 +20,10 @@ export function separateOverwrites(v: bigint): [number, bigint, bigint, bigint] 
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
-export const baseChannel = {
+export const baseChannel: InternalBot['transformers']['$inferredTypes']['channel'] = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['channel']),
+
   get archived() {
     return !!this.toggles?.archived
   },
@@ -62,9 +65,12 @@ export const baseChannel = {
       archived: !!this.toggles?.archived,
     }
   },
-} as Channel
+}
 
-export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
+export function transformChannel(
+  bot: InternalBot,
+  payload: { channel: DiscordChannel; guildId?: BigString },
+): typeof bot.transformers.$inferredTypes.channel {
   const channel = Object.create(baseChannel) as Channel
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
@@ -86,13 +92,13 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (props.videoQualityMode && payload.channel.video_quality_mode) channel.videoQualityMode = payload.channel.video_quality_mode
   if (props.messageCount) channel.messageCount = payload.channel.message_count
   if (props.memberCount) channel.memberCount = payload.channel.member_count
-  if (props.archiveTimestamp || props.createTimestamp || props.autoArchiveDuration) {
+  if (props.threadMetadata) {
     channel.internalThreadMetadata = {} as NonNullable<Channel['internalThreadMetadata']>
-    if (props.archiveTimestamp && payload.channel.thread_metadata?.archive_timestamp)
+    if (payload.channel.thread_metadata?.archive_timestamp)
       channel.internalThreadMetadata.archiveTimestamp = Date.parse(payload.channel.thread_metadata.archive_timestamp)
-    if (props.createTimestamp && payload.channel.thread_metadata?.create_timestamp)
+    if (payload.channel.thread_metadata?.create_timestamp)
       channel.internalThreadMetadata.createTimestamp = Date.parse(payload.channel.thread_metadata.create_timestamp)
-    if (props.autoArchiveDuration && payload.channel.thread_metadata?.auto_archive_duration)
+    if (payload.channel.thread_metadata?.auto_archive_duration)
       channel.internalThreadMetadata.autoArchiveDuration = payload.channel.thread_metadata.auto_archive_duration
   }
   if (props.defaultAutoArchiveDuration && payload.channel.default_auto_archive_duration)
@@ -121,7 +127,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
 
-export function transformForumTag(bot: Bot, payload: DiscordForumTag): ForumTag {
+export function transformForumTag(bot: InternalBot, payload: DiscordForumTag): typeof bot.transformers.$inferredTypes.forumTag {
   const props = bot.transformers.desiredProperties.forumTag
   const forumTag = {} as ForumTag
 

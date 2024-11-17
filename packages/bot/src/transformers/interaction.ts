@@ -21,11 +21,15 @@ import type {
   InteractionDataResolved,
   InteractionResolvedChannel,
   InteractionResource,
+  InternalBot,
   Member,
   Message,
 } from '../index.js'
 
-const baseInteraction = {
+const baseInteraction: InternalBot['transformers']['$inferredTypes']['interaction'] = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['interaction']),
+
   async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
 
@@ -104,15 +108,19 @@ const baseInteraction = {
     if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token, messageId)
     else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token)
   },
-} as Interaction
+}
 
-export function transformInteraction(bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }): Interaction {
+export function transformInteraction(
+  bot: InternalBot,
+  payload: { interaction: DiscordInteraction; shardId: number },
+): typeof bot.transformers.$inferredTypes.interaction {
   const guildId = payload.interaction.guild_id ? bot.transformers.snowflake(payload.interaction.guild_id) : undefined
   const user = bot.transformers.user(bot, payload.interaction.member?.user ?? payload.interaction.user!)
 
   const interaction: Interaction = Object.create(baseInteraction)
   const props = bot.transformers.desiredProperties.interaction
-  interaction.bot = bot
+  // Typescript has an hard time with this, so we need to tell him for sure this is a Bot
+  interaction.bot = bot as unknown as Bot
   interaction.acknowledged = false
 
   if (props.id && payload.interaction.id) interaction.id = bot.transformers.snowflake(payload.interaction.id)
@@ -130,7 +138,8 @@ export function transformInteraction(bot: Bot, payload: { interaction: DiscordIn
   if (props.user && user) interaction.user = user
   if (props.appPermissions && payload.interaction.app_permissions)
     interaction.appPermissions = bot.transformers.snowflake(payload.interaction.app_permissions)
-  if (props.message && payload.interaction.message) interaction.message = bot.transformers.message(bot, payload.interaction.message)
+  if (props.message && payload.interaction.message)
+    interaction.message = bot.transformers.message(bot, { message: payload.interaction.message, shardId: 0 })
   if (props.channel && payload.interaction.channel)
     interaction.channel = bot.transformers.channel(bot, { channel: payload.interaction.channel as DiscordChannel, guildId })
   if (props.channelId && payload.interaction.channel_id) interaction.channelId = bot.transformers.snowflake(payload.interaction.channel_id)
@@ -159,14 +168,15 @@ export function transformInteraction(bot: Bot, payload: { interaction: DiscordIn
       id: payload.interaction.data.id ? bot.transformers.snowflake(payload.interaction.data.id) : undefined,
       name: payload.interaction.data.name,
       resolved: payload.interaction.data.resolved
-        ? bot.transformers.interactionDataResolved(bot, { resolved: payload.interaction.data.resolved, guildId })
+        ? bot.transformers.interactionDataResolved(bot, { resolved: payload.interaction.data.resolved, shardId: payload.shardId, guildId })
         : undefined,
       options: payload.interaction.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
       targetId: payload.interaction.data.target_id ? bot.transformers.snowflake(payload.interaction.data.target_id) : undefined,
     }
   }
 
-  return bot.transformers.customizers.interaction(bot, payload, interaction)
+  // Typescript has an hard time with interaction.bot, so we need to tell him for sure this interaction is the of the correct type
+  return bot.transformers.customizers.interaction(bot, payload, interaction as unknown as typeof bot.transformers.$inferredTypes.interaction)
 }
 
 export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption): InteractionDataOption {
@@ -182,15 +192,15 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
 }
 
 export function transformInteractionDataResolved(
-  bot: Bot,
-  payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
+  bot: InternalBot,
+  payload: { resolved: DiscordInteractionDataResolved; shardId: number; guildId?: bigint },
 ): InteractionDataResolved {
   const transformed: InteractionDataResolved = {}
 
   if (payload.resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.resolved.messages).map(([_id, value]) => {
-        const message: Message = bot.transformers.message(bot, value)
+        const message: Message = bot.transformers.message(bot, { message: value, shardId: payload.shardId })
         return [message.id, message]
       }),
     )
@@ -244,17 +254,28 @@ export function transformInteractionDataResolved(
   return bot.transformers.customizers.interactionDataResolved(bot, payload, transformed)
 }
 
-export function transformInteractionCallbackResponse(bot: Bot, payload: DiscordInteractionCallbackResponse): InteractionCallbackResponse {
+export function transformInteractionCallbackResponse(
+  bot: InternalBot,
+  payload: { interactionCallbackResponse: DiscordInteractionCallbackResponse; shardId: number },
+): typeof bot.transformers.$inferredTypes.interactionCallbackResponse {
   const props = bot.transformers.desiredProperties.interactionCallbackResponse
   const response = {} as InteractionCallbackResponse
 
-  if (props.interaction && payload.interaction) response.interaction = bot.transformers.interactionCallback(bot, payload.interaction)
-  if (props.resource && payload.resource) response.resource = bot.transformers.interactionResource(bot, payload.resource)
+  if (props.interaction && payload.interactionCallbackResponse.interaction)
+    response.interaction = bot.transformers.interactionCallback(bot, payload.interactionCallbackResponse.interaction)
+  if (props.resource && payload.interactionCallbackResponse.resource)
+    response.resource = bot.transformers.interactionResource(bot, {
+      interactionResource: payload.interactionCallbackResponse.resource,
+      shardId: payload.shardId,
+    })
 
-  return bot.transformers.customizers.interactionCallbackResponse(bot, payload, response)
+  return bot.transformers.customizers.interactionCallbackResponse(bot, payload.interactionCallbackResponse, response)
 }
 
-export function transformInteractionCallback(bot: Bot, payload: DiscordInteractionCallback): InteractionCallback {
+export function transformInteractionCallback(
+  bot: InternalBot,
+  payload: DiscordInteractionCallback,
+): typeof bot.transformers.$inferredTypes.interactionCallback {
   const props = bot.transformers.desiredProperties.interactionCallback
   const callback = {} as InteractionCallback
 
@@ -268,13 +289,18 @@ export function transformInteractionCallback(bot: Bot, payload: DiscordInteracti
   return bot.transformers.customizers.interactionCallback(bot, payload, callback)
 }
 
-export function transformInteractionResource(bot: Bot, payload: DiscordInteractionResource): InteractionResource {
+export function transformInteractionResource(
+  bot: InternalBot,
+  payload: { interactionResource: DiscordInteractionResource; shardId: number },
+): typeof bot.transformers.$inferredTypes.interactionResource {
   const props = bot.transformers.desiredProperties.interactionResource
   const resource = {} as InteractionResource
 
-  if (props.type && payload.type) resource.type = payload.type
-  if (props.activityInstance && payload.activity_instance) resource.activityInstance = payload.activity_instance
-  if (props.message && payload.message) resource.message = bot.transformers.message(bot, payload.message)
+  if (props.type && payload.interactionResource.type) resource.type = payload.interactionResource.type
+  if (props.activityInstance && payload.interactionResource.activity_instance)
+    resource.activityInstance = payload.interactionResource.activity_instance
+  if (props.message && payload.interactionResource.message)
+    resource.message = bot.transformers.message(bot, { message: payload.interactionResource.message, shardId: payload.shardId })
 
-  return bot.transformers.customizers.interactionResource(bot, payload, resource)
+  return bot.transformers.customizers.interactionResource(bot, payload.interactionResource, resource)
 }

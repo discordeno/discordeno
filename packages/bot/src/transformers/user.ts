@@ -1,8 +1,11 @@
 import type { DiscordUser } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { type Bot, ToggleBitfield, type User, UserToggles } from '../index.js'
+import { type InternalBot, ToggleBitfield, type User, UserToggles } from '../index.js'
 
-const baseUser = {
+const baseUser: InternalBot['transformers']['$inferredTypes']['user'] = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['user']),
+
   get tag() {
     return `${this.username}#${this.discriminator}`
   },
@@ -18,9 +21,9 @@ const baseUser = {
   get verified() {
     return !!this.toggles?.has('verified')
   },
-} as User
+}
 
-export function transformUser(bot: Bot, payload: DiscordUser): User {
+export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bot.transformers.$inferredTypes.user {
   const user: User = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 

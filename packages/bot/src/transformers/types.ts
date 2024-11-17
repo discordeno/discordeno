@@ -875,7 +875,10 @@ export interface Interaction {
    *
    * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
    */
-  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean; withResponse?: boolean }) => Promise<Message | void>
+  respond: (
+    response: string | InteractionCallbackData,
+    options?: { isPrivate?: boolean; withResponse?: boolean },
+  ) => Promise<Message | InteractionCallbackResponse | void>
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
@@ -1060,6 +1063,9 @@ export interface Member {
 export interface Message {
   /** Sent with Rich Presence-related chat embeds */
   activity?: MessageActivity
+  /** Sent with Rich Presence-related chat embeds */
+  application?: Partial<Application>
+  /** If the message is an Interaction or application-owned webhook, this is the id of the application */
   applicationId?: bigint
   /** Any attached files on this message. */
   attachments?: Attachment[]
