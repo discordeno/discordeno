@@ -4,7 +4,6 @@ import { use as chaiUse } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { createBot } from '../../src/bot.js'
-import type { EventHandlers } from '../../src/events.js'
 import { token } from './constants.js'
 chaiUse(chaiAsPromised)
 
@@ -14,6 +13,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
       token,
       desiredProperties: {
         guild: {
+          id: true,
           joinedAt: true,
           ownerId: true,
         },
@@ -37,14 +37,14 @@ describe('[Bot] Delete any guild owned guilds', () => {
         intents: Intents.Guilds,
       },
       events: {
-        async guildCreate(payload) {
-          if (payload.joinedAt && Date.now() - payload.joinedAt < 360000) {
+        async guildCreate(guild) {
+          if (guild.joinedAt && Date.now() - guild.joinedAt < 360000) {
             return
           }
 
-          if (bot.rest.applicationId === payload.ownerId) {
-            logger.debug(`Deleting one of the bot created guilds.`, payload.id)
-            await bot.rest.deleteGuild(payload.id)
+          if (bot.rest.applicationId === guild.ownerId) {
+            logger.debug(`Deleting one of the bot created guilds.`, guild.id)
+            await bot.rest.deleteGuild(guild.id)
           }
         },
       },
