@@ -1,3 +1,8 @@
+---
+sidebar_position: 8
+sidebar_label: Contributing Guide
+---
+
 # Contributing Guide
 
 So, you want to contribute to Discordeno? Fantastic!
