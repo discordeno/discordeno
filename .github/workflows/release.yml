@@ -50,8 +50,8 @@ jobs:
         if: ${{ github.event_name != 'release' && github.event.action != 'published' }}
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
 
-      # If the action is running from a release use the latest tag, otherwise use the dev tag
-      - run: npm publish --tag ${{ github.event_name == 'release' && github.event.action == 'published' && 'latest' || 'dev' }} --access public --provenance
+      # If the action is running from a release use the latest tag, otherwise use the next tag
+      - run: npm publish --tag ${{ github.event_name == 'release' && github.event.action == 'published' && 'latest' || 'next' }} --access public --provenance
         working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
