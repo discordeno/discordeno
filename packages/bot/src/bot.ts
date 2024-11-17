@@ -24,7 +24,7 @@ import { type Transformers, createTransformers } from './transformers.js'
  */
 export function createBot<
   TProps extends RecursivePartial<TransformersDesiredProperties>,
-  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.ChangeType,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
 >(options: CreateBotOptions<TProps, TBehavior>): Bot<CompleteDesiredProperties<TProps>, TBehavior> {
   type CompleteProps = CompleteDesiredProperties<TProps>
   type TypedBot = Bot<CompleteProps, TBehavior>
@@ -141,7 +141,7 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
 
 export interface Bot<
   TProps extends TransformersDesiredProperties = TransformersDesiredProperties,
-  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.ChangeType,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
 > {
   /** The id of the bot. */
   id: bigint

@@ -839,7 +839,7 @@ type TransformNestedProps<
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],
   TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.ChangeType,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
 > = {
   // When the behavior is to remove the key we use the RemoveKeyIfUndesired type helper else return the Key as is
   [Key in keyof T as TBehavior extends DesiredPropertiesBehavior.RemoveKey
