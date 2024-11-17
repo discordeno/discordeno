@@ -112,15 +112,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordeno/bot@npm:19.0.0-beta.1, @discordeno/bot@workspace:packages/bot":
+"@discordeno/bot@npm:19.0.0, @discordeno/bot@workspace:packages/bot":
   version: 0.0.0-use.local
   resolution: "@discordeno/bot@workspace:packages/bot"
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
-    "@discordeno/gateway": "npm:19.0.0-alpha.1"
-    "@discordeno/rest": "npm:19.0.0-alpha.1"
-    "@discordeno/types": "npm:19.0.0-beta.1"
-    "@discordeno/utils": "npm:19.0.0-beta.1"
+    "@discordeno/gateway": "npm:19.0.0"
+    "@discordeno/rest": "npm:19.0.0"
+    "@discordeno/types": "npm:19.0.0"
+    "@discordeno/utils": "npm:19.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
@@ -137,13 +137,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@discordeno/gateway@npm:19.0.0-alpha.1, @discordeno/gateway@workspace:packages/gateway":
+"@discordeno/gateway@npm:19.0.0, @discordeno/gateway@workspace:packages/gateway":
   version: 0.0.0-use.local
   resolution: "@discordeno/gateway@workspace:packages/gateway"
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
-    "@discordeno/types": "npm:19.0.0-beta.1"
-    "@discordeno/utils": "npm:19.0.0-beta.1"
+    "@discordeno/types": "npm:19.0.0"
+    "@discordeno/utils": "npm:19.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
@@ -167,13 +167,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@discordeno/rest@npm:19.0.0-alpha.1, @discordeno/rest@workspace:packages/rest":
+"@discordeno/rest@npm:19.0.0, @discordeno/rest@workspace:packages/rest":
   version: 0.0.0-use.local
   resolution: "@discordeno/rest@workspace:packages/rest"
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
-    "@discordeno/types": "npm:19.0.0-beta.1"
-    "@discordeno/utils": "npm:19.0.0-beta.1"
+    "@discordeno/types": "npm:19.0.0"
+    "@discordeno/utils": "npm:19.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
@@ -193,7 +193,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@discordeno/types@npm:19.0.0-beta.1, @discordeno/types@workspace:packages/types":
+"@discordeno/types@npm:19.0.0, @discordeno/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@discordeno/types@workspace:packages/types"
   dependencies:
@@ -210,12 +210,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@discordeno/utils@npm:19.0.0-beta.1, @discordeno/utils@workspace:packages/utils":
+"@discordeno/utils@npm:19.0.0, @discordeno/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@discordeno/utils@workspace:packages/utils"
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
-    "@discordeno/types": "npm:19.0.0-beta.1"
+    "@discordeno/types": "npm:19.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
@@ -1031,11 +1031,11 @@ __metadata:
   resolution: "benchmarks@workspace:packages/benchmarks"
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
-    "@discordeno/bot": "npm:19.0.0-beta.1"
-    "@discordeno/gateway": "npm:19.0.0-alpha.1"
-    "@discordeno/rest": "npm:19.0.0-alpha.1"
-    "@discordeno/types": "npm:19.0.0-beta.1"
-    "@discordeno/utils": "npm:19.0.0-beta.1"
+    "@discordeno/bot": "npm:19.0.0"
+    "@discordeno/gateway": "npm:19.0.0"
+    "@discordeno/rest": "npm:19.0.0"
+    "@discordeno/types": "npm:19.0.0"
+    "@discordeno/utils": "npm:19.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/benchmark": "npm:^2.1.5"
@@ -1662,7 +1662,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
     chokidar-cli: "npm:^3.0.0"
-    discordeno: "npm:19.0.0-alpha.1"
+    discordeno: "npm:19.0.0"
     husky: "npm:^9.1.6"
     lint-staged: "npm:^15.2.10"
     turbo: "npm:^2.3.0"
@@ -1672,16 +1672,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"discordeno@npm:19.0.0-alpha.1, discordeno@workspace:packages/discordeno":
+"discordeno@npm:19.0.0, discordeno@workspace:packages/discordeno":
   version: 0.0.0-use.local
   resolution: "discordeno@workspace:packages/discordeno"
   dependencies:
     "@biomejs/biome": "npm:^1.9.4"
-    "@discordeno/bot": "npm:19.0.0-beta.1"
-    "@discordeno/gateway": "npm:19.0.0-alpha.1"
-    "@discordeno/rest": "npm:19.0.0-alpha.1"
-    "@discordeno/types": "npm:19.0.0-beta.1"
-    "@discordeno/utils": "npm:19.0.0-beta.1"
+    "@discordeno/bot": "npm:19.0.0"
+    "@discordeno/gateway": "npm:19.0.0"
+    "@discordeno/rest": "npm:19.0.0"
+    "@discordeno/types": "npm:19.0.0"
+    "@discordeno/utils": "npm:19.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
