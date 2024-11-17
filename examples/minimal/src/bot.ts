@@ -1,4 +1,4 @@
-import { type Bot, Collection, Intents, createBot } from '@discordeno/bot'
+import { Collection, Intents, createBot } from '@discordeno/bot'
 import { configs } from './config.js'
 import type { Command } from './types/commands.js'
 
@@ -20,6 +20,4 @@ export const bot = rawBot as BotWithCommands
 // Create the command collection
 bot.commands = new Collection()
 
-export interface BotWithCommands extends Bot {
-  commands: Collection<string, Command>
-}
+export type BotWithCommands = typeof rawBot & { commands: Collection<string, Command> }

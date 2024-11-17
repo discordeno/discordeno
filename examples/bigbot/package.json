@@ -11,7 +11,6 @@
     "start:bot": "node dist/bot/index.js",
     "start:rest": "node dist/rest/index.js",
     "start:gateway": "node dist/gateway/index.js",
-    "postinstall": "discordeno generate --config src/bot/discordeno.config.ts",
     "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "build:watch": "swc src --strip-leading-paths --delete-dir-on-start --watch --out-dir dist",
     "dev:bot": "node --watch --watch-preserve-output dist/bot/index.js",
@@ -20,19 +19,18 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-next.76ad81d",
-    "@fastify/multipart": "^8.3.0",
+    "@discordeno/bot": "19.0.0",
+    "@fastify/multipart": "^9.0.1",
     "@influxdata/influxdb-client": "^1.33.2",
     "amqplib": "^0.10.4",
     "chalk": "^5.3.0",
-    "discordeno": "19.0.0-next.76ad81d",
-    "fastify": "^4.28.0"
+    "fastify": "^5.1.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.6.3",
+    "@swc/cli": "^0.5.0",
+    "@swc/core": "^1.9.2",
     "@types/amqplib": "^0.10.5",
-    "@types/node": "^20.14.6",
-    "typescript": "^5.5.2"
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3"
   }
 }

@@ -12,7 +12,7 @@ bot.events.ready = async ({ shardId }) => {
     activities: [
       {
         name: 'Discordeno is the Best Lib',
-        type: ActivityTypes.Game,
+        type: ActivityTypes.Playing,
         timestamps: {
           start: Date.now(),
         },

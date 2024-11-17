@@ -1,4 +1,4 @@
-import { type Interaction, InteractionTypes, LogLevels, commandOptionsParser, type logger } from '@discordeno/bot'
+import { InteractionTypes, LogLevels, commandOptionsParser, type logger } from '@discordeno/bot'
 import chalk from 'chalk'
 import { bot } from '../../bot.js'
 
@@ -19,6 +19,7 @@ bot.events.interactionCreate = async (interaction) => {
 
   logCommand(interaction, 'Trigger', interaction.data.name)
 
+  // @ts-expect-error commandOptionsParser is currently bugged
   const options = commandOptionsParser(interaction)
 
   try {
@@ -36,7 +37,7 @@ bot.events.interactionCreate = async (interaction) => {
 }
 
 function logCommand(
-  interaction: Interaction,
+  interaction: typeof bot.transformers.$inferredTypes.interaction,
   type: 'Failure' | 'Success' | 'Trigger' | 'Missing',
   commandName: string,
   logLevel: LogLevels = LogLevels.Info,

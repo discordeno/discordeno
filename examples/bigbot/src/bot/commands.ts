@@ -1,13 +1,9 @@
 import type {
   ApplicationCommandOptionTypes,
-  Attachment,
-  CamelizedDiscordApplicationCommandOption,
-  ChannelTypes,
+  Camelize,
   CreateApplicationCommand,
-  Interaction,
-  Member,
-  Role,
-  User,
+  DiscordApplicationCommandOption,
+  ParsedInteractionOption,
 } from '@discordeno/bot'
 import { bot } from './bot.js'
 
@@ -25,33 +21,33 @@ export type Command<TOptions extends CommandOptions = CommandOptions> = CreateAp
    */
   devOnly?: boolean
   /** Function to run when the interaction is executed */
-  run: (interaction: Interaction, options: GetCommandOptions<TOptions>) => unknown
+  run: (interaction: typeof bot.transformers.$inferredTypes.interaction, options: GetCommandOptions<TOptions>) => unknown
   /** Function to run when an autocomplete interaction is fired */
-  autoComplete?: (interaction: Interaction, options: GetCommandOptions<TOptions>) => unknown
+  autoComplete?: (interaction: typeof bot.transformers.$inferredTypes.interaction, options: GetCommandOptions<TOptions>) => unknown
 }
 
 export type GetCommandOptions<T extends CommandOptions> = T extends CommandOptions
   ? { [Prop in keyof BuildOptions<T> as Prop]: BuildOptions<T>[Prop] }
   : never
 
-export type CommandOption = CamelizedDiscordApplicationCommandOption
+export type CommandOption = Camelize<DiscordApplicationCommandOption>
 export type CommandOptions = CommandOption[]
 
 // Option parsing
 
-interface UserResolved {
-  user: User
-  member: Member | undefined
-}
+type ResolvedValues = ParsedInteractionOption[string]
 
-interface ChannelResolved {
-  id: bigint
-  name: string
-  type: ChannelTypes
-  permissions: bigint
-}
+// Using omit + exclude is a slight trick to avoid a type error on Pick
+export type InteractionResolvedChannel = Omit<
+  typeof bot.transformers.$inferredTypes.channel,
+  Exclude<keyof typeof bot.transformers.$inferredTypes.channel, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
+>
+export type InteractionResolvedMember = Omit<typeof bot.transformers.$inferredTypes.member, 'user' | 'deaf' | 'mute'>
 
-type ResolvedValues = number | boolean | UserResolved | Role | ChannelResolved | Attachment
+export interface InteractionResolvedUser {
+  user: typeof bot.transformers.$inferredTypes.user
+  member: InteractionResolvedMember
+}
 
 /**
  * From here SubCommandGroup and SubCommand are missing, this is wanted.
@@ -62,12 +58,12 @@ interface TypeToResolvedMap {
   [ApplicationCommandOptionTypes.String]: string
   [ApplicationCommandOptionTypes.Integer]: number
   [ApplicationCommandOptionTypes.Boolean]: boolean
-  [ApplicationCommandOptionTypes.User]: UserResolved
-  [ApplicationCommandOptionTypes.Channel]: ChannelResolved
-  [ApplicationCommandOptionTypes.Role]: Role
-  [ApplicationCommandOptionTypes.Mentionable]: Role | UserResolved
+  [ApplicationCommandOptionTypes.User]: InteractionResolvedUser
+  [ApplicationCommandOptionTypes.Channel]: InteractionResolvedChannel
+  [ApplicationCommandOptionTypes.Role]: typeof bot.transformers.$inferredTypes.role
+  [ApplicationCommandOptionTypes.Mentionable]: typeof bot.transformers.$inferredTypes.role | InteractionResolvedUser
   [ApplicationCommandOptionTypes.Number]: number
-  [ApplicationCommandOptionTypes.Attachment]: Attachment
+  [ApplicationCommandOptionTypes.Attachment]: typeof bot.transformers.$inferredTypes.attachment
 }
 
 type ConvertTypeToResolved<T extends ApplicationCommandOptionTypes> = T extends keyof TypeToResolvedMap ? TypeToResolvedMap[T] : ResolvedValues
