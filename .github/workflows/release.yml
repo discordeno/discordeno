@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
