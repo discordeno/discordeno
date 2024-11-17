@@ -62,7 +62,7 @@ import { createRoutes } from './routes.js'
 import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
-const version = '19.0.0-alpha.1'
+const version = '19.0.0'
 
 export const DISCORD_API_VERSION = 10
 export const DISCORD_API_URL = 'https://discord.com/api'

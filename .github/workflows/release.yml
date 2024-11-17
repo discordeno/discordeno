@@ -7,6 +7,8 @@ on:
     paths:
       - packages/**
       - .github/**
+  release:
+      types: [published]
   workflow_dispatch:
 
 jobs:
@@ -45,9 +47,11 @@ jobs:
       - name: build Package
         run: yarn release-build --cache-dir=".turbo" --filter=./packages/${{ matrix.package }}
       - name: Bump Package Version
+        if: ${{ github.event_name != 'release' && github.event.action != 'published' }}
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
 
-      - run: npm publish --access public
+      # If the action is running from a release use the latest tag, otherwise use the dev tag
+      - run: npm publish --tag ${{ github.event_name == 'release' && github.event.action == 'published' && 'latest' || 'dev' }} --access public --provenance
         working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
