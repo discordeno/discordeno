@@ -1,13 +1,13 @@
 import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
+import type { InternalBot } from '../bot.js'
 import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
 import type { Member } from './types.js'
 
-const baseMember: Member = {
+const baseMember: InternalBot['transformers']['$inferredTypes']['member'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as Member),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['member']),
 
   get deaf() {
     return !!this.toggles?.has('deaf')
@@ -35,7 +35,12 @@ const baseMember: Member = {
   },
 }
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString): Member {
+export function transformMember(
+  bot: InternalBot,
+  payload: DiscordMember,
+  guildId: BigString,
+  userId: BigString,
+): typeof bot.transformers.$inferredTypes.member {
   const member: Member = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 

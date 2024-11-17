@@ -1,11 +1,11 @@
 import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
-import type { Bot, Channel, Guild } from '../index.js'
+import type { Channel, Guild, InternalBot } from '../index.js'
 import { GuildToggles } from './toggles/guild.js'
 
-const baseGuild: Guild = {
+const baseGuild: InternalBot['transformers']['$inferredTypes']['guild'] = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as Guild),
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['guild']),
 
   get threads() {
     if (!this.channels) return new Collection<bigint, Channel>()
@@ -21,7 +21,7 @@ const baseGuild: Guild = {
   },
 }
 
-export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }): Guild {
+export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild; shardId: number }): typeof bot.transformers.$inferredTypes.guild {
   const guildId = bot.transformers.snowflake(payload.guild.id)
   const props = bot.transformers.desiredProperties.guild
   const guild: Guild = Object.create(baseGuild)
@@ -37,6 +37,8 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.maxMembers && payload.guild.max_members) guild.maxMembers = payload.guild.max_members
   if (props.maxPresences && payload.guild.max_presences) guild.maxPresences = payload.guild.max_presences ?? undefined
   if (props.maxVideoChannelUsers && payload.guild.max_video_channel_users) guild.maxVideoChannelUsers = payload.guild.max_video_channel_users
+  if (props.maxStageVideoChannelUsers && payload.guild.max_stage_video_channel_users)
+    guild.maxStageVideoChannelUsers = payload.guild.max_stage_video_channel_users
   if (props.mfaLevel) guild.mfaLevel = payload.guild.mfa_level
   if (props.name && payload.guild.name) guild.name = payload.guild.name
   if (props.nsfwLevel) guild.nsfwLevel = payload.guild.nsfw_level

@@ -1,4 +1,4 @@
-import { type Bot, createBot, snakeToCamelCase } from '@discordeno/bot'
+import { createBot, snakeToCamelCase } from '@discordeno/bot'
 import { events as dbEvents } from '../utils/db.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
@@ -14,18 +14,14 @@ memoryBenchmark(() => enableCachePlugin(createBot({
 })))
 */
 
-const enableCachePlugin = (bot: Bot): Bot => bot
-
 await memoryBenchmark(
   '[Cache Plugin]',
   () =>
-    enableCachePlugin(
-      createBot({
-        token: ' ',
-        applicationId: 1n,
-        events: {},
-      }),
-    ),
+    createBot({
+      token: ' ',
+      applicationId: 1n,
+      events: {},
+    }),
   (bot, event) => {
     const eventName = snakeToCamelCase(event.payload.t!)
     bot.events[eventName as keyof typeof bot.events]?.(event.payload.d as never, {})

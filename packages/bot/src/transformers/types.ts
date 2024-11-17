@@ -1063,6 +1063,9 @@ export interface Member {
 export interface Message {
   /** Sent with Rich Presence-related chat embeds */
   activity?: MessageActivity
+  /** Sent with Rich Presence-related chat embeds */
+  application?: Partial<Application>
+  /** If the message is an Interaction or application-owned webhook, this is the id of the application */
   applicationId?: bigint
   /** Any attached files on this message. */
   attachments?: Attachment[]

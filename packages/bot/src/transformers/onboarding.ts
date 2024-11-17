@@ -1,7 +1,7 @@
 import type { DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordGuildOnboardingPromptOption } from '@discordeno/types'
-import type { Bot, GuildOnboarding, GuildOnboardingPrompt, GuildOnboardingPromptOption } from '../index.js'
+import type { GuildOnboarding, GuildOnboardingPrompt, GuildOnboardingPromptOption, InternalBot } from '../index.js'
 
-export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboarding): GuildOnboarding {
+export function transformGuildOnboarding(bot: InternalBot, payload: DiscordGuildOnboarding): typeof bot.transformers.$inferredTypes.guildOnboarding {
   const props = bot.transformers.desiredProperties.guildOnboarding
   const guildOnboarding = {} as GuildOnboarding
 
@@ -10,12 +10,15 @@ export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboardi
     guildOnboarding.defaultChannelIds = payload.default_channel_ids.map(bot.transformers.snowflake)
   if (props.enabled) guildOnboarding.enabled = payload.enabled
   if (props.mode) guildOnboarding.mode = payload.mode
-  if (payload.prompts) guildOnboarding.prompts = payload.prompts.map((prompt) => bot.transformers.guildOnboardingPrompt(bot, prompt))
+  if (props.prompts && payload.prompts) guildOnboarding.prompts = payload.prompts.map((prompt) => bot.transformers.guildOnboardingPrompt(bot, prompt))
 
   return bot.transformers.customizers.guildOnboarding(bot, payload, guildOnboarding)
 }
 
-export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOnboardingPrompt): GuildOnboardingPrompt {
+export function transformGuildOnboardingPrompt(
+  bot: InternalBot,
+  payload: DiscordGuildOnboardingPrompt,
+): typeof bot.transformers.$inferredTypes.guildOnboardingPrompt {
   const props = bot.transformers.desiredProperties.guildOnboardingPrompt
   const prompt = {} as GuildOnboardingPrompt
 
@@ -25,12 +28,15 @@ export function transformGuildOnboardingPrompt(bot: Bot, payload: DiscordGuildOn
   if (props.singleSelect && payload.single_select) prompt.singleSelect = payload.single_select
   if (props.title && payload.title) prompt.title = payload.title
   if (props.type) prompt.type = payload.type
-  if (payload.options) prompt.options = payload.options.map((option) => bot.transformers.guildOnboardingPromptOption(bot, option))
+  if (props.options && payload.options) prompt.options = payload.options.map((option) => bot.transformers.guildOnboardingPromptOption(bot, option))
 
   return bot.transformers.customizers.guildOnboardingPrompt(bot, payload, prompt)
 }
 
-export function transformGuildOnboardingPromptOption(bot: Bot, payload: DiscordGuildOnboardingPromptOption): GuildOnboardingPromptOption {
+export function transformGuildOnboardingPromptOption(
+  bot: InternalBot,
+  payload: DiscordGuildOnboardingPromptOption,
+): typeof bot.transformers.$inferredTypes.guildOnboardingPromptOption {
   const props = bot.transformers.desiredProperties.guildOnboardingPromptOption
   const option = {} as GuildOnboardingPromptOption
 
