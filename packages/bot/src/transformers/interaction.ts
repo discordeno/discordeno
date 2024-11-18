@@ -19,6 +19,7 @@ import type {
   InteractionCallbackResponse,
   InteractionDataOption,
   InteractionDataResolved,
+  InteractionResolvedChannel,
   InteractionResource,
   InternalBot,
   Member,
@@ -235,7 +236,7 @@ export function transformInteractionDataResolved(
   if (payload.resolved.channels) {
     transformed.channels = new Collection(
       Object.entries(payload.resolved.channels).map(([_id, value]) => {
-        const channel = bot.transformers.channel(bot, { channel: value })
+        const channel = bot.transformers.channel(bot, { channel: value }) as InteractionResolvedChannel
         return [channel.id, channel]
       }),
     )
