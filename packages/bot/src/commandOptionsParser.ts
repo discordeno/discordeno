@@ -8,6 +8,7 @@ import type {
   Member,
   Role,
   SetupDesiredProps,
+  TransformProperty,
   TransformersDesiredProperties,
   User,
   WithAtLeast,
@@ -73,23 +74,17 @@ export type InteractionResolvedData<TProps extends TransformersDesiredProperties
   | string
   | number
   | boolean
-  | InteractionResolvedUser<TProps, TBehavior>
-  | InteractionResolvedChannel<TProps, TBehavior>
-  | SetupDesiredProps<Role, TProps, TBehavior>
-  | SetupDesiredProps<Attachment, TProps, TBehavior>
+  | TransformProperty<InteractionResolvedUser, TProps, TBehavior>
+  | TransformProperty<InteractionResolvedChannel, TProps, TBehavior>
+  | TransformProperty<Role, TProps, TBehavior>
+  | TransformProperty<Attachment, TProps, TBehavior>
   | ParsedInteractionOption<TProps, TBehavior>
 
-export interface InteractionResolvedUser<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
-  user: SetupDesiredProps<User, TProps, TBehavior>
-  member: InteractionResolvedMember<TProps, TBehavior>
+export interface InteractionResolvedUser {
+  user: User
+  member: InteractionResolvedMember
 }
 
-export type InteractionResolvedChannel<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Omit<
-  SetupDesiredProps<Channel, TProps, TBehavior>,
-  Exclude<keyof Channel, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
->
+export type InteractionResolvedChannel = Pick<Channel, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
 
-export type InteractionResolvedMember<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Omit<
-  SetupDesiredProps<Member, TProps, TBehavior>,
-  'user' | 'deaf' | 'mute'
->
+export type InteractionResolvedMember = Omit<Member, 'user' | 'deaf' | 'mute'>
