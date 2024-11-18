@@ -820,7 +820,7 @@ type GetErrorWhenUndesired<
 type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
 
 // If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
-export type TransformProperty<
+type TransformProperty<
   T,
   TProps extends TransformersDesiredProperties,
   TBehavior extends DesiredPropertiesBehavior,
