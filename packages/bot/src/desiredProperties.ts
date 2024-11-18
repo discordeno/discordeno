@@ -729,6 +729,10 @@ type Complete<TObj, TDefault> = {
   [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
 }
 
+export type WithAtLeast<T extends TransformersDesiredProperties, AtLeast extends RecursivePartial<TransformersDesiredProperties>> = T & {
+  [K in keyof T]: K extends keyof AtLeast ? Complete<AtLeast[K], false> & T[K] : T[K]
+}
+
 type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]
   ? R['length'] extends 0
     ? F
@@ -811,30 +815,36 @@ type GetErrorWhenUndesired<
     TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
     TProps[KeyByValue<TransformersObjects, T>]
   >,
-> = TIsDesired extends true ? TransformNestedProps<T[Key], TProps, TBehavior> : TIsDesired
+> = TIsDesired extends true ? TransformProperty<T[Key], TProps, TBehavior> : TIsDesired | TransformProperty<T[Key], TProps, TBehavior>
+
+type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
 
 // If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
-type TransformNestedProps<
+export type TransformProperty<
   T,
   TProps extends TransformersDesiredProperties,
   TBehavior extends DesiredPropertiesBehavior,
 > = T extends TransformersObjects[keyof TransformersObjects] // is T a transformed object?
   ? // Yes, apply the desired props
     SetupDesiredProps<T, TProps, TBehavior>
-  : // No, is it a collection of transformed objects?
-    T extends Collection<infer U, infer UObj extends TransformersObjects[keyof TransformersObjects]>
-    ? // Yes, apply the desired props
-      Collection<U, SetupDesiredProps<UObj, TProps, TBehavior>>
-    : // No, is it an array of transformed objects?
-      T extends Array<infer U extends TransformersObjects[keyof TransformersObjects]>
+  : // No, is it a collection?
+    T extends Collection<infer U, infer UObj>
+    ? // Yes, check for nested proprieties
+      Collection<U, TransformProperty<UObj, TProps, TBehavior>>
+    : // No, is it an array?
+      T extends Array<infer U>
       ? // Yes, apply the desired props
-        SetupDesiredProps<U, TProps, TBehavior>[]
+        TransformProperty<U, TProps, TBehavior>[]
       : // No, is it a Bot?
         T extends Bot
         ? // Yes, return a bot with the correct set of props & behavior
           Bot<TProps, TBehavior>
-        : // No, this is a normal value such as string / bigint / number
-          T
+        : // No, is this a generic object? If so we need to ensure nested inside there aren't transformed objects
+          IsObject<T> extends true
+          ? // Yes, check of nested proprieties
+            { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
+          : // No, this is a normal value such as string / bigint / number
+            T
 
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],
@@ -847,7 +857,7 @@ export type SetupDesiredProps<
     : Key]: // When the behavior is to change the type we use the GetErrorWhenUndesired type helper else apply the desired props to the key and return
   TBehavior extends DesiredPropertiesBehavior.ChangeType
     ? GetErrorWhenUndesired<Key, T, TProps, TBehavior>
-    : TransformNestedProps<T[Key], TProps, TBehavior>
+    : TransformProperty<T[Key], TProps, TBehavior>
 }
 
 export type TransformersDesiredProperties = {
