@@ -1,4 +1,5 @@
-import { type ApplicationCommandOption, type ApplicationCommandTypes, Collection, type Interaction } from '@discordeno/bot'
+import { type ApplicationCommandOption, type ApplicationCommandTypes, Collection } from '@discordeno/bot'
+import type { bot } from './bot.js'
 
 export const commands = new Collection<string, Command>()
 
@@ -16,5 +17,5 @@ export interface Command {
   /** The options for this command */
   options?: ApplicationCommandOption[]
   /** This will be executed when the command is run. */
-  execute: (interaction: Interaction, options: Record<string, unknown>) => unknown
+  execute: (interaction: typeof bot.transformers.$inferredTypes.interaction, options: Record<string, unknown>) => unknown
 }

@@ -1,17 +1,16 @@
+import assert from 'node:assert'
 import {
   type ActionRow,
   type ButtonComponent,
   DiscordInteractionContextType,
-  type Interaction,
   MessageComponentTypes,
-  type Role,
   type SelectMenuComponent,
   TextStyles,
 } from '@discordeno/bot'
 import { ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types'
+import { bot } from '../bot.js'
 import ItemCollector from '../collector.js'
 import { collectors } from '../events/interactionCreate.js'
-import { bot } from '../index.js'
 import type { Command } from './index.js'
 
 const command: Command = {
@@ -91,13 +90,12 @@ const command: Command = {
       // NOTE: we use a copy so when we edit this actionRow the edits don't get applied to all the command executions, only this one, for example we do disable some buttons in some conditional cases
       const messageActionRow = structuredClone(messageActionRowTemplate)
 
-      await interaction.defer(true)
       const message = await interaction.respond(
         {
           content: 'Use the buttons in this message to edit the message below.',
           components: [messageActionRow],
         },
-        { isPrivate: true },
+        { isPrivate: true, withResponse: true },
       )
 
       if (!message) {
@@ -105,8 +103,10 @@ const command: Command = {
         return
       }
 
+      assert('resource' in message && message.resource?.message)
+
       // Create the collector for the menu
-      const itemCollector = new ItemCollector<Interaction>()
+      const itemCollector = new ItemCollector<typeof bot.transformers.$inferredTypes.interaction>()
       collectors.add(itemCollector)
 
       // For the new reaction role, we need to keep track of what the user gave us
@@ -114,7 +114,7 @@ const command: Command = {
 
       itemCollector.onItem(async (i) => {
         // We need to verify the interaction is for us.
-        if (i.message?.id !== message.id) {
+        if (i.message?.id !== message.resource?.message?.id) {
           return
         }
 
@@ -314,7 +314,7 @@ export default command
 interface CommandArgs {
   reactions?: {
     create?: {
-      role: Role
+      role: typeof bot.transformers.$inferredTypes.role
       emoji: string
       color: ButtonStyles
       label?: string
@@ -432,7 +432,7 @@ const selectLabelActionRow: ActionRow = {
 // Function to get all the actionRows with buttons for the reaction roles message
 function getRoleButtons(
   roles: Array<{
-    role: Role
+    role: typeof bot.transformers.$inferredTypes.role
     emoji: string
     color: ButtonStyles
     label?: string | undefined

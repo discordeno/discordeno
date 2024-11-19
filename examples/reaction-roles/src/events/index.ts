@@ -1,10 +1,10 @@
-import type { EventHandlers } from '@discordeno/bot'
+import type { bot } from '../bot.js'
 import { event as interactionCreateEvent } from './interactionCreate.js'
 import { event as readyEvent } from './ready.js'
 
 export const events = {
   interactionCreate: interactionCreateEvent,
   ready: readyEvent,
-} as Partial<EventHandlers>
+} as typeof bot.events
 
 export default events

@@ -1,32 +1,46 @@
-import { Intents, createBot } from '@discordeno/bot'
+import { type Collection, Intents, createBot } from '@discordeno/bot'
 import { createProxyCache } from 'dd-cache-proxy'
 import { configs } from './config.js'
 
-export const bot = createProxyCache(
-  createBot({
-    token: configs.token,
-    intents: Intents.Guilds,
-  }),
-  {
-    desiredProps: {
-      guilds: ['id', 'name'],
+const rawBot = createBot({
+  token: configs.token,
+  intents: Intents.Guilds,
+  desiredProperties: {
+    interaction: {
+      id: true,
+      type: true,
+      data: true,
+      user: true,
+      token: true,
+      guildId: true,
     },
-    cacheInMemory: {
-      guilds: true,
-      default: false,
+    guild: {
+      id: true,
+      name: true,
+    },
+    user: {
+      username: true,
     },
   },
-)
+})
 
-// Setup desired properties
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.user = true
-bot.transformers.desiredProperties.interaction.token = true
-bot.transformers.desiredProperties.interaction.guildId = true
+// TODO: remove this type hack when dd-cache-proxy fixes support for v19
+// @ts-expect-error
+export const bot = createProxyCache(rawBot, {
+  desiredProps: {
+    guilds: ['id', 'name'],
+  },
+  cacheInMemory: {
+    guilds: true,
+    default: false,
+  },
+}) as CacheBot
 
-bot.transformers.desiredProperties.guild.id = true
-bot.transformers.desiredProperties.guild.name = true
-
-bot.transformers.desiredProperties.user.username = true
+export type CacheBot = typeof rawBot & {
+  cache: {
+    guild: {
+      memory: Collection<bigint, typeof rawBot.transformers.$inferredTypes.guild>
+      get: (guildId: bigint) => typeof rawBot.transformers.$inferredTypes.guild
+    }
+  }
+}

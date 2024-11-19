@@ -34,7 +34,7 @@ const bot = createBot({
   intents: Intents.Guilds | Intents.GuildMessages, // Or other intents that you might needs.
   events: {
     ready: data => {
-      console.log(`The shard ${data.shardId} is ready!`)
+      bot.logger.info(`The shard ${data.shardId} is ready!`)
     },
   },
 })
@@ -88,33 +88,32 @@ Discordeno's methods always perform one action only. A method will never call mu
 
 ## Understanding Desired Properties in Discordeno
 
+:::tip
+For more details checkout [the desired properties docs](./desired-properties.md)
+:::
+
 If we ran the code above (for example, by putting the code inside the ready event), the bot will send a message in the channel you specified (as long as it has the permissions to do so) with the content "Hello world. This is test message from Discordeno.". However, if we log to the console the message object that Discordeno return, we won't see many, if any, values on it. This is also the case for other events such as `MessageCreate`. But why is that? Well, this is because of a Discordeno feature called `Desired properties`.
 
 Desired properties is a feature that reduce the memory usage of your application by removing properties that you don't use. For example, you might not be interested in knowing the topic of a channel, but Discord will always return it, therefore consuming more memory. This is why Discordeno requires you to explicitly set the properties that you want to keep and use.
 
-You can set which property you want to keep in the `bot.transformers.desiredProperties` object. Discordeno will default everything to false and you can set the values you want to keep to true manually like this:
+The main way to configure desired properties is using the `desiredProperties` object in `createBot`:
 
 ```ts
-bot.transformers.desiredProperties.message.id = true
-bot.transformers.desiredProperties.message.content = true
-bot.transformers.desiredProperties.message.channelId = true
+const bot = createBot({
+  // ... your exiting code
+  desiredProperties: {
+    message: {
+      id: true,
+      content: true,
+      channelId: true,
+    },
+  },
+})
 ```
 
-With the above 3 lines of code, we will be able to get the message ID, the channel ID and the message content\* of a specific message. The same thing can be said for the return object of `sendMessage` method and the `messageCreate` event
-
-We can also set the properties we want to keep with `{ id: true, content: true, channelId: true }`, but that would require us to specify all others keys in the object, and doing that would get extremely annoying.
+With the above, we will be able to get the message ID, the channel ID and the message content\* of messages, this means that if we now log the message object from before we will find these 3 values.
 
 \*: As long as the required privileged intent is enabled.
-
-:::danger[Changing the default for Desired Properties]
-THIS IS NOT RECOMMENDED IF YOU PLAN TO SHIP YOUR BOT TO PRODUCTION.
-
-While not recommended, you can add `defaultDesiredPropertiesValue: true` to the first parameter object of the `createBot` function. This will set every desired property to true by default (you can still disable some if you want to). The reason why this is not recommended and considered deprecated is because while Desired Properties DO slow you down during development (needing to make sure you aren't using something that you won't have at runtime), they have a significant performance impact on both CPU and memory usage.
-:::
-
-:::warning[Typescript and Desired Properties]
-We are aware that TypeScript has no idea which properties will be missing. We are working on fixing this issue.
-:::
 
 ## Additional information on Discordeno
 

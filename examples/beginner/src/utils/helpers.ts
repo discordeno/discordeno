@@ -1,4 +1,4 @@
-import { type Bot, type CreateApplicationCommand, type Guild, hasProperty } from '@discordeno/bot'
+import { type CreateApplicationCommand, hasProperty } from '@discordeno/bot'
 import { bot } from '../bot.js'
 import { type SubCommand, type SubCommandGroup, commands } from '../commands.js'
 import { createLogger } from './logger.js'
@@ -35,7 +35,7 @@ export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> 
 
   if (perGuildCommands.length && (scope === 'Guild' || scope === undefined)) {
     await Promise.all(
-      bot.cache.guilds.memory.map(async (guild: Guild) => {
+      bot.cache.guild.memory.map(async (guild) => {
         await bot.helpers.upsertGuildApplicationCommands(guild.id, perGuildCommands)
       }),
     )
@@ -43,7 +43,7 @@ export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> 
 }
 
 /** Update commands for a guild */
-export async function updateGuildCommands(bot: Bot, guild: Guild): Promise<void> {
+export async function updateGuildCommands(guild: typeof bot.transformers.$inferredTypes.guild): Promise<void> {
   const perGuildCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
 
   for (const command of commands.values()) {
@@ -62,8 +62,8 @@ export async function updateGuildCommands(bot: Bot, guild: Guild): Promise<void>
   }
 }
 
-export async function getGuildFromId(guildId: bigint): Promise<Guild> {
-  const cached = await bot.cache.guilds.get(guildId)
+export async function getGuildFromId(guildId: bigint) {
+  const cached = await bot.cache.guild.get(guildId)
 
   if (cached) return cached
 

@@ -13,15 +13,15 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-next.92bf166",
+    "@discordeno/bot": "19.0.0",
     "chalk": "^5.3.0",
-    "dd-cache-proxy": "^2.1.1",
+    "dd-cache-proxy": "^2.3.0",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.6.3",
-    "@types/node": "^20.14.6",
-    "typescript": "^5.5.2"
+    "@swc/cli": "^0.5.0",
+    "@swc/core": "^1.9.2",
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3"
   }
 }
