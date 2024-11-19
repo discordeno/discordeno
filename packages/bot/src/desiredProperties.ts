@@ -815,7 +815,7 @@ type GetErrorWhenUndesired<
     TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
     TProps[KeyByValue<TransformersObjects, T>]
   >,
-> = TIsDesired extends true ? TransformProperty<T[Key], TProps, TBehavior> : TIsDesired | TransformProperty<T[Key], TProps, TBehavior>
+> = TIsDesired extends true ? TransformProperty<T[Key], TProps, TBehavior> : TIsDesired
 
 type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
 
