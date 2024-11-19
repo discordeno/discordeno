@@ -5,44 +5,55 @@ sidebar_label: Desired Properties
 
 # Desired Properties
 
-As already explained in the Getting started desired properties are a way to save on performance by not transforming value you don't use.
+The `desiredProperties` feature in Discordeno gives developers full control over memory utilization. This enables a highly lightweight setup, where only essential data is stored.
 
-There are a couple of ways to configure and work with desired properties, you can chose the one is more appropriate for your bot.
+With `desiredProperties`, you can specify which properties to cache for each object type—such as users, members, channels, and guilds. This flexibility allows you to tailor caching to the exact needs of your bot, preserving only the data you truly require.
+
+## Benefits
+- **Memory Efficiency**: Only relevant data is stored, leading to substantial memory savings, especially for larger bots.
+- **Improved Performance**: By storing minimal data, bots experience faster processing times and reduced resource usage.
+- **Customizable**: Developers can enable specific properties on a per-object basis, eliminating unnecessary bloat.
+
+## Example: The Memory Impact of Channel Topics
+
+Consider the `channel.topic` property, which stores a text description for each channel.
+
+While a single topic might not seem memory-intensive, this property can quickly become costly at scale:
+- **Single Channel Topic**: A typical `channel.topic` can occupy hundreds of bytes.
+- **Large Bot Scale**: If your bot operates across millions of servers with hundreds of millions of channels, storing every `channel.topic` would consume vast amounts of memory.
+
+By choosing to store only the properties relevant to your bot’s functionality — like omitting `channel.topic` when it’s unnecessary — you can save gigabytes of memory.
+Desired Properties is thus an essential tool for bots needing scalable and efficient caching, allowing for minimal resource usage without sacrificing performance.
 
 :::tip
-See the [TypeScript](#typescript) section if you are using TypeScript as that requires a bit more work
+Check the [TypeScript](#typescript) section if you are using typescript
 :::
 
+## Configuring
 
-## Configuring desired properties
+To configure desired proprieties you can use the `desiredProperties` option on the `createBot` function
 
-There are 2 ways to configure desired proprieties. These are:
-- Using `desiredProperties` on the `createBot` function
-- Using `desiredProprieties` object on `bot.transformers`
-
-The recommended way is to use `desiredProperties` on `createBot`.
-
-Both objects are structured the same way: the objects contains all the names of the objects that have desired proprieties and in them you will find all the properties of the objects. 
+The objects inside `desiredProperties` contains all the names of the objects that have desired proprieties and in them you will find all the properties of the objects. 
 
 :::info[Flags and toggles]
 Usually flags and toggles will be stored in a BitField to save on memory, Discordeno does provide getters on the objects for these flags however they aren't in desired properties with their individual names, instead you will find them as `toggles` and / or `flags` most of the cases.
 :::
 
 :::danger[NOT RECOMMENDED - Changing the default for Desired Properties]
-You can change the default value for desired properties, using `desiredProprieties: createDesiredPropertiesObject({}, true)` or `defaultDesiredPropertiesValue` in the `createBot` function, however this will negate all the benefits desired proprieties provide.
+You can change the default value for desired properties, using `desiredProprieties: createDesiredPropertiesObject({}, true) as CompleteDesiredProprieties<{}, true>` in the `createBot` function, however this will negate all the benefits desired proprieties provide.
 
-The reason why this is not recommended is because while Desired Properties DO slow you down during development (needing to make sure you aren't using something that you won't have at runtime), they have a significant performance impact on both CPU and memory usage.
-
-The `defaultDesiredPropertiesValue` is considered deprecated on the `createBot` function to make it apparent that it is not recommended, changing the default of `createDesiredPropertiesObject` is still not recommended but not deprecated.
+The reason why this is not recommended is because while Desired Proprieties can be an annoyance at first, they have a significant performance impact on both CPU and memory usage.
 
 Again, this is **NOT** RECOMMENDED, especially if you plan to ship your bot to production.
 :::
 
+### Computed values
+
+Some values in these object may depend on some other value, notable examples are `user.bot` and `interaction.respond`. If you do not include all the values they depend on these require you might face undefined behavior using these values.
+
 ### Examples
 
-In these examples we will configure desired properties to have `user.id`, `user.bot` and `user.username`.
-
-#### `createBot({ ... })` function example
+In this example we will configure desired properties to have `user.id`, `user.bot` and `user.username`.
 
 ```ts
 const bot = createBot({
@@ -57,124 +68,80 @@ const bot = createBot({
 })
 ```
 
-#### `bot.transformers.desiredProprieties` example
+## TypeScript
+
+Discordeno will give change the types of the supported objects to match your desired proprieties, for this reason you might get an error when incorrectly typing your functions.
+
+Along side `desiredProperties` in the bot option that is explained above, `desiredPropertiesBehavior` is a configuration option for how should typescript threat proprieties that are not desired in your configuration. 
+
+Discordeno does expose the customized type according to your desired properties in the `bot.transformers.$inferredTypes` object, in these you will find all the types to be used in your functions / variables / ...
+
+:::info
+The value `bot.transformers.$inferredTypes` only exists for typescript. It will be `undefined` if tried to access at runtime, as it is not intended to provide any value at runtime, and it is intended to be used along side the `typeof` operator in typescript
+:::
+
+### Example
 
 ```ts
-bot.transformers.desiredProprieties.user.id = true
-// Toggles includes the "bot" flag
-bot.transformers.desiredProprieties.user.toggles = true
-bot.transformers.desiredProprieties.user.username = true
+const bot = createBot({
+  // Your usual createBot options, such as token and intents
+  desiredProperties: {
+    message: {
+      id: true,
+      author: true,
+    }
+    user: {
+      id: true,
+      toggles: true, // Toggles includes the "bot" flag
+      username: true,
+    },
+  },
+})
+
+bot.events.messageCreate = (message) => {
+  processMessage(message)
+}
+
+function processMessage(message: typeof bot.transformers.$inferredTypes.message) {
+  bot.logger.info(`Message with id ${message.id} has author @${message.author.username}, whose has id ${message.author.id} and ${message.author.bot ? 'is' : "isn't"} a bot`)
+
+  // Do some other work with the message
+}
 ```
 
-It is important to note when changing this object that we can't re-assign the entire object or else there will be a lot of errors as we require all properties to exist in this object, if you want to can get around this by using `createDesiredPropertiesObject`
+### Configuring
+
+There are 2 behaviors, `ChangeType` and `RemoveKey`. The default behavior is `RemoveKey`.
+
+An example where the behavior is changed to `ChangeType` is:
 
 ```ts
-bot.transformers.desiredProprieties = createDesiredPropertiesObject({
-  user: {
-    id: true,
-    toggles: true, // Toggles includes the "bot" flag
-    username: true,
+const bot = createBot({
+  // Your usual createBot options, such as token and intents
+  desiredPropertiesBehavior: DesiredPropertiesBehavior.ChangeType,
+  desiredProperties: {
+    user: {
+      id: true,
+      toggles: true, // Toggles includes the "bot" flag
+      username: true,
+    },
   },
 })
 ```
 
-## TypeScript
+Following is the explanation of each behavior:
 
-As is Typescript will not give you any type error if you try to use a value that is not specified in your desired proprieties configuration, this is because desired proprieties are something that happen at runtime based on what you configure, for this reason we have built a CLI to get around this.
-
-:::warning[Experimental]
-The CLI is considered experimental at this time. It is subject to change in the way it works
-:::
-
-:::warning[Deno]
-If you are using Deno you might not be able to use the CLI, see [limitations](#limitations)
-:::
-
-The CLI is not included in `@discordeno/bot`, you will need to install the `discordeno` npm package:
-
-```bash
-npm install discordeno # Using npm
-yarn add discordeno    # Using yarn
-pnpm add discordeno    # Using pnpm
-bun add discordeno     # Using bun (as a package manager)
-```
-
-You can configure the CLI with a `discordeno.config.ts` that looks like this:
-- Has a default export to the config
-- Is a EcmaScript Module (a `.mts` can be used)
-
-Discordeno provides a `defineConfig` function, you should use this function.
-
-```ts
-import { defineConfig } from "discordeno";
-
-export default defineConfig({
-    desiredProperties: {
-      // We will use the same example configuration from before, you can change this object the same way you would the `createBot` `desiredProperties` object
-      properties: {
-        user: {
-          id: true,
-          toggles: true,
-          username: true,
-        },
-      },
-    }
-});
-```
-
-:::tip
-To avoid duplicating code and ensuring Runtime and Types are in sync you can import the CLI config in your bot code you can use `cliConfig.desiredProperties.properties` as `desiredProperties` in the `createBot` function
-:::
-
-Then you can run the CLI by running `discordeno generate` and if needed pass `--config <path to your config file>` if the CLI can't find it automatically.
-
-After you do this restart the Typescript Server if you are in VSCode as it does not always pick up the change and you should start getting errors about properties that aren't enabled in your CLI config.
-
-:::tip
-Set the `discordeno generate` command as a `postinstall` / `prepare` / ... script in your package.json so every time you install the dependencies/update discordeno you don't need to re-run the CLI separately
-:::
-
-Every time you update the desired proprieties you will need to re-run the CLI to update the typings of discordeno to reflect the current state of desired proprieties
-
-### Configuring
-
-There are 2 mode for the CLI, `TypeAsNever` and `Remove`, by default the CLI will use `TypeAsNever`.
-
-It can be configured by changing the `behavior` config in `defineConfig()`, for example if we want to instead remove the proprieties:
-```ts
-import { DesiredPropertiesBehavior, defineConfig } from "discordeno";
-
-export default defineConfig({
-    desiredProperties: {
-      behavior: DesiredPropertiesBehavior.Remove,
-      properties: {
-        // ...
-      },
-    }
-});
-```
-
-Following is the explanation of each mode:
-
-#### `TypeAsNever`
-
-All the "undesired" properties will be typed as `never` and in the JSDoc comment you will find a `@remark` section explaining that the property is not enabled, what the type for that property is and if the propriety depends on other values being presents they will be listed too to make it easy to know why something is missing.
-
-This mode has a caveat: when working with generic functions / untyped functions / ... you may face situation where TypeScript won't give you a type error since `never` will actually be a valid type for that function
-
-This mode is the default.
-
-#### `Remove`
+#### `RemoveKey`
 
 All the "undesired" properties will be removed from the type of the object. This will prevent you from using them at all since they "don't exist anymore".
 
-This mode has a caveat: You will not know the original type and if there are any dependencies needed for a value to be available
+The caveats of this behavior are the following:
+- You don't know all the properties available on the object
+- If a value requires other values to be enabled you won't know them without searching it up (when a computed value is missing a dependency it won't be shown)
 
-### Limitations
+#### `ChangeType`
 
-There are a few limitations with the current implementation of the CLI:
+All the "undesired" properties will be typed with a string that will explain why the property is disabled, this may also include the dependencies for said property if those are present.
 
-- `Deno` is not always supported due to the fact that the CLI works by editing the `node_modules` folder
-- When using `pnpm` you need to explicitly install `@discordeno/bot` or else the CLI will report an error as it can't find the transformer types file
-- `yarn` PnP / `bun` Auto-install is not supported since they don't create a `node_modules` folder
-- The Typescript Server might needs to be restarted after you run the CLI to make sure it picks up the updated types
+The caveats of this behavior are the following:
+- Typescript may not always error on the usage of undesired proprieties as in some context the string will be a valid option
