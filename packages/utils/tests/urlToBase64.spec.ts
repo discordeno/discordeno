@@ -7,8 +7,11 @@ describe('urlToBase64.ts', () => {
   let fetchStub: sinon.SinonStub
 
   beforeEach(() => {
-    if (global) fetchStub = sinon.stub(global, 'fetch')
-    else fetchStub = sinon.stub(window, 'fetch')
+    try {
+      fetchStub = sinon.stub(global, 'fetch')
+    } catch {
+      fetchStub = sinon.stub(window, 'fetch')
+    }
   })
 
   afterEach(() => {
