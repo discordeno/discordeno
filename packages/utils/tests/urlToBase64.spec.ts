@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { describe, it } from 'mocha'
+import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import { urlToBase64 } from '../src/urlToBase64.js'
 
