@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionTypes, type Guild, hasProperty } from '@discordeno/bot'
+import { ApplicationCommandOptionTypes, hasProperty } from '@discordeno/bot'
 import chalk from 'chalk'
 import { bot } from '../bot.js'
 import { commands } from '../commands.js'
@@ -11,7 +11,7 @@ bot.events.interactionCreate = async (interaction) => {
   if (!interaction.data || !interaction.id) return
 
   let guildName = 'Direct Message'
-  let guild = {} as Guild
+  let guild = {} as typeof bot.transformers.$inferredTypes.guild
 
   // Set guild, if there was an error getting the guild, then just say it was a DM. (What else are we going to do?)
   if (interaction.guildId) {

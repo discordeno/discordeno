@@ -1,50 +1,46 @@
-import { type Bot, Collection, LogDepth, createBot, type logger } from '@discordeno/bot'
+import { Collection, LogDepth, createBot, type logger } from '@discordeno/bot'
 import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
 import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'
 
-export const bot = createCustomBot(
-  createBot({
-    token: DISCORD_TOKEN,
-    intents: GATEWAY_INTENTS,
-    rest: {
-      token: DISCORD_TOKEN,
-      proxy: {
-        baseUrl: REST_URL,
-        authorization: REST_AUTHORIZATION,
-      },
+const rawBot = createBot({
+  token: DISCORD_TOKEN,
+  intents: GATEWAY_INTENTS,
+  // TEMPLATE-SETUP: Add/Remove the desired properties that you don't need
+  desiredProperties: {
+    user: {
+      id: true,
+      username: true,
     },
-  }),
-)
+    interaction: {
+      id: true,
+      data: true,
+      type: true,
+      user: true,
+      token: true,
+      guildId: true,
+    },
+  },
+  rest: {
+    token: DISCORD_TOKEN,
+    proxy: {
+      baseUrl: REST_URL,
+      authorization: REST_AUTHORIZATION,
+    },
+  },
+})
+
+export const bot = rawBot as CustomBot
+
+// TEMPLATE-SETUP: If you want/need to add any custom properties on the Bot type, you can do it in these lines below and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
+// We need to set the log depth for the default discordeno logger or else only the first param will be logged
+;(bot.logger as typeof logger).setDepth(LogDepth.Full)
+
+bot.commands = new Collection()
 
 overrideGatewayImplementations(bot)
 
-// TEMPLATE-SETUP: Add/Remove the desired properties that you don't need
-const props = bot.transformers.desiredProperties
-
-props.interaction.id = true
-props.interaction.data = true
-props.interaction.type = true
-props.interaction.user = true
-props.interaction.token = true
-props.interaction.guildId = true
-
-props.user.id = true
-props.user.username = true
-
-// TEMPLATE-SETUP: If you want/need to add any custom properties on the Bot type, you can do it in this function and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
-function createCustomBot<TBot extends Bot = Bot>(rawBot: TBot): CustomBot<TBot> {
-  const bot = rawBot as CustomBot<TBot>
-
-  // We need to set the log depth for the default discordeno logger or else only the first param will be logged
-  ;(bot.logger as typeof logger).setDepth(LogDepth.Full)
-
-  bot.commands = new Collection()
-
-  return bot
-}
-
-export type CustomBot<TBot extends Bot = Bot> = TBot & {
+export type CustomBot = typeof rawBot & {
   commands: Collection<string, Command>
 }
 

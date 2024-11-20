@@ -125,7 +125,7 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   /**
    * Set the desired properties behavior for undesired properties
    *
-   * @default DesiredPropertiesBehavior.ChangeKey
+   * @default DesiredPropertiesBehavior.RemoveKey
    */
   desiredPropertiesBehavior?: TBehavior
   /**

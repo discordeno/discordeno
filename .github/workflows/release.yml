@@ -39,14 +39,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-release-build-${{ matrix.package }}-${{ github.sha }}
       - name: build Package
-        run: yarn release-build --cache-dir=".turbo" --filter=./packages/${{ matrix.package }}
+        run: yarn release-build --filter=./packages/${{ matrix.package }}
       - name: Bump Package Version
         if: ${{ github.event_name != 'release' && github.event.action != 'published' }}
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
