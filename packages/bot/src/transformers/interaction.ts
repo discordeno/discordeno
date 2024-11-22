@@ -26,7 +26,7 @@ import type {
   Message,
 } from '../index.js'
 
-const baseInteraction: InternalBot['transformers']['$inferredTypes']['interaction'] = {
+export const baseInteraction: InternalBot['transformers']['$inferredTypes']['interaction'] = {
   // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['interaction']),
 

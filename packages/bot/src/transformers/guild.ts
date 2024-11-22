@@ -3,7 +3,7 @@ import { Collection, iconHashToBigInt } from '@discordeno/utils'
 import type { Channel, Guild, InternalBot } from '../index.js'
 import { GuildToggles } from './toggles/guild.js'
 
-const baseGuild: InternalBot['transformers']['$inferredTypes']['guild'] = {
+export const baseGuild: InternalBot['transformers']['$inferredTypes']['guild'] = {
   // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['guild']),
 
