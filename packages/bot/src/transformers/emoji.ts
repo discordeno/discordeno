@@ -2,7 +2,10 @@ import type { DiscordDefaultReactionEmoji, DiscordEmoji } from '@discordeno/type
 import type { DefaultReactionEmoji, Emoji, InternalBot } from '../index.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
-const baseEmoji = {
+export const baseEmoji: InternalBot['transformers']['$inferredTypes']['emoji'] = {
+  // This allows typescript to still check for type errors on functions below
+  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['emoji']),
+
   get animated() {
     return this.toggles?.animated
   },
@@ -15,7 +18,7 @@ const baseEmoji = {
   get available() {
     return this.toggles.available
   },
-} as Emoji
+}
 
 export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof bot.transformers.$inferredTypes.emoji {
   const props = bot.transformers.desiredProperties.emoji
