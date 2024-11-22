@@ -5,7 +5,7 @@ import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
 import type { Member } from './types.js'
 
-const baseMember: InternalBot['transformers']['$inferredTypes']['member'] = {
+export const baseMember: InternalBot['transformers']['$inferredTypes']['member'] = {
   // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['member']),
 
