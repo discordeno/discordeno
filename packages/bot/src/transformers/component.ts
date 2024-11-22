@@ -15,16 +15,20 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
   switch (payload.type) {
     case MessageComponentTypes.ActionRow:
       component = transformActionRow(bot, payload)
+      break
     case MessageComponentTypes.Button:
       component = transformButtonComponent(bot, payload as DiscordButtonComponent)
+      break
     case MessageComponentTypes.InputText:
       component = transformInputTextComponent(bot, payload as DiscordInputTextComponent)
+      break
     case MessageComponentTypes.SelectMenu:
     case MessageComponentTypes.SelectMenuChannels:
     case MessageComponentTypes.SelectMenuRoles:
     case MessageComponentTypes.SelectMenuUsers:
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
+      break
   }
 
   return bot.transformers.customizers.component(bot, payload, component)
