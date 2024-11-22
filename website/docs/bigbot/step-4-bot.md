@@ -153,7 +153,7 @@ BOT.gateway.requestMembers = async function (guildId, options) {
 }
 ```
 
-This will now send a request to our gateway manager whenever the bot makes a request to fetch members.
+This will now send a request to our gateway manager whenever the bot makes a request to fetch members and the gateway process will send back `GUILD_MEMBERS_CHUNK` event(s) to the bot process.
 
 ## Caching
 

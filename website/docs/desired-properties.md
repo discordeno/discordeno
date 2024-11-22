@@ -5,7 +5,7 @@ sidebar_label: Desired Properties
 
 # Desired Properties
 
-The `desiredProperties` feature in Discordeno gives developers full control over memory utilization. This enables a highly lightweight setup, where only essential data is stored.
+The `desiredProperties` feature in Discordeno gives developers full control over resource utilization. This enables a highly lightweight setup, where only the essential data is processed and stored.
 
 With `desiredProperties`, you can specify which properties to cache for each object type—such as users, members, channels, and guilds. This flexibility allows you to tailor caching to the exact needs of your bot, preserving only the data you truly require.
 
@@ -31,29 +31,29 @@ Check the [TypeScript](#typescript) section if you are using typescript
 
 ## Configuring
 
-To configure desired proprieties you can use the `desiredProperties` option on the `createBot` function
+To configure desired properties, you can use the `desiredProperties` option on the `createBot` function.
 
-The objects inside `desiredProperties` contains all the names of the objects that have desired proprieties and in them you will find all the properties of the objects. 
+The objects inside `desiredProperties` contains all the names of the objects that have desired properties and inside them you'll find all the properties of the objects. 
 
 :::info[Flags and toggles]
-Usually flags and toggles will be stored in a BitField to save on memory, Discordeno does provide getters on the objects for these flags however they aren't in desired properties with their individual names, instead you will find them as `toggles` and / or `flags` most of the cases.
+Usually flags and toggles will be stored in a BitField to save on memory, Discordeno does provide getters on the objects for these flags, however they aren't in desired properties with their individual names, instead you will find them as `toggles` and / or `flags` most of the cases.
 :::
 
 :::danger[NOT RECOMMENDED - Changing the default for Desired Properties]
-You can change the default value for desired properties, using `desiredProprieties: createDesiredPropertiesObject({}, true) as CompleteDesiredProprieties<{}, true>` in the `createBot` function, however this will negate all the benefits desired proprieties provide.
+You can change the default value for desired properties, using `desiredProperties: createDesiredPropertiesObject({}, true) as CompleteDesiredProperties<{}, true>` in the `createBot` function to make discordeno process all properties on all objects, however this will negate all the benefits desired properties provide.
 
-The reason why this is not recommended is because while Desired Proprieties can be an annoyance at first, they have a significant performance impact on both CPU and memory usage.
+The reason why this is not recommended is because while Desired Properties can be an annoyance at first, they have a significant performance impact on both CPU and memory usage.
 
 Again, this is **NOT** RECOMMENDED, especially if you plan to ship your bot to production.
 :::
 
-### Computed values
+### Computed Properties
 
-Some values in these object may depend on some other value, notable examples are `user.bot` and `interaction.respond`. If you do not include all the values they depend on these require you might face undefined behavior using these values.
+Some properties in these object may depend on some other property, notable examples are `user.bot` and `interaction.respond`. If you do not include all the properties they depend on, you might see undefined values / unexpected bheavior when using them.
 
 ### Examples
 
-In this example we will configure desired properties to have `user.id`, `user.bot` and `user.username`.
+In this example, we will configure desired properties to have `user.id`, `user.bot` and `user.username`.
 
 ```ts
 const bot = createBot({
@@ -70,14 +70,14 @@ const bot = createBot({
 
 ## TypeScript
 
-Discordeno will give change the types of the supported objects to match your desired proprieties, for this reason you might get an error when incorrectly typing your functions.
+Discordeno will change the types of the supported objects to match your desired properties, for this reason, you might get an error when incorrectly typing your functions.
 
-Along side `desiredProperties` in the bot option that is explained above, `desiredPropertiesBehavior` is a configuration option for how should typescript threat proprieties that are not desired in your configuration. 
+Alongside `desiredProperties` in the bot option that is explained above, `desiredPropertiesBehavior` is a configuration option for how should typescript threat properties that are not desired in your configuration. 
 
-Discordeno does expose the customized type according to your desired properties in the `bot.transformers.$inferredTypes` object, in these you will find all the types to be used in your functions / variables / ...
+Discordeno does expose the customized type according to your desired properties in the `bot.transformers.$inferredTypes` object, inside this property you'll find all the types to be used in your functions / variables etc.
 
 :::info
-The value `bot.transformers.$inferredTypes` only exists for typescript. It will be `undefined` if tried to access at runtime, as it is not intended to provide any value at runtime, and it is intended to be used along side the `typeof` operator in typescript
+The value `bot.transformers.$inferredTypes` only exists in typescript. It will be `undefined` if tried to access at runtime, as it is not intended to provide any value at runtime, and only intended to be used alongside the `typeof` operator in typescript.
 :::
 
 ### Example
@@ -109,7 +109,18 @@ function processMessage(message: typeof bot.transformers.$inferredTypes.message)
 }
 ```
 
-### Configuring
+For ease of use, you can also have a single file where you export all these inferred types under a single type name, for example:
+
+```ts
+import { bot } from './index.ts'
+
+export type Guild = typeof bot.transformers.$inferredTypes.guild
+export type Message = typeof bot.transformers.$inferredTypes.message
+
+// Repeat this for all other types you'd like
+```
+
+### Configuring Desired Properties Behavior
 
 There are 2 behaviors, `ChangeType` and `RemoveKey`. The default behavior is `RemoveKey`.
 
@@ -137,11 +148,11 @@ All the "undesired" properties will be removed from the type of the object. This
 
 The caveats of this behavior are the following:
 - You don't know all the properties available on the object
-- If a value requires other values to be enabled you won't know them without searching it up (when a computed value is missing a dependency it won't be shown)
+- If a property requires other properties to be enabled, you won't know them without searching it up (when a computed value is missing a dependency, it won't be shown)
 
 #### `ChangeType`
 
 All the "undesired" properties will be typed with a string that will explain why the property is disabled, this may also include the dependencies for said property if those are present.
 
 The caveats of this behavior are the following:
-- Typescript may not always error on the usage of undesired proprieties as in some context the string will be a valid option
+- Typescript may not always error on the usage of undesired properties, as in some cases, strings can be a valid option (e.g. channel.name is always a string so typescript won't error)
