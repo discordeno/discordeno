@@ -77,7 +77,7 @@ Alongside `desiredProperties` in the bot option that is explained above, `desire
 Discordeno does expose the customized type according to your desired properties in the `bot.transformers.$inferredTypes` object, inside this property you'll find all the types to be used in your functions / variables etc.
 
 :::info
-The value `bot.transformers.$inferredTypes` only exists in typescript. It will be `undefined` if tried to access at runtime, as it is not intended to provide any value at runtime, and only intended to be used alongside the `typeof` operator in typescript.
+The property `bot.transformers.$inferredTypes` only exists in typescript. It will be `undefined` if tried to access at runtime, as it is not intended to provide any value at runtime, and only intended to be used alongside the `typeof` operator in typescript.
 :::
 
 ### Example
@@ -148,7 +148,7 @@ All the "undesired" properties will be removed from the type of the object. This
 
 The caveats of this behavior are the following:
 - You don't know all the properties available on the object
-- If a property requires other properties to be enabled, you won't know them without searching it up (when a computed value is missing a dependency, it won't be shown)
+- If a property requires other properties to be enabled, you won't know them without searching it up (when a computed property is missing a dependency, it won't be shown)
 
 #### `ChangeType`
 
