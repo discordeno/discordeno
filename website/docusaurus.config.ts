@@ -1,5 +1,6 @@
 // Note: type annotations allow type checking and IDEs autocompletion
 
+import type { Options as ClientRedirectOptions } from '@docusaurus/plugin-client-redirects'
 import type { Options as PluginContentDocs } from '@docusaurus/plugin-content-docs'
 import type { Options as PresetClassicOptions, ThemeConfig } from '@docusaurus/preset-classic'
 import type { Config } from '@docusaurus/types'
@@ -242,6 +243,17 @@ const config: Config = {
         searchResultLimits: 8,
         searchResultContextMaxLength: 50,
       },
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            from: '/desired-props',
+            to: '/docs/desired-properties',
+          },
+        ],
+      } satisfies ClientRedirectOptions,
     ],
   ],
 }
