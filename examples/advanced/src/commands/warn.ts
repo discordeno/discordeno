@@ -30,7 +30,7 @@ createCommand({
     // Type based on the options declared above
     const { user, reason } = options as { user: UserResolved; reason?: string }
 
-    const guild = await bot.cache.guilds.get(interaction.guildId)
+    const guild = await bot.cache.guild.get(interaction.guildId)
 
     if (!guild) {
       await interaction.respond('An error has occurred')

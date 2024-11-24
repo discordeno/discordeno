@@ -26,9 +26,8 @@ import { createBot } from '@discordeno/bot'
 import { config } from 'dotenv'
 config()
 
-const bot = createBot({
+export const bot = createBot({
   token: process.env.TOKEN,
-  events: {},
 })
 
 await bot.start()
@@ -380,11 +379,10 @@ We need to parse all the options Discord has provided us. In the `/roles reactio
 
 ```ts
 import commands from '../commands/index.js'
+import { bot } from '../bot.js'
 import { commandOptionsParser } from '@discordeno/bot'
 
-export const event: EventHandlers['interactionCreate'] = async function (
-  interaction,
-) {
+export const event: typeof bot.events.interactionCreate = async (interaction) => {
   if (interaction.type === InteractionTypes.ApplicationCommand) {
     if (!interaction.data) return
 
@@ -399,12 +397,12 @@ export const event: EventHandlers['interactionCreate'] = async function (
 Now we need to create the `src/events/index.ts` file to collect all of our events and give it to the bot object.
 
 ```ts
-import type { EventHandlers } from '@discordeno/bot'
+import type { bot } from '../bot.js'
 import { event as interactionCreateEvent } from './interactionCreate.js'
 
 export const events = {
   interactionCreate: interactionCreateEvent,
-} as Partial<EventHandlers>
+} as typeof bot.events
 
 export default events
 ```
@@ -416,19 +414,17 @@ To tell Discordeno to run the events, we need another change. Go back to the `sr
 ```ts
 import { createBot } from '@discordeno/bot'
 import { config } from 'dotenv'
-
+// insert-next-line
 import events from './events/index.js'
 
 config()
 
-const bot = createBot({
+export const bot = createBot({
   token: process.env.TOKEN,
-  // remove-next-line
-  events: {},
-  // in this line we only use `events` but for javascript this will traduce to `events: events`
-  // insert-next-line
-  events,
 })
+
+// insert-next-line
+bot.events = events
 
 // ... REST OF THE FILE ...
 ```
@@ -607,47 +603,35 @@ This also applies to the `interaction.respond` function that we call. It too has
 
 If you save and then run the bot, you might noticed that Discord still says that the application did not respond, but how is that possibile?
 
-Although we just added the code to respond to the interaction, we have forgot a Discordeno concept called `desired properties`. This is an optimization Discordeno uses to make your code more performant but can be found annoying or unnecessary.
-
-To explain how the `desired properties` work we need to talk about how Discord sends us data. Discord uses its own way to require/give data to who consumes the API. This guide won't go deep into this, but if you are interested can refer to the official documentation.
-
-The way Discord sends us data is not the way that we (might) want it and for that reason Discordeno needs to map it from the Discord format to the Discordeno format. This is done via `transformers` defined in the `bot.transformers` object to tell Discordeno what we need from the pile of data Discord provides us.
+Although we just added the code to respond to the interaction, we have forgot a Discordeno concept called `desired properties`. This is an optimization Discordeno uses to make your code more performant however it requires you do write some code. You can learn more on the [desired properties page](../desired-properties.md).
 
 Looking through the code we have written so far we can see that
 
 - We use `interaction.type` and `interaction.data` in the `src/events/interactionCreate.ts` file.
 - We use `interaction.channelId`, `interaction.id`, `interaction.token`, and `role.id` in our command.
 
-We need to add all of properties that we use to the `desired properties` list, and to do so we go back to `src/index.ts` and add a few lines:
+We need to add all of properties that we use to the `desiredProperties` list, and to do so we go back to `src/index.ts` and add a few lines:
 
 ```ts
 // REST OF YOUR CODE
 
-const bot = createBot({
+export const bot = createBot({
   token,
-  events,
+  // insert-start
+  desiredProperties: {
+    interaction: {
+      id: true,
+      data: true,
+      type: true,
+      token: true,
+      channelId: true,
+    }
+  }
+  // insert-end
 })
-
-// insert-start
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.token = true
-bot.transformers.desiredProperties.interaction.channelId = true
-
-bot.transformers.desiredProperties.role.id = true
-// insert-end
 
 // REST OF YOUR CODE
 ```
-
-:::tip
-As said before the code you are creating is your code, and in being so you can structure it how you find it better for you. This means that if you don't like having to specify the `bot.transformers.desiredProperties` lines in your index.ts nothing is preventing you from moving them somewhere else and make your code call them in a way or another, a way is for example moving to a file apart and creating a function that will edit all the values.
-:::
-
-:::note
-If you want, you can disable the `desired properties` with the `defaultDesiredPropertiesValue` option in the createBot object, it isn't recommended but it's there to allow the developer to choose, keep in mind this will give you a warning in the console when you run the bot and memory/cpu usage WILL be higher.
-:::
 
 If we try again now we'll finally see our message with 3 buttons. But if we click any of the buttons, they don't do anything! This is expected, since we did not write any code to handle buttons. So let's talk about how to react to users' interactions beyond just commands
 
@@ -698,7 +682,7 @@ import ItemCollector from '../collector.js'
 // insert-next-line
 export const collectors = new Set<ItemCollector>()
 
-export const event: EventHandlers['interactionCreate'] = async interaction => {
+export const event: typeof bot.event.interactionCreate = async interaction => {
   // insert-next-line
   for (const collector of collectors) {
     // insert-next-line
@@ -711,10 +695,6 @@ export const event: EventHandlers['interactionCreate'] = async interaction => {
 ```
 
 In here you are defining a `Set` (for what we use, we can see it exactly the same as an array with a few helpful methods) of these collectors and when we receive an interaction from Discord we collect in all the collectors that have been added to then handle the interaction, so if the have just received the button click interaction we will now able to respond to it.
-
-:::tip
-As already said: you don't like how the collection is done in this example? You are free to change it and have fun in experimenting what you find to be the better way
-:::
 
 To do this we need to update the command, `src/events/roles.ts`:
 
@@ -777,16 +757,25 @@ You might remember from before that we discussed the desired properties, and we 
 ```ts
 // REST OF YOUR CODE
 
-// insert-next-line
-bot.transformers.desiredProperties.message.id = true
-
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.token = true
-// insert-next-line
-bot.transformers.desiredProperties.interaction.message = true
-bot.transformers.desiredProperties.interaction.channelId = true
+export const bot = createBot({
+  token,
+  desiredProperties: {
+    interaction: {
+      id: true,
+      data: true,
+      type: true,
+      token: true,
+      // insert-next-line
+      message: true,
+      channelId: true,
+    },
+    // insert-start
+    message: {
+      id: true,
+    }
+    // insert-end
+  }
+})
 
 // REST OF YOUR CODE
 ```
@@ -1382,23 +1371,34 @@ In this final piece of code, we use some desired properties. Let's go to the `sr
 ```ts
 // REST OF YOUR CODE
 
-// insert-next-line
-bot.transformers.desiredProperties.user.id = true
-
-bot.transformers.desiredProperties.message.id = true
-
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.type = true
-// insert-next-line
-bot.transformers.desiredProperties.interaction.user = true
-bot.transformers.desiredProperties.interaction.token = true
-bot.transformers.desiredProperties.interaction.message = true
-// insert-next-line
-bot.transformers.desiredProperties.interaction.guildId = true
-bot.transformers.desiredProperties.interaction.channelId = true
-
-bot.transformers.desiredProperties.role.id = true
+export const bot = createBot({
+  token,
+  desiredProperties: {
+    interaction: {
+      id: true,
+      data: true,
+      type: true,
+      // insert-next-line
+      user: true,
+      token: true,
+      message: true,
+      // insert-next-line
+      guildId: true,
+      channelId: true,
+    },
+    message: {
+      id: true,
+    },
+    // insert-start
+    user: {
+      id: true,
+    },
+    role: {
+      id: true,
+    },
+    // insert-end
+  }
+})
 
 // REST OF YOUR CODE
 ```
@@ -1464,25 +1464,37 @@ And now let's add the desired properties. In the `src/index.ts` we need just a f
 ```ts
 // REST OF YOUR CODE
 
-bot.transformers.desiredProperties.user.id = true
-
-bot.transformers.desiredProperties.message.id = true
-
-// insert-next-line
-bot.transformers.desiredProperties.member.roles = true
-
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.user = true
-bot.transformers.desiredProperties.interaction.token = true
-// insert-next-line
-bot.transformers.desiredProperties.interaction.member = true
-bot.transformers.desiredProperties.interaction.message = true
-bot.transformers.desiredProperties.interaction.guildId = true
-bot.transformers.desiredProperties.interaction.channelId = true
-
-bot.transformers.desiredProperties.role.id = true
+export const bot = createBot({
+  token,
+  desiredProperties: {
+    interaction: {
+      id: true,
+      data: true,
+      type: true,
+      user: true,
+      token: true,
+      // insert-next-line
+      member: true,
+      message: true,
+      guildId: true,
+      channelId: true,
+    },
+    message: {
+      id: true,
+    },
+    user: {
+      id: true,
+    },
+    role: {
+      id: true,
+    },
+    // insert-start
+    member: {
+      roles: true,
+    }
+    // insert-end
+  }
+})
 
 // REST OF YOUR CODE
 ```

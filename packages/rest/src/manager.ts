@@ -62,7 +62,7 @@ import { createRoutes } from './routes.js'
 import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
-const version = '19.0.0-alpha.1'
+const version = '19.0.0'
 
 export const DISCORD_API_VERSION = 10
 export const DISCORD_API_URL = 'https://discord.com/api'
@@ -533,6 +533,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async makeRequest(method, route, options) {
+      // This error needs to be created here because of how stack traces get calculated
+      const error = new Error()
+      error.message = 'Failed to send request to discord.'
+
       if (rest.isProxied) {
         if (rest.authorization) {
           options ??= {}
@@ -543,18 +547,27 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
+          const errText = await result.text().catch(() => null)
+
+          if (errText) {
+            error.cause = {
+              ok: false,
+              status: result.status,
+              body: errText,
+            }
+
+            throw error
+          }
+
           const err = (await result.json().catch(() => {})) as Record<string, any>
           // Legacy Handling to not break old code or when body is missing
           if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
+
           throw new Error(JSON.stringify(err))
         }
 
         return result.status !== 204 ? await result.json() : undefined
       }
-
-      // This error needs to be created here because of how stack traces get calculated
-      const error = new Error()
-      error.message = 'Failed to send request to discord.'
 
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {

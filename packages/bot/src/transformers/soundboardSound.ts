@@ -1,7 +1,7 @@
 import type { DiscordSoundboardSound } from '@discordeno/types'
-import type { Bot, SoundboardSound } from '../index.js'
+import type { InternalBot, SoundboardSound } from '../index.js'
 
-export function transformSoundboardSound(bot: Bot, payload: DiscordSoundboardSound): SoundboardSound {
+export function transformSoundboardSound(bot: InternalBot, payload: DiscordSoundboardSound): typeof bot.transformers.$inferredTypes.soundboardSound {
   const props = bot.transformers.desiredProperties.soundboardSound
   const soundboardSound = {} as SoundboardSound
 

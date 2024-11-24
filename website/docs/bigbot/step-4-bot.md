@@ -20,49 +20,30 @@ import { createBot } from '@discordeno/bot'
 
 export const BOT = createBot({
   token,
-  events: {},
 })
 ```
 
-Now that our bot manager is created, we need to implement our event handlers. First, we can make another file like `services/bot/events/index.ts` and paste the code below.
+Awesome, now we need to implement an event handler. For example, let's implement the ready event. So we make a file like `services/bot/events/ready.ts` and paste the code below:
 
 ```ts
-import type { EventHandlers } from '@discordeno/bot'
+import { BOT } from '../bot.js'
 
-export const events: Partial<EventHandlers> = {
-  // Fill this in the next section
+export const ready: typeof BOT.events.ready = async ({ shardId }) => {
+  BOT.logger.info(`[READY] Shard ID #${shardId} is ready.`)
 }
 ```
 
-Now, we go back to the bot file and pass this events object to the createBot function.
+Now that we have a ready event handler, let's go ahead and add it to our bot.
 
 ```ts
 import { createBot } from '@discordeno/bot'
-import { events } from './events/index.js'
+import { ready } from './events/ready.js'
 
 export const BOT = createBot({
   token,
-  events,
 })
-```
 
-Awesome, now the only thing left is we need to implement an event handler. For example, let's implement the ready event. So we make a file like `services/bot/events/ready.ts` and paste the code below:
-
-```ts
-export const ready: EventHandlers['ready'] = async function (payload, shardId) {
-  logger.info(`[READY] Shard ID #${shardId} is ready.`)
-}
-```
-
-Now that we have a ready event handler, let's go ahead and add it to our events.
-
-```ts
-import type { EventHandlers } from '@discordeno/bot'
-import { ready } from './ready.ts'
-
-export const events: Partial<EventHandlers> = {
-  ready,
-}
+BOT.events.ready = ready;
 ```
 
 There you go. You now have an event handler working perfectly.
@@ -112,10 +93,12 @@ Now that we have the basic code setup complete for our listener, we can begin ad
 
 ```ts
 try {
-  // OPTIONAL: Runs the raw event handler if you need it
-  bot.events.raw(bot, req.body.payload, req.body.shardId);
-  // Runs the event handler if available
-  if (message.t) bot.events.[snakeToCamelCase(message.t.toLowerCase())]?.(req.body.payload, req.body.shardId);
+  // Trigger the raw event, you may remove this if you don't need it
+  bot.events.raw?.(req.body.payload, req.body.shardId)
+
+  if (data.t) {
+    bot.handlers[data.t]?.(bot, req.body.payload, req.body.shardId)
+  }
 
   res.status(200).json({ success: true })
 }
@@ -128,15 +111,12 @@ Alright, now we need to start making our connection to the rest proxy work. That
 ```ts
 export const BOT = createBot({
   token,
-  events,
-})
-
-BOT.rest = createRestManager({
-  token: process.env.TOKEN,
-  proxy: {
-    baseUrl: process.env.REST_URL,
-    authorization: process.env.AUTHORIZATION,
-  },
+  rest: {
+    proxy: {
+      baseUrl: process.env.REST_URL,
+      authorization: process.env.AUTHORIZATION,
+    },
+  }
 })
 ```
 
@@ -192,9 +172,11 @@ Threading or workers or clusters, however you wish to call it can be used here. 
 With server splitting, we are going to split the amount of events that are handled by a bot process across several bot processes. So let's say we buy a couple servers for our bot processes. We can throw this process on both of them. Then go back to our `shards` in step 3 and make each shard send it to the appropriate server. If you think back, we already coded step 3 with this in mind.
 
 ```ts
-async message(shrd, payload) {
-    await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
-    method: 'POST',
+async message(shard, payload) {
+    await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
+      method: 'POST',
+    })
+}
 ```
 
 Here we were using a function to determine which url it should send to.

@@ -96,6 +96,7 @@ function createShard(shardId: number): DiscordenoShard {
       totalShards: workerData.connectionData.totalShards,
       url: workerData.connectionData.url,
       version: workerData.connectionData.version,
+      transportCompression: null,
     },
   })
 

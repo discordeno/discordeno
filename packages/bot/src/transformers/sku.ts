@@ -1,7 +1,7 @@
 import type { DiscordSku } from '@discordeno/types'
-import type { Bot, Sku } from '../index.js'
+import type { InternalBot, Sku } from '../index.js'
 
-export function transformSku(bot: Bot, payload: DiscordSku): Sku {
+export function transformSku(bot: InternalBot, payload: DiscordSku): typeof bot.transformers.$inferredTypes.sku {
   const props = bot.transformers.desiredProperties.sku
   const sku = {} as Sku
 

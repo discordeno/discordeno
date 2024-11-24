@@ -1,6 +1,6 @@
 {
   "name": "@discordeno/rest",
-  "version": "19.0.0-alpha.1",
+  "version": "19.0.0",
   "main": "./dist/esm/index.js",
   "exports": {
     "import": "./dist/esm/index.js",
@@ -30,17 +30,17 @@
     "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
-    "@discordeno/types": "19.0.0-beta.1",
-    "@discordeno/utils": "19.0.0-beta.1"
+    "@discordeno/types": "19.0.0",
+    "@discordeno/utils": "19.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@swc/cli": "^0.5.0",
-    "@swc/core": "^1.7.26",
+    "@swc/cli": "^0.5.1",
+    "@swc/core": "^1.9.2",
     "@types/chai": "^5.0.1",
     "@types/chai-as-promised": "^8.0.1",
-    "@types/mocha": "^10.0.9",
-    "@types/node": "^22.7.4",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.9.1",
     "@types/sinon": "^17.0.3",
     "c8": "^10.1.2",
     "chai": "^5.1.2",

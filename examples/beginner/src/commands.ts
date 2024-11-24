@@ -1,4 +1,5 @@
-import { type ApplicationCommandOption, type ApplicationCommandTypes, Collection, type Interaction } from '@discordeno/bot'
+import { type ApplicationCommandOption, type ApplicationCommandTypes, Collection } from '@discordeno/bot'
+import type { bot } from './bot.js'
 
 export const commands = new Collection<string, Command>()
 
@@ -14,7 +15,7 @@ export interface Command {
   type: ApplicationCommandTypes
   /** Defaults to `Guild` */
   scope?: 'Global' | 'Guild'
-  execute: (interaction: Interaction) => unknown
+  execute: (interaction: typeof bot.transformers.$inferredTypes.interaction) => unknown
   subcommands?: Array<SubCommandGroup | SubCommand>
 }
 
