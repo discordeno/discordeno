@@ -18,11 +18,12 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@docusaurus/core": "3.6.1",
-    "@docusaurus/faster": "^3.6.1",
-    "@docusaurus/plugin-content-docs": "^3.6.1",
-    "@docusaurus/preset-classic": "3.6.1",
-    "@docusaurus/theme-common": "3.6.1",
+    "@docusaurus/core": "3.6.3",
+    "@docusaurus/faster": "^3.6.3",
+    "@docusaurus/plugin-client-redirects": "^3.6.3",
+    "@docusaurus/plugin-content-docs": "^3.6.3",
+    "@docusaurus/preset-classic": "3.6.3",
+    "@docusaurus/theme-common": "3.6.3",
     "@easyops-cn/docusaurus-search-local": "^0.45.0",
     "@mdx-js/react": "^3.1.0",
     "chart.js": "^4.4.6",
@@ -36,9 +37,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@docusaurus/module-type-aliases": "3.6.1",
-    "@docusaurus/tsconfig": "3.6.1",
-    "@docusaurus/types": "3.6.1",
+    "@docusaurus/module-type-aliases": "3.6.3",
+    "@docusaurus/tsconfig": "3.6.3",
+    "@docusaurus/types": "3.6.3",
     "@types/react": "^18.3.12",
     "typescript": "5.6.3",
     "webpack": "5.96.1"
