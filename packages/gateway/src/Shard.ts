@@ -20,13 +20,13 @@ const ZLIB_SYNC_FLUSH = new Uint8Array([0x0, 0x0, 0xff, 0xff])
 
 let fzstd: typeof import('fzstd')
 
-/** Since fzstd is an optional dependency, we need to import it lazily */
+/** Since fzstd is an optional dependency, we need to import it lazily. */
 async function getFZStd() {
   return (fzstd ??= await import('fzstd'))
 }
 
 export class DiscordenoShard {
-  /** The id of the shard */
+  /** The id of the shard. */
   id: number
   /** The connection config details that this shard will used to connect to discord. */
   connection: ShardGatewayConfig
@@ -54,18 +54,25 @@ export class DiscordenoShard {
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
   bucket: LeakyBucket
-  /** Logger for the bucket */
+  /** Logger for the bucket. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
-  /** Text decoder used for compressed payloads */
+  /** Text decoder used for compressed payloads. */
   textDecoder = new TextDecoder()
-  /** ZLib Inflate instance for ZLib-stream transport payloads */
+  /** ZLib Inflate instance for ZLib-stream transport payloads. */
   inflate?: Inflate
-  /** ZLib inflate buffer */
+  /** ZLib inflate buffer. */
   inflateBuffer: Uint8Array | null = null
-  /** ZStd Decompress instance for ZStd-stream transport payloads */
+  /** ZStd Decompress instance for ZStd-stream transport payloads. */
   zstdDecompress?: ZstdDecompress
   /** Queue for compressed payloads for Zstd Decompress */
   decompressionPromisesQueue: ((data: DiscordGatewayPayload) => void)[] = []
+  /**
+   * A function that will be called once the socket is closed and handleClose() has finished updating internal states.
+   *
+   * @internal
+   * This is for internal purposes only, and subject to breaking changes.
+   */
+  resolveAfterClose?: (close: CloseEvent) => void
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -286,6 +293,15 @@ export class DiscordenoShard {
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Resuming open Shard #${this.id}, closing the connection`)
       this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
+
+      // We need to wait for the old socket to be closed before we can connect again.
+      // This is important since closing the old socket will take time, and the new socket will be connected before that, and then handleClose() will be called, resulting in unexpected behavior.
+      await new Promise((resolve) => {
+        this.resolveAfterClose = resolve
+      })
+
+      // Reset the resolveAfterClose function after it has been resolved.
+      this.resolveAfterClose = undefined
     }
 
     // Shard has never identified, so we cannot resume.
@@ -367,6 +383,9 @@ export class DiscordenoShard {
     this.decompressionPromisesQueue = []
 
     this.logger.debug(`[Shard] Shard #${this.id} closed with code ${close.code}${close.reason ? `, and reason: ${close.reason}` : ''}.`)
+
+    // Resolve the close promise if it exists
+    this.resolveAfterClose?.(close)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
