@@ -1483,8 +1483,10 @@ export interface GetEntitlements {
   limit?: number
   /** Guild ID to look up entitlements for */
   guildId?: BigString
-  /** Whether or not ended entitlements should be omitted */
+  /** Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default. */
   excludeEnded?: boolean
+  /** Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default. */
+  exclude_deleted?: boolean
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params */

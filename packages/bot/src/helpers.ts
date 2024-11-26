@@ -749,6 +749,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     listEntitlements: async (applicationId, options) => {
       return (await bot.rest.listEntitlements(applicationId, options)).map((entitlement) => bot.transformers.entitlement(bot, snakelize(entitlement)))
     },
+    getEntitlement: async (applicationId, entitlementId) => {
+      return bot.transformers.entitlement(bot, snakelize(await bot.rest.getEntitlement(applicationId, entitlementId)))
+    },
     createTestEntitlement: async (applicationId, body) => {
       // @ts-expect-error createTestEntitlement gives a partial, and this method returns a partial
       return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body))) as Partial<
@@ -1125,6 +1128,7 @@ export interface BotHelpers<
     reason?: string,
   ) => Promise<TBot['transformers']['$inferredTypes']['guildOnboarding']>
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<TBot['transformers']['$inferredTypes']['entitlement'][]>
+  getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<TBot['transformers']['$inferredTypes']['entitlement']>
   createTestEntitlement: (
     applicationId: BigString,
     body: CreateEntitlement,
