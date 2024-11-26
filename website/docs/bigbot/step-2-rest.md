@@ -232,7 +232,7 @@ BOT.rest = createRestManager({
 
 BOT.rest.createBaseHeaders = () => {
   return {
-    'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v19.0.0-alpha.1)`,
+    'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v19.0.0)`,
     bot_id: BOT.rest.applicationId.toString(),
   }
 }
