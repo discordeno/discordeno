@@ -127,10 +127,18 @@ export class DiscordenoShard {
   }
 
   /** Close the socket connection to discord if present. */
-  close(code: number, reason: string): void {
+  async close(code: number, reason: string): Promise<void> {
     if (this.socket?.readyState !== NodeWebSocket.OPEN) return
 
     this.socket?.close(code, reason)
+
+    // We need to wait for the socket to be fully closed, otherwise there'll be race condition issues if we try to connect again, resulting in unexpected behavior.
+    await new Promise((resolve) => {
+      this.resolveAfterClose = resolve
+    })
+
+    // Reset the resolveAfterClose function after it has been resolved.
+    this.resolveAfterClose = undefined
   }
 
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
@@ -235,7 +243,7 @@ export class DiscordenoShard {
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Identifying open Shard #${this.id}, closing the connection`)
-      this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
+      await this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
     this.state = ShardState.Identifying
@@ -292,16 +300,7 @@ export class DiscordenoShard {
     // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Resuming open Shard #${this.id}, closing the connection`)
-      this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
-
-      // We need to wait for the old socket to be closed before we can connect again.
-      // This is important since closing the old socket will take time, and the new socket will be connected before that, and then handleClose() will be called, resulting in unexpected behavior.
-      await new Promise((resolve) => {
-        this.resolveAfterClose = resolve
-      })
-
-      // Reset the resolveAfterClose function after it has been resolved.
-      this.resolveAfterClose = undefined
+      await this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
     }
 
     // Shard has never identified, so we cannot resume.
@@ -362,7 +361,7 @@ export class DiscordenoShard {
 
   /** Shutdown the this. Forcefully disconnect the shard from Discord. The shard may not attempt to reconnect with Discord. */
   async shutdown(): Promise<void> {
-    this.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down.')
+    await this.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down.')
     this.state = ShardState.Offline
   }
 
@@ -742,7 +741,7 @@ export class DiscordenoShard {
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
           this.logger.debug(`[Shard] Heartbeat not acknowledged for Shard #${this.id}. Assuming zombied connection.`)
-          this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
+          await this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           await this.resume()
           return
