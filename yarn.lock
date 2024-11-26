@@ -124,7 +124,7 @@ __metadata:
     "@swc/cli": "npm:^0.5.1"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
-    "@types/mocha": "npm:^10.0.9"
+    "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.9.1"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
@@ -147,7 +147,7 @@ __metadata:
     "@swc/cli": "npm:^0.5.1"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
-    "@types/mocha": "npm:^10.0.9"
+    "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.9.1"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.13"
@@ -178,7 +178,7 @@ __metadata:
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
     "@types/chai-as-promised": "npm:^8.0.1"
-    "@types/mocha": "npm:^10.0.9"
+    "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.9.1"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
@@ -200,7 +200,7 @@ __metadata:
     "@biomejs/biome": "npm:^1.9.4"
     "@swc/cli": "npm:^0.5.1"
     "@swc/core": "npm:^1.9.2"
-    "@types/mocha": "npm:^10.0.9"
+    "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.9.1"
     c8: "npm:^10.1.2"
     mocha: "npm:^10.8.2"
@@ -219,7 +219,7 @@ __metadata:
     "@swc/cli": "npm:^0.5.1"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
-    "@types/mocha": "npm:^10.0.9"
+    "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.9.1"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.2"
@@ -731,10 +731,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mocha@npm:^10.0.9":
-  version: 10.0.9
-  resolution: "@types/mocha@npm:10.0.9"
-  checksum: aa34e61e6373c5a9e8f904302fc736c04d6757f079d8500689c589b610e8b8e28bdefc2da398569e6328c6b1e6dc5a59fb485211b2bacb465c2aad04d822c28c
+"@types/mocha@npm:^10.0.10":
+  version: 10.0.10
+  resolution: "@types/mocha@npm:10.0.10"
+  checksum: 4e3b61ed5112add86891a5dd3ebdd087714f5e1784a63d47a96424c0825058fd07074e85e43573462f751636c92808fc18a5f3862fe45e649ea98fdc5a3ee2ea
   languageName: node
   linkType: hard
 
@@ -1766,7 +1766,7 @@ __metadata:
     discordeno: "npm:19.0.0"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.2.10"
-    turbo: "npm:^2.3.0"
+    turbo: "npm:^2.3.1"
     typedoc: "npm:^0.26.11"
     typedoc-plugin-markdown: "npm:^4.2.10"
     typescript: "npm:^5.6.3"
@@ -1786,7 +1786,7 @@ __metadata:
     "@swc/cli": "npm:^0.5.1"
     "@swc/core": "npm:^1.9.2"
     "@types/chai": "npm:^5.0.1"
-    "@types/mocha": "npm:^10.0.9"
+    "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.9.1"
     c8: "npm:^10.1.2"
     chai: "npm:^5.1.2"
@@ -4262,58 +4262,58 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"turbo-darwin-64@npm:2.3.0":
-  version: 2.3.0
-  resolution: "turbo-darwin-64@npm:2.3.0"
+"turbo-darwin-64@npm:2.3.1":
+  version: 2.3.1
+  resolution: "turbo-darwin-64@npm:2.3.1"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-darwin-arm64@npm:2.3.0":
-  version: 2.3.0
-  resolution: "turbo-darwin-arm64@npm:2.3.0"
+"turbo-darwin-arm64@npm:2.3.1":
+  version: 2.3.1
+  resolution: "turbo-darwin-arm64@npm:2.3.1"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-64@npm:2.3.0":
-  version: 2.3.0
-  resolution: "turbo-linux-64@npm:2.3.0"
+"turbo-linux-64@npm:2.3.1":
+  version: 2.3.1
+  resolution: "turbo-linux-64@npm:2.3.1"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm64@npm:2.3.0":
-  version: 2.3.0
-  resolution: "turbo-linux-arm64@npm:2.3.0"
+"turbo-linux-arm64@npm:2.3.1":
+  version: 2.3.1
+  resolution: "turbo-linux-arm64@npm:2.3.1"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-windows-64@npm:2.3.0":
-  version: 2.3.0
-  resolution: "turbo-windows-64@npm:2.3.0"
+"turbo-windows-64@npm:2.3.1":
+  version: 2.3.1
+  resolution: "turbo-windows-64@npm:2.3.1"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-windows-arm64@npm:2.3.0":
-  version: 2.3.0
-  resolution: "turbo-windows-arm64@npm:2.3.0"
+"turbo-windows-arm64@npm:2.3.1":
+  version: 2.3.1
+  resolution: "turbo-windows-arm64@npm:2.3.1"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "turbo@npm:2.3.0"
+"turbo@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "turbo@npm:2.3.1"
   dependencies:
-    turbo-darwin-64: "npm:2.3.0"
-    turbo-darwin-arm64: "npm:2.3.0"
-    turbo-linux-64: "npm:2.3.0"
-    turbo-linux-arm64: "npm:2.3.0"
-    turbo-windows-64: "npm:2.3.0"
-    turbo-windows-arm64: "npm:2.3.0"
+    turbo-darwin-64: "npm:2.3.1"
+    turbo-darwin-arm64: "npm:2.3.1"
+    turbo-linux-64: "npm:2.3.1"
+    turbo-linux-arm64: "npm:2.3.1"
+    turbo-windows-64: "npm:2.3.1"
+    turbo-windows-arm64: "npm:2.3.1"
   dependenciesMeta:
     turbo-darwin-64:
       optional: true
@@ -4329,7 +4329,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: adabcc54514d0b670caea01c6de088da2f78ef8b4f1e204799c4602aee958148d2f5f29885f49129a8d127a00832a99635af2518ee692ca6b788e2e424bb5b74
+  checksum: 720c77c0e79341eeaa69a5d99ae9f48515a8125c1dad8d7025bc80428ded718cefaff1f2e6eef902e2eafd64b7e79a45a3589db31c299ef71e2191854506fbb6
   languageName: node
   linkType: hard
 
