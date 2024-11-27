@@ -1,6 +1,6 @@
-import { type DiscordGatewayPayload, Intents } from '@discordeno/types'
+import { type DiscordGatewayPayload, GatewayCloseEventCodes, GatewayOpcodes, Intents } from '@discordeno/types'
 import uWS from 'uWebSockets.js'
-import { type GatewayManager, ShardSocketCloseCodes, createGatewayManager } from '../../src/index.js'
+import { type GatewayManager, createGatewayManager } from '../../src/index.js'
 
 /**
  * This value needs to be AT LEAST `1017`
@@ -30,10 +30,6 @@ function createGatewayManagerWithPort(port: number): GatewayManager {
 }
 
 async function createUws(options: CreateUwsOptions) {
-  options.onOpen ??= () => {}
-  options.onMessage ??= (_message: any) => {}
-  options.onClose ??= (_code: number, _message: string) => {}
-  options.closing ??= false
   let port: number
 
   const { promise, resolve, reject } = promiseWithResolvers<{ port: number; uwsToken: uWS.us_listen_socket }>()
@@ -41,44 +37,36 @@ async function createUws(options: CreateUwsOptions) {
   const app = uWS.App()
 
   app.ws('/*', {
-    compression: uWS.SHARED_COMPRESSOR,
-    maxPayloadLength: 16 * 1024 * 1024,
-    idleTimeout: 10,
     open: async (ws) => {
-      if (options.closing) {
-        ws.end(ShardSocketCloseCodes.Shutdown)
-        return
-      }
-
       ws.send(
         JSON.stringify({
-          op: 10,
+          op: GatewayOpcodes.Hello,
           d: {
             heartbeat_interval: heartbeatInterval,
           },
         }),
       )
-      options.onOpen!()
+      options.onOpen?.()
     },
     message: async (ws, message, _isBinary) => {
       const msg = JSON.parse(Buffer.from(message).toString())
-      options.onMessage!(msg)
+      options.onMessage?.(msg)
 
-      if (msg.op === 1) {
+      if (msg.op === GatewayOpcodes.Heartbeat) {
         ws.send(
           JSON.stringify({
-            op: 11,
+            op: GatewayOpcodes.HeartbeatACK,
           }),
         )
 
         return
       }
-      if (msg.op === 2) {
+      if (msg.op === GatewayOpcodes.Identify) {
         ws.send(
           JSON.stringify({
             t: 'READY',
             s: 1,
-            op: 0,
+            op: GatewayOpcodes.Dispatch,
             d: {
               v: 10,
               user_settings: {},
@@ -110,13 +98,6 @@ async function createUws(options: CreateUwsOptions) {
 
         return
       }
-      if (msg.op === 6) {
-        // resume
-      }
-    },
-    close: (_ws, code, message) => {
-      const msg = Buffer.from(message).toString()
-      options.onClose!(code, msg)
     },
   })
 
@@ -144,7 +125,6 @@ describe('gateway', () => {
 
     const uwsOptions: CreateUwsOptions = {
       onOpen: resolveConnected,
-      closing: false,
     }
 
     const { port, uwsToken } = await createUws(uwsOptions)
@@ -153,8 +133,8 @@ describe('gateway', () => {
     await gateway.spawnShards()
     await connected
 
-    uwsOptions.closing = true
-    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop', true)
+    // TODO: We should use ShardSocketCloseCodes.TestingFinished but there is an issue with sending 3xxx codes to uWS
+    await gateway.shutdown(GatewayCloseEventCodes.InvalidShard, 'User requested bot stop', true)
 
     uWS.us_listen_socket_close(uwsToken)
   })
@@ -172,7 +152,6 @@ describe('gateway', () => {
 
         resolveHeartbeat()
       },
-      closing: false,
     }
 
     const { port, uwsToken } = await createUws(uwsOptions)
@@ -189,8 +168,8 @@ describe('gateway', () => {
 
     clearTimeout(timeout)
 
-    uwsOptions.closing = true
-    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop', true)
+    // TODO: We should use ShardSocketCloseCodes.TestingFinished but there is an issue with sending 3xxx codes to uWS
+    await gateway.shutdown(GatewayCloseEventCodes.InvalidShard, 'User requested bot stop', true)
 
     uWS.us_listen_socket_close(uwsToken)
   })
@@ -216,6 +195,4 @@ function promiseWithResolvers<T>() {
 interface CreateUwsOptions {
   onOpen?: () => any
   onMessage?: (message: DiscordGatewayPayload) => any
-  onClose?: (code: number, message: string) => any
-  closing?: boolean
 }

@@ -355,11 +355,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
     },
     async shutdown(code, reason, clearReshardingInterval = true) {
-      gateway.shards.forEach((shard) => shard.close(code, reason))
-
       if (clearReshardingInterval) clearInterval(gateway.resharding.checkIntervalId)
 
-      await delay(5000)
+      await Promise.all(Array.from(gateway.shards.values()).map((shard) => shard.close(code, reason)))
     },
     async sendPayload(shardId, payload) {
       const shard = gateway.shards.get(shardId)
