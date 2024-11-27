@@ -1632,6 +1632,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options))
     },
 
+    async getEntitlement(applicationId, entitlementId) {
+      return await rest.get<DiscordEntitlement>(rest.routes.monetization.entitlement(applicationId, entitlementId))
+    },
+
     async deleteTestEntitlement(applicationId, entitlementId) {
       await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId))
     },

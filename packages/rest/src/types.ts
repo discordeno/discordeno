@@ -2996,6 +2996,13 @@ export interface RestManager {
    */
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<Camelize<DiscordEntitlement>[]>
   /**
+   * Returns an entitlement.
+   *
+   * @param applicationId - The id of the application to get the entitlement
+   * @param entitlementId - The id of the entitlement to get
+   */
+  getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<Camelize<DiscordEntitlement>>
+  /**
    * Creates a test entitlement to a given SKU for a given guild or user. Discord will act as though that user or guild has entitlement to your premium offering.
    *
    * @param applicationId - The id of the application to create the entitlement
@@ -3014,7 +3021,10 @@ export interface RestManager {
    */
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   /**
-   * For One-Time Purchase consumable SKUs, marks a given entitlement for the user as consumed. The entitlement will have `consumed: true` when using {@link RestManager.listEntitlements | List Entitlements}
+   * For One-Time Purchase consumable SKUs, marks a given entitlement for the user as consumed. The entitlement will have `consumed: true` when using {@link listEntitlements | List Entitlements}
+   *
+   * @param applicationId - The id of the application to get the entitlement
+   * @param entitlementId - The id of the entitlement to get
    */
   consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   /**
