@@ -58,7 +58,7 @@ We are going to proceed with the understanding that we have 5,000 shards, 5,000,
 
 ```ts
 import { createGatewayManager } from '@discordeno/gateway'
-import { logger } from '@discordeno/utils'
+import { GatewayIntents } from '@discordeno/types'
 import { REST } from '../rest.ts'
 
 export const GATEWAY = createGatewayManager({
