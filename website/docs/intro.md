@@ -70,5 +70,6 @@ Interested? [Check the getting started page](./getting-started.md) for more deta
 - [Website](https://discordeno.js.org/)
 - [Documentation](../api_reference/category/docs-api-references)
 - [Discord](https://discord.com/invite/ddeno)
+- [GitHub](https://github.com/discordeno/discordeno)
 
 Discordeno follows [semantic versioning](https://semver.org/)

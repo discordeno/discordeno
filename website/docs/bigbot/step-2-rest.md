@@ -3,14 +3,28 @@ sidebar_position: 3
 sidebar_label: Step 2 - REST
 ---
 
-# Proxy REST
+# Creating A Standalone REST Process
 
-Awesome, if you have reached this far you know that this guide will be using the following:
+The first thing we want to make is our standalone REST process. This process will be used by almost every other process,
+so it is going to be the foundation of the bot.
 
-- Node.JS Runtime
-- Class based approach
+Before, we dive into how, here is a quick summary of why you will want a standalone REST process.
 
-Remember if you need any help with an alternative to the above listed items, please contact us on [Discord](https://discord.gg/ddeno).
+## Why Use Standalone REST Process?
+
+- Easily host on any serverless infrastructure.
+- Freedom from 1 hour downtimes due to invalid requests
+  - Prevent your bot from being down for an hour, by lowering the maximum downtime to 10 minutes.
+- Freedom from global rate limit errors
+  - As a bot grows, you need to handle global rate limits better. Shards don't communicate fast enough to truly handle it properly. With one point of contact to Discord API, you will never have issues again.
+  - Numerous instances of your bot on different hosts, all of which can connect to the same REST server.
+- REST does not rest!
+  - Separate rest guarantees that your queued requests will continue to be processed even if your bot breaks for whatever reason.
+  - Seamless updates! When updating/restarting a bot, you'll lose a lot of messages or replies that are queued/processing.
+- Single point of contact to Discord API
+  - Send requests from any location, even a bot dashboard directly.
+  - Don't send requests from dashboard to bot process to send a request to discord. Your bot process should be freed up to handle bot events!
+- Scalability! Scalability! Scalability!
 
 ## Creating Your REST Manager
 
@@ -213,7 +227,7 @@ Now you will be able to take this data and implement it into Grafana. In a futur
 
 [Grafana + Influx](https://grafana.com/docs/grafana/latest/getting-started/get-started-grafana-influxdb/)
 
-### Multiple Custom Bot Proxy Rest
+## Multiple Custom Bot Proxy Rest
 
 For bots that allow servers to buy custom bots, you can create a separate manager for each bot's token/authorization. As a request comes in, either get a cached rest manager or create one if none exists in the cache.
 
@@ -272,7 +286,7 @@ try {
 
 ```
 
-### Evals
+## Evals
 
 One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command without having to restart our rest service.
 
