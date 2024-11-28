@@ -729,10 +729,6 @@ type Complete<TObj, TDefault> = {
   [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
 }
 
-export type WithAtLeast<T extends TransformersDesiredProperties, AtLeast extends RecursivePartial<TransformersDesiredProperties>> = T & {
-  [K in keyof T]: K extends keyof AtLeast ? Complete<AtLeast[K], false> & T[K] : T[K]
-}
-
 type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]
   ? R['length'] extends 0
     ? F
