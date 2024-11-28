@@ -2,6 +2,7 @@ import { ApplicationCommandOptionTypes } from '@discordeno/types'
 import type {
   Attachment,
   Channel,
+  CompleteDesiredProperties,
   DesiredPropertiesBehavior,
   Interaction,
   InteractionDataOption,
@@ -11,17 +12,16 @@ import type {
   TransformProperty,
   TransformersDesiredProperties,
   User,
-  WithAtLeast,
 } from './index.js'
 
 export function commandOptionsParser<
-  TProps extends WithAtLeast<TransformersDesiredProperties, { interaction: { data: true } }>,
+  TProps extends TransformersDesiredProperties & { interaction: { data: true } },
   TBehavior extends DesiredPropertiesBehavior,
 >(__interaction: SetupDesiredProps<Interaction, TProps, TBehavior>, options?: InteractionDataOption[]): ParsedInteractionOption<TProps, TBehavior> {
   // This is necessary as typescript gets really confused when using __interaction alone, as it will say that 'data' does not exist despite it surely exist since we have the WithAtLeast
   const interaction = __interaction as SetupDesiredProps<
     Interaction,
-    WithAtLeast<TransformersDesiredProperties, { interaction: { data: true } }>,
+    CompleteDesiredProperties<{ interaction: { data: true } }>,
     DesiredPropertiesBehavior.RemoveKey
   >
 
