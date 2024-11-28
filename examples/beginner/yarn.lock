@@ -5,56 +5,56 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@discordeno/bot@npm:19.0.0":
-  version: 19.0.0
-  resolution: "@discordeno/bot@npm:19.0.0"
+"@discordeno/bot@npm:20.0.0":
+  version: 20.0.0
+  resolution: "@discordeno/bot@npm:20.0.0"
   dependencies:
-    "@discordeno/gateway": "npm:19.0.0"
-    "@discordeno/rest": "npm:19.0.0"
-    "@discordeno/types": "npm:19.0.0"
-    "@discordeno/utils": "npm:19.0.0"
-  checksum: 86ac4cd61761c1b3c3fa82db08742dcdba18ffb1b6042455c8a5e8cdd02231543c3c2d43dfb29084d44034cafebdc6ab51969c5930281ab2be83d5b159b69726
+    "@discordeno/gateway": "npm:20.0.0"
+    "@discordeno/rest": "npm:20.0.0"
+    "@discordeno/types": "npm:20.0.0"
+    "@discordeno/utils": "npm:20.0.0"
+  checksum: 9813615392df2ad1b1982c022e9f2921163c49392393be214bc62c2d799629c343cb9d531b4acbdbabf160de0e85aa333c1ef8a0c1d71ce8f9f1badf3ba641ef
   languageName: node
   linkType: hard
 
-"@discordeno/gateway@npm:19.0.0":
-  version: 19.0.0
-  resolution: "@discordeno/gateway@npm:19.0.0"
+"@discordeno/gateway@npm:20.0.0":
+  version: 20.0.0
+  resolution: "@discordeno/gateway@npm:20.0.0"
   dependencies:
-    "@discordeno/types": "npm:19.0.0"
-    "@discordeno/utils": "npm:19.0.0"
+    "@discordeno/types": "npm:20.0.0"
+    "@discordeno/utils": "npm:20.0.0"
     fzstd: "npm:^0.1.1"
     ws: "npm:^8.18.0"
   dependenciesMeta:
     fzstd:
       optional: true
-  checksum: 241ec9981bf47ff894990889477fbc1ce91361648534189361e9dca4d927aba15c941604da29ba135cb20871fac7e82e5cc1eed1df6ef3d86bbcdfdca3448649
+  checksum: 631e4a91576b715062d8187230d34b6279a69a0ddf665784445497ad7e37c9ecc08fa469234935a236e41168e746de0d93bc83fdf502e2dd39158c50cc432eda
   languageName: node
   linkType: hard
 
-"@discordeno/rest@npm:19.0.0":
-  version: 19.0.0
-  resolution: "@discordeno/rest@npm:19.0.0"
+"@discordeno/rest@npm:20.0.0":
+  version: 20.0.0
+  resolution: "@discordeno/rest@npm:20.0.0"
   dependencies:
-    "@discordeno/types": "npm:19.0.0"
-    "@discordeno/utils": "npm:19.0.0"
-  checksum: e1ce6c092566e58c5d407a5fee7c6c38f988251abcbaaf14beaa084691b4c52dc4f6c54f46974735090fafe174b1914374edd074bffd441e11d76851575a136f
+    "@discordeno/types": "npm:20.0.0"
+    "@discordeno/utils": "npm:20.0.0"
+  checksum: 1520aaabfb88988eddb44b0fd8d2b7b827a032c41a277ed1ae1e816e14f9af0d5e43089c358898a6c8913db1e8e80eeacc85e132b29a94e5fd6c08753a71fca4
   languageName: node
   linkType: hard
 
-"@discordeno/types@npm:19.0.0":
-  version: 19.0.0
-  resolution: "@discordeno/types@npm:19.0.0"
-  checksum: aaf832d6510b7aa0ead75bd5c1d1990f3a77fa980d40122d6d092abc571280aed6864b10fdda705d70bd7ba73961f4b3a0ee28c6b7cabb09595574f65fcfd61c
+"@discordeno/types@npm:20.0.0":
+  version: 20.0.0
+  resolution: "@discordeno/types@npm:20.0.0"
+  checksum: 8679feda51c9b282e7f42bf6cb22ed02b9e264a6c8fdc157a0c827fbf3a66101e38ad0f599012cc4362189b0435234d7f41a8af2f744c69ba63e645aa4244f66
   languageName: node
   linkType: hard
 
-"@discordeno/utils@npm:19.0.0":
-  version: 19.0.0
-  resolution: "@discordeno/utils@npm:19.0.0"
+"@discordeno/utils@npm:20.0.0":
+  version: 20.0.0
+  resolution: "@discordeno/utils@npm:20.0.0"
   dependencies:
-    "@discordeno/types": "npm:19.0.0"
-  checksum: b2d430099672cfb8b68d6a9bd12803cd69cb909dc1f368d8305a4bb1067499babff05997a29599b51029d0add435bea4a03929140abf77dd83e1741baaa37855
+    "@discordeno/types": "npm:20.0.0"
+  checksum: a83a61158357f95070a3f78a24e2ad805aaacbefc35c5fa5c3c6fc1a85119a3bc0d14db7f6525dba408f1b37db6cd733454ee0161e366675c5971983c092a8a9
   languageName: node
   linkType: hard
 
@@ -630,23 +630,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dd-beginner-bot@workspace:."
   dependencies:
-    "@discordeno/bot": "npm:19.0.0"
+    "@discordeno/bot": "npm:20.0.0"
     "@swc/cli": "npm:^0.5.0"
     "@swc/core": "npm:^1.9.2"
     "@types/node": "npm:^22.9.0"
     chalk: "npm:^5.3.0"
-    dd-cache-proxy: "npm:^2.3.0"
+    dd-cache-proxy: "npm:^2.5.0"
     dotenv: "npm:^16.4.5"
     typescript: "npm:^5.6.3"
   languageName: unknown
   linkType: soft
 
-"dd-cache-proxy@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "dd-cache-proxy@npm:2.3.0"
+"dd-cache-proxy@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "dd-cache-proxy@npm:2.5.0"
   peerDependencies:
-    "@discordeno/bot": 19.0.0-next.b85c6d5
-  checksum: eda7d43717567b7836208c9690bbc0a547179ff7319daf5ccc08c83bc44d481854bcb474075021646ddc8560015d8b0d5e5c66f72ace67f858484b805a40f5a1
+    "@discordeno/bot": ^20.0.0
+  checksum: 459f0013e69c571ef9477bc311b1d2946c0021842e661aadc7ab15e51670fa413a4eb1af0a051ce3bc345aebeaeaa01634fe38588e3f9cf08b32e49f5a7cb917
   languageName: node
   linkType: hard
 

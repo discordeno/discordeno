@@ -19,7 +19,6 @@ export const event: typeof bot.events.interactionCreate = async (interaction) =>
     if (!command) return
 
     try {
-      // @ts-expect-error commandOptionsParser is bugged at the moment, it wants an Interaction and not the desired props customized interaction
       await command.execute(interaction, commandOptionsParser(interaction))
     } catch (error) {
       console.error(error)

@@ -35,7 +35,7 @@ export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> 
 
   if (perGuildCommands.length && (scope === 'Guild' || scope === undefined)) {
     await Promise.all(
-      bot.cache.guild.memory.map(async (guild) => {
+      bot.cache.guilds.memory.map(async (guild) => {
         await bot.helpers.upsertGuildApplicationCommands(guild.id, perGuildCommands)
       }),
     )
@@ -63,7 +63,7 @@ export async function updateGuildCommands(guild: typeof bot.transformers.$inferr
 }
 
 export async function getGuildFromId(guildId: bigint) {
-  const cached = await bot.cache.guild.get(guildId)
+  const cached = await bot.cache.guilds.get(guildId)
 
   if (cached) return cached
 

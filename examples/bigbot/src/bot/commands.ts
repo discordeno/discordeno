@@ -1,5 +1,6 @@
 import type {
   ApplicationCommandOptionTypes,
+  Bot,
   Camelize,
   CreateApplicationCommand,
   DiscordApplicationCommandOption,
@@ -35,7 +36,7 @@ export type CommandOptions = CommandOption[]
 
 // Option parsing
 
-type ResolvedValues = ParsedInteractionOption[string]
+type ResolvedValues = ParsedInteractionOption<ExtractDesiredProps<typeof bot>, ExtractDesiredBehavior<typeof bot>>[string]
 
 // Using omit + exclude is a slight trick to avoid a type error on Pick
 export type InteractionResolvedChannel = Omit<
@@ -79,3 +80,6 @@ type GetOptionValue<T> = T extends { type: ApplicationCommandOptionTypes; requir
 type BuildOptions<T extends CommandOptions | undefined> = {
   [Prop in keyof Omit<T, keyof unknown[]> as GetOptionName<T[Prop]>]: GetOptionValue<T[Prop]>
 }
+
+type ExtractDesiredProps<T> = T extends Bot<infer Props, infer _Behavior> ? Props : never
+type ExtractDesiredBehavior<T> = T extends Bot<infer _Props, infer Behavior> ? Behavior : never

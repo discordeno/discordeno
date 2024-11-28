@@ -19,7 +19,6 @@ bot.events.interactionCreate = async (interaction) => {
 
   logCommand(interaction, 'Trigger', interaction.data.name)
 
-  // @ts-expect-error commandOptionsParser is currently bugged
   const options = commandOptionsParser(interaction)
 
   try {

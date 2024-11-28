@@ -1,4 +1,4 @@
-import { type Collection, Intents, createBot } from '@discordeno/bot'
+import { Intents, createBot } from '@discordeno/bot'
 import { createProxyCache } from 'dd-cache-proxy'
 import { configs } from './config.js'
 
@@ -24,23 +24,12 @@ const rawBot = createBot({
   },
 })
 
-// TODO: remove this type hack when dd-cache-proxy fixes support for v19
-// @ts-expect-error
 export const bot = createProxyCache(rawBot, {
   desiredProps: {
-    guilds: ['id', 'name'],
+    guild: ['id', 'name'],
   },
   cacheInMemory: {
-    guilds: true,
+    guild: true,
     default: false,
   },
-}) as CacheBot
-
-export type CacheBot = typeof rawBot & {
-  cache: {
-    guild: {
-      memory: Collection<bigint, typeof rawBot.transformers.$inferredTypes.guild>
-      get: (guildId: bigint) => typeof rawBot.transformers.$inferredTypes.guild
-    }
-  }
-}
+})
