@@ -1,6 +1,6 @@
 {
   "name": "discordeno",
-  "version": "19.0.0",
+  "version": "20.0.0",
   "main": "./dist/esm/index.js",
   "exports": {
     "import": "./dist/esm/index.js",
@@ -29,11 +29,11 @@
     "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0",
-    "@discordeno/gateway": "19.0.0",
-    "@discordeno/rest": "19.0.0",
-    "@discordeno/types": "19.0.0",
-    "@discordeno/utils": "19.0.0"
+    "@discordeno/bot": "20.0.0",
+    "@discordeno/gateway": "20.0.0",
+    "@discordeno/rest": "20.0.0",
+    "@discordeno/types": "20.0.0",
+    "@discordeno/utils": "20.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
