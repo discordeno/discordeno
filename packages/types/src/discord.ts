@@ -534,6 +534,7 @@ export enum DiscordConnectionServiceType {
   AmazonMusic = 'amazon-music',
   BattleNet = 'battlenet',
   Bungie = 'Bungie.net',
+  Crunchyroll = 'crunchyroll',
   Domain = 'domain',
   eBay = 'ebay',
   EpicGames = 'epicgames',
