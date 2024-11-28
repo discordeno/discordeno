@@ -74,13 +74,6 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
-          sidebarId: 'old_docs',
-          position: 'left',
-          label: 'Old Docs',
-          docsPluginId: 'old_docs',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'api_reference',
           position: 'left',
           label: 'API Reference',
@@ -108,27 +101,6 @@ const config: Config = {
             {
               label: 'Documentation',
               to: '/docs/intro',
-            },
-          ],
-        },
-        {
-          title: 'Old Docs',
-          items: [
-            {
-              label: 'Introduction',
-              to: '/old_docs/intro',
-            },
-            {
-              label: 'Getting Started',
-              to: '/old_docs/getting-started',
-            },
-            {
-              label: 'FAQ',
-              to: '/old_docs/frequently-asked-questions',
-            },
-            {
-              label: 'Benchmark',
-              to: '/old_docs/benchmark',
             },
           ],
         },
@@ -208,16 +180,6 @@ const config: Config = {
   } satisfies ThemeConfig,
 
   plugins: [
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'old_docs',
-        path: 'old_docs',
-        routeBasePath: 'old_docs',
-        sidebarPath: require.resolve('./sidebars.js'),
-        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
-      } satisfies PluginContentDocs,
-    ],
     [
       '@docusaurus/plugin-content-docs',
       {

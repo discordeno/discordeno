@@ -98,6 +98,7 @@ Interested? [Check the website](https://discordeno.js.org/) for more details on 
 ## Links
 
 - [Website](https://discordeno.js.org/)
+- [Documentation](https://discordeno.js.org/api_reference/category/docs-api-references)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 Discordeno follows [semantic versioning](https://semver.org/)

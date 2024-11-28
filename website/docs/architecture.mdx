@@ -2,13 +2,13 @@
 sidebar_position: 2
 ---
 
-import BrowserOnly from '@docusaurus/BrowserOnly'
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Architecture
 
 ## Overview
 
-import FlowChart from '@site/src/components/architecture/FlowChart'
+import FlowChart from '@site/src/components/architecture/FlowChart';
 
 <BrowserOnly>{() => <FlowChart />}</BrowserOnly>
 
@@ -16,7 +16,7 @@ Discordeno have three main components/process, gateway, bot and rest. Websocket 
 
 ## Gateway Process
 
-import FlowChart2 from '@site/src/components/architecture/FlowChart2'
+import FlowChart2 from '@site/src/components/architecture/FlowChart2';
 
 <BrowserOnly>{() => <FlowChart2 />}</BrowserOnly>
 
@@ -32,22 +32,52 @@ Any event is passed to the handleMessage method by the gateway shard, which also
 
 ## Bot Process
 
-import FlowChart3 from '@site/src/components/architecture/FlowChart3'
+import FlowChart3 from '@site/src/components/architecture/FlowChart3';
 
-<BrowserOnly>
-  {() => (
-    <FlowChart3
-      handlerFilter={handler => handler.startsWith('handleChannel')}
-    />
-  )}
-</BrowserOnly>
+<BrowserOnly>{() => <FlowChart3 />}</BrowserOnly>
 
 A simplified version of function used inside of the bot process, showing only the handlers, transformers and event related to channel event
 
 ### Bot
 
-When an event arrives from the gateway, the bot process receives it and passes it all to the handleDiscordPayload method. The handleDiscordPayload method will invoke raw events for each event and route calls to handlers, transformers, and events at three different layers for processing. The handler will use transformers to alter the event's contents before calling the event. The data will be transformed into typescript after being stripped of pointless properties, given a new name, and having bitwise permission flags abstracted.
+When an event arrives from the gateway, the bot process receives it and will invoke raw events for each event - `bot.events.raw()`, then runs `bot.events.dispatchRequirements()`, aftter which it'll pass it to the respective handler, which will pass all the data through the necessary transformers (which calls customizers inside) and then the respective event function is called, which executes your code. This may sound complex, so let's break it down:
+
+#### `bot.events.raw`:
+
+This is an event that contains the raw objects from Discord and will be called whenever an event is received from Discord. If you want metrics for your gateway events, this would be the best place to put them in.
+
+#### `bot.events.dispatchRequirements`:
+
+This is one of the most useful, yet often overlooked feature in discordeno.
+
+This event runs whenever a dispatch event is received (e.g., `GUILD_CREATE`, `MESSAGE_CREATE`), meaning you'll know every time Discord sends you a dispatch event, which would enable you to cache only active guilds and lazy load the remaining only when there's an event related to that guild arrives. An active guild in this sense means any guild where an event has happened in the past x hours.
+
+In real world, a LOT of your guilds would rarely emit an event related to that guild (e.g. `MESSAGE_CREATE`, `CHANNEL_CREATE`), so caching them would be pointless for most bots, because nothing will ever happen in those servers and the guilds you cached would never be put to use, resulting in being a waste of memory.
+
+What you can do instead for example is remove any guilds from cache that hasn't sent any events in the past hour or so, and whenever you see a guild id in `bot.events.dispatchRequirements`, you check if the guild is cached and if not, you send an API request and cache the guild. Since this event is run before running your actual event code, the guild will be guaranteed to be present in your event code if you cache them in this event. This way, you can save a lot of memory, but be sure to test and figure which time limit would be the best for your bot, because too little limit would make your bot send requests to API constantly, resulting in being ratelimited - an hour is usually a good limit for this.
+
+### Handlers
+
+After `dispatchRequirements` has finished executing, the data will be passed on to handlers. This is where the event function will actually be called, but before that, it'll go through something that we call as `transformers`.
+
+#### Transformers
+
+Transformers, as their name suggests, transforms data from Discord format to discordeno format (there are also reverse transformers that does the opposite: transforming discordeno format to Discord's). For example, `channel.id` is a `string` in Discord, but in discordeno, it's a `bigint`. All these conversion happens inside transformers, whether the data is from REST or gateway. After converting them, they'll be passed on to `customizers`.
+
+#### Customizers
+
+These are functions where we can customize the data to add / remove / modify properties to a channel for example, if you wish.
+
+Since all structures from Discord will be passed on to customizers, **this is the best place for you to cache any data**. For example, you can override `bot.transformers.customizers.channel` to store the channel inside your cache whenever discordeno sees a channel (whether it's from REST or gateway). You can learn more about caching here: [Caching Guide](./caching.md).
 
 ## Rest Process
 
-TBC
+import FlowChart4 from '@site/src/components/architecture/FlowChart4';
+
+<BrowserOnly>{() => <FlowChart4 />}</BrowserOnly>
+
+When running multiple processes or workers for your bot, it’s important to handle REST API requests through a single point. Without a centralized system, each process has its own rate limit handling, which can lead to desynchronized calculations, sending too many invalid requests, and potentially resulting in a Cloudflare ban.
+
+To avoid this, route all your bot’s and gateway's REST requests through one central process by using the `rest.proxy` option. This lets the rest process handle rate limit properly and prevent you from getting Cloudflare bans.
+
+For more details on how to implement this, you can check [here](./bigbot/step-2-rest.md).
