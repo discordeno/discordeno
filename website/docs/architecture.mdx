@@ -12,7 +12,23 @@ import FlowChart from '@site/src/components/architecture/FlowChart';
 
 <BrowserOnly>{() => <FlowChart />}</BrowserOnly>
 
-Discordeno have three main components/process, gateway, bot and rest. Websocket events from Discord, such as connecting, restarting, heartbeating, and transmitting websocket messages to Discord, are handled and maintained by the Gateway process. All Discord events are handled and converted by the Bot process, which also activates your code, such as the execute function upon message creation. All http requests to Discord, including proxying and ratelimiting, are handled by the Rest process.
+Discordeno is a library designed primarily for large-scale bots. Its recommended architecture is tailored to meet the needs of large-scale bot developers or those planning to build bots with the potential to scale significantly in the future. This approach ensures your code is future-proof and ready to handle the demands of a growing bot.  
+
+It operates through three main components/processes: **Gateway**, **Bot**, and **Rest**. Each plays a distinct role in managing the functionality and interaction with Discord's API:  
+
+1. **Gateway**  
+   - Manages WebSocket communication with Discord.  
+   - Handles connection establishment, restarts, heartbeats, and message transmission over WebSocket.
+   - Forwards any relevant events to the Bot process. 
+
+2. **Bot**  
+   - Processes and converts all events received from the Gateway process.  
+   - Executes your code in response to events like message creation.  
+   - If you need to take any action on Discord, those requests are sent to the Rest manager.
+
+3. **Rest**  
+   - Handles all HTTP requests sent to Discord.
+   - Manages proxying and rate-limiting to ensure compliance with Discord’s API constraints.
 
 ## Gateway Process
 
@@ -20,15 +36,24 @@ import FlowChart2 from '@site/src/components/architecture/FlowChart2';
 
 <BrowserOnly>{() => <FlowChart2 />}</BrowserOnly>
 
-The Gateway process have two part the gateway manager and the gateway [shard](https://discord.com/developers/docs/topics/gateway#sharding), the gateway manager oversees the gateway shard.
+The Gateway process consists of two parts: the **Gateway Manager** and the **Shard**. The Gateway Manager oversees all the Gateway Shards.
 
-### Gateway Manager
+#### Gateway Manager  
 
-The gateway manager spawns the right amount of shard acording to data from discord's [getGatewayBot](https://discord.com/developers/docs/topics/gateway#get-gateway-bot) endpoint, user can override the value of gatewayBot by directly passing the value. The manager control the order or sequence of shard identifying base on the session start limit listed in the getGatewayBot to prevent hitting the ratelimiting. By default the manager will check the getGatewayBot endpoint every 8 hours and reshard if the number of shard changed shard. Check [here](/docs/bigbot/step-3-gateway) for more information about the gateway manager.
+- **Shard Management**: The Gateway Manager spawns the appropriate number of shards based on data retrieved from Discord's `getGatewayBot` endpoint. Users can override this by directly providing their own `gatewayBot` value.
+- **Rate-Limiting Control**: It ensures shards identify in a sequence that adheres to Discord's session start limit, preventing rate-limiting issues.  
+- **Automatic Resharding**: By default, the manager queries the `getGatewayBot` endpoint every 8 hours and reshard if the shard count changes. This is a very complex topic, and we will dedicate an entire section in our guides to understanding why "re-sharding" is important and how it works. 
 
-### Gateway Shard
+#### Gateway Shard  
 
-Any event is passed to the handleMessage method by the gateway shard, which also establishes a websocket connection to Discord. The handleMessage method will examine the event and only deliver genuine events to the bot by intercepting and processing websocket-related events like hello, resume, heartbeat, and ready. You can modify the handleMessage to suit your needs, but it is not advised unless you are certain of your actions because the connection depends on it. After the function has finished processing the event, it will either pass the event directly (in the same process), via the rest api, a message queue, or another mechanism depending on the user's customization.
+- **WebSocket Connection**: The Gateway Shard establishes and maintains a WebSocket connection with Discord.  
+- **Event Handling**: It passes any incoming event to the `handleMessage` method. This method filters out WebSocket-related events (e.g., `hello`, `resume`, `heartbeat`, and `ready`) and forwards only relevant events to the bot.  
+- **Customizability**: Every aspect of Discordeno is able to be customized and overridden. However, doing so is not recommended unless you fully understand the implications, as it is critical for maintaining the connection.  
+- **Event Processing**: After processing an event, the shard forwards it either:  
+  - Directly within the same process
+  - Through the REST API
+  - Via a message queue  
+  - Another user-defined mechanism, depending on customization. 
 
 ## Bot Process
 
@@ -36,7 +61,7 @@ import FlowChart3 from '@site/src/components/architecture/FlowChart3';
 
 <BrowserOnly>{() => <FlowChart3 />}</BrowserOnly>
 
-A simplified version of function used inside of the bot process, showing only the handlers, transformers and event related to channel event
+This is a simplified version of functions used inside of the bot process, showing only the handlers, transformers and event related to channel event
 
 ### Bot
 
