@@ -239,14 +239,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gerrit0/mini-shiki@npm:^1.23.2":
-  version: 1.24.0
-  resolution: "@gerrit0/mini-shiki@npm:1.24.0"
+"@gerrit0/mini-shiki@npm:^1.24.0":
+  version: 1.24.1
+  resolution: "@gerrit0/mini-shiki@npm:1.24.1"
   dependencies:
     "@shikijs/engine-oniguruma": "npm:^1.24.0"
     "@shikijs/types": "npm:^1.24.0"
     "@shikijs/vscode-textmate": "npm:^9.3.0"
-  checksum: 7e706532b07e7d83dbbc078333f9e50624e106e7b07877ae96ee70084653dfbe7b590c166a452fdd3231ec73b79644d894009a15d7850fb1f5f374a043ccf90a
+  checksum: 760e852fb28801fd75ba651ac0454d1169ad61ee0edb2ca81399441f297d16d3c73b141a1c0ddbf5c8bdc6996b2c16d4e4c70973ce9e4f8576ca569c68ba3ecf
   languageName: node
   linkType: hard
 
@@ -1686,8 +1686,8 @@ __metadata:
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.2.10"
     turbo: "npm:^2.3.1"
-    typedoc: "npm:^0.27.1"
-    typedoc-plugin-markdown: "npm:^4.2.10"
+    typedoc: "npm:^0.27.2"
+    typedoc-plugin-markdown: "npm:^4.3.1"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -4111,20 +4111,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc-plugin-markdown@npm:^4.2.10":
-  version: 4.2.10
-  resolution: "typedoc-plugin-markdown@npm:4.2.10"
+"typedoc-plugin-markdown@npm:^4.3.1":
+  version: 4.3.1
+  resolution: "typedoc-plugin-markdown@npm:4.3.1"
   peerDependencies:
-    typedoc: 0.26.x
-  checksum: 7320d55b22cd1983e1d5431ce0c7345b7ccf76a9557a3f432532b5ee72bfce2fffceff05ca30c78f5eb11f068c59ec53e4e53ab9ceec2767cc5735dc488ce78b
+    typedoc: 0.27.x
+  checksum: 7fefa169508b5e21f2c1e46d34c19e70bb9c91711d29a521d12ed77c350bf9b9512f0a165b5470878e96fd7bb5e5a6881e5007473adf83289bc875e21f7b55f2
   languageName: node
   linkType: hard
 
-"typedoc@npm:^0.27.1":
-  version: 0.27.1
-  resolution: "typedoc@npm:0.27.1"
+"typedoc@npm:^0.27.2":
+  version: 0.27.2
+  resolution: "typedoc@npm:0.27.2"
   dependencies:
-    "@gerrit0/mini-shiki": "npm:^1.23.2"
+    "@gerrit0/mini-shiki": "npm:^1.24.0"
     lunr: "npm:^2.3.9"
     markdown-it: "npm:^14.1.0"
     minimatch: "npm:^9.0.5"
@@ -4133,7 +4133,7 @@ __metadata:
     typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x
   bin:
     typedoc: bin/typedoc
-  checksum: 426cdcb2726f23818040434a09e9f86f0bc7cbd8f9c865946720edc49acac746872e5f34ddf02bc29b1e32452c67418612c9ab7367600228a17287633e54312e
+  checksum: 645a5850090247c6b2361ec9059c19d6ee181897b48a4f396c3a7c7bd8c7e4e6a5cd817e7d21060c2f42625d5f192a0e944bc0a315cd9e9ec8f77c25a5a4b0fd
   languageName: node
   linkType: hard
 

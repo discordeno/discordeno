@@ -33,8 +33,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "turbo": "^2.3.1",
-    "typedoc": "^0.27.1",
-    "typedoc-plugin-markdown": "^4.2.10",
+    "typedoc": "^0.27.2",
+    "typedoc-plugin-markdown": "^4.3.1",
     "typescript": "^5.7.2"
   },
   "engines": {
