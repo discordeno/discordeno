@@ -257,7 +257,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       if (options?.files !== undefined) {
         const form = new FormData()
         for (let i = 0; i < options.files.length; ++i) {
-          form.append(`file${i}`, options.files[i].blob, options.files[i].name)
+          form.append(`files[${i}]`, options.files[i].blob, options.files[i].name)
         }
 
         // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
