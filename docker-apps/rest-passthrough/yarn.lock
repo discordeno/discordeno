@@ -1157,6 +1157,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.4.6":
+  version: 16.4.6
+  resolution: "dotenv@npm:16.4.6"
+  checksum: 86bf758c47ec2585cf171ded83f0ff8b7327d865116ab8a327ff9ec84e35cc8f7cd3f68cef7ce6ec2907310228a4ec4f310cf701615973aba4a9b57bdbb65c59
+  languageName: node
+  linkType: hard
+
 "env-schema@npm:^6.0.0":
   version: 6.0.0
   resolution: "env-schema@npm:6.0.0"
@@ -2197,7 +2204,7 @@ __metadata:
     "@favware/cliff-jumper": "npm:^5.0.0"
     "@swc/cli": "npm:^0.5.2"
     "@swc/core": "npm:^1.9.3"
-    dotenv: "npm:^16.4.5"
+    dotenv: "npm:^16.4.6"
     fastify: "npm:^4.28.1"
   languageName: unknown
   linkType: soft
