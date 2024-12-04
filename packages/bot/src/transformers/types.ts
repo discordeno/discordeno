@@ -659,9 +659,9 @@ export interface Entitlement {
   type: DiscordEntitlementType
   /** Entitlement was deleted */
   deleted: boolean
-  /** Start date at which the entitlement is valid. Not present when using test entitlements */
+  /** Start date at which the entitlement is valid. */
   startsAt?: number
-  /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
+  /** Date at which the entitlement is no longer valid. */
   endsAt?: number
   /** For consumable items, whether or not the entitlement has been consumed */
   consumed?: boolean
