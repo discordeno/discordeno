@@ -128,7 +128,12 @@ export class DiscordenoShard {
 
   /** Close the socket connection to discord if present. */
   async close(code: number, reason: string): Promise<void> {
-    if (this.socket?.readyState !== NodeWebSocket.OPEN) return
+    this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket.`)
+
+    if (this.socket?.readyState !== NodeWebSocket.OPEN) {
+      this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`)
+      return
+    }
 
     // This has to be created before the actual call to socket.close as for example Bun calls socket.onclose immediately on the .close() call instead of waiting for the connection to end
     const promise = new Promise((resolve) => {
@@ -141,6 +146,8 @@ export class DiscordenoShard {
 
     // We need to wait for the socket to be fully closed, otherwise there'll be race condition issues if we try to connect again, resulting in unexpected behavior.
     await promise
+
+    this.logger.debug(`[Shard] Shard #${this.id} closed the socket.`)
 
     // Reset the resolveAfterClose function after it has been resolved.
     this.resolveAfterClose = undefined
