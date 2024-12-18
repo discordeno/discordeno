@@ -1,22 +1,32 @@
 import type { DiscordGatewayPayload, DiscordReady, DiscordVoiceChannelEffectAnimationType } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
-import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
-import type { Bot } from './index.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js'
 import type {
   AuditLogEntry,
   AutoModerationActionExecution,
   AutoModerationRule,
+  Channel,
+  Emoji,
+  Entitlement,
+  Guild,
   GuildApplicationCommandPermissions,
   Integration,
+  Interaction,
+  Invite,
+  Member,
+  Message,
   PresenceUpdate,
+  Role,
+  ScheduledEvent,
+  SoundboardSound,
+  Sticker,
+  Subscription,
   ThreadMember,
+  User,
+  VoiceState,
 } from './transformers/types.js'
 
-export interface EventHandlers<
-  TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredPropertiesBehavior,
-  TBot extends Bot<TProps, TBehavior> = Bot<TProps, TBehavior>,
-> {
+export interface EventHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
   debug: (text: string, ...args: any[]) => unknown
   applicationCommandPermissionsUpdate: (command: GuildApplicationCommandPermissions) => unknown
   guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
@@ -24,27 +34,27 @@ export interface EventHandlers<
   automodRuleUpdate: (rule: AutoModerationRule) => unknown
   automodRuleDelete: (rule: AutoModerationRule) => unknown
   automodActionExecution: (payload: AutoModerationActionExecution) => unknown
-  threadCreate: (thread: TBot['transformers']['$inferredTypes']['channel']) => unknown
-  threadDelete: (thread: TBot['transformers']['$inferredTypes']['channel']) => unknown
+  threadCreate: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
+  threadDelete: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
   threadListSync: (payload: {
     guildId: bigint
     channelIds?: bigint[]
-    threads: TBot['transformers']['$inferredTypes']['channel'][]
+    threads: SetupDesiredProps<Channel, TProps, TBehavior>[]
     members: ThreadMember[]
   }) => unknown
   threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedAt: number; flags: number }) => unknown
   threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown
-  threadUpdate: (thread: TBot['transformers']['$inferredTypes']['channel']) => unknown
-  scheduledEventCreate: (event: TBot['transformers']['$inferredTypes']['scheduledEvent']) => unknown
-  scheduledEventUpdate: (event: TBot['transformers']['$inferredTypes']['scheduledEvent']) => unknown
-  scheduledEventDelete: (event: TBot['transformers']['$inferredTypes']['scheduledEvent']) => unknown
+  threadUpdate: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
+  scheduledEventCreate: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown
+  scheduledEventUpdate: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown
+  scheduledEventDelete: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown
   scheduledEventUserAdd: (payload: { guildScheduledEventId: bigint; guildId: bigint; userId: bigint }) => unknown
   scheduledEventUserRemove: (payload: { guildScheduledEventId: bigint; guildId: bigint; userId: bigint }) => unknown
   ready: (
     payload: {
       shardId: number
       v: number
-      user: TBot['transformers']['$inferredTypes']['user']
+      user: SetupDesiredProps<User, TProps, TBehavior>
       guilds: bigint[]
       sessionId: string
       shard?: number[]
@@ -52,31 +62,28 @@ export interface EventHandlers<
     },
     rawPayload: DiscordReady,
   ) => unknown
-  interactionCreate: (interaction: TBot['transformers']['$inferredTypes']['interaction']) => unknown
+  interactionCreate: (interaction: SetupDesiredProps<Interaction, TProps, TBehavior>) => unknown
   integrationCreate: (integration: Integration) => unknown
   integrationDelete: (payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => unknown
   integrationUpdate: (payload: { guildId: bigint }) => unknown
-  inviteCreate: (invite: TBot['transformers']['$inferredTypes']['invite']) => unknown
+  inviteCreate: (invite: SetupDesiredProps<Invite, TProps, TBehavior>) => unknown
   inviteDelete: (payload: { channelId: bigint; guildId?: bigint; code: string }) => unknown
-  guildMemberAdd: (member: TBot['transformers']['$inferredTypes']['member'], user: TBot['transformers']['$inferredTypes']['user']) => unknown
-  guildMemberRemove: (user: TBot['transformers']['$inferredTypes']['user'], guildId: bigint) => unknown
-  guildMemberUpdate: (member: TBot['transformers']['$inferredTypes']['member'], user: TBot['transformers']['$inferredTypes']['user']) => unknown
-  guildStickersUpdate: (payload: { guildId: bigint; stickers: TBot['transformers']['$inferredTypes']['sticker'][] }) => unknown
-  messageCreate: (message: TBot['transformers']['$inferredTypes']['message']) => unknown
-  messageDelete: (
-    payload: { id: bigint; channelId: bigint; guildId?: bigint },
-    message?: TBot['transformers']['$inferredTypes']['message'],
-  ) => unknown
+  guildMemberAdd: (member: SetupDesiredProps<Member, TProps, TBehavior>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown
+  guildMemberRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
+  guildMemberUpdate: (member: SetupDesiredProps<Member, TProps, TBehavior>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown
+  guildStickersUpdate: (payload: { guildId: bigint; stickers: SetupDesiredProps<Sticker, TProps, TBehavior>[] }) => unknown
+  messageCreate: (message: SetupDesiredProps<Message, TProps, TBehavior>) => unknown
+  messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: SetupDesiredProps<Message, TProps, TBehavior>) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown
-  messageUpdate: (message: TBot['transformers']['$inferredTypes']['message']) => unknown
+  messageUpdate: (message: SetupDesiredProps<Message, TProps, TBehavior>) => unknown
   reactionAdd: (payload: {
     userId: bigint
     channelId: bigint
     messageId: bigint
     guildId?: bigint
-    member?: TBot['transformers']['$inferredTypes']['member']
-    user?: TBot['transformers']['$inferredTypes']['user']
-    emoji: TBot['transformers']['$inferredTypes']['emoji']
+    member?: SetupDesiredProps<Member, TProps, TBehavior>
+    user?: SetupDesiredProps<User, TProps, TBehavior>
+    emoji: SetupDesiredProps<Emoji, TProps, TBehavior>
     messageAuthorId?: bigint
     burst: boolean
     burstColors?: string[]
@@ -86,14 +93,14 @@ export interface EventHandlers<
     channelId: bigint
     messageId: bigint
     guildId?: bigint
-    emoji: TBot['transformers']['$inferredTypes']['emoji']
+    emoji: SetupDesiredProps<Emoji, TProps, TBehavior>
     burst: boolean
   }) => unknown
   reactionRemoveEmoji: (payload: {
     channelId: bigint
     messageId: bigint
     guildId?: bigint
-    emoji: TBot['transformers']['$inferredTypes']['emoji']
+    emoji: SetupDesiredProps<Emoji, TProps, TBehavior>
   }) => unknown
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown
   presenceUpdate: (presence: PresenceUpdate) => unknown
@@ -101,56 +108,56 @@ export interface EventHandlers<
     channelId: bigint
     guildId: bigint
     userId: bigint
-    emoji?: TBot['transformers']['$inferredTypes']['emoji']
+    emoji?: SetupDesiredProps<Emoji, TProps, TBehavior>
     animationType?: DiscordVoiceChannelEffectAnimationType
     animationId?: number
     soundId?: bigint | number
     soundVolume?: number
   }) => unknown
   voiceServerUpdate: (payload: { token: string; endpoint?: string; guildId: bigint }) => unknown
-  voiceStateUpdate: (voiceState: TBot['transformers']['$inferredTypes']['voiceState']) => unknown
-  channelCreate: (channel: TBot['transformers']['$inferredTypes']['channel']) => unknown
+  voiceStateUpdate: (voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => unknown
+  channelCreate: (channel: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
   dispatchRequirements: (data: DiscordGatewayPayload, shardId: number) => unknown
-  channelDelete: (channel: TBot['transformers']['$inferredTypes']['channel']) => unknown
+  channelDelete: (channel: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
   channelPinsUpdate: (data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => unknown
-  channelUpdate: (channel: TBot['transformers']['$inferredTypes']['channel']) => unknown
+  channelUpdate: (channel: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
   stageInstanceCreate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceDelete: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceUpdate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   guildEmojisUpdate: (payload: {
     guildId: bigint
-    emojis: Collection<bigint, TBot['transformers']['$inferredTypes']['emoji']>
+    emojis: Collection<bigint, SetupDesiredProps<Emoji, TProps, TBehavior>>
   }) => unknown
-  guildBanAdd: (user: TBot['transformers']['$inferredTypes']['user'], guildId: bigint) => unknown
-  guildBanRemove: (user: TBot['transformers']['$inferredTypes']['user'], guildId: bigint) => unknown
-  guildCreate: (guild: TBot['transformers']['$inferredTypes']['guild']) => unknown
+  guildBanAdd: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
+  guildBanRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
+  guildCreate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
   guildDelete: (id: bigint, shardId: number) => unknown
   guildUnavailable: (id: bigint, shardId: number) => unknown
-  guildUpdate: (guild: TBot['transformers']['$inferredTypes']['guild']) => unknown
+  guildUpdate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
-  roleCreate: (role: TBot['transformers']['$inferredTypes']['role']) => unknown
+  roleCreate: (role: SetupDesiredProps<Role, TProps, TBehavior>) => unknown
   roleDelete: (payload: { guildId: bigint; roleId: bigint }) => unknown
-  roleUpdate: (role: TBot['transformers']['$inferredTypes']['role']) => unknown
+  roleUpdate: (role: SetupDesiredProps<Role, TProps, TBehavior>) => unknown
   webhooksUpdate: (payload: { channelId: bigint; guildId: bigint }) => unknown
-  botUpdate: (user: TBot['transformers']['$inferredTypes']['user']) => unknown
+  botUpdate: (user: SetupDesiredProps<User, TProps, TBehavior>) => unknown
   typingStart: (payload: {
     guildId: bigint | undefined
     channelId: bigint
     userId: bigint
     timestamp: number
-    member: TBot['transformers']['$inferredTypes']['member'] | undefined
+    member: SetupDesiredProps<Member, TProps, TBehavior> | undefined
   }) => unknown
-  entitlementCreate: (entitlement: TBot['transformers']['$inferredTypes']['entitlement']) => unknown
-  entitlementUpdate: (entitlement: TBot['transformers']['$inferredTypes']['entitlement']) => unknown
-  entitlementDelete: (entitlement: TBot['transformers']['$inferredTypes']['entitlement']) => unknown
-  subscriptionCreate: (subscription: TBot['transformers']['$inferredTypes']['subscription']) => unknown
-  subscriptionUpdate: (subscription: TBot['transformers']['$inferredTypes']['subscription']) => unknown
-  subscriptionDelete: (subscription: TBot['transformers']['$inferredTypes']['subscription']) => unknown
+  entitlementCreate: (entitlement: SetupDesiredProps<Entitlement, TProps, TBehavior>) => unknown
+  entitlementUpdate: (entitlement: SetupDesiredProps<Entitlement, TProps, TBehavior>) => unknown
+  entitlementDelete: (entitlement: SetupDesiredProps<Entitlement, TProps, TBehavior>) => unknown
+  subscriptionCreate: (subscription: SetupDesiredProps<Subscription, TProps, TBehavior>) => unknown
+  subscriptionUpdate: (subscription: SetupDesiredProps<Subscription, TProps, TBehavior>) => unknown
+  subscriptionDelete: (subscription: SetupDesiredProps<Subscription, TProps, TBehavior>) => unknown
   messagePollVoteAdd: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
   messagePollVoteRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
-  soundboardSoundCreate: (payload: TBot['transformers']['$inferredTypes']['soundboardSound']) => unknown
-  soundboardSoundUpdate: (payload: TBot['transformers']['$inferredTypes']['soundboardSound']) => unknown
+  soundboardSoundCreate: (payload: SetupDesiredProps<SoundboardSound, TProps, TBehavior>) => unknown
+  soundboardSoundUpdate: (payload: SetupDesiredProps<SoundboardSound, TProps, TBehavior>) => unknown
   soundboardSoundDelete: (payload: { soundId: bigint; guildId: bigint }) => unknown
-  soundboardSoundsUpdate: (payload: { soundboardSounds: TBot['transformers']['$inferredTypes']['soundboardSound'][]; guildId: bigint }) => unknown
-  soundboardSounds: (payload: { soundboardSounds: TBot['transformers']['$inferredTypes']['soundboardSound'][]; guildId: bigint }) => unknown
+  soundboardSoundsUpdate: (payload: { soundboardSounds: SetupDesiredProps<SoundboardSound, TProps, TBehavior>[]; guildId: bigint }) => unknown
+  soundboardSounds: (payload: { soundboardSounds: SetupDesiredProps<SoundboardSound, TProps, TBehavior>[]; guildId: bigint }) => unknown
 }
