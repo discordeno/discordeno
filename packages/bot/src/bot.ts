@@ -22,6 +22,17 @@ import { type Transformers, createTransformers } from './transformers.js'
  * @param options Configurations options used to manage this bot.
  * @returns Bot
  */
+
+// Overloads to avoid adding CompleteDesiredProperties if we are given a complete object
+export function createBot<
+  TProps extends TransformersDesiredProperties,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
+>(options: CreateBotOptions<TProps, TBehavior>): Bot<TProps, TBehavior>
+export function createBot<
+  TProps extends RecursivePartial<TransformersDesiredProperties>,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
+>(options: CreateBotOptions<TProps, TBehavior>): Bot<CompleteDesiredProperties<TProps>, TBehavior>
+
 export function createBot<
   TProps extends RecursivePartial<TransformersDesiredProperties>,
   TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
@@ -139,6 +150,7 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   loggerFactory?: (name: 'REST' | 'GATEWAY' | 'BOT') => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
+// NOTE: The reason why we use mapped types for events, transformers, handlers and helpers and not the direct type is because this way Typescript interprets them as anonymous objects and doesn't show the name (and generics) in intellisense
 export interface Bot<
   TProps extends TransformersDesiredProperties = TransformersDesiredProperties,
   TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
@@ -152,18 +164,26 @@ export interface Bot<
   /** The gateway manager. */
   gateway: GatewayManager
   /** The event handlers. */
-  events: Partial<EventHandlers<TProps, TBehavior>>
+  events: {
+    [K in keyof EventHandlers<TProps, TBehavior>]?: EventHandlers<TProps, TBehavior>[K]
+  }
   /** A logger utility to make it easy to log nice and useful things in the bot code. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers: Transformers<TProps, TBehavior> & {
+  transformers: {
+    [K in keyof Transformers<TProps, TBehavior>]: Transformers<TProps, TBehavior>[K]
+  } & {
     $inferredTypes: {
       [K in keyof TransformersObjects]: SetupDesiredProps<TransformersObjects[K], TProps, TBehavior>
     }
   }
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers: GatewayHandlers<TProps, TBehavior>
-  helpers: BotHelpers<TProps, TBehavior>
+  handlers: {
+    [K in keyof GatewayHandlers<TProps, TBehavior>]: GatewayHandlers<TProps, TBehavior>[K]
+  }
+  helpers: {
+    [K in keyof BotHelpers<TProps, TBehavior>]: BotHelpers<TProps, TBehavior>[K]
+  }
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */
