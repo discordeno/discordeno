@@ -62,7 +62,7 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
     }
 
     if (!this.acknowledged) {
-      if (this.type !== InteractionTypes.MessageComponent)
+      if (this.type !== InteractionTypes.MessageComponent && this.type !== InteractionTypes.ModalSubmit)
         throw new Error("This interaction has not been responded to yet and this isn't a MessageComponent interaction.")
 
       this.acknowledged = true
@@ -80,7 +80,7 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
 
-    if (this.type !== InteractionTypes.MessageComponent)
+    if (this.type !== InteractionTypes.MessageComponent && this.type !== InteractionTypes.ModalSubmit)
       throw new Error("Cannot defer to then edit an interaction that isn't a MessageComponent interaction.")
 
     this.acknowledged = true
