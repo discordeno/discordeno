@@ -150,7 +150,6 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   loggerFactory?: (name: 'REST' | 'GATEWAY' | 'BOT') => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
-// NOTE: The reason why we use mapped types for events, transformers, handlers and helpers and not the direct type is because this way Typescript interprets them as anonymous objects and doesn't show the name (and generics) in intellisense
 export interface Bot<
   TProps extends TransformersDesiredProperties = TransformersDesiredProperties,
   TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
@@ -164,26 +163,18 @@ export interface Bot<
   /** The gateway manager. */
   gateway: GatewayManager
   /** The event handlers. */
-  events: {
-    [K in keyof EventHandlers<TProps, TBehavior>]?: EventHandlers<TProps, TBehavior>[K]
-  }
+  events: Partial<EventHandlers<TProps, TBehavior>>
   /** A logger utility to make it easy to log nice and useful things in the bot code. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers: {
-    [K in keyof Transformers<TProps, TBehavior>]: Transformers<TProps, TBehavior>[K]
-  } & {
+  transformers: Transformers<TProps, TBehavior> & {
     $inferredTypes: {
       [K in keyof TransformersObjects]: SetupDesiredProps<TransformersObjects[K], TProps, TBehavior>
     }
   }
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
-  handlers: {
-    [K in keyof GatewayHandlers<TProps, TBehavior>]: GatewayHandlers<TProps, TBehavior>[K]
-  }
-  helpers: {
-    [K in keyof BotHelpers<TProps, TBehavior>]: BotHelpers<TProps, TBehavior>[K]
-  }
+  handlers: GatewayHandlers<TProps, TBehavior>
+  helpers: BotHelpers<TProps, TBehavior>
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */

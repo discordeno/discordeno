@@ -817,7 +817,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
   }
 }
 
-export interface BotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
+export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions, reason?: string) => Promise<AutoModerationRule>
   createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>

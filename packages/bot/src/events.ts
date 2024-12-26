@@ -26,7 +26,7 @@ import type {
   VoiceState,
 } from './transformers/types.js'
 
-export interface EventHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
+export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   debug: (text: string, ...args: any[]) => unknown
   applicationCommandPermissionsUpdate: (command: GuildApplicationCommandPermissions) => unknown
   guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown

@@ -219,7 +219,7 @@ import {
 } from './transformers/reverse/index.js'
 import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
-export interface Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
+export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   customizers: {
     activity: (bot: Bot<TProps, TBehavior>, payload: DiscordActivity, activity: Activity) => any
     activityInstance: (
