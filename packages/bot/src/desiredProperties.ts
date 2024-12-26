@@ -700,6 +700,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       country: defaultValue,
       currentPeriodEnd: defaultValue,
       currentPeriodStart: defaultValue,
+      renewalSkuIds: defaultValue,
       entitlementIds: defaultValue,
       id: defaultValue,
       skuIds: defaultValue,

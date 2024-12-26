@@ -1768,6 +1768,8 @@ export interface Subscription {
   skuIds: bigint[]
   /** List of entitlements granted for this subscription */
   entitlementIds: bigint[]
+  /** List of SKUs that this user will be subscribed to at renewal */
+  renewalSkuIds?: bigint[]
   /** Start of the current subscription period */
   currentPeriodStart: number
   /** End of the current subscription period */
