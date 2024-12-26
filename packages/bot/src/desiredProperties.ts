@@ -700,6 +700,7 @@ export function createDesiredPropertiesObject(
       country: defaultValue,
       currentPeriodEnd: defaultValue,
       currentPeriodStart: defaultValue,
+      renewalSkuIds: defaultValue,
       entitlementIds: defaultValue,
       id: defaultValue,
       skuIds: defaultValue,
