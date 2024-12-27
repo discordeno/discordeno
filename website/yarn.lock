@@ -19980,9 +19980,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.97.0":
-  version: 5.97.0
-  resolution: "webpack@npm:5.97.0"
+"webpack@npm:5.97.1":
+  version: 5.97.1
+  resolution: "webpack@npm:5.97.1"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.6"
@@ -20012,7 +20012,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: bcdc585d115de4309e7821c1533118f2d27b1f83a5587ca8db8a74651e88fb813505d412b1dc15586ff35efb53b0425453196655580023b45f35755f6c7b922f
+  checksum: 665bd3b8c84b20f0b1f250159865e4d3e9b76c682030313d49124d5f8e96357ccdcc799dd9fe0ebf010fdb33dbc59d9863d79676a308e868e360ac98f7c09987
   languageName: node
   linkType: hard
 
@@ -20147,7 +20147,7 @@ __metadata:
     reactflow: "npm:^11.11.4"
     styled-components: "npm:^6.1.13"
     typescript: "npm:5.6.3"
-    webpack: "npm:5.97.0"
+    webpack: "npm:5.97.1"
   languageName: unknown
   linkType: soft
 
