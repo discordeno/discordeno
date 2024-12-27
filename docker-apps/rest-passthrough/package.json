@@ -11,17 +11,17 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/rest": "19.0.0",
+    "@discordeno/rest": "20.0.0",
     "@fastify/env": "^4.4.0",
     "@fastify/helmet": "^13.0.0",
     "@fastify/multipart": "^8.3.0",
-    "fastify": "^4.28.1"
+    "fastify": "^4.29.0"
   },
   "devDependencies": {
     "@favware/cliff-jumper": "^5.0.0",
-    "@swc/cli": "^0.5.1",
-    "@swc/core": "^1.9.3",
-    "dotenv": "^16.4.5"
+    "@swc/cli": "^0.5.2",
+    "@swc/core": "^1.10.2",
+    "dotenv": "^16.4.7"
   },
   "packageManager": "yarn@4.0.2"
 }
