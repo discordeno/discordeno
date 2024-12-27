@@ -818,7 +818,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    */
   editShardStatus: (shardId: number, data: StatusUpdate) => Promise<void>
   /**
-   * Fetches the list of members for a guild over the gateway. Returns an empty array if `gateway.cache.requestMembers.enabled` is not set and you'll have to handle the `GUILD_MEMBERS_CHUNK` events yourself.
+   * Fetches the list of members for a guild over the gateway. If `gateway.cache.requestMembers.enabled` is not set, this function will return an empty array and you'll have to handle the `GUILD_MEMBERS_CHUNK` events yourself.
    *
    * @param guildId - The ID of the guild to get the list of members for.
    * @param options - The parameters for the fetching of the members.
