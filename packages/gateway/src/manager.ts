@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto'
 import {
   type AtLeastOne,
   type BigString,
@@ -506,22 +507,32 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         options.limit = options.userIds.length
       }
 
-      const members =
-        !gateway.cache.requestMembers.enabled || !options?.nonce
-          ? []
-          : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
-              // Should never happen.
-              if (!gateway.cache.requestMembers.enabled || !options?.nonce) {
-                reject(new Error("Can't request the members without the nonce or with the feature disabled."))
-                return
-              }
+      if (!options?.nonce) {
+        let nonce = ''
 
-              gateway.cache.requestMembers.pending.set(options.nonce, {
-                nonce: options.nonce,
-                resolve,
-                members: [],
-              })
+        while (!nonce || gateway.cache.requestMembers.pending.has(nonce)) {
+          nonce = randomBytes(16).toString('hex')
+        }
+
+        options ??= { limit: 0 }
+        options.nonce = nonce
+      }
+
+      const members = !gateway.cache.requestMembers.enabled
+        ? []
+        : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
+            // Should never happen.
+            if (!gateway.cache.requestMembers.enabled || !options?.nonce) {
+              reject(new Error("Can't request the members without the nonce or with the feature disabled."))
+              return
+            }
+
+            gateway.cache.requestMembers.pending.set(options.nonce, {
+              nonce: options.nonce,
+              resolve,
+              members: [],
             })
+          })
 
       await gateway.sendPayload(shardId, {
         op: GatewayOpcodes.RequestGuildMembers,
