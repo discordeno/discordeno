@@ -74,7 +74,6 @@ The preset value of `EVENT_HANDLER_HOST`, `REST_HOST`, and `GATEWAY_HOST` all us
 #### Setup process
 
 - Install the dependencies with yarn
-- Run the Discordeno desired properties CLI with `yarn postinstall`
 - Build the code with `yarn build`
 
 You can start different parts of your bot in the following order.
