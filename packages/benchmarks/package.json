@@ -23,11 +23,11 @@
     "bench": "node dist/index.js"
   },
   "dependencies": {
-    "@discordeno/bot": "20.0.0",
-    "@discordeno/gateway": "20.0.0",
-    "@discordeno/rest": "20.0.0",
-    "@discordeno/types": "20.0.0",
-    "@discordeno/utils": "20.0.0",
+    "@discordeno/bot": "21.0.0",
+    "@discordeno/gateway": "21.0.0",
+    "@discordeno/rest": "21.0.0",
+    "@discordeno/types": "21.0.0",
+    "@discordeno/utils": "21.0.0",
     "benchmark": "^2.1.4"
   },
   "devDependencies": {
