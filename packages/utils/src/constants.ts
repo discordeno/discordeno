@@ -1,1 +1,1 @@
-export const DISCORDENO_VERSION = '20.0.0'
+export const DISCORDENO_VERSION = '21.0.0'
