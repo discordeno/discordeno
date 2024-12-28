@@ -850,6 +850,7 @@ __metadata:
     "@types/node": "npm:^22.9.0"
     amqplib: "npm:^0.10.4"
     chalk: "npm:^5.3.0"
+    dotenv: "npm:^16.4.7"
     fastify: "npm:^5.1.0"
     typescript: "npm:^5.6.3"
   languageName: unknown
@@ -880,6 +881,13 @@ __metadata:
   version: 2.0.1
   resolution: "defer-to-connect@npm:2.0.1"
   checksum: 8a9b50d2f25446c0bfefb55a48e90afd58f85b21bcf78e9207cd7b804354f6409032a1705c2491686e202e64fc05f147aa5aa45f9aa82627563f045937f5791b
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.7":
+  version: 16.4.7
+  resolution: "dotenv@npm:16.4.7"
+  checksum: f13bfe97db88f0df4ec505eeffb8925ec51f2d56a3d0b6d916964d8b4af494e6fb1633ba5d09089b552e77ab2a25de58d70259b2c5ed45ec148221835fc99a0c
   languageName: node
   linkType: hard
 

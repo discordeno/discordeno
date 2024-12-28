@@ -24,6 +24,7 @@
     "@influxdata/influxdb-client": "^1.33.2",
     "amqplib": "^0.10.4",
     "chalk": "^5.3.0",
+    "dotenv": "^16.4.7",
     "fastify": "^5.1.0"
   },
   "devDependencies": {
