@@ -1,6 +1,6 @@
 {
   "name": "@discordeno/gateway",
-  "version": "20.0.0",
+  "version": "21.0.0",
   "main": "./dist/esm/index.js",
   "exports": {
     "import": "./dist/esm/index.js",
@@ -29,8 +29,8 @@
     "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
-    "@discordeno/types": "20.0.0",
-    "@discordeno/utils": "20.0.0",
+    "@discordeno/types": "21.0.0",
+    "@discordeno/utils": "21.0.0",
     "ws": "^8.18.0"
   },
   "optionalDependencies": {
