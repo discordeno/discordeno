@@ -201,10 +201,10 @@ interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadat
   }
 }
 
-export function createDesiredPropertiesObject(
-  desiredProperties: RecursivePartial<TransformersDesiredProperties>,
-  defaultValue = false,
-): TransformersDesiredProperties {
+export function createDesiredPropertiesObject<T extends RecursivePartial<TransformersDesiredProperties>, TDefault extends boolean = false>(
+  desiredProperties: T,
+  defaultValue: TDefault = false as TDefault,
+): CompleteDesiredProperties<T, TDefault> {
   return {
     activityInstance: {
       applicationId: defaultValue,
@@ -719,7 +719,7 @@ export function createDesiredPropertiesObject(
       volume: defaultValue,
       ...desiredProperties.soundboardSound,
     },
-  }
+  } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>
 }
 
 type KeyByValue<TObj, TValue> = {
