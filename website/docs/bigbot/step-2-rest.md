@@ -240,13 +240,15 @@ Having multiple bots sending requests from one source will impact your global ra
 In order to send the bot id inside of the request headers we first have to override the `createBaseHeaders()` function in our `services/bot/bot.ts` file.
 
 ```ts
+import { DISCORDENO_VERSION } from '@discordeno/utils'
+
 BOT.rest = createRestManager({
   token: process.env.PUBLIC_BOT_TOKEN as string,
 })
 
 BOT.rest.createBaseHeaders = () => {
   return {
-    'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v19.0.0)`,
+    'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`,
     bot_id: BOT.rest.applicationId.toString(),
   }
 }

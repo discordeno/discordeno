@@ -42,15 +42,16 @@ export interface IReview {
     discriminator: string // 0000
     avatar: string // https://cdn.discordapp.com/avatars/123456789012345678/abcdefg1234567890.png
     invite_url: string // https://discord.com/api/oauth2/authorize?client_id=123456789012345678&permissions=8&scope=bot
-    guild_count: number // 123456 => automatically frontent converts to 123,456...
+    guild_count: number // 123456 => frontend converts to 123,456...
   }
   developer: {
-    usernames: string[] // [Peter_]
+    usernames: string[] // ["Peter_"]
   }
   stars: 4 | 5 // 4 or 5, discordeno can't have lower because it's the best :D
   previous_library?: keyof typeof DiscordLibraries // previous library used by the bot (if any)
   memory_improvement?: {
     from: number // 100 => frontend converts to 100MB
     to: number // 50 => frontend converts to 50MB
+    guild_count: number // 123456 => frontend convers to 123K. this is the amount of guilds the bot is in at the time of the review
   }
 }

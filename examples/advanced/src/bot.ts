@@ -1,4 +1,4 @@
-import { type Collection, Intents, LogDepth, createBot, type logger as discordenoLogger } from '@discordeno/bot'
+import { Intents, LogDepth, createBot, type logger as discordenoLogger } from '@discordeno/bot'
 import { createProxyCache } from 'dd-cache-proxy'
 import { configs } from './config.js'
 
@@ -40,32 +40,17 @@ const rawBot = createBot({
   },
 })
 
-// TODO: remove this type hack when dd-cache-proxy fixes support for v19
-// @ts-expect-error
 export const bot = createProxyCache(rawBot, {
   desiredProps: {
-    guilds: ['id', 'name', 'roles'],
+    guild: ['id', 'name', 'ownerId', 'roles'],
     roles: ['id', 'guildId', 'permissions'],
   },
   cacheInMemory: {
-    guilds: true,
-    roles: true,
+    guild: true,
+    role: true,
     default: false,
   },
-}) as CacheBot
-
-export type CacheBot = typeof rawBot & {
-  cache: {
-    guild: {
-      memory: Collection<bigint, typeof rawBot.transformers.$inferredTypes.guild>
-      get: (guildId: bigint) => typeof rawBot.transformers.$inferredTypes.guild
-    }
-    role: {
-      memory: Collection<bigint, typeof rawBot.transformers.$inferredTypes.role>
-      get: (roleId: bigint) => typeof rawBot.transformers.$inferredTypes.role
-    }
-  }
-}
+})
 
 // By default, bot.logger will use an instance of the logger from @discordeno/bot, this logger supports depth and we need to change it, so we need to say to TS that we know what we are doing with as
 ;(bot.logger as typeof discordenoLogger).setDepth(LogDepth.Full)

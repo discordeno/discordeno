@@ -1,6 +1,7 @@
 {
   "imports": {
     "node:buffer": "https://deno.land/std@0.176.0/node/buffer.ts",
+    "node:crypto": "https://deno.land/std@0.176.0/node/crypto.ts",
     "node:fs": "https://deno.land/std@0.176.0/node/fs.ts",
     "node:fs/promises": "https://deno.land/std@0.176.0/node/fs/promises.ts",
     "node:events": "https://deno.land/std@0.176.0/node/events.ts",

@@ -29,13 +29,13 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@swc/cli": "^0.5.1",
-    "@swc/core": "^1.9.2",
+    "@swc/core": "^1.10.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.9.1",
+    "@types/node": "^22.10.2",
     "c8": "^10.1.2",
     "mocha": "^10.8.2",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
