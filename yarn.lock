@@ -1686,8 +1686,8 @@ __metadata:
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.2.10"
     turbo: "npm:^2.3.1"
-    typedoc: "npm:^0.27.2"
-    typedoc-plugin-markdown: "npm:^4.3.1"
+    typedoc: "npm:^0.27.6"
+    typedoc-plugin-markdown: "npm:^4.3.3"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -4111,18 +4111,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc-plugin-markdown@npm:^4.3.1":
-  version: 4.3.1
-  resolution: "typedoc-plugin-markdown@npm:4.3.1"
+"typedoc-plugin-markdown@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "typedoc-plugin-markdown@npm:4.3.3"
   peerDependencies:
     typedoc: 0.27.x
-  checksum: 7fefa169508b5e21f2c1e46d34c19e70bb9c91711d29a521d12ed77c350bf9b9512f0a165b5470878e96fd7bb5e5a6881e5007473adf83289bc875e21f7b55f2
+  checksum: 9c9a3218a838765750b2acb53ca81e0fb2ed95f0f3b34a59e426ec0578c9c29d5fee30aefee1a2104faeb94e444dcf9a4bd1d0d4667a65affef55c088ebfc554
   languageName: node
   linkType: hard
 
-"typedoc@npm:^0.27.2":
-  version: 0.27.2
-  resolution: "typedoc@npm:0.27.2"
+"typedoc@npm:^0.27.6":
+  version: 0.27.6
+  resolution: "typedoc@npm:0.27.6"
   dependencies:
     "@gerrit0/mini-shiki": "npm:^1.24.0"
     lunr: "npm:^2.3.9"
@@ -4133,7 +4133,7 @@ __metadata:
     typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x
   bin:
     typedoc: bin/typedoc
-  checksum: 645a5850090247c6b2361ec9059c19d6ee181897b48a4f396c3a7c7bd8c7e4e6a5cd817e7d21060c2f42625d5f192a0e944bc0a315cd9e9ec8f77c25a5a4b0fd
+  checksum: 07a5649020f055534ada6919036a98098f27fc307e2addfd6865f4c11bd97f10167f34165fc6a0fd57dec28d9480f9ac58a4d5a3c17ec5a88296520e4f67d960
   languageName: node
   linkType: hard
 
