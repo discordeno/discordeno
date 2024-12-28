@@ -178,9 +178,9 @@ Since we dynamically change types based on the desired properties you provide, m
 This will become increasingly cluttered as you add more desired properties, making it harder to read and work with. To address this issue, you can do something like:
 
 ```js
-import { RecursivePartial, TransformersDesiredProperties, createBot } from '@discordeno/bot';
+import { createBot, createDesiredPropertiesObject } from '@discordeno/bot';
 
-const desiredProperties = {
+const desiredProperties = createDesiredPropertiesObject({
   message: {
     id: true,
     author: true,
@@ -190,7 +190,7 @@ const desiredProperties = {
     toggles: true, // Toggles includes the "bot" flag
     username: true,
   },
-} satisfies RecursivePartial<TransformersDesiredProperties>;
+})
 
 interface BotDesiredProperties extends Required<typeof desiredProperties> {}
 
