@@ -55,14 +55,21 @@ import {
   type MfaLevels,
   type ModifyGuildTemplate,
 } from '@discordeno/types'
-import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
+import {
+  DISCORDENO_VERSION,
+  calculateBits,
+  camelToSnakeCase,
+  camelize,
+  delay,
+  getBotIdFromToken,
+  logger,
+  processReactionString,
+  urlToBase64
+} from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
 import { createRoutes } from './routes.js'
 import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
-
-// TODO: make dynamic based on package.json file
-const version = '19.0.0'
 
 export const DISCORD_API_VERSION = 10
 export const DISCORD_API_URL = 'https://discord.com/api'
@@ -102,7 +109,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     createBaseHeaders() {
       return {
-        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
+        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`,
       }
     },
 
@@ -257,7 +264,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       if (options?.files !== undefined) {
         const form = new FormData()
         for (let i = 0; i < options.files.length; ++i) {
-          form.append(`file${i}`, options.files[i].blob, options.files[i].name)
+          form.append(`files[${i}]`, options.files[i].blob, options.files[i].name)
         }
 
         // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json

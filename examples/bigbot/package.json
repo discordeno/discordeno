@@ -19,7 +19,7 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0",
+    "@discordeno/bot": "20.0.0",
     "@fastify/multipart": "^9.0.1",
     "@influxdata/influxdb-client": "^1.33.2",
     "amqplib": "^0.10.4",

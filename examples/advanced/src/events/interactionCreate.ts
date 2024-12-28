@@ -12,7 +12,6 @@ bot.events.interactionCreate = async (interaction) => {
     return
   }
 
-  // @ts-expect-error commandOptionsParser requires the entire Interaction object, this is a bug in @discordeno/bot
   const options = commandOptionsParser(interaction)
 
   try {

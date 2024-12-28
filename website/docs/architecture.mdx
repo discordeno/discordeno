@@ -12,7 +12,23 @@ import FlowChart from '@site/src/components/architecture/FlowChart';
 
 <BrowserOnly>{() => <FlowChart />}</BrowserOnly>
 
-Discordeno have three main components/process, gateway, bot and rest. Websocket events from Discord, such as connecting, restarting, heartbeating, and transmitting websocket messages to Discord, are handled and maintained by the Gateway process. All Discord events are handled and converted by the Bot process, which also activates your code, such as the execute function upon message creation. All http requests to Discord, including proxying and ratelimiting, are handled by the Rest process.
+Discordeno is a library designed primarily for large-scale bots. Its recommended architecture is tailored to meet the needs of large-scale bot developers or those planning to build bots with the potential to scale significantly in the future. This approach ensures your code is future-proof and ready to handle the demands of a growing bot.  
+
+It operates through three main components/processes: **Gateway**, **Bot**, and **Rest**. Each plays a distinct role in managing the functionality and interaction with Discord's API:  
+
+1. **Gateway**  
+   - Manages WebSocket communication with Discord.  
+   - Handles connection establishment, restarts, heartbeats, and message transmission over WebSocket.
+   - Forwards any relevant events to the Bot process. 
+
+2. **Bot**  
+   - Processes and converts all events received from the Gateway process.  
+   - Executes your code in response to events like message creation.  
+   - If you need to take any action on Discord, those requests are sent to the Rest manager.
+
+3. **Rest**  
+   - Handles all HTTP requests sent to Discord.
+   - Manages proxying and rate-limiting to ensure compliance with Discord’s API constraints.
 
 ## Gateway Process
 
@@ -20,15 +36,24 @@ import FlowChart2 from '@site/src/components/architecture/FlowChart2';
 
 <BrowserOnly>{() => <FlowChart2 />}</BrowserOnly>
 
-The Gateway process have two part the gateway manager and the gateway [shard](https://discord.com/developers/docs/topics/gateway#sharding), the gateway manager oversees the gateway shard.
+The Gateway process consists of two parts: the **Gateway Manager** and the **Shard**. The Gateway Manager oversees all the Gateway Shards.
 
-### Gateway Manager
+#### Gateway Manager  
 
-The gateway manager spawns the right amount of shard acording to data from discord's [getGatewayBot](https://discord.com/developers/docs/topics/gateway#get-gateway-bot) endpoint, user can override the value of gatewayBot by directly passing the value. The manager control the order or sequence of shard identifying base on the session start limit listed in the getGatewayBot to prevent hitting the ratelimiting. By default the manager will check the getGatewayBot endpoint every 8 hours and reshard if the number of shard changed shard. Check [here](/docs/bigbot/step-3-gateway) for more information about the gateway manager.
+- **Shard Management**: The Gateway Manager spawns the appropriate number of shards based on data retrieved from Discord's `getGatewayBot` endpoint. Users can override this by directly providing their own `gatewayBot` value.
+- **Rate-Limiting Control**: It ensures shards identify in a sequence that adheres to Discord's session start limit, preventing rate-limiting issues.  
+- **Automatic Resharding**: By default, the manager queries the `getGatewayBot` endpoint every 8 hours and reshard if the shard count changes. This is a very complex topic, and we will dedicate an entire section in our guides to understanding why "re-sharding" is important and how it works. 
 
-### Gateway Shard
+#### Gateway Shard  
 
-Any event is passed to the handleMessage method by the gateway shard, which also establishes a websocket connection to Discord. The handleMessage method will examine the event and only deliver genuine events to the bot by intercepting and processing websocket-related events like hello, resume, heartbeat, and ready. You can modify the handleMessage to suit your needs, but it is not advised unless you are certain of your actions because the connection depends on it. After the function has finished processing the event, it will either pass the event directly (in the same process), via the rest api, a message queue, or another mechanism depending on the user's customization.
+- **WebSocket Connection**: The Gateway Shard establishes and maintains a WebSocket connection with Discord.  
+- **Event Handling**: It passes any incoming event to the `handleMessage` method. This method filters out WebSocket-related events (e.g., `hello`, `resume`, `heartbeat`, and `ready`) and forwards only relevant events to the bot.  
+- **Customizability**: Every aspect of Discordeno is able to be customized and overridden. However, doing so is not recommended unless you fully understand the implications, as it is critical for maintaining the connection.  
+- **Event Processing**: After processing an event, the shard forwards it either:  
+  - Directly within the same process
+  - Through the REST API
+  - Via a message queue  
+  - Another user-defined mechanism, depending on customization. 
 
 ## Bot Process
 
@@ -36,39 +61,78 @@ import FlowChart3 from '@site/src/components/architecture/FlowChart3';
 
 <BrowserOnly>{() => <FlowChart3 />}</BrowserOnly>
 
-A simplified version of function used inside of the bot process, showing only the handlers, transformers and event related to channel event
+This is a simplified version of functions used inside of the bot process, showing only the handlers, transformers and event related to channel event
 
 ### Bot
 
-When an event arrives from the gateway, the bot process receives it and will invoke raw events for each event - `bot.events.raw()`, then runs `bot.events.dispatchRequirements()`, aftter which it'll pass it to the respective handler, which will pass all the data through the necessary transformers (which calls customizers inside) and then the respective event function is called, which executes your code. This may sound complex, so let's break it down:
+The Bot process is the core of Discordeno's event handling system. It processes events received from the Gateway, applies necessary transformations, and triggers user-defined logic. While the process may seem complex at first, its modular design ensures flexibility and efficiency for developers.  
 
-#### `bot.events.raw`:
+When an event arrives from the Gateway, the Bot process executes the following steps:  
+1. **Run `bot.events.raw` function.**  
+2. **Run `bot.events.dispatchRequirements` function.**  
+3. **Pass the data to the appropriate handler.**  
+4. **Transform and customize the data.**  
+5. **Call the respective event function to execute your code.**  
 
-This is an event that contains the raw objects from Discord and will be called whenever an event is received from Discord. If you want metrics for your gateway events, this would be the best place to put them in.
+Let’s break this process down further:  
 
-#### `bot.events.dispatchRequirements`:
+#### `bot.events.raw`  
 
-This is one of the most useful, yet often overlooked feature in discordeno.
+- This event is triggered whenever a raw event is received from the Gateway.  
+- It contains the unprocessed data directly from Discord, providing an opportunity to analyze or log metrics for Gateway events.  
+- If your bot requires Gateway event metrics, this is the ideal place to implement them.  
 
-This event runs whenever a dispatch event is received (e.g., `GUILD_CREATE`, `MESSAGE_CREATE`), meaning you'll know every time Discord sends you a dispatch event, which would enable you to cache only active guilds and lazy load the remaining only when there's an event related to that guild arrives. An active guild in this sense means any guild where an event has happened in the past x hours.
+#### Lazy Loading/Caching With `bot.events.dispatchRequirements`  
 
-In real world, a LOT of your guilds would rarely emit an event related to that guild (e.g. `MESSAGE_CREATE`, `CHANNEL_CREATE`), so caching them would be pointless for most bots, because nothing will ever happen in those servers and the guilds you cached would never be put to use, resulting in being a waste of memory.
+Lazy loading, or lazy caching, in Discordeno is a feature that allows bot developers to remove unused data from the cache, optimizing memory usage. Imagine your bot is in 100,000 servers. How many of those servers are actively generating events at any given time? Testing shows that only 10–20% of servers are typically active, meaning 80–90% of cached data is unused. 80,000 to 90,0000 servers were unused for any hour of the day. Lazy loading solves this problem by dynamically managing cache usage based on activity. Here’s how it works:  
 
-What you can do instead for example is remove any guilds from cache that hasn't sent any events in the past hour or so, and whenever you see a guild id in `bot.events.dispatchRequirements`, you check if the guild is cached and if not, you send an API request and cache the guild. Since this event is run before running your actual event code, the guild will be guaranteed to be present in your event code if you cache them in this event. This way, you can save a lot of memory, but be sure to test and figure which time limit would be the best for your bot, because too little limit would make your bot send requests to API constantly, resulting in being ratelimited - an hour is usually a good limit for this.
+1. **When an Event is Received**:  
+   - If the event contains a `guild id`, Discordeno checks if the guild is in the cache.  
+   - **If the guild is cached**, the event proceeds through the normal processing route.  
+   - **If the guild is NOT cached**, Discordeno fetches the guild, its channels, and any other required data.  
+   - Once the necessary data is cached, the event is passed to the bot's event handler.  
 
-### Handlers
+   > **Key Point**: Your code will always have the necessary data cached for an event, ensuring seamless logic execution without requiring manual checks.  
 
-After `dispatchRequirements` has finished executing, the data will be passed on to handlers. This is where the event function will actually be called, but before that, it'll go through something that we call as `transformers`.
+2. **When a Guild Becomes Inactive**:  
+   - If a guild doesn’t send any events (e.g., `MESSAGE_CREATE`, `MEMBER_UPDATE`) for a set period (default: 1 hour, customizable), it should be considered as **inactive**.  
+   - At this point, the guild and its related data can safely be removed from the cache.  
+   - This prevents wasting memory on guilds that aren’t generating events, significantly reducing overall cache usage.  
 
-#### Transformers
+3. **When a Guild Becomes Active Again**:  
+   - If a previously inactive guild sends an event (e.g., a member sends a message), Discordeno fetches and caches the required data for the guild.  
+   - The event is then processed as usual, with all necessary data in place.  
 
-Transformers, as their name suggests, transforms data from Discord format to discordeno format (there are also reverse transformers that does the opposite: transforming discordeno format to Discord's). For example, `channel.id` is a `string` in Discord, but in discordeno, it's a `bigint`. All these conversion happens inside transformers, whether the data is from REST or gateway. After converting them, they'll be passed on to `customizers`.
+### Real-World Impact  
 
-#### Customizers
+Lazy loading allows bots to maintain efficient cache usage, especially for large-scale deployments. Removing unused data from cache can save enormous amounts of memory, especially for bots in many servers. Data is cached only when needed, ensuring memory is used effectively without impacting bot performance.  
 
-These are functions where we can customize the data to add / remove / modify properties to a channel for example, if you wish.
+For example, imagine 90% of your bot's guilds are inactive overnight. Lazy loading offloads their data, freeing memory. As users become active again, events trigger the cache to reload dynamically. Lazy loading ensures your bot is scalable, resource-efficient, and ready for handling massive server counts without sacrificing performance. 
 
-Since all structures from Discord will be passed on to customizers, **this is the best place for you to cache any data**. For example, you can override `bot.transformers.customizers.channel` to store the channel inside your cache whenever discordeno sees a channel (whether it's from REST or gateway). You can learn more about caching here: [Caching Guide](./caching.md).
+### Handlers  
+
+Once lazy loading finishes, the event is passed to a handler, where the data undergoes transformations and customizations. Upon completion, the actual event function is called.
+
+#### Transformers  
+
+- **Purpose**: Converts data between Discord's format and Discordeno's format.  
+- **Example**: Discord represents `channel.id` as a `string`, but in Discordeno, it’s converted to a `bigint`.  
+- **Bidirectional**: Transformers handle both directions (e.g., Gateway data → Discordeno format, and vice versa for REST).  
+- **Seamless Processing**: Ensures consistent data structures across your bot's code.  
+
+#### Customizers  
+
+- **Purpose**: Allows developers to modify, add, or remove properties or methods of Discord data structures.
+- **Flexibility**: Allows any custom logic to be inserted and ran on each item for example if you wanted to do something whenever you received a "Guild".
+
+### Seamless Integration  
+
+The Bot process is tightly integrated with the **Gateway** and **Rest** processes to ensure smooth operation:  
+
+- **From Gateway**: Receives events and processes them.  
+- **To Rest**: Sends API requests when necessary for additional data or updates.  
+
+This modular approach ensures your bot is highly scalable, efficient, and ready for large-scale deployment.  
 
 ## Rest Process
 

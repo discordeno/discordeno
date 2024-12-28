@@ -22,6 +22,17 @@ import { type Transformers, createTransformers } from './transformers.js'
  * @param options Configurations options used to manage this bot.
  * @returns Bot
  */
+
+// Overloads to avoid adding CompleteDesiredProperties if we are given a complete object
+export function createBot<
+  TProps extends TransformersDesiredProperties,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
+>(options: CreateBotOptions<TProps, TBehavior>): Bot<TProps, TBehavior>
+export function createBot<
+  TProps extends RecursivePartial<TransformersDesiredProperties>,
+  TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
+>(options: CreateBotOptions<TProps, TBehavior>): Bot<CompleteDesiredProperties<TProps>, TBehavior>
+
 export function createBot<
   TProps extends RecursivePartial<TransformersDesiredProperties>,
   TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,

@@ -18,7 +18,7 @@ export function commandOptionsParser<
   TProps extends TransformersDesiredProperties & { interaction: { data: true } },
   TBehavior extends DesiredPropertiesBehavior,
 >(__interaction: SetupDesiredProps<Interaction, TProps, TBehavior>, options?: InteractionDataOption[]): ParsedInteractionOption<TProps, TBehavior> {
-  // This is necessary as typescript gets really confused when using __interaction alone, as it will say that 'data' does not exist despite it surely exist since we have the WithAtLeast
+  // This is necessary as typescript gets really confused when using __interaction alone, as it will say that 'data' does not exist despite it surely exist since we have the &
   const interaction = __interaction as SetupDesiredProps<
     Interaction,
     CompleteDesiredProperties<{ interaction: { data: true } }>,

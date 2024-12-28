@@ -70,33 +70,74 @@ import type {
   RecursivePartial,
 } from '@discordeno/types'
 import type { Bot } from './bot.js'
-import { type DesiredPropertiesBehavior, type TransformersDesiredProperties, createDesiredPropertiesObject } from './desiredProperties.js'
+import {
+  type DesiredPropertiesBehavior,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
+  createDesiredPropertiesObject,
+} from './desiredProperties.js'
 import {
   type Activity,
+  type ActivityInstance,
+  type ActivityLocation,
   type Application,
   type ApplicationCommand,
   type ApplicationCommandOption,
   type ApplicationCommandOptionChoice,
+  type Attachment,
   type AuditLogEntry,
   type AutoModerationActionExecution,
   type AutoModerationRule,
+  type AvatarDecorationData,
+  type Channel,
   type Component,
+  type DefaultReactionEmoji,
   type Embed,
+  type Emoji,
+  type Entitlement,
+  type ForumTag,
   type GetGatewayBot,
+  type Guild,
   type GuildApplicationCommandPermissions,
+  type GuildOnboarding,
+  type GuildOnboardingPrompt,
   type GuildOnboardingPromptOption,
   type GuildWidget,
   type GuildWidgetSettings,
   type Integration,
+  type Interaction,
+  type InteractionCallback,
+  type InteractionCallbackResponse,
   type InteractionDataOption,
   type InteractionDataResolved,
+  type InteractionResource,
+  type Invite,
+  type InviteStageInstance,
+  type Member,
+  type Message,
+  type MessageCall,
+  type MessageInteractionMetadata,
+  type MessageSnapshot,
+  type Poll,
+  type PollMedia,
   type PresenceUpdate,
+  type Role,
+  type ScheduledEvent,
+  type ScheduledEventRecurrenceRule,
+  type Sku,
+  type SoundboardSound,
+  type StageInstance,
+  type Sticker,
   type StickerPack,
+  type Subscription,
   type Team,
   type Template,
   type ThreadMember,
   type ThreadMemberGuildCreate,
+  type User,
   type VoiceRegion,
+  type VoiceState,
+  type Webhook,
   type WelcomeScreen,
   transformActivity,
   transformActivityInstance,
@@ -178,240 +219,293 @@ import {
 } from './transformers/reverse/index.js'
 import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
-export interface Transformers<
-  TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredPropertiesBehavior,
-  // This is just an alias, not an actual parameter
-  TBot extends Bot<TProps, TBehavior> = Bot<TProps, TBehavior>,
-> {
+export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   customizers: {
-    activity: (bot: TBot, payload: DiscordActivity, activity: Activity) => any
+    activity: (bot: Bot<TProps, TBehavior>, payload: DiscordActivity, activity: Activity) => any
     activityInstance: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordActivityInstance,
-      activityInstance: TBot['transformers']['$inferredTypes']['activityInstance'],
+      activityInstance: SetupDesiredProps<ActivityInstance, TProps, TBehavior>,
     ) => any
     activityLocation: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordActivityLocation,
-      activityLocation: TBot['transformers']['$inferredTypes']['activityLocation'],
+      activityLocation: SetupDesiredProps<ActivityLocation, TProps, TBehavior>,
     ) => any
-    application: (bot: TBot, payload: DiscordApplication, application: Application) => any
-    applicationCommand: (bot: TBot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
-    applicationCommandOption: (bot: TBot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
+    application: (bot: Bot<TProps, TBehavior>, payload: DiscordApplication, application: Application) => any
+    applicationCommand: (bot: Bot<TProps, TBehavior>, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
+    applicationCommandOption: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordApplicationCommandOption,
+      applicationCommandOption: ApplicationCommandOption,
+    ) => any
     applicationCommandOptionChoice: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordApplicationCommandOptionChoice,
       applicationCommandOptionChoice: ApplicationCommandOptionChoice,
     ) => any
     applicationCommandPermission: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordGuildApplicationCommandPermissions,
       applicationCommandPermission: GuildApplicationCommandPermissions,
     ) => any
-    attachment: (bot: TBot, payload: DiscordAttachment, attachment: TBot['transformers']['$inferredTypes']['attachment']) => any
-    auditLogEntry: (bot: TBot, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
-    automodActionExecution: (bot: TBot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
-    automodRule: (bot: TBot, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
+    attachment: (bot: Bot<TProps, TBehavior>, payload: DiscordAttachment, attachment: SetupDesiredProps<Attachment, TProps, TBehavior>) => any
+    auditLogEntry: (bot: Bot<TProps, TBehavior>, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
+    automodActionExecution: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordAutoModerationActionExecution,
+      automodActionExecution: AutoModerationActionExecution,
+    ) => any
+    automodRule: (bot: Bot<TProps, TBehavior>, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
     avatarDecorationData: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordAvatarDecorationData,
-      avatarDecorationData: TBot['transformers']['$inferredTypes']['avatarDecorationData'],
+      avatarDecorationData: SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>,
     ) => any
-    channel: (bot: TBot, payload: DiscordChannel, channel: TBot['transformers']['$inferredTypes']['channel']) => any
-    component: (bot: TBot, payload: DiscordMessageComponent, component: Component) => any
+    channel: (bot: Bot<TProps, TBehavior>, payload: DiscordChannel, channel: SetupDesiredProps<Channel, TProps, TBehavior>) => any
+    component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent, component: Component) => any
     defaultReactionEmoji: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordDefaultReactionEmoji,
-      defaultReactionEmoji: TBot['transformers']['$inferredTypes']['defaultReactionEmoji'],
+      defaultReactionEmoji: SetupDesiredProps<DefaultReactionEmoji, TProps, TBehavior>,
     ) => any
-    embed: (bot: TBot, payload: DiscordEmbed, embed: Embed) => any
-    emoji: (bot: TBot, payload: DiscordEmoji, emoji: TBot['transformers']['$inferredTypes']['emoji']) => any
-    entitlement: (bot: TBot, payload: DiscordEntitlement, entitlement: TBot['transformers']['$inferredTypes']['entitlement']) => any
-    forumTag: (bot: TBot, payload: DiscordForumTag, forumTag: TBot['transformers']['$inferredTypes']['forumTag']) => any
-    gatewayBot: (bot: TBot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
-    guild: (bot: TBot, payload: DiscordGuild, guild: TBot['transformers']['$inferredTypes']['guild']) => any
-    guildOnboarding: (bot: TBot, payload: DiscordGuildOnboarding, onboarding: TBot['transformers']['$inferredTypes']['guildOnboarding']) => any
+    embed: (bot: Bot<TProps, TBehavior>, payload: DiscordEmbed, embed: Embed) => any
+    emoji: (bot: Bot<TProps, TBehavior>, payload: DiscordEmoji, emoji: SetupDesiredProps<Emoji, TProps, TBehavior>) => any
+    entitlement: (bot: Bot<TProps, TBehavior>, payload: DiscordEntitlement, entitlement: SetupDesiredProps<Entitlement, TProps, TBehavior>) => any
+    forumTag: (bot: Bot<TProps, TBehavior>, payload: DiscordForumTag, forumTag: SetupDesiredProps<ForumTag, TProps, TBehavior>) => any
+    gatewayBot: (bot: Bot<TProps, TBehavior>, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
+    guild: (bot: Bot<TProps, TBehavior>, payload: DiscordGuild, guild: SetupDesiredProps<Guild, TProps, TBehavior>) => any
+    guildOnboarding: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordGuildOnboarding,
+      onboarding: SetupDesiredProps<GuildOnboarding, TProps, TBehavior>,
+    ) => any
     guildOnboardingPrompt: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordGuildOnboardingPrompt,
-      onboardingPrompt: TBot['transformers']['$inferredTypes']['guildOnboardingPrompt'],
+      onboardingPrompt: SetupDesiredProps<GuildOnboardingPrompt, TProps, TBehavior>,
     ) => any
-    guildOnboardingPromptOption: (bot: TBot, payload: DiscordGuildOnboardingPromptOption, onboardingPromptOption: GuildOnboardingPromptOption) => any
-    integration: (bot: TBot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
+    guildOnboardingPromptOption: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordGuildOnboardingPromptOption,
+      onboardingPromptOption: GuildOnboardingPromptOption,
+    ) => any
+    integration: (bot: Bot<TProps, TBehavior>, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
     interaction: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: { interaction: DiscordInteraction; shardId: number },
-      interaction: TBot['transformers']['$inferredTypes']['interaction'],
+      interaction: SetupDesiredProps<Interaction, TProps, TBehavior>,
     ) => any
     interactionCallback: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordInteractionCallback,
-      interactionCallback: TBot['transformers']['$inferredTypes']['interactionCallback'],
+      interactionCallback: SetupDesiredProps<InteractionCallback, TProps, TBehavior>,
     ) => any
     interactionCallbackResponse: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordInteractionCallbackResponse,
-      interactionCallbackResponse: TBot['transformers']['$inferredTypes']['interactionCallbackResponse'],
+      interactionCallbackResponse: SetupDesiredProps<InteractionCallbackResponse, TProps, TBehavior>,
     ) => any
-    interactionDataOptions: (bot: TBot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
+    interactionDataOptions: (bot: Bot<TProps, TBehavior>, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
     interactionDataResolved: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: { resolved: DiscordInteractionDataResolved; guildId?: bigint },
       interactionDataResolved: InteractionDataResolved,
     ) => any
     interactionResource: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordInteractionResource,
-      interactionResource: TBot['transformers']['$inferredTypes']['interactionResource'],
+      interactionResource: SetupDesiredProps<InteractionResource, TProps, TBehavior>,
     ) => any
-    invite: (bot: TBot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: TBot['transformers']['$inferredTypes']['invite']) => any
+    invite: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordInviteCreate | DiscordInviteMetadata,
+      invite: SetupDesiredProps<Invite, TProps, TBehavior>,
+    ) => any
     inviteStageInstance: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordInviteStageInstance,
-      inviteStageInstance: TBot['transformers']['$inferredTypes']['inviteStageInstance'],
+      inviteStageInstance: SetupDesiredProps<InviteStageInstance, TProps, TBehavior>,
     ) => any
-    member: (bot: TBot, payload: DiscordMember, member: TBot['transformers']['$inferredTypes']['member']) => any
-    message: (bot: TBot, payload: DiscordMessage, message: TBot['transformers']['$inferredTypes']['message']) => any
-    messageCall: (bot: TBot, payload: DiscordMessageCall, call: TBot['transformers']['$inferredTypes']['messageCall']) => any
+    member: (bot: Bot<TProps, TBehavior>, payload: DiscordMember, member: SetupDesiredProps<Member, TProps, TBehavior>) => any
+    message: (bot: Bot<TProps, TBehavior>, payload: DiscordMessage, message: SetupDesiredProps<Message, TProps, TBehavior>) => any
+    messageCall: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageCall, call: SetupDesiredProps<MessageCall, TProps, TBehavior>) => any
     messageInteractionMetadata: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordMessageInteractionMetadata,
-      metadata: TBot['transformers']['$inferredTypes']['messageInteractionMetadata'],
+      metadata: SetupDesiredProps<MessageInteractionMetadata, TProps, TBehavior>,
     ) => any
-    messageSnapshot: (bot: TBot, payload: DiscordMessageSnapshot, messageSnapshot: TBot['transformers']['$inferredTypes']['messageSnapshot']) => any
-    poll: (bot: TBot, payload: DiscordPoll, poll: TBot['transformers']['$inferredTypes']['poll']) => any
-    pollMedia: (bot: TBot, payload: DiscordPollMedia, pollMedia: TBot['transformers']['$inferredTypes']['pollMedia']) => any
-    presence: (bot: TBot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
-    role: (bot: TBot, payload: DiscordRole, role: TBot['transformers']['$inferredTypes']['role']) => any
-    scheduledEvent: (bot: TBot, payload: DiscordScheduledEvent, scheduledEvent: TBot['transformers']['$inferredTypes']['scheduledEvent']) => any
+    messageSnapshot: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordMessageSnapshot,
+      messageSnapshot: SetupDesiredProps<MessageSnapshot, TProps, TBehavior>,
+    ) => any
+    poll: (bot: Bot<TProps, TBehavior>, payload: DiscordPoll, poll: SetupDesiredProps<Poll, TProps, TBehavior>) => any
+    pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia, pollMedia: SetupDesiredProps<PollMedia, TProps, TBehavior>) => any
+    presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
+    role: (bot: Bot<TProps, TBehavior>, payload: DiscordRole, role: SetupDesiredProps<Role, TProps, TBehavior>) => any
+    scheduledEvent: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordScheduledEvent,
+      scheduledEvent: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>,
+    ) => any
     scheduledEventRecurrenceRule: (
-      bot: TBot,
+      bot: Bot<TProps, TBehavior>,
       payload: DiscordScheduledEventRecurrenceRule,
-      scheduledEvent: TBot['transformers']['$inferredTypes']['scheduledEventRecurrenceRule'],
+      scheduledEvent: SetupDesiredProps<ScheduledEventRecurrenceRule, TProps, TBehavior>,
     ) => any
-    sku: (bot: TBot, payload: DiscordSku, sku: TBot['transformers']['$inferredTypes']['sku']) => any
-    soundboardSound: (bot: TBot, payload: DiscordSoundboardSound, soundboardSound: TBot['transformers']['$inferredTypes']['soundboardSound']) => any
-    stageInstance: (bot: TBot, payload: DiscordStageInstance, stageInstance: TBot['transformers']['$inferredTypes']['stageInstance']) => any
-    sticker: (bot: TBot, payload: DiscordSticker, sticker: TBot['transformers']['$inferredTypes']['sticker']) => any
-    stickerPack: (bot: TBot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
-    subscription: (bot: TBot, payload: DiscordSubscription, subscription: TBot['transformers']['$inferredTypes']['subscription']) => any
-    team: (bot: TBot, payload: DiscordTeam, team: Team) => any
-    template: (bot: TBot, payload: DiscordTemplate, template: Template) => any
-    threadMember: (bot: TBot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
-    threadMemberGuildCreate: (bot: TBot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
-    user: (bot: TBot, payload: DiscordUser, user: TBot['transformers']['$inferredTypes']['user']) => any
-    voiceRegion: (bot: TBot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
-    voiceState: (bot: TBot, payload: DiscordVoiceState, voiceState: TBot['transformers']['$inferredTypes']['voiceState']) => any
-    webhook: (bot: TBot, payload: DiscordWebhook, webhook: TBot['transformers']['$inferredTypes']['webhook']) => any
-    welcomeScreen: (bot: TBot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
-    widget: (bot: TBot, payload: DiscordGuildWidget, widget: GuildWidget) => any
-    widgetSettings: (bot: TBot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
+    sku: (bot: Bot<TProps, TBehavior>, payload: DiscordSku, sku: SetupDesiredProps<Sku, TProps, TBehavior>) => any
+    soundboardSound: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordSoundboardSound,
+      soundboardSound: SetupDesiredProps<SoundboardSound, TProps, TBehavior>,
+    ) => any
+    stageInstance: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordStageInstance,
+      stageInstance: SetupDesiredProps<StageInstance, TProps, TBehavior>,
+    ) => any
+    sticker: (bot: Bot<TProps, TBehavior>, payload: DiscordSticker, sticker: SetupDesiredProps<Sticker, TProps, TBehavior>) => any
+    stickerPack: (bot: Bot<TProps, TBehavior>, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    subscription: (bot: Bot<TProps, TBehavior>, payload: DiscordSubscription, subscription: SetupDesiredProps<Subscription, TProps, TBehavior>) => any
+    team: (bot: Bot<TProps, TBehavior>, payload: DiscordTeam, team: Team) => any
+    template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate, template: Template) => any
+    threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    threadMemberGuildCreate: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordThreadMemberGuildCreate,
+      threadMemberGuildCreate: ThreadMemberGuildCreate,
+    ) => any
+    user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser, user: SetupDesiredProps<User, TProps, TBehavior>) => any
+    voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
+    voiceState: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceState, voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => any
+    webhook: (bot: Bot<TProps, TBehavior>, payload: DiscordWebhook, webhook: SetupDesiredProps<Webhook, TProps, TBehavior>) => any
+    welcomeScreen: (bot: Bot<TProps, TBehavior>, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
+    widget: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildWidget, widget: GuildWidget) => any
+    widgetSettings: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
   }
   desiredProperties: TransformersDesiredProperties
   reverse: {
-    activity: (bot: TBot, payload: Activity) => DiscordActivity
-    allowedMentions: (bot: TBot, payload: AllowedMentions) => DiscordAllowedMentions
-    application: (bot: TBot, payload: Application) => DiscordApplication
-    applicationCommand: (bot: TBot, payload: ApplicationCommand) => DiscordApplicationCommand
-    applicationCommandOption: (bot: TBot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
-    applicationCommandOptionChoice: (bot: TBot, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
-    attachment: (bot: TBot, payload: TBot['transformers']['$inferredTypes']['attachment']) => DiscordAttachment
-    component: (bot: TBot, payload: Component) => DiscordMessageComponent
-    createApplicationCommand: (bot: TBot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
-    embed: (bot: TBot, payload: Embed) => DiscordEmbed
-    member: (bot: TBot, payload: TBot['transformers']['$inferredTypes']['member']) => DiscordMember
+    activity: (bot: Bot<TProps, TBehavior>, payload: Activity) => DiscordActivity
+    allowedMentions: (bot: Bot<TProps, TBehavior>, payload: AllowedMentions) => DiscordAllowedMentions
+    application: (bot: Bot<TProps, TBehavior>, payload: Application) => DiscordApplication
+    applicationCommand: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommand) => DiscordApplicationCommand
+    applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
+    applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
+    attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment
+    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent
+    createApplicationCommand: (bot: Bot<TProps, TBehavior>, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
+    embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
+    member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
     snowflake: (snowflake: BigString) => string
-    team: (bot: TBot, payload: Team) => DiscordTeam
-    user: (bot: TBot, payload: TBot['transformers']['$inferredTypes']['user']) => DiscordUser
+    team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam
+    user: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<User, TProps, TBehavior>) => DiscordUser
   }
-  activity: (bot: TBot, payload: DiscordActivity) => Activity
-  activityInstance: (bot: TBot, payload: DiscordActivityInstance) => TBot['transformers']['$inferredTypes']['activityInstance']
-  activityLocation: (bot: TBot, payload: DiscordActivityLocation) => TBot['transformers']['$inferredTypes']['activityLocation']
-  application: (bot: TBot, payload: { application: DiscordApplication; shardId: number }) => Application
-  applicationCommand: (bot: TBot, payload: DiscordApplicationCommand) => ApplicationCommand
-  applicationCommandOption: (bot: TBot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
-  applicationCommandOptionChoice: (bot: TBot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
-  applicationCommandPermission: (bot: TBot, payload: DiscordGuildApplicationCommandPermissions) => GuildApplicationCommandPermissions
-  attachment: (bot: TBot, payload: DiscordAttachment) => TBot['transformers']['$inferredTypes']['attachment']
-  auditLogEntry: (bot: TBot, payload: DiscordAuditLogEntry) => AuditLogEntry
-  automodActionExecution: (bot: TBot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
-  automodRule: (bot: TBot, payload: DiscordAutoModerationRule) => AutoModerationRule
-  avatarDecorationData: (bot: TBot, payload: DiscordAvatarDecorationData) => TBot['transformers']['$inferredTypes']['avatarDecorationData']
-  channel: (bot: TBot, payload: { channel: DiscordChannel; guildId?: BigString }) => TBot['transformers']['$inferredTypes']['channel']
-  component: (bot: TBot, payload: DiscordMessageComponent) => Component
-  defaultReactionEmoji: (bot: TBot, payload: DiscordDefaultReactionEmoji) => TBot['transformers']['$inferredTypes']['defaultReactionEmoji']
-  embed: (bot: TBot, payload: DiscordEmbed) => Embed
-  emoji: (bot: TBot, payload: DiscordEmoji) => TBot['transformers']['$inferredTypes']['emoji']
-  entitlement: (bot: TBot, payload: DiscordEntitlement) => TBot['transformers']['$inferredTypes']['entitlement']
-  forumTag: (bot: TBot, payload: DiscordForumTag) => TBot['transformers']['$inferredTypes']['forumTag']
-  gatewayBot: (bot: TBot, payload: DiscordGetGatewayBot) => GetGatewayBot
-  guild: (bot: TBot, payload: { guild: DiscordGuild; shardId: number }) => TBot['transformers']['$inferredTypes']['guild']
-  guildOnboarding: (bot: TBot, payload: DiscordGuildOnboarding) => TBot['transformers']['$inferredTypes']['guildOnboarding']
-  guildOnboardingPrompt: (bot: TBot, payload: DiscordGuildOnboardingPrompt) => TBot['transformers']['$inferredTypes']['guildOnboardingPrompt']
-  guildOnboardingPromptOption: (bot: TBot, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
-  integration: (bot: TBot, payload: DiscordIntegrationCreateUpdate) => Integration
-  interaction: (bot: TBot, payload: { interaction: DiscordInteraction; shardId: number }) => TBot['transformers']['$inferredTypes']['interaction']
-  interactionCallback: (bot: TBot, payload: DiscordInteractionCallback) => TBot['transformers']['$inferredTypes']['interactionCallback']
+  activity: (bot: Bot<TProps, TBehavior>, payload: DiscordActivity) => Activity
+  activityInstance: (bot: Bot<TProps, TBehavior>, payload: DiscordActivityInstance) => SetupDesiredProps<ActivityInstance, TProps, TBehavior>
+  activityLocation: (bot: Bot<TProps, TBehavior>, payload: DiscordActivityLocation) => SetupDesiredProps<ActivityLocation, TProps, TBehavior>
+  application: (bot: Bot<TProps, TBehavior>, payload: { application: DiscordApplication; shardId: number }) => Application
+  applicationCommand: (bot: Bot<TProps, TBehavior>, payload: DiscordApplicationCommand) => ApplicationCommand
+  applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
+  applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
+  applicationCommandPermission: (
+    bot: Bot<TProps, TBehavior>,
+    payload: DiscordGuildApplicationCommandPermissions,
+  ) => GuildApplicationCommandPermissions
+  attachment: (bot: Bot<TProps, TBehavior>, payload: DiscordAttachment) => SetupDesiredProps<Attachment, TProps, TBehavior>
+  auditLogEntry: (bot: Bot<TProps, TBehavior>, payload: DiscordAuditLogEntry) => AuditLogEntry
+  automodActionExecution: (bot: Bot<TProps, TBehavior>, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
+  automodRule: (bot: Bot<TProps, TBehavior>, payload: DiscordAutoModerationRule) => AutoModerationRule
+  avatarDecorationData: (
+    bot: Bot<TProps, TBehavior>,
+    payload: DiscordAvatarDecorationData,
+  ) => SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>
+  channel: (bot: Bot<TProps, TBehavior>, payload: { channel: DiscordChannel; guildId?: BigString }) => SetupDesiredProps<Channel, TProps, TBehavior>
+  component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent) => Component
+  defaultReactionEmoji: (
+    bot: Bot<TProps, TBehavior>,
+    payload: DiscordDefaultReactionEmoji,
+  ) => SetupDesiredProps<DefaultReactionEmoji, TProps, TBehavior>
+  embed: (bot: Bot<TProps, TBehavior>, payload: DiscordEmbed) => Embed
+  emoji: (bot: Bot<TProps, TBehavior>, payload: DiscordEmoji) => SetupDesiredProps<Emoji, TProps, TBehavior>
+  entitlement: (bot: Bot<TProps, TBehavior>, payload: DiscordEntitlement) => SetupDesiredProps<Entitlement, TProps, TBehavior>
+  forumTag: (bot: Bot<TProps, TBehavior>, payload: DiscordForumTag) => SetupDesiredProps<ForumTag, TProps, TBehavior>
+  gatewayBot: (bot: Bot<TProps, TBehavior>, payload: DiscordGetGatewayBot) => GetGatewayBot
+  guild: (bot: Bot<TProps, TBehavior>, payload: { guild: DiscordGuild; shardId: number }) => SetupDesiredProps<Guild, TProps, TBehavior>
+  guildOnboarding: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildOnboarding) => SetupDesiredProps<GuildOnboarding, TProps, TBehavior>
+  guildOnboardingPrompt: (
+    bot: Bot<TProps, TBehavior>,
+    payload: DiscordGuildOnboardingPrompt,
+  ) => SetupDesiredProps<GuildOnboardingPrompt, TProps, TBehavior>
+  guildOnboardingPromptOption: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
+  integration: (bot: Bot<TProps, TBehavior>, payload: DiscordIntegrationCreateUpdate) => Integration
+  interaction: (
+    bot: Bot<TProps, TBehavior>,
+    payload: { interaction: DiscordInteraction; shardId: number },
+  ) => SetupDesiredProps<Interaction, TProps, TBehavior>
+  interactionCallback: (bot: Bot<TProps, TBehavior>, payload: DiscordInteractionCallback) => SetupDesiredProps<InteractionCallback, TProps, TBehavior>
   interactionCallbackResponse: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: { interactionCallbackResponse: DiscordInteractionCallbackResponse; shardId: number },
-  ) => TBot['transformers']['$inferredTypes']['interactionCallbackResponse']
-  interactionDataOptions: (bot: TBot, payload: DiscordInteractionDataOption) => InteractionDataOption
+  ) => SetupDesiredProps<InteractionCallbackResponse, TProps, TBehavior>
+  interactionDataOptions: (bot: Bot<TProps, TBehavior>, payload: DiscordInteractionDataOption) => InteractionDataOption
   interactionDataResolved: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: { resolved: DiscordInteractionDataResolved; shardId: number; guildId?: bigint },
   ) => InteractionDataResolved
   interactionResource: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: { interactionResource: DiscordInteractionResource; shardId: number },
-  ) => TBot['transformers']['$inferredTypes']['interactionResource']
+  ) => SetupDesiredProps<InteractionResource, TProps, TBehavior>
   invite: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number },
-  ) => TBot['transformers']['$inferredTypes']['invite']
+  ) => SetupDesiredProps<Invite, TProps, TBehavior>
   inviteStageInstance: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: DiscordInviteStageInstance & { guildId: BigString },
-  ) => TBot['transformers']['$inferredTypes']['inviteStageInstance']
-  member: (bot: TBot, payload: DiscordMember, guildId: BigString, userId: BigString) => TBot['transformers']['$inferredTypes']['member']
-  message: (bot: TBot, payload: { message: DiscordMessage; shardId: number }) => TBot['transformers']['$inferredTypes']['message']
-  messageCall: (bot: TBot, payload: DiscordMessageCall) => TBot['transformers']['$inferredTypes']['messageCall']
+  ) => SetupDesiredProps<InviteStageInstance, TProps, TBehavior>
+  member: (bot: Bot<TProps, TBehavior>, payload: DiscordMember, guildId: BigString, userId: BigString) => SetupDesiredProps<Member, TProps, TBehavior>
+  message: (bot: Bot<TProps, TBehavior>, payload: { message: DiscordMessage; shardId: number }) => SetupDesiredProps<Message, TProps, TBehavior>
+  messageCall: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageCall) => SetupDesiredProps<MessageCall, TProps, TBehavior>
   messageInteractionMetadata: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: DiscordMessageInteractionMetadata,
-  ) => TBot['transformers']['$inferredTypes']['messageInteractionMetadata']
+  ) => SetupDesiredProps<MessageInteractionMetadata, TProps, TBehavior>
   messageSnapshot: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
-  ) => TBot['transformers']['$inferredTypes']['messageSnapshot']
-  poll: (bot: TBot, payload: DiscordPoll) => TBot['transformers']['$inferredTypes']['poll']
-  pollMedia: (bot: TBot, payload: DiscordPollMedia) => TBot['transformers']['$inferredTypes']['pollMedia']
-  presence: (bot: TBot, payload: DiscordPresenceUpdate) => PresenceUpdate
-  role: (bot: TBot, payload: { role: DiscordRole; guildId: BigString }) => TBot['transformers']['$inferredTypes']['role']
-  scheduledEvent: (bot: TBot, payload: DiscordScheduledEvent) => TBot['transformers']['$inferredTypes']['scheduledEvent']
+  ) => SetupDesiredProps<MessageSnapshot, TProps, TBehavior>
+  poll: (bot: Bot<TProps, TBehavior>, payload: DiscordPoll) => SetupDesiredProps<Poll, TProps, TBehavior>
+  pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia) => SetupDesiredProps<PollMedia, TProps, TBehavior>
+  presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate) => PresenceUpdate
+  role: (bot: Bot<TProps, TBehavior>, payload: { role: DiscordRole; guildId: BigString }) => SetupDesiredProps<Role, TProps, TBehavior>
+  scheduledEvent: (bot: Bot<TProps, TBehavior>, payload: DiscordScheduledEvent) => SetupDesiredProps<ScheduledEvent, TProps, TBehavior>
   scheduledEventRecurrenceRule: (
-    bot: TBot,
+    bot: Bot<TProps, TBehavior>,
     payload: DiscordScheduledEventRecurrenceRule,
-  ) => TBot['transformers']['$inferredTypes']['scheduledEventRecurrenceRule']
-  sku: (bot: TBot, payload: DiscordSku) => TBot['transformers']['$inferredTypes']['sku']
-  soundboardSound: (bot: TBot, payload: DiscordSoundboardSound) => TBot['transformers']['$inferredTypes']['soundboardSound']
+  ) => SetupDesiredProps<ScheduledEventRecurrenceRule, TProps, TBehavior>
+  sku: (bot: Bot<TProps, TBehavior>, payload: DiscordSku) => SetupDesiredProps<Sku, TProps, TBehavior>
+  soundboardSound: (bot: Bot<TProps, TBehavior>, payload: DiscordSoundboardSound) => SetupDesiredProps<SoundboardSound, TProps, TBehavior>
   snowflake: (snowflake: BigString) => bigint
-  stageInstance: (bot: TBot, payload: DiscordStageInstance) => TBot['transformers']['$inferredTypes']['stageInstance']
-  sticker: (bot: TBot, payload: DiscordSticker) => TBot['transformers']['$inferredTypes']['sticker']
-  stickerPack: (bot: TBot, payload: DiscordStickerPack) => StickerPack
-  subscription: (bot: TBot, payload: DiscordSubscription) => TBot['transformers']['$inferredTypes']['subscription']
-  team: (bot: TBot, payload: DiscordTeam) => Team
-  template: (bot: TBot, payload: DiscordTemplate) => Template
-  threadMember: (bot: TBot, payload: DiscordThreadMember) => ThreadMember
-  threadMemberGuildCreate: (bot: TBot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
-  user: (bot: TBot, payload: DiscordUser) => TBot['transformers']['$inferredTypes']['user']
-  voiceRegion: (bot: TBot, payload: DiscordVoiceRegion) => VoiceRegion
-  voiceState: (bot: TBot, payload: { voiceState: DiscordVoiceState; guildId: BigString }) => TBot['transformers']['$inferredTypes']['voiceState']
-  webhook: (bot: TBot, payload: DiscordWebhook) => TBot['transformers']['$inferredTypes']['webhook']
-  welcomeScreen: (bot: TBot, payload: DiscordWelcomeScreen) => WelcomeScreen
-  widget: (bot: TBot, payload: DiscordGuildWidget) => GuildWidget
-  widgetSettings: (bot: TBot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
+  stageInstance: (bot: Bot<TProps, TBehavior>, payload: DiscordStageInstance) => SetupDesiredProps<StageInstance, TProps, TBehavior>
+  sticker: (bot: Bot<TProps, TBehavior>, payload: DiscordSticker) => SetupDesiredProps<Sticker, TProps, TBehavior>
+  stickerPack: (bot: Bot<TProps, TBehavior>, payload: DiscordStickerPack) => StickerPack
+  subscription: (bot: Bot<TProps, TBehavior>, payload: DiscordSubscription) => SetupDesiredProps<Subscription, TProps, TBehavior>
+  team: (bot: Bot<TProps, TBehavior>, payload: DiscordTeam) => Team
+  template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate) => Template
+  threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember) => ThreadMember
+  threadMemberGuildCreate: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
+  user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>
+  voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion) => VoiceRegion
+  voiceState: (
+    bot: Bot<TProps, TBehavior>,
+    payload: { voiceState: DiscordVoiceState; guildId: BigString },
+  ) => SetupDesiredProps<VoiceState, TProps, TBehavior>
+  webhook: (bot: Bot<TProps, TBehavior>, payload: DiscordWebhook) => SetupDesiredProps<Webhook, TProps, TBehavior>
+  welcomeScreen: (bot: Bot<TProps, TBehavior>, payload: DiscordWelcomeScreen) => WelcomeScreen
+  widget: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildWidget) => GuildWidget
+  widgetSettings: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
 }
 
 const defaultCustomizer = (_bot: unknown, _payload: unknown, structure: unknown) => structure
