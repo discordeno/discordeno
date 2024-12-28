@@ -51,7 +51,7 @@
     "sinon": "^19.0.2",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "uWebSockets.js": "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
   }
 }
