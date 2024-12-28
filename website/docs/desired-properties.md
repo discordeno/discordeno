@@ -89,7 +89,7 @@ const bot = createBot({
     message: {
       id: true,
       author: true,
-    }
+    },
     user: {
       id: true,
       toggles: true, // Toggles includes the "bot" flag
@@ -156,3 +156,54 @@ All the "undesired" properties will be typed with a string that will explain why
 
 The caveats of this behavior are the following:
 - Typescript may not always error on the usage of undesired properties, as in some cases, strings can be a valid option (e.g. channel.name is always a string so typescript won't error)
+
+### Removing TypeScript Clutter
+
+Since we dynamically change types based on the desired properties you provide, many functions' types become cluttered. For example, the intellisense for `bot.helpers.getUser()` shows:
+
+```js
+(property) getUser: (id: BigString) => Promise<SetupDesiredProps<User, CompleteDesiredProperties<{
+  message: {
+      id: true;
+      author: true;
+  };
+  user: {
+    id: true;
+    toggles: true;
+    username: true;
+  };
+}>, DesiredPropertiesBehavior.RemoveKey>>
+```
+
+This will become increasingly cluttered as you add more desired properties, making it harder to read and work with. To address this issue, you can do something like:
+
+```js
+import { RecursivePartial, TransformersDesiredProperties, createBot } from '@discordeno/bot';
+
+const desiredProperties = {
+  message: {
+    id: true,
+    author: true,
+  },
+  user: {
+    id: true,
+    toggles: true, // Toggles includes the "bot" flag
+    username: true,
+  },
+} satisfies RecursivePartial<TransformersDesiredProperties>;
+
+interface BotDesiredProperties extends Required<typeof desiredProperties> {}
+
+const bot = createBot<BotDesiredProperties>({
+  // Your usual createBot options, such as token and intents
+  desiredProperties,
+});
+```
+
+Now, when you hover over `bot.helpers.getUser()`, you'll see:
+
+```js
+(property) getUser: (id: BigString) => Promise<SetupDesiredProps<User, BotDesiredProperties, DesiredPropertiesBehavior.RemoveKey>>
+```
+
+This makes it more readable and easier to work with.
