@@ -135,7 +135,7 @@ jobs:
   # Not using matrix because test later on cant needs a specific job
   bot-unit-test:
     name: Bot
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -159,7 +159,7 @@ jobs:
 
   discordeno-unit-test:
     name: Discordeno
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -174,7 +174,7 @@ jobs:
 
   gateway-unit-test:
     name: Gateway
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -188,7 +188,7 @@ jobs:
       package: gateway
   gateway-other-runtime-test:
     name: Gateway
-    needs: [gateway-unit-test, gateway-integration-test]
+    needs: [gateway-unit-test]
     uses: ./.github/workflows/other-runtime-unit-test.yml
     secrets: inherit
     with:
@@ -196,7 +196,7 @@ jobs:
 
   rest-unit-test:
     name: Rest
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -220,7 +220,7 @@ jobs:
 
   types-unit-test:
     name: Types
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -235,7 +235,7 @@ jobs:
 
   utils-unit-test:
     name: Utils
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
