@@ -36,7 +36,7 @@ export const GATEWAY_PORT = parseNumber(assertEnv('GATEWAY_PORT'), 'GATEWAY_PORT
 
 // Message queue (RabbitMQ configuration)
 
-export const MESSAGEQUEUE_ENABLE = process.env.MESSAGEQUEUE_ENABLE ?? false
+export const MESSAGEQUEUE_ENABLE = process.env.MESSAGEQUEUE_ENABLE === "true"
 
 export const MESSAGEQUEUE_URL = process.env.MESSAGEQUEUE_URL
 export const MESSAGEQUEUE_USERNAME = process.env.MESSAGEQUEUE_USERNAME
