@@ -16,9 +16,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - uses: denoland/setup-deno@main
+      - uses: denoland/setup-deno@v2
         with:
-          deno-version: 'v1.29'
+          deno-version: 'v2.1'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
@@ -41,21 +41,6 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-      - name: Build type cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
-      - name: Deno cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.deno
-            ~/.cache/deno
-          key: ${{ runner.os }}-deno-${{ inputs.package }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-deno-${{ inputs.package }}
       - name: Deno Unit Test
         run: yarn test:deno-unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
   bun-unit-test:
@@ -68,7 +53,7 @@ jobs:
           node-version: 18
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: '1.0.6'
+          bun-version: '1.1.42'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
@@ -91,12 +76,6 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-      - name: Build type cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Bun Unit Test
         run: yarn test:bun-unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
         timeout-minutes: 1
