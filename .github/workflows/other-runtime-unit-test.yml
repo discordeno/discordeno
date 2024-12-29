@@ -18,7 +18,7 @@ jobs:
           node-version: 18
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: 'v2.1'
+          deno-version: 'v2.1.x'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
@@ -53,7 +53,7 @@ jobs:
           node-version: 18
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: '1.1.42'
+          bun-version: '1.1.x'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
