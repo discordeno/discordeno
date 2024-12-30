@@ -7,15 +7,15 @@ updates:
   - package-ecosystem: 'npm'
     # Look for `package.json` and `lock` files in the `root` directory
     directory: '/'
-    # Check the npm registry for updates every day (weekdays)
+    # Check the npm registry for updates every month
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      # Check for updates to GitHub Actions every week
-      interval: 'daily'
+      # Check for updates to GitHub Actions every month
+      interval: 'monthly'
   - package-ecosystem: 'npm'
     directory: '/docker-apps/rest-passthrough'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
