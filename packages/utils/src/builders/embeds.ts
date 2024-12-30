@@ -50,7 +50,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @returns {EmbedsBuilder}
    */
   addFields(fields: DiscordEmbedField[]): this {
-    this.#currentEmbed.fields.push(fields)
+    this.#currentEmbed.fields.push(...fields)
 
     return this
   }
