@@ -12,7 +12,7 @@ import type {
  * A builder to help create Discord embeds.
  *
  * @example
- * const embeds = new EmbedBuilder()
+ * const embeds = new EmbedsBuilder()
  *  .setTitle('My Embed')
  *  .setDescription('This is my new embed')
  *  .newEmbed()
