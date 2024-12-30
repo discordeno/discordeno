@@ -56,7 +56,7 @@ describe('builders/embeds.ts', () => {
       {
         fields: [
           { name: 'firstname', value: 'firstvalue', inline: undefined },
-          { name: 'secondname', value: 'secondvalue', inline: undefined },
+          { name: 'secondname', value: 'secondvalue' },
           { name: 'thirdname', value: 'thirdvalue', inline: true },
         ],
       },
