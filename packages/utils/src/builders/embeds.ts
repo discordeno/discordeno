@@ -37,7 +37,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.fields.push({
       name,
       value,
-      inline,
+      ...(inline !== undefined && { inline }),
     })
 
     return this
