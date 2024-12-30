@@ -46,11 +46,15 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
   /**
    * Adds multiple new fields to the embed fields array
    *
-   * @param {DiscordEmbedField[]} fields
+   * @param {DiscordEmbedField[]} fields - The fields to add
    * @returns {EmbedsBuilder}
    */
   addFields(fields: DiscordEmbedField[]): this {
-    this.#currentEmbed.fields.push(fields)
+    if (this.#currentEmbed.fields === undefined) { 
+      this.#currentEmbed.fields = [] 
+    }
+    
+    this.#currentEmbed.fields.push(...fields)
 
     return this
   }
