@@ -32,6 +32,7 @@
     "@swc/core": "^1.9.2",
     "@types/amqplib": "^0.10.5",
     "@types/node": "^22.9.0",
+    "chokidar": "^4.0.3",
     "typescript": "^5.6.3"
   }
 }
