@@ -37,7 +37,7 @@ export function createWorker(workerId: number): Worker {
       },
       workerId,
       messageQueue: {
-        enabled: MESSAGEQUEUE_ENABLE === 'true',
+        enabled: MESSAGEQUEUE_ENABLE,
         username: MESSAGEQUEUE_USERNAME,
         password: MESSAGEQUEUE_PASSWORD,
         url: MESSAGEQUEUE_URL,
