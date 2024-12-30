@@ -12,7 +12,7 @@ import type {
  * A builder to help create Discord embeds.
  *
  * @example
- * const embeds = new EmbedBuilder()
+ * const embeds = new EmbedsBuilder()
  *  .setTitle('My Embed')
  *  .setDescription('This is my new embed')
  *  .newEmbed()
@@ -39,6 +39,18 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
       value,
       inline,
     })
+
+    return this
+  }
+
+  /**
+   * Adds multiple new fields to the embed fields array
+   *
+   * @param {DiscordEmbedField[]} fields
+   * @returns {EmbedsBuilder}
+   */
+  addFields(fields: DiscordEmbedField[]): this {
+    this.#currentEmbed.fields.push(fields)
 
     return this
   }
