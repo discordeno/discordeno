@@ -37,7 +37,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.fields.push({
       name,
       value,
-      ...(inline !== undefined && { inline }),
+      inline,
     })
 
     return this
@@ -46,15 +46,11 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
   /**
    * Adds multiple new fields to the embed fields array
    *
-   * @param {DiscordEmbedField[]} fields - The fields to add
+   * @param {DiscordEmbedField[]} fields
    * @returns {EmbedsBuilder}
    */
   addFields(fields: DiscordEmbedField[]): this {
-    if (this.#currentEmbed.fields === undefined) { 
-      this.#currentEmbed.fields = [] 
-    }
-    
-    this.#currentEmbed.fields.push(...fields)
+    this.#currentEmbed.fields.push(fields)
 
     return this
   }

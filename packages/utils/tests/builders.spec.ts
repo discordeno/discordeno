@@ -25,7 +25,7 @@ describe('builders/embeds.ts', () => {
   it('should add a field in the embed JSON', () => {
     expect(new EmbedsBuilder().addField('firstname', 'firstvalue')).to.eql([
       {
-        fields: [{ name: 'firstname', value: 'firstvalue' }],
+        fields: [{ name: 'firstname', value: 'firstvalue', inline: undefined }],
       },
     ])
   })
@@ -55,8 +55,8 @@ describe('builders/embeds.ts', () => {
     ).to.eql([
       {
         fields: [
-          { name: 'firstname', value: 'firstvalue' },
-          { name: 'secondname', value: 'secondvalue' },
+          { name: 'firstname', value: 'firstvalue', inline: undefined },
+          { name: 'secondname', value: 'secondvalue', inline: undefined },
           { name: 'thirdname', value: 'thirdvalue', inline: true },
         ],
       },
