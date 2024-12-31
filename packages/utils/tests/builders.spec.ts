@@ -22,6 +22,14 @@ describe('builders/embeds.ts', () => {
     expect(new EmbedsBuilder().setDescription('My Description')).to.eql([{ description: 'My Description' }])
   })
 
+  it('should add a field in the embed JSON', () => {
+    expect(new EmbedsBuilder().addField('firstname', 'firstvalue')).to.eql([
+      {
+        fields: [{ name: 'firstname', value: 'firstvalue', inline: undefined }],
+      },
+    ])
+  })
+
   it('should set the fields in the embed JSON', () => {
     expect(
       new EmbedsBuilder().setFields([
@@ -33,6 +41,23 @@ describe('builders/embeds.ts', () => {
         fields: [
           { name: 'firstname', value: 'firstvalue' },
           { name: 'secondname', value: 'secondvalue', inline: true },
+        ],
+      },
+    ])
+  })
+
+  it('should add the fields in the embed JSON', () => {
+    expect(
+      new EmbedsBuilder().addField('firstname', 'firstvalue').addFields([
+        { name: 'secondname', value: 'secondvalue' },
+        { name: 'thirdname', value: 'thirdvalue', inline: true },
+      ]),
+    ).to.eql([
+      {
+        fields: [
+          { name: 'firstname', value: 'firstvalue', inline: undefined },
+          { name: 'secondname', value: 'secondvalue' },
+          { name: 'thirdname', value: 'thirdvalue', inline: true },
         ],
       },
     ])
