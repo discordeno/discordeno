@@ -17,6 +17,8 @@ import type {
   DiscordInstallParams,
   DiscordInteractionContextType,
   DiscordInteractionEntryPointCommandHandlerType,
+  DiscordMediaItem,
+  DiscordMediaUrl,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -48,6 +50,7 @@ import type {
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
+  SeparatorSpacingSize,
   SortOrderTypes,
   SystemChannelFlags,
   TargetTypes,
@@ -109,6 +112,12 @@ export type MessageComponent =
   | SelectMenuRolesComponent
   | SelectMenuUsersComponent
   | SelectMenuUsersAndRolesComponent
+  | SectionComponent
+  | TextComponent
+  | ThumbnailComponent
+  | MediaComponent
+  | SeparatorComponent
+  | FileComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
@@ -295,6 +304,74 @@ export interface InputTextComponent {
   required?: boolean
   /** Pre-filled value for input text. */
   value?: string
+}
+
+/** TBD */
+export interface SectionComponent {
+  /** TBD */
+  type: MessageComponentTypes.Section
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  components: TextComponent[]
+  /** TBD */
+  accessory: ThumbnailComponent
+}
+
+/** TBD */
+export interface TextComponent {
+  /** TBD */
+  type: MessageComponentTypes.Text
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  content: string
+}
+
+/** TBD */
+export interface ThumbnailComponent {
+  /** TBD */
+  type: MessageComponentTypes.Thumbnail
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  image: DiscordMediaUrl
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface MediaComponent {
+  /** TBD */
+  type: MessageComponentTypes.Media
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  items: DiscordMediaItem[]
+}
+
+/** TBD */
+export interface SeparatorComponent {
+  /** TBD */
+  type: MessageComponentTypes.Separator
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  spacing?: SeparatorSpacingSize
+}
+
+/** TBD */
+export interface FileComponent {
+  /** TBD */
+  type: MessageComponentTypes.File
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  file: DiscordMediaUrl
+  /** TBD */
+  spoiler?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */

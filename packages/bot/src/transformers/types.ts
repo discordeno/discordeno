@@ -24,6 +24,8 @@ import type {
   DiscordGuildOnboardingPromptType,
   DiscordInteractionContextType,
   DiscordInviteType,
+  DiscordMediaItem,
+  DiscordMediaUrl,
   DiscordPollLayoutType,
   DiscordScheduledEventRecurrenceRuleFrequency,
   DiscordScheduledEventRecurrenceRuleMonth,
@@ -59,6 +61,7 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
   SelectOption,
+  SeparatorSpacingSize,
   SkuFlags,
   SortOrderTypes,
   StickerFormatTypes,
@@ -547,6 +550,24 @@ export interface Component {
   defaultValues?: DiscordComponentDefaultValue[]
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: bigint
+  /** TBD */
+  id?: number
+  /** TBD */
+  accessory?: Component
+  /** TBD */
+  content?: string
+  /** TBD */
+  image?: DiscordMediaUrl
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
+  /** TBD */
+  items?: DiscordMediaItem[]
+  /** TBD */
+  spacing?: SeparatorSpacingSize
+  /** TBD */
+  file?: DiscordMediaUrl
 }
 
 export interface DiscordComponentDefaultValue {

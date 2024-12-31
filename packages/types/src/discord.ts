@@ -34,6 +34,7 @@ import type {
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
+  SeparatorSpacingSize,
   SkuFlags,
   SortOrderTypes,
   StickerFormatTypes,
@@ -1757,7 +1758,17 @@ export interface DiscordModalSubmitInteractionMetadata {
 }
 
 export type DiscordMessageComponents = DiscordMessageComponent[]
-export type DiscordMessageComponent = DiscordActionRow | DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent
+export type DiscordMessageComponent =
+  | DiscordActionRow
+  | DiscordSelectMenuComponent
+  | DiscordButtonComponent
+  | DiscordInputTextComponent
+  | DiscordSectionComponent
+  | DiscordTextComponent
+  | DiscordThumbnailComponent
+  | DiscordMediaComponent
+  | DiscordSeparatorComponent
+  | DiscordFileComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
@@ -1903,6 +1914,90 @@ export interface DiscordInputTextComponent {
   max_length?: number
   /** Pre-filled value for input text. */
   value?: string
+}
+
+/** TBD */
+export interface DiscordSectionComponent {
+  /** TBD */
+  type: MessageComponentTypes.Section
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  components: DiscordTextComponent[]
+  /** TBD */
+  accessory: DiscordThumbnailComponent
+}
+
+/** TBD */
+export interface DiscordTextComponent {
+  /** TBD */
+  type: MessageComponentTypes.Text
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  content: string
+}
+
+/** TBD */
+export interface DiscordThumbnailComponent {
+  /** TBD */
+  type: MessageComponentTypes.Thumbnail
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  image: DiscordMediaUrl
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface DiscordMediaComponent {
+  /** TBD */
+  type: MessageComponentTypes.Media
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  items: DiscordMediaItem[]
+}
+
+/** TBD */
+export interface DiscordSeparatorComponent {
+  /** TBD */
+  type: MessageComponentTypes.Separator
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  spacing?: SeparatorSpacingSize
+}
+
+/** TBD */
+export interface DiscordFileComponent {
+  /** TBD */
+  type: MessageComponentTypes.File
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  file: DiscordMediaUrl
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface DiscordMediaUrl {
+  /** TBD */
+  url: string
+}
+
+/** TBD */
+export interface DiscordMediaItem {
+  /** TBD */
+  media: DiscordMediaUrl
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-item-object-sticker-item-structure */
