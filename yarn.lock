@@ -5,10 +5,10 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@bcoe/v8-coverage@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@bcoe/v8-coverage@npm:0.2.3"
-  checksum: 1a1f0e356a3bb30b5f1ced6f79c413e6ebacf130421f15fac5fcd8be5ddf98aedb4404d7f5624e3285b700e041f9ef938321f3ca4d359d5b716f96afa120d88d
+"@bcoe/v8-coverage@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@bcoe/v8-coverage@npm:1.0.1"
+  checksum: fb1ae58d23912d7d91704b9bede88023c8593526bf82f470415bd6ffb29a0375aee120e301a8f84ca498695843fa384dea666729548c7974f3e8e1c41d6eb7d3
   languageName: node
   linkType: hard
 
@@ -127,7 +127,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.10.2"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^10.1.2"
+    c8: "npm:^10.1.3"
     chai: "npm:^5.1.2"
     mocha: "npm:^11.0.1"
     sinon: "npm:^19.0.2"
@@ -151,7 +151,7 @@ __metadata:
     "@types/node": "npm:^22.10.2"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.13"
-    c8: "npm:^10.1.2"
+    c8: "npm:^10.1.3"
     chai: "npm:^5.1.2"
     fzstd: "npm:^0.1.1"
     mocha: "npm:^11.0.1"
@@ -181,7 +181,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.10.2"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^10.1.2"
+    c8: "npm:^10.1.3"
     chai: "npm:^5.1.2"
     chai-as-promised: "npm:^8.0.1"
     dotenv: "npm:^16.4.5"
@@ -202,7 +202,7 @@ __metadata:
     "@swc/core": "npm:^1.10.2"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.10.2"
-    c8: "npm:^10.1.2"
+    c8: "npm:^10.1.3"
     mocha: "npm:^11.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -222,7 +222,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.10.2"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^10.1.2"
+    c8: "npm:^10.1.3"
     chai: "npm:^5.1.2"
     mocha: "npm:^11.0.1"
     sinon: "npm:^19.0.2"
@@ -1359,11 +1359,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"c8@npm:^10.1.2":
-  version: 10.1.2
-  resolution: "c8@npm:10.1.2"
+"c8@npm:^10.1.3":
+  version: 10.1.3
+  resolution: "c8@npm:10.1.3"
   dependencies:
-    "@bcoe/v8-coverage": "npm:^0.2.3"
+    "@bcoe/v8-coverage": "npm:^1.0.1"
     "@istanbuljs/schema": "npm:^0.1.3"
     find-up: "npm:^5.0.0"
     foreground-child: "npm:^3.1.1"
@@ -1381,7 +1381,7 @@ __metadata:
       optional: true
   bin:
     c8: bin/c8.js
-  checksum: 36d1e1dec01b87d73edd9562ddeab5dfb12b3b1a04214ea303ce444caca4ca2814d35de5d21eb5b973f5641c027fd9c17f23eccb6c1206ef24552380ba4a06e6
+  checksum: 6fdc2097fec28a14089fb6e450a5d7532b39391de5c1fd04803430c7a27be4fff6311388ab9ca8cc570c42062bf0c0fa1d7f23558957f7ab35b781f33a5f0906
   languageName: node
   linkType: hard
 
@@ -1876,7 +1876,7 @@ __metadata:
     "@types/chai": "npm:^5.0.1"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^22.10.2"
-    c8: "npm:^10.1.2"
+    c8: "npm:^10.1.3"
     chai: "npm:^5.1.2"
     mocha: "npm:^11.0.1"
     ts-node: "npm:^10.9.2"
