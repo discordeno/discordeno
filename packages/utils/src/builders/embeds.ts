@@ -240,7 +240,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @returns {EmbedsBuilder}
    */
   setTimestamp(timestamp?: string | number | Date): this {
-    this.#currentEmbed.timestamp = new Date(timestamp!).toISOString()
+    this.#currentEmbed.timestamp = new Date(timestamp ?? Date.now()).toISOString()
 
     return this
   }
