@@ -26,7 +26,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
           }
 
           if (bot.rest.applicationId === guild.ownerId) {
-            logger.info(`Deleting one of the bot created guilds. ${guild.id}`)
+            logger.debug(`Deleting one of the bot created guilds. ${guild.id}`)
             await bot.rest.deleteGuild(guild.id)
           }
         },
