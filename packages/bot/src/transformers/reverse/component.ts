@@ -16,6 +16,14 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     case MessageComponentTypes.SelectMenuUsers:
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       return transformSelectMenuComponent(bot, payload)
+    case MessageComponentTypes.File:
+    case MessageComponentTypes.Media:
+    case MessageComponentTypes.Section:
+    case MessageComponentTypes.Separator:
+    case MessageComponentTypes.Text:
+    case MessageComponentTypes.Thumbnail:
+      // As of now they are compatible
+      return payload as DiscordMessageComponent
   }
 }
 

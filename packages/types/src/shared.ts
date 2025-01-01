@@ -153,6 +153,8 @@ export enum MessageFlags {
   SuppressNotifications = 1 << 12,
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
+  /** TBD */
+  IsUiKit = 1 << 15,
 }
 
 /** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-flags */
@@ -222,6 +224,18 @@ export enum MessageComponentTypes {
   SelectMenuUsersAndRoles,
   /** Select menu for channels */
   SelectMenuChannels,
+  /** TBD */
+  Section = 9,
+  /** TBD */
+  Text,
+  /** TBD */
+  Thumbnail,
+  /** TBD */
+  Media,
+  /** TBD */
+  File,
+  /** TBD */
+  Separator,
 }
 
 export enum TextStyles {
@@ -245,6 +259,11 @@ export enum ButtonStyles {
   Link,
   /** A blurple button to show a Premium item in the shop */
   Premium,
+}
+
+export enum SeparatorSpacingSize {
+  Small = 1,
+  Large = 2,
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
