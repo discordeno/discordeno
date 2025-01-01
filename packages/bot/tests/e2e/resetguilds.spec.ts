@@ -1,5 +1,5 @@
 import { Intents } from '@discordeno/types'
-import { delay, logger, snakeToCamelCase } from '@discordeno/utils'
+import { delay, logger } from '@discordeno/utils'
 import { use as chaiUse } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
@@ -18,24 +18,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
           ownerId: true,
         },
       },
-      gateway: {
-        token,
-        events: {
-          message: async (shard, data) => {
-            // TRIGGER RAW EVENT
-            bot.events.raw?.(data, shard.id)
-
-            if (!data.t) return
-
-            // RUN DISPATCH CHECK
-            await bot.events.dispatchRequirements?.(data, shard.id)
-
-            const eventName = snakeToCamelCase(data.t)
-            bot.events[eventName as keyof typeof bot.events]?.(data.d as never, shard as never)
-          },
-        },
-        intents: Intents.Guilds,
-      },
+      intents: Intents.Guilds,
       events: {
         async guildCreate(guild) {
           if (guild.joinedAt && Date.now() - guild.joinedAt < 360000) {
@@ -43,7 +26,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
           }
 
           if (bot.rest.applicationId === guild.ownerId) {
-            logger.debug(`Deleting one of the bot created guilds.`, guild.id)
+            logger.info(`Deleting one of the bot created guilds. ${guild.id}`)
             await bot.rest.deleteGuild(guild.id)
           }
         },
