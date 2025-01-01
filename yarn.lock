@@ -159,7 +159,6 @@ __metadata:
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^5.7.2"
-    uWebSockets.js: "uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901"
     ws: "npm:^8.18.0"
   dependenciesMeta:
     fzstd:
@@ -4323,13 +4322,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: ff27fc124bceb8969be722baa38af945b2505767cf794de3e2715e58f61b43780284060287d651fcbbdfb6f917f4653b20f4751991f17e0706db389b9bb3f75d
-  languageName: node
-  linkType: hard
-
-"uWebSockets.js@uNetworking/uWebSockets.js#54e5db370db746ed1c85021bdf215578a2164901":
-  version: 20.47.0
-  resolution: "uWebSockets.js@https://github.com/uNetworking/uWebSockets.js.git#commit=54e5db370db746ed1c85021bdf215578a2164901"
-  checksum: c6ed6796b1ed86118e7ea32fa5e486a9aa8d2cc5e3757eb20e8a3120779b47130c318c5f84bbdfbb744c816af272ea7c0220e163ff1c7b85bcd848b04d521408
   languageName: node
   linkType: hard
 
