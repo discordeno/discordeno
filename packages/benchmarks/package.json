@@ -1,33 +1,34 @@
 {
   "name": "benchmarks",
   "version": "0.0.0",
+  "private": true,
   "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     "import": "./dist/index.js",
     "types": "./dist/types/index.d.ts"
   },
-  "types": "./dist/types/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/discordeno/discordeno.git"
+    "url": "git+https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
     "release-build": "yarn build && yarn build:type",
     "fmt": "biome format --write",
     "lint": "biome lint --write",
-    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist && node ../../scripts/fixBenchExtension.js",
-    "build-message": "swc src/generateMessage.ts --strip-leading-paths -C sourceMaps=false --out-dir ../../scripts && node ../../scripts/fixBenchExtension.js",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
+    "build-message": "swc src/generateMessage.ts --strip-leading-paths -C sourceMaps=false --out-dir ../../scripts",
     "bench": "node dist/index.js"
   },
   "dependencies": {
-    "@discordeno/bot": "21.0.0",
-    "@discordeno/gateway": "21.0.0",
-    "@discordeno/rest": "21.0.0",
-    "@discordeno/types": "21.0.0",
-    "@discordeno/utils": "21.0.0",
+    "@discordeno/bot": "workspace:^",
+    "@discordeno/gateway": "workspace:^",
+    "@discordeno/rest": "workspace:^",
+    "@discordeno/types": "workspace:^",
+    "@discordeno/utils": "workspace:^",
     "benchmark": "^2.1.4"
   },
   "devDependencies": {
