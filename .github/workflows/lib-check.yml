@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-type-and-test:
-    name: Build Types
+    name: Build Type and Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
