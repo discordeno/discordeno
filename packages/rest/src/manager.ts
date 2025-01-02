@@ -64,7 +64,7 @@ import {
   getBotIdFromToken,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'

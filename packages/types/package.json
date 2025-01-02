@@ -2,18 +2,22 @@
   "name": "@discordeno/types",
   "version": "21.0.0",
   "main": "./dist/esm/index.js",
-  "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.cjs",
-    "types": "./dist/types/index.d.ts"
-  },
   "types": "./dist/types/index.d.ts",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.cjs"
+  },
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/discordeno/discordeno.git"
+    "url": "git+https://github.com/discordeno/discordeno.git"
   },
+  "files": [
+    "dist/**",
+    "!dist/.tsbuildinfo"
+  ],
   "scripts": {
     "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist/esm && swc --strip-leading-paths --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",

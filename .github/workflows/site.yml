@@ -1,10 +1,6 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Deploy Docs Site
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: ['main']
     paths:
@@ -14,54 +10,32 @@ on:
       - 'package.json'
       - 'packages/**'
   pull_request:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  merge_group:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    # The type of runner that the job will run on
     name: Build Docusaurus
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Get yarn cache directory path (root)
-        id: yarn-cache-dir-path-root
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path-root.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+            website/yarn.lock
       - name: yarn install (root)
         run: yarn install --immutable
       - name: Build all pkg
         run: yarn release-build
       - name: Build docs
         run: yarn build:doc
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-        working-directory: ./website
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-site-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-site-
       - run: yarn install --immutable
         working-directory: ./website
       - name: Build website
@@ -78,31 +52,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Get yarn cache directory path (root)
-        id: yarn-cache-dir-path-root
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path-root.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+            website/yarn.lock
       - name: yarn install (root)
         run: yarn install --immutable
       - name: Build all pkg
         run: yarn release-build
       - name: Build docs
         run: yarn build:doc
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-        working-directory: ./website
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-site-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-site-
       - run: yarn install --immutable
         working-directory: ./website
       - run: yarn typecheck
