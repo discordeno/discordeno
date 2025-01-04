@@ -64,7 +64,7 @@ import {
   getBotIdFromToken,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -455,6 +455,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return
         }
 
+        // Consume the response body to avoid leaking memory
+        await response.arrayBuffer()
+
         rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
@@ -473,8 +476,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
         if (resetAfter) await delay(Number(resetAfter) * 1000)
-        // process the response to prevent mem leak
-        await response.arrayBuffer()
 
         return await options.retryRequest?.(options)
       }
@@ -556,21 +557,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         if (!result.ok) {
           const errText = await result.text().catch(() => null)
 
-          if (errText) {
-            error.cause = {
-              ok: false,
-              status: result.status,
-              body: errText,
-            }
-
-            throw error
+          error.cause = {
+            ok: false,
+            status: result.status,
+            body: errText,
           }
 
-          const err = (await result.json().catch(() => {})) as Record<string, any>
-          // Legacy Handling to not break old code or when body is missing
-          if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
-
-          throw new Error(JSON.stringify(err))
+          throw error
         }
 
         return result.status !== 204 ? await result.json() : undefined
