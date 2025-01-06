@@ -565,6 +565,8 @@ export interface Component {
   /** TBD */
   items?: DiscordMediaGalleryItem[]
   /** TBD */
+  divider?: boolean
+  /** TBD */
   spacing?: SeparatorSpacingSize
   /** TBD */
   file?: DiscordUnfurledMediaItem

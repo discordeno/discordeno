@@ -1969,6 +1969,8 @@ export interface DiscordSeparatorComponent {
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
+  divider?: boolean
+  /** TBD */
   spacing?: SeparatorSpacingSize
 }
 
