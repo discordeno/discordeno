@@ -93,26 +93,6 @@ const reviewList: IReview[] = [
       guild_count: 211000,
     },
   },
-  {
-    review: `I think choosing discordeno is a very good option, we have been working with Discord.js for years, and yes... It's good, but for large scale bots... nothing better than discordeno. Besides its creator is very attentive, and gives us a hand whenever he can.`,
-    bot: {
-      username: 'CactusFire',
-      discriminator: '3759',
-      avatar: 'https://i.imgur.com/L7zadjU.png',
-      invite_url: 'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
-      guild_count: 288000,
-    },
-    developer: {
-      usernames: ['LHCLYT'],
-    },
-    stars: 5,
-    previous_library: 'DISCORD_JS',
-    memory_improvement: {
-      from: 64000,
-      to: 9000,
-      guild_count: 260000,
-    },
-  },
 ]
 
 export default function DiscordenoReviews() {
