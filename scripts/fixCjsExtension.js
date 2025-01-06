@@ -1,16 +1,12 @@
-import fs from 'node:fs'
+import { readFile, readdir, rm, writeFile } from 'node:fs/promises'
 
-const dirs = ['']
-for await (const dir of dirs) {
-  await Promise.all(
-    fs.readdirSync(`dist/cjs${dir}`).map(async (file) => {
-      if (!file.endsWith('.js') && !file.endsWith('.map') && !file.endsWith('.ts') && !file.endsWith('.cjs')) {
-        dirs.push(`${dir}/${file}`)
-        return
-      }
-      const content = await fs.promises.readFile(`dist/cjs${dir}/${file}`, 'utf-8')
-      await fs.promises.rm(`dist/cjs${dir}/${file}`)
-      fs.promises.writeFile(`dist/cjs${dir}/${file.slice(0, -3)}.cjs`, content.replace(/\.js(?!on)/g, '.cjs'))
-    }),
-  )
-}
+const files = await readdir('dist/cjs', { recursive: true })
+const promises = files
+  .filter((f) => f.endsWith('.js'))
+  .map(async (file) => {
+    const content = await readFile(`dist/cjs/${file}`, 'utf-8')
+    await rm(`dist/cjs/${file}`)
+    await writeFile(`dist/cjs/${file.slice(0, -3)}.cjs`, content.replace(/\.js(?!on)/g, '.cjs'))
+  })
+
+await Promise.all(promises)

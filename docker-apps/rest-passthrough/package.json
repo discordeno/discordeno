@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "version": "1.0.0",
+  "packageManager": "yarn@4.6.0",
   "scripts": {
     "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "start:dev": "yarn exec node -r dotenv/config dist/server.js",
     "start:prod": "yarn exec node ./dist/server.js",
-    "release": "cliff-jumper",
-    "setup-dd": ""
+    "release": "cliff-jumper"
   },
   "dependencies": {
     "@discordeno/rest": "21.0.0",
@@ -22,6 +22,5 @@
     "@swc/cli": "^0.5.2",
     "@swc/core": "^1.10.4",
     "dotenv": "^16.4.7"
-  },
-  "packageManager": "yarn@4.0.2"
+  }
 }

@@ -6,7 +6,7 @@
   "type": "module",
   "license": "ISC",
   "private": true,
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.6.0",
   "scripts": {
     "start:bot": "node dist/bot/index.js",
     "start:rest": "node dist/rest/index.js",
@@ -15,8 +15,7 @@
     "build:watch": "swc src --strip-leading-paths --delete-dir-on-start --watch --out-dir dist",
     "dev:bot": "node --watch --watch-preserve-output dist/bot/index.js",
     "dev:rest": "node --watch --watch-preserve-output dist/rest/index.js",
-    "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js",
-    "setup-dd": ""
+    "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js"
   },
   "dependencies": {
     "@discordeno/bot": "21.0.0",

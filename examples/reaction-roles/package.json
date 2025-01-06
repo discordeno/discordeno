@@ -5,11 +5,10 @@
   "type": "module",
   "license": "ISC",
   "private": true,
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.6.0",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
-    "setup-dd": ""
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist"
   },
   "dependencies": {
     "@discordeno/bot": "20.0.0",
