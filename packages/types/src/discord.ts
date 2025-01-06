@@ -1764,11 +1764,11 @@ export type DiscordMessageComponent =
   | DiscordButtonComponent
   | DiscordInputTextComponent
   | DiscordSectionComponent
-  | DiscordTextComponent
+  | DiscordTextDisplayComponent
   | DiscordThumbnailComponent
-  | DiscordMediaComponent
+  | DiscordMediaGalleryComponent
   | DiscordSeparatorComponent
-  | DiscordFileComponent
+  | DiscordFileDisplayComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
@@ -1923,15 +1923,15 @@ export interface DiscordSectionComponent {
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  components: DiscordTextComponent[]
+  components: DiscordTextDisplayComponent[]
   /** TBD */
   accessory: DiscordThumbnailComponent
 }
 
 /** TBD */
-export interface DiscordTextComponent {
+export interface DiscordTextDisplayComponent {
   /** TBD */
-  type: MessageComponentTypes.Text
+  type: MessageComponentTypes.TextDisplay
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
@@ -1945,7 +1945,7 @@ export interface DiscordThumbnailComponent {
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  image: DiscordMediaUrl
+  image: DiscordUnfurledMediaItem
   /** TBD */
   description?: string
   /** TBD */
@@ -1953,13 +1953,13 @@ export interface DiscordThumbnailComponent {
 }
 
 /** TBD */
-export interface DiscordMediaComponent {
+export interface DiscordMediaGalleryComponent {
   /** TBD */
-  type: MessageComponentTypes.Media
+  type: MessageComponentTypes.MediaGallery
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  items: DiscordMediaItem[]
+  items: DiscordMediaGalleryItem[]
 }
 
 /** TBD */
@@ -1973,27 +1973,27 @@ export interface DiscordSeparatorComponent {
 }
 
 /** TBD */
-export interface DiscordFileComponent {
+export interface DiscordFileDisplayComponent {
   /** TBD */
-  type: MessageComponentTypes.File
+  type: MessageComponentTypes.FileDisplay
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  file: DiscordMediaUrl
+  file: DiscordUnfurledMediaItem
   /** TBD */
   spoiler?: boolean
 }
 
 /** TBD */
-export interface DiscordMediaUrl {
+export interface DiscordUnfurledMediaItem {
   /** TBD */
   url: string
 }
 
 /** TBD */
-export interface DiscordMediaItem {
+export interface DiscordMediaGalleryItem {
   /** TBD */
-  media: DiscordMediaUrl
+  media: DiscordUnfurledMediaItem
   /** TBD */
   description?: string
   /** TBD */

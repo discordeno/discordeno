@@ -24,8 +24,7 @@ import type {
   DiscordGuildOnboardingPromptType,
   DiscordInteractionContextType,
   DiscordInviteType,
-  DiscordMediaItem,
-  DiscordMediaUrl,
+  DiscordMediaGalleryItem,
   DiscordPollLayoutType,
   DiscordScheduledEventRecurrenceRuleFrequency,
   DiscordScheduledEventRecurrenceRuleMonth,
@@ -35,6 +34,7 @@ import type {
   DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
+  DiscordUnfurledMediaItem,
   DiscordWebhookEventType,
   EmbedTypes,
   ExplicitContentFilterLevels,
@@ -557,17 +557,17 @@ export interface Component {
   /** TBD */
   content?: string
   /** TBD */
-  image?: DiscordMediaUrl
+  image?: DiscordUnfurledMediaItem
   /** TBD */
   description?: string
   /** TBD */
   spoiler?: boolean
   /** TBD */
-  items?: DiscordMediaItem[]
+  items?: DiscordMediaGalleryItem[]
   /** TBD */
   spacing?: SeparatorSpacingSize
   /** TBD */
-  file?: DiscordMediaUrl
+  file?: DiscordUnfurledMediaItem
 }
 
 export interface DiscordComponentDefaultValue {

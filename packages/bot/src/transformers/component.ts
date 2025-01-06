@@ -1,14 +1,14 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
-  type DiscordFileComponent,
+  type DiscordFileDisplayComponent,
   type DiscordInputTextComponent,
-  type DiscordMediaComponent,
+  type DiscordMediaGalleryComponent,
   type DiscordMessageComponent,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
-  type DiscordTextComponent,
+  type DiscordTextDisplayComponent,
   type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
@@ -35,11 +35,11 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
       break
-    case MessageComponentTypes.File:
-    case MessageComponentTypes.Media:
+    case MessageComponentTypes.FileDisplay:
+    case MessageComponentTypes.MediaGallery:
     case MessageComponentTypes.Section:
     case MessageComponentTypes.Separator:
-    case MessageComponentTypes.Text:
+    case MessageComponentTypes.TextDisplay:
     case MessageComponentTypes.Thumbnail:
       component = keepAsIs(bot, payload)
       break
@@ -121,9 +121,9 @@ function keepAsIs(
   _bot: Bot,
   payload:
     | DiscordThumbnailComponent
-    | DiscordFileComponent
-    | DiscordTextComponent
-    | DiscordMediaComponent
+    | DiscordFileDisplayComponent
+    | DiscordTextDisplayComponent
+    | DiscordMediaGalleryComponent
     | DiscordSectionComponent
     | DiscordSeparatorComponent,
 ): Component {

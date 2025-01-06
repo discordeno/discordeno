@@ -17,8 +17,7 @@ import type {
   DiscordInstallParams,
   DiscordInteractionContextType,
   DiscordInteractionEntryPointCommandHandlerType,
-  DiscordMediaItem,
-  DiscordMediaUrl,
+  DiscordMediaGalleryItem,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -26,6 +25,7 @@ import type {
   DiscordReactionType,
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
+  DiscordUnfurledMediaItem,
   DiscordWebhookEventType,
 } from './discord.js'
 import type {
@@ -113,11 +113,11 @@ export type MessageComponent =
   | SelectMenuUsersComponent
   | SelectMenuUsersAndRolesComponent
   | SectionComponent
-  | TextComponent
+  | TextDisplayComponent
   | ThumbnailComponent
-  | MediaComponent
+  | MediaGalleryComponent
   | SeparatorComponent
-  | FileComponent
+  | FileDisplayComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
@@ -313,15 +313,15 @@ export interface SectionComponent {
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  components: TextComponent[]
+  components: TextDisplayComponent[]
   /** TBD */
   accessory: ThumbnailComponent
 }
 
 /** TBD */
-export interface TextComponent {
+export interface TextDisplayComponent {
   /** TBD */
-  type: MessageComponentTypes.Text
+  type: MessageComponentTypes.TextDisplay
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
@@ -335,7 +335,7 @@ export interface ThumbnailComponent {
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  image: DiscordMediaUrl
+  image: DiscordUnfurledMediaItem
   /** TBD */
   description?: string
   /** TBD */
@@ -343,13 +343,13 @@ export interface ThumbnailComponent {
 }
 
 /** TBD */
-export interface MediaComponent {
+export interface MediaGalleryComponent {
   /** TBD */
-  type: MessageComponentTypes.Media
+  type: MessageComponentTypes.MediaGallery
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  items: DiscordMediaItem[]
+  items: DiscordMediaGalleryItem[]
 }
 
 /** TBD */
@@ -363,13 +363,13 @@ export interface SeparatorComponent {
 }
 
 /** TBD */
-export interface FileComponent {
+export interface FileDisplayComponent {
   /** TBD */
-  type: MessageComponentTypes.File
+  type: MessageComponentTypes.FileDisplay
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  file: DiscordMediaUrl
+  file: DiscordUnfurledMediaItem
   /** TBD */
   spoiler?: boolean
 }

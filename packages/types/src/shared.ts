@@ -227,13 +227,13 @@ export enum MessageComponentTypes {
   /** TBD */
   Section = 9,
   /** TBD */
-  Text,
+  TextDisplay,
   /** TBD */
   Thumbnail,
   /** TBD */
-  Media,
+  MediaGallery,
   /** TBD */
-  File,
+  FileDisplay,
   /** TBD */
   Separator,
 }
