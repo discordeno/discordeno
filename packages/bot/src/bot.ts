@@ -47,7 +47,6 @@ export function createBot<
   if (!options.rest.logger && options.loggerFactory) options.rest.logger = options.loggerFactory('REST')
   if (!options.gateway) options.gateway = { token: options.token }
   if (!options.gateway.token) options.gateway.token = options.token
-  if (!options.gateway.intents) options.gateway.intents = options.intents
   if (!options.gateway.events) options.gateway.events = {}
   if (!options.gateway.logger && options.loggerFactory) options.gateway.logger = options.loggerFactory('GATEWAY')
   if (!options.gateway.events.message) {
@@ -63,6 +62,7 @@ export function createBot<
     }
   }
 
+  options.gateway.intents = options.intents
   options.gateway.preferSnakeCase = true
 
   const id = getBotIdFromToken(options.token)
