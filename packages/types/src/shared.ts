@@ -206,49 +206,6 @@ export enum ApplicationFlags {
   ApplicationCommandBadge = 1 << 23,
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#component-types */
-export enum MessageComponentTypes {
-  /** A container for other components */
-  ActionRow = 1,
-  /** A button object */
-  Button,
-  /** A select menu for picking from choices */
-  SelectMenu,
-  /** A text input object */
-  InputText,
-  /** Select menu for users */
-  SelectMenuUsers,
-  /** Select menu for roles */
-  SelectMenuRoles,
-  /** Select menu for users and roles */
-  SelectMenuUsersAndRoles,
-  /** Select menu for channels */
-  SelectMenuChannels,
-}
-
-export enum TextStyles {
-  /** Intended for short single-line text */
-  Short = 1,
-  /** Intended for much longer inputs */
-  Paragraph = 2,
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#buttons-button-styles */
-export enum ButtonStyles {
-  /** A blurple button */
-  Primary = 1,
-  /** A grey button */
-  Secondary,
-  /** A green button */
-  Success,
-  /** A red button */
-  Danger,
-  /** A button that navigates to a URL */
-  Link,
-  /** A blurple button to show a Premium item in the shop */
-  Premium,
-}
-
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
 export enum AllowedMentionsTypes {
   /** Controls role mentions */
@@ -523,30 +480,6 @@ export enum StickerFormatTypes {
   Gif,
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export enum InteractionTypes {
-  Ping = 1,
-  ApplicationCommand = 2,
-  MessageComponent = 3,
-  ApplicationCommandAutocomplete = 4,
-  ModalSubmit = 5,
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum ApplicationCommandOptionTypes {
-  SubCommand = 1,
-  SubCommandGroup,
-  String,
-  Integer,
-  Boolean,
-  User,
-  Channel,
-  Role,
-  Mentionable,
-  Number,
-  Attachment,
-}
-
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
 export enum AuditLogEvents {
   /** Server settings were updated */
@@ -705,23 +638,6 @@ export enum ScheduledEventStatus {
 export enum TargetTypes {
   Stream = 1,
   EmbeddedApplication,
-}
-
-export enum ApplicationCommandTypes {
-  /** A text-based command that shows up when a user types `/` */
-  ChatInput = 1,
-  /** A UI-based command that shows up when you right click or tap on a user */
-  User,
-  /** A UI-based command that shows up when you right click or tap on a message */
-  Message,
-  /** A UI-based command that represents the primary way to invoke an app's Activity */
-  PrimaryEntryPoint,
-}
-
-export enum ApplicationCommandPermissionTypes {
-  Role = 1,
-  User,
-  Channel,
 }
 
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
@@ -1120,37 +1036,6 @@ export enum GatewayIntents {
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export const Intents = GatewayIntents
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum InteractionResponseTypes {
-  /** ACK a `Ping` */
-  Pong = 1,
-  /** Respond to an interaction with a message */
-  ChannelMessageWithSource = 4,
-  /** ACK an interaction and edit a response later, the user sees a loading state */
-  DeferredChannelMessageWithSource = 5,
-  /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
-  DeferredUpdateMessage = 6,
-  /** For components, edit the message the component was attached to */
-  UpdateMessage = 7,
-  /** For Application Command Options, send an autocomplete result */
-  ApplicationCommandAutocompleteResult = 8,
-  /** For Command or Component interactions, send a Modal response */
-  Modal = 9,
-  /**
-   * Respond to an interaction with an upgrade button, only available for apps with monetization enabled
-   *
-   * @deprecated You should migrate to the premium button components
-   */
-  PremiumRequired = 10,
-  /**
-   * Launch the Activity associated with the app.
-   *
-   * @remarks
-   * Only available for apps with Activities enabled
-   */
-  LaunchActivity = 12,
-}
 
 export enum SortOrderTypes {
   /** Sort forum posts by activity */
