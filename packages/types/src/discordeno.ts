@@ -24,8 +24,8 @@ import type {
   DiscordReactionType,
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
-  DiscordWebhookEventType,
 } from './discord.js'
+import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
 import type {
   AllowedMentionsTypes,
   ApplicationCommandTypes,
