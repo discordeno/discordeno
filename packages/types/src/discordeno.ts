@@ -607,6 +607,8 @@ export interface RequestGuildMembers {
   nonce?: string
 }
 
+/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
+
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string

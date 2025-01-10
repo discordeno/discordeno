@@ -2,13 +2,6 @@ import type { Locales } from './discord/reference.js'
 
 export type BigString = bigint | string
 
-export enum PresenceStatus {
-  online,
-  dnd,
-  idle,
-  offline,
-}
-
 /** https://discord.com/developers/docs/resources/user#user-object-premium-types */
 export enum PremiumTypes {
   None,
@@ -155,19 +148,6 @@ export enum MessageFlags {
   SuppressNotifications = 1 << 12,
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
-}
-
-/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-flags */
-export enum ActivityFlags {
-  Instance = 1 << 0,
-  Join = 1 << 1,
-  Spectate = 1 << 2,
-  JoinRequest = 1 << 3,
-  Sync = 1 << 4,
-  Play = 1 << 5,
-  PartyPrivacyFriends = 1 << 6,
-  PartyPrivacyVoiceChannel = 1 << 7,
-  Embedded = 1 << 8,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
@@ -403,16 +383,6 @@ export enum VideoQualityModes {
   Auto = 1,
   /** 720p */
   Full,
-}
-
-/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types */
-export enum ActivityTypes {
-  Playing = 0,
-  Streaming = 1,
-  Listening = 2,
-  Watching = 3,
-  Custom = 4,
-  Competing = 5,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
@@ -883,159 +853,6 @@ export type GatewayDispatchEventNames =
   | 'MESSAGE_POLL_VOTE_REMOVE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'RESUMED'
-
-/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export enum GatewayIntents {
-  /**
-   * - GUILD_CREATE
-   * - GUILD_UPDATE
-   * - GUILD_DELETE
-   * - GUILD_ROLE_CREATE
-   * - GUILD_ROLE_UPDATE
-   * - GUILD_ROLE_DELETE
-   * - CHANNEL_CREATE
-   * - CHANNEL_UPDATE
-   * - CHANNEL_DELETE
-   * - CHANNEL_PINS_UPDATE
-   * - THREAD_CREATE
-   * - THREAD_UPDATE
-   * - THREAD_DELETE
-   * - THREAD_LIST_SYNC
-   * - THREAD_MEMBER_UPDATE
-   * - THREAD_MEMBERS_UPDATE
-   * - STAGE_INSTANCE_CREATE
-   * - STAGE_INSTANCE_UPDATE
-   * - STAGE_INSTANCE_DELETE
-   */
-  Guilds = 1 << 0,
-  /**
-   * - GUILD_MEMBER_ADD
-   * - GUILD_MEMBER_UPDATE
-   * - GUILD_MEMBER_REMOVE
-   * - THREAD_MEMBERS_UPDATE
-   *
-   * This is a privileged intent.
-   */
-  GuildMembers = 1 << 1,
-  /**
-   * - GUILD_AUDIT_LOG_ENTRY_CREATE
-   * - GUILD_BAN_ADD
-   * - GUILD_BAN_REMOVE
-   */
-  GuildModeration = 1 << 2,
-  /**
-   * - GUILD_EMOJIS_UPDATE
-   * - GUILD_STICKERS_UPDATE
-   * - GUILD_SOUNDBOARD_SOUND_CREATE
-   * - GUILD_SOUNDBOARD_SOUND_UPDATE
-   * - GUILD_SOUNDBOARD_SOUND_DELETE
-   * - GUILD_SOUNDBOARD_SOUNDS_UPDATE
-   */
-  GuildExpressions = 1 << 3,
-  /**
-   * - GUILD_INTEGRATIONS_UPDATE
-   * - INTEGRATION_CREATE
-   * - INTEGRATION_UPDATE
-   * - INTEGRATION_DELETE
-   */
-  GuildIntegrations = 1 << 4,
-  /**
-   * - WEBHOOKS_UPDATE
-   */
-  GuildWebhooks = 1 << 5,
-  /**
-   * - INVITE_CREATE
-   * - INVITE_DELETE
-   */
-  GuildInvites = 1 << 6,
-  /**
-   * - VOICE_STATE_UPDATE
-   * - VOICE_CHANNEL_EFFECT_SEND
-   */
-  GuildVoiceStates = 1 << 7,
-  /**
-   * - PRESENCE_UPDATE
-   *
-   * This is a privileged intent.
-   */
-  GuildPresences = 1 << 8,
-  /**
-   * - MESSAGE_CREATE
-   * - MESSAGE_UPDATE
-   * - MESSAGE_DELETE
-   * - MESSAGE_DELETE_BULK
-   *
-   * The messages do not contain content by default.
-   * If you want to receive their content too, you need to turn on the privileged `MESSAGE_CONTENT` intent. */
-  GuildMessages = 1 << 9,
-  /**
-   * - MESSAGE_REACTION_ADD
-   * - MESSAGE_REACTION_REMOVE
-   * - MESSAGE_REACTION_REMOVE_ALL
-   * - MESSAGE_REACTION_REMOVE_EMOJI
-   */
-  GuildMessageReactions = 1 << 10,
-  /**
-   * - TYPING_START
-   */
-  GuildMessageTyping = 1 << 11,
-  /**
-   * - CHANNEL_CREATE
-   * - MESSAGE_CREATE
-   * - MESSAGE_UPDATE
-   * - MESSAGE_DELETE
-   * - CHANNEL_PINS_UPDATE
-   */
-  DirectMessages = 1 << 12,
-  /**
-   * - MESSAGE_REACTION_ADD
-   * - MESSAGE_REACTION_REMOVE
-   * - MESSAGE_REACTION_REMOVE_ALL
-   * - MESSAGE_REACTION_REMOVE_EMOJI
-   */
-  DirectMessageReactions = 1 << 13,
-  /**
-   * - TYPING_START
-   */
-  DirectMessageTyping = 1 << 14,
-  /**
-   * This intent will add all content related values to message events.
-   *
-   * This is a privileged intent.
-   */
-  MessageContent = 1 << 15,
-  /**
-   * - GUILD_SCHEDULED_EVENT_CREATE
-   * - GUILD_SCHEDULED_EVENT_UPDATE
-   * - GUILD_SCHEDULED_EVENT_DELETE
-   * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
-   * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
-   */
-  GuildScheduledEvents = 1 << 16,
-  /**
-   * - AUTO_MODERATION_RULE_CREATE
-   * - AUTO_MODERATION_RULE_UPDATE
-   * - AUTO_MODERATION_RULE_DELETE
-   */
-  AutoModerationConfiguration = 1 << 20,
-  /**
-   * - AUTO_MODERATION_ACTION_EXECUTION
-   */
-  AutoModerationExecution = 1 << 21,
-  /**
-   * - MESSAGE_POLL_VOTE_ADD
-   * - MESSAGE_POLL_VOTE_REMOVE
-   */
-  GuildMessagePolls = 1 << 24,
-  /**
-   * - MESSAGE_POLL_VOTE_ADD
-   * - MESSAGE_POLL_VOTE_REMOVE
-   */
-  DirectMessagePolls = 1 << 25,
-}
-
-/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export const Intents = GatewayIntents
 
 export enum SortOrderTypes {
   /** Sort forum posts by activity */
