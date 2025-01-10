@@ -2,8 +2,6 @@ import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
-  DiscordApplicationCommandOption,
-  DiscordApplicationCommandOptionChoice,
   DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAttachment,
@@ -15,8 +13,6 @@ import type {
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
-  DiscordInteractionContextType,
-  DiscordInteractionEntryPointCommandHandlerType,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -24,24 +20,31 @@ import type {
   DiscordReactionType,
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
-  DiscordWebhookEventType,
 } from './discord.js'
 import type {
-  AllowedMentionsTypes,
   ApplicationCommandTypes,
+  ButtonStyles,
+  DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
+  DiscordInteractionContextType,
+  DiscordInteractionEntryPointCommandHandlerType,
+  InteractionResponseTypes,
+  MessageComponentTypes,
+  TextStyles,
+} from './discord/interactions.js'
+import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
+import type {
+  AllowedMentionsTypes,
   ApplicationFlags,
   AuditLogEvents,
   BigString,
-  ButtonStyles,
   Camelize,
   ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
   ForumLayout,
   GuildFeatures,
-  InteractionResponseTypes,
   Localization,
-  MessageComponentTypes,
   MessageFlags,
   OverwriteTypes,
   PermissionStrings,
@@ -51,7 +54,6 @@ import type {
   SortOrderTypes,
   SystemChannelFlags,
   TargetTypes,
-  TextStyles,
   VerificationLevels,
   VideoQualityModes,
 } from './shared.js'
@@ -604,6 +606,8 @@ export interface RequestGuildMembers {
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string
 }
+
+/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
 
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */

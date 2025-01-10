@@ -1,11 +1,6 @@
-export type BigString = bigint | string
+import type { Locales } from './discord/reference.js'
 
-export enum PresenceStatus {
-  online,
-  dnd,
-  idle,
-  offline,
-}
+export type BigString = bigint | string
 
 /** https://discord.com/developers/docs/resources/user#user-object-premium-types */
 export enum PremiumTypes {
@@ -155,19 +150,6 @@ export enum MessageFlags {
   IsVoiceMessage = 1 << 13,
 }
 
-/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-flags */
-export enum ActivityFlags {
-  Instance = 1 << 0,
-  Join = 1 << 1,
-  Spectate = 1 << 2,
-  JoinRequest = 1 << 3,
-  Sync = 1 << 4,
-  Play = 1 << 5,
-  PartyPrivacyFriends = 1 << 6,
-  PartyPrivacyVoiceChannel = 1 << 7,
-  Embedded = 1 << 8,
-}
-
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,
@@ -202,49 +184,6 @@ export enum ApplicationFlags {
   GatewayMessageContentLimited = 1 << 19,
   /** Indicates if an app has registered global application commands */
   ApplicationCommandBadge = 1 << 23,
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#component-types */
-export enum MessageComponentTypes {
-  /** A container for other components */
-  ActionRow = 1,
-  /** A button object */
-  Button,
-  /** A select menu for picking from choices */
-  SelectMenu,
-  /** A text input object */
-  InputText,
-  /** Select menu for users */
-  SelectMenuUsers,
-  /** Select menu for roles */
-  SelectMenuRoles,
-  /** Select menu for users and roles */
-  SelectMenuUsersAndRoles,
-  /** Select menu for channels */
-  SelectMenuChannels,
-}
-
-export enum TextStyles {
-  /** Intended for short single-line text */
-  Short = 1,
-  /** Intended for much longer inputs */
-  Paragraph = 2,
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#buttons-button-styles */
-export enum ButtonStyles {
-  /** A blurple button */
-  Primary = 1,
-  /** A grey button */
-  Secondary,
-  /** A green button */
-  Success,
-  /** A red button */
-  Danger,
-  /** A button that navigates to a URL */
-  Link,
-  /** A blurple button to show a Premium item in the shop */
-  Premium,
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
@@ -446,16 +385,6 @@ export enum VideoQualityModes {
   Full,
 }
 
-/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types */
-export enum ActivityTypes {
-  Playing = 0,
-  Streaming = 1,
-  Listening = 2,
-  Watching = 3,
-  Custom = 4,
-  Competing = 5,
-}
-
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
 export enum MessageTypes {
   Default,
@@ -519,30 +448,6 @@ export enum StickerFormatTypes {
   APng,
   Lottie,
   Gif,
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export enum InteractionTypes {
-  Ping = 1,
-  ApplicationCommand = 2,
-  MessageComponent = 3,
-  ApplicationCommandAutocomplete = 4,
-  ModalSubmit = 5,
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum ApplicationCommandOptionTypes {
-  SubCommand = 1,
-  SubCommandGroup,
-  String,
-  Integer,
-  Boolean,
-  User,
-  Channel,
-  Role,
-  Mentionable,
-  Number,
-  Attachment,
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
@@ -703,23 +608,6 @@ export enum ScheduledEventStatus {
 export enum TargetTypes {
   Stream = 1,
   EmbeddedApplication,
-}
-
-export enum ApplicationCommandTypes {
-  /** A text-based command that shows up when a user types `/` */
-  ChatInput = 1,
-  /** A UI-based command that shows up when you right click or tap on a user */
-  User,
-  /** A UI-based command that shows up when you right click or tap on a message */
-  Message,
-  /** A UI-based command that represents the primary way to invoke an app's Activity */
-  PrimaryEntryPoint,
-}
-
-export enum ApplicationCommandPermissionTypes {
-  Role = 1,
-  User,
-  Channel,
 }
 
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
@@ -966,190 +854,6 @@ export type GatewayDispatchEventNames =
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'RESUMED'
 
-/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export enum GatewayIntents {
-  /**
-   * - GUILD_CREATE
-   * - GUILD_UPDATE
-   * - GUILD_DELETE
-   * - GUILD_ROLE_CREATE
-   * - GUILD_ROLE_UPDATE
-   * - GUILD_ROLE_DELETE
-   * - CHANNEL_CREATE
-   * - CHANNEL_UPDATE
-   * - CHANNEL_DELETE
-   * - CHANNEL_PINS_UPDATE
-   * - THREAD_CREATE
-   * - THREAD_UPDATE
-   * - THREAD_DELETE
-   * - THREAD_LIST_SYNC
-   * - THREAD_MEMBER_UPDATE
-   * - THREAD_MEMBERS_UPDATE
-   * - STAGE_INSTANCE_CREATE
-   * - STAGE_INSTANCE_UPDATE
-   * - STAGE_INSTANCE_DELETE
-   */
-  Guilds = 1 << 0,
-  /**
-   * - GUILD_MEMBER_ADD
-   * - GUILD_MEMBER_UPDATE
-   * - GUILD_MEMBER_REMOVE
-   * - THREAD_MEMBERS_UPDATE
-   *
-   * This is a privileged intent.
-   */
-  GuildMembers = 1 << 1,
-  /**
-   * - GUILD_AUDIT_LOG_ENTRY_CREATE
-   * - GUILD_BAN_ADD
-   * - GUILD_BAN_REMOVE
-   */
-  GuildModeration = 1 << 2,
-  /**
-   * - GUILD_EMOJIS_UPDATE
-   * - GUILD_STICKERS_UPDATE
-   * - GUILD_SOUNDBOARD_SOUND_CREATE
-   * - GUILD_SOUNDBOARD_SOUND_UPDATE
-   * - GUILD_SOUNDBOARD_SOUND_DELETE
-   * - GUILD_SOUNDBOARD_SOUNDS_UPDATE
-   */
-  GuildExpressions = 1 << 3,
-  /**
-   * - GUILD_INTEGRATIONS_UPDATE
-   * - INTEGRATION_CREATE
-   * - INTEGRATION_UPDATE
-   * - INTEGRATION_DELETE
-   */
-  GuildIntegrations = 1 << 4,
-  /**
-   * - WEBHOOKS_UPDATE
-   */
-  GuildWebhooks = 1 << 5,
-  /**
-   * - INVITE_CREATE
-   * - INVITE_DELETE
-   */
-  GuildInvites = 1 << 6,
-  /**
-   * - VOICE_STATE_UPDATE
-   * - VOICE_CHANNEL_EFFECT_SEND
-   */
-  GuildVoiceStates = 1 << 7,
-  /**
-   * - PRESENCE_UPDATE
-   *
-   * This is a privileged intent.
-   */
-  GuildPresences = 1 << 8,
-  /**
-   * - MESSAGE_CREATE
-   * - MESSAGE_UPDATE
-   * - MESSAGE_DELETE
-   * - MESSAGE_DELETE_BULK
-   *
-   * The messages do not contain content by default.
-   * If you want to receive their content too, you need to turn on the privileged `MESSAGE_CONTENT` intent. */
-  GuildMessages = 1 << 9,
-  /**
-   * - MESSAGE_REACTION_ADD
-   * - MESSAGE_REACTION_REMOVE
-   * - MESSAGE_REACTION_REMOVE_ALL
-   * - MESSAGE_REACTION_REMOVE_EMOJI
-   */
-  GuildMessageReactions = 1 << 10,
-  /**
-   * - TYPING_START
-   */
-  GuildMessageTyping = 1 << 11,
-  /**
-   * - CHANNEL_CREATE
-   * - MESSAGE_CREATE
-   * - MESSAGE_UPDATE
-   * - MESSAGE_DELETE
-   * - CHANNEL_PINS_UPDATE
-   */
-  DirectMessages = 1 << 12,
-  /**
-   * - MESSAGE_REACTION_ADD
-   * - MESSAGE_REACTION_REMOVE
-   * - MESSAGE_REACTION_REMOVE_ALL
-   * - MESSAGE_REACTION_REMOVE_EMOJI
-   */
-  DirectMessageReactions = 1 << 13,
-  /**
-   * - TYPING_START
-   */
-  DirectMessageTyping = 1 << 14,
-  /**
-   * This intent will add all content related values to message events.
-   *
-   * This is a privileged intent.
-   */
-  MessageContent = 1 << 15,
-  /**
-   * - GUILD_SCHEDULED_EVENT_CREATE
-   * - GUILD_SCHEDULED_EVENT_UPDATE
-   * - GUILD_SCHEDULED_EVENT_DELETE
-   * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
-   * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
-   */
-  GuildScheduledEvents = 1 << 16,
-  /**
-   * - AUTO_MODERATION_RULE_CREATE
-   * - AUTO_MODERATION_RULE_UPDATE
-   * - AUTO_MODERATION_RULE_DELETE
-   */
-  AutoModerationConfiguration = 1 << 20,
-  /**
-   * - AUTO_MODERATION_ACTION_EXECUTION
-   */
-  AutoModerationExecution = 1 << 21,
-  /**
-   * - MESSAGE_POLL_VOTE_ADD
-   * - MESSAGE_POLL_VOTE_REMOVE
-   */
-  GuildMessagePolls = 1 << 24,
-  /**
-   * - MESSAGE_POLL_VOTE_ADD
-   * - MESSAGE_POLL_VOTE_REMOVE
-   */
-  DirectMessagePolls = 1 << 25,
-}
-
-/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export const Intents = GatewayIntents
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum InteractionResponseTypes {
-  /** ACK a `Ping` */
-  Pong = 1,
-  /** Respond to an interaction with a message */
-  ChannelMessageWithSource = 4,
-  /** ACK an interaction and edit a response later, the user sees a loading state */
-  DeferredChannelMessageWithSource = 5,
-  /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
-  DeferredUpdateMessage = 6,
-  /** For components, edit the message the component was attached to */
-  UpdateMessage = 7,
-  /** For Application Command Options, send an autocomplete result */
-  ApplicationCommandAutocompleteResult = 8,
-  /** For Command or Component interactions, send a Modal response */
-  Modal = 9,
-  /**
-   * Respond to an interaction with an upgrade button, only available for apps with monetization enabled
-   *
-   * @deprecated You should migrate to the premium button components
-   */
-  PremiumRequired = 10,
-  /**
-   * Launch the Activity associated with the app.
-   *
-   * @remarks
-   * Only available for apps with Activities enabled
-   */
-  LaunchActivity = 12,
-}
-
 export enum SortOrderTypes {
   /** Sort forum posts by activity */
   LatestActivity,
@@ -1164,50 +868,6 @@ export enum ForumLayout {
   ListView = 1,
   /** Display posts as a collection of tiles. */
   GalleryView = 2,
-}
-
-/**
- * https://discord.com/developers/docs/reference#image-formatting
- * json is only for stickers
- */
-export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json'
-
-/** https://discord.com/developers/docs/reference#image-formatting */
-export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
-
-export enum Locales {
-  Indonesian = 'id',
-  Danish = 'da',
-  German = 'de',
-  EnglishUk = 'en-GB',
-  EnglishUs = 'en-US',
-  Spanish = 'es-ES',
-  SpanishLatam = 'es-419',
-  French = 'fr',
-  Croatian = 'hr',
-  Italian = 'it',
-  Lithuanian = 'lt',
-  Hungarian = 'hu',
-  Dutch = 'nl',
-  Norwegian = 'no',
-  Polish = 'pl',
-  PortugueseBrazilian = 'pt-BR',
-  RomanianRomania = 'ro',
-  Finnish = 'fi',
-  Swedish = 'sv-SE',
-  Vietnamese = 'vi',
-  Turkish = 'tr',
-  Czech = 'cs',
-  Greek = 'el',
-  Bulgarian = 'bg',
-  Russian = 'ru',
-  Ukrainian = 'uk',
-  Hindi = 'hi',
-  Thai = 'th',
-  ChineseChina = 'zh-CN',
-  Japanese = 'ja',
-  ChineseTaiwan = 'zh-TW',
-  Korean = 'ko',
 }
 
 export type Localization = Partial<Record<Locales, string>>
