@@ -570,6 +570,8 @@ export interface Component {
   spacing?: SeparatorSpacingSize
   /** TBD */
   file?: DiscordUnfurledMediaItem
+  /** TBD */
+  accentColor?: number
 }
 
 export interface DiscordComponentDefaultValue {

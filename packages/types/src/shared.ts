@@ -236,6 +236,8 @@ export enum MessageComponentTypes {
   File,
   /** TBD */
   Separator,
+  /** TBD */
+  Container = 17,
 }
 
 export enum TextStyles {

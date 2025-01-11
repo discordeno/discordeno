@@ -12,7 +12,7 @@ import {
   type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type { Bot, Component } from '../index.js'
+import type { Bot, Component, DiscordContainerComponent } from '../index.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
   let component: Component
@@ -24,6 +24,9 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
       break
     case MessageComponentTypes.Button:
       component = transformButtonComponent(bot, payload as DiscordButtonComponent)
+      break
+    case MessageComponentTypes.Container:
+      component = transformContainerComponent(bot, payload as DiscordContainerComponent)
       break
     case MessageComponentTypes.InputText:
       component = transformInputTextComponent(bot, payload as DiscordInputTextComponent)
@@ -51,6 +54,15 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
 function transformActionRow(bot: Bot, payload: DiscordActionRow): Component {
   return {
     type: MessageComponentTypes.ActionRow,
+    components: payload.components.map((component) => bot.transformers.component(bot, component)),
+  }
+}
+
+function transformContainerComponent(bot: Bot, payload: DiscordContainerComponent): Component {
+  return {
+    type: MessageComponentTypes.Container,
+    accentColor: payload.accent_color,
+    spoiler: payload.spoiler,
     components: payload.components.map((component) => bot.transformers.component(bot, component)),
   }
 }

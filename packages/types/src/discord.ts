@@ -1769,6 +1769,7 @@ export type DiscordMessageComponent =
   | DiscordMediaGalleryComponent
   | DiscordSeparatorComponent
   | DiscordFileComponent
+  | DiscordContainerComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
@@ -1984,6 +1985,27 @@ export interface DiscordFileComponent {
   file: DiscordUnfurledMediaItem
   /** TBD */
   spoiler?: boolean
+}
+
+/** TBD */
+export interface DiscordContainerComponent {
+  /** TBD */
+  type: MessageComponentTypes.Container
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  accent_color?: number
+  /** TBD */
+  spoiler?: boolean
+  /** TBD */
+  components: Array<
+    | DiscordActionRow
+    | DiscordTextDisplayComponent
+    | DiscordSectionComponent
+    | DiscordMediaGalleryComponent
+    | DiscordSeparatorComponent
+    | DiscordFileComponent
+  >
 }
 
 /** TBD */

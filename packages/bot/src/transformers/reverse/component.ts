@@ -1,5 +1,13 @@
 import { type DiscordButtonComponent, type DiscordMessageComponent, MessageComponentTypes, type TextStyles } from '@discordeno/types'
-import type { Bot, ButtonStyles, Component, DiscordActionRow, DiscordInputTextComponent, DiscordSelectMenuComponent } from '../../index.js'
+import type {
+  Bot,
+  ButtonStyles,
+  Component,
+  DiscordActionRow,
+  DiscordContainerComponent,
+  DiscordInputTextComponent,
+  DiscordSelectMenuComponent,
+} from '../../index.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordMessageComponent {
   // This switch should include all cases
@@ -8,6 +16,8 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       return transformActionRow(bot, payload)
     case MessageComponentTypes.Button:
       return transformButtonComponent(bot, payload)
+    case MessageComponentTypes.Container:
+      return transformContainerComponent(bot, payload)
     case MessageComponentTypes.InputText:
       return transformInputTextComponent(bot, payload)
     case MessageComponentTypes.SelectMenu:
@@ -32,6 +42,16 @@ function transformActionRow(bot: Bot, payload: Component): DiscordActionRow {
     type: MessageComponentTypes.ActionRow,
     // The actionRow.components type is kinda annoying, so we need a cast for this
     components: (payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) ?? []) as DiscordActionRow['components'],
+  }
+}
+
+function transformContainerComponent(bot: Bot, payload: Component): DiscordContainerComponent {
+  return {
+    type: MessageComponentTypes.Container,
+    accent_color: payload.accentColor,
+    spoiler: payload.spoiler,
+    components: (payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) ??
+      []) as DiscordContainerComponent['components'],
   }
 }
 

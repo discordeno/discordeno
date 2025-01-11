@@ -376,6 +376,20 @@ export interface FileComponent {
   spoiler?: boolean
 }
 
+/** TBD */
+export interface ContainerComponent {
+  /** TBD */
+  type: MessageComponentTypes.Container
+  /** Autoincrememented number if not provided */
+  id?: number
+  /** TBD */
+  accentColor?: number
+  /** TBD */
+  spoiler?: boolean
+  /** TBD */
+  components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
+}
+
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
 export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
