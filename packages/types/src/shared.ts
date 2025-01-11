@@ -233,7 +233,7 @@ export enum MessageComponentTypes {
   /** TBD */
   MediaGallery,
   /** TBD */
-  FileDisplay,
+  File,
   /** TBD */
   Separator,
 }

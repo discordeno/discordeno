@@ -16,7 +16,7 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     case MessageComponentTypes.SelectMenuUsers:
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       return transformSelectMenuComponent(bot, payload)
-    case MessageComponentTypes.FileDisplay:
+    case MessageComponentTypes.File:
     case MessageComponentTypes.MediaGallery:
     case MessageComponentTypes.Section:
     case MessageComponentTypes.Separator:

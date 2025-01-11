@@ -1768,7 +1768,7 @@ export type DiscordMessageComponent =
   | DiscordThumbnailComponent
   | DiscordMediaGalleryComponent
   | DiscordSeparatorComponent
-  | DiscordFileDisplayComponent
+  | DiscordFileComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
@@ -1975,9 +1975,9 @@ export interface DiscordSeparatorComponent {
 }
 
 /** TBD */
-export interface DiscordFileDisplayComponent {
+export interface DiscordFileComponent {
   /** TBD */
-  type: MessageComponentTypes.FileDisplay
+  type: MessageComponentTypes.File
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */

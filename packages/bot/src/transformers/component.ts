@@ -1,7 +1,7 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
-  type DiscordFileDisplayComponent,
+  type DiscordFileComponent,
   type DiscordInputTextComponent,
   type DiscordMediaGalleryComponent,
   type DiscordMessageComponent,
@@ -35,7 +35,7 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
       break
-    case MessageComponentTypes.FileDisplay:
+    case MessageComponentTypes.File:
     case MessageComponentTypes.MediaGallery:
     case MessageComponentTypes.Section:
     case MessageComponentTypes.Separator:
@@ -121,7 +121,7 @@ function keepAsIs(
   _bot: Bot,
   payload:
     | DiscordThumbnailComponent
-    | DiscordFileDisplayComponent
+    | DiscordFileComponent
     | DiscordTextDisplayComponent
     | DiscordMediaGalleryComponent
     | DiscordSectionComponent
