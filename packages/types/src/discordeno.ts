@@ -335,7 +335,7 @@ export interface ThumbnailComponent {
   /** Autoincrememented number if not provided */
   id?: number
   /** TBD */
-  image: DiscordUnfurledMediaItem
+  media: DiscordUnfurledMediaItem
   /** TBD */
   description?: string
   /** TBD */
