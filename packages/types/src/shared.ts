@@ -154,7 +154,7 @@ export enum MessageFlags {
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
   /** TBD */
-  IsUiKit = 1 << 15,
+  IsComponentsV2 = 1 << 15,
 }
 
 /** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-flags */
