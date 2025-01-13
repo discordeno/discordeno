@@ -61,6 +61,7 @@ function transformActionRow(bot: Bot, payload: DiscordActionRow): Component {
 function transformContainerComponent(bot: Bot, payload: DiscordContainerComponent): Component {
   return {
     type: MessageComponentTypes.Container,
+    id: payload.id,
     accentColor: payload.accent_color,
     spoiler: payload.spoiler,
     components: payload.components.map((component) => bot.transformers.component(bot, component)),
