@@ -1775,6 +1775,8 @@ export type DiscordMessageComponent =
 export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
   type: MessageComponentTypes.ActionRow
+  /** Autoincremented number if not provided */
+  id?: number
   /** The components in this row */
   components: Exclude<DiscordMessageComponent, DiscordActionRow>[]
 }
@@ -1787,6 +1789,8 @@ export interface DiscordSelectMenuComponent {
     | MessageComponentTypes.SelectMenuRoles
     | MessageComponentTypes.SelectMenuUsers
     | MessageComponentTypes.SelectMenuUsersAndRoles
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -1846,6 +1850,8 @@ export interface DiscordSelectMenuDefaultValue {
 export interface DiscordButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
+  /** Autoincremented number if not provided */
+  id?: number
   /**
    * Text that appears on the button
    *
@@ -1899,6 +1905,8 @@ export interface DiscordButtonComponent {
 export interface DiscordInputTextComponent {
   /** InputText Component is of type 3 */
   type: MessageComponentTypes.InputText
+  /** Autoincremented number if not provided */
+  id?: number
   /** The style of the InputText */
   style: TextStyles
   /** whether this component is required to be filled, default true */
@@ -1921,7 +1929,7 @@ export interface DiscordInputTextComponent {
 export interface DiscordSectionComponent {
   /** TBD */
   type: MessageComponentTypes.Section
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   components: DiscordTextDisplayComponent[]
@@ -1933,7 +1941,7 @@ export interface DiscordSectionComponent {
 export interface DiscordTextDisplayComponent {
   /** TBD */
   type: MessageComponentTypes.TextDisplay
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   content: string
@@ -1943,7 +1951,7 @@ export interface DiscordTextDisplayComponent {
 export interface DiscordThumbnailComponent {
   /** TBD */
   type: MessageComponentTypes.Thumbnail
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   media: DiscordUnfurledMediaItem
@@ -1957,7 +1965,7 @@ export interface DiscordThumbnailComponent {
 export interface DiscordMediaGalleryComponent {
   /** TBD */
   type: MessageComponentTypes.MediaGallery
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   items: DiscordMediaGalleryItem[]
@@ -1967,7 +1975,7 @@ export interface DiscordMediaGalleryComponent {
 export interface DiscordSeparatorComponent {
   /** TBD */
   type: MessageComponentTypes.Separator
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   divider?: boolean
@@ -1979,7 +1987,7 @@ export interface DiscordSeparatorComponent {
 export interface DiscordFileComponent {
   /** TBD */
   type: MessageComponentTypes.File
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   file: DiscordUnfurledMediaItem
@@ -1991,7 +1999,7 @@ export interface DiscordFileComponent {
 export interface DiscordContainerComponent {
   /** TBD */
   type: MessageComponentTypes.Container
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   accent_color?: number

@@ -123,6 +123,8 @@ export type MessageComponent =
 export interface ActionRow {
   /** Action rows are a group of buttons. */
   type: MessageComponentTypes.ActionRow
+  /** Autoincremented number if not provided */
+  id?: number
   /** The components in this row */
   components:
     | [Exclude<MessageComponent, ActionRow>]
@@ -136,6 +138,8 @@ export interface ActionRow {
 export interface ButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
+  /** Autoincremented number if not provided */
+  id?: number
   /** for what the button says (max 80 characters) */
   label?: string
   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
@@ -161,6 +165,8 @@ export interface ButtonComponent {
 export interface SelectMenuComponent {
   /** SelectMenu Component is of type 3 */
   type: MessageComponentTypes.SelectMenu
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -178,6 +184,8 @@ export interface SelectMenuComponent {
 export interface SelectMenuUsersComponent {
   /** SelectMenuChannels Component is of type 5 */
   type: MessageComponentTypes.SelectMenuUsers
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -198,6 +206,8 @@ export interface SelectMenuUsersComponent {
 export interface SelectMenuRolesComponent {
   /** SelectMenuChannels Component is of type 6 */
   type: MessageComponentTypes.SelectMenuRoles
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -218,6 +228,8 @@ export interface SelectMenuRolesComponent {
 export interface SelectMenuUsersAndRolesComponent {
   /** SelectMenuChannels Component is of type 7 */
   type: MessageComponentTypes.SelectMenuUsersAndRoles
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -238,6 +250,8 @@ export interface SelectMenuUsersAndRolesComponent {
 export interface SelectMenuChannelsComponent {
   /** SelectMenuChannels Component is of type 8 */
   type: MessageComponentTypes.SelectMenuChannels
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -288,6 +302,8 @@ export interface SelectMenuDefaultValue {
 export interface InputTextComponent {
   /** InputText Component is of type 4 */
   type: MessageComponentTypes.InputText
+  /** Autoincremented number if not provided */
+  id?: number
   /** The style of the InputText */
   style: TextStyles
   /** The customId of the InputText */
@@ -310,7 +326,7 @@ export interface InputTextComponent {
 export interface SectionComponent {
   /** TBD */
   type: MessageComponentTypes.Section
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   components: TextDisplayComponent[]
@@ -322,7 +338,7 @@ export interface SectionComponent {
 export interface TextDisplayComponent {
   /** TBD */
   type: MessageComponentTypes.TextDisplay
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   content: string
@@ -332,7 +348,7 @@ export interface TextDisplayComponent {
 export interface ThumbnailComponent {
   /** TBD */
   type: MessageComponentTypes.Thumbnail
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   media: DiscordUnfurledMediaItem
@@ -346,7 +362,7 @@ export interface ThumbnailComponent {
 export interface MediaGalleryComponent {
   /** TBD */
   type: MessageComponentTypes.MediaGallery
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   items: DiscordMediaGalleryItem[]
@@ -356,7 +372,7 @@ export interface MediaGalleryComponent {
 export interface SeparatorComponent {
   /** TBD */
   type: MessageComponentTypes.Separator
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   divider?: boolean
@@ -368,7 +384,7 @@ export interface SeparatorComponent {
 export interface FileComponent {
   /** TBD */
   type: MessageComponentTypes.File
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   file: DiscordUnfurledMediaItem
@@ -380,7 +396,7 @@ export interface FileComponent {
 export interface ContainerComponent {
   /** TBD */
   type: MessageComponentTypes.Container
-  /** Autoincrememented number if not provided */
+  /** Autoincremented number if not provided */
   id?: number
   /** TBD */
   accentColor?: number

@@ -40,6 +40,7 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
 function transformActionRow(bot: Bot, payload: Component): DiscordActionRow {
   return {
     type: MessageComponentTypes.ActionRow,
+    id: payload.id,
     // The actionRow.components type is kinda annoying, so we need a cast for this
     components: (payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) ?? []) as DiscordActionRow['components'],
   }
@@ -60,6 +61,7 @@ function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonCo
   // Since Component is a merge of all components, some casts are necessary
   return {
     type: MessageComponentTypes.Button,
+    id: payload.id,
     style: payload.style as ButtonStyles,
     custom_id: payload.customId,
     disabled: payload.disabled,
@@ -80,6 +82,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordInpu
   // Since Component is a merge of all components, some casts are necessary
   return {
     type: MessageComponentTypes.InputText,
+    id: payload.id,
     style: payload.style as TextStyles,
     custom_id: payload.customId!,
     label: payload.label!,
@@ -94,6 +97,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordInpu
 function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent {
   return {
     type: payload.type as DiscordSelectMenuComponent['type'],
+    id: payload.id,
     custom_id: payload.customId!,
     channel_types: payload.channelTypes,
     default_values: payload.defaultValues?.map((defaultValue) => ({
