@@ -242,6 +242,34 @@ export function memberAvatarUrl(
 }
 
 /**
+ * Builds a URL to a member's banner stored in the Discord CDN.
+ *
+ * @param guildId - The ID of the guild where the member is
+ * @param userId - The ID of the user to get the banner of.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined` if no banner has been set.
+ */
+export function memberBannerUrl(
+  guildId: BigString,
+  userId: BigString,
+  options?: {
+    banner?: BigString
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return options?.banner
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/guilds/${guildId}/users/${userId}/banners/${
+          typeof options.banner === 'string' ? options.banner : iconBigintToHash(options.banner)
+        }`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
  * Builds the URL to an application icon stored in the Discord CDN.
  *
  * @param applicationId - The ID of the application to get the icon of.
