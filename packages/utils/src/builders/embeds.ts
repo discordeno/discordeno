@@ -100,6 +100,10 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    */
   setColor(color: number | string): this {
     if (typeof color === 'string') {
+      if (color === 'random') {
+        return this.setRandomColor()
+      }
+
       const convertedValue = parseInt(color.replace('#', ''), 16)
       color = Number.isNaN(convertedValue) ? 0 : convertedValue
     }
