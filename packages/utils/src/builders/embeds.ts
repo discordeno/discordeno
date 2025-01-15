@@ -100,7 +100,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    */
   setColor(color: number | string): this {
     if (typeof color === 'string') {
-      if (color === 'random') {
+      if (color.toLowerCase() === 'random') {
         return this.setRandomColor()
       }
 
