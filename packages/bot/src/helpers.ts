@@ -862,7 +862,9 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: Partial<EditAutoModerationRuleOptions>,
     reason?: string,
   ) => Promise<AutoModerationRule>
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<SetupDesiredProps<User, TProps, TBehavior>>
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null }) => Promise<
+    SetupDesiredProps<User, TProps, TBehavior>
+  >
   editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
