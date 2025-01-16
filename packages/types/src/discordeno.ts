@@ -2,8 +2,6 @@ import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
-  DiscordApplicationEventWebhookStatus,
-  DiscordApplicationIntegrationType,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
@@ -12,7 +10,6 @@ import type {
   DiscordForumTag,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
-  DiscordInstallParams,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -21,6 +18,12 @@ import type {
   DiscordRole,
   DiscordScheduledEventRecurrenceRule,
 } from './discord.js'
+import type {
+  ApplicationFlags,
+  DiscordApplicationEventWebhookStatus,
+  DiscordApplicationIntegrationType,
+  DiscordInstallParams,
+} from './discord/applications.js'
 import type {
   ApplicationCommandTypes,
   ButtonStyles,
@@ -35,7 +38,6 @@ import type {
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
 import type {
   AllowedMentionsTypes,
-  ApplicationFlags,
   AuditLogEvents,
   BigString,
   Camelize,

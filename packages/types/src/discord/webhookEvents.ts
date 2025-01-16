@@ -1,6 +1,7 @@
 /** Types for: https://discord.com/developers/docs/events/webhook-events */
 
-import type { DiscordApplicationIntegrationType, DiscordEntitlement, DiscordGuild, DiscordUser, OAuth2Scope } from '../discord.js'
+import type { DiscordEntitlement, DiscordGuild, DiscordUser, OAuth2Scope } from '../discord.js'
+import type { DiscordApplicationIntegrationType } from './applications.js'
 
 /** https://discord.com/developers/docs/events/webhook-events#payload-structure */
 export interface DiscordEventWebhookEvent {
