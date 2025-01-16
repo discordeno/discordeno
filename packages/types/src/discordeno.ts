@@ -24,6 +24,7 @@ import type {
   DiscordApplicationIntegrationType,
   DiscordInstallParams,
 } from './discord/applications.js'
+import type { AuditLogEvents } from './discord/auditLogs.js'
 import type {
   ApplicationCommandTypes,
   ButtonStyles,
@@ -38,7 +39,6 @@ import type {
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
 import type {
   AllowedMentionsTypes,
-  AuditLogEvents,
   BigString,
   Camelize,
   ChannelTypes,
