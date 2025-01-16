@@ -1,6 +1,7 @@
 export * from './discord.js'
 export * from './discord/applications.js'
 export * from './discord/auditLogs.js'
+export * from './discord/autoModeration.js'
 export * from './discord/gateway.js'
 export * from './discord/interactions.js'
 export * from './discord/reference.js'

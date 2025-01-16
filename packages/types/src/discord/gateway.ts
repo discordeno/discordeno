@@ -5,8 +5,6 @@
  */
 
 import type {
-  AutoModerationTriggerTypes,
-  DiscordAutoModerationAction,
   DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordEmoji,
@@ -22,6 +20,8 @@ import type {
   DiscordUser,
 } from '../discord.js'
 import type { GatewayEventNames, TargetTypes } from '../shared.js'
+import type { DiscordApplication } from './applications.js'
+import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -175,7 +175,6 @@ export enum GatewayIntents {
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 import Intents = GatewayIntents
-import type { DiscordApplication } from './applications.js'
 export { Intents }
 
 // TODO: Add TransportCompression: https://discord.com/developers/docs/events/gateway#transport-compression

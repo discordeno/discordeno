@@ -1,7 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/audit-log */
 
 import type {
-  DiscordAutoModerationRule,
   DiscordChannel,
   DiscordEmoji,
   DiscordGuild,
@@ -20,6 +19,7 @@ import type {
   DiscordUser,
   DiscordWebhook,
 } from '../discord.js'
+import type { DiscordAutoModerationRule } from './autoModeration.js'
 import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */

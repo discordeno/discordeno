@@ -1,9 +1,5 @@
 import type {
-  AutoModerationActionType,
-  AutoModerationEventTypes,
-  AutoModerationTriggerTypes,
   DiscordAttachment,
-  DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
@@ -25,6 +21,12 @@ import type {
   DiscordInstallParams,
 } from './discord/applications.js'
 import type { AuditLogEvents } from './discord/auditLogs.js'
+import type {
+  AutoModerationActionType,
+  AutoModerationEventTypes,
+  AutoModerationTriggerTypes,
+  DiscordAutoModerationRuleTriggerMetadataPresets,
+} from './discord/autoModeration.js'
 import type {
   ApplicationCommandTypes,
   ButtonStyles,
