@@ -6,7 +6,6 @@
 
 import type {
   DiscordAvatarDecorationData,
-  DiscordChannel,
   DiscordEmoji,
   DiscordIntegration,
   DiscordMember,
@@ -15,13 +14,13 @@ import type {
   DiscordRole,
   DiscordSoundboardSound,
   DiscordSticker,
-  DiscordThreadMember,
   DiscordUnavailableGuild,
   DiscordUser,
 } from '../discord.js'
 import type { GatewayEventNames, TargetTypes } from '../shared.js'
 import type { DiscordApplication } from './applications.js'
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
+import type { DiscordChannel, DiscordThreadMember } from './channels.js'
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -173,9 +172,7 @@ export enum GatewayIntents {
   DirectMessagePolls = 1 << 25,
 }
 
-/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-import Intents = GatewayIntents
-export { Intents }
+export { GatewayIntents as Intents }
 
 // TODO: Add TransportCompression: https://discord.com/developers/docs/events/gateway#transport-compression
 

@@ -1,9 +1,6 @@
 import type {
   DiscordAttachment,
-  DiscordChannel,
-  DiscordDefaultReactionEmoji,
   DiscordEmbed,
-  DiscordForumTag,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordMessageReferenceType,
@@ -28,6 +25,16 @@ import type {
   DiscordAutoModerationRuleTriggerMetadataPresets,
 } from './discord/autoModeration.js'
 import type {
+  ChannelTypes,
+  DiscordChannel,
+  DiscordDefaultReactionEmoji,
+  DiscordForumTag,
+  ForumLayout,
+  OverwriteTypes,
+  SortOrderTypes,
+  VideoQualityModes,
+} from './discord/channels.js'
+import type {
   ApplicationCommandTypes,
   ButtonStyles,
   DiscordApplicationCommandOption,
@@ -43,23 +50,18 @@ import type {
   AllowedMentionsTypes,
   BigString,
   Camelize,
-  ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
-  ForumLayout,
   GuildFeatures,
   Localization,
   MessageFlags,
-  OverwriteTypes,
   PermissionStrings,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
-  SortOrderTypes,
   SystemChannelFlags,
   TargetTypes,
   VerificationLevels,
-  VideoQualityModes,
 } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */

@@ -90,17 +90,6 @@ export enum MemberFlags {
   DmSettingsUpsellAcknowledged = 1 << 9,
 }
 
-/** https://discord.com/developers/docs/resources/channel#channels-resource */
-export enum ChannelFlags {
-  None,
-  /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
-  Pinned = 1 << 1,
-  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a GUILD_MEDIA channel. Tags are specified in the `applied_tags` field. */
-  RequireTag = 1 << 4,
-  /** When set hides the embedded media download options. Available only for media channels. */
-  HideMediaDownloadOptions = 1 << 15,
-}
-
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
 export enum RoleFlags {
   None,
@@ -317,48 +306,6 @@ export enum GuildNsfwLevel {
   Explicit,
   Safe,
   AgeRestricted,
-}
-
-/** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
-export enum ChannelTypes {
-  /** A text channel within a server */
-  GuildText,
-  /** A direct message between users */
-  DM,
-  /** A voice channel within a server */
-  GuildVoice,
-  /** A direct message between multiple users */
-  GroupDm,
-  /** An organizational category that contains up to 50 channels */
-  GuildCategory,
-  /** A channel that users can follow and crosspost into their own server */
-  GuildAnnouncement,
-  /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
-  AnnouncementThread = 10,
-  /** A temporary sub-channel within a GUILD_TEXT or GUILD_FORUM channel */
-  PublicThread,
-  /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
-  PrivateThread,
-  /** A voice channel for hosting events with an audience */
-  GuildStageVoice,
-  /** A channel in a hub containing the listed servers */
-  GuildDirectory,
-  /** A channel which can only contains threads */
-  GuildForum,
-  /** Channel that can only contain threads, similar to GUILD_FORUM channels */
-  GuildMedia,
-}
-
-export enum OverwriteTypes {
-  Role,
-  Member,
-}
-
-export enum VideoQualityModes {
-  /** Discord chooses the quality for optimal performance */
-  Auto = 1,
-  /** 720p */
-  Full,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
@@ -693,22 +640,6 @@ export type GatewayDispatchEventNames =
   | 'MESSAGE_POLL_VOTE_REMOVE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'RESUMED'
-
-export enum SortOrderTypes {
-  /** Sort forum posts by activity */
-  LatestActivity,
-  /** Sort forum posts by creation time (from most recent to oldest) */
-  CreationDate,
-}
-
-export enum ForumLayout {
-  /** No default has been set for forum channel. */
-  NotSet = 0,
-  /** Display posts as a list. */
-  ListView = 1,
-  /** Display posts as a collection of tiles. */
-  GalleryView = 2,
-}
 
 export type Localization = Partial<Record<Locales, string>>
 

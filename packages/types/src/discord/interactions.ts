@@ -7,7 +7,6 @@
 
 import type {
   DiscordAttachment,
-  DiscordChannel,
   DiscordEntitlement,
   DiscordGuild,
   DiscordInteractionMember,
@@ -16,8 +15,9 @@ import type {
   DiscordRole,
   DiscordUser,
 } from '../discord.js'
-import type { ChannelTypes, Localization } from '../shared.js'
+import type { Localization } from '../shared.js'
 import type { DiscordApplicationIntegrationType } from './applications.js'
+import type { ChannelTypes, DiscordChannel } from './channels.js'
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure */
 export interface DiscordInteraction {
