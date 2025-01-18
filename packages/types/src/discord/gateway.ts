@@ -6,7 +6,6 @@
 
 import type {
   DiscordAvatarDecorationData,
-  DiscordEmoji,
   DiscordIntegration,
   DiscordMember,
   DiscordMemberWithUser,
@@ -21,6 +20,7 @@ import type { GatewayEventNames, TargetTypes } from '../shared.js'
 import type { DiscordApplication } from './applications.js'
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
 import type { DiscordChannel, DiscordThreadMember } from './channels.js'
+import type { DiscordEmoji } from './emojis.js'
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {

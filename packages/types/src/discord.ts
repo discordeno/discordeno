@@ -1,5 +1,6 @@
 import type { DiscordApplication, DiscordApplicationIntegrationType } from './discord/applications.js'
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './discord/channels.js'
+import type { DiscordEmoji } from './discord/emojis.js'
 import type { DiscordPresenceUpdate } from './discord/gateway.js'
 import type { DiscordMessageComponents, DiscordMessageInteraction, InteractionTypes } from './discord/interactions.js'
 import type {
@@ -826,26 +827,6 @@ export interface DiscordRoleTags {
   guild_connections?: null
 }
 
-/** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export interface DiscordEmoji {
-  /** Emoji name (can only be null in reaction emoji objects) */
-  name?: string
-  /** Emoji id */
-  id?: string
-  /** Roles allowed to use this emoji */
-  roles?: string[]
-  /** User that created this emoji */
-  user?: DiscordUser
-  /** Whether this emoji must be wrapped in colons */
-  require_colons?: boolean
-  /** Whether this emoji is managed */
-  managed?: boolean
-  /** Whether this emoji is animated */
-  animated?: boolean
-  /** Whether this emoji can be used, may be false due to loss of Server Boosts */
-  available?: boolean
-}
-
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface DiscordVoiceState {
   /** The session id for this voice state */
@@ -1669,24 +1650,6 @@ export interface DiscordGuildWidgetSettings {
   enabled: boolean
   /** the widget channel id */
   channel_id: string | null
-}
-
-/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
-export interface DiscordCreateGuildEmoji {
-  /** Name of the emoji */
-  name: string
-  /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
-  image: string
-  /** Roles allowed to use this emoji */
-  roles?: string[]
-}
-
-/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface DiscordModifyGuildEmoji {
-  /** Name of the emoji */
-  name?: string
-  /** Roles allowed to use this emoji */
-  roles?: string[] | null
 }
 
 export interface DiscordCreateGuildChannel {
