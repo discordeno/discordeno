@@ -1,23 +1,16 @@
 import type { DiscordApplication, DiscordApplicationIntegrationType } from './discord/applications.js'
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './discord/channels.js'
 import type { DiscordEmoji } from './discord/emojis.js'
-import type { DiscordPresenceUpdate } from './discord/gateway.js'
+import type { DiscordGuild, DiscordIntegration, DiscordMember, DiscordMemberWithUser } from './discord/guilds.js'
 import type { DiscordMessageComponents, DiscordMessageInteraction, InteractionTypes } from './discord/interactions.js'
 import type {
   AllowedMentionsTypes,
   AttachmentFlags,
-  DefaultMessageNotificationLevels,
   EmbedTypes,
-  ExplicitContentFilterLevels,
-  GuildFeatures,
-  GuildNsfwLevel,
-  IntegrationExpireBehaviors,
   MessageActivityTypes,
   MessageFlags,
   MessageTypes,
-  MfaLevels,
   PickPartial,
-  PremiumTiers,
   PremiumTypes,
   RoleFlags,
   ScheduledEventEntityType,
@@ -26,10 +19,8 @@ import type {
   SkuFlags,
   StickerFormatTypes,
   StickerTypes,
-  SystemChannelFlags,
   TargetTypes,
   TeamMembershipStates,
-  VerificationLevels,
   WebhookTypes,
 } from './shared.js'
 
@@ -198,96 +189,6 @@ export enum OAuth2Scope {
   Voice = 'voice',
   /** Generate a webhook that is returned in the oauth token response for authorization code grants */
   WebhookIncoming = 'webhook.incoming',
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export interface DiscordIntegration {
-  /** Integration Id */
-  id: string
-  /** Integration name */
-  name: string
-  /** Integration type (twitch, youtube, discord, or guild_subscription). */
-  type: 'twitch' | 'youtube' | 'discord'
-  /** Is this integration enabled */
-  enabled?: boolean
-  /** Is this integration syncing */
-  syncing?: boolean
-  /** Role Id that this integration uses for "subscribers" */
-  role_id?: string
-  /** Whether emoticons should be synced for this integration (twitch only currently) */
-  enable_emoticons?: boolean
-  /** The behavior of expiring subscribers */
-  expire_behavior?: IntegrationExpireBehaviors
-  /** The grace period (in days) before expiring subscribers */
-  expire_grace_period?: number
-  /** When this integration was last synced */
-  synced_at?: string
-  /** How many subscribers this integration has */
-  subscriber_count?: number
-  /** Has this integration been revoked */
-  revoked?: boolean
-  /** User for this integration */
-  user?: DiscordUser
-  /** Integration account information */
-  account: DiscordIntegrationAccount
-  /** The bot/OAuth2 application for discord integrations */
-  application?: DiscordIntegrationApplication
-  /** the scopes the application has been authorized for */
-  scopes: OAuth2Scope[]
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
-export interface DiscordIntegrationAccount {
-  /** Id of the account */
-  id: string
-  /** Name of the account */
-  name: string
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
-export interface DiscordIntegrationApplication {
-  /** The id of the app */
-  id: string
-  /** The name of the app */
-  name: string
-  /** the icon hash of the app */
-  icon: string | null
-  /** The description of the app */
-  description: string
-  /** The bot associated with this application */
-  bot?: DiscordUser
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export interface DiscordMember {
-  /** Whether the user is deafened in voice channels */
-  deaf?: boolean
-  /** Whether the user is muted in voice channels */
-  mute?: boolean
-  /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean
-  /** The user this guild member represents */
-  user?: DiscordUser
-  /** This user's guild nickname */
-  nick?: string | null
-  /** The member's custom avatar for this server. */
-  avatar?: string
-  /** The member's guild banner */
-  banner?: string
-  /** Array of role object ids */
-  roles: string[]
-  /** When the user joined the guild */
-  joined_at: string
-  /** When the user started boosting the guild */
-  premium_since?: string | null
-  /** The permissions this member has in the guild. Only present on interaction events and OAuth2 current member fetch. */
-  permissions?: string
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
-  communication_disabled_until?: string | null
-  /** Guild member flags */
-  flags: number
-  /** data for the member's guild avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData | null
 }
 
 /** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object */
@@ -668,121 +569,6 @@ export interface DiscordApplicationWebhook {
   source_channel?: Partial<DiscordChannel>
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object */
-export interface DiscordGuild {
-  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
-  name: string
-  /** True if the user is the owner of the guild */
-  owner?: boolean
-  /** Afk timeout in seconds */
-  afk_timeout: number
-  /** True if the server widget is enabled */
-  widget_enabled?: boolean
-  /** Verification level required for the guild */
-  verification_level: VerificationLevels
-  /** Default message notifications level */
-  default_message_notifications: DefaultMessageNotificationLevels
-  /** Explicit content filter level */
-  explicit_content_filter: ExplicitContentFilterLevels
-  /** Enabled guild features */
-  features: GuildFeatures[]
-  /** Required MFA level for the guild */
-  mfa_level: MfaLevels
-  /** System channel flags */
-  system_channel_flags: SystemChannelFlags
-  /** True if this is considered a large guild */
-  large?: boolean
-  /** True if this guild is unavailable due to an outage */
-  unavailable?: boolean
-  /** Total number of members in this guild */
-  member_count?: number
-  /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
-  max_presences?: number | null
-  /** The maximum number of members for the guild */
-  max_members?: number
-  /** The vanity url code for the guild */
-  vanity_url_code: string | null
-  /** The description of a guild */
-  description: string | null
-  /** Premium tier (Server Boost level) */
-  premium_tier: PremiumTiers
-  /** The number of boosts this guild currently has */
-  premium_subscription_count?: number
-  /** The maximum amount of users in a video channel */
-  max_video_channel_users?: number
-  /** Maximum amount of users in a stage video channel */
-  max_stage_video_channel_users?: number
-  /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
-  approximate_member_count?: number
-  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
-  approximate_presence_count?: number
-  /** Guild NSFW level */
-  nsfw_level: GuildNsfwLevel
-  /** Whether the guild has the boost progress bar enabled */
-  premium_progress_bar_enabled: boolean
-  /** Guild id */
-  id: string
-  /** Icon hash */
-  icon: string | null
-  /** Icon hash, returned when in the template object */
-  icon_hash?: string | null
-  /** Splash hash */
-  splash: string | null
-  /** Discovery splash hash; only present for guilds with the "DISCOVERABLE" feature */
-  discovery_splash: string | null
-  /** Id of the owner */
-  owner_id: string
-  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
-  permissions?: string
-  /** Id of afk channel */
-  afk_channel_id: string | null
-  /** The channel id that the widget will generate an invite to, or null if set to no invite */
-  widget_channel_id?: string | null
-  /** Roles in the guild */
-  roles: DiscordRole[]
-  /** Custom guild emojis */
-  emojis: DiscordEmoji[]
-  /** Application id of the guild creator if it is bot-created */
-  application_id: string | null
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  system_channel_id: string | null
-  /** The id of the channel where community guilds can display rules and/or guidelines */
-  rules_channel_id: string | null
-  /** When this guild was joined at */
-  joined_at?: string
-  /** States of members currently in voice channels; lacks the guild_id key */
-  voice_states?: Omit<DiscordVoiceState, 'guildId'>[]
-  /** Users in the guild */
-  members?: DiscordMember[]
-  /** Channels in the guild */
-  channels?: DiscordChannel[]
-  /** All active threads in the guild that the current user has permission to view */
-  threads?: DiscordChannel[]
-  /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Partial<DiscordPresenceUpdate>[]
-  /** Banner hash */
-  banner: string | null
-  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferred_locale: string
-  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  public_updates_channel_id: string | null
-  /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
-  welcome_screen?: DiscordWelcomeScreen
-  /** Stage instances in the guild */
-  stage_instances?: DiscordStageInstance[]
-  /** Custom guild stickers */
-  stickers?: DiscordSticker[]
-  /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
-  safety_alerts_channel_id: string | null
-  /**
-   * Soundboard sounds in the guild
-   *
-   * @remarks
-   * Only sent by the gateway
-   */
-  soundboard_sounds?: DiscordSoundboardSound[]
-}
-
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface DiscordRole {
   /** Role id */
@@ -857,26 +643,6 @@ export interface DiscordVoiceState {
   request_to_speak_timestamp: string | null
 }
 
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
-export interface DiscordWelcomeScreen {
-  /** The server description shown in the welcome screen */
-  description: string | null
-  /** The channels shown in the welcome screen, up to 5 */
-  welcome_channels: DiscordWelcomeScreenChannel[]
-}
-
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
-export interface DiscordWelcomeScreenChannel {
-  /** The description shown for the channel */
-  description: string
-  /** The channel's id */
-  channel_id: string
-  /** The emoji id, if the emoji is custom */
-  emoji_id: string | null
-  /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
-  emoji_name: string | null
-}
-
 /** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
 export interface DiscordStageInstance {
   /** The topic of the Stage instance (1-120 characters) */
@@ -889,11 +655,6 @@ export interface DiscordStageInstance {
   channel_id: string
   /** The id of the scheduled event for this Stage instance */
   guild_scheduled_event_id?: string
-}
-
-export interface DiscordMemberWithUser extends DiscordMember {
-  /** The user object for this member */
-  user: DiscordUser
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
@@ -1310,12 +1071,6 @@ export interface DiscordStickerPack {
   banner_asset_id?: string
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export interface DiscordInteractionMember extends DiscordMemberWithUser {
-  /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
-  permissions: string
-}
-
 export interface DiscordScheduledEvent {
   /** the id of the scheduled event */
   id: string
@@ -1481,56 +1236,6 @@ export interface DiscordInviteStageInstance {
   topic: string
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-widget-example-get-guild-widget */
-export interface DiscordGuildWidget {
-  id: string
-  name: string
-  instant_invite: string
-  channels: Array<{
-    id: string
-    name: string
-    position: number
-  }>
-  members: Array<{
-    id: string
-    username: string
-    discriminator: string
-    avatar?: string | null
-    status: string
-    avatar_url: string
-  }>
-  presence_count: number
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-preview-object */
-export interface DiscordGuildPreview {
-  /** Guild id */
-  id: string
-  /** Guild name (2-100 characters) */
-  name: string
-  /** Icon hash */
-  icon: string | null
-  /** Splash hash */
-  splash: string | null
-  /** Discovery splash hash */
-  discovery_splash: string | null
-  /** Custom guild emojis */
-  emojis: DiscordEmoji[]
-  /** Enabled guild features */
-  features: GuildFeatures[]
-  /** Approximate number of members in this guild */
-  approximate_member_count: number
-  /** Approximate number of online members in this guild */
-  approximate_presence_count: number
-  /** The description for the guild, if the guild is discoverable */
-  description: string | null
-  /** Custom guild stickers */
-  stickers: DiscordSticker[]
-}
-
-/** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface DiscordUnavailableGuild extends Pick<DiscordGuild, 'id' | 'unavailable'> {}
-
 /** https://discord.com/developers/docs/resources/template#template-object-template-structure */
 export interface DiscordTemplate {
   /** The template code (unique Id) */
@@ -1623,14 +1328,6 @@ export interface DiscordThreadMemberUpdate {
   flags: number
 }
 
-/** https://discord.com/developers/docs/resources/guild#ban-object */
-export interface DiscordBan {
-  /** The reason for the ban */
-  reason: string | null
-  /** The banned user */
-  user: DiscordUser
-}
-
 /** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
 export interface DiscordVoiceRegion {
   /** Unique Id for the region */
@@ -1643,13 +1340,6 @@ export interface DiscordVoiceRegion {
   deprecated: boolean
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean
-}
-
-export interface DiscordGuildWidgetSettings {
-  /** whether the widget is enabled */
-  enabled: boolean
-  /** the widget channel id */
-  channel_id: string | null
 }
 
 export interface DiscordCreateGuildChannel {
@@ -1730,28 +1420,6 @@ export interface DiscordCreateMessage {
   stickerIds?: [string] | [string, string] | [string, string, string]
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
-export interface DiscordModifyGuildWelcomeScreen {
-  /** Whether the welcome screen is enabled */
-  enabled?: boolean | null
-  /** Channels linked in the welcome screen and their display options */
-  welcome_screen?: DiscordWelcomeScreenChannel[] | null
-  /** The server description to show in the welcome screen */
-  description?: string | null
-}
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
-export interface DiscordModifyGuildChannelPositions {
-  /** Channel id */
-  id: string
-  /** Sorting position of the channel */
-  position?: number | null
-  /** Syncs the permission overwrites with the new parent, if moving to a new category */
-  lock_positions?: boolean | null
-  /** The new parent ID for the channel that is moved */
-  parent_id?: string | null
-}
-
 export interface DiscordCreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string
@@ -1775,94 +1443,6 @@ export interface DiscordVanityUrl {
 
 export interface DiscordPrunedCount {
   pruned: number
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-guild-onboarding-structure */
-export interface DiscordGuildOnboarding {
-  /** ID of the guild this onboarding is part of */
-  guild_id: string
-  /** Prompts shown during onboarding and in customize community */
-  prompts: DiscordGuildOnboardingPrompt[]
-  /** Channel IDs that members get opted into automatically */
-  default_channel_ids: string[]
-  /** Whether onboarding is enabled in the guild */
-  enabled: boolean
-  /** Current mode of onboarding */
-  mode: DiscordGuildOnboardingMode
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure */
-export interface DiscordGuildOnboardingPrompt {
-  /** ID of the prompt */
-  id: string
-  /** Type of prompt */
-  type: DiscordGuildOnboardingPromptType
-  /** Options available within the prompt */
-  options: DiscordGuildOnboardingPromptOption[]
-  /** Title of the prompt */
-  title: string
-  /** Indicates whether users are limited to selecting one option for the prompt */
-  single_select: boolean
-  /** Indicates whether the prompt is required before a user completes the onboarding flow */
-  required: boolean
-  /** Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab */
-  in_onboarding: boolean
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure */
-export interface DiscordGuildOnboardingPromptOption {
-  /** ID of the prompt option */
-  id: string
-  /** IDs for channels a member is added to when the option is selected */
-  channel_ids: string[]
-  /** IDs for roles assigned to a member when the option is selected */
-  role_ids: string[]
-  /**
-   * Emoji of the option
-   *
-   * @remarks
-   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
-   */
-  emoji?: DiscordEmoji
-  /**
-   * Emoji ID of the option
-   *
-   * @remarks
-   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
-   */
-  emoji_id?: string
-  /**
-   * Emoji name of the option
-   *
-   * @remarks
-   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
-   */
-  emoji_name?: string
-  /**
-   * Whether the emoji is animated
-   *
-   * @remarks
-   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
-   */
-  emoji_animated?: boolean
-  /** Title of the option */
-  title: string
-  /** Description of the option */
-  description: string | null
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types */
-export enum DiscordGuildOnboardingPromptType {
-  MultipleChoice,
-  DropDown,
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode */
-export enum DiscordGuildOnboardingMode {
-  /** Counts only Default Channels towards constraints */
-  OnboardingDefault,
-  /** Counts Default Channels and Questions towards constraints */
-  OnboardingAdvanced,
 }
 
 /** https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types */
@@ -1941,14 +1521,6 @@ export enum DiscordSubscriptionStatus {
   Ending,
   /** Subscription is inactive and not being charged. */
   Inactive,
-}
-
-/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban */
-export interface DiscordBulkBan {
-  /** list of user ids, that were successfully banned */
-  banned_users: string[]
-  /** list of user ids, that were not banned */
-  failed_users: string[]
 }
 
 /** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */

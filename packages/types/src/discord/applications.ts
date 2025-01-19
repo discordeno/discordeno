@@ -1,6 +1,7 @@
 /** Types for: https://discord.com/developers/docs/resources/application */
 
-import type { DiscordGuild, DiscordTeam, DiscordUser, OAuth2Scope } from '../discord.js'
+import type { DiscordTeam, DiscordUser, OAuth2Scope } from '../discord.js'
+import type { DiscordGuild } from './guilds.js'
 import type { DiscordWebhookEventType } from './webhookEvents.js'
 
 /** https://discord.com/developers/docs/resources/application#application-object-application-structure */

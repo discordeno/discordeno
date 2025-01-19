@@ -1,13 +1,8 @@
 /** Types for: https://discord.com/developers/docs/resources/audit-log */
 
 import type {
-  DiscordGuild,
-  DiscordGuildOnboarding,
-  DiscordGuildOnboardingPrompt,
-  DiscordIntegration,
   DiscordInvite,
   DiscordInviteMetadata,
-  DiscordMember,
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
@@ -18,6 +13,7 @@ import type {
 import type { DiscordAutoModerationRule } from './autoModeration.js'
 import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channels.js'
 import type { DiscordEmoji } from './emojis.js'
+import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guilds.js'
 import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */

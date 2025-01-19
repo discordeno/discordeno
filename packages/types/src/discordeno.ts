@@ -1,8 +1,6 @@
 import type {
   DiscordAttachment,
   DiscordEmbed,
-  DiscordGuildOnboardingMode,
-  DiscordGuildOnboardingPrompt,
   DiscordMessageReferenceType,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -35,6 +33,15 @@ import type {
   VideoQualityModes,
 } from './discord/channels.js'
 import type {
+  DefaultMessageNotificationLevels,
+  DiscordGuildOnboardingMode,
+  DiscordGuildOnboardingPrompt,
+  ExplicitContentFilterLevels,
+  GuildFeatures,
+  SystemChannelFlags,
+  VerificationLevels,
+} from './discord/guilds.js'
+import type {
   ApplicationCommandTypes,
   ButtonStyles,
   DiscordApplicationCommandOption,
@@ -50,18 +57,13 @@ import type {
   AllowedMentionsTypes,
   BigString,
   Camelize,
-  DefaultMessageNotificationLevels,
-  ExplicitContentFilterLevels,
-  GuildFeatures,
   Localization,
   MessageFlags,
   PermissionStrings,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
-  SystemChannelFlags,
   TargetTypes,
-  VerificationLevels,
 } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */

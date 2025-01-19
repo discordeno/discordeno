@@ -5,19 +5,12 @@
  * - https://discord.com/developers/docs/interactions/message-components
  */
 
-import type {
-  DiscordAttachment,
-  DiscordGuild,
-  DiscordInteractionMember,
-  DiscordMember,
-  DiscordMessage,
-  DiscordRole,
-  DiscordUser,
-} from '../discord.js'
+import type { DiscordAttachment, DiscordMessage, DiscordRole, DiscordUser } from '../discord.js'
 import type { Localization } from '../shared.js'
 import type { DiscordApplicationIntegrationType } from './applications.js'
 import type { ChannelTypes, DiscordChannel } from './channels.js'
 import type { DiscordEntitlement } from './entitlements.js'
+import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guilds.js'
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure */
 export interface DiscordInteraction {
@@ -606,6 +599,12 @@ export enum TextStyles {
   Short = 1,
   /** Intended for much longer inputs */
   Paragraph = 2,
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure specifcly the member propriety */
+export interface DiscordInteractionMember extends DiscordMemberWithUser {
+  /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
+  permissions: string
 }
 
 // TODO: This type does not match any structure discord defines it is however a subset of the props in
