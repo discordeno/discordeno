@@ -172,24 +172,6 @@ export enum StickerFormatTypes {
   Gif,
 }
 
-export enum ScheduledEventPrivacyLevel {
-  /** the scheduled event is only accessible to guild members */
-  GuildOnly = 2,
-}
-
-export enum ScheduledEventEntityType {
-  StageInstance = 1,
-  Voice,
-  External,
-}
-
-export enum ScheduledEventStatus {
-  Scheduled = 1,
-  Active,
-  Completed,
-  Canceled,
-}
-
 /** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */
 export enum TargetTypes {
   Stream = 1,

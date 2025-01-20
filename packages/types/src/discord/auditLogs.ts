@@ -4,7 +4,6 @@ import type {
   DiscordInvite,
   DiscordInviteMetadata,
   DiscordRole,
-  DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordSticker,
   DiscordUser,
@@ -13,6 +12,7 @@ import type {
 import type { DiscordAutoModerationRule } from './autoModeration.js'
 import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channels.js'
 import type { DiscordEmoji } from './emojis.js'
+import type { DiscordScheduledEvent } from './guildScheduledEvents.js'
 import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guilds.js'
 import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
 

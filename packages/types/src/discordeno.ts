@@ -7,7 +7,6 @@ import type {
   DiscordPollMedia,
   DiscordReactionType,
   DiscordRole,
-  DiscordScheduledEventRecurrenceRule,
 } from './discord.js'
 import type {
   ApplicationFlags,
@@ -33,6 +32,12 @@ import type {
   VideoQualityModes,
 } from './discord/channels.js'
 import type {
+  DiscordScheduledEventRecurrenceRule,
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus,
+} from './discord/guildScheduledEvents.js'
+import type {
   DefaultMessageNotificationLevels,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
@@ -53,18 +58,7 @@ import type {
   TextStyles,
 } from './discord/interactions.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
-import type {
-  AllowedMentionsTypes,
-  BigString,
-  Camelize,
-  Localization,
-  MessageFlags,
-  PermissionStrings,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-  TargetTypes,
-} from './shared.js'
+import type { AllowedMentionsTypes, BigString, Camelize, Localization, MessageFlags, PermissionStrings, TargetTypes } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
