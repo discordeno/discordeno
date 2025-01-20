@@ -12,12 +12,13 @@ import type {
   DiscordSticker,
   DiscordUser,
 } from '../discord.js'
-import type { GatewayEventNames, TargetTypes } from '../shared.js'
+import type { GatewayEventNames } from '../shared.js'
 import type { DiscordApplication } from './applications.js'
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
 import type { DiscordChannel, DiscordThreadMember } from './channels.js'
 import type { DiscordEmoji } from './emojis.js'
 import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guilds.js'
+import type { TargetTypes } from './invites.js'
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {

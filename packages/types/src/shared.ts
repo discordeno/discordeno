@@ -172,12 +172,6 @@ export enum StickerFormatTypes {
   Gif,
 }
 
-/** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */
-export enum TargetTypes {
-  Stream = 1,
-  EmbeddedApplication,
-}
-
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
 export const BitwisePermissionFlags = {
   /** Allows creation of instant invites */

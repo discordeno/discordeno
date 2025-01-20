@@ -57,8 +57,9 @@ import type {
   MessageComponentTypes,
   TextStyles,
 } from './discord/interactions.js'
+import type { TargetTypes } from './discord/invites.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
-import type { AllowedMentionsTypes, BigString, Camelize, Localization, MessageFlags, PermissionStrings, TargetTypes } from './shared.js'
+import type { AllowedMentionsTypes, BigString, Camelize, Localization, MessageFlags, PermissionStrings } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
