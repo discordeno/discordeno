@@ -1,4 +1,4 @@
-import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia, DiscordRole } from './discord.js'
+import type { DiscordRole } from './discord.js'
 import type {
   ApplicationFlags,
   DiscordApplicationEventWebhookStatus,
@@ -57,6 +57,7 @@ import type {
   DiscordReactionType,
   MessageFlags,
 } from './discord/messages.js'
+import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/polls.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
 import type { BigString, Camelize, Localization, PermissionStrings } from './shared.js'
 
