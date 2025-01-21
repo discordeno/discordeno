@@ -3,7 +3,6 @@
 import type {
   DiscordAvatarDecorationData,
   DiscordRole,
-  DiscordSoundboardSound,
   DiscordStageInstance,
   DiscordSticker,
   DiscordUser,
@@ -13,6 +12,7 @@ import type {
 import type { DiscordChannel } from './channels.js'
 import type { DiscordEmoji } from './emojis.js'
 import type { DiscordPresenceUpdate } from './gateway.js'
+import type { DiscordSoundboardSound } from './soundboards.js'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-structure */
 export interface DiscordGuild {
