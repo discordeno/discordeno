@@ -36,12 +36,6 @@ export enum RoleFlags {
   InPrompt = 1 << 0,
 }
 
-export enum AttachmentFlags {
-  None,
-  /** This attachment has been edited using the remix feature on mobile */
-  IsRemix = 1 << 2,
-}
-
 /** https://discord.com/developers/docs/monetization/skus#sku-object-sku-flags */
 export enum SkuFlags {
   /** SKU is available for purchase */
@@ -52,46 +46,10 @@ export enum SkuFlags {
   UserSubscription = 1 << 8,
 }
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
-export enum MessageFlags {
-  /** This message has been published to subscribed channels (via Channel Following) */
-  Crossposted = 1 << 0,
-  /** This message originated from a message in another channel (via Channel Following) */
-  IsCrosspost = 1 << 1,
-  /** Do not include any embeds when serializing this message */
-  SuppressEmbeds = 1 << 2,
-  /** The source message for this crosspost has been deleted (via Channel Following) */
-  SourceMessageDeleted = 1 << 3,
-  /** This message came from the urgent message system */
-  Urgent = 1 << 4,
-  /** This message has an associated thread, with the same id as the message */
-  HasThread = 1 << 5,
-  /** This message is only visible to the user who invoked the Interaction */
-  Ephemeral = 1 << 6,
-  /** This message is an Interaction Response and the bot is "thinking" */
-  Loading = 1 << 7,
-  /** This message failed to mention some roles and add their members to the thread */
-  FailedToMentionSomeRolesInThread = 1 << 8,
-  /** This message will not trigger push and desktop notifications */
-  SuppressNotifications = 1 << 12,
-  /** This message is a voice message */
-  IsVoiceMessage = 1 << 13,
-}
-
 /** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
 export enum TeamMembershipStates {
   Invited = 1,
   Accepted,
-}
-
-/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
-export enum AllowedMentionsTypes {
-  /** Controls role mentions */
-  RoleMentions = 'roles',
-  /** Controls user mentions */
-  UserMentions = 'users',
-  /** Controls \@everyone and \@here mentions */
-  EveryoneMentions = 'everyone',
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types */
@@ -102,58 +60,6 @@ export enum WebhookTypes {
   ChannelFollower,
   /** Application webhooks are webhooks used with Interactions */
   Application,
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result'
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-types */
-export enum MessageTypes {
-  Default,
-  RecipientAdd,
-  RecipientRemove,
-  Call,
-  ChannelNameChange,
-  ChannelIconChange,
-  ChannelPinnedMessage,
-  UserJoin,
-  GuildBoost,
-  GuildBoostTier1,
-  GuildBoostTier2,
-  GuildBoostTier3,
-  ChannelFollowAdd,
-  GuildDiscoveryDisqualified = 14,
-  GuildDiscoveryRequalified,
-  GuildDiscoveryGracePeriodInitialWarning,
-  GuildDiscoveryGracePeriodFinalWarning,
-  ThreadCreated,
-  Reply,
-  ChatInputCommand,
-  ThreadStarterMessage,
-  GuildInviteReminder,
-  ContextMenuCommand,
-  AutoModerationAction,
-  RoleSubscriptionPurchase,
-  InteractionPremiumUpsell,
-  StageStart,
-  StageEnd,
-  StageSpeaker,
-  StageTopic = 31,
-  GuildApplicationPremiumSubscription,
-  GuildIncidentAlertModeEnabled = 36,
-  GuildIncidentAlertModeDisabled,
-  GuildIncidentReportRaid,
-  GuildIncidentReportFalseAlarm,
-  PurchaseNotification = 44,
-  PollResult = 46,
-}
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
-export enum MessageActivityTypes {
-  Join = 1,
-  Spectate = 2,
-  Listen = 3,
-  JoinRequest = 5,
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */

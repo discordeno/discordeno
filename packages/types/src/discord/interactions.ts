@@ -5,12 +5,13 @@
  * - https://discord.com/developers/docs/interactions/message-components
  */
 
-import type { DiscordAttachment, DiscordMessage, DiscordRole, DiscordUser } from '../discord.js'
+import type { DiscordRole, DiscordUser } from '../discord.js'
 import type { Localization } from '../shared.js'
 import type { DiscordApplicationIntegrationType } from './applications.js'
 import type { ChannelTypes, DiscordChannel } from './channels.js'
 import type { DiscordEntitlement } from './entitlements.js'
 import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guilds.js'
+import type { DiscordAttachment, DiscordMessage } from './messages.js'
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure */
 export interface DiscordInteraction {
@@ -54,7 +55,7 @@ export interface DiscordInteraction {
   /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
   entitlements: DiscordEntitlement[]
   /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
-  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  authorizing_integration_owners: DiscordAuthorizingIntegrationOwners
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
 }

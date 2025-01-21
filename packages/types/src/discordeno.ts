@@ -1,13 +1,4 @@
-import type {
-  DiscordAttachment,
-  DiscordEmbed,
-  DiscordMessageReferenceType,
-  DiscordPollAnswer,
-  DiscordPollLayoutType,
-  DiscordPollMedia,
-  DiscordReactionType,
-  DiscordRole,
-} from './discord.js'
+import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia, DiscordRole } from './discord.js'
 import type {
   ApplicationFlags,
   DiscordApplicationEventWebhookStatus,
@@ -58,8 +49,16 @@ import type {
   TextStyles,
 } from './discord/interactions.js'
 import type { TargetTypes } from './discord/invites.js'
+import type {
+  AllowedMentionsTypes,
+  DiscordAttachment,
+  DiscordEmbed,
+  DiscordMessageReferenceType,
+  DiscordReactionType,
+  MessageFlags,
+} from './discord/messages.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
-import type { AllowedMentionsTypes, BigString, Camelize, Localization, MessageFlags, PermissionStrings } from './shared.js'
+import type { BigString, Camelize, Localization, PermissionStrings } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
