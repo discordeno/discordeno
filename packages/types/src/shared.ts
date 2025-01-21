@@ -36,16 +36,6 @@ export enum RoleFlags {
   InPrompt = 1 << 0,
 }
 
-/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-flags */
-export enum SkuFlags {
-  /** SKU is available for purchase */
-  Available = 1 << 2,
-  /** Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. */
-  GuildSubscription = 1 << 7,
-  /** Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server. */
-  UserSubscription = 1 << 8,
-}
-
 /** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
 export enum TeamMembershipStates {
   Invited = 1,

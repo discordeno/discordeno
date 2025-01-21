@@ -1,7 +1,7 @@
 import type { DiscordApplication } from './discord/applications.js'
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './discord/channels.js'
 import type { DiscordGuild, DiscordIntegration, DiscordMemberWithUser } from './discord/guilds.js'
-import type { PremiumTypes, RoleFlags, SkuFlags, StickerFormatTypes, StickerTypes, TeamMembershipStates, WebhookTypes } from './shared.js'
+import type { PremiumTypes, RoleFlags, StickerFormatTypes, StickerTypes, TeamMembershipStates, WebhookTypes } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -659,34 +659,6 @@ export enum DiscordTeamMemberRole {
   Developer = 'developer',
   /** Read-only members can access information about a team and any team-owned apps. Some examples include getting the IDs of applications and exporting payout records. */
   ReadOnly = 'read_only',
-}
-
-/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-structure */
-export interface DiscordSku {
-  /** ID of SKU */
-  id: string
-  /** Type of SKU */
-  type: DiscordSkuType
-  /** ID of the parent application */
-  application_id: string
-  /** Customer-facing name of your premium offering */
-  name: string
-  /** System-generated URL slug based on the SKU's name */
-  slug: string
-  /** SKU flags combined as a bitfield */
-  flags: SkuFlags
-}
-
-/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
-export enum DiscordSkuType {
-  /** Durable one-time purchase */
-  Durable = 2,
-  /** Consumable one-time purchase */
-  Consumable = 3,
-  /** Represents a recurring subscription */
-  Subscription = 5,
-  /** System-generated group for each SUBSCRIPTION SKU created */
-  SubscriptionGroup = 6,
 }
 
 /** https://discord.com/developers/docs/resources/subscription#subscription-object */
