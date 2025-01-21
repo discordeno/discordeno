@@ -159,7 +159,7 @@ export function transformMessage(
   if (props.attachments && payload.message.attachments?.length)
     message.attachments = payload.message.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
   if (props.channelId && payload.message.channel_id) message.channelId = bot.transformers.snowflake(payload.message.channel_id)
-  if (props.components && payload.message.components)
+  if (props.components && payload.message.components?.length)
     message.components = payload.message.components.map((comp) => bot.transformers.component(bot, comp))
   if (props.content) message.content = payload.message.content ?? EMPTY_STRING
   if (props.editedTimestamp && payload.message.edited_timestamp) message.editedTimestamp = Date.parse(payload.message.edited_timestamp)

@@ -1074,7 +1074,7 @@ export interface Message {
   /** id of the channel the message was sent in */
   channelId: bigint
   /** The components related to this message */
-  components: Component[]
+  components?: Component[]
   /** Contents of the message */
   content: string
   /** The timestamp in milliseconds when this message was edited last. */
