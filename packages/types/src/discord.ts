@@ -1,7 +1,7 @@
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './discord/channels.js'
 import type { DiscordMemberWithUser } from './discord/guilds.js'
 import type { DiscordUser } from './discord/users.js'
-import type { RoleFlags, TeamMembershipStates } from './shared.js'
+import type { TeamMembershipStates } from './shared.js'
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
 export interface DiscordTeam {
@@ -27,50 +27,6 @@ export interface DiscordTeamMember {
   user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>
   /** Role of the team member */
   role: DiscordTeamMemberRole
-}
-
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
-export interface DiscordRole {
-  /** Role id */
-  id: string
-  /** If this role is showed separately in the user listing */
-  hoist: boolean
-  /** Permission bit set */
-  permissions: string
-  /** Whether this role is managed by an integration */
-  managed: boolean
-  /** Whether this role is mentionable */
-  mentionable: boolean
-  /** The tags this role has */
-  tags?: DiscordRoleTags
-  /** the role emoji hash */
-  icon?: string
-  /** Role name */
-  name: string
-  /** Integer representation of hexadecimal color code */
-  color: number
-  /** Position of this role (roles with the same position are sorted by id) */
-  position: number
-  /** role unicode emoji */
-  unicode_emoji?: string
-  /** Role flags combined as a bitfield */
-  flags: RoleFlags
-}
-
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
-export interface DiscordRoleTags {
-  /** The id of the bot this role belongs to */
-  bot_id?: string
-  /** The id of the integration this role belongs to */
-  integration_id?: string
-  /** Whether this is the guild's premium subscriber role */
-  premium_subscriber?: null
-  /** Id of this role's subscription sku and listing. */
-  subscription_listing_id?: string
-  /** Whether this role is available for purchase. */
-  available_for_purchase?: null
-  /** Whether this is a guild's linked role */
-  guild_connections?: null
 }
 
 /** https://discord.com/developers/docs/events/gateway#guild-member-add */

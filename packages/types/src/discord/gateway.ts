@@ -4,7 +4,6 @@
  *  - https://discord.com/developers/docs/events/gateway-events
  */
 
-import type { DiscordRole } from '../discord.js'
 import type { GatewayEventNames } from '../shared.js'
 import type { DiscordApplication } from './applications.js'
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
@@ -13,6 +12,7 @@ import type { DiscordEmoji } from './emojis.js'
 import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guilds.js'
 import type { TargetTypes } from './invites.js'
 import type { DiscordReactionType } from './messages.js'
+import type { DiscordRole } from './permissions.js'
 import type { DiscordSoundboardSound } from './soundboards.js'
 import type { DiscordSticker } from './stickers.js'
 import type { DiscordAvatarDecorationData, DiscordUser } from './users.js'
