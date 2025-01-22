@@ -1,7 +1,7 @@
 import type { DiscordApplication } from './discord/applications.js'
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './discord/channels.js'
 import type { DiscordGuild, DiscordIntegration, DiscordMemberWithUser } from './discord/guilds.js'
-import type { PremiumTypes, RoleFlags, StickerFormatTypes, StickerTypes, TeamMembershipStates, WebhookTypes } from './shared.js'
+import type { PremiumTypes, RoleFlags, TeamMembershipStates, WebhookTypes } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -471,60 +471,6 @@ export interface DiscordVoiceState {
   suppress: boolean
   /** The time at which the user requested to speak */
   request_to_speak_timestamp: string | null
-}
-
-/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
-export interface DiscordSticker {
-  /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
-  id: string
-  /** Id of the pack the sticker is from */
-  pack_id?: string
-  /** Name of the sticker */
-  name: string
-  /** Description of the sticker */
-  description: string
-  /** a unicode emoji representing the sticker's expression */
-  tags: string
-  /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
-  type: StickerTypes
-  /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
-  format_type: StickerFormatTypes
-  /**  Whether or not the sticker is available */
-  available?: boolean
-  /** Id of the guild that owns this sticker */
-  guild_id?: string
-  /** The user that uploaded the sticker */
-  user?: DiscordUser
-  /** A sticker's sort order within a pack */
-  sort_value?: number
-}
-
-/** https://discord.com/developers/docs/resources/sticker#sticker-item-object-sticker-item-structure */
-export interface DiscordStickerItem {
-  /** Id of the sticker */
-  id: string
-  /** Name of the sticker */
-  name: string
-  /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
-  format_type: StickerFormatTypes
-}
-
-/** https://discord.com/developers/docs/resources/sticker#sticker-pack-object-sticker-pack-structure */
-export interface DiscordStickerPack {
-  /** id of the sticker pack */
-  id: string
-  /** the stickers in the pack */
-  stickers: DiscordSticker[]
-  /** name of the sticker pack */
-  name: string
-  /** id of the pack's SKU */
-  sku_id: string
-  /** id of a sticker in the pack which is shown as the pack's icon */
-  cover_sticker_id?: string
-  /** description of the sticker pack */
-  description: string
-  /** id of the sticker pack's [banner image](https://discord.com/developers/docs/reference#image-formatting) */
-  banner_asset_id?: string
 }
 
 /** https://discord.com/developers/docs/events/gateway#guild-member-add */

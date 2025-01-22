@@ -52,22 +52,6 @@ export enum WebhookTypes {
   Application,
 }
 
-/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
-export enum StickerTypes {
-  /** an official sticker in a pack */
-  Standard = 1,
-  /** a sticker uploaded to a guild for the guild's members */
-  Guild,
-}
-
-/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types */
-export enum StickerFormatTypes {
-  Png = 1,
-  APng,
-  Lottie,
-  Gif,
-}
-
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
 export const BitwisePermissionFlags = {
   /** Allows creation of instant invites */
