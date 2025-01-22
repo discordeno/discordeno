@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/sticker */
 
-import type { DiscordUser } from '../discord.js'
+import type { DiscordUser } from './users.js'
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface DiscordSticker {

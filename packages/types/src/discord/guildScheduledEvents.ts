@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/guild-scheduled-event */
 
-import type { DiscordUser } from '../discord.js'
+import type { DiscordUser } from './users.js'
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-structure */
 export interface DiscordScheduledEvent {

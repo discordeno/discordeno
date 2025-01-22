@@ -1,45 +1,8 @@
 import type { DiscordApplication } from './discord/applications.js'
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './discord/channels.js'
-import type { DiscordGuild, DiscordIntegration, DiscordMemberWithUser } from './discord/guilds.js'
-import type { PremiumTypes, RoleFlags, TeamMembershipStates, WebhookTypes } from './shared.js'
-
-/** https://discord.com/developers/docs/resources/user#user-object */
-export interface DiscordUser {
-  /** The user's username, not unique across the platform */
-  username: string
-  /** The user's display name, if it is set. For bots, this is the application name */
-  global_name: string | null
-  /** The user's chosen language option */
-  locale?: string
-  /** The flags on a user's account */
-  flags?: number
-  /** The type of Nitro subscription on a user's account */
-  premium_type?: PremiumTypes
-  /** The public flags on a user's account */
-  public_flags?: number
-  /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accent_color?: number
-  /** The user's id */
-  id: string
-  /** The user's discord-tag */
-  discriminator: string
-  /** The user's avatar hash */
-  avatar: string | null
-  /** Whether the user belongs to an OAuth2 application */
-  bot?: boolean
-  /** Whether the user is an Official Discord System user (part of the urgent message system) */
-  system?: boolean
-  /** Whether the user has two factor enabled on their account */
-  mfa_enabled?: boolean
-  /** Whether the email on this account has been verified */
-  verified?: boolean
-  /** The user's email */
-  email?: string | null
-  /** the user's banner, or null if unset */
-  banner?: string
-  /** data for the user's avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData
-}
+import type { DiscordGuild, DiscordMemberWithUser } from './discord/guilds.js'
+import type { DiscordUser } from './discord/users.js'
+import type { RoleFlags, TeamMembershipStates, WebhookTypes } from './shared.js'
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
 export enum OAuth2Scope {
@@ -170,14 +133,6 @@ export enum OAuth2Scope {
   WebhookIncoming = 'webhook.incoming',
 }
 
-/** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object */
-export interface DiscordAvatarDecorationData {
-  /** the avatar decoration hash */
-  asset: string
-  /** id of the avatar decoration's SKU */
-  sku_id: string
-}
-
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
 
 export interface DiscordTokenExchangeAuthorizationCode {
@@ -240,78 +195,6 @@ export interface DiscordCurrentAuthorization {
   expires: string
   /** the user who has authorized, if the user has authorized with the `identify` scope */
   user?: DiscordUser
-}
-
-/** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */
-export interface DiscordConnection {
-  /** id of the connection account */
-  id: string
-  /** the username of the connection account */
-  name: string
-  /** the service of this connection */
-  type: DiscordConnectionServiceType
-  /** whether the connection is revoked */
-  revoked?: boolean
-  /** an array of partial server integrations */
-  integrations?: Partial<DiscordIntegration>[]
-  /** whether the connection is verified */
-  verified: boolean
-  /** whether friend sync is enabled for this connection */
-  friend_sync: boolean
-  /** whether activities related to this connection will be shown in presence updates */
-  show_activity: boolean
-  /** whether this connection has a corresponding third party OAuth2 token */
-  two_way_link: boolean
-  /** visibility of this connection */
-  visibility: DiscordConnectionVisibility
-}
-
-/** https://discord.com/developers/docs/resources/user#connection-object-services */
-export enum DiscordConnectionServiceType {
-  AmazonMusic = 'amazon-music',
-  BattleNet = 'battlenet',
-  Bungie = 'Bungie.net',
-  Bluesky = 'bluesky',
-  Crunchyroll = 'crunchyroll',
-  Domain = 'domain',
-  eBay = 'ebay',
-  EpicGames = 'epicgames',
-  Facebook = 'facebook',
-  GitHub = 'github',
-  Instagram = 'instagram',
-  LeagueOfLegends = 'leagueoflegends',
-  Mastodon = 'mastodon',
-  PayPal = 'paypal',
-  PlayStationNetwork = 'playstation',
-  Reddit = 'reddit',
-  RiotGames = 'riotgames',
-  Roblox = 'roblox',
-  Spotify = 'spotify',
-  Skype = 'skype',
-  Steam = 'steam',
-  TikTok = 'tiktok',
-  Twitch = 'twitch',
-  Twitter = 'twitter',
-  Xbox = 'xbox',
-  YouTube = 'youtube',
-}
-
-/** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
-export enum DiscordConnectionVisibility {
-  /** invisible to everyone except the user themselves */
-  None = 0,
-  /** visible to everyone */
-  Everyone = 1,
-}
-
-/** https://discord.com/developers/docs/resources/user#application-role-connection-object-application-role-connection-structure */
-export interface DiscordApplicationRoleConnection {
-  /** the vanity name of the platform a bot has connected (max 50 characters) */
-  platform_name: string | null
-  /** the username on the platform a bot has connected (max 100 characters) */
-  platform_username: string | null
-  /** object mapping application role connection metadata keys to their stringified value (max 100 characters) for the user on the platform a bot has connected */
-  metadata: Record<string, string>
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
