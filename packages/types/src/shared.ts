@@ -2,12 +2,6 @@ import type { Locales } from './discord/reference.js'
 
 export type BigString = bigint | string
 
-/** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
-export enum TeamMembershipStates {
-  Invited = 1,
-  Accepted,
-}
-
 export type GatewayDispatchEventNames =
   | 'READY'
   | 'APPLICATION_COMMAND_PERMISSIONS_UPDATE'
