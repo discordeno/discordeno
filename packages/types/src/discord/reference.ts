@@ -46,3 +46,5 @@ export enum Locales {
   ChineseTaiwan = 'zh-TW',
   Korean = 'ko',
 }
+
+export type Localization = Partial<Record<Locales, string>>

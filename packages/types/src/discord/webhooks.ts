@@ -73,3 +73,11 @@ export enum WebhookTypes {
   /** Application webhooks are webhooks used with Interactions */
   Application,
 }
+
+/** https://discord.com/developers/docs/resources/webhook#create-webhook-json-params */
+export interface DiscordCreateWebhook {
+  /** Name of the webhook (1-80 characters) */
+  name: string
+  /** Image url for the default webhook avatar */
+  avatar?: string | null
+}

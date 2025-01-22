@@ -5,13 +5,13 @@
  * - https://discord.com/developers/docs/interactions/message-components
  */
 
-import type { Localization } from '../shared.js'
 import type { DiscordApplicationIntegrationType } from './applications.js'
 import type { ChannelTypes, DiscordChannel } from './channels.js'
 import type { DiscordEntitlement } from './entitlements.js'
 import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guilds.js'
 import type { DiscordAttachment, DiscordMessage } from './messages.js'
 import type { DiscordRole } from './permissions.js'
+import type { Localization } from './reference.js'
 import type { DiscordUser } from './users.js'
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure */

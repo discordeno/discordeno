@@ -201,6 +201,14 @@ export interface DiscordThreadMember {
   join_timestamp: string
 }
 
+/** https://discord.com/developers/docs/resources/channel#thread-member-object-thread-member-structure, the first asterisk */
+export interface DiscordThreadMemberGuildCreate {
+  /** Any user-thread settings, currently only used for notifications */
+  flags: number
+  /** The time the current user last joined the thread */
+  join_timestamp: string
+}
+
 /** https://discord.com/developers/docs/resources/channel#default-reaction-object-default-reaction-structure */
 export interface DiscordDefaultReactionEmoji {
   /** The id of a guild's custom emoji */
@@ -332,6 +340,19 @@ export interface DiscordCreateForumPostWithMessage {
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
+}
+
+/** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-response-body */
+// TODO: this should be ArchivedThreads, not Active
+export interface DiscordActiveThreads {
+  threads: DiscordChannel[]
+  members: DiscordThreadMember[]
+}
+
+/** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-response-body */
+export type DiscordArchivedThreads = DiscordActiveThreads & {
+  // TODO: this should be has_more, not hasMore
+  hasMore: boolean
 }
 
 // TODO: What does this type exactly match to? The API doesn't seem to have a list ACTIVE threads, only list archived threads

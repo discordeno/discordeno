@@ -4,7 +4,6 @@
  *  - https://discord.com/developers/docs/events/gateway-events
  */
 
-import type { GatewayEventNames } from '../shared.js'
 import type { DiscordApplication } from './applications.js'
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
 import type { DiscordChannel, DiscordThreadMember } from './channels.js'
@@ -193,6 +192,87 @@ export interface DiscordSessionStartLimit {
   max_concurrency: number
 }
 
+/** https://discord.com/developers/docs/events/gateway-events#receive-events */
+// TODO: Move 'RESUMED' from GatewayEventNames to GatewayDispatchEventNames
+export type GatewayDispatchEventNames =
+  | 'READY'
+  | 'APPLICATION_COMMAND_PERMISSIONS_UPDATE'
+  | 'AUTO_MODERATION_RULE_CREATE'
+  | 'AUTO_MODERATION_RULE_UPDATE'
+  | 'AUTO_MODERATION_RULE_DELETE'
+  | 'AUTO_MODERATION_ACTION_EXECUTION'
+  | 'CHANNEL_CREATE'
+  | 'CHANNEL_UPDATE'
+  | 'CHANNEL_DELETE'
+  | 'CHANNEL_PINS_UPDATE'
+  | 'THREAD_CREATE'
+  | 'THREAD_UPDATE'
+  | 'THREAD_DELETE'
+  | 'THREAD_LIST_SYNC'
+  | 'THREAD_MEMBER_UPDATE'
+  | 'THREAD_MEMBERS_UPDATE'
+  | 'GUILD_AUDIT_LOG_ENTRY_CREATE'
+  | 'GUILD_CREATE'
+  | 'GUILD_UPDATE'
+  | 'GUILD_DELETE'
+  | 'GUILD_BAN_ADD'
+  | 'GUILD_BAN_REMOVE'
+  | 'GUILD_EMOJIS_UPDATE'
+  | 'GUILD_STICKERS_UPDATE'
+  | 'GUILD_INTEGRATIONS_UPDATE'
+  | 'GUILD_MEMBER_ADD'
+  | 'GUILD_MEMBER_REMOVE'
+  | 'GUILD_MEMBER_UPDATE'
+  | 'GUILD_MEMBERS_CHUNK'
+  | 'GUILD_ROLE_CREATE'
+  | 'GUILD_ROLE_UPDATE'
+  | 'GUILD_ROLE_DELETE'
+  | 'GUILD_SCHEDULED_EVENT_CREATE'
+  | 'GUILD_SCHEDULED_EVENT_UPDATE'
+  | 'GUILD_SCHEDULED_EVENT_DELETE'
+  | 'GUILD_SCHEDULED_EVENT_USER_ADD'
+  | 'GUILD_SCHEDULED_EVENT_USER_REMOVE'
+  | 'GUILD_SOUNDBOARD_SOUND_CREATE'
+  | 'GUILD_SOUNDBOARD_SOUND_UPDATE'
+  | 'GUILD_SOUNDBOARD_SOUND_DELETE'
+  | 'GUILD_SOUNDBOARD_SOUNDS_UPDATE'
+  | 'SOUNDBOARD_SOUNDS'
+  | 'INTEGRATION_CREATE'
+  | 'INTEGRATION_UPDATE'
+  | 'INTEGRATION_DELETE'
+  | 'INTERACTION_CREATE'
+  | 'INVITE_CREATE'
+  | 'INVITE_DELETE'
+  | 'MESSAGE_CREATE'
+  | 'MESSAGE_UPDATE'
+  | 'MESSAGE_DELETE'
+  | 'MESSAGE_DELETE_BULK'
+  | 'MESSAGE_REACTION_ADD'
+  | 'MESSAGE_REACTION_REMOVE'
+  | 'MESSAGE_REACTION_REMOVE_ALL'
+  | 'MESSAGE_REACTION_REMOVE_EMOJI'
+  | 'PRESENCE_UPDATE'
+  | 'STAGE_INSTANCE_CREATE'
+  | 'STAGE_INSTANCE_UPDATE'
+  | 'STAGE_INSTANCE_DELETE'
+  | 'TYPING_START'
+  | 'USER_UPDATE'
+  | 'VOICE_CHANNEL_EFFECT_SEND'
+  | 'VOICE_STATE_UPDATE'
+  | 'VOICE_SERVER_UPDATE'
+  | 'WEBHOOKS_UPDATE'
+  | 'ENTITLEMENT_CREATE'
+  | 'ENTITLEMENT_UPDATE'
+  | 'ENTITLEMENT_DELETE'
+  | 'SUBSCRIPTION_CREATE'
+  | 'SUBSCRIPTION_UPDATE'
+  | 'SUBSCRIPTION_DELETE'
+  | 'MESSAGE_POLL_VOTE_ADD'
+  | 'MESSAGE_POLL_VOTE_REMOVE'
+
+/** https://discord.com/developers/docs/events/gateway-events#receive-events */
+export type GatewayEventNames = GatewayDispatchEventNames | 'RESUMED'
+
 /** https://discord.com/developers/docs/events/gateway-events#payload-structure */
 export interface DiscordGatewayPayload {
   /** opcode for the payload */
@@ -283,7 +363,17 @@ export interface DiscordThreadListSync {
   members: DiscordThreadMember[]
 }
 
-// TODO: Add Thread Member Update: https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields
+/** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
+export interface DiscordThreadMemberUpdate {
+  /** The id of the thread */
+  id: string
+  /** The id of the guild */
+  guild_id: string
+  /** The timestamp when the bot joined this thread. */
+  joined_at: string
+  /** The flags this user has for this thread. Not useful for bots. */
+  flags: number
+}
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-members-update-thread-members-update-event-fields */
 export interface DiscordThreadMembersUpdate {
@@ -346,7 +436,11 @@ export interface DiscordGuildIntegrationsUpdate {
   guild_id: string
 }
 
-// TODO: Add Guild Member Add: https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields
+/** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
+export interface DiscordGuildMemberAdd extends DiscordMemberWithUser {
+  /** id of the guild */
+  guild_id: string
+}
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-remove-guild-member-remove-event-fields */
 export interface DiscordGuildMemberRemove {

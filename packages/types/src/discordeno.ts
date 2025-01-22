@@ -58,8 +58,9 @@ import type {
 } from './discord/messages.js'
 import type { DiscordRole, PermissionStrings } from './discord/permissions.js'
 import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/polls.js'
+import type { Localization } from './discord/reference.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
-import type { BigString, Camelize, Localization } from './shared.js'
+import type { BigString, Camelize } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
