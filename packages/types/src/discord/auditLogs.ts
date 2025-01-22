@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/audit-log */
 
-import type { DiscordRole, DiscordStageInstance, DiscordSticker, DiscordUser, DiscordWebhook } from '../discord.js'
+import type { DiscordRole, DiscordSticker, DiscordUser, DiscordWebhook } from '../discord.js'
 import type { DiscordAutoModerationRule } from './autoModeration.js'
 import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channels.js'
 import type { DiscordEmoji } from './emojis.js'
@@ -8,6 +8,7 @@ import type { DiscordScheduledEvent } from './guildScheduledEvents.js'
 import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guilds.js'
 import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
 import type { DiscordInvite, DiscordInviteMetadata } from './invites.js'
+import type { DiscordStageInstance } from './stageInstances.js'
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */
 export interface DiscordAuditLog {

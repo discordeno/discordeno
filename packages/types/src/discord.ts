@@ -473,20 +473,6 @@ export interface DiscordVoiceState {
   request_to_speak_timestamp: string | null
 }
 
-/** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
-export interface DiscordStageInstance {
-  /** The topic of the Stage instance (1-120 characters) */
-  topic: string
-  /** The id of this Stage instance */
-  id: string
-  /** The guild id of the associated Stage channel */
-  guild_id: string
-  /** The id of the associated Stage channel */
-  channel_id: string
-  /** The id of the scheduled event for this Stage instance */
-  guild_scheduled_event_id?: string
-}
-
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface DiscordSticker {
   /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
