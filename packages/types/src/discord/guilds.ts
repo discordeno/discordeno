@@ -1,9 +1,10 @@
 /** Types for: https://discord.com/developers/docs/resources/guild */
 
-import type { DiscordRole, OAuth2Scope } from '../discord.js'
+import type { DiscordRole } from '../discord.js'
 import type { DiscordChannel } from './channels.js'
 import type { DiscordEmoji } from './emojis.js'
 import type { DiscordPresenceUpdate } from './gateway.js'
+import type { OAuth2Scope } from './oauth2.js'
 import type { DiscordSoundboardSound } from './soundboards.js'
 import type { DiscordStageInstance } from './stageInstances.js'
 import type { DiscordSticker } from './stickers.js'
