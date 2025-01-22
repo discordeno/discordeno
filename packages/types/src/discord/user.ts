@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/user */
 
-import type { DiscordIntegration } from './guilds.js'
+import type { DiscordIntegration } from './guild.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-structure */
 export interface DiscordUser {

@@ -1,10 +1,10 @@
 /** Types for: https://discord.com/developers/docs/resources/invite */
 
-import type { DiscordApplication } from './applications.js'
-import type { DiscordChannel } from './channels.js'
-import type { DiscordScheduledEvent } from './guildScheduledEvents.js'
-import type { DiscordGuild, DiscordMember } from './guilds.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordApplication } from './application.js'
+import type { DiscordChannel } from './channel.js'
+import type { DiscordGuild, DiscordMember } from './guild.js'
+import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/invite#invite-object-invite-structure */
 export interface DiscordInvite {

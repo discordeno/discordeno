@@ -1,10 +1,10 @@
 /** Types for: https://discord.com/developers/docs/resources/guild-template */
 
 import type { PickPartial } from '../shared.js'
-import type { DiscordChannel, DiscordOverwrite } from './channels.js'
-import type { DiscordGuild } from './guilds.js'
+import type { DiscordChannel, DiscordOverwrite } from './channel.js'
+import type { DiscordGuild } from './guild.js'
 import type { DiscordRole } from './permissions.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/guild-template#guild-template-object-guild-template-structure */
 export interface DiscordTemplate {

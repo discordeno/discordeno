@@ -1,14 +1,14 @@
 /** Types for: https://discord.com/developers/docs/resources/guild */
 
-import type { ChannelTypes, DiscordChannel, DiscordOverwrite, SortOrderTypes } from './channels.js'
-import type { DiscordEmoji } from './emojis.js'
+import type { ChannelTypes, DiscordChannel, DiscordOverwrite, SortOrderTypes } from './channel.js'
+import type { DiscordEmoji } from './emoji.js'
 import type { DiscordPresenceUpdate } from './gateway.js'
 import type { OAuth2Scope } from './oauth2.js'
 import type { DiscordRole } from './permissions.js'
-import type { DiscordSoundboardSound } from './soundboards.js'
-import type { DiscordStageInstance } from './stageInstances.js'
-import type { DiscordSticker } from './stickers.js'
-import type { DiscordAvatarDecorationData, DiscordUser } from './users.js'
+import type { DiscordSoundboardSound } from './soundboard.js'
+import type { DiscordStageInstance } from './stageInstance.js'
+import type { DiscordSticker } from './sticker.js'
+import type { DiscordAvatarDecorationData, DiscordUser } from './user.js'
 import type { DiscordVoiceState } from './voice.js'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-structure */

@@ -1,9 +1,9 @@
 /** Types for: https://discord.com/developers/docs/topics/oauth2 */
 
-import type { DiscordApplication } from './applications.js'
-import type { DiscordGuild } from './guilds.js'
-import type { DiscordUser } from './users.js'
-import type { DiscordIncomingWebhook } from './webhooks.js'
+import type { DiscordApplication } from './application.js'
+import type { DiscordGuild } from './guild.js'
+import type { DiscordUser } from './user.js'
+import type { DiscordIncomingWebhook } from './webhook.js'
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
 export enum OAuth2Scope {

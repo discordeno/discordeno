@@ -4,17 +4,17 @@
  *  - https://discord.com/developers/docs/events/gateway-events
  */
 
-import type { DiscordApplication } from './applications.js'
+import type { DiscordApplication } from './application.js'
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
-import type { DiscordChannel, DiscordThreadMember } from './channels.js'
-import type { DiscordEmoji } from './emojis.js'
-import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guilds.js'
-import type { TargetTypes } from './invites.js'
-import type { DiscordReactionType } from './messages.js'
+import type { DiscordChannel, DiscordThreadMember } from './channel.js'
+import type { DiscordEmoji } from './emoji.js'
+import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guild.js'
+import type { TargetTypes } from './invite.js'
+import type { DiscordReactionType } from './message.js'
 import type { DiscordRole } from './permissions.js'
-import type { DiscordSoundboardSound } from './soundboards.js'
-import type { DiscordSticker } from './stickers.js'
-import type { DiscordAvatarDecorationData, DiscordUser } from './users.js'
+import type { DiscordSoundboardSound } from './soundboard.js'
+import type { DiscordSticker } from './sticker.js'
+import type { DiscordAvatarDecorationData, DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {

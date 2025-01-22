@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/topics/teams */
 
-import type { DiscordUser } from './users.js'
+import type { DiscordUser } from './user.js'
 
 /* https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types */
 export enum DiscordTeamMemberRole {

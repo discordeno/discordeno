@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/voice */
 
-import type { DiscordMemberWithUser } from './guilds.js'
+import type { DiscordMemberWithUser } from './guild.js'
 
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface DiscordVoiceState {

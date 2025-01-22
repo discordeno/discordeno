@@ -1,7 +1,7 @@
 /** Types for: https://discord.com/developers/docs/resources/poll */
 
-import type { DiscordEmoji } from './emojis.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordEmoji } from './emoji.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/poll#poll-object-poll-object-structure */
 export interface DiscordPoll {

@@ -1,13 +1,13 @@
 /** Types for: https://discord.com/developers/docs/resources/message */
 
-import type { DiscordApplication } from './applications.js'
-import type { DiscordChannel, DiscordThreadMember } from './channels.js'
-import type { DiscordEmoji } from './emojis.js'
-import type { DiscordMember } from './guilds.js'
+import type { DiscordApplication } from './application.js'
+import type { DiscordChannel, DiscordThreadMember } from './channel.js'
+import type { DiscordEmoji } from './emoji.js'
+import type { DiscordMember } from './guild.js'
 import type { DiscordAuthorizingIntegrationOwners, DiscordMessageComponents, DiscordMessageInteraction, InteractionTypes } from './interactions.js'
-import type { DiscordPoll } from './polls.js'
-import type { DiscordSticker, DiscordStickerItem } from './stickers.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordPoll } from './poll.js'
+import type { DiscordSticker, DiscordStickerItem } from './sticker.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/message#message-object-message-structure */
 export interface DiscordMessage {

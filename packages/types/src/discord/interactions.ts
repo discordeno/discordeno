@@ -5,14 +5,14 @@
  * - https://discord.com/developers/docs/interactions/message-components
  */
 
-import type { DiscordApplicationIntegrationType } from './applications.js'
-import type { ChannelTypes, DiscordChannel } from './channels.js'
-import type { DiscordEntitlement } from './entitlements.js'
-import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guilds.js'
-import type { DiscordAttachment, DiscordMessage } from './messages.js'
+import type { DiscordApplicationIntegrationType } from './application.js'
+import type { ChannelTypes, DiscordChannel } from './channel.js'
+import type { DiscordEntitlement } from './entitlement.js'
+import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guild.js'
+import type { DiscordAttachment, DiscordMessage } from './message.js'
 import type { DiscordRole } from './permissions.js'
 import type { Localization } from './reference.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure */
 export interface DiscordInteraction {

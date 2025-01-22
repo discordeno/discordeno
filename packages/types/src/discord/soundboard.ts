@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/soundboard */
 
-import type { DiscordUser } from './users.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
 export interface DiscordSoundboardSound {

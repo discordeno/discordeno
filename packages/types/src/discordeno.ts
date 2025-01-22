@@ -3,8 +3,8 @@ import type {
   DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordInstallParams,
-} from './discord/applications.js'
-import type { AuditLogEvents } from './discord/auditLogs.js'
+} from './discord/application.js'
+import type { AuditLogEvents } from './discord/auditLog.js'
 import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
@@ -20,13 +20,7 @@ import type {
   OverwriteTypes,
   SortOrderTypes,
   VideoQualityModes,
-} from './discord/channels.js'
-import type {
-  DiscordScheduledEventRecurrenceRule,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-} from './discord/guildScheduledEvents.js'
+} from './discord/channel.js'
 import type {
   DefaultMessageNotificationLevels,
   DiscordGuildOnboardingMode,
@@ -35,7 +29,13 @@ import type {
   GuildFeatures,
   SystemChannelFlags,
   VerificationLevels,
-} from './discord/guilds.js'
+} from './discord/guild.js'
+import type {
+  DiscordScheduledEventRecurrenceRule,
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus,
+} from './discord/guildScheduledEvent.js'
 import type {
   ApplicationCommandTypes,
   ButtonStyles,
@@ -47,7 +47,7 @@ import type {
   MessageComponentTypes,
   TextStyles,
 } from './discord/interactions.js'
-import type { TargetTypes } from './discord/invites.js'
+import type { TargetTypes } from './discord/invite.js'
 import type {
   AllowedMentionsTypes,
   DiscordAttachment,
@@ -55,9 +55,9 @@ import type {
   DiscordMessageReferenceType,
   DiscordReactionType,
   MessageFlags,
-} from './discord/messages.js'
+} from './discord/message.js'
 import type { DiscordRole, PermissionStrings } from './discord/permissions.js'
-import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/polls.js'
+import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/poll.js'
 import type { Localization } from './discord/reference.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
 import type { BigString, Camelize } from './shared.js'

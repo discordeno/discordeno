@@ -1,8 +1,8 @@
 /** Types for: https://discord.com/developers/docs/resources/webhook */
 
-import type { DiscordChannel } from './channels.js'
-import type { DiscordGuild } from './guilds.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordChannel } from './channel.js'
+import type { DiscordGuild } from './guild.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
 export type DiscordWebhook = DiscordIncomingWebhook | DiscordApplicationWebhook

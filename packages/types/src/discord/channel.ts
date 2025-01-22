@@ -1,8 +1,8 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
 import type { DiscordMessageComponents } from './interactions.js'
-import type { DiscordAllowedMentions, DiscordAttachment, DiscordEmbed, MessageFlags } from './messages.js'
-import type { DiscordUser } from './users.js'
+import type { DiscordAllowedMentions, DiscordAttachment, DiscordEmbed, MessageFlags } from './message.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
 export interface DiscordChannel {

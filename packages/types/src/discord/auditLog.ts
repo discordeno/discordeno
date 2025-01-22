@@ -1,17 +1,17 @@
 /** Types for: https://discord.com/developers/docs/resources/audit-log */
 
 import type { DiscordAutoModerationRule } from './autoModeration.js'
-import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channels.js'
-import type { DiscordEmoji } from './emojis.js'
-import type { DiscordScheduledEvent } from './guildScheduledEvents.js'
-import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guilds.js'
+import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channel.js'
+import type { DiscordEmoji } from './emoji.js'
+import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guild.js'
+import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
 import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
-import type { DiscordInvite, DiscordInviteMetadata } from './invites.js'
+import type { DiscordInvite, DiscordInviteMetadata } from './invite.js'
 import type { DiscordRole } from './permissions.js'
-import type { DiscordStageInstance } from './stageInstances.js'
-import type { DiscordSticker } from './stickers.js'
-import type { DiscordUser } from './users.js'
-import type { DiscordWebhook } from './webhooks.js'
+import type { DiscordStageInstance } from './stageInstance.js'
+import type { DiscordSticker } from './sticker.js'
+import type { DiscordUser } from './user.js'
+import type { DiscordWebhook } from './webhook.js'
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */
 export interface DiscordAuditLog {

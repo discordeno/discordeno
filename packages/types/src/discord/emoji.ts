@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/emoji */
 
-import type { DiscordUser } from './users.js'
+import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface DiscordEmoji {
