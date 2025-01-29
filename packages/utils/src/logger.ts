@@ -8,12 +8,6 @@ export enum LogLevels {
   Fatal,
 }
 
-/** @deprecated */
-export enum LogDepth {
-  Minimal,
-  Full,
-}
-
 const prefixes = new Map<LogLevels, string>([
   [LogLevels.Debug, 'DEBUG'],
   [LogLevels.Info, 'INFO'],
@@ -38,8 +32,6 @@ export function createLogger({
   logLevel?: LogLevels
   name?: string
 } = {}) {
-  let depth = LogDepth.Full
-
   function log(level: LogLevels, ...args: any[]) {
     if (level < logLevel) return
 
@@ -74,39 +66,28 @@ export function createLogger({
     logLevel = level
   }
 
-  /** @deprecated */
-  function setDepth(level: LogDepth) {
-    depth = level
-  }
-
   function debug(...args: any[]) {
-    if (LogDepth.Minimal === depth) log(LogLevels.Debug, args[0])
-    else log(LogLevels.Debug, ...args)
+    log(LogLevels.Debug, ...args)
   }
 
   function info(...args: any[]) {
-    if (LogDepth.Minimal === depth) log(LogLevels.Info, args[0])
-    else log(LogLevels.Info, ...args)
+    log(LogLevels.Info, ...args)
   }
 
   function warn(...args: any[]) {
-    if (LogDepth.Minimal === depth) log(LogLevels.Warn, args[0])
-    else log(LogLevels.Warn, ...args)
+    log(LogLevels.Warn, ...args)
   }
 
   function error(...args: any[]) {
-    if (LogDepth.Minimal === depth) log(LogLevels.Error, args[0])
-    else log(LogLevels.Error, ...args)
+    log(LogLevels.Error, ...args)
   }
 
   function fatal(...args: any[]) {
-    if (LogDepth.Minimal === depth) log(LogLevels.Fatal, args[0])
-    else log(LogLevels.Fatal, ...args)
+    log(LogLevels.Fatal, ...args)
   }
 
   return {
     log,
-    setDepth,
     setLevel,
     debug,
     info,
