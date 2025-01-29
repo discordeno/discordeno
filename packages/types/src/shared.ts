@@ -830,6 +830,8 @@ export type PermissionStrings = keyof typeof BitwisePermissionFlags
 export enum GatewayCloseEventCodes {
   /** A normal closure of the gateway. You may attempt to reconnect. */
   NormalClosure = 1000,
+  /** The endpoint is going away. Invalidates bot and bot will appear offline.  */
+  GoingAway = 1001,
   /** We're not sure what went wrong. Try reconnecting? */
   UnknownError = 4000,
   /** You sent an invalid [Gateway opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes) or an invalid payload for an opcode. Don't do that! */
