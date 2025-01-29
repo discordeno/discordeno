@@ -8,6 +8,7 @@ export enum LogLevels {
   Fatal,
 }
 
+/** @deprecated */
 export enum LogDepth {
   Minimal,
   Full,
@@ -37,7 +38,7 @@ export function createLogger({
   logLevel?: LogLevels
   name?: string
 } = {}) {
-  let depth = LogDepth.Minimal
+  let depth = LogDepth.Full
 
   function log(level: LogLevels, ...args: any[]) {
     if (level < logLevel) return
@@ -73,6 +74,7 @@ export function createLogger({
     logLevel = level
   }
 
+  /** @deprecated */
   function setDepth(level: LogDepth) {
     depth = level
   }
