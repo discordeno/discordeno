@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { LogDepth, LogLevels, createLogger } from '../src/logger.js'
+import { LogLevels, createLogger } from '../src/logger.js'
 
 describe('Logger', () => {
   it('create logger with default options', () => {
@@ -11,8 +11,6 @@ describe('Logger', () => {
     loggy.fatal('fatal')
     loggy.info('info')
     loggy.warn('warn')
-
-    loggy.setDepth(LogDepth.Full)
 
     loggy.debug('debugging')
     loggy.error('error')
