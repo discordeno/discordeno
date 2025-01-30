@@ -128,7 +128,7 @@ export class DiscordenoShard {
 
   /** Close the socket connection to discord if present. */
   async close(code: number, reason: string): Promise<void> {
-    this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket.`)
+    this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket with code ${code}.`)
 
     if (this.socket?.readyState !== NodeWebSocket.OPEN) {
       this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`)
@@ -142,12 +142,12 @@ export class DiscordenoShard {
 
     this.socket.close(code, reason)
 
-    this.logger.debug(`[Shard] Waiting for Shard #${this.id} to close the socket.`)
+    this.logger.debug(`[Shard] Waiting for Shard #${this.id} to close the socket with code ${code}.`)
 
     // We need to wait for the socket to be fully closed, otherwise there'll be race condition issues if we try to connect again, resulting in unexpected behavior.
     await promise
 
-    this.logger.debug(`[Shard] Shard #${this.id} closed the socket.`)
+    this.logger.debug(`[Shard] Shard #${this.id} closed the socket with code ${code}.`)
 
     // Reset the resolveAfterClose function after it has been resolved.
     this.resolveAfterClose = undefined
@@ -411,8 +411,7 @@ export class DiscordenoShard {
       case ShardSocketCloseCodes.Shutdown:
       case ShardSocketCloseCodes.ReIdentifying:
       case ShardSocketCloseCodes.Resharded:
-      case ShardSocketCloseCodes.ResumeClosingOldConnection:
-      case ShardSocketCloseCodes.ZombiedConnection: {
+      case ShardSocketCloseCodes.ResumeClosingOldConnection: {
         this.state = ShardState.Disconnected
         this.events.disconnected?.(this)
 
@@ -757,8 +756,6 @@ export class DiscordenoShard {
         if (!this.heart.acknowledged) {
           this.logger.debug(`[Shard] Heartbeat not acknowledged for Shard #${this.id}. Assuming zombied connection.`)
           await this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
-
-          await this.resume()
           return
         }
 
