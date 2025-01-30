@@ -9,7 +9,6 @@ import type {
   Member,
   Role,
   SetupDesiredProps,
-  TransformProperty,
   TransformersDesiredProperties,
   User,
 } from './index.js'
@@ -74,17 +73,35 @@ export type InteractionResolvedData<TProps extends TransformersDesiredProperties
   | string
   | number
   | boolean
-  | TransformProperty<InteractionResolvedUser, TProps, TBehavior>
-  | TransformProperty<InteractionResolvedChannel, TProps, TBehavior>
-  | TransformProperty<Role, TProps, TBehavior>
-  | TransformProperty<Attachment, TProps, TBehavior>
+  | InteractionResolvedDataUser<TProps, TBehavior>
+  | InteractionResolvedDataChannel<TProps, TBehavior>
+  | SetupDesiredProps<Role, TProps, TBehavior>
+  | SetupDesiredProps<Attachment, TProps, TBehavior>
   | ParsedInteractionOption<TProps, TBehavior>
 
+export interface InteractionResolvedDataUser<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
+  user: SetupDesiredProps<User, TProps, TBehavior>
+  member: InteractionResolvedDataMember<TProps, TBehavior>
+}
+
+export type InteractionResolvedDataChannel<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Pick<
+  SetupDesiredProps<Channel, TProps, TBehavior>,
+  Extract<keyof SetupDesiredProps<Channel, TProps, TBehavior>, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
+>
+
+export type InteractionResolvedDataMember<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Omit<
+  SetupDesiredProps<Member, TProps, TBehavior>,
+  'user' | 'deaf' | 'mute'
+>
+
+/** @deprecated Use {@link InteractionResolvedDataUser} */
 export interface InteractionResolvedUser {
   user: User
   member: InteractionResolvedMember
 }
 
+/** @deprecated Use {@link InteractionResolvedDataChannel} */
 export type InteractionResolvedChannel = Pick<Channel, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
 
+/** @deprecated Use {@link InteractionResolvedDataMember} */
 export type InteractionResolvedMember = Omit<Member, 'user' | 'deaf' | 'mute'>
