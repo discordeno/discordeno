@@ -406,6 +406,8 @@ export class DiscordenoShard {
         return
       }
       // On these codes a manual start will be done.
+      case GatewayCloseEventCodes.NormalClosure:
+      case GatewayCloseEventCodes.GoingAway:
       case ShardSocketCloseCodes.Shutdown:
       case ShardSocketCloseCodes.ReIdentifying:
       case ShardSocketCloseCodes.Resharded:
