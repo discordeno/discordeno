@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@discordeno/bot": "21.0.0",
-    "@fastify/multipart": "^9.0.1",
+    "@fastify/multipart": "^9.0.3",
     "@influxdata/influxdb-client": "^1.35.0",
     "amqplib": "^0.10.5",
     "chalk": "^5.4.1",
