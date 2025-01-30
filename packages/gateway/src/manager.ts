@@ -271,7 +271,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       )
     },
     calculateWorkerId(shardId) {
-      const workerId = Math.min(shardId % gateway.shardsPerWorker, gateway.totalWorkers - 1)
+      const workerId = Math.min(Math.floor(shardId / gateway.shardsPerWorker), gateway.totalWorkers - 1);
       gateway.logger.debug(
         `[Gateway] Calculating workerId: Shard: ${shardId} -> Worker: ${workerId} -> Per Worker: ${gateway.shardsPerWorker} -> Total: ${gateway.totalWorkers}`,
       )
