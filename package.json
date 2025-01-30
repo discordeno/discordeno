@@ -1,47 +1,44 @@
 {
   "name": "discordeno-monorepo",
-  "version": "19.0.0",
+  "version": "21.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "yarn@4.6.0",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"turbo run build build:type\"",
+    "build": "turbo build",
+    "build:type": "turbo build:type",
     "build:doc": "typedoc --options ./typedoc.json && node scripts/finalizeTypedocs.js",
-    "build:type": "turbo run build:type",
-    "release-build": "turbo run build build:type",
-    "test:bun-unit": "turbo run test:bun-unit",
-    "test:deno-unit": "turbo run test:deno-unit",
-    "test:e2e": "turbo run test:e2e",
-    "test:integration": "turbo run test:integration",
-    "test:test-type": "turbo run test:test-type",
-    "test:type": "turbo run build:type",
-    "test:unit": "turbo run test:unit",
-    "test:unit-coverage": "turbo run test:unit-coverage",
-    "fmt": "turbo run fmt",
+    "build:watch": "turbo watch build build:type",
+    "release-build": "turbo build build:type",
+    "test:unit": "turbo test:unit",
+    "test:unit-coverage": "turbo test:unit-coverage",
+    "test:bun-unit": "turbo test:bun-unit",
+    "test:deno-unit": "turbo test:deno-unit",
+    "test:integration": "turbo test:integration",
+    "test:e2e": "turbo test:e2e",
+    "test:type": "turbo build:type",
+    "test:test-type": "turbo test:test-type",
+    "fmt": "turbo fmt",
+    "lint": "turbo lint",
     "format": "biome format --write",
-    "lint": "turbo run lint",
-    "prepare": "husky",
-    "setup-dd": "husky"
+    "postinstall": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "chokidar-cli": "^3.0.0",
-    "discordeno": "19.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
-    "turbo": "^2.3.1",
-    "typedoc": "^0.26.11",
-    "typedoc-plugin-markdown": "^4.2.10",
-    "typescript": "^5.6.3"
+    "lint-staged": "^15.3.0",
+    "turbo": "^2.3.3",
+    "typedoc": "^0.27.6",
+    "typedoc-plugin-markdown": "^4.4.0",
+    "typescript": "^5.7.2"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "lint-staged": {
-    "*": "yarn biome check --no-errors-on-unmatched --write"
-  },
-  "packageManager": "yarn@4.0.2"
+    "*": "biome check --no-errors-on-unmatched --write"
+  }
 }

@@ -20,7 +20,7 @@ const reviewList: IReview[] = [
       discriminator: '2911',
       avatar: 'https://giveaway.boats/assets/logo.png',
       invite_url: 'https://invite.giveaway.boats/',
-      guild_count: 225000,
+      guild_count: 300000,
     },
     developer: {
       usernames: ['Awesome Stickz'],
@@ -30,6 +30,7 @@ const reviewList: IReview[] = [
     memory_improvement: {
       from: 20000,
       to: 7000,
+      guild_count: 150000,
     },
   },
   {
@@ -39,7 +40,7 @@ const reviewList: IReview[] = [
       discriminator: '8424',
       avatar: 'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
       invite_url: 'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
-      guild_count: 163000,
+      guild_count: 200000,
     },
     developer: {
       usernames: ['8au'],
@@ -49,6 +50,7 @@ const reviewList: IReview[] = [
     memory_improvement: {
       from: 4500,
       to: 614,
+      guild_count: 41000,
     },
   },
   {
@@ -58,7 +60,7 @@ const reviewList: IReview[] = [
       discriminator: '0756',
       avatar: 'https://cdn.discordapp.com/avatars/853327905357561948/b1785ce8fad6e6b6b2a7ccaba11be25e.png',
       invite_url: 'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
-      guild_count: 244000,
+      guild_count: 370000,
     },
     developer: {
       usernames: ['8au'],
@@ -68,6 +70,7 @@ const reviewList: IReview[] = [
     memory_improvement: {
       from: 7800,
       to: 3700,
+      guild_count: 82000,
     },
   },
   {
@@ -77,7 +80,7 @@ const reviewList: IReview[] = [
       discriminator: '6503',
       avatar: 'https://cdn.discordapp.com/avatars/735147814878969968/8b72f174c30276f4d48c1e66608df70c.webp',
       invite_url: 'https://discord.com/api/oauth2/authorize?client_id=735147814878969968&permissions=805825744&scope=applications.commands%20bot',
-      guild_count: 278000,
+      guild_count: 320000,
     },
     developer: {
       usernames: ['Meister'],
@@ -87,25 +90,7 @@ const reviewList: IReview[] = [
     memory_improvement: {
       from: 13000,
       to: 11000,
-    },
-  },
-  {
-    review: `I think choosing discordeno is a very good option, we have been working with Discord.js for years, and yes... It's good, but for large scale bots... nothing better than discordeno. Besides its creator is very attentive, and gives us a hand whenever he can.`,
-    bot: {
-      username: 'CactusFire',
-      discriminator: '3759',
-      avatar: 'https://i.imgur.com/L7zadjU.png',
-      invite_url: 'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
-      guild_count: 284000,
-    },
-    developer: {
-      usernames: ['LHCLYT'],
-    },
-    stars: 5,
-    previous_library: 'DISCORD_JS',
-    memory_improvement: {
-      from: 64000,
-      to: 9000,
+      guild_count: 211000,
     },
   },
 ]
@@ -210,7 +195,7 @@ export default function DiscordenoReviews() {
                               100}
                             %
                           </strong>
-                          RAM improvement
+                          RAM improvement (at {review.memory_improvement.guild_count / 1000}K servers)
                         </div>
                       )}
                     </div>

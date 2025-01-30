@@ -5,7 +5,7 @@ import 'dotenv/config'
 
 // General Configurations
 
-export const DEVELOPMENT = process.env.DEVELOPMENT ?? false
+export const DEVELOPMENT = process.env.DEVELOPMENT === 'true'
 export const DEV_SERVER_ID = process.env.DEV_SERVER_ID
 export const DISCORD_TOKEN = assertEnv('DISCORD_TOKEN')
 
@@ -36,7 +36,7 @@ export const GATEWAY_PORT = parseNumber(assertEnv('GATEWAY_PORT'), 'GATEWAY_PORT
 
 // Message queue (RabbitMQ configuration)
 
-export const MESSAGEQUEUE_ENABLE = process.env.MESSAGEQUEUE_ENABLE ?? false
+export const MESSAGEQUEUE_ENABLE = process.env.MESSAGEQUEUE_ENABLE === 'true'
 
 export const MESSAGEQUEUE_URL = process.env.MESSAGEQUEUE_URL
 export const MESSAGEQUEUE_USERNAME = process.env.MESSAGEQUEUE_USERNAME

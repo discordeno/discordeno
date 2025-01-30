@@ -20,13 +20,13 @@ const ZLIB_SYNC_FLUSH = new Uint8Array([0x0, 0x0, 0xff, 0xff])
 
 let fzstd: typeof import('fzstd')
 
-/** Since fzstd is an optional dependency, we need to import it lazily */
+/** Since fzstd is an optional dependency, we need to import it lazily. */
 async function getFZStd() {
   return (fzstd ??= await import('fzstd'))
 }
 
 export class DiscordenoShard {
-  /** The id of the shard */
+  /** The id of the shard. */
   id: number
   /** The connection config details that this shard will used to connect to discord. */
   connection: ShardGatewayConfig
@@ -54,18 +54,25 @@ export class DiscordenoShard {
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
   bucket: LeakyBucket
-  /** Logger for the bucket */
+  /** Logger for the bucket. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
-  /** Text decoder used for compressed payloads */
+  /** Text decoder used for compressed payloads. */
   textDecoder = new TextDecoder()
-  /** ZLib Inflate instance for ZLib-stream transport payloads */
+  /** ZLib Inflate instance for ZLib-stream transport payloads. */
   inflate?: Inflate
-  /** ZLib inflate buffer */
+  /** ZLib inflate buffer. */
   inflateBuffer: Uint8Array | null = null
-  /** ZStd Decompress instance for ZStd-stream transport payloads */
+  /** ZStd Decompress instance for ZStd-stream transport payloads. */
   zstdDecompress?: ZstdDecompress
   /** Queue for compressed payloads for Zstd Decompress */
   decompressionPromisesQueue: ((data: DiscordGatewayPayload) => void)[] = []
+  /**
+   * A function that will be called once the socket is closed and handleClose() has finished updating internal states.
+   *
+   * @internal
+   * This is for internal purposes only, and subject to breaking changes.
+   */
+  resolveAfterClose?: (close: CloseEvent) => void
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -120,10 +127,30 @@ export class DiscordenoShard {
   }
 
   /** Close the socket connection to discord if present. */
-  close(code: number, reason: string): void {
-    if (this.socket?.readyState !== NodeWebSocket.OPEN) return
+  async close(code: number, reason: string): Promise<void> {
+    this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket.`)
 
-    this.socket?.close(code, reason)
+    if (this.socket?.readyState !== NodeWebSocket.OPEN) {
+      this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`)
+      return
+    }
+
+    // This has to be created before the actual call to socket.close as for example Bun calls socket.onclose immediately on the .close() call instead of waiting for the connection to end
+    const promise = new Promise((resolve) => {
+      this.resolveAfterClose = resolve
+    })
+
+    this.socket.close(code, reason)
+
+    this.logger.debug(`[Shard] Waiting for Shard #${this.id} to close the socket.`)
+
+    // We need to wait for the socket to be fully closed, otherwise there'll be race condition issues if we try to connect again, resulting in unexpected behavior.
+    await promise
+
+    this.logger.debug(`[Shard] Shard #${this.id} closed the socket.`)
+
+    // Reset the resolveAfterClose function after it has been resolved.
+    this.resolveAfterClose = undefined
   }
 
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
@@ -228,7 +255,7 @@ export class DiscordenoShard {
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Identifying open Shard #${this.id}, closing the connection`)
-      this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
+      await this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
     this.state = ShardState.Identifying
@@ -285,7 +312,7 @@ export class DiscordenoShard {
     // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Resuming open Shard #${this.id}, closing the connection`)
-      this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
+      await this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
     }
 
     // Shard has never identified, so we cannot resume.
@@ -346,7 +373,7 @@ export class DiscordenoShard {
 
   /** Shutdown the this. Forcefully disconnect the shard from Discord. The shard may not attempt to reconnect with Discord. */
   async shutdown(): Promise<void> {
-    this.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down.')
+    await this.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down.')
     this.state = ShardState.Offline
   }
 
@@ -367,6 +394,9 @@ export class DiscordenoShard {
     this.decompressionPromisesQueue = []
 
     this.logger.debug(`[Shard] Shard #${this.id} closed with code ${close.code}${close.reason ? `, and reason: ${close.reason}` : ''}.`)
+
+    // Resolve the close promise if it exists
+    this.resolveAfterClose?.(close)
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
@@ -565,6 +595,7 @@ export class DiscordenoShard {
         break
       }
       case GatewayOpcodes.Reconnect: {
+        this.logger.debug(`[Shard] Received a Reconnect for Shard #${this.id}`)
         this.events.requestedReconnect?.(this)
 
         await this.resume()
@@ -723,7 +754,7 @@ export class DiscordenoShard {
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
           this.logger.debug(`[Shard] Heartbeat not acknowledged for Shard #${this.id}. Assuming zombied connection.`)
-          this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
+          await this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           await this.resume()
           return

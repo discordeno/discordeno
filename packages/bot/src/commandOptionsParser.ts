@@ -2,26 +2,25 @@ import { ApplicationCommandOptionTypes } from '@discordeno/types'
 import type {
   Attachment,
   Channel,
+  CompleteDesiredProperties,
   DesiredPropertiesBehavior,
   Interaction,
   InteractionDataOption,
   Member,
   Role,
   SetupDesiredProps,
-  TransformProperty,
   TransformersDesiredProperties,
   User,
-  WithAtLeast,
 } from './index.js'
 
 export function commandOptionsParser<
-  TProps extends WithAtLeast<TransformersDesiredProperties, { interaction: { data: true } }>,
+  TProps extends TransformersDesiredProperties & { interaction: { data: true } },
   TBehavior extends DesiredPropertiesBehavior,
 >(__interaction: SetupDesiredProps<Interaction, TProps, TBehavior>, options?: InteractionDataOption[]): ParsedInteractionOption<TProps, TBehavior> {
-  // This is necessary as typescript gets really confused when using __interaction alone, as it will say that 'data' does not exist despite it surely exist since we have the WithAtLeast
+  // This is necessary as typescript gets really confused when using __interaction alone, as it will say that 'data' does not exist despite it surely exist since we have the &
   const interaction = __interaction as SetupDesiredProps<
     Interaction,
-    WithAtLeast<TransformersDesiredProperties, { interaction: { data: true } }>,
+    CompleteDesiredProperties<{ interaction: { data: true } }>,
     DesiredPropertiesBehavior.RemoveKey
   >
 
@@ -74,17 +73,35 @@ export type InteractionResolvedData<TProps extends TransformersDesiredProperties
   | string
   | number
   | boolean
-  | TransformProperty<InteractionResolvedUser, TProps, TBehavior>
-  | TransformProperty<InteractionResolvedChannel, TProps, TBehavior>
-  | TransformProperty<Role, TProps, TBehavior>
-  | TransformProperty<Attachment, TProps, TBehavior>
+  | InteractionResolvedDataUser<TProps, TBehavior>
+  | InteractionResolvedDataChannel<TProps, TBehavior>
+  | SetupDesiredProps<Role, TProps, TBehavior>
+  | SetupDesiredProps<Attachment, TProps, TBehavior>
   | ParsedInteractionOption<TProps, TBehavior>
 
+export interface InteractionResolvedDataUser<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
+  user: SetupDesiredProps<User, TProps, TBehavior>
+  member: InteractionResolvedDataMember<TProps, TBehavior>
+}
+
+export type InteractionResolvedDataChannel<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Pick<
+  SetupDesiredProps<Channel, TProps, TBehavior>,
+  Extract<keyof SetupDesiredProps<Channel, TProps, TBehavior>, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
+>
+
+export type InteractionResolvedDataMember<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Omit<
+  SetupDesiredProps<Member, TProps, TBehavior>,
+  'user' | 'deaf' | 'mute'
+>
+
+/** @deprecated Use {@link InteractionResolvedDataUser} */
 export interface InteractionResolvedUser {
   user: User
   member: InteractionResolvedMember
 }
 
+/** @deprecated Use {@link InteractionResolvedDataChannel} */
 export type InteractionResolvedChannel = Pick<Channel, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
 
+/** @deprecated Use {@link InteractionResolvedDataMember} */
 export type InteractionResolvedMember = Omit<Member, 'user' | 'deaf' | 'mute'>

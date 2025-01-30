@@ -1262,7 +1262,7 @@ export interface RestManager {
    * @remarks
    * If editing another user's message:
    * - Requires the `MANAGE_MESSAGES` permission.
-   * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+   * - Only the {@link EditMessage.flags | flags} property of the options object parameter can be edited.
    *
    * Fires a _Message Update_ gateway event.
    *
@@ -1311,7 +1311,7 @@ export interface RestManager {
    * @param options - The parameters for the edit of the voice state.
    *
    * @remarks
-   * The {@link EditOwnVoiceState.channelId | channelId} property of the {@link options} object parameter must point to a stage channel, and the bot user must already have joined it.
+   * The {@link EditOwnVoiceState.channelId | channelId} property of the options object parameter must point to a stage channel, and the bot user must already have joined it.
    *
    * If attempting to unmute oneself:
    * - Requires the `MUTE_MEMBERS` permission.
@@ -1403,7 +1403,7 @@ export interface RestManager {
    * @param options - The parameters for the edit of the voice state.
    *
    * @remarks
-   * The {@link EditOwnVoiceState.channelId | channelId} property of the {@link options} object parameter must point to a stage channel, and the user must already have joined it.
+   * The {@link EditOwnVoiceState.channelId | channelId} property of the options object parameter must point to a stage channel, and the user must already have joined it.
    *
    * Requires the `MUTE_MEMBERS` permission.
    *
@@ -1523,7 +1523,7 @@ export interface RestManager {
    * @param webhookId - The ID of the webhook to execute.
    * @param token - The webhook token, used to execute the webhook.
    * @param options - The parameters for the execution of the webhook.
-   * @returns An instance of the created {@link DiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+   * @returns An instance of the created {@link DiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the options object parameter is set to `false`.
    *
    * @remarks
    * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
@@ -2912,9 +2912,9 @@ export interface RestManager {
    * @remarks
    * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions.
    *
-   * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the {@link options} object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
+   * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the options object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
    *
-   * ⚠️ By default, this process will not remove members with a role. To include the members who have a _particular subset of roles_, specify the role(s) in the {@link BeginGuildPrune.includeRoles | includeRoles} property of the {@link options} object parameter.
+   * ⚠️ By default, this process will not remove members with a role. To include the members who have a _particular subset of roles_, specify the role(s) in the {@link BeginGuildPrune.includeRoles | includeRoles} property of the options object parameter.
    *
    * Fires a _Guild Member Remove_ gateway event for every member kicked.
    *
@@ -2996,6 +2996,13 @@ export interface RestManager {
    */
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<Camelize<DiscordEntitlement>[]>
   /**
+   * Returns an entitlement.
+   *
+   * @param applicationId - The id of the application to get the entitlement
+   * @param entitlementId - The id of the entitlement to get
+   */
+  getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<Camelize<DiscordEntitlement>>
+  /**
    * Creates a test entitlement to a given SKU for a given guild or user. Discord will act as though that user or guild has entitlement to your premium offering.
    *
    * @param applicationId - The id of the application to create the entitlement
@@ -3014,7 +3021,10 @@ export interface RestManager {
    */
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   /**
-   * For One-Time Purchase consumable SKUs, marks a given entitlement for the user as consumed. The entitlement will have `consumed: true` when using {@link RestManager.listEntitlements | List Entitlements}
+   * For One-Time Purchase consumable SKUs, marks a given entitlement for the user as consumed. The entitlement will have `consumed: true` when using {@link listEntitlements | List Entitlements}
+   *
+   * @param applicationId - The id of the application to get the entitlement
+   * @param entitlementId - The id of the entitlement to get
    */
   consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   /**

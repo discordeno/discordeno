@@ -55,14 +55,21 @@ import {
   type MfaLevels,
   type ModifyGuildTemplate,
 } from '@discordeno/types'
-import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
+import {
+  DISCORDENO_VERSION,
+  calculateBits,
+  camelToSnakeCase,
+  camelize,
+  delay,
+  getBotIdFromToken,
+  logger,
+  processReactionString,
+  urlToBase64,
+} from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
 import { createRoutes } from './routes.js'
 import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
-
-// TODO: make dynamic based on package.json file
-const version = '19.0.0'
 
 export const DISCORD_API_VERSION = 10
 export const DISCORD_API_URL = 'https://discord.com/api'
@@ -102,7 +109,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     createBaseHeaders() {
       return {
-        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
+        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`,
       }
     },
 
@@ -257,7 +264,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       if (options?.files !== undefined) {
         const form = new FormData()
         for (let i = 0; i < options.files.length; ++i) {
-          form.append(`file${i}`, options.files[i].blob, options.files[i].name)
+          form.append(`files[${i}]`, options.files[i].blob, options.files[i].name)
         }
 
         // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
@@ -448,6 +455,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return
         }
 
+        // Consume the response body to avoid leaking memory
+        await response.arrayBuffer()
+
         rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
@@ -466,8 +476,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
         if (resetAfter) await delay(Number(resetAfter) * 1000)
-        // process the response to prevent mem leak
-        await response.arrayBuffer()
 
         return await options.retryRequest?.(options)
       }
@@ -547,23 +555,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const errText = await result.text().catch(() => null)
+          const body = (result.headers.get('Content-Type') === 'application/json' ? await result.json() : await result.text()).catch(() => null)
 
-          if (errText) {
-            error.cause = {
-              ok: false,
-              status: result.status,
-              body: errText,
-            }
-
-            throw error
+          error.cause = {
+            ok: false,
+            status: result.status,
+            body,
           }
 
-          const err = (await result.json().catch(() => {})) as Record<string, any>
-          // Legacy Handling to not break old code or when body is missing
-          if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
-
-          throw new Error(JSON.stringify(err))
+          throw error
         }
 
         return result.status !== 204 ? await result.json() : undefined
@@ -1630,6 +1630,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async listEntitlements(applicationId, options) {
       return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options))
+    },
+
+    async getEntitlement(applicationId, entitlementId) {
+      return await rest.get<DiscordEntitlement>(rest.routes.monetization.entitlement(applicationId, entitlementId))
     },
 
     async deleteTestEntitlement(applicationId, entitlementId) {

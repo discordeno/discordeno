@@ -201,10 +201,10 @@ interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadat
   }
 }
 
-export function createDesiredPropertiesObject(
-  desiredProperties: RecursivePartial<TransformersDesiredProperties>,
-  defaultValue = false,
-): TransformersDesiredProperties {
+export function createDesiredPropertiesObject<T extends RecursivePartial<TransformersDesiredProperties>, TDefault extends boolean = false>(
+  desiredProperties: T,
+  defaultValue: TDefault = false as TDefault,
+): CompleteDesiredProperties<T, TDefault> {
   return {
     activityInstance: {
       applicationId: defaultValue,
@@ -700,6 +700,7 @@ export function createDesiredPropertiesObject(
       country: defaultValue,
       currentPeriodEnd: defaultValue,
       currentPeriodStart: defaultValue,
+      renewalSkuIds: defaultValue,
       entitlementIds: defaultValue,
       id: defaultValue,
       skuIds: defaultValue,
@@ -718,7 +719,7 @@ export function createDesiredPropertiesObject(
       volume: defaultValue,
       ...desiredProperties.soundboardSound,
     },
-  }
+  } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>
 }
 
 type KeyByValue<TObj, TValue> = {
@@ -727,10 +728,6 @@ type KeyByValue<TObj, TValue> = {
 
 type Complete<TObj, TDefault> = {
   [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
-}
-
-export type WithAtLeast<T extends TransformersDesiredProperties, AtLeast extends RecursivePartial<TransformersDesiredProperties>> = T & {
-  [K in keyof T]: K extends keyof AtLeast ? Complete<AtLeast[K], false> & T[K] : T[K]
 }
 
 type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]

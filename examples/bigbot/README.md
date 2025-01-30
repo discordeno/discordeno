@@ -60,12 +60,12 @@ You can check the REST process fetch analytics (methods, status...) in influxdb'
 > [!NOTE]
 > This template has been tested with the following versions:
 >
-> - NodeJS: v18.20.3, v20.14.0 and v22.2.0
+> - NodeJS: v18.20.3, v20.18.1 and v22.2.0
 >   - Any NodeJS version between v18.20.3 and v22.2.0 should work, anything below v18 will not run correctly, anything above v22 should work
-> - RabbitMQ: v3.12.14 with:
->   - Erlang: v26.2.5
->   - [RabbitMQ Message Deduplication Plugin](https://github.com/noxdafox/rabbitmq-message-deduplication): v0.6.2
-> - InfluxDB: v2.7.6
+> - RabbitMQ: v4.0.5 with:
+>   - Erlang: v27.2
+>   - [RabbitMQ Message Deduplication Plugin](https://github.com/noxdafox/rabbitmq-message-deduplication): v0.6.4
+> - InfluxDB: v2.7.11
 
 You will need to start a few processes.
 
@@ -74,7 +74,6 @@ The preset value of `EVENT_HANDLER_HOST`, `REST_HOST`, and `GATEWAY_HOST` all us
 #### Setup process
 
 - Install the dependencies with yarn
-- Run the Discordeno desired properties CLI with `yarn postinstall`
 - Build the code with `yarn build`
 
 You can start different parts of your bot in the following order.

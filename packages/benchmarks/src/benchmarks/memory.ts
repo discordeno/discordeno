@@ -2,18 +2,6 @@ import { createBot, snakeToCamelCase } from '@discordeno/bot'
 import { events as dbEvents } from '../utils/db.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
-/* Example Usage
-deno run --v8-flags="--expose-gc" -A .\index.ts
-*/
-/*
-import { createBot } from "https://deno.land/x/discordeno@17.1.0/mod.ts";
-import { enableCachePlugin } from "https://deno.land/x/discordeno@17.1.0/plugins/mod.ts";
-memoryBenchmark(() => enableCachePlugin(createBot({
-  token: " ",
-  botId: 0n,
-})))
-*/
-
 await memoryBenchmark(
   '[Cache Plugin]',
   () =>

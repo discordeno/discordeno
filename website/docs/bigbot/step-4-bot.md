@@ -8,8 +8,12 @@ sidebar_label: Step 4 - Bot
 Woah! You went through the most difficult part already which was the gateway. WOOT! Let's go ahead and jump into the event handler portion so we can proceed. The event handler will be called as the `bot` process going forward. Its purpose is generally to listen for events coming from the shards and process them accordingly.
 
 :::tip
-If you have the money, I would recommend writing the event listener(bot), in a serverless friendly manner. If that code is deployed to something like cloudflare workers, your bot will have unlimited scalability and your shards would simply route these events to be sent there.
+If you have the money, I would recommend writing the event handler (bot), in a serverless friendly manner. If that code is deployed to something like cloudflare workers, your bot will have unlimited scalability and your shards would simply route these events to be sent there.
 :::
+
+## Why Use Standalone Event Handler Process?
+
+The standalone event handler is the portion of your bot code that you will be changing the most. The two previous steps created processes are intended to never be turned off. This process is designed to let you restart whenever you wish and be incredibly quick to restart. Since we don't have the delay to start up shards anymore, your code becomes reloaded instantly.
 
 ## Creating Bot Manager
 
@@ -153,7 +157,7 @@ BOT.gateway.requestMembers = async function (guildId, options) {
 }
 ```
 
-This will now send a request to our gateway manager whenever the bot makes a request to fetch members.
+This will now send a request to our gateway manager whenever the bot makes a request to fetch members and the gateway process will send back `GUILD_MEMBERS_CHUNK` event(s) to the bot process.
 
 ## Caching
 

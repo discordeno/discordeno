@@ -6,7 +6,7 @@
   "type": "module",
   "license": "ISC",
   "private": true,
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.6.0",
   "scripts": {
     "start:bot": "node dist/bot/index.js",
     "start:rest": "node dist/rest/index.js",
@@ -15,22 +15,23 @@
     "build:watch": "swc src --strip-leading-paths --delete-dir-on-start --watch --out-dir dist",
     "dev:bot": "node --watch --watch-preserve-output dist/bot/index.js",
     "dev:rest": "node --watch --watch-preserve-output dist/rest/index.js",
-    "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js",
-    "setup-dd": ""
+    "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js"
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0",
-    "@fastify/multipart": "^9.0.1",
-    "@influxdata/influxdb-client": "^1.33.2",
-    "amqplib": "^0.10.4",
-    "chalk": "^5.3.0",
-    "fastify": "^5.1.0"
+    "@discordeno/bot": "21.0.0",
+    "@fastify/multipart": "^9.0.3",
+    "@influxdata/influxdb-client": "^1.35.0",
+    "amqplib": "^0.10.5",
+    "chalk": "^5.4.1",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.5.0",
-    "@swc/core": "^1.9.2",
-    "@types/amqplib": "^0.10.5",
-    "@types/node": "^22.9.0",
-    "typescript": "^5.6.3"
+    "@swc/cli": "^0.5.2",
+    "@swc/core": "^1.10.4",
+    "@types/amqplib": "^0.10.6",
+    "@types/node": "^22.10.2",
+    "chokidar": "^3.6.0",
+    "typescript": "^5.7.2"
   }
 }

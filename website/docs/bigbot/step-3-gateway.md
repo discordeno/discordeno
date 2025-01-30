@@ -23,6 +23,29 @@ In Discordeno, we have 2 main portions of the gateway system. We have what we ca
 
 Let's say the bot process needs to execute some code on some shard such as fetching members, changing bot's status, or anything else. The ideal way to do this is the bot process sends a request to the gateway manager process which sends a request to the shard process which can send it back to the bot process directly. All of this will help make it easily scale horizontally, which we will start to see below as we code.
 
+## Why Use Standalone Gateway Process?
+
+- **Zero Downtime Updates:**
+  - Others: With non-proxy bots, it takes about 5s per shard bucket to start up. With 100,000 servers, this would be minimum of 8+ minutes of downtime for bot updates.
+  - Discordeno Proxy Gateway: Resume the bot code almost instantly without worrying about any delays or wasting your identify limits.
+- **Zero Downtime Resharding:**
+  - Discord stops allowing your bot to be added to new servers when you max out your existing max shards. Consider a bot started with 150 shards operating on 150,000 servers. Your shards support a maximum of 150 \* 2500 = 375,000 servers. Your bot will be unable to join new servers once it reaches this point until it re-shards.
+  - DD proxy provides 2 types of re-sharding. Automated and manual. You can also have both.
+    - Automated: This system will automatically begin a Zero-downtime resharding process behind the scenes when you reach 80% of your maximum servers allowed by your shards. For example, since 375,000 was the max, at 300,000 we would begin re-sharding behind the scenes with ZERO DOWNTIME.
+      - 80% of maximum servers reached (The % of 80% is customizable.)
+      - Identify limits have room to allow re-sharding. (Also customizable)
+    - Manual: You can also trigger this manually should you choose.
+      - When discord releases a new API version, updates your gateways to new version with no downtime.
+- **Horizontal Scaling:**
+  - When your bot grows a lot, you have two options: you can either keep investing money to upgrade your server or you may expand horizontally by purchasing several more affordable servers. The proxy enables WS handling on multiple servers.
+- **No Loss Restarts:**
+  - Without the proxy mechanism, you would typically lose a lot of events while restarting. Users could issue instructions or send messages that are not automoderated. As your bot grows, this amount grows sharply. Users who don't receive the automatic roles or any other activities your bot should do.
+  - While your bot is unavailable, events can be added to a queue, and once the bot is back online, the queue will start processing all of the events.
+- **Flexibility:**
+  - You have complete control over everything inside the gateway thanks to the controller aspect. Need to customize, the way the manager talks to the workers? Simply, plug in and override the method.
+- **Clustering With Workers:**
+  - Utilize all of your CPU cores to their greatest potential by distributing the workload across workers. To enhance efficiency, manage how shards per worker.
+
 ## Understanding the Flow
 
 In this example, we're proceeding with the understanding that we have 5,000 shards, 5,000,000 Discord servers, which we'll be scaling horizontally across 10 separate dedicated servers with 500 shards each. Each server will have 50 worker threads that contain 10 shards each to split the load evenly among all of the servers properly. Take a look at the following diagram to get a better understanding of this:
@@ -58,12 +81,12 @@ We are going to proceed with the understanding that we have 5,000 shards, 5,000,
 
 ```ts
 import { createGatewayManager } from '@discordeno/gateway'
-import { logger } from '@discordeno/utils'
+import { GatewayIntents } from '@discordeno/types'
 import { REST } from '../rest.ts'
 
 export const GATEWAY = createGatewayManager({
   token: process.env.TOKEN,
-  intents: Intents.Guilds | Intents.GuildMessages,
+  intents: GatewayIntents.Guilds | GatewayIntents.GuildMessages,
   shardsPerWorker: 500,
   totalWorkers: 10,
   connection: await REST.getSessionInfo(),
@@ -352,14 +375,14 @@ const shard =
       version: req.body.version,
     },
 +    events: {
-+      async message(shrd, payload) {
-+        await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
++      async message(shard, payload) {
++        await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
 +          method: 'POST',
 +          headers: {
 +            'Content-Type': 'application/json',
 +            authorization: AUTHORIZATION,
 +          },
-+          body: JSON.stringify({ payload, shardId }),
++          body: JSON.stringify({ payload, shardId: shard.id }),
 +        })
 +          .then(res => res.text())
 +          .catch(logger.error)
@@ -414,7 +437,7 @@ Now, we can begin implementing influxdb in our sharder. Go back to `services/gat
 
 ```ts
 events: {
-  async message(shrd, payload) {
+  async message(shard, payload) {
     Influx?.writePoint(
       new Point('gatewayEvents')
         .timestamp(new Date())
@@ -422,16 +445,16 @@ events: {
         .tag('shard', shardId),
     );
 
-    await fetch(
-      process.env.EVENT_LISTENER_URL,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', authorization: AUTHORIZATION },
-        body: JSON.stringify({payload, shardId }),
-      }
-    )
-      .then(res => res.text())
-      .catch(logger.error);
+    await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
++     method: 'POST',
++     headers: {
++       'Content-Type': 'application/json',
++       authorization: AUTHORIZATION,
++     },
++     body: JSON.stringify({ payload, shardId: shard.id }),
++   })
++     .then(res => res.text())
++     .catch(logger.error)
   },
 },
 ```
@@ -440,8 +463,8 @@ Easy as that. Take the time to add more data to your events. For example, a cool
 
 ```ts
 events: {
-  async message(shrd, payload) {
-    // lots of code here
+  async message(shard, payload) {
+    // your code
   },
   identified() {
     Influx?.writePoint(
@@ -502,16 +525,16 @@ events: {
       payload.d.guilds.forEach((g) => cache.loadingGuildIds.add(g.id));
     }
 
-    await fetch(
-      process.env.EVENT_LISTENER_URL,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', authorization: AUTHORIZATION },
-        body: JSON.stringify({payload, shardId }),
-      }
-    )
-      .then(res => res.text())
-      .catch(logger.error);
+    await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
++     method: 'POST',
++     headers: {
++       'Content-Type': 'application/json',
++       authorization: AUTHORIZATION,
++     },
++     body: JSON.stringify({ payload, shardId: shard.id }),
++   })
++     .then(res => res.text())
++     .catch(logger.error)
   },
 },
 ```
@@ -610,7 +633,7 @@ Take the time to improve more events like this for you bot. For example, if you 
 
 We should take the time here to implement a small queue where we can store events in the off chance that our event listener was not able to receive the event. For example, if you are restarting the bot process for a split second, you might lose some events. To avoid this issue, we should build an event queue which will make sure we don't lose them.
 
-RabbitMQ setup guide here.
+You could use message brokers like RabbitMQ if you'd like, or could implement a simple queue with an array that will hold all the missed events and send them once your bot process is ready again. Keep in mind that interaction create events needs special handling, you might want to send a message to user on non-deferrable interactions and defer the remaining so that you can process them once your bot process is ready.
 
 ## Resharding
 
