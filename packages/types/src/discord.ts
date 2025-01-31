@@ -34,6 +34,7 @@ import type {
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
+  SeparatorSpacingSize,
   SkuFlags,
   SortOrderTypes,
   StickerFormatTypes,
@@ -1757,12 +1758,25 @@ export interface DiscordModalSubmitInteractionMetadata {
 }
 
 export type DiscordMessageComponents = DiscordMessageComponent[]
-export type DiscordMessageComponent = DiscordActionRow | DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent
+export type DiscordMessageComponent =
+  | DiscordActionRow
+  | DiscordSelectMenuComponent
+  | DiscordButtonComponent
+  | DiscordInputTextComponent
+  | DiscordSectionComponent
+  | DiscordTextDisplayComponent
+  | DiscordThumbnailComponent
+  | DiscordMediaGalleryComponent
+  | DiscordSeparatorComponent
+  | DiscordFileComponent
+  | DiscordContainerComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
   type: MessageComponentTypes.ActionRow
+  /** Autoincremented number if not provided */
+  id?: number
   /** The components in this row */
   components: Exclude<DiscordMessageComponent, DiscordActionRow>[]
 }
@@ -1775,6 +1789,8 @@ export interface DiscordSelectMenuComponent {
     | MessageComponentTypes.SelectMenuRoles
     | MessageComponentTypes.SelectMenuUsers
     | MessageComponentTypes.SelectMenuUsersAndRoles
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -1834,6 +1850,8 @@ export interface DiscordSelectMenuDefaultValue {
 export interface DiscordButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
+  /** Autoincremented number if not provided */
+  id?: number
   /**
    * Text that appears on the button
    *
@@ -1887,6 +1905,8 @@ export interface DiscordButtonComponent {
 export interface DiscordInputTextComponent {
   /** InputText Component is of type 3 */
   type: MessageComponentTypes.InputText
+  /** Autoincremented number if not provided */
+  id?: number
   /** The style of the InputText */
   style: TextStyles
   /** whether this component is required to be filled, default true */
@@ -1903,6 +1923,113 @@ export interface DiscordInputTextComponent {
   max_length?: number
   /** Pre-filled value for input text. */
   value?: string
+}
+
+/** TBD */
+export interface DiscordSectionComponent {
+  /** TBD */
+  type: MessageComponentTypes.Section
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  components: DiscordTextDisplayComponent[]
+  /** TBD */
+  accessory: DiscordThumbnailComponent
+}
+
+/** TBD */
+export interface DiscordTextDisplayComponent {
+  /** TBD */
+  type: MessageComponentTypes.TextDisplay
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  content: string
+}
+
+/** TBD */
+export interface DiscordThumbnailComponent {
+  /** TBD */
+  type: MessageComponentTypes.Thumbnail
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  media: DiscordUnfurledMediaItem
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface DiscordMediaGalleryComponent {
+  /** TBD */
+  type: MessageComponentTypes.MediaGallery
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  items: DiscordMediaGalleryItem[]
+}
+
+/** TBD */
+export interface DiscordSeparatorComponent {
+  /** TBD */
+  type: MessageComponentTypes.Separator
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  divider?: boolean
+  /** TBD */
+  spacing?: SeparatorSpacingSize
+}
+
+/** TBD */
+export interface DiscordFileComponent {
+  /** TBD */
+  type: MessageComponentTypes.File
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  file: DiscordUnfurledMediaItem
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface DiscordContainerComponent {
+  /** TBD */
+  type: MessageComponentTypes.Container
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  accent_color?: number
+  /** TBD */
+  spoiler?: boolean
+  /** TBD */
+  components: Array<
+    | DiscordActionRow
+    | DiscordTextDisplayComponent
+    | DiscordSectionComponent
+    | DiscordMediaGalleryComponent
+    | DiscordSeparatorComponent
+    | DiscordFileComponent
+  >
+}
+
+/** TBD */
+export interface DiscordUnfurledMediaItem {
+  /** TBD */
+  url: string
+}
+
+/** TBD */
+export interface DiscordMediaGalleryItem {
+  /** TBD */
+  media: DiscordUnfurledMediaItem
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-item-object-sticker-item-structure */

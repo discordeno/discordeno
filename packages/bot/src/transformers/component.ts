@@ -1,12 +1,18 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordFileComponent,
   type DiscordInputTextComponent,
+  type DiscordMediaGalleryComponent,
   type DiscordMessageComponent,
+  type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
+  type DiscordSeparatorComponent,
+  type DiscordTextDisplayComponent,
+  type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type { Bot, Component } from '../index.js'
+import type { Bot, Component, DiscordContainerComponent } from '../index.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
   let component: Component
@@ -19,6 +25,9 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
     case MessageComponentTypes.Button:
       component = transformButtonComponent(bot, payload as DiscordButtonComponent)
       break
+    case MessageComponentTypes.Container:
+      component = transformContainerComponent(bot, payload as DiscordContainerComponent)
+      break
     case MessageComponentTypes.InputText:
       component = transformInputTextComponent(bot, payload as DiscordInputTextComponent)
       break
@@ -29,6 +38,14 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
       break
+    case MessageComponentTypes.File:
+    case MessageComponentTypes.MediaGallery:
+    case MessageComponentTypes.Section:
+    case MessageComponentTypes.Separator:
+    case MessageComponentTypes.TextDisplay:
+    case MessageComponentTypes.Thumbnail:
+      component = keepAsIs(bot, payload)
+      break
   }
 
   return bot.transformers.customizers.component(bot, payload, component)
@@ -37,6 +54,17 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
 function transformActionRow(bot: Bot, payload: DiscordActionRow): Component {
   return {
     type: MessageComponentTypes.ActionRow,
+    id: payload.id,
+    components: payload.components.map((component) => bot.transformers.component(bot, component)),
+  }
+}
+
+function transformContainerComponent(bot: Bot, payload: DiscordContainerComponent): Component {
+  return {
+    type: MessageComponentTypes.Container,
+    id: payload.id,
+    accentColor: payload.accent_color,
+    spoiler: payload.spoiler,
     components: payload.components.map((component) => bot.transformers.component(bot, component)),
   }
 }
@@ -44,6 +72,7 @@ function transformActionRow(bot: Bot, payload: DiscordActionRow): Component {
 function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent): Component {
   return {
     type: MessageComponentTypes.Button,
+    id: payload.id,
     label: payload.label,
     customId: payload.custom_id,
     style: payload.style,
@@ -63,6 +92,7 @@ function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent): Co
 function transformInputTextComponent(_bot: Bot, payload: DiscordInputTextComponent): Component {
   return {
     type: MessageComponentTypes.InputText,
+    id: payload.id,
     style: payload.style,
     required: payload.required,
     customId: payload.custom_id,
@@ -77,6 +107,7 @@ function transformInputTextComponent(_bot: Bot, payload: DiscordInputTextCompone
 function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent): Component {
   return {
     type: payload.type,
+    id: payload.id,
     customId: payload.custom_id,
     placeholder: payload.placeholder,
     minValues: payload.min_values,
@@ -101,4 +132,17 @@ function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuCompon
     })),
     disabled: payload.disabled,
   }
+}
+
+function keepAsIs(
+  _bot: Bot,
+  payload:
+    | DiscordThumbnailComponent
+    | DiscordFileComponent
+    | DiscordTextDisplayComponent
+    | DiscordMediaGalleryComponent
+    | DiscordSectionComponent
+    | DiscordSeparatorComponent,
+): Component {
+  return payload
 }
