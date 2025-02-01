@@ -1,60 +1,66 @@
 import type {
+  ApplicationFlags,
+  DiscordApplicationEventWebhookStatus,
+  DiscordApplicationIntegrationType,
+  DiscordInstallParams,
+} from './discord/application.js'
+import type { AuditLogEvents } from './discord/auditLog.js'
+import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
-  DiscordApplicationCommandOption,
-  DiscordApplicationCommandOptionChoice,
-  DiscordApplicationEventWebhookStatus,
-  DiscordApplicationIntegrationType,
-  DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
+} from './discord/autoModeration.js'
+import type {
+  ChannelTypes,
   DiscordChannel,
   DiscordDefaultReactionEmoji,
-  DiscordEmbed,
   DiscordForumTag,
+  ForumLayout,
+  OverwriteTypes,
+  SortOrderTypes,
+  VideoQualityModes,
+} from './discord/channel.js'
+import type {
+  DefaultMessageNotificationLevels,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
-  DiscordInstallParams,
-  DiscordInteractionContextType,
-  DiscordInteractionEntryPointCommandHandlerType,
-  DiscordMessageReferenceType,
-  DiscordPollAnswer,
-  DiscordPollLayoutType,
-  DiscordPollMedia,
-  DiscordReactionType,
-  DiscordRole,
-  DiscordScheduledEventRecurrenceRule,
-  DiscordWebhookEventType,
-} from './discord.js'
-import type {
-  AllowedMentionsTypes,
-  ApplicationCommandTypes,
-  ApplicationFlags,
-  AuditLogEvents,
-  BigString,
-  ButtonStyles,
-  Camelize,
-  ChannelTypes,
-  DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
-  ForumLayout,
   GuildFeatures,
-  InteractionResponseTypes,
-  Localization,
-  MessageComponentTypes,
-  MessageFlags,
-  OverwriteTypes,
-  PermissionStrings,
+  SystemChannelFlags,
+  VerificationLevels,
+} from './discord/guild.js'
+import type {
+  DiscordScheduledEventRecurrenceRule,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
-  SortOrderTypes,
-  SystemChannelFlags,
-  TargetTypes,
+} from './discord/guildScheduledEvent.js'
+import type {
+  ApplicationCommandTypes,
+  ButtonStyles,
+  DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
+  DiscordInteractionContextType,
+  DiscordInteractionEntryPointCommandHandlerType,
+  InteractionResponseTypes,
+  MessageComponentTypes,
   TextStyles,
-  VerificationLevels,
-  VideoQualityModes,
-} from './shared.js'
+} from './discord/interactions.js'
+import type { TargetTypes } from './discord/invite.js'
+import type {
+  AllowedMentionsTypes,
+  DiscordAttachment,
+  DiscordEmbed,
+  DiscordMessageReferenceType,
+  DiscordReactionType,
+  MessageFlags,
+} from './discord/message.js'
+import type { DiscordRole, PermissionStrings } from './discord/permissions.js'
+import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/poll.js'
+import type { Localization } from './discord/reference.js'
+import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
+import type { BigString, Camelize } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
@@ -604,6 +610,8 @@ export interface RequestGuildMembers {
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string
 }
+
+/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
 
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
