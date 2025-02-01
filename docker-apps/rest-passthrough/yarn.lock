@@ -138,28 +138,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@favware/cliff-jumper@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "@favware/cliff-jumper@npm:5.0.0"
+"@favware/cliff-jumper@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@favware/cliff-jumper@npm:6.0.0"
   dependencies:
     "@favware/colorette-spinner": "npm:^1.0.1"
     "@octokit/auth-token": "npm:^5.1.1"
-    "@octokit/core": "npm:^6.1.2"
+    "@octokit/core": "npm:^6.1.3"
     "@octokit/plugin-retry": "npm:^7.1.2"
-    "@sapphire/result": "npm:^2.6.6"
-    "@sapphire/utilities": "npm:3.17.0"
+    "@sapphire/result": "npm:^2.7.2"
+    "@sapphire/utilities": "npm:3.18.1"
     colorette: "npm:^2.0.20"
-    commander: "npm:^12.1.0"
+    commander: "npm:^13.0.0"
     conventional-recommended-bump: "npm:^10.0.0"
-    execa: "npm:^9.4.0"
-    git-cliff: "npm:^2.6.1"
+    execa: "npm:^9.5.2"
+    git-cliff: "npm:^2.7.0"
     js-yaml: "npm:^4.1.0"
     semver: "npm:^7.6.3"
-    smol-toml: "npm:^1.3.0"
+    smol-toml: "npm:^1.3.1"
   bin:
     cj: ./dist/cli.js
     cliff-jumper: ./dist/cli.js
-  checksum: 10c0/1fd2e9ba430fe3fb1d0846801dedf3e54040eb318ffebd17225112833f4032f01a9c82dee46f2407ba9937b8c92c2f2a91ccf93f74c2d48ef7326226b7d891a6
+  checksum: 10c0/a029badd47a22dda3ca035e097a79f9ee7714136ce4b3c0552e9ce543c368cbedd62135c1a05eff24045f7cb75fafe4d259d80eae88a80f53124bd38a38f7635
   languageName: node
   linkType: hard
 
@@ -375,18 +375,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:^6.1.2":
-  version: 6.1.2
-  resolution: "@octokit/core@npm:6.1.2"
+"@octokit/core@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@octokit/core@npm:6.1.3"
   dependencies:
     "@octokit/auth-token": "npm:^5.0.0"
-    "@octokit/graphql": "npm:^8.0.0"
-    "@octokit/request": "npm:^9.0.0"
-    "@octokit/request-error": "npm:^6.0.1"
-    "@octokit/types": "npm:^13.0.0"
+    "@octokit/graphql": "npm:^8.1.2"
+    "@octokit/request": "npm:^9.1.4"
+    "@octokit/request-error": "npm:^6.1.6"
+    "@octokit/types": "npm:^13.6.2"
     before-after-hook: "npm:^3.0.2"
     universal-user-agent: "npm:^7.0.0"
-  checksum: 10c0/f73be16a8013f69197b7744de75537d869f3a2061dda25dcde746d23b87f305bbdc7adbfe044ab0755eec32e6d54d61c73f4ca788d214eba8e88648a3133733e
+  checksum: 10c0/d02506dfb2771b18d0ee620b92deb75f0458cbf92b975b04c9ad3e50b06813d4c98a598bf1a1cae5757d31166c52a1ef55c30b17f2359f30309731e264ea20d0
   languageName: node
   linkType: hard
 
@@ -400,14 +400,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/graphql@npm:^8.0.0":
-  version: 8.1.1
-  resolution: "@octokit/graphql@npm:8.1.1"
+"@octokit/graphql@npm:^8.1.2":
+  version: 8.2.0
+  resolution: "@octokit/graphql@npm:8.2.0"
   dependencies:
-    "@octokit/request": "npm:^9.0.0"
-    "@octokit/types": "npm:^13.0.0"
+    "@octokit/request": "npm:^9.1.4"
+    "@octokit/types": "npm:^13.8.0"
     universal-user-agent: "npm:^7.0.0"
-  checksum: 10c0/fe68b89b21416f56bc9c0d19bba96a9a8ee567312b6fb764b05ea0649a5e44bec71665a0013e7c34304eb77c20ad7e7a7cf43b87ea27c280350229d71034c131
+  checksum: 10c0/10c91490e191554bd611d80ae4678fc3887d3cb0f56258781e04c941d3373ccdb63b518a3e6ba7a08e2777b0cb22c60c62aaa6aa138bd9052624b364c886c1db
   languageName: node
   linkType: hard
 
@@ -415,6 +415,13 @@ __metadata:
   version: 22.2.0
   resolution: "@octokit/openapi-types@npm:22.2.0"
   checksum: 10c0/a45bfc735611e836df0729f5922bbd5811d401052b972d1e3bc1278a2d2403e00f4552ce9d1f2793f77f167d212da559c5cb9f1b02c935114ad6d898779546ee
+  languageName: node
+  linkType: hard
+
+"@octokit/openapi-types@npm:^23.0.1":
+  version: 23.0.1
+  resolution: "@octokit/openapi-types@npm:23.0.1"
+  checksum: 10c0/ab734ceb26343d9f051a59503b8cb5bdc7fec9ca044b60511b227179bec73141dd9144a6b2d68bcd737741881b136c1b7d5392da89ae2e35e39acc489e5eb4c1
   languageName: node
   linkType: hard
 
@@ -440,19 +447,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/request@npm:^9.0.0":
-  version: 9.1.1
-  resolution: "@octokit/request@npm:9.1.1"
+"@octokit/request-error@npm:^6.1.6":
+  version: 6.1.6
+  resolution: "@octokit/request-error@npm:6.1.6"
   dependencies:
-    "@octokit/endpoint": "npm:^10.0.0"
-    "@octokit/request-error": "npm:^6.0.1"
-    "@octokit/types": "npm:^13.1.0"
-    universal-user-agent: "npm:^7.0.2"
-  checksum: 10c0/60ad38ffc07b7f8148d146182da9dbcedffb0394ccea583272ac1cb92ede764039273960b449e8591fbf909f30d45e76840713e8533b5fe34140d1dbd2214948
+    "@octokit/types": "npm:^13.6.2"
+  checksum: 10c0/cbbed77ddd1d40a1bed36224667c2fac4c20ce375a78d4648745ad1fedc8c2b1d01343b5908979d5b6557736245637eb58efc65d0cd1ef047ea6be74b46c47d2
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0":
+"@octokit/request@npm:^9.1.4":
+  version: 9.2.0
+  resolution: "@octokit/request@npm:9.2.0"
+  dependencies:
+    "@octokit/endpoint": "npm:^10.0.0"
+    "@octokit/request-error": "npm:^6.0.1"
+    "@octokit/types": "npm:^13.6.2"
+    fast-content-type-parse: "npm:^2.0.0"
+    universal-user-agent: "npm:^7.0.2"
+  checksum: 10c0/025bcb0a1abf1290d5131919e5c7db9cee3df3a271524efd43ac6b9a66abb00d5893fa25ad11cb0546bd3f80096a58dca99fa7b6a06c23c9811bc644d3eb6fa2
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^13.0.0":
   version: 13.5.0
   resolution: "@octokit/types@npm:13.5.0"
   dependencies:
@@ -461,17 +478,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/result@npm:^2.6.6":
-  version: 2.6.6
-  resolution: "@sapphire/result@npm:2.6.6"
-  checksum: 10c0/022d5f4d6b084f6ef7384453773d74116c00bbdbc7eeeed85b4b205a765ac158c2fad7fc8ecaabc19976cc40f01a54de1822f0b3f486ad27e134177ed8eb878a
+"@octokit/types@npm:^13.6.2, @octokit/types@npm:^13.8.0":
+  version: 13.8.0
+  resolution: "@octokit/types@npm:13.8.0"
+  dependencies:
+    "@octokit/openapi-types": "npm:^23.0.1"
+  checksum: 10c0/e08c2fcf10e374f18e4c9fa12a6ada33a40f112d1209012a39f0ce40ae7aa9dcf0598b6007b467f63cc4a97e7b1388d6eed34ddef61494655e08b5a95afaad97
   languageName: node
   linkType: hard
 
-"@sapphire/utilities@npm:3.17.0":
-  version: 3.17.0
-  resolution: "@sapphire/utilities@npm:3.17.0"
-  checksum: 10c0/f3bedac4a5bfb2f0cf67e87554fab23bd9789761419c771f4b1b5515075e73f3f1add5c5b2c309d80596d6e6a17ae8d78c06ac6ef4525fcf3a2580cffab99d5a
+"@sapphire/result@npm:^2.7.2":
+  version: 2.7.2
+  resolution: "@sapphire/result@npm:2.7.2"
+  checksum: 10c0/4d0e67363c7adcc5cc990c3bf3d600560c24c2d2ac1f62c7b5d1fbd639ce8a764f854c549210e13ef8a775fe931b951546bd82030036e2cb4034b77bdffacfdc
+  languageName: node
+  linkType: hard
+
+"@sapphire/utilities@npm:3.18.1":
+  version: 3.18.1
+  resolution: "@sapphire/utilities@npm:3.18.1"
+  checksum: 10c0/82601dab14aa0150df71f09ba130d1cb4b36217a4a4588397d7c645b001183a6ebe7368774e7969ce15a906db8d9cc36425d29c66aea2d0eb08aab6328a09953
   languageName: node
   linkType: hard
 
@@ -1034,10 +1060,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^12.1.0":
-  version: 12.1.0
-  resolution: "commander@npm:12.1.0"
-  checksum: 10c0/6e1996680c083b3b897bfc1cfe1c58dfbcd9842fd43e1aaf8a795fbc237f65efcc860a3ef457b318e73f29a4f4a28f6403c3d653d021d960e4632dd45bde54a9
+"commander@npm:^13.0.0":
+  version: 13.1.0
+  resolution: "commander@npm:13.1.0"
+  checksum: 10c0/7b8c5544bba704fbe84b7cab2e043df8586d5c114a4c5b607f83ae5060708940ed0b5bd5838cf8ce27539cde265c1cbd59ce3c8c6b017ed3eec8943e3a415164
   languageName: node
   linkType: hard
 
@@ -1237,9 +1263,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"execa@npm:^9.4.0":
-  version: 9.5.1
-  resolution: "execa@npm:9.5.1"
+"execa@npm:^9.5.2":
+  version: 9.5.2
+  resolution: "execa@npm:9.5.2"
   dependencies:
     "@sindresorhus/merge-streams": "npm:^4.0.0"
     cross-spawn: "npm:^7.0.3"
@@ -1253,7 +1279,7 @@ __metadata:
     signal-exit: "npm:^4.1.0"
     strip-final-newline: "npm:^4.0.0"
     yoctocolors: "npm:^2.0.0"
-  checksum: 10c0/1a628d535c5a088f9e17a735bb3143efc4198095392b319ba877b2975d5c3c57724536dccb6f68f1cd9b3af331c5a9e8c1aeb338d52ab316b1e008ff453374a7
+  checksum: 10c0/94782a6282e03253224406c29068d18f9095cc251a45d1f19ac3d8f2a9db2cbe32fb8ceb039db1451d8fce3531135a6c0c559f76d634f85416268fc4a6995365
   languageName: node
   linkType: hard
 
@@ -1280,6 +1306,13 @@ __metadata:
   version: 1.1.0
   resolution: "fast-content-type-parse@npm:1.1.0"
   checksum: 10c0/882bf990fa5d64be1825ce183818db43900ece0d7ef184cb9409bae8ed1001acbe536a657b1496382cb3e308e71ab39cc399bbdae70cba1745eecaeca4e55384
+  languageName: node
+  linkType: hard
+
+"fast-content-type-parse@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "fast-content-type-parse@npm:2.0.1"
+  checksum: 10c0/e5ff87d75a35ae4cf377df1dca46ec49e7abbdc8513689676ecdef548b94900b50e66e516e64470035d79b9f7010ef15d98c24d8ae803a881363cc59e0715e19
   languageName: node
   linkType: hard
 
@@ -1515,59 +1548,59 @@ __metadata:
   languageName: node
   linkType: hard
 
-"git-cliff-darwin-arm64@npm:2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff-darwin-arm64@npm:2.6.1"
+"git-cliff-darwin-arm64@npm:2.8.0":
+  version: 2.8.0
+  resolution: "git-cliff-darwin-arm64@npm:2.8.0"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"git-cliff-darwin-x64@npm:2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff-darwin-x64@npm:2.6.1"
+"git-cliff-darwin-x64@npm:2.8.0":
+  version: 2.8.0
+  resolution: "git-cliff-darwin-x64@npm:2.8.0"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"git-cliff-linux-arm64@npm:2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff-linux-arm64@npm:2.6.1"
+"git-cliff-linux-arm64@npm:2.8.0":
+  version: 2.8.0
+  resolution: "git-cliff-linux-arm64@npm:2.8.0"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"git-cliff-linux-x64@npm:2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff-linux-x64@npm:2.6.1"
+"git-cliff-linux-x64@npm:2.8.0":
+  version: 2.8.0
+  resolution: "git-cliff-linux-x64@npm:2.8.0"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"git-cliff-windows-arm64@npm:2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff-windows-arm64@npm:2.6.1"
+"git-cliff-windows-arm64@npm:2.8.0":
+  version: 2.8.0
+  resolution: "git-cliff-windows-arm64@npm:2.8.0"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"git-cliff-windows-x64@npm:2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff-windows-x64@npm:2.6.1"
+"git-cliff-windows-x64@npm:2.8.0":
+  version: 2.8.0
+  resolution: "git-cliff-windows-x64@npm:2.8.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"git-cliff@npm:^2.6.1":
-  version: 2.6.1
-  resolution: "git-cliff@npm:2.6.1"
+"git-cliff@npm:^2.7.0":
+  version: 2.8.0
+  resolution: "git-cliff@npm:2.8.0"
   dependencies:
     execa: "npm:^8.0.1"
-    git-cliff-darwin-arm64: "npm:2.6.1"
-    git-cliff-darwin-x64: "npm:2.6.1"
-    git-cliff-linux-arm64: "npm:2.6.1"
-    git-cliff-linux-x64: "npm:2.6.1"
-    git-cliff-windows-arm64: "npm:2.6.1"
-    git-cliff-windows-x64: "npm:2.6.1"
+    git-cliff-darwin-arm64: "npm:2.8.0"
+    git-cliff-darwin-x64: "npm:2.8.0"
+    git-cliff-linux-arm64: "npm:2.8.0"
+    git-cliff-linux-x64: "npm:2.8.0"
+    git-cliff-windows-arm64: "npm:2.8.0"
+    git-cliff-windows-x64: "npm:2.8.0"
   dependenciesMeta:
     git-cliff-darwin-arm64:
       optional: true
@@ -1583,7 +1616,7 @@ __metadata:
       optional: true
   bin:
     git-cliff: lib/cli/cli.js
-  checksum: 10c0/81d5e2a04f5968ccb86bb739297b6542c0a11e1eb58c417bd2ea4c0e2f6951167eca280c07e7a9ca094e8a20f68ef8687781def2d1e2f1fb06a2969799314105
+  checksum: 10c0/b78cae3ce3e58e2762a09ae14c9a761409b510cbace3830e8f9dd95ef91517f67a017c3453ff40df184e3ff6058b16dcb217256aa8fdb3b76770d250f9303193
   languageName: node
   linkType: hard
 
@@ -2215,7 +2248,7 @@ __metadata:
     "@fastify/env": "npm:^4.4.0"
     "@fastify/helmet": "npm:^13.0.0"
     "@fastify/multipart": "npm:^8.3.1"
-    "@favware/cliff-jumper": "npm:^5.0.0"
+    "@favware/cliff-jumper": "npm:^6.0.0"
     "@swc/cli": "npm:^0.5.2"
     "@swc/core": "npm:^1.10.4"
     dotenv: "npm:^16.4.7"
@@ -2375,7 +2408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"smol-toml@npm:^1.3.0":
+"smol-toml@npm:^1.3.1":
   version: 1.3.1
   resolution: "smol-toml@npm:1.3.1"
   checksum: 10c0/bac5bf4f2655fd561fe41f9426d70ab68b486631beff97a7f127f5d2f811b5e247d50a06583be03d35a625dcb05b7984b94a61a81c68ea2810ac7a9bf4edc64d
