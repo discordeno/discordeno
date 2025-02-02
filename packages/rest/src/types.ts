@@ -54,6 +54,7 @@ import type {
   DiscordGuildPreview,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
+  DiscordIncidentsData,
   DiscordIntegration,
   DiscordInteractionCallbackResponse,
   DiscordInvite,
@@ -120,6 +121,7 @@ import type {
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
+  ModifyGuildIncidentActions,
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
@@ -2975,7 +2977,7 @@ export interface RestManager {
   /**
    * Modifies the onboarding configuration of the guild.
    *
-   * @param guildId - The guild to get the onboarding from
+   * @param guildId - The guild to edit the onboarding from
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
@@ -2988,6 +2990,16 @@ export interface RestManager {
    * The `mode` field modifies what is considered when enforcing these constraints.
    */
   editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<Camelize<DiscordGuildOnboarding>>
+  /**
+   * Modifies the incident actions of the guild.
+   *
+   * @param guildId - The guild to edit the incident actions from
+   * @param options - The options for the incident actions
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   */
+  modifyGuildIncidentActions: (guildId: BigString, options: ModifyGuildIncidentActions) => Promise<Camelize<DiscordIncidentsData>>
   /**
    * Returns all entitlements for a given app, active and expired.
    *

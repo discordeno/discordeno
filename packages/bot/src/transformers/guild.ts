@@ -140,6 +140,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.presences = payload.guild.presences?.map((presence) => bot.transformers.presence(bot, presence as DiscordPresenceUpdate))
   if (props.safetyAlertsChannelId && payload.guild.safety_alerts_channel_id)
     guild.safetyAlertsChannelId = bot.transformers.snowflake(payload.guild.safety_alerts_channel_id)
+  if (props.incidentsData && payload.guild.incidents_data) guild.incidentsData = bot.transformers.incidentsData(bot, payload.guild.incidents_data)
 
   return bot.transformers.customizers.guild(bot, payload.guild, guild)
 }

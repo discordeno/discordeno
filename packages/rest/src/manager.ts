@@ -25,6 +25,7 @@ import {
   type DiscordGuildPreview,
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
+  type DiscordIncidentsData,
   type DiscordIntegration,
   type DiscordInteractionCallbackResponse,
   type DiscordInvite,
@@ -1566,6 +1567,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body: options,
         reason,
       })
+    },
+
+    async modifyGuildIncidentActions(guildId, options) {
+      return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options })
     },
 
     async unbanMember(guildId, userId, reason) {

@@ -1648,3 +1648,11 @@ export interface CreateWebhook {
   /** Image url for the default webhook avatar */
   avatar?: string | null
 }
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-incident-actions-json-params */
+export interface ModifyGuildIncidentActions {
+  /** When invites will be enabled again */
+  invitesDisabledUntil?: string | null
+  /** When direct messages will be enabled again */
+  dms_disabled_until?: string | null
+}
