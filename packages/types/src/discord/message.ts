@@ -191,6 +191,8 @@ export enum MessageFlags {
   SuppressNotifications = 1 << 12,
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
+  /** This message has a snapshot (via Message Forwarding) */
+  HasSnapshot = 1 << 14,
 }
 
 /** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object */
