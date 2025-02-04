@@ -1989,7 +1989,7 @@ export interface DiscordFileComponent {
   type: MessageComponentTypes.File
   /** Autoincremented number if not provided */
   id?: number
-  /** TBD */
+  /** TBD. The UnfurledMediaItem ONLY supports attachment://<filename> references */
   file: DiscordUnfurledMediaItem
   /** TBD */
   spoiler?: boolean
