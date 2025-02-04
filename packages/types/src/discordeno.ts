@@ -1651,8 +1651,24 @@ export interface CreateWebhook {
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-incident-actions-json-params */
 export interface ModifyGuildIncidentActions {
-  /** When invites will be enabled again */
+  /**
+   * When invites will be enabled again
+   *
+   * @remarks
+   * The value should either be an ISO8601 string or null
+   *
+   * Can be enabled for a maximal timespan of 24 hours in the future.
+   * Supplying null disables the action
+   */
   invitesDisabledUntil?: string | null
-  /** When direct messages will be enabled again */
+  /**
+   * When direct messages will be enabled again
+   *
+   * @remarks
+   * The value should either be an ISO8601 string or null
+   *
+   * Can be enabled for a maximal timespan of 24 hours in the future.
+   * Supplying null disables the action
+   */
   dms_disabled_until?: string | null
 }
