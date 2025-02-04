@@ -331,7 +331,7 @@ export interface SectionComponent {
   /** TBD */
   components: TextDisplayComponent[]
   /** TBD */
-  accessory: ThumbnailComponent
+  accessory: ButtonComponent | ThumbnailComponent
 }
 
 /** TBD */

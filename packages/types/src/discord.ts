@@ -1934,7 +1934,7 @@ export interface DiscordSectionComponent {
   /** TBD */
   components: DiscordTextDisplayComponent[]
   /** TBD */
-  accessory: DiscordThumbnailComponent
+  accessory: DiscordButtonComponent | DiscordThumbnailComponent
 }
 
 /** TBD */
