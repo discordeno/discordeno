@@ -7,6 +7,7 @@ import {
   type DiscordApplication,
   type DiscordApplicationCommand,
   type DiscordApplicationRoleConnection,
+  type DiscordApplicationRoleConnectionMetadata,
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
@@ -1691,6 +1692,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async deleteGuildSoundboardSound(guildId, soundId, reason) {
       return await rest.delete(rest.routes.soundboard.guildSound(guildId, soundId), {
         reason,
+      })
+    },
+
+    async listApplicationRoleConnectionsMetadataRecords(applicationId) {
+      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.oauth2.roleConnections(applicationId))
+    },
+
+    async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
+      return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.oauth2.roleConnections(applicationId), {
+        body: options,
       })
     },
 
