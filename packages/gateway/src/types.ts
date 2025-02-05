@@ -1,4 +1,4 @@
-import type { ActivityTypes, Camelize, DiscordActivity, DiscordGatewayPayload, GatewayOpcodes, PresenceStatus } from '@discordeno/types'
+import type { Camelize, DiscordBotActivity, DiscordGatewayPayload, DiscordUpdatePresence, GatewayOpcodes } from '@discordeno/types'
 import type Shard from './Shard.js'
 
 export enum ShardState {
@@ -175,22 +175,17 @@ export interface ShardSocketRequest {
   d: unknown
 }
 
-/** https://discord.com/developers/docs/topics/gateway-events#update-presence */
-export interface BotStatusUpdate {
-  // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
-  since: number | null
-  /** The user's activities */
-  activities: BotActivity[]
-  /** The user's new status */
-  status: keyof typeof PresenceStatus
-}
+/**
+ * https://discord.com/developers/docs/topics/gateway-events#update-presence
+ * @deprecated Use {@link DiscordUpdatePresence} from `@discordeno/types` instead
+ */
+export type BotStatusUpdate = DiscordUpdatePresence
 
-/** https://discord.com/developers/docs/topics/gateway-events#activity-object */
-export interface BotActivity {
-  name: string
-  type: ActivityTypes
-  url?: string
-}
+/**
+ * https://discord.com/developers/docs/topics/gateway-events#activity-object
+ * @deprecated Use {@link DiscordBotActivity} from `@discordeno/types` instead
+ */
+export type BotActivity = DiscordBotActivity
 
 /** https://discord.com/developers/docs/topics/gateway#update-voice-state */
 export interface UpdateVoiceState {
@@ -204,14 +199,8 @@ export interface UpdateVoiceState {
   selfDeaf: boolean
 }
 
-/** https://discord.com/developers/docs/topics/gateway-events#update-presence */
-export interface StatusUpdate {
-  // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
-  // since: number | null;
-  /** The user's activities */
-  activities?: Camelize<Omit<DiscordActivity, 'created_at'>[]>
-  /** The user's new status */
-  status: keyof typeof PresenceStatus
-  // /** Whether or not the client is afk */
-  // afk: boolean;
-}
+/**
+ * https://discord.com/developers/docs/topics/gateway-events#update-presence
+ * @deprecated Use {@link DiscordUpdatePresence} from `@discordeno/types` instead
+ */
+export type StatusUpdate = DiscordUpdatePresence
