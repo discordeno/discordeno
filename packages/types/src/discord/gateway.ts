@@ -299,7 +299,7 @@ export interface DiscordUpdatePresence {
   /** The user's activities */
   activities: DiscordBotActivity[]
   /** The user's new status */
-  status: PresenceStatus
+  status: keyof typeof PresenceStatus
   /** Whether or not the client is afk */
   afk: boolean
 }
