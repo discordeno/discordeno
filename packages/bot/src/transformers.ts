@@ -30,6 +30,7 @@ import type {
   DiscordGuildOnboardingPromptOption,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
+  DiscordIncidentsData,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionCallback,
@@ -76,6 +77,7 @@ import {
   type TransformersDesiredProperties,
   createDesiredPropertiesObject,
 } from './desiredProperties.js'
+import { transformIncidentsData } from './transformers/incidentsData.js'
 import {
   type Activity,
   type ActivityInstance,
@@ -104,6 +106,7 @@ import {
   type GuildOnboardingPromptOption,
   type GuildWidget,
   type GuildWidgetSettings,
+  type IncidentsData,
   type Integration,
   type Interaction,
   type InteractionCallback,
@@ -290,6 +293,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordGuildOnboardingPromptOption,
       onboardingPromptOption: GuildOnboardingPromptOption,
     ) => any
+    incidentsData: (bot: Bot<TProps, TBehavior>, payload: DiscordIncidentsData, incidentsData: IncidentsData) => any
     integration: (bot: Bot<TProps, TBehavior>, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
     interaction: (
       bot: Bot<TProps, TBehavior>,
@@ -438,6 +442,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     payload: DiscordGuildOnboardingPrompt,
   ) => SetupDesiredProps<GuildOnboardingPrompt, TProps, TBehavior>
   guildOnboardingPromptOption: (bot: Bot<TProps, TBehavior>, payload: DiscordGuildOnboardingPromptOption) => GuildOnboardingPromptOption
+  incidentsData: (bot: Bot<TProps, TBehavior>, payload: DiscordIncidentsData) => IncidentsData
   integration: (bot: Bot<TProps, TBehavior>, payload: DiscordIntegrationCreateUpdate) => Integration
   interaction: (
     bot: Bot<TProps, TBehavior>,
@@ -540,6 +545,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       guildOnboarding: options.customizers?.guildOnboarding ?? defaultCustomizer,
       guildOnboardingPrompt: options.customizers?.guildOnboardingPrompt ?? defaultCustomizer,
       guildOnboardingPromptOption: options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
+      incidentsData: options.customizers?.incidentsData ?? defaultCustomizer,
       integration: options.customizers?.integration ?? defaultCustomizer,
       interaction: options.customizers?.interaction ?? defaultCustomizer,
       interactionCallback: options.customizers?.interactionCallback ?? defaultCustomizer,
@@ -621,6 +627,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
     guildOnboardingPrompt: options.guildOnboardingPrompt ?? transformGuildOnboardingPrompt,
     guildOnboardingPromptOption: options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
+    incidentsData: options.incidentsData ?? transformIncidentsData,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
     interactionCallback: options.interactionCallback ?? transformInteractionCallback,
