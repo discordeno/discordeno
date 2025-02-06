@@ -1696,7 +1696,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async listApplicationRoleConnectionsMetadataRecords(applicationId) {
-      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.oauth2.roleConnections(applicationId))
+      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId))
     },
 
     async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
