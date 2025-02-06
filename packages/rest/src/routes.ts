@@ -481,6 +481,9 @@ export function createRoutes(): RestRoutes {
       onboarding: (guildId) => {
         return `/guilds/${guildId}/onboarding`
       },
+      incidentActions: (guildId) => {
+        return `/guilds/${guildId}/incident-actions`
+      },
     },
 
     sticker: (stickerId) => {

@@ -117,6 +117,8 @@ export interface DiscordGuild {
   stickers?: DiscordSticker[]
   /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
   safety_alerts_channel_id: string | null
+  /** The incidents data for this guild */
+  incidents_data: DiscordIncidentsData
   /**
    * Soundboard sounds in the guild
    *
@@ -596,6 +598,18 @@ export enum DiscordGuildOnboardingMode {
 export enum DiscordGuildOnboardingPromptType {
   MultipleChoice,
   DropDown,
+}
+
+/** https://discord.com/developers/docs/resources/guild#incidents-data-object-incidents-data-structure */
+export interface DiscordIncidentsData {
+  /** When invites get enabled again */
+  invites_disabled_until: string | null
+  /** When direct messages get enabled again */
+  dms_disabled_until: string | null
+  /** When the dm spam was detected */
+  dm_spam_detected_at?: string | null
+  /** When the raid was detected */
+  raid_detected_at?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params */

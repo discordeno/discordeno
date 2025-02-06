@@ -219,6 +219,8 @@ export interface RestRoutes {
     voice: (guildId: BigString, userId?: BigString) => string
     /** Route for the onboarding */
     onboarding: (guildId: BigString) => string
+    /** Route for guild incident actions */
+    incidentActions: (guildId: BigString) => string
   }
   /** Routes for interaction related endpoints. */
   interactions: {
