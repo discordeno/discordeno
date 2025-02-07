@@ -1,4 +1,5 @@
 export * from './discord/application.js'
+export * from './discord/applicationRoleConnectionMetadata.js'
 export * from './discord/auditLog.js'
 export * from './discord/autoModeration.js'
 export * from './discord/channel.js'

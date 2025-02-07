@@ -638,6 +638,10 @@ export function createRoutes(): RestRoutes {
       return `/applications/${applicationId}/emojis`
     },
 
+    applicationRoleConnectionMetadata(applicationId) {
+      return `/applications/${applicationId}/role-connections/metadata`
+    },
+
     // User endpoints
     user(userId) {
       return `/users/${userId}`
