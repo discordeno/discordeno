@@ -1,4 +1,4 @@
-import type { Camelize, DiscordBotActivity, DiscordGatewayPayload, DiscordUpdatePresence, GatewayOpcodes } from '@discordeno/types'
+import type { Camelize, DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types'
 import type Shard from './Shard.js'
 
 export enum ShardState {
@@ -175,18 +175,6 @@ export interface ShardSocketRequest {
   d: unknown
 }
 
-/**
- * https://discord.com/developers/docs/topics/gateway-events#update-presence
- * @deprecated Use {@link DiscordUpdatePresence} from `@discordeno/types` instead
- */
-export type BotStatusUpdate = DiscordUpdatePresence
-
-/**
- * https://discord.com/developers/docs/topics/gateway-events#activity-object
- * @deprecated Use {@link DiscordBotActivity} from `@discordeno/types` instead
- */
-export type BotActivity = DiscordBotActivity
-
 /** https://discord.com/developers/docs/topics/gateway#update-voice-state */
 export interface UpdateVoiceState {
   /** id of the guild */
@@ -198,9 +186,3 @@ export interface UpdateVoiceState {
   /** Is the client deafened */
   selfDeaf: boolean
 }
-
-/**
- * https://discord.com/developers/docs/topics/gateway-events#update-presence
- * @deprecated Use {@link DiscordUpdatePresence} from `@discordeno/types` instead
- */
-export type StatusUpdate = DiscordUpdatePresence
