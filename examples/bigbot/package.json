@@ -11,8 +11,8 @@
     "start:bot": "node dist/bot/index.js",
     "start:rest": "node dist/rest/index.js",
     "start:gateway": "node dist/gateway/index.js",
-    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
-    "build:watch": "swc src --strip-leading-paths --delete-dir-on-start --watch --out-dir dist",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
     "dev:bot": "node --watch --watch-preserve-output dist/bot/index.js",
     "dev:rest": "node --watch --watch-preserve-output dist/rest/index.js",
     "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js"
@@ -27,8 +27,6 @@
     "fastify": "^5.2.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.5.2",
-    "@swc/core": "^1.10.4",
     "@types/amqplib": "^0.10.6",
     "@types/node": "^22.10.2",
     "chokidar": "^3.6.0",
