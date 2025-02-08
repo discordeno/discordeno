@@ -1,5 +1,6 @@
 import { join as joinPath } from 'node:path'
 import { Worker } from 'node:worker_threads'
+import { delay } from '@discordeno/bot'
 import {
   DISCORD_TOKEN,
   EVENT_HANDLER_AUTHORIZATION,
@@ -60,6 +61,15 @@ export function createWorker(workerId: number): Worker {
     if (message.type === 'ShardInfo') {
       shardInfoRequests.get(message.nonce)?.(message)
       shardInfoRequests.delete(message.nonce)
+      return
+    }
+    if (message.type === 'ShardIdentified') {
+      logger.info(`Shard #${message.shardId} identified`)
+      await delay(gatewayManager.spawnShardDelay)
+
+      gatewayManager.logger.debug(`[Gateway] Resolving shard identify request`)
+      gatewayManager.buckets.get(message.shardId % gatewayManager.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
+
       return
     }
 

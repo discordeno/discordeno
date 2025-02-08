@@ -1,8 +1,9 @@
 import type { Worker } from 'node:worker_threads'
-import { LogDepth, createGatewayManager, createLogger, createRestManager } from '@discordeno/bot'
+import { LogDepth, createGatewayManager, createLogger, createRestManager, delay } from '@discordeno/bot'
 import { DISCORD_TOKEN, GATEWAY_INTENTS, REST_AUTHORIZATION, REST_URL, SHARDS_PER_WORKER, TOTAL_SHARDS, TOTAL_WORKERS } from '../config.js'
+import { promiseWithResolvers } from '../util.js'
 import { createWorker } from './worker/createWorker.js'
-import type { WorkerMessage } from './worker/types.js'
+import type { ManagerMessage, WorkerMessage } from './worker/types.js'
 
 export const workers = new Map<number, Worker>()
 export const logger = createLogger({ name: 'GATEWAY' })
@@ -37,6 +38,23 @@ gatewayManager.tellWorkerToIdentify = async (workerId, shardId, bucketId) => {
     type: 'IdentifyShard',
     shardId,
   } satisfies WorkerMessage)
+
+  const { promise, resolve } = promiseWithResolvers<void>()
+
+  const waitForShardIdentified = (message: ManagerMessage) => {
+    if (message.type === 'ShardIdentified' && message.shardId === shardId) {
+      resolve()
+    }
+  }
+
+  worker.on('message', waitForShardIdentified)
+
+  await promise
+
+  worker.off('message', waitForShardIdentified)
+
+  // This needs to be here AND in the generic worker message event, because this methods needs wait before it resolves
+  await delay(gatewayManager.spawnShardDelay)
 }
 
 gatewayManager.sendPayload = async (shardId, payload) => {
