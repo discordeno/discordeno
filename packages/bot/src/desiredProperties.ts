@@ -15,6 +15,7 @@ import type {
   GuildOnboarding,
   GuildOnboardingPrompt,
   GuildOnboardingPromptOption,
+  IncidentsData,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
@@ -65,6 +66,7 @@ export interface TransformersObjects {
   guildOnboarding: GuildOnboarding
   guildOnboardingPrompt: GuildOnboardingPrompt
   guildOnboardingPromptOption: GuildOnboardingPromptOption
+  incidentsData: IncidentsData
   interaction: Interaction
   interactionCallback: InteractionCallback
   interactionCallbackResponse: InteractionCallbackResponse
@@ -347,7 +349,15 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       premiumProgressBarEnabled: defaultValue,
       safetyAlertsChannelId: defaultValue,
       maxStageVideoChannelUsers: defaultValue,
+      incidentsData: defaultValue,
       ...desiredProperties.guild,
+    },
+    incidentsData: {
+      dmSpamDetectedAt: defaultValue,
+      dmsDisabledUntil: defaultValue,
+      invitesDisabledUntil: defaultValue,
+      raidDetectedAt: defaultValue,
+      ...desiredProperties.incidentsData,
     },
     interaction: {
       id: defaultValue,

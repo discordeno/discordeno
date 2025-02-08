@@ -7,6 +7,7 @@ import {
   type DiscordApplication,
   type DiscordApplicationCommand,
   type DiscordApplicationRoleConnection,
+  type DiscordApplicationRoleConnectionMetadata,
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
@@ -25,6 +26,7 @@ import {
   type DiscordGuildPreview,
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
+  type DiscordIncidentsData,
   type DiscordIntegration,
   type DiscordInteractionCallbackResponse,
   type DiscordInvite,
@@ -1568,6 +1570,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
+    async modifyGuildIncidentActions(guildId, options) {
+      return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options })
+    },
+
     async unbanMember(guildId, userId, reason) {
       await rest.delete(rest.routes.guilds.members.ban(guildId, userId), { reason })
     },
@@ -1691,6 +1697,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async deleteGuildSoundboardSound(guildId, soundId, reason) {
       return await rest.delete(rest.routes.soundboard.guildSound(guildId, soundId), {
         reason,
+      })
+    },
+
+    async listApplicationRoleConnectionsMetadataRecords(applicationId) {
+      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId))
+    },
+
+    async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
+      return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
+        body: options,
       })
     },
 

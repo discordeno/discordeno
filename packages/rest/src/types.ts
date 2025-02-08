@@ -35,6 +35,7 @@ import type {
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
   DiscordApplicationRoleConnection,
+  DiscordApplicationRoleConnectionMetadata,
   DiscordArchivedThreads,
   DiscordAuditLog,
   DiscordAutoModerationRule,
@@ -54,6 +55,7 @@ import type {
   DiscordGuildPreview,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
+  DiscordIncidentsData,
   DiscordIntegration,
   DiscordInteractionCallbackResponse,
   DiscordInvite,
@@ -120,6 +122,7 @@ import type {
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
+  ModifyGuildIncidentActions,
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
@@ -2975,7 +2978,7 @@ export interface RestManager {
   /**
    * Modifies the onboarding configuration of the guild.
    *
-   * @param guildId - The guild to get the onboarding from
+   * @param guildId - The guild to edit the onboarding from
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
@@ -2988,6 +2991,16 @@ export interface RestManager {
    * The `mode` field modifies what is considered when enforcing these constraints.
    */
   editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<Camelize<DiscordGuildOnboarding>>
+  /**
+   * Modifies the incident actions of the guild.
+   *
+   * @param guildId - The guild to edit the incident actions from
+   * @param options - The options for the incident actions
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   */
+  modifyGuildIncidentActions: (guildId: BigString, options: ModifyGuildIncidentActions) => Promise<Camelize<DiscordIncidentsData>>
   /**
    * Returns all entitlements for a given app, active and expired.
    *
@@ -3125,6 +3138,27 @@ export interface RestManager {
    * For other sounds, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    */
   deleteGuildSoundboardSound: (guildId: BigString, soundId: BigString, reason?: string) => Promise<void>
+  /**
+   * Returns a list of application role connection metadata objects for the given application.
+   *
+   * @param applicationId - The application to get the role connections from
+   * @returns A list of application role connection metadata objects
+   */
+  listApplicationRoleConnectionsMetadataRecords: (applicationId: BigString) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
+  /**
+   * Updates and returns a list of application role connection metadata objects for the given application.
+   *
+   * @param applicationId - The application to get the role connections from
+   * @param options - The options to update the role connections
+   * @returns A list of application role connection metadata objects
+   *
+   * @remarks
+   * An application can have a maximum of 5 metadata records.
+   */
+  updateApplicationRoleConnectionsMetadataRecords: (
+    applicationId: BigString,
+    options: Camelize<DiscordApplicationRoleConnectionMetadata>[],
+  ) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
