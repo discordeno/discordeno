@@ -618,7 +618,9 @@ export class DiscordenoShard {
 
         // When resumable is false we need to re-identify
         if (!resumable) {
+          // TODO: check if we need to close the connection before waiting for the identify
           await this.requestIdentify()
+          await this.identify()
 
           break
         }
@@ -809,7 +811,7 @@ export interface ShardCreateOptions {
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The handler to request a space to make an identify request. */
   requestIdentify?: () => Promise<void>
-  /** The handler to alert the gateway manager that this shard has received a READY event. */
+  /** The handler to alert the gateway manager that this shard has identified. */
   shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
   makePresence?: () => Promise<BotStatusUpdate | undefined>
