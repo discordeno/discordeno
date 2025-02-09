@@ -10,7 +10,7 @@ import {
   GatewayOpcodes,
   type RequestGuildMembers,
 } from '@discordeno/types'
-import { Collection, delay, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import {
   type BotStatusUpdate,
@@ -174,10 +174,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           requestIdentify: async () => await gateway.requestIdentify(shardId),
           shardIsReady: async () => {
             gateway.logger.debug(`[Gateway] Shard #${shardId} has identified.`)
-            await delay(gateway.spawnShardDelay)
-
-            gateway.logger.debug(`[Gateway] Shard #${shardId} is allowing the next identify`)
-            await gateway.allowIdentify(shardId)
           },
           makePresence: gateway.makePresence,
         })
@@ -275,8 +271,11 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         gateway.logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
         gateway.buckets.set(i, {
           workers: [],
-          activeIdentify: false,
-          identifyRequests: [],
+          leakyBucket: new LeakyBucket({
+            max: 1,
+            refillAmount: 1,
+            refillInterval: gateway.spawnShardDelay,
+          }),
         })
       }
 
@@ -382,10 +381,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           requestIdentify: async () => await gateway.requestIdentify(shardId),
           shardIsReady: async () => {
             gateway.logger.debug(`[Gateway] Shard #${shardId} has identified.`)
-            await delay(gateway.spawnShardDelay)
-
-            gateway.logger.debug(`[Gateway] Shard #${shardId} has identified and waited the delay, allowing the next identify`)
-            await gateway.allowIdentify(shardId)
           },
           makePresence: gateway.makePresence,
         })
@@ -425,33 +420,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         throw new Error("Can't request an identify for a shard that can't be assigned to a bucket.")
       }
 
-      if (!bucket.activeIdentify) {
-        bucket.activeIdentify = true
-        return
-      }
-
-      await new Promise((r) => {
-        bucket.identifyRequests.push(r)
-      })
-    },
-
-    async allowIdentify(shardId) {
-      gateway.logger.debug(`[Gateway] Shard #${shardId} is allowing the next identify`)
-
-      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
-
-      if (!bucket) {
-        throw new Error("Can't request an identify for a shard that can't be assigned to a bucket.")
-      }
-
-      const nextRequest = bucket.identifyRequests.shift()
-
-      if (!nextRequest) {
-        bucket.activeIdentify = false
-        return
-      }
-
-      nextRequest()
+      await bucket.leakyBucket.acquire()
     },
 
     async kill(shardId: number) {
@@ -766,10 +735,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     number,
     {
       workers: Array<{ id: number; queue: number[] }>
-      /** There is an identify in the process? */
-      activeIdentify: boolean
-      /** Requests to identify shards are made based on whether it is available to be made. */
-      identifyRequests: Array<(value: void | PromiseLike<void>) => void>
+      /** The bucket to queue the identifies */
+      leakyBucket: LeakyBucket
     }
   >
   /** The shards that are created. */
@@ -820,8 +787,6 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   kill: (shardId: number) => Promise<void>
   /** This function makes sure that the bucket is allowed to make the next identify request. */
   requestIdentify: (shardId: number) => Promise<void>
-  /** Allow the next identify to go through */
-  allowIdentify: (shardId: number) => Promise<void>
   /** Calculates the number of shards based on the guild id and total shards. */
   calculateShardId: (guildId: BigString, totalShards?: number) => number
   /**
