@@ -53,7 +53,7 @@ gatewayManager.tellWorkerToIdentify = async (workerId, shardId, bucketId) => {
 
   worker.off('message', waitForShardIdentified)
 
-  // This needs to be here AND in the generic worker message event, because this methods needs wait before it resolves
+  // This needs to be here because this methods needs wait before it resolves, or else we will have invalid sessions when spawning the next shards
   await delay(gatewayManager.spawnShardDelay)
 }
 
