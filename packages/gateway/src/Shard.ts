@@ -1,12 +1,11 @@
 import { Buffer } from 'node:buffer'
 import { type Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
-import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import type { Decompress as ZstdDecompress } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {
-  type BotStatusUpdate,
   type ShardEvents,
   type ShardGatewayConfig,
   type ShardHeart,
@@ -689,7 +688,7 @@ export class DiscordenoShard {
    * async in case devs create the presence based on eg. database values.
    * Passing the shard's id there to make it easier for the dev to use this function.
    */
-  async makePresence(): Promise<BotStatusUpdate | undefined> {
+  async makePresence(): Promise<DiscordUpdatePresence | undefined> {
     return
   }
 
@@ -812,7 +811,7 @@ export interface ShardCreateOptions {
   /** The handler to alert the gateway manager that this shard has received a READY event. */
   shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
-  makePresence?: () => Promise<BotStatusUpdate | undefined>
+  makePresence?: () => Promise<DiscordUpdatePresence | undefined>
 }
 
 export default DiscordenoShard
