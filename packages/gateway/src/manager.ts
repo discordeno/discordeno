@@ -360,15 +360,18 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
     async tellWorkerToIdentify(workerId, shardId, bucketId) {
       gateway.logger.debug(`[Gateway] Tell worker #${workerId} to identify shard #${shardId} from bucket ${bucketId}`)
-
+      await gateway.identify(shardId)
+    },
+    async identify(shardId: number) {
       let shard = this.shards.get(shardId)
+      gateway.logger.debug(`[Gateway] Identifying ${shard ? 'existing' : 'new'} shard (${shardId})`)
 
       if (!shard) {
         shard = new Shard({
           id: shardId,
           connection: {
             compress: this.compress,
-            transportCompression: this.transportCompression,
+            transportCompression: gateway.transportCompression,
             intents: this.intents,
             properties: this.properties,
             token: this.token,
@@ -392,17 +395,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         }
 
         this.shards.set(shardId, shard)
-      }
-
-      await gateway.identify(shardId)
-    },
-    async identify(shardId: number) {
-      gateway.logger.debug(`[Gateway] Identifying Shard #${shardId}`)
-
-      const shard = this.shards.get(shardId)
-
-      if (!shard) {
-        throw new Error("Can't identify a shard that is not managed.")
       }
 
       await gateway.requestIdentify(shardId)
@@ -781,7 +773,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * This should wait for the worker to have identified the shard before resolving the returned promise
    */
   tellWorkerToIdentify: (workerId: number, shardId: number, bucketId: number) => Promise<void>
-  /** Tell the manager to identify a Shard. */
+  /** Tell the manager to identify a Shard. If this Shard is not already managed this will also add the Shard to the manager. */
   identify: (shardId: number) => Promise<void>
   /** Kill a shard. Close a shards connection to Discord's gateway (if any) and remove it from the manager. */
   kill: (shardId: number) => Promise<void>
