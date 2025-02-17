@@ -291,7 +291,18 @@ export interface DiscordGatewayPayload {
 // TODO: Add Request Guild Members: https://discord.com/developers/docs/events/gateway-events#request-guild-members-request-guild-members-structure
 // TODO: Add Request Soundboard Sounds: https://discord.com/developers/docs/events/gateway-events#request-soundboard-sounds-request-soundboard-sounds-structure
 // TODO: Add Voice State Update: https://discord.com/developers/docs/events/gateway-events#update-voice-state-gateway-voice-state-update-structure
-// TODO: Add Presence Update: https://discord.com/developers/docs/events/gateway-events#update-presence-gateway-presence-update-structure
+
+/** https://discord.com/developers/docs/events/gateway-events#update-presence-gateway-presence-update-structure */
+export interface DiscordUpdatePresence {
+  /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
+  since: number | null
+  /** The user's activities */
+  activities: DiscordBotActivity[]
+  /** The user's new status */
+  status: keyof typeof PresenceStatus
+  /** Whether or not the client is afk */
+  afk: boolean
+}
 
 /** https://discord.com/developers/docs/events/gateway-events#update-presence-status-types */
 export enum PresenceStatus {
@@ -741,6 +752,9 @@ export interface DiscordActivity {
   /** The custom buttons shown in the Rich Presence (max 2) */
   buttons?: DiscordActivityButton[]
 }
+
+/** https://discord.com/developers/docs/events/gateway-events#activity-object - Note at the bottom */
+export type DiscordBotActivity = Pick<DiscordActivity, 'name' | 'state' | 'type' | 'url'>
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
