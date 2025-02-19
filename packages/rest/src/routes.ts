@@ -481,6 +481,9 @@ export function createRoutes(): RestRoutes {
       onboarding: (guildId) => {
         return `/guilds/${guildId}/onboarding`
       },
+      incidentActions: (guildId) => {
+        return `/guilds/${guildId}/incident-actions`
+      },
     },
 
     sticker: (stickerId) => {
@@ -633,6 +636,10 @@ export function createRoutes(): RestRoutes {
 
     applicationEmojis(applicationId) {
       return `/applications/${applicationId}/emojis`
+    },
+
+    applicationRoleConnectionMetadata(applicationId) {
+      return `/applications/${applicationId}/role-connections/metadata`
     },
 
     // User endpoints

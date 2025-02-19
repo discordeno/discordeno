@@ -812,6 +812,19 @@ export interface Guild {
   stickers?: Collection<bigint, Sticker>
   /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
   safetyAlertsChannelId?: bigint
+  /** The incidents data for this guild */
+  incidentsData: IncidentsData
+}
+
+export interface IncidentsData {
+  /** When invites get enabled again */
+  invitesDisabledUntil?: number
+  /** When direct messages get enabled again */
+  dmsDisabledUntil?: number
+  /** When the dm spam was detected */
+  dmSpamDetectedAt?: number
+  /** When the raid was detected */
+  raidDetectedAt?: number
 }
 
 export interface Integration {

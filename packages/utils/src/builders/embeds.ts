@@ -100,6 +100,10 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    */
   setColor(color: number | string): this {
     if (typeof color === 'string') {
+      if (color.toLowerCase() === 'random') {
+        return this.setRandomColor()
+      }
+
       const convertedValue = parseInt(color.replace('#', ''), 16)
       color = Number.isNaN(convertedValue) ? 0 : convertedValue
     }
@@ -240,7 +244,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @returns {EmbedsBuilder}
    */
   setTimestamp(timestamp?: string | number | Date): this {
-    this.#currentEmbed.timestamp = new Date(timestamp!).toISOString()
+    this.#currentEmbed.timestamp = new Date(timestamp ?? Date.now()).toISOString()
 
     return this
   }

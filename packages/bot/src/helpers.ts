@@ -32,6 +32,7 @@ import type {
   DiscordActivityInstance,
   DiscordApplicationCommandPermissions,
   DiscordApplicationRoleConnection,
+  DiscordApplicationRoleConnectionMetadata,
   DiscordArchivedThreads,
   DiscordAuditLog,
   DiscordBan,
@@ -600,6 +601,12 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getApplicationActivityInstance: async (applicationId, instanceId) => {
       return await bot.rest.getApplicationActivityInstance(applicationId, instanceId)
     },
+    listApplicationRoleConnectionsMetadataRecords: async (applicationId) => {
+      return await bot.rest.listApplicationRoleConnectionsMetadataRecords(applicationId)
+    },
+    updateApplicationRoleConnectionsMetadataRecords: async (applicationId, options) => {
+      return await bot.rest.updateApplicationRoleConnectionsMetadataRecords(applicationId, options)
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction)
@@ -862,7 +869,9 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: Partial<EditAutoModerationRuleOptions>,
     reason?: string,
   ) => Promise<AutoModerationRule>
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<SetupDesiredProps<User, TProps, TBehavior>>
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null }) => Promise<
+    SetupDesiredProps<User, TProps, TBehavior>
+  >
   editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
@@ -1061,6 +1070,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   ) => Promise<SetupDesiredProps<Member, TProps, TBehavior>[]>
   bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<{ bannedUsers: bigint[]; failedUsers: bigint[] }>
   getApplicationActivityInstance: (applicationId: BigString, instanceId: string) => Promise<Camelize<DiscordActivityInstance>>
+  listApplicationRoleConnectionsMetadataRecords: (applicationId: BigString) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
+  updateApplicationRoleConnectionsMetadataRecords: (
+    applicationId: BigString,
+    options: Camelize<DiscordApplicationRoleConnectionMetadata>[],
+  ) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>

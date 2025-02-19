@@ -15,14 +15,12 @@ describe('bucket.ts', () => {
   let clock: sinon.SinonFakeTimers
 
   beforeEach(() => {
-    console.log('before')
     clock = sinon.useFakeTimers()
   })
 
   afterEach(() => {
     sinon.restore()
     clock.restore()
-    console.log('after')
   })
 
   describe('LeakyBucket function', () => {

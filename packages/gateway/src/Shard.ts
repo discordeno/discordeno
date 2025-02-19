@@ -1,12 +1,11 @@
 import { Buffer } from 'node:buffer'
 import { type Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
-import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import type { Decompress as ZstdDecompress } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {
-  type BotStatusUpdate,
   type ShardEvents,
   type ShardGatewayConfig,
   type ShardHeart,
@@ -128,7 +127,7 @@ export class DiscordenoShard {
 
   /** Close the socket connection to discord if present. */
   async close(code: number, reason: string): Promise<void> {
-    this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket.`)
+    this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket with code ${code}.`)
 
     if (this.socket?.readyState !== NodeWebSocket.OPEN) {
       this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`)
@@ -142,12 +141,12 @@ export class DiscordenoShard {
 
     this.socket.close(code, reason)
 
-    this.logger.debug(`[Shard] Waiting for Shard #${this.id} to close the socket.`)
+    this.logger.debug(`[Shard] Waiting for Shard #${this.id} to close the socket with code ${code}.`)
 
     // We need to wait for the socket to be fully closed, otherwise there'll be race condition issues if we try to connect again, resulting in unexpected behavior.
     await promise
 
-    this.logger.debug(`[Shard] Shard #${this.id} closed the socket.`)
+    this.logger.debug(`[Shard] Shard #${this.id} closed the socket with code ${code}.`)
 
     // Reset the resolveAfterClose function after it has been resolved.
     this.resolveAfterClose = undefined
@@ -406,11 +405,12 @@ export class DiscordenoShard {
         return
       }
       // On these codes a manual start will be done.
+      case GatewayCloseEventCodes.NormalClosure:
+      case GatewayCloseEventCodes.GoingAway:
       case ShardSocketCloseCodes.Shutdown:
       case ShardSocketCloseCodes.ReIdentifying:
       case ShardSocketCloseCodes.Resharded:
-      case ShardSocketCloseCodes.ResumeClosingOldConnection:
-      case ShardSocketCloseCodes.ZombiedConnection: {
+      case ShardSocketCloseCodes.ResumeClosingOldConnection: {
         this.state = ShardState.Disconnected
         this.events.disconnected?.(this)
 
@@ -688,7 +688,7 @@ export class DiscordenoShard {
    * async in case devs create the presence based on eg. database values.
    * Passing the shard's id there to make it easier for the dev to use this function.
    */
-  async makePresence(): Promise<BotStatusUpdate | undefined> {
+  async makePresence(): Promise<DiscordUpdatePresence | undefined> {
     return
   }
 
@@ -755,8 +755,6 @@ export class DiscordenoShard {
         if (!this.heart.acknowledged) {
           this.logger.debug(`[Shard] Heartbeat not acknowledged for Shard #${this.id}. Assuming zombied connection.`)
           await this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
-
-          await this.resume()
           return
         }
 
@@ -813,7 +811,7 @@ export interface ShardCreateOptions {
   /** The handler to alert the gateway manager that this shard has received a READY event. */
   shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
-  makePresence?: () => Promise<BotStatusUpdate | undefined>
+  makePresence?: () => Promise<DiscordUpdatePresence | undefined>
 }
 
 export default DiscordenoShard

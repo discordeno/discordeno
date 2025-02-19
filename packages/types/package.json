@@ -2,18 +2,22 @@
   "name": "@discordeno/types",
   "version": "21.0.0",
   "main": "./dist/esm/index.js",
-  "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.cjs",
-    "types": "./dist/types/index.d.ts"
-  },
   "types": "./dist/types/index.d.ts",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.cjs"
+  },
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/discordeno/discordeno.git"
+    "url": "git+https://github.com/discordeno/discordeno.git"
   },
+  "files": [
+    "dist/**",
+    "!dist/.tsbuildinfo"
+  ],
   "scripts": {
     "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist/esm && swc --strip-leading-paths --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
@@ -22,20 +26,21 @@
     "lint": "biome lint --write",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js utils",
-    "test:deno-unit": "swc tests --strip-leading-paths --delete-dir-on-start -C jsc.minify.mangle=false --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
+    "test:deno-unit": "deno -A ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/**/*.spec.ts'",
+    "test:bun-unit": "bun ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@swc/cli": "^0.5.2",
-    "@swc/core": "^1.10.4",
+    "@swc/core": "^1.10.12",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.13.0",
     "c8": "^10.1.3",
-    "mocha": "^11.0.1",
+    "mocha": "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

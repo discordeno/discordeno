@@ -219,6 +219,8 @@ export interface RestRoutes {
     voice: (guildId: BigString, userId?: BigString) => string
     /** Route for the onboarding */
     onboarding: (guildId: BigString) => string
+    /** Route for guild incident actions */
+    incidentActions: (guildId: BigString) => string
   }
   /** Routes for interaction related endpoints. */
   interactions: {
@@ -293,6 +295,8 @@ export interface RestRoutes {
   }
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string
+  /** Route to list / update application role connection metadata records */
+  applicationRoleConnectionMetadata: (applicationId: BigString) => string
   /** Route to get / edit / delete an application emoji */
   applicationEmoji: (applicationId: BigString, emojiId: BigString) => string
   /** Get information about the current OAuth2 user / bot user. If used with a OAuth2 token requires the `identify` OAuth2 scope */

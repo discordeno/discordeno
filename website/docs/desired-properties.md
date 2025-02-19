@@ -194,9 +194,9 @@ const desiredProperties = createDesiredPropertiesObject({
 
 interface BotDesiredProperties extends Required<typeof desiredProperties> {}
 
-const bot = createBot<BotDesiredProperties>({
+const bot = createBot({
   // Your usual createBot options, such as token and intents
-  desiredProperties,
+  desiredProperties: desiredProperties as BotDesiredProperties,
 });
 ```
 

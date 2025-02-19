@@ -27,17 +27,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: yarn
           registry-url: 'https://registry.npmjs.org'
           scope: '@discordeno'
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
       - run: yarn install --immutable
       - name: build Package
         run: yarn release-build --filter=./packages/${{ matrix.package }}
@@ -45,8 +37,11 @@ jobs:
         if: ${{ github.event_name != 'release' && github.event.action != 'published' }}
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
 
+      - run: yarn pack
+        working-directory: packages/${{ matrix.package }}
+
       # If the action is running from a release use the latest tag, otherwise use the next tag
-      - run: npm publish --tag ${{ github.event_name == 'release' && github.event.action == 'published' && 'latest' || 'next' }} --access public --provenance
+      - run: npm publish package.tgz --tag ${{ github.event_name == 'release' && github.event.action == 'published' && 'latest' || 'next' }} --access public --provenance
         working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+  "nodeModulesDir": "manual",
+  "lock": false,
+  "unstable": ["sloppy-imports"]
+}

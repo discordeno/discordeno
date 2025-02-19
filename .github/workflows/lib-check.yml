@@ -18,15 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: yarn
       - run: yarn install --immutable
       - name: Turbo Cache
         id: turbo-cache
@@ -34,7 +26,7 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
-      - name: Build Type and Test
+      - name: Build Types
         run: yarn build:type --cache-dir=".turbo"
 
   build-dist:
@@ -45,15 +37,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: yarn
       - run: yarn install --immutable
       - name: Turbo Cache
         id: turbo-cache
@@ -64,8 +48,8 @@ jobs:
       - name: Type Test
         run: yarn build --cache-dir=".turbo"
 
-  format-unit-and-integration-test:
-    name: Format Test
+  format:
+    name: Format
     runs-on: ubuntu-latest
     needs: build-type-and-test
     steps:
@@ -73,15 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: yarn
       - run: yarn install --immutable
       - name: Turbo Cache
         id: turbo-cache
@@ -99,7 +75,7 @@ jobs:
         run: yarn lint --cache-dir=".turbo"
 
   test-type-unit-and-integration-test:
-    name: Test Type Test
+    name: Typecheck Tests
     runs-on: ubuntu-latest
     needs: build-type-and-test
     steps:
@@ -107,15 +83,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: yarn
       - run: yarn install --immutable
       - name: Turbo Cache
         id: turbo-cache
@@ -135,7 +103,7 @@ jobs:
   # Not using matrix because test later on cant needs a specific job
   bot-unit-test:
     name: Bot
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -159,7 +127,7 @@ jobs:
 
   discordeno-unit-test:
     name: Discordeno
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -174,7 +142,7 @@ jobs:
 
   gateway-unit-test:
     name: Gateway
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -188,7 +156,7 @@ jobs:
       package: gateway
   gateway-other-runtime-test:
     name: Gateway
-    needs: [gateway-unit-test, gateway-integration-test]
+    needs: [gateway-unit-test]
     uses: ./.github/workflows/other-runtime-unit-test.yml
     secrets: inherit
     with:
@@ -196,7 +164,7 @@ jobs:
 
   rest-unit-test:
     name: Rest
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -220,7 +188,7 @@ jobs:
 
   types-unit-test:
     name: Types
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:
@@ -235,7 +203,7 @@ jobs:
 
   utils-unit-test:
     name: Utils
-    needs: [build-dist, build-type-and-test]
+    needs: [build-dist]
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
     with:

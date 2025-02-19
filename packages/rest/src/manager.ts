@@ -7,6 +7,7 @@ import {
   type DiscordApplication,
   type DiscordApplicationCommand,
   type DiscordApplicationRoleConnection,
+  type DiscordApplicationRoleConnectionMetadata,
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
@@ -25,6 +26,7 @@ import {
   type DiscordGuildPreview,
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
+  type DiscordIncidentsData,
   type DiscordIntegration,
   type DiscordInteractionCallbackResponse,
   type DiscordInvite,
@@ -64,7 +66,7 @@ import {
   getBotIdFromToken,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -455,6 +457,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return
         }
 
+        // Consume the response body to avoid leaking memory
+        await response.arrayBuffer()
+
         rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
@@ -473,8 +478,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
         if (resetAfter) await delay(Number(resetAfter) * 1000)
-        // process the response to prevent mem leak
-        await response.arrayBuffer()
 
         return await options.retryRequest?.(options)
       }
@@ -554,23 +557,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const errText = await result.text().catch(() => null)
+          const body = (result.headers.get('Content-Type') === 'application/json' ? await result.json() : await result.text()).catch(() => null)
 
-          if (errText) {
-            error.cause = {
-              ok: false,
-              status: result.status,
-              body: errText,
-            }
-
-            throw error
+          error.cause = {
+            ok: false,
+            status: result.status,
+            body,
           }
 
-          const err = (await result.json().catch(() => {})) as Record<string, any>
-          // Legacy Handling to not break old code or when body is missing
-          if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
-
-          throw new Error(JSON.stringify(err))
+          throw error
         }
 
         return result.status !== 204 ? await result.json() : undefined
@@ -1575,6 +1570,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
+    async modifyGuildIncidentActions(guildId, options) {
+      return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options })
+    },
+
     async unbanMember(guildId, userId, reason) {
       await rest.delete(rest.routes.guilds.members.ban(guildId, userId), { reason })
     },
@@ -1698,6 +1697,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async deleteGuildSoundboardSound(guildId, soundId, reason) {
       return await rest.delete(rest.routes.soundboard.guildSound(guildId, soundId), {
         reason,
+      })
+    },
+
+    async listApplicationRoleConnectionsMetadataRecords(applicationId) {
+      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId))
+    },
+
+    async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
+      return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
+        body: options,
       })
     },
 
