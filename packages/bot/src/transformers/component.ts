@@ -12,7 +12,7 @@ import {
   type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type { Bot, ButtonComponent, Component, DiscordContainerComponent, ThumbnailComponent } from '../index.js'
+import type { Bot, Component, DiscordContainerComponent } from '../index.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
   let component: Component
@@ -141,7 +141,7 @@ function transformSectionComponent(bot: Bot, payload: DiscordSectionComponent): 
     type: MessageComponentTypes.Section,
     id: payload.id,
     components: payload.components.map((component) => bot.transformers.component(bot, component)),
-    accessory: bot.transformers.component(bot, payload.accessory) as ButtonComponent | ThumbnailComponent,
+    accessory: bot.transformers.component(bot, payload.accessory),
   }
 }
 
