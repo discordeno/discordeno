@@ -6,7 +6,9 @@ import type {
   DiscordActionRow,
   DiscordContainerComponent,
   DiscordInputTextComponent,
+  DiscordSectionComponent,
   DiscordSelectMenuComponent,
+  DiscordTextDisplayComponent,
 } from '../../index.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordMessageComponent {
@@ -26,9 +28,10 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     case MessageComponentTypes.SelectMenuUsers:
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       return transformSelectMenuComponent(bot, payload)
+    case MessageComponentTypes.Section:
+      return transformSectionComponent(bot, payload)
     case MessageComponentTypes.File:
     case MessageComponentTypes.MediaGallery:
-    case MessageComponentTypes.Section:
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
     case MessageComponentTypes.Thumbnail:
@@ -121,5 +124,14 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
       default: option.default,
     })),
     placeholder: payload.placeholder,
+  }
+}
+
+function transformSectionComponent(bot: Bot, payload: Component): DiscordSectionComponent {
+  return {
+    type: MessageComponentTypes.Section,
+    id: payload.id,
+    components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) as DiscordTextDisplayComponent[],
+    accessory: (payload.accessory ? bot.transformers.reverse.component(bot, payload.accessory) : undefined) as DiscordSectionComponent['accessory'],
   }
 }
