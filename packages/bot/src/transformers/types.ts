@@ -10,6 +10,7 @@ import type {
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
   BigString,
+  ButtonComponent,
   ButtonStyles,
   ChannelTypes,
   DefaultMessageNotificationLevels,
@@ -69,6 +70,7 @@ import type {
   SystemChannelFlags,
   TeamMembershipStates,
   TextStyles,
+  ThumbnailComponent,
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
@@ -553,7 +555,7 @@ export interface Component {
   /** TBD */
   id?: number
   /** TBD */
-  accessory?: Component
+  accessory?: ButtonComponent | ThumbnailComponent
   /** TBD */
   content?: string
   /** TBD */

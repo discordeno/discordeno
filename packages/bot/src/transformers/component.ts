@@ -12,7 +12,7 @@ import {
   type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type { Bot, Component, DiscordContainerComponent } from '../index.js'
+import type { Bot, ButtonComponent, Component, DiscordContainerComponent, ThumbnailComponent } from '../index.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
   let component: Component
@@ -38,9 +38,11 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
     case MessageComponentTypes.SelectMenuUsersAndRoles:
       component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
       break
+    case MessageComponentTypes.Section:
+      component = transformSectionComponent(bot, payload as DiscordSectionComponent)
+      break
     case MessageComponentTypes.File:
     case MessageComponentTypes.MediaGallery:
-    case MessageComponentTypes.Section:
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
     case MessageComponentTypes.Thumbnail:
@@ -134,15 +136,18 @@ function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuCompon
   }
 }
 
+function transformSectionComponent(bot: Bot, payload: DiscordSectionComponent): Component {
+  return {
+    type: MessageComponentTypes.Section,
+    id: payload.id,
+    components: payload.components.map((component) => bot.transformers.component(bot, component)),
+    accessory: bot.transformers.component(bot, payload.accessory) as ButtonComponent | ThumbnailComponent,
+  }
+}
+
 function keepAsIs(
   _bot: Bot,
-  payload:
-    | DiscordThumbnailComponent
-    | DiscordFileComponent
-    | DiscordTextDisplayComponent
-    | DiscordMediaGalleryComponent
-    | DiscordSectionComponent
-    | DiscordSeparatorComponent,
+  payload: DiscordThumbnailComponent | DiscordFileComponent | DiscordTextDisplayComponent | DiscordMediaGalleryComponent | DiscordSeparatorComponent,
 ): Component {
   return payload
 }
