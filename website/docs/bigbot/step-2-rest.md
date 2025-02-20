@@ -362,4 +362,4 @@ const bot = createBot({
 })
 ````
 
-Now that you have an eval command available on ur `REST` service, whenever you need to modify something quickly, you can easily do so from ur developer server where this bot is. For example, should you want to switch to a newer api version, it is as simple as `.eval REST.version = xxx` where xxx is the new API version.
+Now that you have an eval command available on your `REST` service, whenever you need to modify something quickly, you can easily do so from your developer server where this bot is. For example, should you want to switch to a newer api version, it is as simple as `.eval REST.version = xxx` where xxx is the new API version.
