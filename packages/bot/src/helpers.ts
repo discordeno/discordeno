@@ -74,6 +74,7 @@ import type {
   GetReactions,
   GetScheduledEventUsers,
   GetScheduledEvents,
+  GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -82,6 +83,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
+  ListThreadMembers,
   MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
@@ -489,11 +491,11 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getSticker: async (stickerId) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.getSticker(stickerId)))
     },
-    getThreadMember: async (channelId, userId) => {
-      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId)))
+    getThreadMember: async (channelId, userId, options) => {
+      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId, options)))
     },
-    getThreadMembers: async (channelId) => {
-      return (await bot.rest.getThreadMembers(channelId)).map((res) => bot.transformers.threadMember(bot, snakelize(res)))
+    getThreadMembers: async (channelId, options) => {
+      return (await bot.rest.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, snakelize(res)))
     },
     getReactions: async (channelId, messageId, reaction, options) => {
       return (await bot.rest.getReactions(channelId, messageId, reaction, options)).map((res) => bot.transformers.user(bot, snakelize(res)))
@@ -1003,8 +1005,8 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getOwnVoiceState: (guildId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getSticker: (stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
-  getThreadMember: (channelId: BigString, userId: BigString) => Promise<ThreadMember>
-  getThreadMembers: (channelId: BigString) => Promise<ThreadMember[]>
+  getThreadMember: (channelId: BigString, userId: BigString, options: GetThreadMember) => Promise<ThreadMember>
+  getThreadMembers: (channelId: BigString, options: ListThreadMembers) => Promise<ThreadMember[]>
   getReactions: (
     channelId: BigString,
     messageId: BigString,

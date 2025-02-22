@@ -384,6 +384,18 @@ export interface ListArchivedThreads {
   limit?: number
 }
 
+/** https://discord.com/developers/docs/resources/channel#get-thread-member-query-string-params */
+export interface GetThreadMember {
+  withMember?: boolean
+}
+
+/** https://discord.com/developers/docs/resources/channel#list-thread-members-query-string-params */
+export interface ListThreadMembers {
+  withMember?: boolean
+  after?: boolean
+  limit?: boolean
+}
+
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
   /** Entries from a specific user ID */

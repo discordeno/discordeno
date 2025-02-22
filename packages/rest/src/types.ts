@@ -108,6 +108,7 @@ import type {
   GetReactions,
   GetScheduledEventUsers,
   GetScheduledEvents,
+  GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -116,6 +117,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
+  ListThreadMembers,
   MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
@@ -2265,15 +2267,17 @@ export interface RestManager {
    *
    * @param channelId - The ID of the thread to get the thread member of.
    * @param userId - The user ID of the thread member to get.
+   * @param options - The parameters for the fetching of the thread member.
    * @returns An instance of {@link DiscordThreadMember}.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
    */
-  getThreadMember: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
+  getThreadMember: (channelId: BigString, userId: BigString, options: GetThreadMember) => Promise<Camelize<DiscordThreadMember>>
   /**
    * Gets the list of thread members for a thread.
    *
    * @param channelId - The ID of the thread to get the thread members of.
+   * @param options - The parameters for the fetching of the thread members.
    * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
    *
    * @remarks
@@ -2281,7 +2285,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
    */
-  getThreadMembers: (channelId: BigString) => Promise<Camelize<DiscordThreadMember>[]>
+  getThreadMembers: (channelId: BigString, options: ListThreadMembers) => Promise<Camelize<DiscordThreadMember>[]>
   /**
    * Gets the list of users that reacted with an emoji to a message.
    *
