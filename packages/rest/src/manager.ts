@@ -64,6 +64,7 @@ import {
   camelize,
   delay,
   getBotIdFromToken,
+  hasProperty,
   logger,
   processReactionString,
   urlToBase64,
@@ -453,7 +454,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} failed.`)
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
-          options.reject({ ok: false, status: response.status, body: await response.text() })
+          const body = response.headers.get('Content-Type') === 'application/json' ? ((await response.json()) as object) : await response.text()
+
+          options.reject({ ok: false, status: response.status, statusText: response.statusText, body })
           return
         }
 
@@ -468,6 +471,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.reject({
             ok: false,
             status: response.status,
+            statusText: response.statusText,
             error: 'The request was rate limited and it maxed out the retries limit.',
           })
 
@@ -545,7 +549,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async makeRequest(method, route, options) {
       // This error needs to be created here because of how stack traces get calculated
       const error = new Error()
-      error.message = 'Failed to send request to discord.'
 
       if (rest.isProxied) {
         if (rest.authorization) {
@@ -584,6 +587,42 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
           reject: (reason) => {
+            // If discord sent us JSON it is provably going to me an error message from where we can get some information, the full body will be in the error cause anyway
+            // https://discord.com/developers/docs/reference#error-messages
+            if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
+              let errorText: string
+
+              switch (reason.status) {
+                case 400:
+                  errorText = "The options was improperly formatted, or the server couldn't understand it."
+                  break
+                case 401:
+                  errorText = 'The Authorization header was missing or invalid.'
+                  break
+                case 403:
+                  errorText = 'The Authorization token you passed did not have permission to the resource.'
+                  break
+                case 404:
+                  errorText = "The resource at the location specified doesn't exist."
+                  break
+                case 405:
+                  errorText = 'The HTTP method used is not valid for the location specified.'
+                  break
+                case 429:
+                  errorText = "You're being ratelimited."
+                  break
+                case 502:
+                  errorText = 'There was not a gateway available to process your options. Wait a bit and retry.'
+                  break
+                default:
+                  errorText = reason.statusText ?? 'Unknown error'
+              }
+
+              error.message = `[${reason.status}] ${errorText}\nDiscord error: [${reason.body.code}] ${reason.body.message}`
+            } else {
+              error.message = 'Failed to send request to discord and failed to parse the response body.'
+            }
+
             error.cause = reason
             reject(error)
           },

@@ -3219,6 +3219,9 @@ export interface RestRequestResponse {
 export interface RestRequestRejection {
   ok: boolean
   status: number
-  body?: string
+  /** The HTTP 1.1 status code text */
+  statusText?: string
+  /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
+  body?: string | object
   error?: string
 }
