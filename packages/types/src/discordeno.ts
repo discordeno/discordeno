@@ -392,8 +392,8 @@ export interface GetThreadMember {
 /** https://discord.com/developers/docs/resources/channel#list-thread-members-query-string-params */
 export interface ListThreadMembers {
   withMember?: boolean
-  after?: boolean
-  limit?: boolean
+  after?: BigString
+  limit?: BigString
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
