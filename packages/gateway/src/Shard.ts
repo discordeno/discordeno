@@ -258,6 +258,8 @@ export class DiscordenoShard {
       await this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
+    await this.requestIdentify()
+
     this.state = ShardState.Identifying
     this.events.identifying?.(this)
 
@@ -618,8 +620,6 @@ export class DiscordenoShard {
 
         // When resumable is false we need to re-identify
         if (!resumable) {
-          // TODO: check if we need to close the connection before waiting for the identify
-          await this.requestIdentify()
           await this.identify()
 
           break
