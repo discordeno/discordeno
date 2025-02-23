@@ -1656,10 +1656,16 @@ export interface Template {
 }
 
 export interface ThreadMember {
-  id?: bigint
-  userId?: bigint
+  /** Any user-thread settings, currently only used for notifications */
   flags: number
+  /** The id of the thread */
+  id?: bigint
+  /** The id of the user */
+  userId?: bigint
+  /** The time the current user last joined the thread */
   joinTimestamp: number
+  /** The member object of the user */
+  member?: Member
 }
 
 export interface ThreadMemberGuildCreate {
