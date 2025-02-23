@@ -2272,7 +2272,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
    */
-  getThreadMember: (channelId: BigString, userId: BigString, options: GetThreadMember) => Promise<Camelize<DiscordThreadMember>>
+  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember) => Promise<Camelize<DiscordThreadMember>>
   /**
    * Gets the list of thread members for a thread.
    *
@@ -2285,7 +2285,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
    */
-  getThreadMembers: (channelId: BigString, options: ListThreadMembers) => Promise<Camelize<DiscordThreadMember>[]>
+  getThreadMembers: (channelId: BigString, options?: ListThreadMembers) => Promise<Camelize<DiscordThreadMember>[]>
   /**
    * Gets the list of users that reacted with an emoji to a message.
    *

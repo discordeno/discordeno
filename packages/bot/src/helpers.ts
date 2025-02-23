@@ -1005,8 +1005,8 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getOwnVoiceState: (guildId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getSticker: (stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
-  getThreadMember: (channelId: BigString, userId: BigString, options: GetThreadMember) => Promise<ThreadMember>
-  getThreadMembers: (channelId: BigString, options: ListThreadMembers) => Promise<ThreadMember[]>
+  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember) => Promise<ThreadMember>
+  getThreadMembers: (channelId: BigString, options?: ListThreadMembers) => Promise<ThreadMember[]>
   getReactions: (
     channelId: BigString,
     messageId: BigString,
