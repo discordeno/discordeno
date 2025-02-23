@@ -1009,7 +1009,7 @@ export interface CreateForumPostWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
   /** contents of the first message in the forum/media thread */
@@ -1053,7 +1053,7 @@ export interface StartThreadWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
 }
@@ -1062,7 +1062,7 @@ export interface StartThreadWithoutMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
   /** the type of thread to create */
