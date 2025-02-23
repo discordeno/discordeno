@@ -189,7 +189,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
         if (!bucket) return
 
-        await gateway.requestIdentify(shardId)
         await shard.identify().then(() => gateway.resharding.shardIsPending(shard))
       },
       async shardIsPending(shard) {
@@ -395,7 +394,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         this.shards.set(shardId, shard)
       }
 
-      await gateway.requestIdentify(shardId)
       await shard.identify()
     },
 
