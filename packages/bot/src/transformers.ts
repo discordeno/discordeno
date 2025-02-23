@@ -470,7 +470,12 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: DiscordInviteStageInstance & { guildId: BigString },
   ) => SetupDesiredProps<InviteStageInstance, TProps, TBehavior>
-  member: (bot: Bot<TProps, TBehavior>, payload: DiscordMember, guildId: BigString, userId: BigString) => SetupDesiredProps<Member, TProps, TBehavior>
+  member: (
+    bot: Bot<TProps, TBehavior>,
+    payload: DiscordMember,
+    guildId: BigString | undefined,
+    userId: BigString,
+  ) => SetupDesiredProps<Member, TProps, TBehavior>
   message: (bot: Bot<TProps, TBehavior>, payload: { message: DiscordMessage; shardId: number }) => SetupDesiredProps<Message, TProps, TBehavior>
   messageCall: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageCall) => SetupDesiredProps<MessageCall, TProps, TBehavior>
   messageInteractionMetadata: (

@@ -1395,12 +1395,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId))
     },
 
-    async getThreadMember(channelId, userId) {
-      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.user(channelId, userId))
+    async getThreadMember(channelId, userId, options) {
+      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.getUser(channelId, userId, options))
     },
 
-    async getThreadMembers(channelId) {
-      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId))
+    async getThreadMembers(channelId, options) {
+      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId, options))
     },
 
     async getReactions(channelId, messageId, reaction, options) {

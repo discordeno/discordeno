@@ -161,11 +161,28 @@ export function createRoutes(): RestRoutes {
         active: (guildId) => {
           return `/guilds/${guildId}/threads/active`
         },
-        members: (channelId) => {
-          return `/channels/${channelId}/thread-members`
+        members: (channelId, options) => {
+          let url = `/channels/${channelId}/thread-members?`
+
+          if (options) {
+            if (options.withMember) url += `with_member=${options.withMember}`
+            if (options.limit) url += `&limit=${options.limit}`
+            if (options.after) url += `&after=${options.after}`
+          }
+
+          return url
         },
         me: (channelId) => {
           return `/channels/${channelId}/thread-members/@me`
+        },
+        getUser(channelId, userId, options) {
+          let url = `/channels/${channelId}/thread-members/${userId}?`
+
+          if (options) {
+            if (options.withMember) url += `with_member=${options.withMember}`
+          }
+
+          return url
         },
         user: (channelId, userId) => {
           return `/channels/${channelId}/thread-members/${userId}`
