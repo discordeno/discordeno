@@ -1033,8 +1033,13 @@ export interface Member {
   id: bigint
   /** The compressed form of all the boolean values on this user. */
   toggles?: MemberToggles
-  /** The guild id where this member is. */
-  guildId: bigint
+  /**
+   * The guild id where this member is.
+   *
+   * @remarks
+   * This will always be present unless the member object is from thread member object.
+   * */
+  guildId?: bigint
   /** The user this guild member represents */
   user?: User
   /** This user's guild nickname */

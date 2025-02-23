@@ -1,5 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
+import type { DiscordMember } from './guild.js'
 import type { DiscordMessageComponents } from './interactions.js'
 import type { DiscordAllowedMentions, DiscordAttachment, DiscordEmbed, MessageFlags } from './message.js'
 import type { DiscordUser } from './user.js'
@@ -199,6 +200,8 @@ export interface DiscordThreadMember {
   user_id: string
   /** The time the current user last joined the thread */
   join_timestamp: string
+  /** The member object of the user */
+  member?: DiscordMember
 }
 
 /** https://discord.com/developers/docs/resources/channel#thread-member-object-thread-member-structure, the first asterisk */
