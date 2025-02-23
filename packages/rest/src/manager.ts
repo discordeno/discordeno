@@ -587,9 +587,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
           reject: (reason) => {
-            // If discord sent us JSON it is provably going to me an error message from where we can get some information, the full body will be in the error cause anyway
-            // https://discord.com/developers/docs/reference#error-messages
-            if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
               let errorText: string
 
               switch (reason.status) {
@@ -617,12 +614,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
                 default:
                   errorText = reason.statusText ?? 'Unknown error'
               }
-
-              error.message = `[${reason.status}] ${errorText}\nDiscord error: [${reason.body.code}] ${reason.body.message}`
-            } else {
-              error.message = 'Failed to send request to discord and failed to parse the response body.'
+            
+            error.message = `[${reason.status}] ${errorText}`
+              
+            // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
+            // https://discord.com/developers/docs/reference#error-messages
+            if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
+              error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`
             }
-
             error.cause = reason
             reject(error)
           },
