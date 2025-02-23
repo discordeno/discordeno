@@ -190,8 +190,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         if (!bucket) return
 
         await gateway.requestIdentify(shardId)
-
-        gateway.logger.debug(`[Gateway] Shard #${shardId} successfully requested the identify, proceding with the identify.`)
         await shard.identify().then(() => gateway.resharding.shardIsPending(shard))
       },
       async shardIsPending(shard) {
@@ -398,8 +396,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       await gateway.requestIdentify(shardId)
-
-      gateway.logger.debug(`[Gateway] Shard #${shardId} successfully requested the identify, proceding with the identify.`)
       await shard.identify()
     },
 
@@ -413,6 +409,8 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       await bucket.leakyBucket.acquire()
+
+      gateway.logger.debug(`[Gateway] Approved identify request for Shard #${shardId}.`)
     },
 
     async kill(shardId: number) {
