@@ -400,12 +400,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async requestIdentify(shardId) {
-      gateway.logger.debug(`[Gateway] Shard #${shardId} requested an identify`)
+      gateway.logger.debug(`[Gateway] Shard #${shardId} requested an identify.`)
 
       const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
 
       if (!bucket) {
-        throw new Error("Can't request an identify for a shard that can't be assigned to a bucket.")
+        throw new Error("Can't request identify for a shard that is not assigned to any bucket.")
       }
 
       await bucket.leakyBucket.acquire()
@@ -416,7 +416,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
       if (!shard) {
-        gateway.logger.debug(`[Gateway] A kill for Shard #${shardId} was requested, but the shard could not be found`)
+        gateway.logger.debug(`[Gateway] Shard #${shardId} was requested to be killed, but the shard could not be found.`)
         return
       }
 
@@ -725,7 +725,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     number,
     {
       workers: Array<{ id: number; queue: number[] }>
-      /** The bucket to queue the identifies */
+      /** The bucket to queue the identifies. */
       leakyBucket: LeakyBucket
     }
   >
