@@ -587,41 +587,42 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
           reject: (reason) => {
-              let errorText: string
+            let errorText: string
 
-              switch (reason.status) {
-                case 400:
-                  errorText = "The options was improperly formatted, or the server couldn't understand it."
-                  break
-                case 401:
-                  errorText = 'The Authorization header was missing or invalid.'
-                  break
-                case 403:
-                  errorText = 'The Authorization token you passed did not have permission to the resource.'
-                  break
-                case 404:
-                  errorText = "The resource at the location specified doesn't exist."
-                  break
-                case 405:
-                  errorText = 'The HTTP method used is not valid for the location specified.'
-                  break
-                case 429:
-                  errorText = "You're being ratelimited."
-                  break
-                case 502:
-                  errorText = 'There was not a gateway available to process your options. Wait a bit and retry.'
-                  break
-                default:
-                  errorText = reason.statusText ?? 'Unknown error'
-              }
-            
+            switch (reason.status) {
+              case 400:
+                errorText = "The options was improperly formatted, or the server couldn't understand it."
+                break
+              case 401:
+                errorText = 'The Authorization header was missing or invalid.'
+                break
+              case 403:
+                errorText = 'The Authorization token you passed did not have permission to the resource.'
+                break
+              case 404:
+                errorText = "The resource at the location specified doesn't exist."
+                break
+              case 405:
+                errorText = 'The HTTP method used is not valid for the location specified.'
+                break
+              case 429:
+                errorText = "You're being ratelimited."
+                break
+              case 502:
+                errorText = 'There was not a gateway available to process your options. Wait a bit and retry.'
+                break
+              default:
+                errorText = reason.statusText ?? 'Unknown error'
+            }
+
             error.message = `[${reason.status}] ${errorText}`
-              
+
             // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
             // https://discord.com/developers/docs/reference#error-messages
             if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
               error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`
             }
+
             error.cause = reason
             reject(error)
           },
