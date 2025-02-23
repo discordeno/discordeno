@@ -386,13 +386,17 @@ export interface ListArchivedThreads {
 
 /** https://discord.com/developers/docs/resources/channel#get-thread-member-query-string-params */
 export interface GetThreadMember {
+  /** Whether to include a guild member object for the thread member */
   withMember?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/channel#list-thread-members-query-string-params */
 export interface ListThreadMembers {
+  /** Whether to include a guild member object for the thread member */
   withMember?: boolean
+  /** Get thread members after this user ID */
   after?: BigString
+  /** Max number of thread members to return (1-100). Defaults to 100. */
   limit?: BigString
 }
 
