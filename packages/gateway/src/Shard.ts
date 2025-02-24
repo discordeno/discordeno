@@ -450,16 +450,20 @@ export class DiscordenoShard {
         await this.identify()
         return
       }
+      // NOTE: This case must always be right above the cases that runs with default case because of how switch works when you don't break / return, more info below.
       case GatewayCloseEventCodes.NormalClosure:
       case GatewayCloseEventCodes.GoingAway: {
+        // If the shard is marked as goingOffline, it stays disconnected.
         if (this.goingOffline) {
           this.state = ShardState.Disconnected
           this.events.disconnected?.(this)
 
+        this.goingOffline = false
+
           return
         }
 
-        // if goingOffline is false we can fall through to the switch and since this is here it will go in the default case
+        // Otherwise, we want the shard to go through the default case where it gets resumed, as it might be an unexpected closure from Discord or Cloudflare for example, so we don't use break / return here.
       }
       // Gateway connection closes on which a resume is allowed.
       case GatewayCloseEventCodes.UnknownError:
