@@ -55,6 +55,16 @@ export class DiscordenoShard {
   bucket: LeakyBucket
   /** Logger for the bucket. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /**
+   * Is the shard going offline?
+   *
+   * @remarks
+   * This will be true if the close method has been called with either 1000 or 1001
+   *
+   * @internal
+   * This is for internal purposes only, and subject to breaking changes.
+   */
+  goingOffline = false
   /** Text decoder used for compressed payloads. */
   textDecoder = new TextDecoder()
   /** ZLib Inflate instance for ZLib-stream transport payloads. */
@@ -133,6 +143,8 @@ export class DiscordenoShard {
       this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`)
       return
     }
+
+    this.goingOffline = code === GatewayCloseEventCodes.NormalClosure || code === GatewayCloseEventCodes.GoingAway
 
     // This has to be created before the actual call to socket.close as for example Bun calls socket.onclose immediately on the .close() call instead of waiting for the connection to end
     const promise = new Promise((resolve) => {
@@ -405,8 +417,6 @@ export class DiscordenoShard {
         return
       }
       // On these codes a manual start will be done.
-      case GatewayCloseEventCodes.NormalClosure:
-      case GatewayCloseEventCodes.GoingAway:
       case ShardSocketCloseCodes.Shutdown:
       case ShardSocketCloseCodes.ReIdentifying:
       case ShardSocketCloseCodes.Resharded:
@@ -439,6 +449,21 @@ export class DiscordenoShard {
 
         await this.identify()
         return
+      }
+      // NOTE: This case must always be right above the cases that runs with default case because of how switch works when you don't break / return, more info below.
+      case GatewayCloseEventCodes.NormalClosure:
+      case GatewayCloseEventCodes.GoingAway: {
+        // If the shard is marked as goingOffline, it stays disconnected.
+        if (this.goingOffline) {
+          this.state = ShardState.Disconnected
+          this.events.disconnected?.(this)
+
+        this.goingOffline = false
+
+          return
+        }
+
+        // Otherwise, we want the shard to go through the default case where it gets resumed, as it might be an unexpected closure from Discord or Cloudflare for example, so we don't use break / return here.
       }
       // Gateway connection closes on which a resume is allowed.
       case GatewayCloseEventCodes.UnknownError:
