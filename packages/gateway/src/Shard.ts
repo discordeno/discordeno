@@ -260,13 +260,20 @@ export class DiscordenoShard {
     })
   }
 
-  /** Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway. */
-  async identify(): Promise<void> {
+  /**
+   * Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway.
+   * @param bypassRequest - Whether to bypass the requestIdentify handler and identify immediately. This should be used carefully as it can cause invalid sessions.
+   */
+  async identify(bypassRequest = false): Promise<void> {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Identifying open Shard #${this.id}, closing the connection`)
       await this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
+    }
+
+    if (!bypassRequest) {
+      await this.requestIdentify()
     }
 
     this.state = ShardState.Identifying
@@ -642,7 +649,7 @@ export class DiscordenoShard {
 
         // When resumable is false we need to re-identify
         if (!resumable) {
-          await this.requestIdentify()
+          await this.identify()
 
           break
         }
@@ -833,7 +840,7 @@ export interface ShardCreateOptions {
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The handler to request a space to make an identify request. */
   requestIdentify?: () => Promise<void>
-  /** The handler to alert the gateway manager that this shard has received a READY event. */
+  /** The handler to alert the gateway manager that this shard has identified. */
   shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
   makePresence?: () => Promise<DiscordUpdatePresence | undefined>
