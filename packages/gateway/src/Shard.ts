@@ -249,8 +249,11 @@ export class DiscordenoShard {
     })
   }
 
-  /** Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway. */
-  async identify(): Promise<void> {
+  /**
+   * Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway.
+   * @param bypassRequest - Whether to bypass the requestIdentify handler and identify immediately. This should be used carefully as it can cause invalid sessions.
+   */
+  async identify(bypassRequest = false): Promise<void> {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
@@ -258,7 +261,9 @@ export class DiscordenoShard {
       await this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
-    await this.requestIdentify()
+    if (!bypassRequest) {
+      await this.requestIdentify()
+    }
 
     this.state = ShardState.Identifying
     this.events.identifying?.(this)
