@@ -43,8 +43,11 @@ import type {
   DiscordApplicationCommandOptionChoice,
   DiscordInteractionContextType,
   DiscordInteractionEntryPointCommandHandlerType,
+  DiscordMediaGalleryItem,
+  DiscordUnfurledMediaItem,
   InteractionResponseTypes,
   MessageComponentTypes,
+  SeparatorSpacingSize,
   TextStyles,
 } from './discord/interactions.js'
 import type { TargetTypes } from './discord/invite.js'
@@ -115,11 +118,19 @@ export type MessageComponent =
   | SelectMenuRolesComponent
   | SelectMenuUsersComponent
   | SelectMenuUsersAndRolesComponent
+  | SectionComponent
+  | TextDisplayComponent
+  | ThumbnailComponent
+  | MediaGalleryComponent
+  | SeparatorComponent
+  | FileComponent
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
   /** Action rows are a group of buttons. */
   type: MessageComponentTypes.ActionRow
+  /** Autoincremented number if not provided */
+  id?: number
   /** The components in this row */
   components:
     | [Exclude<MessageComponent, ActionRow>]
@@ -133,6 +144,8 @@ export interface ActionRow {
 export interface ButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
+  /** Autoincremented number if not provided */
+  id?: number
   /** for what the button says (max 80 characters) */
   label?: string
   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
@@ -158,6 +171,8 @@ export interface ButtonComponent {
 export interface SelectMenuComponent {
   /** SelectMenu Component is of type 3 */
   type: MessageComponentTypes.SelectMenu
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -175,6 +190,8 @@ export interface SelectMenuComponent {
 export interface SelectMenuUsersComponent {
   /** SelectMenuChannels Component is of type 5 */
   type: MessageComponentTypes.SelectMenuUsers
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -195,6 +212,8 @@ export interface SelectMenuUsersComponent {
 export interface SelectMenuRolesComponent {
   /** SelectMenuChannels Component is of type 6 */
   type: MessageComponentTypes.SelectMenuRoles
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -215,6 +234,8 @@ export interface SelectMenuRolesComponent {
 export interface SelectMenuUsersAndRolesComponent {
   /** SelectMenuChannels Component is of type 7 */
   type: MessageComponentTypes.SelectMenuUsersAndRoles
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -235,6 +256,8 @@ export interface SelectMenuUsersAndRolesComponent {
 export interface SelectMenuChannelsComponent {
   /** SelectMenuChannels Component is of type 8 */
   type: MessageComponentTypes.SelectMenuChannels
+  /** Autoincremented number if not provided */
+  id?: number
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -285,6 +308,8 @@ export interface SelectMenuDefaultValue {
 export interface InputTextComponent {
   /** InputText Component is of type 4 */
   type: MessageComponentTypes.InputText
+  /** Autoincremented number if not provided */
+  id?: number
   /** The style of the InputText */
   style: TextStyles
   /** The customId of the InputText */
@@ -301,6 +326,90 @@ export interface InputTextComponent {
   required?: boolean
   /** Pre-filled value for input text. */
   value?: string
+}
+
+/** TBD */
+export interface SectionComponent {
+  /** TBD */
+  type: MessageComponentTypes.Section
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  components: TextDisplayComponent[]
+  /** TBD */
+  accessory: ButtonComponent | ThumbnailComponent
+}
+
+/** TBD */
+export interface TextDisplayComponent {
+  /** TBD */
+  type: MessageComponentTypes.TextDisplay
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  content: string
+}
+
+/** TBD */
+export interface ThumbnailComponent {
+  /** TBD */
+  type: MessageComponentTypes.Thumbnail
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  media: DiscordUnfurledMediaItem
+  /** TBD */
+  description?: string
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface MediaGalleryComponent {
+  /** TBD */
+  type: MessageComponentTypes.MediaGallery
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  items: DiscordMediaGalleryItem[]
+}
+
+/** TBD */
+export interface SeparatorComponent {
+  /** TBD */
+  type: MessageComponentTypes.Separator
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  divider?: boolean
+  /** TBD */
+  spacing?: SeparatorSpacingSize
+}
+
+/** TBD */
+export interface FileComponent {
+  /** TBD */
+  type: MessageComponentTypes.File
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD. The UnfurledMediaItem ONLY supports attachment://<filename> references */
+  file: DiscordUnfurledMediaItem
+  /** TBD */
+  spoiler?: boolean
+}
+
+/** TBD */
+export interface ContainerComponent {
+  /** TBD */
+  type: MessageComponentTypes.Container
+  /** Autoincremented number if not provided */
+  id?: number
+  /** TBD */
+  accentColor?: number
+  /** TBD */
+  spoiler?: boolean
+  /** TBD */
+  components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
@@ -627,8 +736,7 @@ export interface RequestGuildMembers {
   nonce?: string
 }
 
-/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-
+/** https://discord.com/developers/docs/resources/guild#create-guild-channel */
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string
