@@ -720,6 +720,7 @@ export interface RequestGuildMembers {
   nonce?: string
 }
 
+/** https://discord.com/developers/docs/resources/guild#create-guild-channel */
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string
