@@ -43,7 +43,6 @@ import type {
   InteractionCallbackOptions,
   InteractionResponseTypes,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -198,8 +197,8 @@ export interface ApplicationCommand {
   options?: ApplicationCommandOption[]
   description?: string
   guildId?: bigint
-  nameLocalizations?: Record<Locales, string>
-  descriptionLocalizations?: Record<Locales, string>
+  nameLocalizations?: Localization
+  descriptionLocalizations?: Localization
   defaultMemberPermissions?: bigint
   type?: ApplicationCommandTypes
   version?: string
@@ -241,7 +240,7 @@ export interface ApplicationCommandOption {
 }
 
 export interface ApplicationCommandOptionChoice {
-  nameLocalizations?: Record<Locales, string>
+  nameLocalizations?: Localization
   name: string
   value: string | number
 }
