@@ -161,6 +161,8 @@ export class DiscordenoShard {
       this.state = ShardState.Connecting
     }
 
+    this.logger.debug(`[Shard] Creating shard #${this.id} socket connection.`)
+
     this.events.connecting?.(this)
 
     const url = new URL(this.connectionUrl)
@@ -242,6 +244,8 @@ export class DiscordenoShard {
           this.state = ShardState.Unidentified
         }
 
+        this.logger.debug(`[Shard] Shard #${this.id} socket connected.`)
+
         this.events.connected?.(this)
 
         resolve(this)
@@ -274,6 +278,8 @@ export class DiscordenoShard {
     if (!this.isOpen()) {
       await this.connect()
     }
+
+    this.logger.debug(`[Shard] Sending Shard #${this.id} Identify payload`)
 
     this.send(
       {
