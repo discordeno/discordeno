@@ -161,7 +161,7 @@ export class DiscordenoShard {
       this.state = ShardState.Connecting
     }
 
-    this.logger.debug(`[Shard] Creating shard #${this.id} socket connection.`)
+    this.logger.debug(`[Shard] Connecting shard #${this.id} socket.`)
 
     this.events.connecting?.(this)
 
@@ -279,7 +279,7 @@ export class DiscordenoShard {
       await this.connect()
     }
 
-    this.logger.debug(`[Shard] Sending Shard #${this.id} Identify payload`)
+    this.logger.debug(`[Shard] Sending Identify payload for Shard #${this.id}.`)
 
     this.send(
       {
