@@ -36,9 +36,6 @@ export const baseChannel: InternalBot['transformers']['$inferredTypes']['channel
   get nsfw() {
     return !!this.toggles?.nsfw
   },
-  get newlyCreated() {
-    return !!this.toggles?.newlyCreated
-  },
   get managed() {
     return !!this.toggles?.managed
   },

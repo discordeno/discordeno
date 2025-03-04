@@ -29,14 +29,12 @@ import type {
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
-  DiscordActiveThreads,
   DiscordActivityInstance,
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
-  DiscordArchivedThreads,
   DiscordAuditLog,
   DiscordAutoModerationRule,
   DiscordBan,
@@ -60,6 +58,8 @@ import type {
   DiscordInteractionCallbackResponse,
   DiscordInvite,
   DiscordInviteMetadata,
+  DiscordListActiveThreads,
+  DiscordListArchivedThreads,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -1556,7 +1556,7 @@ export interface RestManager {
    * Gets the list of all active threads for a guild.
    *
    * @param guildId - The ID of the guild to get the threads of.
-   * @returns An instance of {@link DiscordActiveThreads}.
+   * @returns An instance of {@link DiscordListActiveThreads}.
    *
    * @remarks
    * Returns both public and private threads.
@@ -1565,7 +1565,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
    */
-  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
+  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordListActiveThreads>>
   /** Get the applications info */
   getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
   /**
@@ -2099,7 +2099,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link DiscordArchivedThreads}.
+   * @returns An instance of {@link DiscordListArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -2111,7 +2111,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
    */
-  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   /**
    * Gets the list of private archived threads the bot is a member of for a channel.
    *
@@ -2128,7 +2128,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
    */
-  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   /**
    * Gets the number of members that would be kicked from a guild during pruning.
    *
@@ -2159,7 +2159,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
    */
-  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   /**
    * Gets the list of roles for a guild.
    *
