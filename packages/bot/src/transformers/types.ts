@@ -333,7 +333,7 @@ export interface AutoModerationActionExecution {
 
 export interface AutoModerationAction {
   type: AutoModerationActionType
-  metadata: AutoModerationActionMetadata
+  metadata?: AutoModerationActionMetadata
 }
 
 export interface AutoModerationActionMetadata {
