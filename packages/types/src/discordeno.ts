@@ -971,6 +971,8 @@ export interface ExecuteWebhook {
   wait?: boolean
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
   threadId?: BigString
+  /** Whether to allow sending (non-interactive) components for non-application-owned webhooks (defaults to `false`; ignored for application-owned webhooks) */
+  withComponents?: boolean
   /** Name of the thread to create (target channel has to be type of forum channel) */
   threadName?: string
   /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
