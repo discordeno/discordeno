@@ -894,7 +894,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
+      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true })
     },
 
     async deleteWebhookWithToken(webhookId, token) {
@@ -994,6 +994,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
         body,
         files: body.files,
+        unauthorized: true,
       })
     },
 
