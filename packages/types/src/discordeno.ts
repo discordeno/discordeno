@@ -148,6 +148,8 @@ export interface ButtonComponent {
     /** Whether this emoji is animated */
     animated?: boolean
   }
+  /** Identifier for a purchasable SKU, only available when using premium-style buttons */
+  sku_id?: bigint
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
   /** Whether or not this button is disabled */
