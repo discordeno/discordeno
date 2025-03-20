@@ -149,7 +149,7 @@ export interface ButtonComponent {
     animated?: boolean
   }
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
-  skuId?: bigint
+  skuId?: BigString
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
   /** Whether or not this button is disabled */
