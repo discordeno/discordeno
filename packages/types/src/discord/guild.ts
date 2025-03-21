@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/guild */
 
-import type { ChannelTypes, DiscordChannel, DiscordOverwrite, SortOrderTypes } from './channel.js'
+import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
 import type { DiscordPresenceUpdate } from './gateway.js'
 import type { OAuth2Scope } from './oauth2.js'
@@ -670,6 +670,14 @@ export interface DiscordModifyGuildChannelPositions {
   lock_positions?: boolean | null
   /** The new parent ID for the channel that is moved */
   parent_id?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#list-active-guild-threads-response-body */
+export interface DiscordListActiveThreads {
+  /** The active threads */
+  threads: DiscordChannel[]
+  /** A thread member object for each returned thread the current user has joined */
+  members: DiscordThreadMember[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#bulk-guild-ban-bulk-ban-response */
