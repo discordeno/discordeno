@@ -913,7 +913,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString },
+    options: InteractionCallbackData & { threadId?: BigString; withComponents?: boolean },
   ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editWebhookWithToken: (
     webhookId: BigString,
