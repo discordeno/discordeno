@@ -22,6 +22,8 @@ import type {
   InteractionResource,
   Invite,
   InviteStageInstance,
+  Lobby,
+  LobbyMember,
   Member,
   Message,
   MessageCall,
@@ -96,6 +98,8 @@ export interface TransformersObjects {
   webhook: Webhook
   subscription: Subscription
   soundboardSound: SoundboardSound
+  lobby: Lobby
+  lobbyMember: LobbyMember
 }
 
 // NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
@@ -728,6 +732,20 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       user: defaultValue,
       volume: defaultValue,
       ...desiredProperties.soundboardSound,
+    },
+    lobby: {
+      id: defaultValue,
+      applicationId: defaultValue,
+      metadata: defaultValue,
+      members: defaultValue,
+      linkedChannel: defaultValue,
+      ...desiredProperties.lobby,
+    },
+    lobbyMember: {
+      id: defaultValue,
+      metadata: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.lobbyMember,
     },
   } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>
 }
