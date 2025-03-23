@@ -845,28 +845,31 @@ type GetErrorWhenUndesired<
 type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
 
 // If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
-export type TransformProperty<
-  T,
-  TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredPropertiesBehavior,
-> = T extends TransformersObjects[keyof TransformersObjects] // is T a transformed object?
+// NOTE: changing the order of these ternaries can cause bugs, for this reason we check in this order:
+//      - Is it an array?
+//      - Is it a collection?
+//      - Is it a bot?
+//      - Is it a transformed object?
+//      - Is it an object?
+//      - It's not an object
+export type TransformProperty<T, TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = T extends Array<infer U> // is it an array?
   ? // Yes, apply the desired props
-    SetupDesiredProps<T, TProps, TBehavior>
+    TransformProperty<U, TProps, TBehavior>[]
   : // No, is it a collection?
     T extends Collection<infer U, infer UObj>
     ? // Yes, check for nested proprieties
       Collection<U, TransformProperty<UObj, TProps, TBehavior>>
-    : // No, is it an array?
-      T extends Array<infer U>
-      ? // Yes, apply the desired props
-        TransformProperty<U, TProps, TBehavior>[]
-      : // No, is it a Bot?
-        T extends Bot
-        ? // Yes, return a bot with the correct set of props & behavior
-          Bot<TProps, TBehavior>
-        : // No, is this a generic object? If so we need to ensure nested inside there aren't transformed objects
+    : // No, is it a Bot?
+      T extends Bot
+      ? // Yes, return a bot with the correct set of props & behavior
+        Bot<TProps, TBehavior>
+      : // No, is it a transformed object?
+        T extends TransformersObjects[keyof TransformersObjects]
+        ? // Yes, apply the desired props
+          SetupDesiredProps<T, TProps, TBehavior>
+        : // Is it an object?
           IsObject<T> extends true
-          ? // Yes, check of nested proprieties
+          ? // Yes, we need to ensure nested inside there aren't transformed objects
             { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
           : // No, this is a normal value such as string / bigint / number
             T
