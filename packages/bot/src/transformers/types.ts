@@ -1846,5 +1846,5 @@ export interface LobbyMember {
   /** dictionary of string key/value pairs. The max total length is 1000. */
   metadata?: Record<string, string>
   /** lobby member flags combined as as bitfield */
-  flags?: number
+  flags?: ToggleBitfield
 }

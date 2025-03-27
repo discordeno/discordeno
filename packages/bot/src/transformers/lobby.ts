@@ -1,5 +1,5 @@
 import type { DiscordLobby, DiscordLobbyMember } from '@discordeno/types'
-import type { InternalBot, Lobby, LobbyMember } from '../index.js'
+import { type InternalBot, type Lobby, type LobbyMember, ToggleBitfield } from '../index.js'
 
 export function transformLobby(bot: InternalBot, payload: DiscordLobby): Lobby {
   const props = bot.transformers.desiredProperties.lobby
@@ -20,7 +20,7 @@ export function transformLobbyMember(bot: InternalBot, payload: DiscordLobbyMemb
 
   if (props.id && payload.id) lobbyMember.id = bot.transformers.snowflake(payload.id)
   if (props.metadata && payload.metadata) lobbyMember.metadata = payload.metadata
-  if (props.flags && payload.flags) lobbyMember.flags = payload.flags
+  if (props.flags && payload.flags) lobbyMember.flags = new ToggleBitfield(payload.flags)
 
   return bot.transformers.customizers.lobbyMember(bot, payload, lobbyMember)
 }
