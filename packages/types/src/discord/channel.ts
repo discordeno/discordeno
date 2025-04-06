@@ -102,7 +102,7 @@ export interface DiscordChannel {
    * @remarks
    * The computed permissions include channel overwrites but does not include implicit permissions, those need to be checked separatly.
    *
-   * Only presente when part of `resolved` data received from a slash command interaction.
+   * Only presented when part of `resolved` data received from a slash command interaction.
    */
   permissions?: string
   /** The flags of the channel */
