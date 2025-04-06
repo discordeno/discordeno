@@ -121,6 +121,13 @@ export interface DiscordChannel {
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
   default_forum_layout?: ForumLayout
+  /**
+   * When a thread is created this will be true on that channel payload for the thread.
+   *
+   * @remarks
+   * This will only exists on Thread Create gateway events.
+   */
+  newly_created?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */

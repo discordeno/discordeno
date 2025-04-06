@@ -452,6 +452,8 @@ export interface Channel {
   nsfw: boolean
   /** Thread-specific fields not needed by other channels */
   threadMetadata?: ChannelThreadMetadata
+  /** When a thread is created this will be true on that channel payload for the thread. */
+  newlyCreated: boolean
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
   locked: boolean
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
