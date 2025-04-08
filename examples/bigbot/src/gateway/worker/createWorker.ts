@@ -62,6 +62,10 @@ export function createWorker(workerId: number): Worker {
       shardInfoRequests.delete(message.nonce)
       return
     }
+    if (message.type === 'ShardIdentified') {
+      logger.info(`Shard #${message.shardId} identified`)
+      return
+    }
 
     logger.warn(`Worker - Received unknown message type: ${(message as { type: string }).type}`)
   })
