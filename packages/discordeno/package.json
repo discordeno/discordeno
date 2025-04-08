@@ -45,7 +45,7 @@
     "@swc/core": "^1.10.12",
     "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.16",
     "c8": "^10.1.3",
     "chai": "^5.1.2",
     "mocha": "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch",
