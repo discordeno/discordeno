@@ -158,6 +158,8 @@ export function transformInteraction(
       )
   }
   if (props.context && payload.interaction.context) interaction.context = payload.interaction.context
+  if (props.attachmentSizeLimit && payload.interaction.attachment_size_limit)
+    interaction.attachmentSizeLimit = payload.interaction.attachment_size_limit
   if (props.data && payload.interaction.data) {
     interaction.data = {
       type: payload.interaction.data.type,
