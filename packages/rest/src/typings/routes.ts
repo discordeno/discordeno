@@ -33,9 +33,9 @@ export interface RestRoutes {
     /** Route for webhook with a id. */
     id: (webhookId: BigString) => string
     /** Route for handling a webhook with a token. */
-    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
+    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString; withComponents?: boolean }) => string
     /** Route for handling a message that was sent through a webhook. */
-    message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
+    message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString; withComponents?: boolean }) => string
   }
   /** Routes for channel related endpoints. */
   channels: {
