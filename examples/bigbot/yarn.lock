@@ -527,7 +527,7 @@ __metadata:
     chalk: "npm:^5.4.1"
     chokidar: "npm:^3.6.0"
     dotenv: "npm:^16.4.7"
-    fastify: "npm:^5.3.1"
+    fastify: "npm:^5.3.2"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -694,9 +694,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^5.3.1":
-  version: 5.3.1
-  resolution: "fastify@npm:5.3.1"
+"fastify@npm:^5.3.2":
+  version: 5.3.2
+  resolution: "fastify@npm:5.3.2"
   dependencies:
     "@fastify/ajv-compiler": "npm:^4.0.0"
     "@fastify/error": "npm:^4.0.0"
@@ -713,7 +713,7 @@ __metadata:
     secure-json-parse: "npm:^4.0.0"
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
-  checksum: 10c0/f48349f785bb33fededaf00409f85c763f03eb711a657d9550647900c34defc0d88a0e831ed2e4527be876189befb49e50161ddce21f1b05fba1d9b6f2b0326a
+  checksum: 10c0/86ec8d6af1ddf779d9350958424d985e274d867786efa677ff88c1d1db9d7a3ee05e25dff29b3893e835a61893cf4df52d696f6ea193da1a29b8d098866914e8
   languageName: node
   linkType: hard
 
