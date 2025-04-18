@@ -19992,9 +19992,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.99.0":
-  version: 5.99.0
-  resolution: "webpack@npm:5.99.0"
+"webpack@npm:5.99.1":
+  version: 5.99.1
+  resolution: "webpack@npm:5.99.1"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.6"
@@ -20024,7 +20024,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/1f2d9222b0fa17418ae49f5eae25af0e12e3a9ec1f508d2d9d99ab39e8f5a6cdf5d3cd8b85b706799214f970d998af6b4c41f940163ef979820cac8d13740369
+  checksum: 10c0/44f58925999c3be255c9322c82ada717a8ccf9671bc423701ff6a88e5b2a0961d70a9f15d74a21191d358d474c3864d4356243da12292ceb02486045c82f8b79
   languageName: node
   linkType: hard
 
@@ -20159,7 +20159,7 @@ __metadata:
     reactflow: "npm:^11.11.4"
     styled-components: "npm:^6.1.13"
     typescript: "npm:5.7.2"
-    webpack: "npm:5.99.0"
+    webpack: "npm:5.99.1"
   languageName: unknown
   linkType: soft
 
