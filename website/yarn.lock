@@ -13332,8 +13332,8 @@ __metadata:
   linkType: hard
 
 "http-proxy-middleware@npm:^2.0.3":
-  version: 2.0.7
-  resolution: "http-proxy-middleware@npm:2.0.7"
+  version: 2.0.9
+  resolution: "http-proxy-middleware@npm:2.0.9"
   dependencies:
     "@types/http-proxy": "npm:^1.17.8"
     http-proxy: "npm:^1.18.1"
@@ -13345,7 +13345,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/express":
       optional: true
-  checksum: 10c0/8d00a61eb215b83826460b07489d8bb095368ec16e02a9d63e228dcf7524e7c20d61561e5476de1391aecd4ec32ea093279cdc972115b311f8e0a95a24c9e47e
+  checksum: 10c0/8e9032af625f7c9f2f0d318f6cdb14eb725cc16ffe7b4ccccea25cf591fa819bb7c3bb579e0b543e0ae9c73059b505a6d728290c757bff27bae526a6ed11c05e
   languageName: node
   linkType: hard
 
@@ -19992,9 +19992,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.99.1":
-  version: 5.99.1
-  resolution: "webpack@npm:5.99.1"
+"webpack@npm:5.99.2":
+  version: 5.99.2
+  resolution: "webpack@npm:5.99.2"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.6"
@@ -20024,7 +20024,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/44f58925999c3be255c9322c82ada717a8ccf9671bc423701ff6a88e5b2a0961d70a9f15d74a21191d358d474c3864d4356243da12292ceb02486045c82f8b79
+  checksum: 10c0/9ad89d986f078311f96284862f12323ff0b55ef23065506043ccccbfb06f60fc0d30423b2a41a6db982666fc7c39b80eb687b6c05319ad1cac3b6e3bbf87fde4
   languageName: node
   linkType: hard
 
@@ -20159,7 +20159,7 @@ __metadata:
     reactflow: "npm:^11.11.4"
     styled-components: "npm:^6.1.13"
     typescript: "npm:5.7.2"
-    webpack: "npm:5.99.1"
+    webpack: "npm:5.99.2"
   languageName: unknown
   linkType: soft
 
