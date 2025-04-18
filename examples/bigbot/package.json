@@ -24,7 +24,7 @@
     "amqplib": "^0.10.5",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
-    "fastify": "^5.3.1"
+    "fastify": "^5.3.2"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6",
