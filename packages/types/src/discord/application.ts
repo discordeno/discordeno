@@ -136,7 +136,7 @@ export interface DiscordActivityInstance {
   instance_id: string
   /** Unique identifier for the launch */
   launch_id: string
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: DiscordActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: string[]
