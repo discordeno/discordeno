@@ -193,6 +193,8 @@ export enum MessageFlags {
   IsVoiceMessage = 1 << 13,
   /** This message has a snapshot (via Message Forwarding) */
   HasSnapshot = 1 << 14,
+  /** Allows you to create fully component driven messages */
+  IsComponentV2 = 1 << 15,
 }
 
 /** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object */

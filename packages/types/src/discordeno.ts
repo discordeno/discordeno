@@ -22,6 +22,14 @@ import type {
   VideoQualityModes,
 } from './discord/channel.js'
 import type {
+  ButtonStyles,
+  DiscordMediaGalleryItem,
+  DiscordUnfurledMediaItem,
+  MessageComponentTypes,
+  SeparatorSpacingSize,
+  TextStyles,
+} from './discord/components.js'
+import type {
   DefaultMessageNotificationLevels,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
@@ -38,17 +46,11 @@ import type {
 } from './discord/guildScheduledEvent.js'
 import type {
   ApplicationCommandTypes,
-  ButtonStyles,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
   DiscordInteractionContextType,
   DiscordInteractionEntryPointCommandHandlerType,
-  DiscordMediaGalleryItem,
-  DiscordUnfurledMediaItem,
   InteractionResponseTypes,
-  MessageComponentTypes,
-  SeparatorSpacingSize,
-  TextStyles,
 } from './discord/interactions.js'
 import type { TargetTypes } from './discord/invite.js'
 import type {
@@ -125,12 +127,18 @@ export type MessageComponent =
   | SeparatorComponent
   | FileComponent
 
-/** https://discord.com/developers/docs/interactions/message-components#actionrow */
-export interface ActionRow {
-  /** Action rows are a group of buttons. */
-  type: MessageComponentTypes.ActionRow
-  /** Autoincremented number if not provided */
+/** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
+export interface BaseComponent {
+  /** The type of the component */
+  type: MessageComponentTypes
+  /** 32 bit integer used as an optional identifier for component */
   id?: number
+}
+
+/** https://discord.com/developers/docs/interactions/message-components#actionrow */
+export interface ActionRow extends BaseComponent {
+  type: MessageComponentTypes.ActionRow
+
   /** The components in this row */
   components:
     | [Exclude<MessageComponent, ActionRow>]
@@ -141,11 +149,9 @@ export interface ActionRow {
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
-export interface ButtonComponent {
-  /** All button components have type 2 */
+export interface ButtonComponent extends BaseComponent {
   type: MessageComponentTypes.Button
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** for what the button says (max 80 characters) */
   label?: string
   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
@@ -170,11 +176,9 @@ export interface ButtonComponent {
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure */
-export interface SelectMenuComponent {
-  /** SelectMenu Component is of type 3 */
+export interface SelectMenuComponent extends BaseComponent {
   type: MessageComponentTypes.SelectMenu
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -189,11 +193,9 @@ export interface SelectMenuComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuUsersComponent {
-  /** SelectMenuChannels Component is of type 5 */
+export interface SelectMenuUsersComponent extends BaseComponent {
   type: MessageComponentTypes.SelectMenuUsers
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -211,11 +213,9 @@ export interface SelectMenuUsersComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuRolesComponent {
-  /** SelectMenuChannels Component is of type 6 */
+export interface SelectMenuRolesComponent extends BaseComponent {
   type: MessageComponentTypes.SelectMenuRoles
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -233,11 +233,9 @@ export interface SelectMenuRolesComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuUsersAndRolesComponent {
-  /** SelectMenuChannels Component is of type 7 */
+export interface SelectMenuUsersAndRolesComponent extends BaseComponent {
   type: MessageComponentTypes.SelectMenuUsersAndRoles
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -255,11 +253,9 @@ export interface SelectMenuUsersAndRolesComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuChannelsComponent {
-  /** SelectMenuChannels Component is of type 8 */
+export interface SelectMenuChannelsComponent extends BaseComponent {
   type: MessageComponentTypes.SelectMenuChannels
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -307,11 +303,9 @@ export interface SelectMenuDefaultValue {
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
-export interface InputTextComponent {
-  /** InputText Component is of type 4 */
+export interface InputTextComponent extends BaseComponent {
   type: MessageComponentTypes.InputText
-  /** Autoincremented number if not provided */
-  id?: number
+
   /** The style of the InputText */
   style: TextStyles
   /** The customId of the InputText */
@@ -330,88 +324,74 @@ export interface InputTextComponent {
   value?: string
 }
 
-/** TBD */
-export interface SectionComponent {
-  /** TBD */
+/** https://discord.com/developers/docs/components/reference#section-section-structure */
+export interface SectionComponent extends BaseComponent {
   type: MessageComponentTypes.Section
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD */
+
+  /** One to three text components */
   components: TextDisplayComponent[]
-  /** TBD */
+  /** A thumbnail or a button component, with a future possibility of adding more compatible components */
   accessory: ButtonComponent | ThumbnailComponent
 }
 
-/** TBD */
-export interface TextDisplayComponent {
-  /** TBD */
+/** https://discord.com/developers/docs/components/reference#text-display */
+export interface TextDisplayComponent extends BaseComponent {
   type: MessageComponentTypes.TextDisplay
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD */
+
+  /** Text that will be displayed similar to a message */
   content: string
 }
 
-/** TBD */
-export interface ThumbnailComponent {
-  /** TBD */
+/** https://discord.com/developers/docs/components/reference#thumbnail */
+export interface ThumbnailComponent extends BaseComponent {
   type: MessageComponentTypes.Thumbnail
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD */
+
+  /** A url or attachment */
   media: DiscordUnfurledMediaItem
-  /** TBD */
+  /** Alt text for the media */
   description?: string
-  /** TBD */
+  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
 }
 
-/** TBD */
-export interface MediaGalleryComponent {
-  /** TBD */
+/** https://discord.com/developers/docs/components/reference#media-gallery */
+export interface MediaGalleryComponent extends BaseComponent {
   type: MessageComponentTypes.MediaGallery
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD */
+
+  /** 1 to 10 media gallery items */
   items: DiscordMediaGalleryItem[]
 }
 
-/** TBD */
-export interface SeparatorComponent {
-  /** TBD */
+/** https://discord.com/developers/docs/components/reference#file */
+export interface FileComponent extends BaseComponent {
+  type: MessageComponentTypes.File
+
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  file: DiscordUnfurledMediaItem
+  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
+}
+
+/** https://discord.com/developers/docs/components/reference#separator */
+export interface SeparatorComponent extends BaseComponent {
   type: MessageComponentTypes.Separator
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD */
+
+  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
   divider?: boolean
-  /** TBD */
+  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
   spacing?: SeparatorSpacingSize
 }
 
-/** TBD */
-export interface FileComponent {
-  /** TBD */
-  type: MessageComponentTypes.File
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD. The UnfurledMediaItem ONLY supports attachment://<filename> references */
-  file: DiscordUnfurledMediaItem
-  /** TBD */
-  spoiler?: boolean
-}
-
-/** TBD */
-export interface ContainerComponent {
-  /** TBD */
+/** https://discord.com/developers/docs/components/reference#container */
+export interface ContainerComponent extends BaseComponent {
   type: MessageComponentTypes.Container
-  /** Autoincremented number if not provided */
-  id?: number
-  /** TBD */
-  accentColor?: number
-  /** TBD */
-  spoiler?: boolean
-  /** TBD */
+
+  /** Up to 10 components of the type action row, text display, section, media gallery, separator, or file */
   components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
+  /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
+  accentColor?: number
+  /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
