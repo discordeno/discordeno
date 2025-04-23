@@ -59,6 +59,8 @@ export interface DiscordInteraction {
   authorizing_integration_owners: DiscordAuthorizingIntegrationOwners
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachment_size_limit: number
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type */

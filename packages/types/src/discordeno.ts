@@ -161,6 +161,8 @@ export interface ButtonComponent {
     /** Whether this emoji is animated */
     animated?: boolean
   }
+  /** Identifier for a purchasable SKU, only available when using premium-style buttons */
+  skuId?: BigString
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
   /** Whether or not this button is disabled */
@@ -491,6 +493,22 @@ export interface ListArchivedThreads {
   before?: number
   /** Optional maximum number of threads to return */
   limit?: number
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-thread-member-query-string-params */
+export interface GetThreadMember {
+  /** Whether to include a guild member object for the thread member */
+  withMember?: boolean
+}
+
+/** https://discord.com/developers/docs/resources/channel#list-thread-members-query-string-params */
+export interface ListThreadMembers {
+  /** Whether to include a guild member object for the thread member */
+  withMember?: boolean
+  /** Get thread members after this user ID */
+  after?: BigString
+  /** Max number of thread members to return (1-100). Defaults to 100. */
+  limit?: BigString
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
@@ -1101,7 +1119,7 @@ export interface CreateForumPostWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
   /** contents of the first message in the forum/media thread */
@@ -1145,7 +1163,7 @@ export interface StartThreadWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
 }
@@ -1154,7 +1172,7 @@ export interface StartThreadWithoutMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
   /** the type of thread to create */

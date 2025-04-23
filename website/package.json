@@ -42,7 +42,7 @@
     "@docusaurus/types": "3.6.3",
     "@types/react": "^18.3.12",
     "typescript": "5.7.2",
-    "webpack": "5.98.0"
+    "webpack": "5.99.3"
   },
   "browserslist": {
     "production": [

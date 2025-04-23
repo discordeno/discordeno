@@ -108,6 +108,7 @@ import type {
   GetReactions,
   GetScheduledEventUsers,
   GetScheduledEvents,
+  GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -116,6 +117,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
+  ListThreadMembers,
   MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
@@ -472,6 +474,11 @@ export interface RestManager {
    * @param options - The parameters for the creation of the guild.
    * @returns An instance of the created {@link DiscordGuild}.
    *
+   * @deprecated
+   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
+   *
+   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
+   *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
    *
@@ -508,6 +515,12 @@ export interface RestManager {
    * @param templateCode - The code of the template.
    * @param options - The parameters for the creation of the guild.
    * @returns An instance of the created {@link DiscordGuild}.
+   *
+   * @deprecated
+   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
+   *
+   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
+   *
    *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
@@ -2265,15 +2278,17 @@ export interface RestManager {
    *
    * @param channelId - The ID of the thread to get the thread member of.
    * @param userId - The user ID of the thread member to get.
+   * @param options - The parameters for the fetching of the thread member.
    * @returns An instance of {@link DiscordThreadMember}.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
    */
-  getThreadMember: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
+  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember) => Promise<Camelize<DiscordThreadMember>>
   /**
    * Gets the list of thread members for a thread.
    *
    * @param channelId - The ID of the thread to get the thread members of.
+   * @param options - The parameters for the fetching of the thread members.
    * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
    *
    * @remarks
@@ -2281,7 +2296,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
    */
-  getThreadMembers: (channelId: BigString) => Promise<Camelize<DiscordThreadMember>[]>
+  getThreadMembers: (channelId: BigString, options?: ListThreadMembers) => Promise<Camelize<DiscordThreadMember>[]>
   /**
    * Gets the list of users that reacted with an emoji to a message.
    *
@@ -3219,6 +3234,9 @@ export interface RestRequestResponse {
 export interface RestRequestRejection {
   ok: boolean
   status: number
-  body?: string
+  /** The HTTP 1.1 status code text */
+  statusText?: string
+  /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
+  body?: string | object
   error?: string
 }

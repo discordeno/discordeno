@@ -45,7 +45,6 @@ import type {
   InteractionCallbackOptions,
   InteractionResponseTypes,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -134,7 +133,7 @@ export interface ActivityInstance {
   instanceId: string
   /** Unique identifier for the launch */
   launchId: bigint
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: ActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: bigint[]
@@ -201,8 +200,8 @@ export interface ApplicationCommand {
   options?: ApplicationCommandOption[]
   description?: string
   guildId?: bigint
-  nameLocalizations?: Record<Locales, string>
-  descriptionLocalizations?: Record<Locales, string>
+  nameLocalizations?: Localization
+  descriptionLocalizations?: Localization
   defaultMemberPermissions?: bigint
   type?: ApplicationCommandTypes
   version?: string
@@ -244,7 +243,7 @@ export interface ApplicationCommandOption {
 }
 
 export interface ApplicationCommandOptionChoice {
-  nameLocalizations?: Record<Locales, string>
+  nameLocalizations?: Localization
   name: string
   value: string | number
 }
@@ -337,7 +336,7 @@ export interface AutoModerationActionExecution {
 
 export interface AutoModerationAction {
   type: AutoModerationActionType
-  metadata: AutoModerationActionMetadata
+  metadata?: AutoModerationActionMetadata
 }
 
 export interface AutoModerationActionMetadata {
@@ -905,6 +904,8 @@ export interface Interaction {
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachmentSizeLimit: number
   /**
    * Sends a response to an interaction.
    *
@@ -1058,8 +1059,13 @@ export interface Member {
   id: bigint
   /** The compressed form of all the boolean values on this user. */
   toggles?: MemberToggles
-  /** The guild id where this member is. */
-  guildId: bigint
+  /**
+   * The guild id where this member is.
+   *
+   * @remarks
+   * This will always be present unless the member object is from thread member object.
+   * */
+  guildId?: bigint
   /** The user this guild member represents */
   user?: User
   /** This user's guild nickname */
@@ -1676,10 +1682,16 @@ export interface Template {
 }
 
 export interface ThreadMember {
-  id?: bigint
-  userId?: bigint
+  /** Any user-thread settings, currently only used for notifications */
   flags: number
+  /** The id of the thread */
+  id?: bigint
+  /** The id of the user */
+  userId?: bigint
+  /** The time the current user last joined the thread */
   joinTimestamp: number
+  /** The member object of the user */
+  member?: Member
 }
 
 export interface ThreadMemberGuildCreate {

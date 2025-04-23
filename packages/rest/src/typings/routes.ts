@@ -9,11 +9,13 @@ import type {
   GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
+  GetThreadMember,
   GetUserGuilds,
   InteractionCallbackOptions,
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
+  ListThreadMembers,
 } from '@discordeno/types'
 
 export interface RestRoutes {
@@ -78,10 +80,12 @@ export interface RestRoutes {
       /** Route for active threads. */
       active: (guildId: BigString) => string
       /** Route for members in a thread. */
-      members: (channelId: BigString) => string
+      members: (channelId: BigString, options?: ListThreadMembers) => string
       /** Route for the bot member in a thread. */
       me: (channelId: BigString) => string
-      /** Route for a specific member in a thread. */
+      /** Route for getting a specific member in a thread. */
+      getUser: (channelId: BigString, userId: BigString, options?: GetThreadMember) => string
+      /** Route for a specific member in a thread apart from the route for getting the member. */
       user: (channelId: BigString, userId: BigString) => string
       /** Route for handling archived threads. */
       archived: (channelId: BigString) => string
