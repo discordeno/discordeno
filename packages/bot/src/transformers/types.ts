@@ -549,27 +549,25 @@ export interface Component {
   defaultValues?: DiscordComponentDefaultValue[]
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: bigint
-  /** TBD */
+  /** Optional identifier for component */
   id?: number
-  /** TBD */
+  /** A thumbnail or a button component, with a future possibility of adding more compatible components */
   accessory?: Component
-  /** TBD */
+  /** Text that will be displayed similar to a message */
   content?: string
-  /** TBD */
-  image?: DiscordUnfurledMediaItem
-  /** TBD */
+  /** Alt text for the media */
   description?: string
-  /** TBD */
+  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
-  /** TBD */
+  /** 1 to 10 media gallery items */
   items?: DiscordMediaGalleryItem[]
-  /** TBD */
+  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
   divider?: boolean
-  /** TBD */
+  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
   spacing?: SeparatorSpacingSize
-  /** TBD */
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
   file?: DiscordUnfurledMediaItem
-  /** TBD */
+  /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accentColor?: number
 }
 

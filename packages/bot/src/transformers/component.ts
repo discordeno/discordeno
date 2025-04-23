@@ -65,7 +65,7 @@ function transformContainerComponent(bot: Bot, payload: DiscordContainerComponen
   return {
     type: MessageComponentTypes.Container,
     id: payload.id,
-    accentColor: payload.accent_color,
+    accentColor: payload.accent_color ?? undefined,
     spoiler: payload.spoiler,
     components: payload.components.map((component) => bot.transformers.component(bot, component)),
   }
