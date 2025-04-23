@@ -474,6 +474,11 @@ export interface RestManager {
    * @param options - The parameters for the creation of the guild.
    * @returns An instance of the created {@link DiscordGuild}.
    *
+   * @deprecated
+   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
+   *
+   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
+   *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
    *
@@ -510,6 +515,12 @@ export interface RestManager {
    * @param templateCode - The code of the template.
    * @param options - The parameters for the creation of the guild.
    * @returns An instance of the created {@link DiscordGuild}.
+   *
+   * @deprecated
+   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
+   *
+   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
+   *
    *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
