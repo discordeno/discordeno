@@ -130,7 +130,7 @@ export interface ActivityInstance {
   instanceId: string
   /** Unique identifier for the launch */
   launchId: bigint
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: ActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: bigint[]
