@@ -2,9 +2,10 @@
 
 import type { DiscordApplication } from './application.js'
 import type { DiscordChannel, DiscordThreadMember } from './channel.js'
+import type { DiscordMessageComponents } from './components.js'
 import type { DiscordEmoji } from './emoji.js'
 import type { DiscordMember } from './guild.js'
-import type { DiscordAuthorizingIntegrationOwners, DiscordMessageComponents, DiscordMessageInteraction, InteractionTypes } from './interactions.js'
+import type { DiscordAuthorizingIntegrationOwners, DiscordMessageInteraction, InteractionTypes } from './interactions.js'
 import type { DiscordPoll } from './poll.js'
 import type { DiscordSticker, DiscordStickerItem } from './sticker.js'
 import type { DiscordUser } from './user.js'
