@@ -879,6 +879,8 @@ export interface Interaction {
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachmentSizeLimit: number
   /**
    * Sends a response to an interaction.
    *
