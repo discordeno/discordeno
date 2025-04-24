@@ -48,14 +48,15 @@ export interface DiscordChannel {
    * Amount of seconds a user has to wait before sending another message (0-21600)
    *
    * @remarks
-   * bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected
+   * Bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected
+   * `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.
    */
   rate_limit_per_user?: number
   /** the recipients of the DM */
   recipients?: DiscordUser[]
   /** icon hash of the group DM */
   icon?: string
-  /** Id of the creator of the group DM of the thread */
+  /** Id of the creator of the group DM or the thread */
   owner_id?: string
   /** Application id of the group DM creator if it is bot-created */
   application_id?: string
@@ -81,7 +82,13 @@ export interface DiscordChannel {
   rtc_region?: string | null
   /** The camera video quality mode of the voice channel, 1 when not present */
   video_quality_mode?: VideoQualityModes
-  /** An approximate count of messages in a thread, does not include deleted messages or the initial message */
+  /**
+
+   * An approximate count of messages in a thread, does not include deleted messages or the initial message
+   * 
+   * @remarks
+   * For threads created before July 1, 2022, the message count is inaccurate when it's greater than 50.
+   */
   message_count?: number
   /** An approximate count of users in a thread, stops counting at 50 */
   member_count?: number
@@ -115,7 +122,12 @@ export interface DiscordChannel {
   applied_tags?: string[]
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM or GUILD_MEDIA channel */
   default_reaction_emoji?: DiscordDefaultReactionEmoji | null
-  /** the initial `rate_limit_per_user` to set on newly created threads in a channel. */
+  /**
+  * The initial `rate_limit_per_user` to set on newly created threads in a channel.
+  *
+  * @remarks
+  * This field is copied to the thread at creation time and does not live update.
+  */
   default_thread_rate_limit_per_user?: number
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
