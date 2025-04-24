@@ -41,7 +41,7 @@ export type DiscordMessageComponent =
   | DiscordActionRow
   | DiscordSelectMenuComponent
   | DiscordButtonComponent
-  | DiscordInputTextComponent
+  | DiscordTextInputComponent
   | DiscordSectionComponent
   | DiscordTextDisplayComponent
   | DiscordThumbnailComponent

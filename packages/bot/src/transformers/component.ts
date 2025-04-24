@@ -2,13 +2,13 @@ import {
   type DiscordActionRow,
   type DiscordButtonComponent,
   type DiscordFileComponent,
-  type DiscordInputTextComponent,
   type DiscordMediaGalleryComponent,
   type DiscordMessageComponent,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
   type DiscordTextDisplayComponent,
+  type DiscordTextInputComponent,
   type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
@@ -125,7 +125,7 @@ function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent): Co
   }
 }
 
-function transformInputTextComponent(_bot: Bot, payload: DiscordInputTextComponent): Component {
+function transformInputTextComponent(_bot: Bot, payload: DiscordTextInputComponent): Component {
   return {
     type: MessageComponentTypes.InputText,
     id: payload.id,

@@ -6,12 +6,12 @@ import type {
   DiscordActionRow,
   DiscordContainerComponent,
   DiscordFileComponent,
-  DiscordInputTextComponent,
   DiscordMediaGalleryComponent,
   DiscordMediaGalleryItem,
   DiscordSectionComponent,
   DiscordSelectMenuComponent,
   DiscordTextDisplayComponent,
+  DiscordTextInputComponent,
   DiscordUnfurledMediaItem,
   MediaGalleryItem,
   UnfurledMediaItem,
@@ -107,7 +107,7 @@ function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonCo
   }
 }
 
-function transformInputTextComponent(_bot: Bot, payload: Component): DiscordInputTextComponent {
+function transformInputTextComponent(_bot: Bot, payload: Component): DiscordTextInputComponent {
   // Since Component is a merge of all components, some casts are necessary
   return {
     type: MessageComponentTypes.InputText,
