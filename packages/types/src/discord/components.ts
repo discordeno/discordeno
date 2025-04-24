@@ -21,7 +21,7 @@ export enum MessageComponentTypes {
   /** Select menu for channels */
   SelectMenuChannels,
   /** Container to display text alongside an accessory component */
-  Section = 9,
+  Section,
   /** Markdown text */
   TextDisplay,
   /** Small image that can be used as an accessory */
@@ -200,7 +200,7 @@ export interface DiscordSelectOption {
 }
 
 /** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
-export interface DiscordInputTextComponent extends DiscordBaseComponent {
+export interface DiscordTextInputComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.InputText
 
   /** The customId of the InputText */
