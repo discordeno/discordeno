@@ -5,10 +5,16 @@ import type {
   Component,
   DiscordActionRow,
   DiscordContainerComponent,
+  DiscordFileComponent,
   DiscordInputTextComponent,
+  DiscordMediaGalleryComponent,
+  DiscordMediaGalleryItem,
   DiscordSectionComponent,
   DiscordSelectMenuComponent,
   DiscordTextDisplayComponent,
+  DiscordUnfurledMediaItem,
+  MediaGalleryItem,
+  UnfurledMediaItem,
 } from '../../index.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordMessageComponent {
@@ -31,12 +37,32 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     case MessageComponentTypes.Section:
       return transformSectionComponent(bot, payload)
     case MessageComponentTypes.File:
+      return transformFileComponent(bot, payload)
     case MessageComponentTypes.MediaGallery:
+      return transformMediaGalleryComponent(bot, payload)
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
     case MessageComponentTypes.Thumbnail:
       // As of now they are compatible
       return payload as DiscordMessageComponent
+  }
+}
+
+export function transformUnfurledMediaItemToDiscordUnfurledMediaItem(_bot: Bot, payload: UnfurledMediaItem): DiscordUnfurledMediaItem {
+  return {
+    url: payload.url,
+    proxy_url: payload.proxyUrl,
+    height: payload.height,
+    width: payload.width,
+    content_type: payload.contentType,
+  }
+}
+
+export function transformMediaGalleryItemToDiscordMediaGalleryItem(bot: Bot, payload: MediaGalleryItem): DiscordMediaGalleryItem {
+  return {
+    media: bot.transformers.reverse.unfurledMediaItem(bot, payload.media),
+    description: payload.description,
+    spoiler: payload.spoiler,
   }
 }
 
@@ -133,5 +159,22 @@ function transformSectionComponent(bot: Bot, payload: Component): DiscordSection
     id: payload.id,
     components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) as DiscordTextDisplayComponent[],
     accessory: (payload.accessory ? bot.transformers.reverse.component(bot, payload.accessory) : undefined) as DiscordSectionComponent['accessory'],
+  }
+}
+
+function transformFileComponent(bot: Bot, payload: Component): DiscordFileComponent {
+  return {
+    type: MessageComponentTypes.File,
+    id: payload.id,
+    file: bot.transformers.reverse.unfurledMediaItem(bot, payload.file!),
+    spoiler: payload.spoiler,
+  }
+}
+
+function transformMediaGalleryComponent(bot: Bot, payload: Component): DiscordMediaGalleryComponent {
+  return {
+    type: MessageComponentTypes.MediaGallery,
+    id: payload.id,
+    items: payload.items?.map((item) => bot.transformers.reverse.mediaGalleryItem(bot, item)) ?? [],
   }
 }

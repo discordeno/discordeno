@@ -24,7 +24,6 @@ import type {
   DiscordGuildOnboardingPromptType,
   DiscordInteractionContextType,
   DiscordInviteType,
-  DiscordMediaGalleryItem,
   DiscordPollLayoutType,
   DiscordScheduledEventRecurrenceRuleFrequency,
   DiscordScheduledEventRecurrenceRuleMonth,
@@ -34,7 +33,6 @@ import type {
   DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
-  DiscordUnfurledMediaItem,
   DiscordWebhookEventType,
   EmbedTypes,
   ExplicitContentFilterLevels,
@@ -560,15 +558,39 @@ export interface Component {
   /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
   /** 1 to 10 media gallery items */
-  items?: DiscordMediaGalleryItem[]
+  items?: MediaGalleryItem[]
   /** Whether a visual divider should be displayed in the component. Defaults to `true` */
   divider?: boolean
   /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
   spacing?: SeparatorSpacingSize
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
-  file?: DiscordUnfurledMediaItem
+  file?: UnfurledMediaItem
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  media?: UnfurledMediaItem
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accentColor?: number
+}
+
+export interface UnfurledMediaItem {
+  /** Supports arbitrary urls and attachment://<filename> references */
+  url: string
+  /** The proxied url of the media item. This field is ignored and provided by the API as part of the response */
+  proxyUrl?: string
+  /** The height of the media item. This field is ignored and provided by the API as part of the response */
+  height?: number | null
+  /** The width of the media item. This field is ignored and provided by the API as part of the response */
+  width?: number | null
+  /** The media type of the content. This field is ignored and provided by the API as part of the response */
+  contentType?: string
+}
+
+export interface MediaGalleryItem {
+  /** A url or attachment */
+  media: UnfurledMediaItem
+  /** Alt text for the media */
+  description?: string
+  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
 }
 
 export interface DiscordComponentDefaultValue {

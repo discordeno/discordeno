@@ -12,7 +12,15 @@ import {
   type DiscordThumbnailComponent,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type { Bot, Component, DiscordContainerComponent } from '../index.js'
+import type {
+  Bot,
+  Component,
+  DiscordContainerComponent,
+  DiscordMediaGalleryItem,
+  DiscordUnfurledMediaItem,
+  MediaGalleryItem,
+  UnfurledMediaItem,
+} from '../index.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
   let component: Component
@@ -23,34 +31,60 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
       component = transformActionRow(bot, payload)
       break
     case MessageComponentTypes.Button:
-      component = transformButtonComponent(bot, payload as DiscordButtonComponent)
+      component = transformButtonComponent(bot, payload)
       break
     case MessageComponentTypes.Container:
-      component = transformContainerComponent(bot, payload as DiscordContainerComponent)
+      component = transformContainerComponent(bot, payload)
       break
     case MessageComponentTypes.InputText:
-      component = transformInputTextComponent(bot, payload as DiscordInputTextComponent)
+      component = transformInputTextComponent(bot, payload)
       break
     case MessageComponentTypes.SelectMenu:
     case MessageComponentTypes.SelectMenuChannels:
     case MessageComponentTypes.SelectMenuRoles:
     case MessageComponentTypes.SelectMenuUsers:
     case MessageComponentTypes.SelectMenuUsersAndRoles:
-      component = transformSelectMenuComponent(bot, payload as DiscordSelectMenuComponent)
+      component = transformSelectMenuComponent(bot, payload)
       break
     case MessageComponentTypes.Section:
-      component = transformSectionComponent(bot, payload as DiscordSectionComponent)
+      component = transformSectionComponent(bot, payload)
+      break
+    case MessageComponentTypes.Thumbnail:
+      component = transformThumbnailComponent(bot, payload)
+      break
+    case MessageComponentTypes.MediaGallery:
+      component = transformMediaGalleryComponent(bot, payload)
       break
     case MessageComponentTypes.File:
-    case MessageComponentTypes.MediaGallery:
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
-    case MessageComponentTypes.Thumbnail:
       component = keepAsIs(bot, payload)
       break
   }
 
   return bot.transformers.customizers.component(bot, payload, component)
+}
+
+export function transformUnfurledMediaItem(bot: Bot, payload: DiscordUnfurledMediaItem): UnfurledMediaItem {
+  const mediaItem: UnfurledMediaItem = {
+    url: payload.url,
+    proxyUrl: payload.proxy_url,
+    height: payload.height,
+    width: payload.width,
+    contentType: payload.content_type,
+  }
+
+  return bot.transformers.customizers.unfurledMediaItem(bot, payload, mediaItem)
+}
+
+export function transformMediaGalleryItem(bot: Bot, payload: DiscordMediaGalleryItem): MediaGalleryItem {
+  const mediaItem: MediaGalleryItem = {
+    media: bot.transformers.unfurledMediaItem(bot, payload.media),
+    description: payload.description,
+    spoiler: payload.spoiler,
+  }
+
+  return bot.transformers.customizers.mediaGalleryItem(bot, payload, mediaItem)
 }
 
 function transformActionRow(bot: Bot, payload: DiscordActionRow): Component {
@@ -145,9 +179,24 @@ function transformSectionComponent(bot: Bot, payload: DiscordSectionComponent): 
   }
 }
 
-function keepAsIs(
-  _bot: Bot,
-  payload: DiscordThumbnailComponent | DiscordFileComponent | DiscordTextDisplayComponent | DiscordMediaGalleryComponent | DiscordSeparatorComponent,
-): Component {
+function transformThumbnailComponent(bot: Bot, payload: DiscordThumbnailComponent): Component {
+  return {
+    type: MessageComponentTypes.Thumbnail,
+    id: payload.id,
+    media: bot.transformers.unfurledMediaItem(bot, payload.media),
+    description: payload.description,
+    spoiler: payload.spoiler,
+  }
+}
+
+function transformMediaGalleryComponent(bot: Bot, payload: DiscordMediaGalleryComponent): Component {
+  return {
+    type: MessageComponentTypes.MediaGallery,
+    id: payload.id,
+    items: payload.items.map((media) => bot.transformers.mediaGalleryItem(bot, media)),
+  }
+}
+
+function keepAsIs(_bot: Bot, payload: DiscordFileComponent | DiscordTextDisplayComponent | DiscordSeparatorComponent): Component {
   return payload
 }
