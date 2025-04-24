@@ -381,7 +381,6 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     sticker: (bot: Bot<TProps, TBehavior>, payload: DiscordSticker, sticker: SetupDesiredProps<Sticker, TProps, TBehavior>) => any
     stickerPack: (bot: Bot<TProps, TBehavior>, payload: DiscordStickerPack, stickerPack: StickerPack) => any
     subscription: (bot: Bot<TProps, TBehavior>, payload: DiscordSubscription, subscription: SetupDesiredProps<Subscription, TProps, TBehavior>) => any
-    user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser, user: SetupDesiredProps<User, TProps, TBehavior>) => any
     team: (bot: Bot<TProps, TBehavior>, payload: DiscordTeam, team: Team) => any
     template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate, template: Template) => any
     threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember, threadMember: ThreadMember) => any
@@ -391,6 +390,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       threadMemberGuildCreate: ThreadMemberGuildCreate,
     ) => any
     unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem, unfurledMediaItem: UnfurledMediaItem) => any
+    user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser, user: SetupDesiredProps<User, TProps, TBehavior>) => any
     voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
     voiceState: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceState, voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => any
     webhook: (bot: Bot<TProps, TBehavior>, payload: DiscordWebhook, webhook: SetupDesiredProps<Webhook, TProps, TBehavior>) => any
@@ -414,8 +414,8 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
     snowflake: (snowflake: BigString) => string
     team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam
-    user: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<User, TProps, TBehavior>) => DiscordUser
     unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: UnfurledMediaItem) => DiscordUnfurledMediaItem
+    user: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<User, TProps, TBehavior>) => DiscordUser
   }
   activity: (bot: Bot<TProps, TBehavior>, payload: DiscordActivity) => Activity
   activityInstance: (bot: Bot<TProps, TBehavior>, payload: DiscordActivityInstance) => SetupDesiredProps<ActivityInstance, TProps, TBehavior>
@@ -519,8 +519,8 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate) => Template
   threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember) => ThreadMember
   threadMemberGuildCreate: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
-  user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>
   unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem) => UnfurledMediaItem
+  user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>
   voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion) => VoiceRegion
   voiceState: (
     bot: Bot<TProps, TBehavior>,
@@ -596,8 +596,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       template: options.customizers?.template ?? defaultCustomizer,
       threadMember: options.customizers?.threadMember ?? defaultCustomizer,
       threadMemberGuildCreate: options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
-      user: options.customizers?.user ?? defaultCustomizer,
       unfurledMediaItem: options.customizers?.unfurledMediaItem ?? defaultCustomizer,
+      user: options.customizers?.user ?? defaultCustomizer,
       voiceRegion: options.customizers?.voiceRegion ?? defaultCustomizer,
       voiceState: options.customizers?.voiceState ?? defaultCustomizer,
       webhook: options.customizers?.webhook ?? defaultCustomizer,
@@ -622,8 +622,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       member: options.reverse?.member ?? transformMemberToDiscordMember,
       snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
       team: options.reverse?.team ?? transformTeamToDiscordTeam,
-      user: options.reverse?.user ?? transformUserToDiscordUser,
       unfurledMediaItem: options.reverse?.unfurledMediaItem ?? transformUnfurledMediaItemToDiscordUnfurledMediaItem,
+      user: options.reverse?.user ?? transformUserToDiscordUser,
     },
     activity: options.activity ?? transformActivity,
     activityInstance: options.activityInstance ?? transformActivityInstance,
@@ -683,8 +683,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     template: options.template ?? transformTemplate,
     threadMember: options.threadMember ?? transformThreadMember,
     threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
-    user: options.user ?? transformUser,
     unfurledMediaItem: options.unfurledMediaItem ?? transformUnfurledMediaItem,
+    user: options.user ?? transformUser,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     voiceState: options.voiceState ?? transformVoiceState,
     webhook: options.webhook ?? transformWebhook,
