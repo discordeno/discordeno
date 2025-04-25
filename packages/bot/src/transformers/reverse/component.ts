@@ -12,6 +12,7 @@ import type {
   DiscordSelectMenuComponent,
   DiscordTextDisplayComponent,
   DiscordTextInputComponent,
+  DiscordThumbnailComponent,
   DiscordUnfurledMediaItem,
   MediaGalleryItem,
   UnfurledMediaItem,
@@ -40,9 +41,10 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       return transformFileComponent(bot, payload)
     case MessageComponentTypes.MediaGallery:
       return transformMediaGalleryComponent(bot, payload)
+    case MessageComponentTypes.Thumbnail:
+      return transformThumbnailComponent(bot, payload)
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
-    case MessageComponentTypes.Thumbnail:
       // As of now they are compatible
       return payload as DiscordMessageComponent
   }
@@ -176,5 +178,15 @@ function transformMediaGalleryComponent(bot: Bot, payload: Component): DiscordMe
     type: MessageComponentTypes.MediaGallery,
     id: payload.id,
     items: payload.items?.map((item) => bot.transformers.reverse.mediaGalleryItem(bot, item)) ?? [],
+  }
+}
+
+function transformThumbnailComponent(bot: Bot, payload: Component): DiscordThumbnailComponent {
+  return {
+    type: MessageComponentTypes.Thumbnail,
+    id: payload.id,
+    media: bot.transformers.reverse.unfurledMediaItem(bot, payload.media!),
+    description: payload.description,
+    spoiler: payload.spoiler,
   }
 }

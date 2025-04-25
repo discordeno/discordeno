@@ -56,6 +56,8 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
       component = transformMediaGalleryComponent(bot, payload)
       break
     case MessageComponentTypes.File:
+      component = transformFileComponent(bot, payload)
+      break
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
       component = keepAsIs(bot, payload)
@@ -197,6 +199,15 @@ function transformMediaGalleryComponent(bot: Bot, payload: DiscordMediaGalleryCo
   }
 }
 
-function keepAsIs(_bot: Bot, payload: DiscordFileComponent | DiscordTextDisplayComponent | DiscordSeparatorComponent): Component {
+function transformFileComponent(bot: Bot, payload: DiscordFileComponent): Component {
+  return {
+    type: MessageComponentTypes.File,
+    id: payload.id,
+    file: bot.transformers.unfurledMediaItem(bot, payload.file),
+    spoiler: payload.spoiler,
+  }
+}
+
+function keepAsIs(_bot: Bot, payload: DiscordTextDisplayComponent | DiscordSeparatorComponent): Component {
   return payload
 }
