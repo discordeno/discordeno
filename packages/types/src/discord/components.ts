@@ -62,9 +62,13 @@ export interface DiscordBaseComponent {
 export interface DiscordActionRow extends DiscordBaseComponent {
   type: MessageComponentTypes.ActionRow
 
-  // TODO: Potenzially this could be changed to (DiscordButtonComponent | DiscordSelectMenuComponent)[]
-  /** The components in this row */
-  components: Exclude<DiscordMessageComponent, DiscordActionRow>[]
+  /**
+   * The components in this row
+   *
+   * @remarks
+   * Up to 5 button components, a single select component or a single text input component
+   */
+  components: (DiscordButtonComponent | DiscordSelectMenuComponent | DiscordTextInputComponent)[]
 }
 
 /** https://discord.com/developers/docs/components/reference#button-button-structure */
