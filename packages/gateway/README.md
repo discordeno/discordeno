@@ -60,5 +60,5 @@ Standalone WebSocket to connect to the Discord API.
 ## Links
 
 - [Website](https://discordeno.js.org/)
-- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
+- [Documentation](https://discordeno.js.org)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)

@@ -130,7 +130,7 @@ export interface ActivityInstance {
   instanceId: string
   /** Unique identifier for the launch */
   launchId: bigint
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: ActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: bigint[]
@@ -333,7 +333,7 @@ export interface AutoModerationActionExecution {
 
 export interface AutoModerationAction {
   type: AutoModerationActionType
-  metadata: AutoModerationActionMetadata
+  metadata?: AutoModerationActionMetadata
 }
 
 export interface AutoModerationActionMetadata {
@@ -879,6 +879,8 @@ export interface Interaction {
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachmentSizeLimit: number
   /**
    * Sends a response to an interaction.
    *
@@ -1823,4 +1825,28 @@ export interface SoundboardSound {
   available: boolean
   /** The user who created this sound */
   user?: User
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
+export interface Lobby {
+  /** The id of this channel */
+  id: bigint
+  /** application that created the lobby */
+  applicationId: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** members of the lobby */
+  members: LobbyMember[]
+  /** the guild channel linked to the lobby */
+  linkedChannel?: Channel
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
+export interface LobbyMember {
+  /** The id of the user */
+  id: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** lobby member flags combined as as bitfield */
+  flags?: ToggleBitfield
 }

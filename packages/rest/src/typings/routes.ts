@@ -297,6 +297,19 @@ export interface RestRoutes {
     /** Route for get/edit/delete of a guild sound */
     guildSound: (guildId: BigString, soundId: BigString) => string
   }
+  /** Routes realted to lobbies */
+  lobby: {
+    /** Route to create a lobby */
+    create: () => string
+    /** Route to get a specific lobby */
+    lobby: (lobbyId: BigString) => string
+    /** Route to add/remove a member from a lobby */
+    member: (lobbyId: BigString, userId: BigString) => string
+    /** Route to leave a lobby */
+    leave: (lobbyId: BigString) => string
+    /** Route to link a lobby */
+    link: (lobbyId: BigString) => string
+  }
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string
   /** Route to list / update application role connection metadata records */
