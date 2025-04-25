@@ -1826,3 +1826,27 @@ export interface SoundboardSound {
   /** The user who created this sound */
   user?: User
 }
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
+export interface Lobby {
+  /** The id of this channel */
+  id: bigint
+  /** application that created the lobby */
+  applicationId: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** members of the lobby */
+  members: LobbyMember[]
+  /** the guild channel linked to the lobby */
+  linkedChannel?: Channel
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
+export interface LobbyMember {
+  /** The id of the user */
+  id: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** lobby member flags combined as as bitfield */
+  flags?: ToggleBitfield
+}
