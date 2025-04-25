@@ -870,12 +870,14 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
+  /** @deprecated */
   createGuild: (options: CreateGuild) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand>
+  /** @deprecated */
   createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildSticker: (
     guildId: BigString,

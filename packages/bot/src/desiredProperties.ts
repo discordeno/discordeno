@@ -382,6 +382,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       appPermissions: defaultValue,
       authorizingIntegrationOwners: defaultValue,
       context: defaultValue,
+      attachmentSizeLimit: defaultValue,
       ...desiredProperties.interaction,
     },
     interactionCallback: {
