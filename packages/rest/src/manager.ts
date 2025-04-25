@@ -33,6 +33,8 @@ import {
   type DiscordInviteMetadata,
   type DiscordListActiveThreads,
   type DiscordListArchivedThreads,
+  type DiscordLobby,
+  type DiscordLobbyMember,
   type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
@@ -894,7 +896,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
+      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true })
     },
 
     async deleteWebhookWithToken(webhookId, token) {
@@ -994,6 +996,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
         body,
         files: body.files,
+        unauthorized: true,
       })
     },
 
@@ -1746,6 +1749,64 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
       return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
         body: options,
+      })
+    },
+
+    async createLobby(options) {
+      return await rest.post<DiscordLobby>(rest.routes.lobby.create(), {
+        body: options,
+      })
+    },
+
+    async getLobby(lobbyId) {
+      return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId))
+    },
+
+    async modifyLobby(lobbyId, options) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.lobby(lobbyId), {
+        body: options,
+      })
+    },
+
+    async deleteLobby(lobbyId) {
+      return await rest.delete(rest.routes.lobby.lobby(lobbyId))
+    },
+
+    async addMemberToLobby(lobbyId, userId, options) {
+      return await rest.put<DiscordLobbyMember>(rest.routes.lobby.member(lobbyId, userId), {
+        body: options,
+      })
+    },
+
+    async removeMemberFromLobby(lobbyId, userId) {
+      return await rest.delete(rest.routes.lobby.member(lobbyId, userId))
+    },
+
+    async leaveLobby(lobbyId, bearerToken) {
+      return await rest.delete(rest.routes.lobby.leave(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async linkChannelToLobby(lobbyId, bearerToken, options) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
+        body: options,
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async unlinkChannelToLobby(lobbyId, bearerToken) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
       })
     },
 

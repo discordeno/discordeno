@@ -1,6 +1,7 @@
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
+  AddLobbyMember,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
@@ -22,6 +23,7 @@ import type {
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
+  CreateLobby,
   CreateMessageOptions,
   CreateScheduledEvent,
   CreateStageInstance,
@@ -80,6 +82,7 @@ import type {
   InteractionCallbackData,
   InteractionCallbackOptions,
   InteractionResponse,
+  LinkChannelToLobby,
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
@@ -93,6 +96,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
   SearchMembers,
@@ -120,6 +124,8 @@ import type {
   Integration,
   InteractionCallbackResponse,
   Invite,
+  Lobby,
+  LobbyMember,
   Member,
   Message,
   Role,
@@ -609,6 +615,24 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     updateApplicationRoleConnectionsMetadataRecords: async (applicationId, options) => {
       return await bot.rest.updateApplicationRoleConnectionsMetadataRecords(applicationId, options)
     },
+    createLobby: async (options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.createLobby(options)))
+    },
+    getLobby: async (lobbyId) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.getLobby(lobbyId)))
+    },
+    modifyLobby: async (lobbyId, options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.modifyLobby(lobbyId, options)))
+    },
+    addMemberToLobby: async (lobbyId, userId, options) => {
+      return bot.transformers.lobbyMember(bot, snakelize(await bot.rest.addMemberToLobby(lobbyId, userId, options)))
+    },
+    linkChannelToLobby: async (lobbyId, bearerToken, options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.linkChannelToLobby(lobbyId, bearerToken, options)))
+    },
+    unlinkChannelToLobby: async (lobbyId, bearerToken) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.unlinkChannelToLobby(lobbyId, bearerToken)))
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction)
@@ -823,6 +847,15 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     deleteGuildSoundboardSound: async (guildId, soundId, reason) => {
       await bot.rest.deleteGuildSoundboardSound(guildId, soundId, reason)
     },
+    deleteLobby: async (lobbyId) => {
+      await bot.rest.deleteLobby(lobbyId)
+    },
+    removeMemberFromLobby: async (lobbyId, userId) => {
+      await bot.rest.removeMemberFromLobby(lobbyId, userId)
+    },
+    leaveLobby: async (lobbyId, bearerToken) => {
+      await bot.rest.leaveLobby(lobbyId, bearerToken)
+    },
   }
 }
 
@@ -837,12 +870,14 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
+  /** @deprecated */
   createGuild: (options: CreateGuild) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand>
+  /** @deprecated */
   createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildSticker: (
     guildId: BigString,
@@ -1077,6 +1112,12 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnectionMetadata>[],
   ) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
+  createLobby: (options: CreateLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  getLobby: (lobbyId: BigString) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  modifyLobby: (lobbyId: BigString, options: ModifyLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>>
+  linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>
@@ -1162,4 +1203,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<SoundboardSound, TProps, TBehavior>>
   deleteGuildSoundboardSound: (guildId: BigString, soundId: BigString, reason?: string) => Promise<void>
+  deleteLobby: (lobbyId: BigString) => Promise<void>
+  removeMemberFromLobby: (lobbyId: BigString, userId: BigString) => Promise<void>
+  leaveLobby: (lobbyId: BigString, bearerToken: string) => Promise<void>
 }
