@@ -1,7 +1,7 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
+import type { DiscordMessageComponents } from './components.js'
 import type { DiscordMember } from './guild.js'
-import type { DiscordMessageComponents } from './interactions.js'
 import type { DiscordAllowedMentions, DiscordAttachment, DiscordEmbed, MessageFlags } from './message.js'
 import type { DiscordUser } from './user.js'
 
