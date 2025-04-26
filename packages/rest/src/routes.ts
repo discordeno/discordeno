@@ -13,7 +13,7 @@ export function createRoutes(): RestRoutes {
 
         if (options) {
           if (options.threadId) url += `thread_id=${options.threadId}`
-          if (options.withComponents) url += `with_components=${options.withComponents}`
+          if (options.withComponents) url += `&with_components=${options.withComponents}`
         }
 
         return url
@@ -32,8 +32,8 @@ export function createRoutes(): RestRoutes {
 
         if (options) {
           if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
-          if (options.threadId) url += `thread_id=${options.threadId}`
-          if (options.withComponents) url += `with_components=${options.withComponents}`
+          if (options.threadId) url += `&thread_id=${options.threadId}`
+          if (options.withComponents) url += `&with_components=${options.withComponents}`
         }
 
         return url
