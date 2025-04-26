@@ -58,6 +58,7 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
   SelectOption,
+  SeparatorSpacingSize,
   SkuFlags,
   SortOrderTypes,
   StickerFormatTypes,
@@ -130,7 +131,7 @@ export interface ActivityInstance {
   instanceId: string
   /** Unique identifier for the launch */
   launchId: bigint
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: ActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: bigint[]
@@ -546,6 +547,50 @@ export interface Component {
   defaultValues?: DiscordComponentDefaultValue[]
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: bigint
+  /** Optional identifier for component */
+  id?: number
+  /** A thumbnail or a button component, with a future possibility of adding more compatible components */
+  accessory?: Component
+  /** Text that will be displayed similar to a message */
+  content?: string
+  /** Alt text for the media */
+  description?: string
+  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
+  /** 1 to 10 media gallery items */
+  items?: MediaGalleryItem[]
+  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
+  divider?: boolean
+  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
+  spacing?: SeparatorSpacingSize
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  file?: UnfurledMediaItem
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  media?: UnfurledMediaItem
+  /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
+  accentColor?: number
+}
+
+export interface UnfurledMediaItem {
+  /** Supports arbitrary urls and attachment://<filename> references */
+  url: string
+  /** The proxied url of the media item. This field is ignored and provided by the API as part of the response */
+  proxyUrl?: string
+  /** The height of the media item. This field is ignored and provided by the API as part of the response */
+  height?: number | null
+  /** The width of the media item. This field is ignored and provided by the API as part of the response */
+  width?: number | null
+  /** The media type of the content. This field is ignored and provided by the API as part of the response */
+  contentType?: string
+}
+
+export interface MediaGalleryItem {
+  /** A url or attachment */
+  media: UnfurledMediaItem
+  /** Alt text for the media */
+  description?: string
+  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
 }
 
 export interface DiscordComponentDefaultValue {
@@ -879,6 +924,8 @@ export interface Interaction {
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachmentSizeLimit: number
   /**
    * Sends a response to an interaction.
    *
@@ -1823,4 +1870,28 @@ export interface SoundboardSound {
   available: boolean
   /** The user who created this sound */
   user?: User
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
+export interface Lobby {
+  /** The id of this channel */
+  id: bigint
+  /** application that created the lobby */
+  applicationId: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** members of the lobby */
+  members: LobbyMember[]
+  /** the guild channel linked to the lobby */
+  linkedChannel?: Channel
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
+export interface LobbyMember {
+  /** The id of the user */
+  id: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** lobby member flags combined as as bitfield */
+  flags?: ToggleBitfield
 }
