@@ -647,6 +647,28 @@ export function createRoutes(): RestRoutes {
       },
     },
 
+    lobby: {
+      create: () => {
+        return '/lobbies'
+      },
+
+      lobby: (lobbyId) => {
+        return `/lobbies/${lobbyId}`
+      },
+
+      member: (lobbyId, userId) => {
+        return `/lobbies/${lobbyId}/members/${userId}`
+      },
+
+      leave: (lobbyId) => {
+        return `/lobbies/${lobbyId}/members/@me`
+      },
+
+      link: (lobbyId) => {
+        return `/lobbies/${lobbyId}/channel-linking`
+      },
+    },
+
     applicationEmoji(applicationId, emojiId) {
       return `/applications/${applicationId}/emojis/${emojiId}`
     },

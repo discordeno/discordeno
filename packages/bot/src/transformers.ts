@@ -41,6 +41,8 @@ import type {
   DiscordInviteCreate,
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
+  DiscordLobby,
+  DiscordLobbyMember,
   DiscordMediaGalleryItem,
   DiscordMember,
   DiscordMessage,
@@ -118,6 +120,8 @@ import {
   type InteractionResource,
   type Invite,
   type InviteStageInstance,
+  type Lobby,
+  type LobbyMember,
   type MediaGalleryItem,
   type Member,
   type Message,
@@ -188,6 +192,8 @@ import {
   transformInteractionResource,
   transformInvite,
   transformInviteStageInstance,
+  transformLobby,
+  transformLobbyMember,
   transformMediaGalleryItem,
   transformMember,
   transformMemberToDiscordMember,
@@ -339,6 +345,8 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordInviteStageInstance,
       inviteStageInstance: SetupDesiredProps<InviteStageInstance, TProps, TBehavior>,
     ) => any
+    lobby: (bot: Bot<TProps, TBehavior>, payload: DiscordLobby, lobby: SetupDesiredProps<Lobby, TProps, TBehavior>) => any
+    lobbyMember: (bot: Bot<TProps, TBehavior>, payload: DiscordLobbyMember, lobbyMember: SetupDesiredProps<LobbyMember, TProps, TBehavior>) => any
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: DiscordMediaGalleryItem, item: MediaGalleryItem) => any
     member: (bot: Bot<TProps, TBehavior>, payload: DiscordMember, member: SetupDesiredProps<Member, TProps, TBehavior>) => any
     message: (bot: Bot<TProps, TBehavior>, payload: DiscordMessage, message: SetupDesiredProps<Message, TProps, TBehavior>) => any
@@ -482,6 +490,8 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: DiscordInviteStageInstance & { guildId: BigString },
   ) => SetupDesiredProps<InviteStageInstance, TProps, TBehavior>
+  lobby: (bot: Bot<TProps, TBehavior>, payload: DiscordLobby) => SetupDesiredProps<Lobby, TProps, TBehavior>
+  lobbyMember: (bot: Bot<TProps, TBehavior>, payload: DiscordLobbyMember) => SetupDesiredProps<LobbyMember, TProps, TBehavior>
   mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: DiscordMediaGalleryItem) => MediaGalleryItem
   member: (
     bot: Bot<TProps, TBehavior>,
@@ -574,6 +584,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       interactionResource: options?.customizers?.interactionResource ?? defaultCustomizer,
       invite: options.customizers?.invite ?? defaultCustomizer,
       inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
+      lobby: options.customizers?.lobby ?? defaultCustomizer,
+      lobbyMember: options.customizers?.lobbyMember ?? defaultCustomizer,
       mediaGalleryItem: options.customizers?.mediaGalleryItem ?? defaultCustomizer,
       member: options.customizers?.member ?? defaultCustomizer,
       message: options.customizers?.message ?? defaultCustomizer,
@@ -660,6 +672,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     interactionResource: options.interactionResource ?? transformInteractionResource,
     invite: options.invite ?? transformInvite,
     inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
+    lobby: options.lobby ?? transformLobby,
+    lobbyMember: options.lobbyMember ?? transformLobbyMember,
     mediaGalleryItem: options.mediaGalleryItem ?? transformMediaGalleryItem,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
