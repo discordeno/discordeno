@@ -35,7 +35,6 @@ import type {
   DiscordApplicationCommandPermissions,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
-  DiscordArchivedThreads,
   DiscordAuditLog,
   DiscordBan,
   DiscordConnection,
@@ -46,6 +45,7 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordInvite,
   DiscordInviteMetadata,
+  DiscordListArchivedThreads,
   DiscordMessage,
   DiscordModifyGuildWelcomeScreen,
   DiscordPrunedCount,
@@ -1018,10 +1018,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   getPinnedMessages: (channelId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>
-  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
-  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<Camelize<DiscordPrunedCount>>
-  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   getRoles: (guildId: BigString) => Promise<SetupDesiredProps<Role, TProps, TBehavior>[]>
   getRole: (guildId: BigString, roleId: BigString) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>
   getScheduledEvent: (
