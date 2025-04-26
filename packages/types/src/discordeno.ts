@@ -125,6 +125,7 @@ export type MessageComponent =
   | ThumbnailComponent
   | MediaGalleryComponent
   | SeparatorComponent
+  | ContainerComponent
   | FileComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */

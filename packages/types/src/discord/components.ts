@@ -47,8 +47,8 @@ export type DiscordMessageComponent =
   | DiscordThumbnailComponent
   | DiscordMediaGalleryComponent
   | DiscordSeparatorComponent
-  | DiscordFileComponent
   | DiscordContainerComponent
+  | DiscordFileComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface DiscordBaseComponent {
