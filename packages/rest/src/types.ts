@@ -1483,7 +1483,7 @@ export interface RestManager {
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString },
+    options: InteractionCallbackData & { threadId?: BigString; withComponents?: boolean },
   ) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.

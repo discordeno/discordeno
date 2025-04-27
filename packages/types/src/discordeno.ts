@@ -1062,6 +1062,13 @@ export interface ExecuteWebhook {
   wait?: boolean
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
   threadId?: BigString
+  /**
+   * Whether to respect the `components` field of the request.
+   * When enabled, allows application-owned webhooks to use all components and non-owned webhooks to use non-interactive components.
+   *
+   * @default false
+   */
+  withComponents?: boolean
   /** Name of the thread to create (target channel has to be type of forum channel) */
   threadName?: string
   /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
@@ -1080,7 +1087,13 @@ export interface ExecuteWebhook {
   embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** the components to include with the message */
+  /**
+   * The components to include with the message
+   *
+   * @remarks
+   * Application-owned webhooks can always send components.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   */
   components?: MessageComponents
   /** A poll object */
   poll?: CreatePoll
