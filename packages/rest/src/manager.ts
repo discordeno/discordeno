@@ -562,7 +562,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const body = (result.headers.get('Content-Type') === 'application/json' ? await result.json() : await result.text()).catch(() => null)
+          const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
 
           error.cause = {
             ok: false,
