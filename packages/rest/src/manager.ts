@@ -33,6 +33,8 @@ import {
   type DiscordInviteMetadata,
   type DiscordListActiveThreads,
   type DiscordListArchivedThreads,
+  type DiscordLobby,
+  type DiscordLobbyMember,
   type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
@@ -64,6 +66,7 @@ import {
   camelize,
   delay,
   getBotIdFromToken,
+  hasProperty,
   logger,
   processReactionString,
   urlToBase64,
@@ -453,7 +456,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} failed.`)
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
-          options.reject({ ok: false, status: response.status, body: await response.text() })
+          const body = response.headers.get('Content-Type') === 'application/json' ? ((await response.json()) as object) : await response.text()
+
+          options.reject({ ok: false, status: response.status, statusText: response.statusText, body })
           return
         }
 
@@ -468,6 +473,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.reject({
             ok: false,
             status: response.status,
+            statusText: response.statusText,
             error: 'The request was rate limited and it maxed out the retries limit.',
           })
 
@@ -545,7 +551,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async makeRequest(method, route, options) {
       // This error needs to be created here because of how stack traces get calculated
       const error = new Error()
-      error.message = 'Failed to send request to discord.'
 
       if (rest.isProxied) {
         if (rest.authorization) {
@@ -584,6 +589,42 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
           reject: (reason) => {
+            let errorText: string
+
+            switch (reason.status) {
+              case 400:
+                errorText = "The options was improperly formatted, or the server couldn't understand it."
+                break
+              case 401:
+                errorText = 'The Authorization header was missing or invalid.'
+                break
+              case 403:
+                errorText = 'The Authorization token you passed did not have permission to the resource.'
+                break
+              case 404:
+                errorText = "The resource at the location specified doesn't exist."
+                break
+              case 405:
+                errorText = 'The HTTP method used is not valid for the location specified.'
+                break
+              case 429:
+                errorText = "You're being ratelimited."
+                break
+              case 502:
+                errorText = 'There was not a gateway available to process your options. Wait a bit and retry.'
+                break
+              default:
+                errorText = reason.statusText ?? 'Unknown error'
+            }
+
+            error.message = `[${reason.status}] ${errorText}`
+
+            // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
+            // https://discord.com/developers/docs/reference#error-messages
+            if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
+              error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`
+            }
+
             error.cause = reason
             reject(error)
           },
@@ -855,7 +896,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
+      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true })
     },
 
     async deleteWebhookWithToken(webhookId, token) {
@@ -955,6 +996,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
         body,
         files: body.files,
+        unauthorized: true,
       })
     },
 
@@ -1356,12 +1398,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId))
     },
 
-    async getThreadMember(channelId, userId) {
-      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.user(channelId, userId))
+    async getThreadMember(channelId, userId, options) {
+      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.getUser(channelId, userId, options))
     },
 
-    async getThreadMembers(channelId) {
-      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId))
+    async getThreadMembers(channelId, options) {
+      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId, options))
     },
 
     async getReactions(channelId, messageId, reaction, options) {
@@ -1707,6 +1749,64 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
       return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
         body: options,
+      })
+    },
+
+    async createLobby(options) {
+      return await rest.post<DiscordLobby>(rest.routes.lobby.create(), {
+        body: options,
+      })
+    },
+
+    async getLobby(lobbyId) {
+      return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId))
+    },
+
+    async modifyLobby(lobbyId, options) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.lobby(lobbyId), {
+        body: options,
+      })
+    },
+
+    async deleteLobby(lobbyId) {
+      return await rest.delete(rest.routes.lobby.lobby(lobbyId))
+    },
+
+    async addMemberToLobby(lobbyId, userId, options) {
+      return await rest.put<DiscordLobbyMember>(rest.routes.lobby.member(lobbyId, userId), {
+        body: options,
+      })
+    },
+
+    async removeMemberFromLobby(lobbyId, userId) {
+      return await rest.delete(rest.routes.lobby.member(lobbyId, userId))
+    },
+
+    async leaveLobby(lobbyId, bearerToken) {
+      return await rest.delete(rest.routes.lobby.leave(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async linkChannelToLobby(lobbyId, bearerToken, options) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
+        body: options,
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async unlinkChannelToLobby(lobbyId, bearerToken) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
       })
     },
 

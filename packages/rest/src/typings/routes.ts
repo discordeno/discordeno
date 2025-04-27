@@ -9,11 +9,13 @@ import type {
   GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
+  GetThreadMember,
   GetUserGuilds,
   InteractionCallbackOptions,
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
+  ListThreadMembers,
 } from '@discordeno/types'
 
 export interface RestRoutes {
@@ -31,9 +33,9 @@ export interface RestRoutes {
     /** Route for webhook with a id. */
     id: (webhookId: BigString) => string
     /** Route for handling a webhook with a token. */
-    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
+    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString; withComponents?: boolean }) => string
     /** Route for handling a message that was sent through a webhook. */
-    message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
+    message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString; withComponents?: boolean }) => string
   }
   /** Routes for channel related endpoints. */
   channels: {
@@ -78,10 +80,12 @@ export interface RestRoutes {
       /** Route for active threads. */
       active: (guildId: BigString) => string
       /** Route for members in a thread. */
-      members: (channelId: BigString) => string
+      members: (channelId: BigString, options?: ListThreadMembers) => string
       /** Route for the bot member in a thread. */
       me: (channelId: BigString) => string
-      /** Route for a specific member in a thread. */
+      /** Route for getting a specific member in a thread. */
+      getUser: (channelId: BigString, userId: BigString, options?: GetThreadMember) => string
+      /** Route for a specific member in a thread apart from the route for getting the member. */
       user: (channelId: BigString, userId: BigString) => string
       /** Route for handling archived threads. */
       archived: (channelId: BigString) => string
@@ -292,6 +296,19 @@ export interface RestRoutes {
     guildSounds: (guildId: BigString) => string
     /** Route for get/edit/delete of a guild sound */
     guildSound: (guildId: BigString, soundId: BigString) => string
+  }
+  /** Routes realted to lobbies */
+  lobby: {
+    /** Route to create a lobby */
+    create: () => string
+    /** Route to get a specific lobby */
+    lobby: (lobbyId: BigString) => string
+    /** Route to add/remove a member from a lobby */
+    member: (lobbyId: BigString, userId: BigString) => string
+    /** Route to leave a lobby */
+    leave: (lobbyId: BigString) => string
+    /** Route to link a lobby */
+    link: (lobbyId: BigString) => string
   }
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string

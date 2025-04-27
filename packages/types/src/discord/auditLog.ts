@@ -8,6 +8,7 @@ import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
 import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
 import type { DiscordInvite, DiscordInviteMetadata } from './invite.js'
 import type { DiscordRole } from './permissions.js'
+import type { DiscordSoundboardSound } from './soundboard.js'
 import type { DiscordStageInstance } from './stageInstance.js'
 import type { DiscordSticker } from './sticker.js'
 import type { DiscordUser } from './user.js'
@@ -15,25 +16,27 @@ import type { DiscordWebhook } from './webhook.js'
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */
 export interface DiscordAuditLog {
-  /** List of webhooks found in the audit log */
-  webhooks: DiscordWebhook[]
-  /** List of users found in the audit log */
-  users: DiscordUser[]
+  /** List of application commands referenced in the audit log */
+  application_commands: DiscordApplicationCommand[]
   /** List of audit log entries, sorted from most to least recent */
   audit_log_entries: DiscordAuditLogEntry[]
+  /** List of auto moderation rules referenced in the audit log */
+  auto_moderation_rules: DiscordAutoModerationRule[]
+  /** List of guild scheduled events found in the audit log */
+  guild_scheduled_events: DiscordScheduledEvent[]
   /** List of partial integration objects */
   integrations: Partial<DiscordIntegration>[]
   /**
    * List of threads found in the audit log.
+   *
+   * @remarks
    * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
    */
   threads: DiscordChannel[]
-  /** List of guild scheduled events found in the audit log */
-  guild_scheduled_events?: DiscordScheduledEvent[]
-  /** List of auto moderation rules referenced in the audit log */
-  auto_moderation_rules?: DiscordAutoModerationRule[]
-  /** List of application commands referenced in the audit log */
-  application_commands: DiscordApplicationCommand[]
+  /** List of users found in the audit log */
+  users: DiscordUser[]
+  /** List of webhooks found in the audit log */
+  webhooks: DiscordWebhook[]
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
@@ -207,6 +210,7 @@ export type DiscordAuditLogChange =
   | DiscordAuditLogChangeObject<DiscordSticker>
   | DiscordAuditLogChangeObject<DiscordThreadMetadata>
   | DiscordAuditLogChangeApplicationCommandPermissions
+  | DiscordAuditLogChangeObject<DiscordSoundboardSound>
   | DiscordAuditLogChangeObject<DiscordAutoModerationRule>
   | DiscordAuditLogChangeObject<DiscordGuildOnboardingPrompt>
   | DiscordAuditLogChangeObject<DiscordGuildOnboarding>
