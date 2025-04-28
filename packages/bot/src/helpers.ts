@@ -64,6 +64,7 @@ import type {
   EditOwnVoiceState,
   EditScheduledEvent,
   EditUserVoiceState,
+  EditWebhookMessageOptions,
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
@@ -243,12 +244,6 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     editOriginalInteractionResponse: async (token, options) => {
       return bot.transformers.message(bot, { message: snakelize(await bot.rest.editOriginalInteractionResponse(token, options)), shardId: 0 })
-    },
-    editOriginalWebhookMessage: async (webhookId, token, options) => {
-      return bot.transformers.message(bot, {
-        message: snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)) as DiscordMessage,
-        shardId: 0,
-      })
     },
     editRole: async (guildId, roleId, options, reason) => {
       return bot.transformers.role(bot, { role: snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), guildId })
@@ -929,11 +924,6 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
   editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
-  editOriginalWebhookMessage: (
-    webhookId: BigString,
-    token: string,
-    options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>
   editRolePositions: (guildId: BigString, options: ModifyRolePositions[], reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>[]>
   editScheduledEvent: (
@@ -948,7 +938,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString; withComponents?: boolean },
+    options: EditWebhookMessageOptions,
   ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editWebhookWithToken: (
     webhookId: BigString,

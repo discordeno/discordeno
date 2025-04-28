@@ -1116,6 +1116,44 @@ export interface GetWebhookMessageOptions {
   threadId: BigString
 }
 
+/** https://discord.com/developers/docs/resources/webhook#edit-webhook-message */
+export interface EditWebhookMessageOptions {
+  /** Id of the thread the message is in */
+  threadId?: BigString
+  /**
+   * Whether to respect the `components` field of the request.
+   * When enabled, allows application-owned webhooks to use all components and non-owned webhooks to use non-interactive components.
+   *
+   * @default false
+   */
+  withComponents?: boolean
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Embedded `rich` content */
+  embeds?: Camelize<DiscordEmbed>[]
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /**
+   * The components to include with the message
+   *
+   * @remarks
+   * Application-owned webhooks can always send components.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   */
+  components?: MessageComponents
+  /** The contents of the files being sent */
+  files?: FileContent[]
+  /** Attached files to keep and possible descriptions for new files */
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
+  /**
+   * A poll!
+   *
+   * @remarks
+   * Polls can only be added when editing a deferred interaction response.
+   */
+  poll?: CreatePoll
+}
+
 export interface DeleteWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString
