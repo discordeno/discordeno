@@ -9,17 +9,17 @@ export enum MessageComponentTypes {
   /** A button object */
   Button,
   /** A select menu for picking from choices */
-  SelectMenu,
+  StringSelect,
   /** A text input object */
-  InputText,
+  TextInput,
   /** Select menu for users */
-  SelectMenuUsers,
+  UserSelect,
   /** Select menu for roles */
-  SelectMenuRoles,
+  RoleSelect,
   /** Select menu for users and roles */
-  SelectMenuUsersAndRoles,
+  MentionableSelect,
   /** Select menu for channels */
-  SelectMenuChannels,
+  ChannelSelect,
   /** Container to display text alongside an accessory component */
   Section,
   /** Markdown text */
@@ -149,11 +149,11 @@ export enum ButtonStyles {
  */
 export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
   type:
-    | MessageComponentTypes.SelectMenu
-    | MessageComponentTypes.SelectMenuUsers
-    | MessageComponentTypes.SelectMenuRoles
-    | MessageComponentTypes.SelectMenuUsersAndRoles
-    | MessageComponentTypes.SelectMenuChannels
+    | MessageComponentTypes.StringSelect
+    | MessageComponentTypes.UserSelect
+    | MessageComponentTypes.RoleSelect
+    | MessageComponentTypes.MentionableSelect
+    | MessageComponentTypes.ChannelSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string
@@ -205,7 +205,7 @@ export interface DiscordSelectOption {
 
 /** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
 export interface DiscordTextInputComponent extends DiscordBaseComponent {
-  type: MessageComponentTypes.InputText
+  type: MessageComponentTypes.TextInput
 
   /** The customId of the InputText */
   custom_id: string

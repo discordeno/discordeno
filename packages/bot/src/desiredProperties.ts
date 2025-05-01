@@ -7,6 +7,7 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  Component,
   DefaultReactionEmoji,
   Emoji,
   Entitlement,
@@ -24,6 +25,7 @@ import type {
   InviteStageInstance,
   Lobby,
   LobbyMember,
+  MediaGalleryItem,
   Member,
   Message,
   MessageCall,
@@ -44,6 +46,7 @@ import type {
   StageInstance,
   Sticker,
   Subscription,
+  UnfurledMediaItem,
   User,
   VoiceState,
   Webhook,
@@ -60,6 +63,7 @@ export interface TransformersObjects {
   attachment: Attachment
   avatarDecorationData: AvatarDecorationData
   channel: Channel
+  component: Component
   defaultReactionEmoji: DefaultReactionEmoji
   emoji: Emoji
   entitlement: Entitlement
@@ -75,6 +79,7 @@ export interface TransformersObjects {
   interactionResource: InteractionResource
   invite: Invite
   inviteStageInstance: InviteStageInstance
+  mediaGalleryItem: MediaGalleryItem
   member: Member
   message: Message
   messageCall: MessageCall
@@ -93,6 +98,7 @@ export interface TransformersObjects {
   sku: Sku
   stageInstance: StageInstance
   sticker: Sticker
+  unfurledMediaItem: UnfurledMediaItem
   user: User
   voiceState: VoiceState
   webhook: Webhook
@@ -279,6 +285,39 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       totalMessageSent: defaultValue,
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
+    },
+    component: {
+      type: defaultValue,
+      customId: defaultValue,
+      required: defaultValue,
+      disabled: defaultValue,
+      style: defaultValue,
+      label: defaultValue,
+      value: defaultValue,
+      emoji: defaultValue,
+      url: defaultValue,
+      channelTypes: defaultValue,
+      options: defaultValue,
+      placeholder: defaultValue,
+      minValues: defaultValue,
+      maxValues: defaultValue,
+      minLength: defaultValue,
+      maxLength: defaultValue,
+      components: defaultValue,
+      defaultValues: defaultValue,
+      skuId: defaultValue,
+      id: defaultValue,
+      accessory: defaultValue,
+      content: defaultValue,
+      description: defaultValue,
+      spoiler: defaultValue,
+      items: defaultValue,
+      divider: defaultValue,
+      spacing: defaultValue,
+      file: defaultValue,
+      media: defaultValue,
+      accentColor: defaultValue,
+      ...desiredProperties.component,
     },
     forumTag: {
       emojiId: defaultValue,
@@ -571,6 +610,12 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       topic: defaultValue,
       ...desiredProperties.inviteStageInstance,
     },
+    mediaGalleryItem: {
+      media: defaultValue,
+      description: defaultValue,
+      spoiler: defaultValue,
+      ...desiredProperties.mediaGalleryItem,
+    },
     sticker: {
       id: defaultValue,
       packId: defaultValue,
@@ -584,6 +629,14 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       user: defaultValue,
       sortValue: defaultValue,
       ...desiredProperties.sticker,
+    },
+    unfurledMediaItem: {
+      url: defaultValue,
+      proxyUrl: defaultValue,
+      height: defaultValue,
+      width: defaultValue,
+      contentType: defaultValue,
+      ...desiredProperties.unfurledMediaItem,
     },
     user: {
       username: defaultValue,

@@ -27,13 +27,13 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       return transformButtonComponent(bot, payload)
     case MessageComponentTypes.Container:
       return transformContainerComponent(bot, payload)
-    case MessageComponentTypes.InputText:
+    case MessageComponentTypes.TextInput:
       return transformInputTextComponent(bot, payload)
-    case MessageComponentTypes.SelectMenu:
-    case MessageComponentTypes.SelectMenuChannels:
-    case MessageComponentTypes.SelectMenuRoles:
-    case MessageComponentTypes.SelectMenuUsers:
-    case MessageComponentTypes.SelectMenuUsersAndRoles:
+    case MessageComponentTypes.StringSelect:
+    case MessageComponentTypes.ChannelSelect:
+    case MessageComponentTypes.RoleSelect:
+    case MessageComponentTypes.UserSelect:
+    case MessageComponentTypes.MentionableSelect:
       return transformSelectMenuComponent(bot, payload)
     case MessageComponentTypes.Section:
       return transformSectionComponent(bot, payload)
@@ -112,7 +112,7 @@ function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonCo
 function transformInputTextComponent(_bot: Bot, payload: Component): DiscordTextInputComponent {
   // Since Component is a merge of all components, some casts are necessary
   return {
-    type: MessageComponentTypes.InputText,
+    type: MessageComponentTypes.TextInput,
     id: payload.id,
     style: payload.style as TextStyles,
     custom_id: payload.customId!,
