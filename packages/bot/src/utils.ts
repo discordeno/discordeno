@@ -8,6 +8,6 @@ export function bigintToSnowflake(snowflake: BigString): string {
   return snowflake ? snowflake.toString() : ''
 }
 
-export function snowflakeToTimestamp(id: bigint): number {
-  return Number(id / 4194304n + 1420070400000n)
+export function snowflakeToTimestamp(snowflake: BigString): number {
+  return Number(BigInt(snowflake) / 4194304n + 1420070400000n)
 }
