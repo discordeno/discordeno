@@ -513,9 +513,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/cli@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@swc/cli@npm:0.6.0"
+"@swc/cli@npm:^0.7.3":
+  version: 0.7.3
+  resolution: "@swc/cli@npm:0.7.3"
   dependencies:
     "@swc/counter": "npm:^0.1.3"
     "@xhmikosr/bin-wrapper": "npm:^13.0.5"
@@ -536,7 +536,7 @@ __metadata:
     spack: bin/spack.js
     swc: bin/swc.js
     swcx: bin/swcx.js
-  checksum: 10c0/eaeac958e271c0ad41c94df0712b8fc65c884c8515439ac48451928f18bde6fa4f931c430cc3efc2bc3c2bc9af8fecca810e1c86962041e10a28200590314f6f
+  checksum: 10c0/056ec3533ade2fec657158ef80ba0f5074a89346de02141e5da340b7ff5f17da62bcdb0b584abd2f205b2b778922574f8597e8934e1bb1fb0841f3f4897a4ad1
   languageName: node
   linkType: hard
 
@@ -2240,7 +2240,7 @@ __metadata:
     "@fastify/helmet": "npm:^13.0.1"
     "@fastify/multipart": "npm:^8.3.1"
     "@favware/cliff-jumper": "npm:^6.0.0"
-    "@swc/cli": "npm:^0.6.0"
+    "@swc/cli": "npm:^0.7.3"
     "@swc/core": "npm:^1.11.24"
     dotenv: "npm:^16.4.7"
     fastify: "npm:^4.29.1"
