@@ -458,7 +458,7 @@ export class DiscordenoShard {
           this.state = ShardState.Disconnected
           this.events.disconnected?.(this)
 
-        this.goingOffline = false
+          this.goingOffline = false
 
           return
         }
@@ -472,7 +472,6 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.AlreadyAuthenticated:
       default: {
-        this.logger.info(`[Shard] Shard #${this.id} closed with code ${close.code}. Attempting to resume...`)
         // We don't want to get into an infinite loop where we resume forever, so if we were already resuming we identify instead
         this.state = this.state === ShardState.Resuming ? ShardState.Identifying : ShardState.Resuming
         this.events.disconnected?.(this)
