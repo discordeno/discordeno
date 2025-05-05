@@ -318,7 +318,7 @@ export enum SeparatorSpacingSize {
 export interface DiscordContainerComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Container
 
-  /** Up to 10 components of the type action row, text display, section, media gallery, separator, or file */
+  /** Components of the type action row, text display, section, media gallery, separator, or file */
   components: Array<
     | DiscordActionRow
     | DiscordTextDisplayComponent
