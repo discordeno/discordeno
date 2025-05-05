@@ -399,7 +399,7 @@ export interface SeparatorComponent extends BaseComponent {
 export interface ContainerComponent extends BaseComponent {
   type: MessageComponentTypes.Container
 
-  /** Up to 10 components of the type action row, text display, section, media gallery, separator, or file */
+  /** Components of the type action row, text display, section, media gallery, separator, or file */
   components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accentColor?: number
