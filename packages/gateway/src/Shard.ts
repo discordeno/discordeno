@@ -1,12 +1,11 @@
 import { Buffer } from 'node:buffer'
 import { type Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
-import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import type { Decompress as ZstdDecompress } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {
-  type BotStatusUpdate,
   type ShardEvents,
   type ShardGatewayConfig,
   type ShardHeart,
@@ -56,6 +55,16 @@ export class DiscordenoShard {
   bucket: LeakyBucket
   /** Logger for the bucket. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /**
+   * Is the shard going offline?
+   *
+   * @remarks
+   * This will be true if the close method has been called with either 1000 or 1001
+   *
+   * @internal
+   * This is for internal purposes only, and subject to breaking changes.
+   */
+  goingOffline = false
   /** Text decoder used for compressed payloads. */
   textDecoder = new TextDecoder()
   /** ZLib Inflate instance for ZLib-stream transport payloads. */
@@ -134,6 +143,8 @@ export class DiscordenoShard {
       this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`)
       return
     }
+
+    this.goingOffline = code === GatewayCloseEventCodes.NormalClosure || code === GatewayCloseEventCodes.GoingAway
 
     // This has to be created before the actual call to socket.close as for example Bun calls socket.onclose immediately on the .close() call instead of waiting for the connection to end
     const promise = new Promise((resolve) => {
@@ -419,8 +430,6 @@ export class DiscordenoShard {
         return
       }
       // On these codes a manual start will be done.
-      case GatewayCloseEventCodes.NormalClosure:
-      case GatewayCloseEventCodes.GoingAway:
       case ShardSocketCloseCodes.Shutdown:
       case ShardSocketCloseCodes.ReIdentifying:
       case ShardSocketCloseCodes.Resharded:
@@ -454,6 +463,21 @@ export class DiscordenoShard {
         await this.identify()
         return
       }
+      // NOTE: This case must always be right above the cases that runs with default case because of how switch works when you don't break / return, more info below.
+      case GatewayCloseEventCodes.NormalClosure:
+      case GatewayCloseEventCodes.GoingAway: {
+        // If the shard is marked as goingOffline, it stays disconnected.
+        if (this.goingOffline) {
+          this.state = ShardState.Disconnected
+          this.events.disconnected?.(this)
+
+          this.goingOffline = false
+
+          return
+        }
+
+        // Otherwise, we want the shard to go through the default case where it gets resumed, as it might be an unexpected closure from Discord or Cloudflare for example, so we don't use break / return here.
+      }
       // Gateway connection closes on which a resume is allowed.
       case GatewayCloseEventCodes.UnknownError:
       case GatewayCloseEventCodes.UnknownOpcode:
@@ -461,7 +485,6 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.AlreadyAuthenticated:
       default: {
-        this.logger.info(`[Shard] Shard #${this.id} closed with code ${close.code}. Attempting to resume...`)
         // We don't want to get into an infinite loop where we resume forever, so if we were already resuming we identify instead
         this.state = this.state === ShardState.Resuming ? ShardState.Identifying : ShardState.Resuming
         this.events.disconnected?.(this)
@@ -702,7 +725,7 @@ export class DiscordenoShard {
    * async in case devs create the presence based on eg. database values.
    * Passing the shard's id there to make it easier for the dev to use this function.
    */
-  async makePresence(): Promise<BotStatusUpdate | undefined> {
+  async makePresence(): Promise<DiscordUpdatePresence | undefined> {
     return
   }
 
@@ -825,7 +848,7 @@ export interface ShardCreateOptions {
   /** The handler to alert the gateway manager that this shard has identified. */
   shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
-  makePresence?: () => Promise<BotStatusUpdate | undefined>
+  makePresence?: () => Promise<DiscordUpdatePresence | undefined>
 }
 
 export default DiscordenoShard

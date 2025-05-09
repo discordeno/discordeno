@@ -6,21 +6,14 @@ import {
   type DiscordGetGatewayBot,
   type DiscordMemberWithUser,
   type DiscordReady,
+  type DiscordUpdatePresence,
   GatewayIntents,
   GatewayOpcodes,
   type RequestGuildMembers,
 } from '@discordeno/types'
 import { Collection, LeakyBucket, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
-import {
-  type BotStatusUpdate,
-  type ShardEvents,
-  ShardSocketCloseCodes,
-  type ShardSocketRequest,
-  type StatusUpdate,
-  type TransportCompression,
-  type UpdateVoiceState,
-} from './types.js'
+import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type TransportCompression, type UpdateVoiceState } from './types.js'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   const connectionOptions = options.connection ?? {
@@ -687,7 +680,7 @@ export interface CreateGatewayManagerOptions {
    * @remarks
    * This function will be called each time a Shard is going to identify
    */
-  makePresence?: () => Promise<BotStatusUpdate | undefined>
+  makePresence?: () => Promise<DiscordUpdatePresence | undefined>
   /** Options related to resharding. */
   resharding?: {
     /**
@@ -799,7 +792,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @param data The status data to set the bots status to.
    * @returns nothing
    */
-  editBotStatus: (data: StatusUpdate) => Promise<void>
+  editBotStatus: (data: DiscordUpdatePresence) => Promise<void>
   /**
    * Edits the bot's status on one shard.
    *
@@ -807,7 +800,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @param data The status data to set the bots status to.
    * @returns nothing
    */
-  editShardStatus: (shardId: number, data: StatusUpdate) => Promise<void>
+  editShardStatus: (shardId: number, data: DiscordUpdatePresence) => Promise<void>
   /**
    * Fetches the list of members for a guild over the gateway. If `gateway.cache.requestMembers.enabled` is not set, this function will return an empty array and you'll have to handle the `GUILD_MEMBERS_CHUNK` events yourself.
    *
