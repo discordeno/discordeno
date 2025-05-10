@@ -165,9 +165,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
           logger: gateway.logger,
           requestIdentify: async () => await gateway.requestIdentify(shardId),
-          shardIsReady: async () => {
-            gateway.logger.debug(`[Gateway] Shard #${shardId} has identified.`)
-          },
           makePresence: gateway.makePresence,
         })
 
@@ -372,9 +369,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           events: options.events ?? {},
           logger: this.logger,
           requestIdentify: async () => await gateway.requestIdentify(shardId),
-          shardIsReady: async () => {
-            gateway.logger.debug(`[Gateway] Shard #${shardId} has identified.`)
-          },
           makePresence: gateway.makePresence,
         })
 
