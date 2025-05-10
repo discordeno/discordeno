@@ -39,7 +39,10 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
     // If user provides an object, determine if it should be an autocomplete or a modal response
     if (response.title) type = InteractionResponseTypes.Modal
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
-    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = MessageFlags.Ephemeral
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) {
+      response.flags ??= 0
+      response.flags |= MessageFlags.Ephemeral
+    }
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response)
