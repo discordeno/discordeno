@@ -95,7 +95,6 @@ export class DiscordenoShard {
     }
 
     if (options.requestIdentify) this.requestIdentify = options.requestIdentify
-    if (options.shardIsReady) this.shardIsReady = options.shardIsReady
     if (options.makePresence) this.makePresence = options.makePresence
 
     this.bucket = new LeakyBucket({
@@ -310,8 +309,6 @@ export class DiscordenoShard {
     return await new Promise((resolve) => {
       this.resolves.set('READY', () => {
         this.events.identified?.(this)
-        // Tells the manager that this shard is ready
-        this.shardIsReady()
         resolve()
       })
       // When identifying too fast, Discord sends an invalid session payload.
@@ -735,9 +732,6 @@ export class DiscordenoShard {
    */
   async requestIdentify(): Promise<void> {}
 
-  /** This function communicates with the management process, in order to tell it can identify the next shard. */
-  async shardIsReady(): Promise<void> {}
-
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
     this.logger.debug(`[Shard] Start heartbeating on Shard #${this.id}`)
@@ -845,8 +839,6 @@ export interface ShardCreateOptions {
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The handler to request a space to make an identify request. */
   requestIdentify?: () => Promise<void>
-  /** The handler to alert the gateway manager that this shard has identified. */
-  shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
   makePresence?: () => Promise<DiscordUpdatePresence | undefined>
 }
