@@ -11,7 +11,7 @@ import {
   GatewayOpcodes,
   type RequestGuildMembers,
 } from '@discordeno/types'
-import { Collection, delay, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type TransportCompression, type UpdateVoiceState } from './types.js'
 
@@ -164,14 +164,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             },
           },
           logger: gateway.logger,
-          requestIdentify: async () => {
-            await gateway.identify(shardId)
-          },
+          requestIdentify: async () => await gateway.requestIdentify(shardId),
           shardIsReady: async () => {
-            gateway.logger.debug(`[Shard] Shard #${shardId} is ready`)
-            await delay(gateway.spawnShardDelay)
-            gateway.logger.debug(`[Shard] Resolving shard identify request`)
-            gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
+            gateway.logger.debug(`[Gateway] Shard #${shardId} has identified.`)
           },
           makePresence: gateway.makePresence,
         })
@@ -187,16 +182,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
         if (!bucket) return
 
-        return await new Promise((resolve) => {
-          // Mark that we are making an identify request so another is not made.
-          bucket.identifyRequests.push(resolve)
-          gateway.logger.debug(`[Gateway] Identifying Shard #${shardId}.`)
-          // This will trigger identify and when READY is received it will resolve the above request.
-          shard?.identify().then(async () => {
-            // Tell the manager that this shard is online
-            return await gateway.resharding.shardIsPending(shard)
-          })
-        })
+        await shard.identify().then(() => gateway.resharding.shardIsPending(shard))
       },
       async shardIsPending(shard) {
         // Save this in pending at the moment, until all shards are online
@@ -275,19 +261,25 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         gateway.logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
         gateway.buckets.set(i, {
           workers: [],
-          identifyRequests: [],
+          leakyBucket: new LeakyBucket({
+            max: 1,
+            refillAmount: 1,
+            refillInterval: gateway.spawnShardDelay,
+          }),
         })
       }
 
-      // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
+      // Organize all shards into their own buckets
       for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
         gateway.logger.debug(`[Gateway] Preparing buckets for shard: ${shardId}`)
+
         if (shardId >= gateway.totalShards) {
           throw new Error(`Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.totalShards}`)
         }
 
         const bucketId = shardId % gateway.connection.sessionStartLimit.maxConcurrency
         const bucket = gateway.buckets.get(bucketId)
+
         if (!bucket) {
           throw new Error(
             `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
@@ -296,38 +288,32 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           )
         }
 
-        // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
-        // const worker = bucket.workers.find((w) => w.queue.length < gateway.shardsPerWorker);
+        // Get the worker id for this shard
         const workerId = gateway.calculateWorkerId(shardId)
         const worker = bucket.workers.find((w) => w.id === workerId)
+
+        // If this worker already exists, add the shard to its queue
         if (worker) {
-          // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
           worker.queue.push(shardId)
         } else {
           bucket.workers.push({ id: workerId, queue: [shardId] })
         }
       }
-
-      for (const bucket of gateway.buckets.values()) {
-        for (const worker of bucket.workers.values()) {
-          worker.queue = worker.queue.sort((a, b) => a - b)
-        }
-      }
     },
     async spawnShards() {
-      // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
+      // Prepare the concurrency buckets
       gateway.prepareBuckets()
 
-      // Prefer concurrency of forEach instead of forof
-      await Promise.all(
-        [...gateway.buckets.entries()].map(async ([bucketId, bucket]) => {
-          for (const worker of bucket.workers) {
-            for (const shardId of worker.queue) {
-              await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
-            }
+      const promises = [...gateway.buckets.entries()].map(async ([bucketId, bucket]) => {
+        for (const worker of bucket.workers) {
+          for (const shardId of worker.queue) {
+            await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
           }
-        }),
-      )
+        }
+      })
+
+      // We use Promise.all so we can start all buckets at the same time
+      await Promise.all(promises)
 
       // Check and reshard automatically if auto resharding is enabled.
       if (gateway.resharding.enabled && gateway.resharding.checkInterval !== -1) {
@@ -363,7 +349,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       await shard.send(payload)
     },
     async tellWorkerToIdentify(workerId, shardId, bucketId) {
-      gateway.logger.debug(`[Gateway] Tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
+      gateway.logger.debug(`[Gateway] Tell worker #${workerId} to identify shard #${shardId} from bucket ${bucketId}`)
       await gateway.identify(shardId)
     },
     async identify(shardId: number) {
@@ -385,14 +371,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
           events: options.events ?? {},
           logger: this.logger,
-          requestIdentify: async () => {
-            await gateway.identify(shardId)
-          },
+          requestIdentify: async () => await gateway.requestIdentify(shardId),
           shardIsReady: async () => {
-            gateway.logger.debug(`[Shard] Shard #${shardId} is ready`)
-            await delay(gateway.spawnShardDelay)
-            gateway.logger.debug(`[Shard] Resolving shard identify request`)
-            gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
+            gateway.logger.debug(`[Gateway] Shard #${shardId} has identified.`)
           },
           makePresence: gateway.makePresence,
         })
@@ -406,29 +387,33 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         this.shards.set(shardId, shard)
       }
 
-      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
-      if (!bucket) return
-
-      return await new Promise((resolve) => {
-        // Mark that we are making an identify request so another is not made.
-        bucket.identifyRequests.push(resolve)
-        gateway.logger.debug(`[Gateway] Identifying Shard #${shardId}.`)
-        // This will trigger identify and when READY is received it will resolve the above request.
-        shard?.identify()
-      })
+      await shard.identify()
     },
+
+    async requestIdentify(shardId) {
+      gateway.logger.debug(`[Gateway] Shard #${shardId} requested an identify.`)
+
+      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+
+      if (!bucket) {
+        throw new Error("Can't request identify for a shard that is not assigned to any bucket.")
+      }
+
+      await bucket.leakyBucket.acquire()
+
+      gateway.logger.debug(`[Gateway] Approved identify request for Shard #${shardId}.`)
+    },
+
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
       if (!shard) {
-        return gateway.logger.debug(`[Gateway] A kill for Shard #${shardId} was requested, but the shard could not be found`)
+        gateway.logger.debug(`[Gateway] Shard #${shardId} was requested to be killed, but the shard could not be found.`)
+        return
       }
 
       gateway.logger.debug(`[Gateway] Killing Shard #${shardId}`)
       this.shards.delete(shardId)
       await shard.shutdown()
-    },
-    async requestIdentify(_shardId: number) {
-      gateway.logger.debug(`[Gateway] Requesting identify`)
     },
 
     // Helpers methods below this
@@ -731,8 +716,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     number,
     {
       workers: Array<{ id: number; queue: number[] }>
-      /** Requests to identify shards are made based on whether it is available to be made. */
-      identifyRequests: Array<(value: void | PromiseLike<void>) => void>
+      /** The bucket to queue the identifies. */
+      leakyBucket: LeakyBucket
     }
   >
   /** The shards that are created. */
@@ -769,7 +754,13 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   /** Shutdown all shards. */
   shutdown: (code: number, reason: string, clearReshardingInterval?: boolean) => Promise<void>
   sendPayload: (shardId: number, payload: ShardSocketRequest) => Promise<void>
-  /** Allows users to hook in and change to communicate to different workers across different servers or anything they like. For example using redis pubsub to talk to other servers. */
+  /**
+   * Allows users to hook in and change to communicate to different workers across different servers or anything they like.
+   * For example using redis pubsub to talk to other servers.
+   *
+   * @remarks
+   * This should wait for the worker to have identified the shard before resolving the returned promise
+   */
   tellWorkerToIdentify: (workerId: number, shardId: number, bucketId: number) => Promise<void>
   /** Tell the manager to identify a Shard. If this Shard is not already managed this will also add the Shard to the manager. */
   identify: (shardId: number) => Promise<void>
