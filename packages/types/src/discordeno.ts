@@ -93,7 +93,7 @@ export interface CreateMessageOptions {
     /** id of the originating message's guild */
     guildId?: BigString
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-    failIfNotExists: boolean
+    failIfNotExists?: boolean
   }
   attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
   /** The contents of the files being sent */
