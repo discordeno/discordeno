@@ -4,12 +4,12 @@ import { avatarUrl, emojiUrl, formatImageUrl, getWidgetImageUrl, guildBannerUrl,
 
 describe('images.ts', () => {
   describe('formatImageUrl function', () => {
-    it('will return formated url with default size 128 and jpg', () => {
-      expect(formatImageUrl('https://skillz.is.pro/image')).to.be.equal('https://skillz.is.pro/image.jpg?size=128')
+    it('will return formated url with default size 128 and webp', () => {
+      expect(formatImageUrl('https://skillz.is.pro/image')).to.be.equal('https://skillz.is.pro/image.webp?size=128')
     })
 
     it('will return formated url with given size', () => {
-      expect(formatImageUrl('https://skillz.is.pro/image', 1024)).to.be.equal('https://skillz.is.pro/image.jpg?size=1024')
+      expect(formatImageUrl('https://skillz.is.pro/image', 1024)).to.be.equal('https://skillz.is.pro/image.webp?size=1024')
     })
 
     it('will return formated url with given size and format', () => {
@@ -27,9 +27,9 @@ describe('images.ts', () => {
         )
       })
 
-      it('will use jpg if no a_ is found', () => {
+      it('will use webp if no a_ is found', () => {
         expect(formatImageUrl('https://cdn.discordapp.com/avatars/568505543511259840/482491d6dcf12e12746ccd3148f0c646')).to.be.equal(
-          'https://cdn.discordapp.com/avatars/568505543511259840/482491d6dcf12e12746ccd3148f0c646.jpg?size=128',
+          'https://cdn.discordapp.com/avatars/568505543511259840/482491d6dcf12e12746ccd3148f0c646.webp?size=128',
         )
       })
     })
