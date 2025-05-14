@@ -95,7 +95,6 @@ export class DiscordenoShard {
     }
 
     if (options.requestIdentify) this.requestIdentify = options.requestIdentify
-    if (options.shardIsReady) this.shardIsReady = options.shardIsReady
     if (options.makePresence) this.makePresence = options.makePresence
 
     this.bucket = new LeakyBucket({
@@ -171,6 +170,8 @@ export class DiscordenoShard {
     if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
       this.state = ShardState.Connecting
     }
+
+    this.logger.debug(`[Shard] Connecting Shard #${this.id} socket.`)
 
     this.events.connecting?.(this)
 
@@ -253,6 +254,8 @@ export class DiscordenoShard {
           this.state = ShardState.Unidentified
         }
 
+        this.logger.debug(`[Shard] Shard #${this.id} socket connected.`)
+
         this.events.connected?.(this)
 
         resolve(this)
@@ -260,13 +263,20 @@ export class DiscordenoShard {
     })
   }
 
-  /** Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway. */
-  async identify(): Promise<void> {
+  /**
+   * Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway.
+   * @param bypassRequest - Whether to bypass the requestIdentify handler and identify immediately. This should be used carefully as it can cause invalid sessions.
+   */
+  async identify(bypassRequest = false): Promise<void> {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
       this.logger.debug(`[Shard] Identifying open Shard #${this.id}, closing the connection`)
       await this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
+    }
+
+    if (!bypassRequest) {
+      await this.requestIdentify()
     }
 
     this.state = ShardState.Identifying
@@ -278,6 +288,8 @@ export class DiscordenoShard {
     if (!this.isOpen()) {
       await this.connect()
     }
+
+    this.logger.debug(`[Shard] Sending Identify payload for Shard #${this.id}.`)
 
     this.send(
       {
@@ -297,8 +309,6 @@ export class DiscordenoShard {
     return await new Promise((resolve) => {
       this.resolves.set('READY', () => {
         this.events.identified?.(this)
-        // Tells the manager that this shard is ready
-        this.shardIsReady()
         resolve()
       })
       // When identifying too fast, Discord sends an invalid session payload.
@@ -458,7 +468,7 @@ export class DiscordenoShard {
           this.state = ShardState.Disconnected
           this.events.disconnected?.(this)
 
-        this.goingOffline = false
+          this.goingOffline = false
 
           return
         }
@@ -472,7 +482,6 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.AlreadyAuthenticated:
       default: {
-        this.logger.info(`[Shard] Shard #${this.id} closed with code ${close.code}. Attempting to resume...`)
         // We don't want to get into an infinite loop where we resume forever, so if we were already resuming we identify instead
         this.state = this.state === ShardState.Resuming ? ShardState.Identifying : ShardState.Resuming
         this.events.disconnected?.(this)
@@ -642,7 +651,7 @@ export class DiscordenoShard {
 
         // When resumable is false we need to re-identify
         if (!resumable) {
-          await this.requestIdentify()
+          await this.identify()
 
           break
         }
@@ -722,9 +731,6 @@ export class DiscordenoShard {
    * When this function resolves, this means that the shard is allowed to send an identify payload to discord.
    */
   async requestIdentify(): Promise<void> {}
-
-  /** This function communicates with the management process, in order to tell it can identify the next shard. */
-  async shardIsReady(): Promise<void> {}
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
@@ -833,8 +839,6 @@ export interface ShardCreateOptions {
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The handler to request a space to make an identify request. */
   requestIdentify?: () => Promise<void>
-  /** The handler to alert the gateway manager that this shard has received a READY event. */
-  shardIsReady?: () => Promise<void>
   /** Function to create the bot status to send on Identify requests */
   makePresence?: () => Promise<DiscordUpdatePresence | undefined>
 }

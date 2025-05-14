@@ -93,7 +93,7 @@ export interface CreateMessageOptions {
     /** id of the originating message's guild */
     guildId?: BigString
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-    failIfNotExists: boolean
+    failIfNotExists?: boolean
   }
   attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
   /** The contents of the files being sent */
@@ -114,12 +114,12 @@ export type MessageComponents = MessageComponent[]
 export type MessageComponent =
   | ActionRow
   | ButtonComponent
-  | InputTextComponent
-  | SelectMenuComponent
-  | SelectMenuChannelsComponent
-  | SelectMenuRolesComponent
-  | SelectMenuUsersComponent
-  | SelectMenuUsersAndRolesComponent
+  | TextInputComponent
+  | StringSelectComponent
+  | ChannelSelectComponent
+  | RoleSelectComponent
+  | UserSelectComponent
+  | MentionableSelectComponent
   | SectionComponent
   | TextDisplayComponent
   | ThumbnailComponent
@@ -136,20 +136,28 @@ export interface BaseComponent {
   id?: number
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#actionrow */
+/** https://discord.com/developers/docs/components/reference#action-row-action-row-structure */
 export interface ActionRow extends BaseComponent {
   type: MessageComponentTypes.ActionRow
 
-  /** The components in this row */
-  components:
-    | [Exclude<MessageComponent, ActionRow>]
-    | [ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+  /**
+   * The components in this row
+   *
+   * @remarks
+   * Up to 5 button components, a single select component or a single text input component
+   */
+  components: (
+    | ButtonComponent
+    | StringSelectComponent
+    | UserSelectComponent
+    | RoleSelectComponent
+    | MentionableSelectComponent
+    | ChannelSelectComponent
+    | TextInputComponent
+  )[]
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
+/** https://discord.com/developers/docs/components/reference#button-button-structure */
 export interface ButtonComponent extends BaseComponent {
   type: MessageComponentTypes.Button
 
@@ -176,9 +184,9 @@ export interface ButtonComponent extends BaseComponent {
   disabled?: boolean
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure */
-export interface SelectMenuComponent extends BaseComponent {
-  type: MessageComponentTypes.SelectMenu
+/** https://discord.com/developers/docs/components/reference#string-select-string-select-structure */
+export interface StringSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.StringSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
@@ -194,8 +202,9 @@ export interface SelectMenuComponent extends BaseComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuUsersComponent extends BaseComponent {
-  type: MessageComponentTypes.SelectMenuUsers
+/** https://discord.com/developers/docs/components/reference#user-select-user-select-structure */
+export interface UserSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.UserSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
@@ -214,8 +223,9 @@ export interface SelectMenuUsersComponent extends BaseComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuRolesComponent extends BaseComponent {
-  type: MessageComponentTypes.SelectMenuRoles
+/** https://discord.com/developers/docs/components/reference#role-select-role-select-structure */
+export interface RoleSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.RoleSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
@@ -234,8 +244,9 @@ export interface SelectMenuRolesComponent extends BaseComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuUsersAndRolesComponent extends BaseComponent {
-  type: MessageComponentTypes.SelectMenuUsersAndRoles
+/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-structure */
+export interface MentionableSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.MentionableSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
@@ -254,8 +265,9 @@ export interface SelectMenuUsersAndRolesComponent extends BaseComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuChannelsComponent extends BaseComponent {
-  type: MessageComponentTypes.SelectMenuChannels
+/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-structure */
+export interface ChannelSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.ChannelSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
@@ -303,9 +315,9 @@ export interface SelectMenuDefaultValue {
   type: 'user' | 'role' | 'channel'
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
-export interface InputTextComponent extends BaseComponent {
-  type: MessageComponentTypes.InputText
+/** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
+export interface TextInputComponent extends BaseComponent {
+  type: MessageComponentTypes.TextInput
 
   /** The style of the InputText */
   style: TextStyles
@@ -387,7 +399,7 @@ export interface SeparatorComponent extends BaseComponent {
 export interface ContainerComponent extends BaseComponent {
   type: MessageComponentTypes.Container
 
-  /** Up to 10 components of the type action row, text display, section, media gallery, separator, or file */
+  /** Components of the type action row, text display, section, media gallery, separator, or file */
   components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accentColor?: number
@@ -1102,6 +1114,44 @@ export interface ExecuteWebhook {
 export interface GetWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString
+}
+
+/** https://discord.com/developers/docs/resources/webhook#edit-webhook-message */
+export interface EditWebhookMessageOptions {
+  /** Id of the thread the message is in */
+  threadId?: BigString
+  /**
+   * Whether to respect the `components` field of the request.
+   * When enabled, allows application-owned webhooks to use all components and non-owned webhooks to use non-interactive components.
+   *
+   * @default false
+   */
+  withComponents?: boolean
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Embedded `rich` content */
+  embeds?: Camelize<DiscordEmbed>[]
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /**
+   * The components to include with the message
+   *
+   * @remarks
+   * Application-owned webhooks can always send components.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   */
+  components?: MessageComponents
+  /** The contents of the files being sent */
+  files?: FileContent[]
+  /** Attached files to keep and possible descriptions for new files */
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
+  /**
+   * A poll!
+   *
+   * @remarks
+   * Polls can only be added when editing a deferred interaction response.
+   */
+  poll?: CreatePoll
 }
 
 export interface DeleteWebhookMessageOptions {

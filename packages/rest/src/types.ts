@@ -98,6 +98,7 @@ import type {
   EditOwnVoiceState,
   EditScheduledEvent,
   EditUserVoiceState,
+  EditWebhookMessageOptions,
   ExecuteWebhook,
   FileContent,
   GetApplicationCommandPermissionOptions,
@@ -1309,24 +1310,6 @@ export interface RestManager {
    */
   editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
   /**
-   * Edits the original webhook message.
-   *
-   * @param webhookId - The ID of the webhook to edit the original message of.
-   * @param token - The webhook token, used to edit the message.
-   * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link DiscordMessage}.
-   *
-   * @remarks
-   * Fires a _Message Update_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-   */
-  editOriginalWebhookMessage: (
-    webhookId: BigString,
-    token: string,
-    options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<Camelize<DiscordMessage>>
-  /**
    * Edits the voice state of the bot user.
    *
    * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
@@ -1483,7 +1466,7 @@ export interface RestManager {
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString; withComponents?: boolean },
+    options: EditWebhookMessageOptions,
   ) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.

@@ -28,8 +28,6 @@ export interface RestRoutes {
   stickerPack: (stickerPackId: BigString) => string
   /** Routes for webhook related routes. */
   webhooks: {
-    /** Route for managing the original message sent by a webhook. */
-    original: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => string
     /** Route for webhook with a id. */
     id: (webhookId: BigString) => string
     /** Route for handling a webhook with a token. */
