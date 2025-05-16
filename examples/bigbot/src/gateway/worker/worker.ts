@@ -23,12 +23,19 @@ if (workerData.messageQueue.enabled) {
 }
 
 parentPort.on('message', async (message: WorkerMessage) => {
+  assert(parentPort)
+
   if (message.type === 'IdentifyShard') {
     logger.info(`Starting to identify shard #${message.shardId}`)
     const shard = shards.get(message.shardId) ?? createShard(message.shardId)
     shards.set(message.shardId, shard)
 
     await shard.identify()
+
+    parentPort.postMessage({
+      type: 'ShardIdentified',
+      shardId: message.shardId,
+    } satisfies ManagerMessage)
 
     return
   }
