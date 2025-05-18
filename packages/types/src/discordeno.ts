@@ -102,7 +102,7 @@ export interface CreateMessageOptions {
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
-  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_COMPONENTS_V2 can be set */
   flags?: MessageFlags
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
@@ -662,7 +662,7 @@ export interface InteractionCallbackData {
   title?: string
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL` and `SUPPRESS_NOTIFICATIONS` can be set) */
+  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `SUPPRESS_NOTIFICATIONS` and `IS_COMPONENTS_V2` can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
@@ -1178,7 +1178,7 @@ export interface CreateForumPostWithMessage {
     components?: MessageComponents
     /** IDs of up to 3 stickers in the server to send in the message */
     stickerIds?: BigString[]
-    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set */
     flags?: MessageFlags
   }
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
