@@ -123,11 +123,11 @@ export interface DiscordChannel {
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM or GUILD_MEDIA channel */
   default_reaction_emoji?: DiscordDefaultReactionEmoji | null
   /**
-  * The initial `rate_limit_per_user` to set on newly created threads in a channel.
-  *
-  * @remarks
-  * This field is copied to the thread at creation time and does not live update.
-  */
+   * The initial `rate_limit_per_user` to set on newly created threads in a channel.
+   *
+   * @remarks
+   * This field is copied to the thread at creation time and does not live update.
+   */
   default_thread_rate_limit_per_user?: number
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
@@ -411,7 +411,7 @@ export interface DiscordCreateForumPostWithMessage {
     payload_json?: string
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     attachments?: DiscordAttachment[]
-    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS can be set */
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and IS_COMPONENTS_V2 can be set */
     flags?: MessageFlags
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
