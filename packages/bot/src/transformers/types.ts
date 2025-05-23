@@ -911,7 +911,7 @@ export interface Interaction {
   token: string
   /** Read-only property, always `1` */
   version: 1
-  /** For the message the button was attached to */
+  /** For components or modals triggered by components, the message they were attached to */
   message?: Message
   /** the command data payload */
   data?: InteractionData
