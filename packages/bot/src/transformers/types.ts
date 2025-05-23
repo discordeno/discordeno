@@ -918,6 +918,8 @@ export interface Interaction {
   locale?: string
   /** The guild's preferred locale, if invoked in a guild */
   guildLocale?: string
+  /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
+  entitlements: Entitlement[]
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
   appPermissions: bigint
   /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */

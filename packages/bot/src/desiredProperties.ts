@@ -418,6 +418,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       data: defaultValue,
       locale: defaultValue,
       guildLocale: defaultValue,
+      entitlements: defaultValue,
       appPermissions: defaultValue,
       authorizingIntegrationOwners: defaultValue,
       context: defaultValue,
