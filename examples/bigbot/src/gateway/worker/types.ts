@@ -1,6 +1,6 @@
-import type { ShardSocketRequest, StatusUpdate } from '@discordeno/bot'
+import type { DiscordUpdatePresence, ShardSocketRequest } from '@discordeno/bot'
 
-export type ManagerMessage = ManagerRequestIdentify | ManagerShardInfo
+export type ManagerMessage = ManagerRequestIdentify | ManagerShardIdentified | ManagerShardInfo
 export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerPresencesUpdate | WorkerShardInfo
 
 export interface WorkerIdentifyShard {
@@ -26,7 +26,7 @@ export interface WorkerShardPayload {
 
 export interface WorkerPresencesUpdate {
   type: 'EditShardsPresence'
-  payload: StatusUpdate
+  payload: DiscordUpdatePresence
 }
 
 export interface WorkerShardInfo {
@@ -70,4 +70,9 @@ export interface ManagerShardInfo extends ShardInfo {
 export interface ManagerGetShardInfoFromGuildId {
   type: 'ShardInfoFromGuild'
   guildId: string | undefined
+}
+
+export interface ManagerShardIdentified {
+  type: 'ShardIdentified'
+  shardId: number
 }

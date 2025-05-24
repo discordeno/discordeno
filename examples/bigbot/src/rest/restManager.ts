@@ -1,4 +1,4 @@
-import { LogDepth, createLogger, createRestManager } from '@discordeno/bot'
+import { createLogger, createRestManager } from '@discordeno/bot'
 import { DISCORD_TOKEN } from '../config.js'
 import { setupRestAnalyticsHooks } from './influx.js'
 
@@ -7,7 +7,6 @@ const manager = createRestManager({
 })
 
 export const logger = createLogger({ name: 'REST' })
-logger.setDepth(LogDepth.Full)
 
 setupRestAnalyticsHooks(manager, logger)
 
