@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 import { workerData as _workerData, parentPort } from 'node:worker_threads'
-import { DiscordenoShard, GatewayOpcodes, LogDepth, createLogger } from '@discordeno/bot'
+import { DiscordenoShard, GatewayOpcodes, createLogger } from '@discordeno/bot'
 import { type Channel as amqpChannel, connect as connectAmqp } from 'amqplib'
 import { promiseWithResolvers } from '../../util.js'
 import type { ManagerMessage, WorkerCreateData, WorkerMessage } from './types.js'
@@ -11,7 +11,6 @@ assert(parentPort)
 const workerData: WorkerCreateData = _workerData
 
 const logger = createLogger({ name: `Worker #${workerData.workerId}` })
-logger.setDepth(LogDepth.Full)
 
 const identifyPromises = new Map<number, () => void>()
 const shards = new Map<number, DiscordenoShard>()

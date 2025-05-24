@@ -1,5 +1,5 @@
 import type { Worker } from 'node:worker_threads'
-import { LogDepth, createGatewayManager, createLogger, createRestManager, delay } from '@discordeno/bot'
+import { createGatewayManager, createLogger, createRestManager } from '@discordeno/bot'
 import { DISCORD_TOKEN, GATEWAY_INTENTS, REST_AUTHORIZATION, REST_URL, SHARDS_PER_WORKER, TOTAL_SHARDS, TOTAL_WORKERS } from '../config.js'
 import { promiseWithResolvers } from '../util.js'
 import { createWorker } from './worker/createWorker.js'
@@ -7,7 +7,6 @@ import type { ManagerMessage, WorkerMessage } from './worker/types.js'
 
 export const workers = new Map<number, Worker>()
 export const logger = createLogger({ name: 'GATEWAY' })
-logger.setDepth(LogDepth.Full)
 
 const restManager = createRestManager({
   token: DISCORD_TOKEN,
@@ -27,6 +26,9 @@ const gatewayManager = createGatewayManager({
   totalShards: TOTAL_SHARDS,
   totalWorkers: TOTAL_WORKERS,
 })
+
+// @ts-expect-error
+gatewayManager.logger.setLevel(0)
 
 gatewayManager.tellWorkerToIdentify = async (workerId, shardId, bucketId) => {
   logger.info(`Tell worker to identify, workerId: ${workerId}, shardId: ${shardId}, bucketId: ${bucketId}`)
@@ -52,9 +54,6 @@ gatewayManager.tellWorkerToIdentify = async (workerId, shardId, bucketId) => {
   await promise
 
   worker.off('message', waitForShardIdentified)
-
-  // This needs to be here because this methods needs to wait before it resolves, or else we will have invalid sessions when spawning the next shards
-  await delay(gatewayManager.spawnShardDelay)
 }
 
 gatewayManager.sendPayload = async (shardId, payload) => {
