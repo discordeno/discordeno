@@ -911,13 +911,15 @@ export interface Interaction {
   token: string
   /** Read-only property, always `1` */
   version: 1
-  /** For the message the button was attached to */
+  /** For components or modals triggered by components, the message they were attached to */
   message?: Message
   /** the command data payload */
   data?: InteractionData
   locale?: string
   /** The guild's preferred locale, if invoked in a guild */
   guildLocale?: string
+  /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
+  entitlements: Entitlement[]
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
   appPermissions: bigint
   /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */

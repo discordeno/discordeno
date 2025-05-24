@@ -148,6 +148,8 @@ export function transformInteraction(
   if (props.channelId && payload.interaction.channel_id) interaction.channelId = bot.transformers.snowflake(payload.interaction.channel_id)
   if (props.member && guildId && payload.interaction.member)
     interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, user.id)
+  if (props.entitlements && payload.interaction.entitlements)
+    interaction.entitlements = payload.interaction.entitlements.map((e) => bot.transformers.entitlement(bot, e))
   if (props.authorizingIntegrationOwners && payload.interaction.authorizing_integration_owners) {
     interaction.authorizingIntegrationOwners = {}
 

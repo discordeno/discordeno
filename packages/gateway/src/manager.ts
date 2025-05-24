@@ -11,7 +11,7 @@ import {
   GatewayOpcodes,
   type RequestGuildMembers,
 } from '@discordeno/types'
-import { Collection, LeakyBucket, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, jsonSafeReplacer, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type TransportCompression, type UpdateVoiceState } from './types.js'
 
@@ -442,7 +442,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async editBotStatus(data) {
-      gateway.logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data)}`)
+      gateway.logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data, jsonSafeReplacer)}`)
 
       await Promise.all(
         [...gateway.shards.values()].map(async (shard) => {
