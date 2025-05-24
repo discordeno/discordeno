@@ -27,9 +27,6 @@ const gatewayManager = createGatewayManager({
   totalWorkers: TOTAL_WORKERS,
 })
 
-// @ts-expect-error
-gatewayManager.logger.setLevel(0)
-
 gatewayManager.tellWorkerToIdentify = async (workerId, shardId, bucketId) => {
   logger.info(`Tell worker to identify, workerId: ${workerId}, shardId: ${shardId}, bucketId: ${bucketId}`)
 
