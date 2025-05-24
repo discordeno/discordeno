@@ -3,7 +3,7 @@ import { iconBigintToHash } from './hash.js'
 
 /** Help format an image url. */
 export function formatImageUrl(url: string, size: ImageSize = 128, format?: ImageFormat): string {
-  return `${url}.${format ?? (url.includes('/a_') ? 'gif' : 'jpg')}?size=${size}`
+  return `${url}.${format ?? (url.includes('/a_') ? 'gif' : 'webp')}?size=${size}`
 }
 
 /**

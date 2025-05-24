@@ -8,42 +8,60 @@ import type { DiscordWebhookEventType } from './webhookEvents.js'
 
 /** https://discord.com/developers/docs/resources/application#application-object-application-structure */
 export interface DiscordApplication {
+  /** ID of the app */
+  id: string
   /** The name of the app */
   name: string
+  /** The icon hash of the app */
+  icon: string | null
   /** The description of the app */
   description: string
   /** An array of rpc origin urls, if rpc is enabled */
   rpc_origins?: string[]
-  /** The url of the app's terms of service */
-  terms_of_service_url?: string
-  /** The url of the app's privacy policy */
-  privacy_policy_url?: string
-  /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
-  verify_key: string
-  /** If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists */
-  primary_sku_id?: string
-  /** If this application is a game sold on Discord, this field will be the URL slug that links to the store page */
-  slug?: string
-  /** The application's public flags */
-  flags?: ApplicationFlags
-  /** The id of the app */
-  id: string
-  /** The icon hash of the app */
-  icon: string | null
   /** When false only app owner can join the app's bot to guilds */
   bot_public: boolean
   /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
   bot_require_code_grant: boolean
+  /** Partial user object for the bot user associated with the app */
+  bot?: Partial<DiscordUser>
+  /** The url of the app's terms of service */
+  terms_of_service_url?: string
+  /** The url of the app's privacy policy */
+  privacy_policy_url?: string
   /** Partial user object containing info on the owner of the application */
   owner?: Partial<DiscordUser>
+  /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
+  verify_key: string
   /** If the application belongs to a team, this will be a list of the members of that team */
   team: DiscordTeam | null
   /** Guild associated with the app. For example, a developer support server. */
   guild_id?: string
   /** A partial object of the associated guild */
   guild?: Partial<DiscordGuild>
+  /** If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists */
+  primary_sku_id?: string
+  /** If this application is a game sold on Discord, this field will be the URL slug that links to the store page */
+  slug?: string
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string
+  /** The application's public flags */
+  flags?: ApplicationFlags
+  /** An approximate count of the app's guild membership. */
+  approximate_guild_count?: number
+  /** Approximate count of users that have installed the app. */
+  approximate_user_install_count?: number
+  /** Array of redirect URIs for the app */
+  redirect_uris?: string[]
+  /** Interactions endpoint URL for the app */
+  interactions_endpoint_url?: string | null
+  /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
+  role_connections_verification_url?: string | null
+  /** Event webhook URL for the app to receive webhook events */
+  event_webhooks_url?: string | null
+  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
+  event_webhooks_status: DiscordApplicationEventWebhookStatus
+  /** List of Webhook event types the app subscribes to */
+  event_webhooks_types?: DiscordWebhookEventType[]
   /** up to 5 tags describing the content and functionality of the application */
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
@@ -52,24 +70,6 @@ export interface DiscordApplication {
   integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
-  /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
-  role_connections_verification_url?: string | null
-  /** An approximate count of the app's guild membership. */
-  approximate_guild_count?: number
-  /** Approximate count of users that have installed the app. */
-  approximate_user_install_count?: number
-  /** Partial user object for the bot user associated with the app */
-  bot?: Partial<DiscordUser>
-  /** Array of redirect URIs for the app */
-  redirect_uris?: string[]
-  /** Interactions endpoint URL for the app */
-  interactions_endpoint_url?: string | null
-  /** Event webhook URL for the app to receive webhook events */
-  event_webhooks_url?: string | null
-  /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
-  event_webhooks_status: DiscordApplicationEventWebhookStatus
-  /** List of Webhook event types the app subscribes to */
-  event_webhooks_types?: DiscordWebhookEventType[]
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object-application-integration-types */
@@ -112,9 +112,9 @@ export enum ApplicationFlags {
   VerificationPendingGuildLimit = 1 << 16,
   /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
   Embedded = 1 << 17,
-  /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
+  /** Intent required for bots in **100 or more servers** to receive message content */
   GatewayMessageContent = 1 << 18,
-  /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
+  /** Intent required for bots in under 100 servers to receive message content, found in Bot Settings */
   GatewayMessageContentLimited = 1 << 19,
   /** Indicates if an app has registered global application commands */
   ApplicationCommandBadge = 1 << 23,
@@ -136,7 +136,7 @@ export interface DiscordActivityInstance {
   instance_id: string
   /** Unique identifier for the launch */
   launch_id: string
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: DiscordActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: string[]

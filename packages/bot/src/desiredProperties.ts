@@ -7,6 +7,7 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  Component,
   DefaultReactionEmoji,
   Emoji,
   Entitlement,
@@ -22,6 +23,9 @@ import type {
   InteractionResource,
   Invite,
   InviteStageInstance,
+  Lobby,
+  LobbyMember,
+  MediaGalleryItem,
   Member,
   Message,
   MessageCall,
@@ -42,6 +46,7 @@ import type {
   StageInstance,
   Sticker,
   Subscription,
+  UnfurledMediaItem,
   User,
   VoiceState,
   Webhook,
@@ -58,6 +63,7 @@ export interface TransformersObjects {
   attachment: Attachment
   avatarDecorationData: AvatarDecorationData
   channel: Channel
+  component: Component
   defaultReactionEmoji: DefaultReactionEmoji
   emoji: Emoji
   entitlement: Entitlement
@@ -73,6 +79,7 @@ export interface TransformersObjects {
   interactionResource: InteractionResource
   invite: Invite
   inviteStageInstance: InviteStageInstance
+  mediaGalleryItem: MediaGalleryItem
   member: Member
   message: Message
   messageCall: MessageCall
@@ -91,11 +98,14 @@ export interface TransformersObjects {
   sku: Sku
   stageInstance: StageInstance
   sticker: Sticker
+  unfurledMediaItem: UnfurledMediaItem
   user: User
   voiceState: VoiceState
   webhook: Webhook
   subscription: Subscription
   soundboardSound: SoundboardSound
+  lobby: Lobby
+  lobbyMember: LobbyMember
 }
 
 // NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
@@ -276,6 +286,39 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
     },
+    component: {
+      type: defaultValue,
+      customId: defaultValue,
+      required: defaultValue,
+      disabled: defaultValue,
+      style: defaultValue,
+      label: defaultValue,
+      value: defaultValue,
+      emoji: defaultValue,
+      url: defaultValue,
+      channelTypes: defaultValue,
+      options: defaultValue,
+      placeholder: defaultValue,
+      minValues: defaultValue,
+      maxValues: defaultValue,
+      minLength: defaultValue,
+      maxLength: defaultValue,
+      components: defaultValue,
+      defaultValues: defaultValue,
+      skuId: defaultValue,
+      id: defaultValue,
+      accessory: defaultValue,
+      content: defaultValue,
+      description: defaultValue,
+      spoiler: defaultValue,
+      items: defaultValue,
+      divider: defaultValue,
+      spacing: defaultValue,
+      file: defaultValue,
+      media: defaultValue,
+      accentColor: defaultValue,
+      ...desiredProperties.component,
+    },
     forumTag: {
       emojiId: defaultValue,
       emojiName: defaultValue,
@@ -375,9 +418,11 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       data: defaultValue,
       locale: defaultValue,
       guildLocale: defaultValue,
+      entitlements: defaultValue,
       appPermissions: defaultValue,
       authorizingIntegrationOwners: defaultValue,
       context: defaultValue,
+      attachmentSizeLimit: defaultValue,
       ...desiredProperties.interaction,
     },
     interactionCallback: {
@@ -566,6 +611,12 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       topic: defaultValue,
       ...desiredProperties.inviteStageInstance,
     },
+    mediaGalleryItem: {
+      media: defaultValue,
+      description: defaultValue,
+      spoiler: defaultValue,
+      ...desiredProperties.mediaGalleryItem,
+    },
     sticker: {
       id: defaultValue,
       packId: defaultValue,
@@ -579,6 +630,14 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       user: defaultValue,
       sortValue: defaultValue,
       ...desiredProperties.sticker,
+    },
+    unfurledMediaItem: {
+      url: defaultValue,
+      proxyUrl: defaultValue,
+      height: defaultValue,
+      width: defaultValue,
+      contentType: defaultValue,
+      ...desiredProperties.unfurledMediaItem,
     },
     user: {
       username: defaultValue,
@@ -729,6 +788,20 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       volume: defaultValue,
       ...desiredProperties.soundboardSound,
     },
+    lobby: {
+      id: defaultValue,
+      applicationId: defaultValue,
+      metadata: defaultValue,
+      members: defaultValue,
+      linkedChannel: defaultValue,
+      ...desiredProperties.lobby,
+    },
+    lobbyMember: {
+      id: defaultValue,
+      metadata: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.lobbyMember,
+    },
   } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>
 }
 
@@ -827,28 +900,31 @@ type GetErrorWhenUndesired<
 type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
 
 // If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
-export type TransformProperty<
-  T,
-  TProps extends TransformersDesiredProperties,
-  TBehavior extends DesiredPropertiesBehavior,
-> = T extends TransformersObjects[keyof TransformersObjects] // is T a transformed object?
+// NOTE: changing the order of these ternaries can cause bugs, for this reason we check in this order:
+//      - Is it an array?
+//      - Is it a collection?
+//      - Is it a bot?
+//      - Is it a transformed object?
+//      - Is it an object?
+//      - It's not an object
+export type TransformProperty<T, TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = T extends Array<infer U> // is it an array?
   ? // Yes, apply the desired props
-    SetupDesiredProps<T, TProps, TBehavior>
+    TransformProperty<U, TProps, TBehavior>[]
   : // No, is it a collection?
     T extends Collection<infer U, infer UObj>
     ? // Yes, check for nested proprieties
       Collection<U, TransformProperty<UObj, TProps, TBehavior>>
-    : // No, is it an array?
-      T extends Array<infer U>
-      ? // Yes, apply the desired props
-        TransformProperty<U, TProps, TBehavior>[]
-      : // No, is it a Bot?
-        T extends Bot
-        ? // Yes, return a bot with the correct set of props & behavior
-          Bot<TProps, TBehavior>
-        : // No, is this a generic object? If so we need to ensure nested inside there aren't transformed objects
+    : // No, is it a Bot?
+      T extends Bot
+      ? // Yes, return a bot with the correct set of props & behavior
+        Bot<TProps, TBehavior>
+      : // No, is it a transformed object?
+        T extends TransformersObjects[keyof TransformersObjects]
+        ? // Yes, apply the desired props
+          SetupDesiredProps<T, TProps, TBehavior>
+        : // Is it an object?
           IsObject<T> extends true
-          ? // Yes, check of nested proprieties
+          ? // Yes, we need to ensure nested inside there aren't transformed objects
             { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
           : // No, this is a normal value such as string / bigint / number
             T

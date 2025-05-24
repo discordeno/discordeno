@@ -8,15 +8,13 @@
   "packageManager": "yarn@4.6.0",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist"
+    "build": "tsc"
   },
   "dependencies": {
     "@discordeno/bot": "20.0.0",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@swc/cli": "^0.5.0",
-    "@swc/core": "^1.9.2",
     "@types/node": "^22.9.0",
     "typescript": "^5.6.3"
   }

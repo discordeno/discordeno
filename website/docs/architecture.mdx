@@ -109,6 +109,10 @@ Lazy loading allows bots to maintain efficient cache usage, especially for large
 
 For example, imagine 90% of your bot's guilds are inactive overnight. Lazy loading offloads their data, freeing memory. As users become active again, events trigger the cache to reload dynamically. Lazy loading ensures your bot is scalable, resource-efficient, and ready for handling massive server counts without sacrificing performance. 
 
+:::warning
+Be cautious when applying lazy loading to certain events, as excessive get guild requests at once can lead to Cloudflare bans. Discord may occasionally send a large number of events — for example when when they mass ban users — which can trigger a flood of `GUILD_MEMBER_REMOVE` events. If each of these results in a get guild request, it can lead to a Cloudflare ban.
+:::
+
 ### Handlers  
 
 Once lazy loading finishes, the event is passed to a handler, where the data undergoes transformations and customizations. Upon completion, the actual event function is called.
