@@ -291,9 +291,6 @@ export class DiscordenoShard {
 
     this.logger.debug(`[Shard] Sending Identify payload for Shard #${this.id}.`)
 
-    const presence = await this.makePresence()
-    if (presence?.status === 'offline') presence.status = 'invisible'
-
     this.send(
       {
         op: GatewayOpcodes.Identify,
@@ -303,7 +300,7 @@ export class DiscordenoShard {
           properties: this.gatewayConfig.properties,
           intents: this.gatewayConfig.intents,
           shard: [this.id, this.gatewayConfig.totalShards],
-          presence,
+          presence: await this.makePresence(),
         },
       },
       true,
