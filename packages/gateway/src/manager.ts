@@ -121,6 +121,8 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         if (typeof info.firstShardId === 'number') gateway.firstShardId = info.firstShardId
         // Set last shard id if provided in info
         if (typeof info.lastShardId === 'number') gateway.lastShardId = info.lastShardId
+        // If we didn't get any lastShardId, we assume all the shards are to be used
+        else gateway.lastShardId = gateway.totalShards - 1
         gateway.logger.info(`[Resharding] Starting the reshard process. New total shards: ${gateway.totalShards}`)
 
         // Resetting buckets
@@ -670,7 +672,7 @@ export interface CreateGatewayManagerOptions {
      * Whether or not automated resharding should be enabled.
      * @default true
      */
-    enabled: boolean
+    enabled?: boolean
     /**
      * The % of how full a shard is when resharding should be triggered.
      *
@@ -680,20 +682,20 @@ export interface CreateGatewayManagerOptions {
      *
      * @default 80 as in 80%
      */
-    shardsFullPercentage: number
+    shardsFullPercentage?: number
     /**
      * The interval in milliseconds, of how often to check whether resharding is needed and reshard automatically. Set to -1 to disable auto resharding.
      * @default 28800000 (8 hours)
      */
-    checkInterval: number
+    checkInterval?: number
     /** Handler to get shard count and other session info. */
-    getSessionInfo?: () => Promise<Camelize<DiscordGetGatewayBot>>
+    getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
     /** Handler to edit the shard id on any cached guilds. */
     updateGuildsShardId?: (guildIds: string[], shardId: number) => Promise<void>
   }
 }
 
-export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
+export interface GatewayManager extends Omit<Required<CreateGatewayManagerOptions>, 'resharding'> {
   /** The max concurrency buckets. Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called. */
   buckets: Map<
     number,
@@ -708,7 +710,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   /** The logger for the gateway manager. */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** Everything related to resharding. */
-  resharding: CreateGatewayManagerOptions['resharding'] & {
+  resharding: PickPartialKeys<Required<NonNullable<CreateGatewayManagerOptions['resharding']>>, 'getSessionInfo' | 'updateGuildsShardId'> & {
     /** The interval id of the check interval. This is used to clear the interval when the manager is shutdown. */
     checkIntervalId?: NodeJS.Timeout | undefined
     /** Holds the shards that resharding has created. Once resharding is done, this replaces the gateway.shards */
@@ -866,6 +868,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     }
   }
 }
+
+type PickPartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 export interface RequestMemberRequest {
   /** The unique nonce for this request. */
