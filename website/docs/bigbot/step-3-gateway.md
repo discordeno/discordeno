@@ -99,7 +99,7 @@ Now let's break it down.
 
 ### Worker & Server Confusion
 
-The `shardsPerWorker` property represents how many shards we will run per **server** in this eaxmple. This property is called `perWorker` because for mid sized bots that don't require separate dedicated servers, it can use _worker threads_ to mitigate the load in that single server. Here, we are going to be aiming to scale much much larger so we need to think bigger. In our case, what we are telling our gateway manager is that it should create 500 shards per **server**. Sounds like a lot? Yes, but no problem! Those shards will then be split across _worker threads_ on each server.
+The `shardsPerWorker` property represents how many shards we will run per **server** in this example. This property is called `perWorker` because for mid sized bots that don't require separate dedicated servers, it can use _worker threads_ to mitigate the load in that single server. Here, we are going to be aiming to scale much much larger so we need to think bigger. In our case, what we are telling our gateway manager is that it should create 500 shards per **server**. Sounds like a lot? Yes, but no problem! Those shards will then be split across _worker threads_ on each server.
 
 The `totalWorkers` property represents the number of **servers** we have available for shards. For example, if we have 10 dedicated servers available to us, this will allow the manager to spread out the load across 10 total **servers**.
 
