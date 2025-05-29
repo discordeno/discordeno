@@ -11,10 +11,14 @@ export function formatImageUrl(url: string, size: ImageSize = 128, format?: Imag
  *
  * @param emojiId The id of the emoji
  * @param animated Whether or not the emoji is animated
+ * @param format The format of the image, defaults to png
  * @returns string
+ *
+ * @remarks
+ * The animated parameter is used to specify the animated query parameter valid for webp images or to force the gif if the format is not set to webp.
  */
-export function emojiUrl(emojiId: BigString, animated = false): string {
-  return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`
+export function emojiUrl(emojiId: BigString, animated = false, format: ImageFormat = 'png'): string {
+  return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? (format === 'webp' ? 'webp' : 'gif') : format}${animated && format === 'webp' ? '?animated=true' : ''}`
 }
 
 /**
