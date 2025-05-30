@@ -846,6 +846,11 @@ export type DesiredPropertiesMapper<T extends TransformersObjects[keyof Transfor
   [Key in DesirableProperties<T>]: boolean
 }
 
+declare const TypeErrorSymbol: unique symbol
+interface DesiredPropertiesError<T extends string> {
+  [TypeErrorSymbol]: T
+}
+
 type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
   [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : false
 }
@@ -856,7 +861,7 @@ type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefin
     ? // Yes, this is a key to include
       true
     : // No, this is a key to exclude
-      `This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`
+      DesiredPropertiesError<`This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
   : // No, it is a props with dependencies?
     TKey extends keyof TDependencies
     ? // Yes, has all of its dependencies satisfied?
@@ -864,7 +869,7 @@ type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefin
       ? // Yes, this is a key to include
         true
       : // No, this is a key to not include
-        `This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`
+        DesiredPropertiesError<`This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
     : // No, we include it but it does not have neither props nor dependencies
       true
 
