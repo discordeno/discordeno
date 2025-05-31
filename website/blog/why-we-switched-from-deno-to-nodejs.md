@@ -10,6 +10,8 @@ date: 2023-04-03T17:01:03Z
 
 As a team, we have recently made the decision to move away from Deno and migrate to Node.js. This was not a decision we made lightly, but rather one that was based on several factors.
 
+<!-- truncate -->
+
 ## Deno's Broken Promises: Why we had to make the switch
 
 One of the primary reasons we decided to make the switch was because we found that Deno had become a worse version of Node.js.
