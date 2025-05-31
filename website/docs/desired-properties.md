@@ -152,10 +152,15 @@ The caveats of this behavior are the following:
 
 #### `ChangeType`
 
-All the "undesired" properties will be typed with a string that will explain why the property is disabled, this may also include the dependencies for said property if those are present.
+All the "undesired" properties will be typed with a string wrapped in a type that will explain why the property is disabled, this may also include the dependencies for said property if those are present.
 
 The caveats of this behavior are the following:
-- Typescript may not always error on the usage of undesired properties, as in some cases, strings can be a valid option (e.g. channel.name is always a string so typescript won't error)
+- Typescript may not always error on the usage of undesired properties, as in some cases, the object without any property can be a valid thing to use (e.g. `message.poll` is an object, so if you only check if `message.poll` exists Typescript won't error)
+
+The types for undesired properties will be like the following:
+```js
+(property) content: DesiredPropertiesError<"This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props">
+```
 
 ### Removing TypeScript Clutter
 
