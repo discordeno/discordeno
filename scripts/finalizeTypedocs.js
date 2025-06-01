@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises'
-import typedocConfig from '../typedoc.json' with { type: 'json' }
+import typedocConfig from '../typedoc.jsonc' with { type: 'json' }
 
 const typedocOutPath = typedocConfig.out
 
