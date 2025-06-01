@@ -47,7 +47,8 @@ export function transformRole(bot: InternalBot, payload: { role: DiscordRole; gu
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)
-  if (props.name && payload.role.name) role.name = payload.role.name
+  // Role name can be an empty string
+  if (props.name && payload.role.name !== undefined) role.name = payload.role.name
   if (props.position) role.position = payload.role.position
   if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
   if (props.color && payload.role.color !== undefined) role.color = payload.role.color

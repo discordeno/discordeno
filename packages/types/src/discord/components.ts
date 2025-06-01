@@ -264,7 +264,7 @@ export interface DiscordThumbnailComponent extends DiscordBaseComponent {
 
   /** A url or attachment */
   media: DiscordUnfurledMediaItem
-  /** Alt text for the media */
+  /** Alt text for the media, max 1024 characters */
   description?: string
   /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
@@ -282,7 +282,7 @@ export interface DiscordMediaGalleryComponent extends DiscordBaseComponent {
 export interface DiscordMediaGalleryItem {
   /** A url or attachment */
   media: DiscordUnfurledMediaItem
-  /** Alt text for the media */
+  /** Alt text for the media, max 1024 characters */
   description?: string
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
