@@ -617,8 +617,7 @@ export interface CreateSlashApplicationCommand {
    * Interaction context types where the command is available.
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types are included for new commands
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[]
   /**
