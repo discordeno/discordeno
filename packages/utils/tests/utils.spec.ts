@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { delay, hasProperty } from '../src/utils.js'
+import { delay, hasProperty, jsonSafeReplacer } from '../src/utils.js'
 
 describe('utils.ts', () => {
   let clock: sinon.SinonFakeTimers
@@ -13,6 +13,15 @@ describe('utils.ts', () => {
   afterEach(() => {
     sinon.restore()
     clock.restore()
+  })
+
+  describe('jsonSafe function', () => {
+    it('will convert records to `JSON.stringify`-serializable', () => {
+      // Example from issue#4196: https://github.com/discordeno/discordeno/issues/4196.
+      const value = { limit: 0, userIds: [0n, 0n, 0n] }
+      const expected = { limit: 0, userIds: ['0', '0', '0'] }
+      expect(JSON.stringify(value, jsonSafeReplacer)).equal(JSON.stringify(expected))
+    })
   })
 
   describe('delay function', () => {
