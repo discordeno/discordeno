@@ -456,8 +456,7 @@ export interface DiscordCreateApplicationCommand {
    * Interaction context(s) where the command can be used
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types included for new commands.
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[] | null
   /**
