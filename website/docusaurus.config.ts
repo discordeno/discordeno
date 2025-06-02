@@ -1,5 +1,3 @@
-// Note: type annotations allow type checking and IDEs autocompletion
-
 import type { Options as ClientRedirectOptions } from '@docusaurus/plugin-client-redirects'
 import type { Options as PluginContentDocs } from '@docusaurus/plugin-content-docs'
 import type { Options as PresetClassicOptions, ThemeConfig } from '@docusaurus/preset-classic'
@@ -24,7 +22,21 @@ const config: Config = {
   trailingSlash: false,
 
   future: {
-    experimental_faster: true,
+    v4: {
+      // Used for https://docusaurus.io/blog/releases/3.8#worker-threads
+      removeLegacyPostBuildHeadAttribute: true,
+      useCssCascadeLayers: false,
+    },
+    experimental_faster: {
+      lightningCssMinimizer: true,
+      mdxCrossCompilerCache: true,
+      rspackBundler: true,
+      rspackPersistentCache: true,
+      ssgWorkerThreads: true,
+      swcHtmlMinimizer: true,
+      swcJsLoader: true,
+      swcJsMinimizer: true,
+    },
   },
 
   onBrokenLinks: 'throw',
