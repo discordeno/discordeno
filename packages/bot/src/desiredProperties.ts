@@ -637,6 +637,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       height: defaultValue,
       width: defaultValue,
       contentType: defaultValue,
+      attachmentId: defaultValue,
       ...desiredProperties.unfurledMediaItem,
     },
     user: {
