@@ -170,6 +170,7 @@ export interface Application {
   customInstallUrl?: string
   approximateGuildCount?: number
   approximateUserInstallCount?: number
+  approximateUserAuthorizationCount?: number
   installParams?: ApplicationInstallParams
   bot?: User
   redirectUris?: string[]
