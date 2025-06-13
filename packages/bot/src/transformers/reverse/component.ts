@@ -170,8 +170,8 @@ function transformFileComponent(bot: Bot, payload: Component): DiscordFileCompon
     id: payload.id,
     file: bot.transformers.reverse.unfurledMediaItem(bot, payload.file!),
     spoiler: payload.spoiler,
-    name: payload.name,
-    size: payload.size,
+    name: payload.name!,
+    size: payload.size!,
   }
 }
 
