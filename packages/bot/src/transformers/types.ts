@@ -582,6 +582,8 @@ export interface UnfurledMediaItem {
   width?: number | null
   /** The media type of the content. This field is ignored and provided by the API as part of the response */
   contentType?: string
+  /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
+  attachmentId?: bigint
 }
 
 export interface MediaGalleryItem {
