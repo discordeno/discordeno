@@ -665,7 +665,7 @@ export interface InteractionCallbackData {
   title?: string
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `SUPPRESS_NOTIFICATIONS` and `IS_COMPONENTS_V2` can be set) */
+  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `IS_COMPONENTS_V2`, `IS_VOICE_MESSAGE` and `SUPPRESS_NOTIFICATIONS` can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>

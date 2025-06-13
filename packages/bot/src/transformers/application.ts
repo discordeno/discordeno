@@ -35,6 +35,7 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
     guild: payload.application.guild ? bot.transformers.guild(bot, { guild: payload.application.guild, shardId: payload.shardId }) : undefined,
     approximateGuildCount: payload.application.approximate_guild_count,
     approximateUserInstallCount: payload.application.approximate_user_install_count,
+    approximateUserAuthorizationCount: payload.application.approximate_user_authorization_count,
     bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot as DiscordUser) : undefined,
     interactionsEndpointUrl: payload.application.interactions_endpoint_url ? payload.application.interactions_endpoint_url : undefined,
     redirectUris: payload.application.redirect_uris,

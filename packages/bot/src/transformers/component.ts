@@ -78,6 +78,7 @@ export function transformUnfurledMediaItem(bot: Bot, payload: DiscordUnfurledMed
   if (props.height && payload.height) mediaItem.height = payload.height
   if (props.width && payload.width) mediaItem.width = payload.width
   if (props.contentType && payload.content_type) mediaItem.contentType = payload.content_type
+  if (props.attachmentId && payload.attachment_id) mediaItem.attachmentId = bot.transformers.snowflake(payload.attachment_id)
 
   return bot.transformers.customizers.unfurledMediaItem(bot, payload, mediaItem)
 }
