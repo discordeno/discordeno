@@ -232,6 +232,8 @@ function transformFileComponent(bot: Bot, payload: DiscordFileComponent): Compon
   if (props.id && payload.id) file.id = payload.id
   if (props.file && payload.file) file.file = bot.transformers.unfurledMediaItem(bot, payload.file)
   if (props.spoiler && payload.spoiler) file.spoiler = payload.spoiler
+  if (props.name && payload.name) file.name = payload.name
+  if (props.size && payload.size) file.size = payload.size
 
   return file
 }
