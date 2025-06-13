@@ -317,6 +317,8 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       file: defaultValue,
       media: defaultValue,
       accentColor: defaultValue,
+      name: defaultValue,
+      size: defaultValue,
       ...desiredProperties.component,
     },
     forumTag: {
