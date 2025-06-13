@@ -383,6 +383,10 @@ export interface FileComponent extends BaseComponent {
   file: DiscordUnfurledMediaItem
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size: number
 }
 
 /** https://discord.com/developers/docs/components/reference#separator */
