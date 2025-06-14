@@ -16,6 +16,7 @@ import type {
   DiscordAutoModerationRule,
   DiscordAvatarDecorationData,
   DiscordChannel,
+  DiscordCollectibles,
   DiscordCreateApplicationCommand,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
@@ -50,6 +51,7 @@ import type {
   DiscordMessageComponent,
   DiscordMessageInteractionMetadata,
   DiscordMessageSnapshot,
+  DiscordNameplate,
   DiscordPoll,
   DiscordPollMedia,
   DiscordPresenceUpdate,
@@ -96,6 +98,7 @@ import {
   type AutoModerationRule,
   type AvatarDecorationData,
   type Channel,
+  type Collectibles,
   type Component,
   type DefaultReactionEmoji,
   type Embed,
@@ -128,6 +131,7 @@ import {
   type MessageCall,
   type MessageInteractionMetadata,
   type MessageSnapshot,
+  type Nameplate,
   type Poll,
   type PollMedia,
   type PresenceUpdate,
@@ -170,6 +174,7 @@ import {
   transformAutoModerationRule,
   transformAvatarDecorationData,
   transformChannel,
+  transformCollectibles,
   transformComponent,
   transformComponentToDiscordComponent,
   transformDefaultReactionEmoji,
@@ -201,6 +206,7 @@ import {
   transformMessageCall,
   transformMessageInteractionMetadata,
   transformMessageSnapshot,
+  transformNameplate,
   transformPoll,
   transformPollMedia,
   transformPresence,
@@ -280,6 +286,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       avatarDecorationData: SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>,
     ) => any
     channel: (bot: Bot<TProps, TBehavior>, payload: DiscordChannel, channel: SetupDesiredProps<Channel, TProps, TBehavior>) => any
+    collectibles: (bot: Bot<TProps, TBehavior>, payload: DiscordCollectibles, collectibles: SetupDesiredProps<Collectibles, TProps, TBehavior>) => any
     component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent, component: Component) => any
     defaultReactionEmoji: (
       bot: Bot<TProps, TBehavior>,
@@ -361,6 +368,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordMessageSnapshot,
       messageSnapshot: SetupDesiredProps<MessageSnapshot, TProps, TBehavior>,
     ) => any
+    nameplate: (bot: Bot<TProps, TBehavior>, payload: DiscordNameplate, nameplate: SetupDesiredProps<Nameplate, TProps, TBehavior>) => any
     poll: (bot: Bot<TProps, TBehavior>, payload: DiscordPoll, poll: SetupDesiredProps<Poll, TProps, TBehavior>) => any
     pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia, pollMedia: SetupDesiredProps<PollMedia, TProps, TBehavior>) => any
     presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
@@ -445,6 +453,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     payload: DiscordAvatarDecorationData,
   ) => SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>
   channel: (bot: Bot<TProps, TBehavior>, payload: { channel: DiscordChannel; guildId?: BigString }) => SetupDesiredProps<Channel, TProps, TBehavior>
+  collectibles: (bot: Bot<TProps, TBehavior>, payload: DiscordCollectibles) => SetupDesiredProps<Collectibles, TProps, TBehavior>
   component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent) => Component
   defaultReactionEmoji: (
     bot: Bot<TProps, TBehavior>,
@@ -509,6 +518,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
   ) => SetupDesiredProps<MessageSnapshot, TProps, TBehavior>
+  nameplate: (bot: Bot<TProps, TBehavior>, payload: DiscordNameplate) => SetupDesiredProps<Nameplate, TProps, TBehavior>
   poll: (bot: Bot<TProps, TBehavior>, payload: DiscordPoll) => SetupDesiredProps<Poll, TProps, TBehavior>
   pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia) => SetupDesiredProps<PollMedia, TProps, TBehavior>
   presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate) => PresenceUpdate
@@ -651,6 +661,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     automodRule: options.automodRule ?? transformAutoModerationRule,
     avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: options.channel ?? transformChannel,
+    collectibles: options.collectibles ?? transformCollectibles,
     component: options.component ?? transformComponent,
     defaultReactionEmoji: options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     embed: options.embed ?? transformEmbed,
@@ -680,6 +691,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     messageCall: options.messageCall ?? transformMessageCall,
     messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
     messageSnapshot: options.messageSnapshot ?? transformMessageSnapshot,
+    nameplate: options.nameplate ?? transformNameplate,
     poll: options.poll ?? transformPoll,
     pollMedia: options.pollMedia ?? transformPollMedia,
     presence: options.presence ?? transformPresence,
