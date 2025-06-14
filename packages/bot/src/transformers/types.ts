@@ -170,6 +170,7 @@ export interface Application {
   customInstallUrl?: string
   approximateGuildCount?: number
   approximateUserInstallCount?: number
+  approximateUserAuthorizationCount?: number
   installParams?: ApplicationInstallParams
   bot?: User
   redirectUris?: string[]
@@ -569,6 +570,10 @@ export interface Component {
   media?: UnfurledMediaItem
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accentColor?: number
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name?: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size?: number
 }
 
 export interface UnfurledMediaItem {
@@ -582,6 +587,8 @@ export interface UnfurledMediaItem {
   width?: number | null
   /** The media type of the content. This field is ignored and provided by the API as part of the response */
   contentType?: string
+  /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
+  attachmentId?: bigint
 }
 
 export interface MediaGalleryItem {

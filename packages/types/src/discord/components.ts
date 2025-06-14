@@ -296,6 +296,10 @@ export interface DiscordFileComponent extends DiscordBaseComponent {
   file: DiscordUnfurledMediaItem
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size: number
 }
 
 /** https://discord.com/developers/docs/components/reference#separator-separator-structure */
@@ -345,4 +349,6 @@ export interface DiscordUnfurledMediaItem {
   width?: number | null
   /** The media type of the content. This field is ignored and provided by the API as part of the response */
   content_type?: string
+  /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
+  attachment_id?: string | null
 }

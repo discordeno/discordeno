@@ -325,6 +325,8 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       file: defaultValue,
       media: defaultValue,
       accentColor: defaultValue,
+      name: defaultValue,
+      size: defaultValue,
       ...desiredProperties.component,
     },
     forumTag: {
@@ -652,6 +654,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       height: defaultValue,
       width: defaultValue,
       contentType: defaultValue,
+      attachmentId: defaultValue,
       ...desiredProperties.unfurledMediaItem,
     },
     user: {
