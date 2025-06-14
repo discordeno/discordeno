@@ -1759,6 +1759,24 @@ export interface User {
   mfaEnabled: boolean
   /** Whether the email on this account has been verified */
   verified: boolean
+  /** data for the user's collectibles */
+  collectibles?: Collectibles
+}
+
+export interface Collectibles {
+  /** object mapping of nameplate data */
+  nameplate?: Nameplate
+}
+
+export interface Nameplate {
+  /** the nameplate's id */
+  skuId: bigint
+  /** path to the nameplate asset */
+  asset: string
+  /** the label of this nameplate. Currently unused */
+  label: string
+  /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
+  palette: string
 }
 
 export interface VoiceRegion {

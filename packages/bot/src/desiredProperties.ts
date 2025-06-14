@@ -7,6 +7,7 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  Collectibles,
   Component,
   DefaultReactionEmoji,
   Emoji,
@@ -33,6 +34,7 @@ import type {
   MessageInteractionMetadata,
   MessageReference,
   MessageSnapshot,
+  Nameplate,
   Poll,
   PollAnswer,
   PollAnswerCount,
@@ -63,6 +65,7 @@ export interface TransformersObjects {
   attachment: Attachment
   avatarDecorationData: AvatarDecorationData
   channel: Channel
+  collectibles: Collectibles
   component: Component
   defaultReactionEmoji: DefaultReactionEmoji
   emoji: Emoji
@@ -79,6 +82,8 @@ export interface TransformersObjects {
   interactionResource: InteractionResource
   invite: Invite
   inviteStageInstance: InviteStageInstance
+  lobby: Lobby
+  lobbyMember: LobbyMember
   mediaGalleryItem: MediaGalleryItem
   member: Member
   message: Message
@@ -87,6 +92,7 @@ export interface TransformersObjects {
   messageInteractionMetadata: MessageInteractionMetadata
   messageReference: MessageReference
   messageSnapshot: MessageSnapshot
+  nameplate: Nameplate
   poll: Poll
   pollAnswer: PollAnswer
   pollAnswerCount: PollAnswerCount
@@ -96,16 +102,14 @@ export interface TransformersObjects {
   scheduledEvent: ScheduledEvent
   scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule
   sku: Sku
+  soundboardSound: SoundboardSound
   stageInstance: StageInstance
   sticker: Sticker
+  subscription: Subscription
   unfurledMediaItem: UnfurledMediaItem
   user: User
   voiceState: VoiceState
   webhook: Webhook
-  subscription: Subscription
-  soundboardSound: SoundboardSound
-  lobby: Lobby
-  lobbyMember: LobbyMember
 }
 
 // NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
@@ -285,6 +289,10 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       totalMessageSent: defaultValue,
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
+    },
+    collectibles: {
+      nameplate: defaultValue,
+      ...desiredProperties.collectibles,
     },
     component: {
       type: defaultValue,
@@ -549,6 +557,13 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       endedTimestamp: defaultValue,
       ...desiredProperties.messageCall,
     },
+    nameplate: {
+      skuId: defaultValue,
+      asset: defaultValue,
+      label: defaultValue,
+      palette: defaultValue,
+      ...desiredProperties.nameplate,
+    },
     role: {
       name: defaultValue,
       guildId: defaultValue,
@@ -654,6 +669,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       banner: defaultValue,
       avatarDecorationData: defaultValue,
       toggles: defaultValue,
+      collectibles: defaultValue,
       ...desiredProperties.user,
     },
     avatarDecorationData: {
