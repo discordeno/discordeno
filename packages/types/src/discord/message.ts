@@ -2,9 +2,10 @@
 
 import type { DiscordApplication } from './application.js'
 import type { DiscordChannel, DiscordThreadMember } from './channel.js'
+import type { DiscordMessageComponents } from './components.js'
 import type { DiscordEmoji } from './emoji.js'
 import type { DiscordMember } from './guild.js'
-import type { DiscordAuthorizingIntegrationOwners, DiscordMessageComponents, DiscordMessageInteraction, InteractionTypes } from './interactions.js'
+import type { DiscordAuthorizingIntegrationOwners, DiscordMessageInteraction, InteractionTypes } from './interactions.js'
 import type { DiscordPoll } from './poll.js'
 import type { DiscordSticker, DiscordStickerItem } from './sticker.js'
 import type { DiscordUser } from './user.js'
@@ -193,6 +194,13 @@ export enum MessageFlags {
   IsVoiceMessage = 1 << 13,
   /** This message has a snapshot (via Message Forwarding) */
   HasSnapshot = 1 << 14,
+  /**
+   * Allows you to create fully component driven messages
+   *
+   * @remarks
+   * Once a message has been sent with this flag, it can't be removed from that message.
+   */
+  IsComponentV2 = 1 << 15,
 }
 
 /** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object */

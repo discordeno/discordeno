@@ -59,7 +59,7 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    *
    * Can have up to 10 elements in the array and each string can have up to 260 characters
    */
-  regex_patterns: string[]
+  regex_patterns?: string[]
   /**
    * The pre-defined lists of words to match from.
    *
@@ -118,7 +118,7 @@ export interface DiscordAutoModerationAction {
   /** The type of action to take when a rule is triggered */
   type: AutoModerationActionType
   /** additional metadata needed during execution for this specific action type */
-  metadata: DiscordAutoModerationActionMetadata
+  metadata?: DiscordAutoModerationActionMetadata
 }
 
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-types */
@@ -142,10 +142,31 @@ export enum AutoModerationActionType {
 
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata */
 export interface DiscordAutoModerationActionMetadata {
-  /** The id of channel to which user content should be logged. Only in ActionType.SendAlertMessage */
+  /**
+   * The id of channel to which user content should be logged.
+   *
+   * @remarks
+   * Only for actions of type {@link AutoModerationActionType.SendAlertMessage}.
+   */
   channel_id?: string
-  /** Additional explanation that will be shown to members whenever their message is blocked. Maximum of 150 characters. Only supported for AutoModerationActionType.BlockMessage */
-  custom_message?: string
-  /** Timeout duration in seconds maximum of 2419200 seconds (4 weeks). Only supported for TriggerType.Keyword && Only in ActionType.Timeout */
+  /**
+   * Timeout duration in seconds.
+   *
+   * @remarks
+   * Only for actions of type {@link AutoModerationActionType.Timeout}.
+   *
+   * Maximum of 2419200 seconds (4 weeks).
+   */
   duration_seconds?: number
+  /**
+   * Additional explanation that will be shown to members whenever their message is blocked.
+   *
+   * This may set to undefined if no custom message is provided.
+   *
+   * @remarks
+   * Only for actions of type {@link AutoModerationActionType.BlockMessage}.
+   *
+   * Maximum of 150 characters.
+   */
+  custom_message?: string
 }

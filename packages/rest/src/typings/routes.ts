@@ -28,14 +28,12 @@ export interface RestRoutes {
   stickerPack: (stickerPackId: BigString) => string
   /** Routes for webhook related routes. */
   webhooks: {
-    /** Route for managing the original message sent by a webhook. */
-    original: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => string
     /** Route for webhook with a id. */
     id: (webhookId: BigString) => string
     /** Route for handling a webhook with a token. */
-    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
+    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString; withComponents?: boolean }) => string
     /** Route for handling a message that was sent through a webhook. */
-    message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
+    message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString; withComponents?: boolean }) => string
   }
   /** Routes for channel related endpoints. */
   channels: {
@@ -296,6 +294,19 @@ export interface RestRoutes {
     guildSounds: (guildId: BigString) => string
     /** Route for get/edit/delete of a guild sound */
     guildSound: (guildId: BigString, soundId: BigString) => string
+  }
+  /** Routes realted to lobbies */
+  lobby: {
+    /** Route to create a lobby */
+    create: () => string
+    /** Route to get a specific lobby */
+    lobby: (lobbyId: BigString) => string
+    /** Route to add/remove a member from a lobby */
+    member: (lobbyId: BigString, userId: BigString) => string
+    /** Route to leave a lobby */
+    leave: (lobbyId: BigString) => string
+    /** Route to link a lobby */
+    link: (lobbyId: BigString) => string
   }
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string

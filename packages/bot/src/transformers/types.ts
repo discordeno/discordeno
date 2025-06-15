@@ -43,7 +43,6 @@ import type {
   InteractionCallbackOptions,
   InteractionResponseTypes,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -59,6 +58,7 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
   SelectOption,
+  SeparatorSpacingSize,
   SkuFlags,
   SortOrderTypes,
   StickerFormatTypes,
@@ -131,7 +131,7 @@ export interface ActivityInstance {
   instanceId: string
   /** Unique identifier for the launch */
   launchId: bigint
-  /** The Location the instance is runnning in */
+  /** The Location the instance is running in */
   location: ActivityLocation
   /** The IDs of the Users currently connected to the instance */
   users: bigint[]
@@ -170,6 +170,7 @@ export interface Application {
   customInstallUrl?: string
   approximateGuildCount?: number
   approximateUserInstallCount?: number
+  approximateUserAuthorizationCount?: number
   installParams?: ApplicationInstallParams
   bot?: User
   redirectUris?: string[]
@@ -198,8 +199,8 @@ export interface ApplicationCommand {
   options?: ApplicationCommandOption[]
   description?: string
   guildId?: bigint
-  nameLocalizations?: Record<Locales, string>
-  descriptionLocalizations?: Record<Locales, string>
+  nameLocalizations?: Localization
+  descriptionLocalizations?: Localization
   defaultMemberPermissions?: bigint
   type?: ApplicationCommandTypes
   version?: string
@@ -241,7 +242,7 @@ export interface ApplicationCommandOption {
 }
 
 export interface ApplicationCommandOptionChoice {
-  nameLocalizations?: Record<Locales, string>
+  nameLocalizations?: Localization
   name: string
   value: string | number
 }
@@ -334,7 +335,7 @@ export interface AutoModerationActionExecution {
 
 export interface AutoModerationAction {
   type: AutoModerationActionType
-  metadata: AutoModerationActionMetadata
+  metadata?: AutoModerationActionMetadata
 }
 
 export interface AutoModerationActionMetadata {
@@ -547,6 +548,56 @@ export interface Component {
   defaultValues?: DiscordComponentDefaultValue[]
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: bigint
+  /** Optional identifier for component */
+  id?: number
+  /** A thumbnail or a button component, with a future possibility of adding more compatible components */
+  accessory?: Component
+  /** Text that will be displayed similar to a message */
+  content?: string
+  /** Alt text for the media */
+  description?: string
+  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
+  /** 1 to 10 media gallery items */
+  items?: MediaGalleryItem[]
+  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
+  divider?: boolean
+  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
+  spacing?: SeparatorSpacingSize
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  file?: UnfurledMediaItem
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  media?: UnfurledMediaItem
+  /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
+  accentColor?: number
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name?: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size?: number
+}
+
+export interface UnfurledMediaItem {
+  /** Supports arbitrary urls and attachment://<filename> references */
+  url: string
+  /** The proxied url of the media item. This field is ignored and provided by the API as part of the response */
+  proxyUrl?: string
+  /** The height of the media item. This field is ignored and provided by the API as part of the response */
+  height?: number | null
+  /** The width of the media item. This field is ignored and provided by the API as part of the response */
+  width?: number | null
+  /** The media type of the content. This field is ignored and provided by the API as part of the response */
+  contentType?: string
+  /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
+  attachmentId?: bigint
+}
+
+export interface MediaGalleryItem {
+  /** A url or attachment */
+  media: UnfurledMediaItem
+  /** Alt text for the media */
+  description?: string
+  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
 }
 
 export interface DiscordComponentDefaultValue {
@@ -867,19 +918,23 @@ export interface Interaction {
   token: string
   /** Read-only property, always `1` */
   version: 1
-  /** For the message the button was attached to */
+  /** For components or modals triggered by components, the message they were attached to */
   message?: Message
   /** the command data payload */
   data?: InteractionData
   locale?: string
   /** The guild's preferred locale, if invoked in a guild */
   guildLocale?: string
+  /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
+  entitlements: Entitlement[]
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
   appPermissions: bigint
   /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachmentSizeLimit: number
   /**
    * Sends a response to an interaction.
    *
@@ -1711,6 +1766,24 @@ export interface User {
   mfaEnabled: boolean
   /** Whether the email on this account has been verified */
   verified: boolean
+  /** data for the user's collectibles */
+  collectibles?: Collectibles
+}
+
+export interface Collectibles {
+  /** object mapping of nameplate data */
+  nameplate?: Nameplate
+}
+
+export interface Nameplate {
+  /** the nameplate's id */
+  skuId: bigint
+  /** path to the nameplate asset */
+  asset: string
+  /** the label of this nameplate. Currently unused */
+  label: string
+  /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
+  palette: string
 }
 
 export interface VoiceRegion {
@@ -1824,4 +1897,28 @@ export interface SoundboardSound {
   available: boolean
   /** The user who created this sound */
   user?: User
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
+export interface Lobby {
+  /** The id of this channel */
+  id: bigint
+  /** application that created the lobby */
+  applicationId: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** members of the lobby */
+  members: LobbyMember[]
+  /** the guild channel linked to the lobby */
+  linkedChannel?: Channel
+}
+
+/** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
+export interface LobbyMember {
+  /** The id of the user */
+  id: bigint
+  /** dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string>
+  /** lobby member flags combined as as bitfield */
+  flags?: ToggleBitfield
 }

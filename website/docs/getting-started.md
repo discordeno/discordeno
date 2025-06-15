@@ -44,6 +44,6 @@ For more details checkout [the desired properties docs](./desired-properties.md)
 If you plan to use discordeno, this is a must read! Please do not skip! It is a very important concept to make your bot work in discordeno.
 :::
 
-## Minimal bot that logins into Discord
+## Minimal bot that logs into Discord
 
 You can check minimal examples with [Node.JS](./examples/node.md), [Deno](./examples/deno.md) or [Bun](./examples/bun.md). 

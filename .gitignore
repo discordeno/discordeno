@@ -18,6 +18,7 @@ node_modules
 website/.yarn
 
 website/api_reference/generated/**/*.md
+!website/api_reference/generated/_media/README.md
 
 # testing
 coverage

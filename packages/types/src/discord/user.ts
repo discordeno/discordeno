@@ -38,6 +38,8 @@ export interface DiscordUser {
   banner?: string
   /** data for the user's avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData
+  /** data for the user's collectibles */
+  collectibles?: DiscordCollectibles
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
@@ -73,6 +75,24 @@ export interface DiscordAvatarDecorationData {
   asset: string
   /** id of the avatar decoration's SKU */
   sku_id: string
+}
+
+/** https://discord.com/developers/docs/resources/user#collectibles-collectible-structure */
+export interface DiscordCollectibles {
+  /** object mapping of nameplate data */
+  nameplate?: DiscordNameplate
+}
+
+/** https://discord.com/developers/docs/resources/user#nameplate-nameplate-structure */
+export interface DiscordNameplate {
+  /** the nameplate's id */
+  sku_id: string
+  /** path to the nameplate asset */
+  asset: string
+  /** the label of this nameplate. Currently unused */
+  label: string
+  /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
+  palette: string
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */

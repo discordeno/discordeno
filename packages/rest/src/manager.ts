@@ -1,61 +1,62 @@
 import { Buffer } from 'node:buffer'
-import {
-  type BigString,
-  type Camelize,
-  type DiscordAccessTokenResponse,
-  type DiscordActivityInstance,
-  type DiscordApplication,
-  type DiscordApplicationCommand,
-  type DiscordApplicationRoleConnection,
-  type DiscordApplicationRoleConnectionMetadata,
-  type DiscordAuditLog,
-  type DiscordAutoModerationRule,
-  type DiscordBan,
-  type DiscordBulkBan,
-  type DiscordChannel,
-  type DiscordConnection,
-  type DiscordCurrentAuthorization,
-  type DiscordEmoji,
-  type DiscordEntitlement,
-  type DiscordFollowedChannel,
-  type DiscordGetAnswerVotesResponse,
-  type DiscordGetGatewayBot,
-  type DiscordGuild,
-  type DiscordGuildApplicationCommandPermissions,
-  type DiscordGuildOnboarding,
-  type DiscordGuildPreview,
-  type DiscordGuildWidget,
-  type DiscordGuildWidgetSettings,
-  type DiscordIncidentsData,
-  type DiscordIntegration,
-  type DiscordInteractionCallbackResponse,
-  type DiscordInvite,
-  type DiscordInviteMetadata,
-  type DiscordListActiveThreads,
-  type DiscordListArchivedThreads,
-  type DiscordMember,
-  type DiscordMemberWithUser,
-  type DiscordMessage,
-  type DiscordPrunedCount,
-  type DiscordRole,
-  type DiscordScheduledEvent,
-  type DiscordSku,
-  type DiscordSoundboardSound,
-  type DiscordStageInstance,
-  type DiscordSticker,
-  type DiscordStickerPack,
-  type DiscordSubscription,
-  type DiscordTemplate,
-  type DiscordThreadMember,
-  type DiscordUser,
-  type DiscordVanityUrl,
-  type DiscordVoiceRegion,
-  type DiscordVoiceState,
-  type DiscordWebhook,
-  type DiscordWelcomeScreen,
-  InteractionResponseTypes,
-  type MfaLevels,
-  type ModifyGuildTemplate,
+import type {
+  BigString,
+  Camelize,
+  DiscordAccessTokenResponse,
+  DiscordActivityInstance,
+  DiscordApplication,
+  DiscordApplicationCommand,
+  DiscordApplicationRoleConnection,
+  DiscordApplicationRoleConnectionMetadata,
+  DiscordAuditLog,
+  DiscordAutoModerationRule,
+  DiscordBan,
+  DiscordBulkBan,
+  DiscordChannel,
+  DiscordConnection,
+  DiscordCurrentAuthorization,
+  DiscordEmoji,
+  DiscordEntitlement,
+  DiscordFollowedChannel,
+  DiscordGetAnswerVotesResponse,
+  DiscordGetGatewayBot,
+  DiscordGuild,
+  DiscordGuildApplicationCommandPermissions,
+  DiscordGuildOnboarding,
+  DiscordGuildPreview,
+  DiscordGuildWidget,
+  DiscordGuildWidgetSettings,
+  DiscordIncidentsData,
+  DiscordIntegration,
+  DiscordInteractionCallbackResponse,
+  DiscordInvite,
+  DiscordInviteMetadata,
+  DiscordListActiveThreads,
+  DiscordListArchivedThreads,
+  DiscordLobby,
+  DiscordLobbyMember,
+  DiscordMember,
+  DiscordMemberWithUser,
+  DiscordMessage,
+  DiscordPrunedCount,
+  DiscordRole,
+  DiscordScheduledEvent,
+  DiscordSku,
+  DiscordSoundboardSound,
+  DiscordStageInstance,
+  DiscordSticker,
+  DiscordStickerPack,
+  DiscordSubscription,
+  DiscordTemplate,
+  DiscordThreadMember,
+  DiscordUser,
+  DiscordVanityUrl,
+  DiscordVoiceRegion,
+  DiscordVoiceState,
+  DiscordWebhook,
+  DiscordWelcomeScreen,
+  MfaLevels,
+  ModifyGuildTemplate,
 } from '@discordeno/types'
 import {
   DISCORDENO_VERSION,
@@ -560,7 +561,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const body = (result.headers.get('Content-Type') === 'application/json' ? await result.json() : await result.text()).catch(() => null)
+          const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
 
           error.cause = {
             ok: false,
@@ -894,7 +895,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
+      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true })
     },
 
     async deleteWebhookWithToken(webhookId, token) {
@@ -994,16 +995,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
         body,
         files: body.files,
-      })
-    },
-
-    async editOriginalWebhookMessage(webhookId, token, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.webhooks.original(webhookId, token, options), {
-        body: {
-          type: InteractionResponseTypes.UpdateMessage,
-          data: options,
-        },
-        files: options.files,
         unauthorized: true,
       })
     },
@@ -1746,6 +1737,64 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
       return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
         body: options,
+      })
+    },
+
+    async createLobby(options) {
+      return await rest.post<DiscordLobby>(rest.routes.lobby.create(), {
+        body: options,
+      })
+    },
+
+    async getLobby(lobbyId) {
+      return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId))
+    },
+
+    async modifyLobby(lobbyId, options) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.lobby(lobbyId), {
+        body: options,
+      })
+    },
+
+    async deleteLobby(lobbyId) {
+      return await rest.delete(rest.routes.lobby.lobby(lobbyId))
+    },
+
+    async addMemberToLobby(lobbyId, userId, options) {
+      return await rest.put<DiscordLobbyMember>(rest.routes.lobby.member(lobbyId, userId), {
+        body: options,
+      })
+    },
+
+    async removeMemberFromLobby(lobbyId, userId) {
+      return await rest.delete(rest.routes.lobby.member(lobbyId, userId))
+    },
+
+    async leaveLobby(lobbyId, bearerToken) {
+      return await rest.delete(rest.routes.lobby.leave(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async linkChannelToLobby(lobbyId, bearerToken, options) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
+        body: options,
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async unlinkChannelToLobby(lobbyId, bearerToken) {
+      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
       })
     },
 
