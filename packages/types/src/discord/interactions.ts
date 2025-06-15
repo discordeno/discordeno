@@ -43,7 +43,7 @@ export interface DiscordInteraction {
   token: string
   /** Read-only property, always `1` */
   version: 1
-  /** For the message the button was attached to */
+  /** For components or modals triggered by components, the message they were attached to */
   message?: DiscordMessage
   /** the command data payload */
   data?: DiscordInteractionData
@@ -456,8 +456,7 @@ export interface DiscordCreateApplicationCommand {
    * Interaction context(s) where the command can be used
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types included for new commands.
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[] | null
   /**

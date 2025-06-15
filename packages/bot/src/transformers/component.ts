@@ -78,6 +78,7 @@ export function transformUnfurledMediaItem(bot: Bot, payload: DiscordUnfurledMed
   if (props.height && payload.height) mediaItem.height = payload.height
   if (props.width && payload.width) mediaItem.width = payload.width
   if (props.contentType && payload.content_type) mediaItem.contentType = payload.content_type
+  if (props.attachmentId && payload.attachment_id) mediaItem.attachmentId = bot.transformers.snowflake(payload.attachment_id)
 
   return bot.transformers.customizers.unfurledMediaItem(bot, payload, mediaItem)
 }
@@ -231,6 +232,8 @@ function transformFileComponent(bot: Bot, payload: DiscordFileComponent): Compon
   if (props.id && payload.id) file.id = payload.id
   if (props.file && payload.file) file.file = bot.transformers.unfurledMediaItem(bot, payload.file)
   if (props.spoiler && payload.spoiler) file.spoiler = payload.spoiler
+  if (props.name && payload.name) file.name = payload.name
+  if (props.size && payload.size) file.size = payload.size
 
   return file
 }

@@ -383,6 +383,10 @@ export interface FileComponent extends BaseComponent {
   file: DiscordUnfurledMediaItem
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size: number
 }
 
 /** https://discord.com/developers/docs/components/reference#separator */
@@ -617,8 +621,7 @@ export interface CreateSlashApplicationCommand {
    * Interaction context types where the command is available.
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types are included for new commands
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[]
   /**
@@ -662,7 +665,7 @@ export interface InteractionCallbackData {
   title?: string
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `SUPPRESS_NOTIFICATIONS` and `IS_COMPONENTS_V2` can be set) */
+  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `IS_COMPONENTS_V2`, `IS_VOICE_MESSAGE` and `SUPPRESS_NOTIFICATIONS` can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>

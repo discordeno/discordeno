@@ -10,7 +10,7 @@
   "scripts": {
     "build": "turbo build",
     "build:type": "turbo build:type",
-    "build:doc": "typedoc --options ./typedoc.json && node scripts/finalizeTypedocs.js",
+    "build:doc": "typedoc --options ./typedoc.jsonc",
     "build:watch": "turbo watch build build:type",
     "release-build": "turbo build build:type",
     "test:unit": "turbo test:unit",

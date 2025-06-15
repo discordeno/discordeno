@@ -11,7 +11,7 @@ import {
   GatewayOpcodes,
   type RequestGuildMembers,
 } from '@discordeno/types'
-import { Collection, LeakyBucket, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, jsonSafeReplacer, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type TransportCompression, type UpdateVoiceState } from './types.js'
 
@@ -47,6 +47,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
     spawnShardDelay: options.spawnShardDelay ?? 5300,
+    spreadShardsInRoundRobin: options.spreadShardsInRoundRobin ?? false,
     preferSnakeCase: options.preferSnakeCase ?? false,
     shards: new Map(),
     buckets: new Map(),
@@ -247,7 +248,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       )
     },
     calculateWorkerId(shardId) {
-      const workerId = Math.min(Math.floor(shardId / gateway.shardsPerWorker), gateway.totalWorkers - 1)
+      const workerId = options.spreadShardsInRoundRobin
+        ? shardId % gateway.totalWorkers
+        : Math.min(Math.floor(shardId / gateway.shardsPerWorker), gateway.totalWorkers - 1)
       gateway.logger.debug(
         `[Gateway] Calculating workerId: Shard: ${shardId} -> Worker: ${workerId} -> Per Worker: ${gateway.shardsPerWorker} -> Total: ${gateway.totalWorkers}`,
       )
@@ -442,7 +445,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async editBotStatus(data) {
-      gateway.logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data)}`)
+      gateway.logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data, jsonSafeReplacer)}`)
 
       await Promise.all(
         [...gateway.shards.values()].map(async (shard) => {
@@ -607,6 +610,19 @@ export interface CreateGatewayManagerOptions {
    * @default 4
    */
   totalWorkers?: number
+  /**
+   * Whether to spread shards across workers in a round-robin manner.
+   *
+   * @remarks
+   * By default, shards are assigned to workers in contiguous blocks based on shardsPerWorker. If any shard is left over, it will be assigned to the last worker.
+   * This means that if you have 3 workers and 40 shards while shardsPerWorker is 10, the first worker will get shards 0-9, the second worker will get shards 10-19, and so on, the last worker will get shards 20-39.
+   *
+   * If this option is set to true, the shards will be assigned in a round-robin manner to spread more evenly across workers.
+   * For example, with 3 workers and 40 shards, the first shard will go to worker 0, the second shard to worker 1, the third shard to worker 2, the fourth shard to worker 0, and so on.
+   *
+   * @default false
+   */
+  spreadShardsInRoundRobin?: boolean
   /** Important data which is used by the manager to connect shards to the gateway. */
   connection?: Camelize<DiscordGetGatewayBot>
   /** Whether incoming payloads are compressed using zlib.

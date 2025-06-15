@@ -1,4 +1,4 @@
-import { Collection, LogDepth, createBot, type logger } from '@discordeno/bot'
+import { Collection, createBot } from '@discordeno/bot'
 import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
 import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'
@@ -33,8 +33,6 @@ const rawBot = createBot({
 export const bot = rawBot as CustomBot
 
 // TEMPLATE-SETUP: If you want/need to add any custom properties on the Bot type, you can do it in these lines below and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
-// We need to set the log depth for the default discordeno logger or else only the first param will be logged
-;(bot.logger as typeof logger).setDepth(LogDepth.Full)
 
 bot.commands = new Collection()
 
