@@ -1,6 +1,7 @@
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
+  AddLobbyMember,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
@@ -22,6 +23,7 @@ import type {
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
+  CreateLobby,
   CreateMessageOptions,
   CreateScheduledEvent,
   CreateStageInstance,
@@ -29,14 +31,12 @@ import type {
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
-  DiscordActiveThreads,
   DiscordActivityInstance,
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
-  DiscordArchivedThreads,
   DiscordAuditLog,
   DiscordAutoModerationRule,
   DiscordBan,
@@ -60,6 +60,10 @@ import type {
   DiscordInteractionCallbackResponse,
   DiscordInvite,
   DiscordInviteMetadata,
+  DiscordListActiveThreads,
+  DiscordListArchivedThreads,
+  DiscordLobby,
+  DiscordLobbyMember,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -94,6 +98,7 @@ import type {
   EditOwnVoiceState,
   EditScheduledEvent,
   EditUserVoiceState,
+  EditWebhookMessageOptions,
   ExecuteWebhook,
   FileContent,
   GetApplicationCommandPermissionOptions,
@@ -114,6 +119,7 @@ import type {
   InteractionCallbackData,
   InteractionCallbackOptions,
   InteractionResponse,
+  LinkChannelToLobby,
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
@@ -128,6 +134,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
   SearchMembers,
@@ -474,6 +481,11 @@ export interface RestManager {
    * @param options - The parameters for the creation of the guild.
    * @returns An instance of the created {@link DiscordGuild}.
    *
+   * @deprecated
+   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
+   *
+   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
+   *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
    *
@@ -510,6 +522,12 @@ export interface RestManager {
    * @param templateCode - The code of the template.
    * @param options - The parameters for the creation of the guild.
    * @returns An instance of the created {@link DiscordGuild}.
+   *
+   * @deprecated
+   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
+   *
+   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
+   *
    *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
@@ -1292,24 +1310,6 @@ export interface RestManager {
    */
   editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
   /**
-   * Edits the original webhook message.
-   *
-   * @param webhookId - The ID of the webhook to edit the original message of.
-   * @param token - The webhook token, used to edit the message.
-   * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link DiscordMessage}.
-   *
-   * @remarks
-   * Fires a _Message Update_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-   */
-  editOriginalWebhookMessage: (
-    webhookId: BigString,
-    token: string,
-    options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<Camelize<DiscordMessage>>
-  /**
    * Edits the voice state of the bot user.
    *
    * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
@@ -1466,7 +1466,7 @@ export interface RestManager {
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString },
+    options: EditWebhookMessageOptions,
   ) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
@@ -1556,7 +1556,7 @@ export interface RestManager {
    * Gets the list of all active threads for a guild.
    *
    * @param guildId - The ID of the guild to get the threads of.
-   * @returns An instance of {@link DiscordActiveThreads}.
+   * @returns An instance of {@link DiscordListActiveThreads}.
    *
    * @remarks
    * Returns both public and private threads.
@@ -1565,7 +1565,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
    */
-  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
+  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordListActiveThreads>>
   /** Get the applications info */
   getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
   /**
@@ -2099,7 +2099,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link DiscordArchivedThreads}.
+   * @returns An instance of {@link DiscordListArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -2111,7 +2111,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
    */
-  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   /**
    * Gets the list of private archived threads the bot is a member of for a channel.
    *
@@ -2128,7 +2128,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
    */
-  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   /**
    * Gets the number of members that would be kicked from a guild during pruning.
    *
@@ -2159,7 +2159,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
    */
-  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   /**
    * Gets the list of roles for a guild.
    *
@@ -3163,6 +3163,88 @@ export interface RestManager {
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnectionMetadata>[],
   ) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
+  /**
+   * Creates a new lobby, adding any of the specified members to it, if provided.
+   *
+   * @param options - The options to create the lobby
+   * @returns The created lobby
+   */
+  createLobby: (options: CreateLobby) => Promise<Camelize<DiscordLobby>>
+  /**
+   * Returns a lobby object for the specified lobby id, if it exists.
+   *
+   * @param lobbyId - The ID of the lobby to get
+   * @returns The lobby object
+   */
+  getLobby: (lobbyId: BigString) => Promise<Camelize<DiscordLobby>>
+  /**
+   * Modifies the specified lobby with new values, if provided.
+   *
+   * @param lobbyId - The ID of the lobby to modify
+   * @param options - The options to modify the lobby
+   * @returns The modified lobby
+   */
+  modifyLobby: (lobbyId: BigString, options: ModifyLobby) => Promise<Camelize<DiscordLobby>>
+  /**
+   * Deletes the specified lobby if it exists.
+   *
+   * It is safe to call even if the lobby is already deleted as well.
+   *
+   * @param lobbyId - The ID of the lobby to delete
+   * @returns Nothing
+   */
+  deleteLobby: (lobbyId: BigString) => Promise<void>
+  /**
+   * Adds the provided user to the specified lobby. If called when the user is already a member of the lobby will update fields such as metadata on that user instead.
+   *
+   * @param lobbyId - The ID of the lobby to add the user to
+   * @param userId - The ID of the user to add to the lobby
+   * @param options - The options to add the user to the lobby
+   * @returns The lobby member object
+   */
+  addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<Camelize<DiscordLobbyMember>>
+  /**
+   * Removes the provided user from the specified lobby. It is safe to call this even if the user is no longer a member of the lobby, but will fail if the lobby does not exist.
+   *
+   * @param lobbyId - The ID of the lobby to remove the user from
+   * @param userId - The ID of the user to remove from the lobby
+   * @returns Nothing
+   */
+  removeMemberFromLobby: (lobbyId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Removes the current user from the specified lobby. It is safe to call this even if the user is no longer a member of the lobby, but will fail if the lobby does not exist.
+   *
+   * @param lobbyId - The ID of the lobby to remove the user from
+   * @param bearerToken - The access token of the user
+   * @returns Nothing
+   *
+   * @remarks
+   * This requires a bearer token for authorization
+   */
+  leaveLobby: (lobbyId: BigString, bearerToken: string) => Promise<void>
+  /**
+   * Links an existing text channel to a lobby.
+   *
+   * @param lobbyId - The ID of the lobby to link the channel to
+   * @param bearerToken - The access token of the user
+   * @param options - The options to link the channel to the lobby
+   * @returns The updated lobby object
+   *
+   * @remarks
+   * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
+   */
+  linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<Camelize<DiscordLobby>>
+  /**
+   * Unlinks any currently linked channels from the specified lobby.
+   *
+   * @param lobbyId - The ID of the lobby to unlink the channel from
+   * @param bearerToken - The access token of the user
+   * @returns The updated lobby object
+   *
+   * @remarks
+   * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
+   */
+  unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<Camelize<DiscordLobby>>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'

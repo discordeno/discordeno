@@ -39,7 +39,10 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
     // If user provides an object, determine if it should be an autocomplete or a modal response
     if (response.title) type = InteractionResponseTypes.Modal
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
-    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = MessageFlags.Ephemeral
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) {
+      response.flags ??= 0
+      response.flags |= MessageFlags.Ephemeral
+    }
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response)
@@ -145,6 +148,8 @@ export function transformInteraction(
   if (props.channelId && payload.interaction.channel_id) interaction.channelId = bot.transformers.snowflake(payload.interaction.channel_id)
   if (props.member && guildId && payload.interaction.member)
     interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, user.id)
+  if (props.entitlements && payload.interaction.entitlements)
+    interaction.entitlements = payload.interaction.entitlements.map((e) => bot.transformers.entitlement(bot, e))
   if (props.authorizingIntegrationOwners && payload.interaction.authorizing_integration_owners) {
     interaction.authorizingIntegrationOwners = {}
 
@@ -158,6 +163,8 @@ export function transformInteraction(
       )
   }
   if (props.context && payload.interaction.context) interaction.context = payload.interaction.context
+  if (props.attachmentSizeLimit && payload.interaction.attachment_size_limit)
+    interaction.attachmentSizeLimit = payload.interaction.attachment_size_limit
   if (props.data && payload.interaction.data) {
     interaction.data = {
       type: payload.interaction.data.type,

@@ -4,12 +4,12 @@ import { avatarUrl, emojiUrl, formatImageUrl, getWidgetImageUrl, guildBannerUrl,
 
 describe('images.ts', () => {
   describe('formatImageUrl function', () => {
-    it('will return formated url with default size 128 and jpg', () => {
-      expect(formatImageUrl('https://skillz.is.pro/image')).to.be.equal('https://skillz.is.pro/image.jpg?size=128')
+    it('will return formated url with default size 128 and webp', () => {
+      expect(formatImageUrl('https://skillz.is.pro/image')).to.be.equal('https://skillz.is.pro/image.webp?size=128')
     })
 
     it('will return formated url with given size', () => {
-      expect(formatImageUrl('https://skillz.is.pro/image', 1024)).to.be.equal('https://skillz.is.pro/image.jpg?size=1024')
+      expect(formatImageUrl('https://skillz.is.pro/image', 1024)).to.be.equal('https://skillz.is.pro/image.webp?size=1024')
     })
 
     it('will return formated url with given size and format', () => {
@@ -27,9 +27,9 @@ describe('images.ts', () => {
         )
       })
 
-      it('will use jpg if no a_ is found', () => {
+      it('will use webp if no a_ is found', () => {
         expect(formatImageUrl('https://cdn.discordapp.com/avatars/568505543511259840/482491d6dcf12e12746ccd3148f0c646')).to.be.equal(
-          'https://cdn.discordapp.com/avatars/568505543511259840/482491d6dcf12e12746ccd3148f0c646.jpg?size=128',
+          'https://cdn.discordapp.com/avatars/568505543511259840/482491d6dcf12e12746ccd3148f0c646.webp?size=128',
         )
       })
     })
@@ -43,6 +43,14 @@ describe('images.ts', () => {
     it('can format emoji url with gif as ext', () => {
       expect(emojiUrl('1079584570661404724', true)).to.equal('https://cdn.discordapp.com/emojis/1079584570661404724.gif')
     })
+
+    it('can format emoji url with webp as ext', () => {
+      expect(emojiUrl('1079823706743918622', false, 'webp')).to.equal('https://cdn.discordapp.com/emojis/1079823706743918622.webp')
+    })
+
+    it('can format emoji url with webp as ext when animated', () => {
+      expect(emojiUrl('1079823706743918622', true, 'webp')).to.equal('https://cdn.discordapp.com/emojis/1079823706743918622.webp?animated=true')
+    })
   })
 
   describe('avatarUrl function', () => {
@@ -51,7 +59,7 @@ describe('images.ts', () => {
         avatarUrl('207324334904049664', '9130', {
           avatar: 'db26a6fb924c985f66b79364cf5797b7',
         }),
-      ).to.equal('https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.jpg?size=128')
+      ).to.equal('https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128')
     })
 
     it('will return the url for given avatar icon bigint', () => {
@@ -59,7 +67,7 @@ describe('images.ts', () => {
         avatarUrl('207324334904049664', '9130', {
           avatar: 4034407661299384404326332419647968090039n,
         }),
-      ).to.equal('https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.jpg?size=128')
+      ).to.equal('https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128')
     })
 
     it('will return the url for default avatar', () => {
@@ -74,25 +82,25 @@ describe('images.ts', () => {
   describe('guildBannerUrl function', () => {
     it("will return the url for given guild's banner's icon hash", () => {
       expect(guildBannerUrl('785384884197392384', { banner: '2fc0f64acd7a326e0c93c123db02eb1d' })).to.equal(
-        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.jpg?size=128',
+        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.webp?size=128',
       )
     })
 
     it("will return the url for given guild's banner's icon big int", () => {
       expect(guildBannerUrl('785384884197392384', { banner: 3806581668328291509506503737571885116189n })).to.equal(
-        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.jpg?size=128',
+        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.webp?size=128',
       )
     })
 
     it("will return the url for given guild's banner with format", () => {
-      expect(guildBannerUrl('785384884197392384', { banner: '2fc0f64acd7a326e0c93c123db02eb1d', format: 'webp' })).to.equal(
-        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.webp?size=128',
+      expect(guildBannerUrl('785384884197392384', { banner: '2fc0f64acd7a326e0c93c123db02eb1d', format: 'png' })).to.equal(
+        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.png?size=128',
       )
     })
 
     it("will return the url for given guild's banner with size", () => {
       expect(guildBannerUrl('785384884197392384', { banner: '2fc0f64acd7a326e0c93c123db02eb1d', size: 256 })).to.equal(
-        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.jpg?size=256',
+        'https://cdn.discordapp.com/banners/785384884197392384/2fc0f64acd7a326e0c93c123db02eb1d.webp?size=256',
       )
     })
 
@@ -104,25 +112,25 @@ describe('images.ts', () => {
   describe('guildIconUrl function', () => {
     it("will return the url for given guild's icon's icon hash", () => {
       expect(guildIconUrl('785384884197392384', '7cb67c989d54d824239b2bb4270955b1')).to.equal(
-        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.jpg?size=128',
+        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.webp?size=128',
       )
     })
 
     it("will return the url for given guild's icon's icon big int", () => {
       expect(guildIconUrl('785384884197392384', 3908877832746069276949504774836813649329n)).to.equal(
-        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.jpg?size=128',
+        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.webp?size=128',
       )
     })
 
     it("will return the url for given guild's icon with format", () => {
-      expect(guildIconUrl('785384884197392384', '7cb67c989d54d824239b2bb4270955b1', { format: 'webp' })).to.equal(
-        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.webp?size=128',
+      expect(guildIconUrl('785384884197392384', '7cb67c989d54d824239b2bb4270955b1', { format: 'png' })).to.equal(
+        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.png?size=128',
       )
     })
 
     it("will return the url for given guild's icon with size", () => {
       expect(guildIconUrl('785384884197392384', '7cb67c989d54d824239b2bb4270955b1', { size: 256 })).to.equal(
-        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.jpg?size=256',
+        'https://cdn.discordapp.com/icons/785384884197392384/7cb67c989d54d824239b2bb4270955b1.webp?size=256',
       )
     })
 
@@ -134,25 +142,25 @@ describe('images.ts', () => {
   describe('guildSplashUrl function', () => {
     it("will return the url for given guild's splash's icon big hash", () => {
       expect(guildSplashUrl('785384884197392384', '207961ff6c41f119874e10efc602858c')).to.equal(
-        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.jpg?size=128',
+        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.webp?size=128',
       )
     })
 
     it("will return the url for given guild's splash's icon big int", () => {
       expect(guildSplashUrl('785384884197392384', 3786271587545740215322752847582515594636n)).to.equal(
-        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.jpg?size=128',
+        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.webp?size=128',
       )
     })
 
     it("will return the url for given guild's splash with format", () => {
-      expect(guildSplashUrl('785384884197392384', '207961ff6c41f119874e10efc602858c', { format: 'webp' })).to.equal(
-        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.webp?size=128',
+      expect(guildSplashUrl('785384884197392384', '207961ff6c41f119874e10efc602858c', { format: 'png' })).to.equal(
+        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.png?size=128',
       )
     })
 
     it("will return the url for given guild's splash with size", () => {
       expect(guildSplashUrl('785384884197392384', '207961ff6c41f119874e10efc602858c', { size: 2048 })).to.equal(
-        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.jpg?size=2048',
+        'https://cdn.discordapp.com/splashes/785384884197392384/207961ff6c41f119874e10efc602858c.webp?size=2048',
       )
     })
 

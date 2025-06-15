@@ -1,6 +1,7 @@
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
+  AddLobbyMember,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
@@ -22,6 +23,7 @@ import type {
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
+  CreateLobby,
   CreateMessageOptions,
   CreateScheduledEvent,
   CreateStageInstance,
@@ -33,7 +35,6 @@ import type {
   DiscordApplicationCommandPermissions,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
-  DiscordArchivedThreads,
   DiscordAuditLog,
   DiscordBan,
   DiscordConnection,
@@ -44,6 +45,7 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordInvite,
   DiscordInviteMetadata,
+  DiscordListArchivedThreads,
   DiscordMessage,
   DiscordModifyGuildWelcomeScreen,
   DiscordPrunedCount,
@@ -62,6 +64,7 @@ import type {
   EditOwnVoiceState,
   EditScheduledEvent,
   EditUserVoiceState,
+  EditWebhookMessageOptions,
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
@@ -80,6 +83,7 @@ import type {
   InteractionCallbackData,
   InteractionCallbackOptions,
   InteractionResponse,
+  LinkChannelToLobby,
   ListArchivedThreads,
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
@@ -93,6 +97,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
   SearchMembers,
@@ -120,6 +125,8 @@ import type {
   Integration,
   InteractionCallbackResponse,
   Invite,
+  Lobby,
+  LobbyMember,
   Member,
   Message,
   Role,
@@ -237,12 +244,6 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     editOriginalInteractionResponse: async (token, options) => {
       return bot.transformers.message(bot, { message: snakelize(await bot.rest.editOriginalInteractionResponse(token, options)), shardId: 0 })
-    },
-    editOriginalWebhookMessage: async (webhookId, token, options) => {
-      return bot.transformers.message(bot, {
-        message: snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)) as DiscordMessage,
-        shardId: 0,
-      })
     },
     editRole: async (guildId, roleId, options, reason) => {
       return bot.transformers.role(bot, { role: snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), guildId })
@@ -609,6 +610,24 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     updateApplicationRoleConnectionsMetadataRecords: async (applicationId, options) => {
       return await bot.rest.updateApplicationRoleConnectionsMetadataRecords(applicationId, options)
     },
+    createLobby: async (options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.createLobby(options)))
+    },
+    getLobby: async (lobbyId) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.getLobby(lobbyId)))
+    },
+    modifyLobby: async (lobbyId, options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.modifyLobby(lobbyId, options)))
+    },
+    addMemberToLobby: async (lobbyId, userId, options) => {
+      return bot.transformers.lobbyMember(bot, snakelize(await bot.rest.addMemberToLobby(lobbyId, userId, options)))
+    },
+    linkChannelToLobby: async (lobbyId, bearerToken, options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.linkChannelToLobby(lobbyId, bearerToken, options)))
+    },
+    unlinkChannelToLobby: async (lobbyId, bearerToken) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.unlinkChannelToLobby(lobbyId, bearerToken)))
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction)
@@ -823,6 +842,15 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     deleteGuildSoundboardSound: async (guildId, soundId, reason) => {
       await bot.rest.deleteGuildSoundboardSound(guildId, soundId, reason)
     },
+    deleteLobby: async (lobbyId) => {
+      await bot.rest.deleteLobby(lobbyId)
+    },
+    removeMemberFromLobby: async (lobbyId, userId) => {
+      await bot.rest.removeMemberFromLobby(lobbyId, userId)
+    },
+    leaveLobby: async (lobbyId, bearerToken) => {
+      await bot.rest.leaveLobby(lobbyId, bearerToken)
+    },
   }
 }
 
@@ -837,12 +865,14 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
+  /** @deprecated */
   createGuild: (options: CreateGuild) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand>
+  /** @deprecated */
   createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildSticker: (
     guildId: BigString,
@@ -894,11 +924,6 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
   editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
-  editOriginalWebhookMessage: (
-    webhookId: BigString,
-    token: string,
-    options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>
   editRolePositions: (guildId: BigString, options: ModifyRolePositions[], reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>[]>
   editScheduledEvent: (
@@ -913,7 +938,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString },
+    options: EditWebhookMessageOptions,
   ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   editWebhookWithToken: (
     webhookId: BigString,
@@ -983,10 +1008,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   getPinnedMessages: (channelId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>
-  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
-  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<Camelize<DiscordPrunedCount>>
-  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   getRoles: (guildId: BigString) => Promise<SetupDesiredProps<Role, TProps, TBehavior>[]>
   getRole: (guildId: BigString, roleId: BigString) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>
   getScheduledEvent: (
@@ -1077,6 +1102,12 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnectionMetadata>[],
   ) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>
+  createLobby: (options: CreateLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  getLobby: (lobbyId: BigString) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  modifyLobby: (lobbyId: BigString, options: ModifyLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>>
+  linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
+  unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>
@@ -1162,4 +1193,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<SoundboardSound, TProps, TBehavior>>
   deleteGuildSoundboardSound: (guildId: BigString, soundId: BigString, reason?: string) => Promise<void>
+  deleteLobby: (lobbyId: BigString) => Promise<void>
+  removeMemberFromLobby: (lobbyId: BigString, userId: BigString) => Promise<void>
+  leaveLobby: (lobbyId: BigString, bearerToken: string) => Promise<void>
 }

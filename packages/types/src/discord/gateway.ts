@@ -299,7 +299,7 @@ export interface DiscordUpdatePresence {
   /** The user's activities */
   activities: DiscordBotActivity[]
   /** The user's new status */
-  status: keyof typeof PresenceStatus
+  status: Exclude<keyof typeof PresenceStatus, 'offline'>
   /** Whether or not the client is afk */
   afk: boolean
 }
@@ -309,6 +309,7 @@ export enum PresenceStatus {
   online,
   dnd,
   idle,
+  invisible,
   offline,
 }
 

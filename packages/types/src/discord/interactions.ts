@@ -2,11 +2,11 @@
  * Types for:
  * - https://discord.com/developers/docs/interactions/receiving-and-responding
  * - https://discord.com/developers/docs/interactions/application-commands
- * - https://discord.com/developers/docs/interactions/message-components
  */
 
 import type { DiscordApplicationIntegrationType } from './application.js'
 import type { ChannelTypes, DiscordChannel } from './channel.js'
+import type { DiscordMessageComponents, MessageComponentTypes } from './components.js'
 import type { DiscordEntitlement } from './entitlement.js'
 import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guild.js'
 import type { DiscordAttachment, DiscordMessage } from './message.js'
@@ -43,7 +43,7 @@ export interface DiscordInteraction {
   token: string
   /** Read-only property, always `1` */
   version: 1
-  /** For the message the button was attached to */
+  /** For components or modals triggered by components, the message they were attached to */
   message?: DiscordMessage
   /** the command data payload */
   data?: DiscordInteractionData
@@ -59,6 +59,8 @@ export interface DiscordInteraction {
   authorizing_integration_owners: DiscordAuthorizingIntegrationOwners
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
+  /** Attachment size limit in bytes */
+  attachment_size_limit: number
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type */
@@ -265,7 +267,7 @@ export interface DiscordApplicationCommandOption {
    * @remarks
    * This value should be unique within an array of {@link DiscordApplicationCommandOption}
    *
-   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
    *
@@ -409,200 +411,6 @@ export enum ApplicationCommandPermissionTypes {
   Channel,
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#component-object-component-types */
-export enum MessageComponentTypes {
-  /** A container for other components */
-  ActionRow = 1,
-  /** A button object */
-  Button,
-  /** A select menu for picking from choices */
-  SelectMenu,
-  /** A text input object */
-  InputText,
-  /** Select menu for users */
-  SelectMenuUsers,
-  /** Select menu for roles */
-  SelectMenuRoles,
-  /** Select menu for users and roles */
-  SelectMenuUsersAndRoles,
-  /** Select menu for channels */
-  SelectMenuChannels,
-}
-
-export type DiscordMessageComponents = DiscordMessageComponent[]
-export type DiscordMessageComponent = DiscordActionRow | DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent
-
-/** https://discord.com/developers/docs/interactions/message-components#actionrow */
-export interface DiscordActionRow {
-  /** Action rows are a group of buttons. */
-  type: MessageComponentTypes.ActionRow
-  /** The components in this row */
-  components: Exclude<DiscordMessageComponent, DiscordActionRow>[]
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
-export interface DiscordButtonComponent {
-  /** All button components have type 2 */
-  type: MessageComponentTypes.Button
-  /**
-   * Text that appears on the button
-   *
-   * @remarks
-   * A label can have a max of 80 characters
-   * A button of style {@link ButtonStyles.Premium | Premium} cannot have a label
-   */
-  label?: string
-  /**
-   * A dev-defined unique string sent on click (max 100 characters).
-   *
-   * @remarks
-   * A button of style {@link ButtonStyles.Link | Link} or {@link ButtonStyles.Premium | Premium} cannot have a custom_id
-   */
-  custom_id?: string
-  /** For different styles/colors of the buttons */
-  style: ButtonStyles
-  /**
-   * Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis.
-   *
-   * @remarks
-   * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
-   */
-  emoji?: {
-    /** Emoji id */
-    id?: string
-    /** Emoji name */
-    name?: string
-    /** Whether this emoji is animated */
-    animated?: boolean
-  }
-  /**
-   * Url for {@link ButtonStyles.Link | link} buttons that can navigate a user to the web.
-   *
-   * @remarks
-   * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
-   */
-  url?: string
-  /** Whether or not this button is disabled */
-  disabled?: boolean
-  /**
-   * Identifier for a purchasable SKU
-   *
-   * @remarks
-   * Buttons of style {@link ButtonStyles.Premium | Premium} must have a sku_id, any other button with a different style can not have a a sku_id
-   */
-  sku_id?: string
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#button-object-button-styles */
-export enum ButtonStyles {
-  /** A blurple button */
-  Primary = 1,
-  /** A grey button */
-  Secondary,
-  /** A green button */
-  Success,
-  /** A red button */
-  Danger,
-  /** A button that navigates to a URL */
-  Link,
-  /** A blurple button to show a Premium item in the shop */
-  Premium,
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure */
-export interface DiscordSelectMenuComponent {
-  type:
-    | MessageComponentTypes.SelectMenu
-    | MessageComponentTypes.SelectMenuChannels
-    | MessageComponentTypes.SelectMenuRoles
-    | MessageComponentTypes.SelectMenuUsers
-    | MessageComponentTypes.SelectMenuUsersAndRoles
-  /** A custom identifier for this component. Maximum 100 characters. */
-  custom_id: string
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
-  min_values?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
-  max_values?: number
-  /**
-   * List of default values for auto-populated select menu components
-   *
-   * @remarks
-   * The number of default values must be in the range defined by min_values and max_values
-   */
-  default_values?: DiscordSelectMenuDefaultValue[]
-  /** List of channel types to include in a channel select menu options list */
-  channel_types?: ChannelTypes[]
-  /** The choices! Maximum of 25 items. */
-  options?: DiscordSelectOption[]
-  /**
-   * Whether select menu is disabled
-   *
-   * @default false
-   */
-  disabled?: boolean
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure */
-export interface DiscordSelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
-  label: string
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string
-  /** An additional description of the option. Maximum 50 characters. */
-  description?: string
-  /** The id, name, and animated properties of an emoji. */
-  emoji?: {
-    /** Emoji id */
-    id?: string
-    /** Emoji name */
-    name?: string
-    /** Whether this emoji is animated */
-    animated?: boolean
-  }
-  /** Will render this option as already-selected by default. */
-  default?: boolean
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure */
-export interface DiscordSelectMenuDefaultValue {
-  /** ID of a user, role, or channel */
-  id: string
-  /** Type of value that id represents. */
-  type: 'user' | 'role' | 'channel'
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-structure */
-export interface DiscordInputTextComponent {
-  /** InputText Component is of type 3 */
-  type: MessageComponentTypes.InputText
-  /** The style of the InputText */
-  style: TextStyles
-  /** whether this component is required to be filled, default true */
-  required?: boolean
-  /** The customId of the InputText */
-  custom_id: string
-  /** The label of the InputText (max 45 characters) */
-  label: string
-  /** The placeholder of the InputText */
-  placeholder?: string
-  /** The minimum length of the text the user has to provide */
-  min_length?: number
-  /** The maximum length of the text the user has to provide */
-  max_length?: number
-  /** Pre-filled value for input text. */
-  value?: string
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-styles */
-export enum TextStyles {
-  /** Intended for short single-line text */
-  Short = 1,
-  /** Intended for much longer inputs */
-  Paragraph = 2,
-}
-
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure specifcly the member propriety */
 export interface DiscordInteractionMember extends DiscordMemberWithUser {
   /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
@@ -620,7 +428,7 @@ export interface DiscordCreateApplicationCommand {
   type?: ApplicationCommandTypes
   /**
    * Name of command, 1-32 characters.
-   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
@@ -648,8 +456,7 @@ export interface DiscordCreateApplicationCommand {
    * Interaction context(s) where the command can be used
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types included for new commands.
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[] | null
   /**

@@ -110,6 +110,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/forwarded@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@fastify/forwarded@npm:3.0.0"
+  checksum: 10c0/bd139ee46c193ed9e04af2539f31fcb9e542b91917820f6cf401d5715c4c8bcccaae4a148e0ca14eeddee077ad8a3ab73e6f0f1ad769aff861fcef5f0a28e0d2
+  languageName: node
+  linkType: hard
+
 "@fastify/merge-json-schemas@npm:^0.1.1":
   version: 0.1.1
   resolution: "@fastify/merge-json-schemas@npm:0.1.1"
@@ -129,6 +136,16 @@ __metadata:
     fastify-plugin: "npm:^5.0.0"
     secure-json-parse: "npm:^3.0.0"
   checksum: 10c0/589571e71954e28b6445dcaeef3f4e978931f9a697cf259ef45327ee646f85db2195cd38fe4bf758aab3e0d61ceb30429b1389fd9e176f55a3c83b4186ebb20d
+  languageName: node
+  linkType: hard
+
+"@fastify/proxy-addr@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@fastify/proxy-addr@npm:5.0.0"
+  dependencies:
+    "@fastify/forwarded": "npm:^3.0.0"
+    ipaddr.js: "npm:^2.1.0"
+  checksum: 10c0/5a7d667480c3699015aa9bc12a47b6044106f412725d91a1b90f4a7845390c710486f05d322a895c633fb32a5ba1a17e598cb72e727337862034034443d59bcd
   languageName: node
   linkType: hard
 
@@ -376,11 +393,11 @@ __metadata:
   linkType: hard
 
 "brace-expansion@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "brace-expansion@npm:2.0.1"
+  version: 2.0.2
+  resolution: "brace-expansion@npm:2.0.2"
   dependencies:
     balanced-match: "npm:^1.0.0"
-  checksum: 10c0/b358f2fe060e2d7a87aa015979ecea07f3c37d4018f8d6deb5bd4c229ad3a0384fe6029bb76cd8be63c81e516ee52d1a0673edbe2023d53a5191732ae3c3e49f
+  checksum: 10c0/6d117a4c793488af86b83172deb6af143e94c17bc53b0b3cec259733923b4ca84679d506ac261f4ba3c7ed37c46018e2ff442f9ce453af8643ecd64f4a54e6cf
   languageName: node
   linkType: hard
 
@@ -510,7 +527,7 @@ __metadata:
     chalk: "npm:^5.4.1"
     chokidar: "npm:^3.6.0"
     dotenv: "npm:^16.4.7"
-    fastify: "npm:^5.2.0"
+    fastify: "npm:^5.3.2"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -677,26 +694,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "fastify@npm:5.2.0"
+"fastify@npm:^5.3.2":
+  version: 5.3.2
+  resolution: "fastify@npm:5.3.2"
   dependencies:
     "@fastify/ajv-compiler": "npm:^4.0.0"
     "@fastify/error": "npm:^4.0.0"
     "@fastify/fast-json-stringify-compiler": "npm:^5.0.0"
+    "@fastify/proxy-addr": "npm:^5.0.0"
     abstract-logging: "npm:^2.0.1"
     avvio: "npm:^9.0.0"
     fast-json-stringify: "npm:^6.0.0"
     find-my-way: "npm:^9.0.0"
     light-my-request: "npm:^6.0.0"
     pino: "npm:^9.0.0"
-    process-warning: "npm:^4.0.0"
-    proxy-addr: "npm:^2.0.7"
+    process-warning: "npm:^5.0.0"
     rfdc: "npm:^1.3.1"
-    secure-json-parse: "npm:^3.0.1"
+    secure-json-parse: "npm:^4.0.0"
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
-  checksum: 10c0/9e750b451f8a5ab52f54fa1c7d9056a80d7b28750b4755595e98c0060ee0a1d92899294091a8f0a0b7554cb9418c33a4e86e7629bae365f9edbdbdf732ef32fc
+  checksum: 10c0/86ec8d6af1ddf779d9350958424d985e274d867786efa677ff88c1d1db9d7a3ee05e25dff29b3893e835a61893cf4df52d696f6ea193da1a29b8d098866914e8
   languageName: node
   linkType: hard
 
@@ -736,13 +753,6 @@ __metadata:
     cross-spawn: "npm:^7.0.0"
     signal-exit: "npm:^4.0.1"
   checksum: 10c0/028f1d41000553fcfa6c4bb5c372963bf3d9bf0b1f25a87d1a6253014343fb69dfb1b42d9625d7cf44c8ba429940f3d0ff718b62105d4d4a4f6ef8ca0a53faa2
-  languageName: node
-  linkType: hard
-
-"forwarded@npm:0.2.0":
-  version: 0.2.0
-  resolution: "forwarded@npm:0.2.0"
-  checksum: 10c0/9b67c3fac86acdbc9ae47ba1ddd5f2f81526fa4c8226863ede5600a3f7c7416ef451f6f1e240a3cc32d0fd79fcfe6beb08fd0da454f360032bde70bf80afbb33
   languageName: node
   linkType: hard
 
@@ -873,10 +883,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ipaddr.js@npm:1.9.1":
-  version: 1.9.1
-  resolution: "ipaddr.js@npm:1.9.1"
-  checksum: 10c0/0486e775047971d3fdb5fb4f063829bac45af299ae0b82dcf3afa2145338e08290563a2a70f34b732d795ecc8311902e541a8530eeb30d75860a78ff4e94ce2a
+"ipaddr.js@npm:^2.1.0":
+  version: 2.2.0
+  resolution: "ipaddr.js@npm:2.2.0"
+  checksum: 10c0/e4ee875dc1bd92ac9d27e06cfd87cdb63ca786ff9fd7718f1d4f7a8ef27db6e5d516128f52d2c560408cbb75796ac2f83ead669e73507c86282d45f84c5abbb6
   languageName: node
   linkType: hard
 
@@ -1264,6 +1274,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"process-warning@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "process-warning@npm:5.0.0"
+  checksum: 10c0/941f48863d368ec161e0b5890ba0c6af94170078f3d6b5e915c19b36fb59edb0dc2f8e834d25e0d375a8bf368a49d490f080508842168832b93489d17843ec29
+  languageName: node
+  linkType: hard
+
 "process@npm:^0.11.10":
   version: 0.11.10
   resolution: "process@npm:0.11.10"
@@ -1278,16 +1295,6 @@ __metadata:
     err-code: "npm:^2.0.2"
     retry: "npm:^0.12.0"
   checksum: 10c0/9c7045a1a2928094b5b9b15336dcd2a7b1c052f674550df63cc3f36cd44028e5080448175b6f6ca32b642de81150f5e7b1a98b728f15cb069f2dd60ac2616b96
-  languageName: node
-  linkType: hard
-
-"proxy-addr@npm:^2.0.7":
-  version: 2.0.7
-  resolution: "proxy-addr@npm:2.0.7"
-  dependencies:
-    forwarded: "npm:0.2.0"
-    ipaddr.js: "npm:1.9.1"
-  checksum: 10c0/c3eed999781a35f7fd935f398b6d8920b6fb00bbc14287bc6de78128ccc1a02c89b95b56742bf7cf0362cc333c61d138532049c7dedc7a328ef13343eff81210
   languageName: node
   linkType: hard
 
@@ -1445,10 +1452,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"secure-json-parse@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "secure-json-parse@npm:3.0.1"
-  checksum: 10c0/4e4555f62a570fd11a37fe7853fb0fd6661084e53ed11324c68496128f5300309c81279d890fe5145e8ec79887c58682be33e67693392c44cc835859c041dd12
+"secure-json-parse@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "secure-json-parse@npm:4.0.0"
+  checksum: 10c0/1a298cf00e1de91e833cee5eb406d6e77fb2f7eca9bef3902047d49e7f5d3e6c21b5de61ff73466c831e716430bfe87d732a6e645a7dabb5f1e8a8e4d3e15eb4
   languageName: node
   linkType: hard
 
@@ -1764,8 +1771,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:^8.18.0":
-  version: 8.18.0
-  resolution: "ws@npm:8.18.0"
+  version: 8.18.2
+  resolution: "ws@npm:8.18.2"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -1774,7 +1781,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/25eb33aff17edcb90721ed6b0eb250976328533ad3cd1a28a274bd263682e7296a6591ff1436d6cbc50fa67463158b062f9d1122013b361cec99a05f84680e06
+  checksum: 10c0/4b50f67931b8c6943c893f59c524f0e4905bbd183016cfb0f2b8653aa7f28dad4e456b9d99d285bbb67cca4fedd9ce90dfdfaa82b898a11414ebd66ee99141e4
   languageName: node
   linkType: hard
 

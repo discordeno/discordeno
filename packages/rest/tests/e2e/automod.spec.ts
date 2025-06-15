@@ -228,8 +228,8 @@ describe('Run automod tests', async () => {
       expect(fetchedRule.actions[0]).to.be.exist
       expect(fetchedRule.actions[1].metadata).to.be.exist
       expect(fetchedRule.actions[2].metadata).to.be.exist
-      expect(fetchedRule.actions[1].metadata.channelId).to.equal(channel.id)
-      expect(fetchedRule.actions[2].metadata.durationSeconds).to.equal(10)
+      expect(fetchedRule.actions[1].metadata?.channelId).to.equal(channel.id)
+      expect(fetchedRule.actions[2].metadata?.durationSeconds).to.equal(10)
       expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage)
       expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.SendAlertMessage)
       expect(fetchedRule.actions[2].type).to.equal(AutoModerationActionType.Timeout)

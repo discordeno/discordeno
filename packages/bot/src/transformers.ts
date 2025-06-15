@@ -16,6 +16,7 @@ import type {
   DiscordAutoModerationRule,
   DiscordAvatarDecorationData,
   DiscordChannel,
+  DiscordCollectibles,
   DiscordCreateApplicationCommand,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
@@ -41,12 +42,16 @@ import type {
   DiscordInviteCreate,
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
+  DiscordLobby,
+  DiscordLobbyMember,
+  DiscordMediaGalleryItem,
   DiscordMember,
   DiscordMessage,
   DiscordMessageCall,
   DiscordMessageComponent,
   DiscordMessageInteractionMetadata,
   DiscordMessageSnapshot,
+  DiscordNameplate,
   DiscordPoll,
   DiscordPollMedia,
   DiscordPresenceUpdate,
@@ -63,6 +68,7 @@ import type {
   DiscordTemplate,
   DiscordThreadMember,
   DiscordThreadMemberGuildCreate,
+  DiscordUnfurledMediaItem,
   DiscordUser,
   DiscordVoiceRegion,
   DiscordVoiceState,
@@ -92,6 +98,7 @@ import {
   type AutoModerationRule,
   type AvatarDecorationData,
   type Channel,
+  type Collectibles,
   type Component,
   type DefaultReactionEmoji,
   type Embed,
@@ -116,11 +123,15 @@ import {
   type InteractionResource,
   type Invite,
   type InviteStageInstance,
+  type Lobby,
+  type LobbyMember,
+  type MediaGalleryItem,
   type Member,
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
   type MessageSnapshot,
+  type Nameplate,
   type Poll,
   type PollMedia,
   type PresenceUpdate,
@@ -137,6 +148,7 @@ import {
   type Template,
   type ThreadMember,
   type ThreadMemberGuildCreate,
+  type UnfurledMediaItem,
   type User,
   type VoiceRegion,
   type VoiceState,
@@ -162,6 +174,7 @@ import {
   transformAutoModerationRule,
   transformAvatarDecorationData,
   transformChannel,
+  transformCollectibles,
   transformComponent,
   transformComponentToDiscordComponent,
   transformDefaultReactionEmoji,
@@ -184,12 +197,16 @@ import {
   transformInteractionResource,
   transformInvite,
   transformInviteStageInstance,
+  transformLobby,
+  transformLobbyMember,
+  transformMediaGalleryItem,
   transformMember,
   transformMemberToDiscordMember,
   transformMessage,
   transformMessageCall,
   transformMessageInteractionMetadata,
   transformMessageSnapshot,
+  transformNameplate,
   transformPoll,
   transformPollMedia,
   transformPresence,
@@ -207,6 +224,7 @@ import {
   transformTemplate,
   transformThreadMember,
   transformThreadMemberGuildCreate,
+  transformUnfurledMediaItem,
   transformUser,
   transformUserToDiscordUser,
   transformVoiceRegion,
@@ -219,6 +237,8 @@ import {
 import {
   transformAllowedMentionsToDiscordAllowedMentions,
   transformCreateApplicationCommandToDiscordCreateApplicationCommand,
+  transformMediaGalleryItemToDiscordMediaGalleryItem,
+  transformUnfurledMediaItemToDiscordUnfurledMediaItem,
 } from './transformers/reverse/index.js'
 import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
@@ -266,6 +286,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       avatarDecorationData: SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>,
     ) => any
     channel: (bot: Bot<TProps, TBehavior>, payload: DiscordChannel, channel: SetupDesiredProps<Channel, TProps, TBehavior>) => any
+    collectibles: (bot: Bot<TProps, TBehavior>, payload: DiscordCollectibles, collectibles: SetupDesiredProps<Collectibles, TProps, TBehavior>) => any
     component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent, component: Component) => any
     defaultReactionEmoji: (
       bot: Bot<TProps, TBehavior>,
@@ -331,6 +352,9 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordInviteStageInstance,
       inviteStageInstance: SetupDesiredProps<InviteStageInstance, TProps, TBehavior>,
     ) => any
+    lobby: (bot: Bot<TProps, TBehavior>, payload: DiscordLobby, lobby: SetupDesiredProps<Lobby, TProps, TBehavior>) => any
+    lobbyMember: (bot: Bot<TProps, TBehavior>, payload: DiscordLobbyMember, lobbyMember: SetupDesiredProps<LobbyMember, TProps, TBehavior>) => any
+    mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: DiscordMediaGalleryItem, item: MediaGalleryItem) => any
     member: (bot: Bot<TProps, TBehavior>, payload: DiscordMember, member: SetupDesiredProps<Member, TProps, TBehavior>) => any
     message: (bot: Bot<TProps, TBehavior>, payload: DiscordMessage, message: SetupDesiredProps<Message, TProps, TBehavior>) => any
     messageCall: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageCall, call: SetupDesiredProps<MessageCall, TProps, TBehavior>) => any
@@ -344,6 +368,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordMessageSnapshot,
       messageSnapshot: SetupDesiredProps<MessageSnapshot, TProps, TBehavior>,
     ) => any
+    nameplate: (bot: Bot<TProps, TBehavior>, payload: DiscordNameplate, nameplate: SetupDesiredProps<Nameplate, TProps, TBehavior>) => any
     poll: (bot: Bot<TProps, TBehavior>, payload: DiscordPoll, poll: SetupDesiredProps<Poll, TProps, TBehavior>) => any
     pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia, pollMedia: SetupDesiredProps<PollMedia, TProps, TBehavior>) => any
     presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
@@ -380,6 +405,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordThreadMemberGuildCreate,
       threadMemberGuildCreate: ThreadMemberGuildCreate,
     ) => any
+    unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem, unfurledMediaItem: UnfurledMediaItem) => any
     user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser, user: SetupDesiredProps<User, TProps, TBehavior>) => any
     voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
     voiceState: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceState, voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => any
@@ -400,9 +426,11 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent
     createApplicationCommand: (bot: Bot<TProps, TBehavior>, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
+    mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
     snowflake: (snowflake: BigString) => string
     team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam
+    unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: UnfurledMediaItem) => DiscordUnfurledMediaItem
     user: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<User, TProps, TBehavior>) => DiscordUser
   }
   activity: (bot: Bot<TProps, TBehavior>, payload: DiscordActivity) => Activity
@@ -425,6 +453,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     payload: DiscordAvatarDecorationData,
   ) => SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>
   channel: (bot: Bot<TProps, TBehavior>, payload: { channel: DiscordChannel; guildId?: BigString }) => SetupDesiredProps<Channel, TProps, TBehavior>
+  collectibles: (bot: Bot<TProps, TBehavior>, payload: DiscordCollectibles) => SetupDesiredProps<Collectibles, TProps, TBehavior>
   component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent) => Component
   defaultReactionEmoji: (
     bot: Bot<TProps, TBehavior>,
@@ -470,6 +499,9 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: DiscordInviteStageInstance & { guildId: BigString },
   ) => SetupDesiredProps<InviteStageInstance, TProps, TBehavior>
+  lobby: (bot: Bot<TProps, TBehavior>, payload: DiscordLobby) => SetupDesiredProps<Lobby, TProps, TBehavior>
+  lobbyMember: (bot: Bot<TProps, TBehavior>, payload: DiscordLobbyMember) => SetupDesiredProps<LobbyMember, TProps, TBehavior>
+  mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: DiscordMediaGalleryItem) => MediaGalleryItem
   member: (
     bot: Bot<TProps, TBehavior>,
     payload: DiscordMember,
@@ -486,6 +518,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
   ) => SetupDesiredProps<MessageSnapshot, TProps, TBehavior>
+  nameplate: (bot: Bot<TProps, TBehavior>, payload: DiscordNameplate) => SetupDesiredProps<Nameplate, TProps, TBehavior>
   poll: (bot: Bot<TProps, TBehavior>, payload: DiscordPoll) => SetupDesiredProps<Poll, TProps, TBehavior>
   pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia) => SetupDesiredProps<PollMedia, TProps, TBehavior>
   presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate) => PresenceUpdate
@@ -506,6 +539,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate) => Template
   threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember) => ThreadMember
   threadMemberGuildCreate: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
+  unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem) => UnfurledMediaItem
   user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>
   voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion) => VoiceRegion
   voiceState: (
@@ -560,6 +594,9 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       interactionResource: options?.customizers?.interactionResource ?? defaultCustomizer,
       invite: options.customizers?.invite ?? defaultCustomizer,
       inviteStageInstance: options.customizers?.inviteStageInstance ?? defaultCustomizer,
+      lobby: options.customizers?.lobby ?? defaultCustomizer,
+      lobbyMember: options.customizers?.lobbyMember ?? defaultCustomizer,
+      mediaGalleryItem: options.customizers?.mediaGalleryItem ?? defaultCustomizer,
       member: options.customizers?.member ?? defaultCustomizer,
       message: options.customizers?.message ?? defaultCustomizer,
       messageCall: options.customizers?.messageCall ?? defaultCustomizer,
@@ -581,6 +618,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       template: options.customizers?.template ?? defaultCustomizer,
       threadMember: options.customizers?.threadMember ?? defaultCustomizer,
       threadMemberGuildCreate: options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
+      unfurledMediaItem: options.customizers?.unfurledMediaItem ?? defaultCustomizer,
       user: options.customizers?.user ?? defaultCustomizer,
       voiceRegion: options.customizers?.voiceRegion ?? defaultCustomizer,
       voiceState: options.customizers?.voiceState ?? defaultCustomizer,
@@ -602,9 +640,11 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       component: options.reverse?.component ?? transformComponentToDiscordComponent,
       createApplicationCommand: options.reverse?.createApplicationCommand ?? transformCreateApplicationCommandToDiscordCreateApplicationCommand,
       embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
+      mediaGalleryItem: options.reverse?.mediaGalleryItem ?? transformMediaGalleryItemToDiscordMediaGalleryItem,
       member: options.reverse?.member ?? transformMemberToDiscordMember,
       snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
       team: options.reverse?.team ?? transformTeamToDiscordTeam,
+      unfurledMediaItem: options.reverse?.unfurledMediaItem ?? transformUnfurledMediaItemToDiscordUnfurledMediaItem,
       user: options.reverse?.user ?? transformUserToDiscordUser,
     },
     activity: options.activity ?? transformActivity,
@@ -621,6 +661,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     automodRule: options.automodRule ?? transformAutoModerationRule,
     avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: options.channel ?? transformChannel,
+    collectibles: options.collectibles ?? transformCollectibles,
     component: options.component ?? transformComponent,
     defaultReactionEmoji: options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     embed: options.embed ?? transformEmbed,
@@ -642,11 +683,15 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     interactionResource: options.interactionResource ?? transformInteractionResource,
     invite: options.invite ?? transformInvite,
     inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
+    lobby: options.lobby ?? transformLobby,
+    lobbyMember: options.lobbyMember ?? transformLobbyMember,
+    mediaGalleryItem: options.mediaGalleryItem ?? transformMediaGalleryItem,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
     messageCall: options.messageCall ?? transformMessageCall,
     messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
     messageSnapshot: options.messageSnapshot ?? transformMessageSnapshot,
+    nameplate: options.nameplate ?? transformNameplate,
     poll: options.poll ?? transformPoll,
     pollMedia: options.pollMedia ?? transformPollMedia,
     presence: options.presence ?? transformPresence,
@@ -664,6 +709,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     template: options.template ?? transformTemplate,
     threadMember: options.threadMember ?? transformThreadMember,
     threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
+    unfurledMediaItem: options.unfurledMediaItem ?? transformUnfurledMediaItem,
     user: options.user ?? transformUser,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     voiceState: options.voiceState ?? transformVoiceState,

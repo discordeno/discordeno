@@ -22,6 +22,14 @@ import type {
   VideoQualityModes,
 } from './discord/channel.js'
 import type {
+  ButtonStyles,
+  DiscordMediaGalleryItem,
+  DiscordUnfurledMediaItem,
+  MessageComponentTypes,
+  SeparatorSpacingSize,
+  TextStyles,
+} from './discord/components.js'
+import type {
   DefaultMessageNotificationLevels,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
@@ -38,14 +46,11 @@ import type {
 } from './discord/guildScheduledEvent.js'
 import type {
   ApplicationCommandTypes,
-  ButtonStyles,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
   DiscordInteractionContextType,
   DiscordInteractionEntryPointCommandHandlerType,
   InteractionResponseTypes,
-  MessageComponentTypes,
-  TextStyles,
 } from './discord/interactions.js'
 import type { TargetTypes } from './discord/invite.js'
 import type {
@@ -88,7 +93,7 @@ export interface CreateMessageOptions {
     /** id of the originating message's guild */
     guildId?: BigString
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-    failIfNotExists: boolean
+    failIfNotExists?: boolean
   }
   attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
   /** The contents of the files being sent */
@@ -97,7 +102,7 @@ export interface CreateMessageOptions {
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
-  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_COMPONENTS_V2 can be set */
   flags?: MessageFlags
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
@@ -109,30 +114,53 @@ export type MessageComponents = MessageComponent[]
 export type MessageComponent =
   | ActionRow
   | ButtonComponent
-  | InputTextComponent
-  | SelectMenuComponent
-  | SelectMenuChannelsComponent
-  | SelectMenuRolesComponent
-  | SelectMenuUsersComponent
-  | SelectMenuUsersAndRolesComponent
+  | TextInputComponent
+  | StringSelectComponent
+  | ChannelSelectComponent
+  | RoleSelectComponent
+  | UserSelectComponent
+  | MentionableSelectComponent
+  | SectionComponent
+  | TextDisplayComponent
+  | ThumbnailComponent
+  | MediaGalleryComponent
+  | SeparatorComponent
+  | ContainerComponent
+  | FileComponent
 
-/** https://discord.com/developers/docs/interactions/message-components#actionrow */
-export interface ActionRow {
-  /** Action rows are a group of buttons. */
-  type: MessageComponentTypes.ActionRow
-  /** The components in this row */
-  components:
-    | [Exclude<MessageComponent, ActionRow>]
-    | [ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+/** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
+export interface BaseComponent {
+  /** The type of the component */
+  type: MessageComponentTypes
+  /** 32 bit integer used as an optional identifier for component */
+  id?: number
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
-export interface ButtonComponent {
-  /** All button components have type 2 */
+/** https://discord.com/developers/docs/components/reference#action-row-action-row-structure */
+export interface ActionRow extends BaseComponent {
+  type: MessageComponentTypes.ActionRow
+
+  /**
+   * The components in this row
+   *
+   * @remarks
+   * Up to 5 button components, a single select component or a single text input component
+   */
+  components: (
+    | ButtonComponent
+    | StringSelectComponent
+    | UserSelectComponent
+    | RoleSelectComponent
+    | MentionableSelectComponent
+    | ChannelSelectComponent
+    | TextInputComponent
+  )[]
+}
+
+/** https://discord.com/developers/docs/components/reference#button-button-structure */
+export interface ButtonComponent extends BaseComponent {
   type: MessageComponentTypes.Button
+
   /** for what the button says (max 80 characters) */
   label?: string
   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
@@ -148,16 +176,18 @@ export interface ButtonComponent {
     /** Whether this emoji is animated */
     animated?: boolean
   }
+  /** Identifier for a purchasable SKU, only available when using premium-style buttons */
+  skuId?: BigString
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure */
-export interface SelectMenuComponent {
-  /** SelectMenu Component is of type 3 */
-  type: MessageComponentTypes.SelectMenu
+/** https://discord.com/developers/docs/components/reference#string-select-string-select-structure */
+export interface StringSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.StringSelect
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -172,9 +202,10 @@ export interface SelectMenuComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuUsersComponent {
-  /** SelectMenuChannels Component is of type 5 */
-  type: MessageComponentTypes.SelectMenuUsers
+/** https://discord.com/developers/docs/components/reference#user-select-user-select-structure */
+export interface UserSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.UserSelect
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -192,9 +223,10 @@ export interface SelectMenuUsersComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuRolesComponent {
-  /** SelectMenuChannels Component is of type 6 */
-  type: MessageComponentTypes.SelectMenuRoles
+/** https://discord.com/developers/docs/components/reference#role-select-role-select-structure */
+export interface RoleSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.RoleSelect
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -212,9 +244,10 @@ export interface SelectMenuRolesComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuUsersAndRolesComponent {
-  /** SelectMenuChannels Component is of type 7 */
-  type: MessageComponentTypes.SelectMenuUsersAndRoles
+/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-structure */
+export interface MentionableSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.MentionableSelect
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -232,9 +265,10 @@ export interface SelectMenuUsersAndRolesComponent {
   disabled?: boolean
 }
 
-export interface SelectMenuChannelsComponent {
-  /** SelectMenuChannels Component is of type 8 */
-  type: MessageComponentTypes.SelectMenuChannels
+/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-structure */
+export interface ChannelSelectComponent extends BaseComponent {
+  type: MessageComponentTypes.ChannelSelect
+
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -281,10 +315,10 @@ export interface SelectMenuDefaultValue {
   type: 'user' | 'role' | 'channel'
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
-export interface InputTextComponent {
-  /** InputText Component is of type 4 */
-  type: MessageComponentTypes.InputText
+/** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
+export interface TextInputComponent extends BaseComponent {
+  type: MessageComponentTypes.TextInput
+
   /** The style of the InputText */
   style: TextStyles
   /** The customId of the InputText */
@@ -301,6 +335,80 @@ export interface InputTextComponent {
   required?: boolean
   /** Pre-filled value for input text. */
   value?: string
+}
+
+/** https://discord.com/developers/docs/components/reference#section-section-structure */
+export interface SectionComponent extends BaseComponent {
+  type: MessageComponentTypes.Section
+
+  /** One to three text components */
+  components: TextDisplayComponent[]
+  /** A thumbnail or a button component, with a future possibility of adding more compatible components */
+  accessory: ButtonComponent | ThumbnailComponent
+}
+
+/** https://discord.com/developers/docs/components/reference#text-display */
+export interface TextDisplayComponent extends BaseComponent {
+  type: MessageComponentTypes.TextDisplay
+
+  /** Text that will be displayed similar to a message */
+  content: string
+}
+
+/** https://discord.com/developers/docs/components/reference#thumbnail */
+export interface ThumbnailComponent extends BaseComponent {
+  type: MessageComponentTypes.Thumbnail
+
+  /** A url or attachment */
+  media: DiscordUnfurledMediaItem
+  /** Alt text for the media */
+  description?: string
+  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
+}
+
+/** https://discord.com/developers/docs/components/reference#media-gallery */
+export interface MediaGalleryComponent extends BaseComponent {
+  type: MessageComponentTypes.MediaGallery
+
+  /** 1 to 10 media gallery items */
+  items: DiscordMediaGalleryItem[]
+}
+
+/** https://discord.com/developers/docs/components/reference#file */
+export interface FileComponent extends BaseComponent {
+  type: MessageComponentTypes.File
+
+  /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
+  file: DiscordUnfurledMediaItem
+  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size: number
+}
+
+/** https://discord.com/developers/docs/components/reference#separator */
+export interface SeparatorComponent extends BaseComponent {
+  type: MessageComponentTypes.Separator
+
+  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
+  divider?: boolean
+  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
+  spacing?: SeparatorSpacingSize
+}
+
+/** https://discord.com/developers/docs/components/reference#container */
+export interface ContainerComponent extends BaseComponent {
+  type: MessageComponentTypes.Container
+
+  /** Components of the type action row, text display, section, media gallery, separator, or file */
+  components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
+  /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
+  accentColor?: number
+  /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
+  spoiler?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
@@ -478,7 +586,7 @@ export type CreateApplicationCommand = CreateSlashApplicationCommand | CreateCon
 export interface CreateSlashApplicationCommand {
   /**
    * Name of command, 1-32 characters.
-   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
@@ -513,8 +621,7 @@ export interface CreateSlashApplicationCommand {
    * Interaction context types where the command is available.
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types are included for new commands
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[]
   /**
@@ -558,7 +665,7 @@ export interface InteractionCallbackData {
   title?: string
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL` and `SUPPRESS_NOTIFICATIONS` can be set) */
+  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `IS_COMPONENTS_V2`, `IS_VOICE_MESSAGE` and `SUPPRESS_NOTIFICATIONS` can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
@@ -627,8 +734,7 @@ export interface RequestGuildMembers {
   nonce?: string
 }
 
-/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-
+/** https://discord.com/developers/docs/resources/guild#create-guild-channel */
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string
@@ -971,6 +1077,13 @@ export interface ExecuteWebhook {
   wait?: boolean
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
   threadId?: BigString
+  /**
+   * Whether to respect the `components` field of the request.
+   * When enabled, allows application-owned webhooks to use all components and non-owned webhooks to use non-interactive components.
+   *
+   * @default false
+   */
+  withComponents?: boolean
   /** Name of the thread to create (target channel has to be type of forum channel) */
   threadName?: string
   /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
@@ -989,7 +1102,13 @@ export interface ExecuteWebhook {
   embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** the components to include with the message */
+  /**
+   * The components to include with the message
+   *
+   * @remarks
+   * Application-owned webhooks can always send components.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   */
   components?: MessageComponents
   /** A poll object */
   poll?: CreatePoll
@@ -998,6 +1117,44 @@ export interface ExecuteWebhook {
 export interface GetWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString
+}
+
+/** https://discord.com/developers/docs/resources/webhook#edit-webhook-message */
+export interface EditWebhookMessageOptions {
+  /** Id of the thread the message is in */
+  threadId?: BigString
+  /**
+   * Whether to respect the `components` field of the request.
+   * When enabled, allows application-owned webhooks to use all components and non-owned webhooks to use non-interactive components.
+   *
+   * @default false
+   */
+  withComponents?: boolean
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Embedded `rich` content */
+  embeds?: Camelize<DiscordEmbed>[]
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /**
+   * The components to include with the message
+   *
+   * @remarks
+   * Application-owned webhooks can always send components.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   */
+  components?: MessageComponents
+  /** The contents of the files being sent */
+  files?: FileContent[]
+  /** Attached files to keep and possible descriptions for new files */
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
+  /**
+   * A poll!
+   *
+   * @remarks
+   * Polls can only be added when editing a deferred interaction response.
+   */
+  poll?: CreatePoll
 }
 
 export interface DeleteWebhookMessageOptions {
@@ -1024,7 +1181,7 @@ export interface CreateForumPostWithMessage {
     components?: MessageComponents
     /** IDs of up to 3 stickers in the server to send in the message */
     stickerIds?: BigString[]
-    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set */
     flags?: MessageFlags
   }
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
@@ -1687,4 +1844,48 @@ export interface ModifyGuildIncidentActions {
    * Supplying null disables the action
    */
   dms_disabled_until?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/lobby#create-lobby */
+export interface CreateLobby {
+  /** Optional dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string> | null
+  /** Optional array of up to 25 users to be added to the lobby */
+  members?: CreateLobbyMember[]
+  /** Seconds to wait before shutting down a lobby after it becomes idle. Value can be between 5 and 604800 (7 days). */
+  idleTimeoutSeconds?: number
+}
+
+/** https://discord.com/developers/docs/resources/lobby#create-lobby */
+export interface CreateLobbyMember {
+  /** Discord user id of the user to add to the lobby */
+  id: BigString
+  /** Optional dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string> | null
+  /** Lobby member flags combined as a bitfield */
+  flags?: number
+}
+
+/** https://discord.com/developers/docs/resources/lobby#add-a-member-to-a-lobby */
+export interface ModifyLobby {
+  /** Optional dictionary of string key/value pairs. The max total length is 1000. Overwrites any existing metadata. */
+  metadata?: Record<string, string> | null
+  /** Optional array of up to 25 users to replace the lobby members with. If provided, lobby members not in this list will be removed from the lobby. */
+  members?: CreateLobbyMember[]
+  /** Seconds to wait before shutting down a lobby after it becomes idle. Value can be between 5 and 604800 (7 days). */
+  idleTimeoutSeconds?: number
+}
+
+/** https://discord.com/developers/docs/resources/lobby#add-a-member-to-a-lobby */
+export interface AddLobbyMember {
+  /** Optional dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string> | null
+  /** Lobby member flags combined as a bitfield */
+  flags?: number
+}
+
+/** https://discord.com/developers/docs/resources/lobby#link-channel-to-lobby */
+export interface LinkChannelToLobby {
+  /** The id of the channel to link to the lobby. If not provided, will unlink any currently linked channels from the lobby. */
+  channelId?: BigString
 }

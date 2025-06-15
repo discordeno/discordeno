@@ -202,7 +202,7 @@ await memoryBenchmark(
             type: 1,
             components: [
               {
-                type: MessageComponentTypes.InputText,
+                type: MessageComponentTypes.TextInput,
                 custom_id: 'discordeno',
                 label: 'discordeno',
                 max_length: 100,
@@ -218,7 +218,7 @@ await memoryBenchmark(
             type: 1,
             components: [
               {
-                type: MessageComponentTypes.SelectMenu,
+                type: MessageComponentTypes.StringSelect,
                 custom_id: 'discordeno',
                 max_values: 100,
                 min_values: 100,
@@ -585,7 +585,7 @@ await memoryBenchmark(
             type: 1,
             components: [
               {
-                type: MessageComponentTypes.InputText,
+                type: MessageComponentTypes.TextInput,
                 custom_id: 'discordeno',
                 label: 'discordeno',
                 max_length: 100,
@@ -601,7 +601,7 @@ await memoryBenchmark(
             type: 1,
             components: [
               {
-                type: MessageComponentTypes.SelectMenu,
+                type: MessageComponentTypes.StringSelect,
                 custom_id: 'discordeno',
                 max_values: 100,
                 min_values: 100,

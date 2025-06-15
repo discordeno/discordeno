@@ -13,15 +13,7 @@ export function createRoutes(): RestRoutes {
 
         if (options) {
           if (options.threadId) url += `thread_id=${options.threadId}`
-        }
-
-        return url
-      },
-      original: (webhookId, token, options) => {
-        let url = `/webhooks/${webhookId}/${token}/messages/@original?`
-
-        if (options) {
-          if (options.threadId) url += `thread_id=${options.threadId}`
+          if (options.withComponents) url += `&with_components=${options.withComponents}`
         }
 
         return url
@@ -31,7 +23,8 @@ export function createRoutes(): RestRoutes {
 
         if (options) {
           if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
-          if (options.threadId) url += `thread_id=${options.threadId}`
+          if (options.threadId) url += `&thread_id=${options.threadId}`
+          if (options.withComponents) url += `&with_components=${options.withComponents}`
         }
 
         return url
@@ -644,6 +637,28 @@ export function createRoutes(): RestRoutes {
       },
       guildSound: (guildId, soundId) => {
         return `/guilds/${guildId}/soundboard-sounds/${soundId}`
+      },
+    },
+
+    lobby: {
+      create: () => {
+        return '/lobbies'
+      },
+
+      lobby: (lobbyId) => {
+        return `/lobbies/${lobbyId}`
+      },
+
+      member: (lobbyId, userId) => {
+        return `/lobbies/${lobbyId}/members/${userId}`
+      },
+
+      leave: (lobbyId) => {
+        return `/lobbies/${lobbyId}/members/@me`
+      },
+
+      link: (lobbyId) => {
+        return `/lobbies/${lobbyId}/channel-linking`
       },
     },
 

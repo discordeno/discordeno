@@ -33,13 +33,15 @@ export interface DiscordEventWebhookEventBody {
   /** Timestamp of when the event occurred in ISO8601 format */
   timestamp: string
   /** Data for the event. The shape depends on the event type */
-  data?: DiscordEventWebhookApplicationAuthorizedBody | DiscordEntitlement
+  data?: DiscordEventWebhookApplicationAuthorizedBody | DiscordEventWebhookApplicationDeauthorizedBody | DiscordEntitlement
 }
 
 /** https://discord.com/developers/docs/events/webhook-events#event-types */
 export enum DiscordWebhookEventType {
   /** Sent when an app was authorized by a user to a server or their account */
   ApplicationAuthorized = 'APPLICATION_AUTHORIZED',
+  /** Sent when an app was deauthorized by a user */
+  ApplicationDeauthorized = 'APPLICATION_DEAUTHORIZED',
   /** Entitlement was created */
   EntitlementCreate = 'ENTITLEMENT_CREATE',
   /** User was added to a Quest (currently unavailable) */
@@ -56,4 +58,10 @@ export interface DiscordEventWebhookApplicationAuthorizedBody {
   scopes: OAuth2Scope[]
   /** Server which app was authorized for (when integration type is 0) */
   guild?: DiscordGuild
+}
+
+/** https://discord.com/developers/docs/events/webhook-events#application-authorized-application-authorized-structure */
+export interface DiscordEventWebhookApplicationDeauthorizedBody {
+  /** User who deauthorized the app */
+  user: DiscordUser
 }
