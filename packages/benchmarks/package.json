@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "main": "./dist/index.js",
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     "import": "./dist/index.js",
-    "types": "./dist/types/index.d.ts"
+    "types": "./dist/index.d.ts"
   },
   "type": "module",
   "license": "Apache-2.0",
@@ -15,11 +15,11 @@
     "url": "git+https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
     "fmt": "biome format --write",
     "lint": "biome lint --write",
-    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "build-message": "swc src/generateMessage.ts --strip-leading-paths -C sourceMaps=false --out-dir ../../scripts",
     "bench": "node dist/index.js"
   },
