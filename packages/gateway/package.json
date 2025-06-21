@@ -1,12 +1,7 @@
 {
   "name": "@discordeno/gateway",
   "version": "21.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.js"
-  },
+  "exports": "./dist/index.js",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
