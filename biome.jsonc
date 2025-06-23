@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -8,8 +8,12 @@
     "lineEnding": "lf",
     "lineWidth": 150
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
@@ -44,22 +48,7 @@
     }
   },
   "files": {
-    "ignore": [
-      // Ignore the package.json and leave yarn to format it
-      "package.json",
-      "node_modules",
-      // Ignore turbo and docusaurus cache/stuff
-      ".docusaurus",
-      ".turbo",
-      // Remove the yarn script as it is minified
-      ".yarn",
-      // Ignore build outputs
-      "bunTestsDist",
-      "build",
-      "coverage",
-      "denoTestsDist",
-      "dist"
-    ],
+    "includes": ["**", "!**/package.json", "!**/node_modules", "!**/.docusaurus", "!**/.turbo", "!**/.yarn", "!**/build", "!**/coverage", "!**/dist"],
     "ignoreUnknown": true
   }
 }
