@@ -1329,6 +1329,13 @@ export interface MessageCall {
   endedTimestamp: number
 }
 
+export interface MessagePin {
+  /** the time the message was pinned */
+  pinnedAt: number
+  /** the pinned message */
+  message: Message
+}
+
 export interface Reaction {
   /** Whether the current user reacted using this emoji */
   me: boolean

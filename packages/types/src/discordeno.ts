@@ -1392,6 +1392,14 @@ export interface EditMessage {
   components?: MessageComponents
 }
 
+/** https://discord.com/developers/docs/resources/message#get-channel-pins-query-string-params */
+export interface GetChannelPinsOptions {
+  /** Get messages pinned before this timestamp */
+  before?: string
+  /** Max number of pins to return (1-50), defaults to 50 */
+  limit?: number
+}
+
 /** Additional properties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */

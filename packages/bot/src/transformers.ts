@@ -50,6 +50,7 @@ import type {
   DiscordMessageCall,
   DiscordMessageComponent,
   DiscordMessageInteractionMetadata,
+  DiscordMessagePin,
   DiscordMessageSnapshot,
   DiscordNameplate,
   DiscordPoll,
@@ -130,6 +131,7 @@ import {
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
+  type MessagePin,
   type MessageSnapshot,
   type Nameplate,
   type Poll,
@@ -363,6 +365,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordMessageInteractionMetadata,
       metadata: SetupDesiredProps<MessageInteractionMetadata, TProps, TBehavior>,
     ) => any
+    messagePin: (bot: Bot<TProps, TBehavior>, payload: DiscordMessagePin, call: SetupDesiredProps<MessagePin, TProps, TBehavior>) => any
     messageSnapshot: (
       bot: Bot<TProps, TBehavior>,
       payload: DiscordMessageSnapshot,
@@ -514,6 +517,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: DiscordMessageInteractionMetadata,
   ) => SetupDesiredProps<MessageInteractionMetadata, TProps, TBehavior>
+  messagePin: (bot: Bot<TProps, TBehavior>, payload: DiscordMessagePin) => SetupDesiredProps<MessagePin, TProps, TBehavior>
   messageSnapshot: (
     bot: Bot<TProps, TBehavior>,
     payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },

@@ -1318,6 +1318,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true })
     },
 
+    async getChannelPins(channelId, options) {
+      return await rest.get(rest.routes.channels.messagePins(channelId, options))
+    },
+
     async getPinnedMessages(channelId) {
       return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId))
     },
@@ -1578,7 +1582,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async pinMessage(channelId, messageId, reason) {
-      await rest.put(rest.routes.channels.pin(channelId, messageId), { reason })
+      await rest.put(rest.routes.channels.messagePin(channelId, messageId), { reason })
     },
 
     async pruneMembers(guildId, body, reason) {
@@ -1609,7 +1613,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async unpinMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.pin(channelId, messageId), { reason })
+      await rest.delete(rest.routes.channels.messagePin(channelId, messageId), { reason })
     },
 
     async triggerTypingIndicator(channelId) {
