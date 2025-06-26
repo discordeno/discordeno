@@ -1,3 +1,5 @@
+// biome-ignore lint/correctness/noUnusedImports: <explanation>
+import type { RestManager } from '@discordeno/rest'
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
@@ -68,6 +70,7 @@ import type {
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetChannelPinsOptions,
   GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
@@ -129,6 +132,7 @@ import type {
   LobbyMember,
   Member,
   Message,
+  MessagePin,
   Role,
   ScheduledEvent,
   Sku,
@@ -441,6 +445,14 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     getOriginalInteractionResponse: async (token) => {
       return bot.transformers.message(bot, { message: snakelize(await bot.rest.getOriginalInteractionResponse(token)), shardId: 0 })
+    },
+    getChannelPins: async (channelId, options) => {
+      const res = snakelize(await bot.rest.getChannelPins(channelId, options))
+
+      return {
+        hasMore: res.has_more,
+        items: bot.transformers.messagePin(bot, res.items),
+      }
     },
     getPinnedMessages: async (channelId) => {
       return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, { message: snakelize(res), shardId: 0 }))
@@ -1007,6 +1019,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getStickerPack: (stickerPackId: BigString) => Promise<StickerPack>
   getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
+  getChannelPins: (
+    channelId: BigString,
+    options?: GetChannelPinsOptions,
+  ) => Promise<{ items: SetupDesiredProps<MessagePin, TProps, TBehavior>; hasMore: boolean }>
+  /** @deprecated Use {@link BotHelpers.getChannelPins} instead */
   getPinnedMessages: (channelId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>
   getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>
   getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>

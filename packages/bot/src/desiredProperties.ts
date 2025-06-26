@@ -32,6 +32,7 @@ import type {
   MessageCall,
   MessageInteraction,
   MessageInteractionMetadata,
+  MessagePin,
   MessageReference,
   MessageSnapshot,
   Nameplate,
@@ -90,6 +91,7 @@ export interface TransformersObjects {
   messageCall: MessageCall
   messageInteraction: MessageInteraction
   messageInteractionMetadata: MessageInteractionMetadata
+  messagePin: MessagePin
   messageReference: MessageReference
   messageSnapshot: MessageSnapshot
   nameplate: Nameplate
@@ -539,6 +541,11 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       targetMessageId: defaultValue,
       targetUser: defaultValue,
       ...desiredProperties.messageInteractionMetadata,
+    },
+    messagePin: {
+      message: defaultValue,
+      pinnedAt: defaultValue,
+      ...desiredProperties.messagePin,
     },
     messageInteraction: {
       id: defaultValue,

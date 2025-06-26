@@ -4,6 +4,7 @@ import {
   type DiscordMessage,
   type DiscordMessageCall,
   type DiscordMessageInteractionMetadata,
+  type DiscordMessagePin,
   type DiscordMessageSnapshot,
   MessageFlags,
 } from '@discordeno/types'
@@ -13,6 +14,7 @@ import {
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
+  type MessagePin,
   type MessageSnapshot,
   snowflakeToTimestamp,
 } from '../index.js'
@@ -259,6 +261,16 @@ export function transformMessage(
   if (props.call && payload.message.call) message.call = bot.transformers.messageCall(bot, payload.message.call)
 
   return bot.transformers.customizers.message(bot, payload.message, message)
+}
+
+export function transformMessagePin(bot: InternalBot, payload: DiscordMessagePin): MessagePin {
+  const props = bot.transformers.desiredProperties.messagePin
+  const messagePin = {} as MessagePin
+
+  if (props.pinnedAt && payload.pinned_at) messagePin.pinnedAt = Date.parse(payload.pinned_at)
+  if (props.message && payload.message) messagePin.message = bot.transformers.message(bot, { message: payload.message, shardId: 0 })
+
+  return bot.transformers.customizers.messagePin(bot, payload, messagePin)
 }
 
 export function transformMessageSnapshot(
