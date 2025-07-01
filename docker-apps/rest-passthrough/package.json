@@ -21,6 +21,6 @@
     "@favware/cliff-jumper": "^6.0.0",
     "@swc/cli": "^0.7.7",
     "@swc/core": "^1.12.5",
-    "dotenv": "^16.5.0"
+    "dotenv": "^17.0.0"
   }
 }
