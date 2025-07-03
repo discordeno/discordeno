@@ -1641,13 +1641,13 @@ export interface BeginGuildPrune {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
 export interface EditGuildOnboarding {
   /** Prompts shown during onboarding and in customize community */
-  prompts: Camelize<DiscordGuildOnboardingPrompt>[]
+  prompts?: Camelize<DiscordGuildOnboardingPrompt>[]
   /** Channel IDs that members get opted into automatically */
-  defaultChannelIds: BigString[]
+  defaultChannelIds?: BigString[]
   /** Whether onboarding is enabled in the guild */
-  enabled: boolean
+  enabled?: boolean
   /** Current mode of onboarding */
-  mode: DiscordGuildOnboardingMode
+  mode?: DiscordGuildOnboardingMode
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#list-entitlements-query-params */
