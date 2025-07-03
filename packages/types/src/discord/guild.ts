@@ -202,16 +202,16 @@ export enum SystemChannelFlags {
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
 export enum GuildFeatures {
-  /** Guild has access to set an invite splash background */
-  InviteSplash = 'INVITE_SPLASH',
-  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
-  VipRegions = 'VIP_REGIONS',
-  /** Guild has access to set a vanity URL */
-  VanityUrl = 'VANITY_URL',
-  /** Guild is verified */
-  Verified = 'VERIFIED',
-  /** Guild is partnered */
-  Partnered = 'PARTNERED',
+  /** Guild has access to set an animated guild banner image */
+  AnimatedBanner = 'ANIMATED_BANNER',
+  /** Guild has access to set an animated guild icon */
+  AnimatedIcon = 'ANIMATED_ICON',
+  /** Guild is using the old permissions configuration behavior */
+  ApplicationCommandPermissionsV2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
+  /** Guild has set up auto moderation rules */
+  AutoModeration = 'AUTO_MODERATION',
+  /** Guild has access to set a guild banner image */
+  Banner = 'BANNER',
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = 'COMMUNITY',
   /** Guild has enabled monetization. */
@@ -220,28 +220,28 @@ export enum GuildFeatures {
   CreatorStorePage = 'CREATOR_STORE_PAGE',
   /** Guild has been set as a support server on the App Directory */
   DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
-  /** Guild has access to create news channels */
-  News = 'NEWS',
   /** Guild is able to be discovered in the directory */
   Discoverable = 'DISCOVERABLE',
   /** Guild is able to be featured in the directory */
   Featurable = 'FEATURABLE',
-  /** Guild has access to set an animated guild icon */
-  AnimatedIcon = 'ANIMATED_ICON',
-  /** Guild has access to set a guild banner image */
-  Banner = 'BANNER',
-  /** Guild has enabled the welcome screen */
-  WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
+  /** Guild has paused invites, preventing new users from joining */
+  InvitesDisabled = 'INVITES_DISABLED',
+  /** Guild has access to set an invite splash background */
+  InviteSplash = 'INVITE_SPLASH',
   /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
   MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
   /** Guild has increased custom soundboard sound slots. */
   MoreSoundboard = 'MORE_SOUNDBOARD',
-  /** Guild can be previewed before joining via Membership Screening or the directory */
-  PreviewEnabled = 'PREVIEW_ENABLED',
-  /** Guild has enabled ticketed events */
-  TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
   /** Guild has increased custom sticker slots */
   MoreStickers = 'MORE_STICKERS',
+  /** Guild has access to create news channels */
+  News = 'NEWS',
+  /** Guild is partnered */
+  Partnered = 'PARTNERED',
+  /** Guild can be previewed before joining via Membership Screening or the directory */
+  PreviewEnabled = 'PREVIEW_ENABLED',
+  /** Guild has disabled alerts for join raids in the configured safety alerts channel */
+  RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
   /** Guild is able to set role icons */
   RoleIcons = 'ROLE_ICONS',
   /** Guild has role subscriptions that can be purchased. */
@@ -250,16 +250,16 @@ export enum GuildFeatures {
   RoleSubscriptionsEnabled = 'ROLE_SUBSCRIPTIONS_ENABLED',
   /** Guild has created soundboard sounds. */
   Soundboard = 'SOUNDBOARD',
-  /** Guild has set up auto moderation rules */
-  AutoModeration = 'AUTO_MODERATION',
-  /** Guild has paused invites, preventing new users from joining */
-  InvitesDisabled = 'INVITES_DISABLED',
-  /** Guild has access to set an animated guild banner image */
-  AnimatedBanner = 'ANIMATED_BANNER',
-  /** Guild has disabled alerts for join raids in the configured safety alerts channel */
-  RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
-  /** Guild is using the old permissions configuration behavior */
-  ApplicationCommandPermissionsV2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
+  /** Guild has enabled ticketed events */
+  TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
+  /** Guild has access to set a vanity URL */
+  VanityUrl = 'VANITY_URL',
+  /** Guild is verified */
+  Verified = 'VERIFIED',
+  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
+  VipRegions = 'VIP_REGIONS',
+  /** Guild has enabled the welcome screen */
+  WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
