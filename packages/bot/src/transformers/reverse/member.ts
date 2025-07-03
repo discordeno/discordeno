@@ -26,7 +26,7 @@ export function transformMemberToDiscordMember(bot: InternalBot, payload: Member
   return {
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => id.toString()),
-    joined_at: new Date(payload.joinedAt).toISOString(),
+    joined_at: payload.joinedAt ? new Date(payload.joinedAt).toISOString() : null,
     premium_since: payload.premiumSince ? new Date(payload.premiumSince).toISOString() : undefined,
     avatar: payload.avatar ? iconBigintToHash(payload.avatar) : undefined,
     permissions: payload.permissions?.toString(),

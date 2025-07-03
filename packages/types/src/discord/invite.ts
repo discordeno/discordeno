@@ -34,6 +34,12 @@ export interface DiscordInvite {
   stage_instance?: DiscordInviteStageInstance
   /** guild scheduled event data */
   guild_scheduled_event?: DiscordScheduledEvent
+  /**
+   * Guild invite flags for guild invites.
+   *
+   * @see {@link DiscordGuildInviteFlags}
+   */
+  flags?: number
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-object-invite-types */
@@ -47,6 +53,12 @@ export enum DiscordInviteType {
 export enum TargetTypes {
   Stream = 1,
   EmbeddedApplication,
+}
+
+/** https://discord.com/developers/docs/resources/invite#invite-object-guild-invite-flags */
+export enum DiscordGuildInviteFlags {
+  /** This invite is a guest invite for a voice channel */
+  isGuestInvite = 1 << 0,
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-metadata-object-invite-metadata-structure */

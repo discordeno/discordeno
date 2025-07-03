@@ -1,5 +1,5 @@
 import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
-import { type InternalBot, type Invite, isInviteWithMetadata } from '../index.js'
+import { type InternalBot, type Invite, ToggleBitfield, isInviteWithMetadata } from '../index.js'
 
 export function transformInvite(
   bot: InternalBot,
@@ -42,6 +42,7 @@ export function transformInvite(
     if (props.expiresAt && payload.invite.expires_at) {
       invite.expiresAt = Date.parse(payload.invite.expires_at)
     }
+    if (props.flags && payload.invite.flags) invite.flags = new ToggleBitfield(payload.invite.flags)
   } else {
     if (props.channelId && payload.invite.channel_id) invite.channelId = bot.transformers.snowflake(payload.invite.channel_id)
     if (props.guildId && payload.invite.guild_id) invite.guildId = bot.transformers.snowflake(payload.invite.guild_id)

@@ -1081,6 +1081,8 @@ export interface Invite {
   guildScheduledEvent?: ScheduledEvent
   /** Approximate count of online members (only present when target_user is set) */
   approximatePresenceCount?: number
+  /** Guild invite flags for guild invites. */
+  flags?: ToggleBitfield
 }
 
 export interface Member {
@@ -1106,7 +1108,7 @@ export interface Member {
   /** Array of role object ids */
   roles: bigint[]
   /** When the user joined the guild */
-  joinedAt: number
+  joinedAt?: number
   /** When the user started boosting the guild */
   premiumSince?: number
   /** The permissions this member has in the guild. Only present on interaction events. */
