@@ -1,6 +1,7 @@
 import type {
   BigString,
   GetBans,
+  GetChannelPinsOptions,
   GetEntitlements,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -47,6 +48,10 @@ export interface RestRoutes {
     pin: (channelId: BigString, messageId: BigString) => string
     /** Route for handling a channels pins. */
     pins: (channelId: BigString) => string
+    /** Route for handling a channels pins. */
+    messagePins: (channelId: BigString, options?: GetChannelPinsOptions) => string
+    /** Route for handling a specific pin. */
+    messagePin: (channelId: BigString, messageId: BigString) => string
     /** Route for non-specific webhook in a channel. */
     webhooks: (channelId: BigString) => string
     /** Route for a specific channel. */
