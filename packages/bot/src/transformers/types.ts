@@ -1502,8 +1502,13 @@ export interface Role {
   icon?: bigint
   /** Role name */
   name: string
-  /** Integer representation of hexadecimal color code */
+  /**
+   * Integer representation of hexadecimal color code
+   * @remarks the {@link colors} field is reccomended for use instead of this field
+   */
   color: number
+  /** The role's color */
+  colors: RoleColors
   /** Position of this role */
   position: number
   /** role unicode emoji */
@@ -1545,6 +1550,15 @@ export interface RoleTags {
   guildConnections?: boolean
   /** Whether this is the guild's premium subscriber role */
   premiumSubscriber?: boolean
+}
+
+export interface RoleColors {
+  /** The primary color for the role */
+  primaryColor: number
+  /** The secondary color for the role, this will make the role a gradient between the other provided colors */
+  secondaryColor?: number
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
+  tertiaryColor?: number
 }
 
 export interface ScheduledEvent {

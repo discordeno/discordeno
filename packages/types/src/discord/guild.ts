@@ -260,6 +260,8 @@ export enum GuildFeatures {
   VipRegions = 'VIP_REGIONS',
   /** Guild has enabled the welcome screen */
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
+  /** Guild is able to set gradient colors to roles */
+  EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */

@@ -1426,13 +1426,19 @@ export interface CreateGuild {
   systemChannelFlags?: SystemChannelFlags
 }
 
+/** https://discord.com/developers/docs/resources/guild#create-guild-role-json-params */
 export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[]
-  /** RGB color value, default: 0 */
+  /**
+   * RGB color value, default: 0
+   * @remarks the {@link colors} field is reccomended for use instead of this field
+   */
   color?: number
+  /** The role's color */
+  colors?: GuildRoleColors
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean
   /** Whether the role should be mentionable, default: false */
@@ -1443,13 +1449,28 @@ export interface CreateGuildRole {
   icon?: string
 }
 
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
+export interface GuildRoleColors {
+  /** The primary color for the role */
+  primaryColor: number
+  /** The secondary color for the role, this will make the role a gradient between the other provided colors */
+  secondaryColor?: number
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
+  tertiaryColor?: number
+}
+
 export interface EditGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[]
-  /** RGB color value, default: 0 */
+  /**
+   * RGB color value, default: 0
+   * @remarks the {@link colors} field is reccomended for use instead of this field
+   */
   color?: number
+  /** The role's color */
+  colors?: GuildRoleColors
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean
   /** Whether the role should be mentionable, default: false */

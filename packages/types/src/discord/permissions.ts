@@ -123,8 +123,13 @@ export interface DiscordRole {
   icon?: string
   /** Role name */
   name: string
-  /** Integer representation of hexadecimal color code */
+  /**
+   * RGB color value, default: 0
+   * @remarks the {@link colors} field is reccomended for use instead of this field
+   */
   color: number
+  /** The role's color */
+  colors: DiscordRoleColors
   /** Position of this role (roles with the same position are sorted by id) */
   position: number
   /** role unicode emoji */
@@ -147,6 +152,16 @@ export interface DiscordRoleTags {
   available_for_purchase?: null
   /** Whether this is a guild's linked role */
   guild_connections?: null
+}
+
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
+export interface DiscordRoleColors {
+  /** The primary color for the role */
+  primary_color: number
+  /** The secondary color for the role, this will make the role a gradient between the other provided colors */
+  secondary_color: number | null
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
+  tertiary_color: number | null
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
