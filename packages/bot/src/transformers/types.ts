@@ -1504,7 +1504,7 @@ export interface Role {
   name: string
   /**
    * Integer representation of hexadecimal color code
-   * @remarks the {@link colors} field is reccomended for use instead of this field
+   * @deprecated the {@link colors} field is recommended for use instead of this field
    */
   color: number
   /** The role's color */
