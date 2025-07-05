@@ -50,6 +50,7 @@ import type {
   Subscription,
   UnfurledMediaItem,
   User,
+  UserPrimaryGuild,
   VoiceState,
   Webhook,
 } from './transformers/index.js'
@@ -108,6 +109,7 @@ export interface TransformersObjects {
   subscription: Subscription
   unfurledMediaItem: UnfurledMediaItem
   user: User
+  userPrimaryGuild: UserPrimaryGuild
   voiceState: VoiceState
   webhook: Webhook
 }
@@ -673,7 +675,15 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       avatarDecorationData: defaultValue,
       toggles: defaultValue,
       collectibles: defaultValue,
+      primaryGuild: defaultValue,
       ...desiredProperties.user,
+    },
+    userPrimaryGuild: {
+      identityGuildId: defaultValue,
+      identityEnabled: defaultValue,
+      tag: defaultValue,
+      badge: defaultValue,
+      ...desiredProperties.userPrimaryGuild,
     },
     avatarDecorationData: {
       asset: defaultValue,
