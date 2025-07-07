@@ -20,7 +20,7 @@
   "devDependencies": {
     "@favware/cliff-jumper": "^6.0.0",
     "@swc/cli": "^0.7.7",
-    "@swc/core": "^1.12.5",
+    "@swc/core": "^1.12.9",
     "dotenv": "^17.0.0"
   }
 }
