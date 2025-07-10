@@ -1769,7 +1769,7 @@ export interface User {
   /** data for the user's collectibles */
   collectibles?: Collectibles
   /** The user's primary guild */
-  primaryGuild?: UserPrimaryGuild | null
+  primaryGuild?: UserPrimaryGuild
 }
 
 export interface Collectibles {
@@ -1791,7 +1791,7 @@ export interface Nameplate {
 export interface UserPrimaryGuild {
   /** The id of the primary guild */
   identityGuildId?: bigint
-  /** Thether the user is displaying the primary guild's server tag. This can be `null` if the system clears the identity, e.g. because the server no longer supports tags. */
+  /** Whether the user is displaying the primary guild's server tag. This can be undefined if the system clears the identity, e.g. because the server no longer supports tags. */
   identityEnabled?: boolean
   /** The text of the user's server tag. Limited to 4 characters */
   tag?: string

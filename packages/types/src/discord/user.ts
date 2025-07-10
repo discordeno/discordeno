@@ -37,9 +37,9 @@ export interface DiscordUser {
   /** the user's banner, or null if unset */
   banner?: string
   /** data for the user's avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
   /** data for the user's collectibles */
-  collectibles?: DiscordCollectibles
+  collectibles?: DiscordCollectibles | null
   /** The user's primary guild */
   primary_guild?: DiscordUserPrimaryGuild | null
 }
@@ -75,7 +75,7 @@ export enum PremiumTypes {
 export interface DiscordUserPrimaryGuild {
   /** The id of the primary guild */
   identity_guild_id: string | null
-  /** Thether the user is displaying the primary guild's server tag. This can be `null` if the system clears the identity, e.g. because the server no longer supports tags. */
+  /** Whether the user is displaying the primary guild's server tag. This can be `null` if the system clears the identity, e.g. because the server no longer supports tags. */
   identity_enabled: boolean | null
   /** The text of the user's server tag. Limited to 4 characters */
   tag: string | null
