@@ -262,6 +262,8 @@ export enum GuildFeatures {
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
   /** Guild has access to guest invites */
   GuestsEnabled = 'GUESTS_ENABLED',
+  /** Guild is able to set gradient colors to roles */
+  EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */

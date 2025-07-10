@@ -30,10 +30,10 @@
     "@biomejs/biome": "^1.9.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "turbo": "^2.4.0",
+    "turbo": "^2.5.4",
     "typedoc": "^0.28.5",
     "typedoc-plugin-markdown": "^4.7.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=18.0.0"
