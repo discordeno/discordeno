@@ -2093,7 +2093,7 @@ export interface RestManager {
    *
    * If the user is missing the `READ_MESSAGE_HISTORY` permission in the channel, then no pins will be returned.
    *
-   * @see {@link https://canary.discord.com/developers/docs/resources/message#get-channel-pins}
+   * @see {@link https://discord.com/developers/docs/resources/message#get-channel-pins}
    */
   getChannelPins: (channelId: BigString, options?: GetChannelPinsOptions) => Promise<Camelize<DiscordGetChannelPins>>
   /**
@@ -2982,7 +2982,7 @@ export interface RestManager {
    *
    * Fires a _Channel Pins Update_ event.
    *
-   * @see {@link https://canary.discord.com/developers/docs/resources/message#unpin-message}
+   * @see {@link https://discord.com/developers/docs/resources/message#unpin-message}
    */
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**

@@ -46,9 +46,9 @@ export interface RestRoutes {
     dmRecipient: (channelId: BigString, userId: BigString) => string
     /** Route for handling a specific pin. */
     pin: (channelId: BigString, messageId: BigString) => string
-    /** Route for handling a channels pins. */
+    /** Route for handling a channel's pins. */
     pins: (channelId: BigString) => string
-    /** Route for handling a channels pins. */
+    /** Route for handling a channel's pins. */
     messagePins: (channelId: BigString, options?: GetChannelPinsOptions) => string
     /** Route for handling a specific pin. */
     messagePin: (channelId: BigString, messageId: BigString) => string
