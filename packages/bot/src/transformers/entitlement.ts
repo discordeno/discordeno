@@ -11,7 +11,7 @@ export function transformEntitlement(bot: InternalBot, payload: DiscordEntitleme
   if (props.guildId && payload.guild_id) entitlement.guildId = bot.transformers.snowflake(payload.guild_id)
   if (props.applicationId && payload.application_id) entitlement.applicationId = bot.transformers.snowflake(payload.application_id)
   if (props.type && payload.type) entitlement.type = payload.type
-  if (props.deleted && payload.deleted) entitlement.deleted = payload.deleted
+  if (props.deleted && payload.deleted !== undefined) entitlement.deleted = payload.deleted
   if (props.startsAt && payload.starts_at) entitlement.startsAt = Date.parse(payload.starts_at)
   if (props.endsAt && payload.ends_at) entitlement.endsAt = Date.parse(payload.ends_at)
   if (props.consumed && payload.consumed !== undefined) entitlement.consumed = payload.consumed
