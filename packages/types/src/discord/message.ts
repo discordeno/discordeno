@@ -532,6 +532,14 @@ export interface DiscordAllowedMentions {
 
 // TODO: Implement RoleSubscriptionData https://discord.com/developers/docs/resources/message#role-subscription-data-object-role-subscription-data-object-structure
 
+/** https://discord.com/developers/docs/resources/message#message-pin-object-message-pin-object-struture */
+export interface DiscordMessagePin {
+  /** the time the message was pinned */
+  pinned_at: string
+  /** the pinned message */
+  message: DiscordMessage
+}
+
 /** https://discord.com/developers/docs/resources/message#create-message-jsonform-params */
 export interface DiscordCreateMessage {
   /** The message contents (up to 2000 characters) */
@@ -568,4 +576,10 @@ export interface DiscordCreateMessage {
 export enum DiscordReactionType {
   Normal,
   Burst,
+}
+
+/** https://discord.com/developers/docs/resources/message#get-channel-pins-response-structure */
+export interface DiscordGetChannelPins {
+  items: DiscordMessagePin
+  has_more: boolean
 }

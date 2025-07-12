@@ -48,6 +48,19 @@ export function createRoutes(): RestRoutes {
       pins: (channelId) => {
         return `/channels/${channelId}/pins`
       },
+      messagePins: (channelId, options) => {
+        let url = `/channels/${channelId}/messages/pins?`
+
+        if (options) {
+          if (options.before) url += `before=${options.before}`
+          if (options.limit) url += `&limit=${options.limit}`
+        }
+
+        return url
+      },
+      messagePin: (channelId, messageId) => {
+        return `/channels/${channelId}/messages/pins/${messageId}`
+      },
       reactions: {
         bot: (channelId, messageId, emoji) => {
           return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`
