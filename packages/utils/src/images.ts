@@ -447,3 +447,24 @@ export function roleIconUrl(
       )
     : undefined
 }
+
+/**
+ * Builds the URL to a guild tag badge stored in the Discord CDN.
+ *
+ * @param guildId - The ID of the guild to get the tag badge of
+ * @param badgeHash - The hash identifying the guild tag badge.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined` if no badge has been set.
+ */
+export function guildTagBadgeUrl(
+  guildId: BigString,
+  badgeHash: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  if (badgeHash === undefined) return undefined
+
+  return formatImageUrl(`https://cdn.discordapp.com/guild-tag-badges/${guildId}/${badgeHash}`, options?.size ?? 128, options?.format)
+}

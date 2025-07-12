@@ -42,6 +42,7 @@ import type {
   PollMedia,
   PollResult,
   Role,
+  RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
   Sku,
@@ -51,6 +52,7 @@ import type {
   Subscription,
   UnfurledMediaItem,
   User,
+  UserPrimaryGuild,
   VoiceState,
   Webhook,
 } from './transformers/index.js'
@@ -101,6 +103,7 @@ export interface TransformersObjects {
   pollMedia: PollMedia
   pollResult: PollResult
   role: Role
+  roleColors: RoleColors
   scheduledEvent: ScheduledEvent
   scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule
   sku: Sku
@@ -110,6 +113,7 @@ export interface TransformersObjects {
   subscription: Subscription
   unfurledMediaItem: UnfurledMediaItem
   user: User
+  userPrimaryGuild: UserPrimaryGuild
   voiceState: VoiceState
   webhook: Webhook
 }
@@ -578,6 +582,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       guildId: defaultValue,
       position: defaultValue,
       color: defaultValue,
+      colors: defaultValue,
       id: defaultValue,
       permissions: defaultValue,
       icon: defaultValue,
@@ -586,6 +591,12 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       tags: defaultValue,
       toggles: defaultValue,
       ...desiredProperties.role,
+    },
+    roleColors: {
+      primaryColor: defaultValue,
+      secondaryColor: defaultValue,
+      tertiaryColor: defaultValue,
+      ...desiredProperties.roleColors,
     },
     scheduledEvent: {
       id: defaultValue,
@@ -680,7 +691,15 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       avatarDecorationData: defaultValue,
       toggles: defaultValue,
       collectibles: defaultValue,
+      primaryGuild: defaultValue,
       ...desiredProperties.user,
+    },
+    userPrimaryGuild: {
+      identityGuildId: defaultValue,
+      identityEnabled: defaultValue,
+      tag: defaultValue,
+      badge: defaultValue,
+      ...desiredProperties.userPrimaryGuild,
     },
     avatarDecorationData: {
       asset: defaultValue,

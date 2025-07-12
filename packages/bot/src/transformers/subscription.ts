@@ -14,7 +14,7 @@ export function transformSubscription(bot: InternalBot, payload: DiscordSubscrip
     subscription.renewalSkuIds = payload.renewal_sku_ids.map((skuId) => bot.transformers.snowflake(skuId))
   if (props.currentPeriodStart && payload.current_period_start) subscription.currentPeriodStart = Date.parse(payload.current_period_start)
   if (props.currentPeriodEnd && payload.current_period_end) subscription.currentPeriodEnd = Date.parse(payload.current_period_end)
-  if (props.status && payload.status) subscription.status = payload.status
+  if (props.status && payload.status !== undefined) subscription.status = payload.status
   if (props.canceledAt && payload.canceled_at) subscription.canceledAt = Date.parse(payload.canceled_at)
   if (props.country && payload.country) subscription.country = payload.country
 

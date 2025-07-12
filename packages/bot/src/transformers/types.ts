@@ -1509,8 +1509,13 @@ export interface Role {
   icon?: bigint
   /** Role name */
   name: string
-  /** Integer representation of hexadecimal color code */
+  /**
+   * Integer representation of hexadecimal color code
+   * @deprecated the {@link colors} field is recommended for use instead of this field
+   */
   color: number
+  /** The role's color */
+  colors: RoleColors
   /** Position of this role */
   position: number
   /** role unicode emoji */
@@ -1552,6 +1557,15 @@ export interface RoleTags {
   guildConnections?: boolean
   /** Whether this is the guild's premium subscriber role */
   premiumSubscriber?: boolean
+}
+
+export interface RoleColors {
+  /** The primary color for the role */
+  primaryColor: number
+  /** The secondary color for the role, this will make the role a gradient between the other provided colors */
+  secondaryColor?: number
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
+  tertiaryColor?: number
 }
 
 export interface ScheduledEvent {
@@ -1775,6 +1789,8 @@ export interface User {
   verified: boolean
   /** data for the user's collectibles */
   collectibles?: Collectibles
+  /** The user's primary guild */
+  primaryGuild?: UserPrimaryGuild
 }
 
 export interface Collectibles {
@@ -1791,6 +1807,17 @@ export interface Nameplate {
   label: string
   /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
   palette: string
+}
+
+export interface UserPrimaryGuild {
+  /** The id of the primary guild */
+  identityGuildId?: bigint
+  /** Whether the user is displaying the primary guild's server tag. This can be undefined if the system clears the identity, e.g. because the server no longer supports tags. */
+  identityEnabled?: boolean
+  /** The text of the user's server tag. Limited to 4 characters */
+  tag?: string
+  /** The server tag badge hash */
+  badge?: bigint
 }
 
 export interface VoiceRegion {

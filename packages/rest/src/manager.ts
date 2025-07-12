@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer'
+import { type InspectOptions, inspect } from 'node:util'
 import type {
   BigString,
   Camelize,
@@ -90,6 +91,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token)
 
   const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
+  // Discord error can get nested a lot, so we use a custom inspect to change the depth to Infinity
+  const baseErrorPrototype = {
+    [inspect.custom](_depth: number, options: InspectOptions, _inspect: typeof inspect) {
+      return _inspect(this, {
+        ...options,
+        depth: Infinity,
+        // Since we call inspect on ourself, we need to disable the calls to the inspect.custom symbol or else it will cause an infinite loop.
+        customInspect: false,
+      })
+    },
+  }
 
   const rest: RestManager = {
     applicationId,
@@ -563,11 +575,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         if (!result.ok) {
           const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
 
-          error.cause = {
+          error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
             status: result.status,
             body,
-          }
+          })
 
           throw error
         }
@@ -624,7 +636,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`
             }
 
-            error.cause = reason
+            error.cause = Object.assign(Object.create(baseErrorPrototype), reason)
             reject(error)
           },
           runThroughQueue: options?.runThroughQueue,
