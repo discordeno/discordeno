@@ -120,6 +120,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     token: options.token,
     version: options.version ?? DISCORD_API_VERSION,
     logger: options.logger ?? logger,
+    events: {
+      request: () => {},
+      response: () => {},
+      requestError: () => {},
+      ...options.events,
+    },
 
     routes: createRoutes(),
 
@@ -441,9 +447,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authorizationScheme} tokenhere`
       }
 
+      const request = new Request(url, payload)
+      rest.events.request(request, {
+        body: options.requestBodyOptions?.body,
+      })
+
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
-      const response = await fetch(url, payload).catch(async (error) => {
+      const startTime = Date.now()
+      const response = await fetch(request).catch(async (error) => {
         rest.logger.error(error)
+        rest.events.requestError(request, error, { body: options.requestBodyOptions?.body })
         // Mark request and completed
         rest.invalidBucket.handleCompletedRequest(999, false)
         options.reject({
@@ -453,7 +466,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
         throw error
       })
+      const endTime = Date.now()
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
+
+      const body = response.headers.get('Content-Type') === 'application/json' ? ((await response.json()) as object) : await response.text()
+
+      rest.events.response(request, response, {
+        timeTook: endTime - startTime,
+        requestBody: options.requestBodyOptions?.body,
+        responseBody: body,
+      })
 
       // Mark request and completed
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
@@ -467,14 +489,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} failed.`)
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
-          const body = response.headers.get('Content-Type') === 'application/json' ? ((await response.json()) as object) : await response.text()
-
           options.reject({ ok: false, status: response.status, statusText: response.statusText, body })
           return
         }
-
-        // Consume the response body to avoid leaking memory
-        await response.arrayBuffer()
 
         rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
@@ -500,7 +517,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       // Discord sometimes sends no response with no content.
-      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : await response.text() })
+      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : body })
     },
 
     simplifyUrl(url, method) {
@@ -570,11 +587,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.headers[rest.authorizationHeader] = rest.authorization
         }
 
-        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
+        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
+        rest.events.request(request, {
+          body: options?.body,
+        })
+
+        const startTime = Date.now()
+        const result = await fetch(request)
+        const endTime = Date.now()
+
+        const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
+
+        rest.events.response(request, result, {
+          timeTook: endTime - startTime,
+          requestBody: options?.body,
+          responseBody: body,
+        })
 
         if (!result.ok) {
-          const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
-
           error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
             status: result.status,
@@ -584,7 +614,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           throw error
         }
 
-        return result.status !== 204 ? await result.json() : undefined
+        return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined
       }
 
       return await new Promise(async (resolve, reject) => {
@@ -597,7 +627,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload)
           },
           resolve: (data) => {
-            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
+            resolve(data.status !== 204 ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : undefined)
           },
           reject: (reason) => {
             let errorText: string

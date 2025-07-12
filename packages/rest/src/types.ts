@@ -199,6 +199,30 @@ export interface CreateRestManagerOptions {
    * @default logger // The logger exported by `@discordeno/utils`
    */
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /** Events for the rest manager */
+  events?: {
+    /**
+     * Emitted when a request is made to the API.
+     *
+     * @remarks
+     * The body that will be sent to the API is available in the `extra` parameter, do not consume the body in the Request object.
+     */
+    request?: (request: Request, extra: { body: any }) => void
+    /**
+     * Emitted when a response is received from the API.
+     *
+     * @remarks
+     * Both the request and the response are available in the `extra` parameter.
+     */
+    response?: (request: Request, response: Response, extra: { timeTook: number; requestBody: any; responseBody: string | object }) => void
+    /**
+     * Emitted when a request errors due to fetch error.
+     *
+     * @remarks
+     * The body that was sent to the API is available in the `extra` parameter.
+     */
+    requestError?: (request: Request, error: any, extra: { body: any }) => void
+  }
 }
 
 export interface RestManager {
@@ -244,6 +268,32 @@ export interface RestManager {
   routes: RestRoutes
   /** The logger to use for the rest manager */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /** Events for the rest manager */
+  events: {
+    /**
+     * Emitted when a request is made to the API.
+     *
+     * @remarks
+     * The body that will be sent to the API is available in the `extra` parameter, do not consume the body in the Request object.
+     */
+    request: (request: Request, extra: { body: any }) => void
+    /**
+     * Emitted when a response is received from the API.
+     *
+     * @remarks
+     * This is fired for both successful and failed requests, you should check the Response object to determine if the request was successful or not.
+     *
+     * Both the request and the response are available in the `extra` parameter.
+     */
+    response: (request: Request, response: Response, extra: { timeTook: number; requestBody: any; responseBody: string | object }) => void
+    /**
+     * Emitted when a request errors due to fetch error.
+     *
+     * @remarks
+     * The body that was sent to the API is available in the `extra` parameter.
+     */
+    requestError: (request: Request, error: any, extra: { body: any }) => void
+  }
   /** Allows the user to inject custom headers that will be sent with every request. */
   createBaseHeaders: () => Record<string, string>
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
@@ -3311,7 +3361,8 @@ export interface RestRateLimitedPath {
 export interface RestRequestResponse {
   ok: boolean
   status: number
-  body?: string
+  /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
+  body?: string | object
 }
 
 export interface RestRequestRejection {
