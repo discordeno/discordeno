@@ -480,6 +480,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       guildScheduledEvent: defaultValue,
       stageInstance: defaultValue,
       expiresAt: defaultValue,
+      flags: defaultValue,
       ...desiredProperties.invite,
     },
     member: {

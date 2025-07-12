@@ -260,6 +260,8 @@ export enum GuildFeatures {
   VipRegions = 'VIP_REGIONS',
   /** Guild has enabled the welcome screen */
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
+  /** Guild has access to guest invites */
+  GuestsEnabled = 'GUESTS_ENABLED',
   /** Guild is able to set gradient colors to roles */
   EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
@@ -340,8 +342,11 @@ export interface DiscordMember {
   banner?: string
   /** Array of role object ids */
   roles: string[]
-  /** When the user joined the guild */
-  joined_at: string
+  /**
+   * When the user joined the guild
+   * @remarks Member objects retrieved from `VOICE_STATE_UPDATE` events will have `joined_at` set as `null` if the member was invited as a guest.
+   */
+  joined_at: string | null
   /** When the user started boosting the guild */
   premium_since?: string | null
   /** The permissions this member has in the guild. Only present on interaction events and OAuth2 current member fetch. */
