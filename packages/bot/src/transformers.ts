@@ -71,6 +71,7 @@ import type {
   DiscordThreadMemberGuildCreate,
   DiscordUnfurledMediaItem,
   DiscordUser,
+  DiscordUserPrimaryGuild,
   DiscordVoiceRegion,
   DiscordVoiceState,
   DiscordWebhook,
@@ -152,6 +153,7 @@ import {
   type ThreadMemberGuildCreate,
   type UnfurledMediaItem,
   type User,
+  type UserPrimaryGuild,
   type VoiceRegion,
   type VoiceState,
   type Webhook,
@@ -229,6 +231,7 @@ import {
   transformThreadMemberGuildCreate,
   transformUnfurledMediaItem,
   transformUser,
+  transformUserPrimaryGuild,
   transformUserToDiscordUser,
   transformVoiceRegion,
   transformVoiceState,
@@ -411,6 +414,11 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     ) => any
     unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem, unfurledMediaItem: UnfurledMediaItem) => any
     user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser, user: SetupDesiredProps<User, TProps, TBehavior>) => any
+    userPrimaryGuild: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordUserPrimaryGuild,
+      userPrimaryGuild: SetupDesiredProps<UserPrimaryGuild, TProps, TBehavior>,
+    ) => any
     voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
     voiceState: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceState, voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => any
     webhook: (bot: Bot<TProps, TBehavior>, payload: DiscordWebhook, webhook: SetupDesiredProps<Webhook, TProps, TBehavior>) => any
@@ -546,6 +554,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   threadMemberGuildCreate: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem) => UnfurledMediaItem
   user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>
+  userPrimaryGuild: (bot: Bot<TProps, TBehavior>, payload: DiscordUserPrimaryGuild) => SetupDesiredProps<UserPrimaryGuild, TProps, TBehavior>
   voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion) => VoiceRegion
   voiceState: (
     bot: Bot<TProps, TBehavior>,
@@ -628,6 +637,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       threadMemberGuildCreate: options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
       unfurledMediaItem: options.customizers?.unfurledMediaItem ?? defaultCustomizer,
       user: options.customizers?.user ?? defaultCustomizer,
+      userPrimaryGuild: options.customizers?.userPrimaryGuild ?? defaultCustomizer,
       voiceRegion: options.customizers?.voiceRegion ?? defaultCustomizer,
       voiceState: options.customizers?.voiceState ?? defaultCustomizer,
       webhook: options.customizers?.webhook ?? defaultCustomizer,
@@ -720,6 +730,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
     unfurledMediaItem: options.unfurledMediaItem ?? transformUnfurledMediaItem,
     user: options.user ?? transformUser,
+    userPrimaryGuild: options.userPrimaryGuild ?? transformUserPrimaryGuild,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     voiceState: options.voiceState ?? transformVoiceState,
     webhook: options.webhook ?? transformWebhook,
