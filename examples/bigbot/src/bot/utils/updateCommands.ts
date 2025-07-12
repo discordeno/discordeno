@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { DEVELOPMENT, DEV_SERVER_ID } from '../../config.js'
+import { DEV_SERVER_ID, DEVELOPMENT } from '../../config.js'
 import { bot } from '../bot.js'
 
 export async function updateCommands(): Promise<void> {
