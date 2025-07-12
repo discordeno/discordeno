@@ -1,11 +1,28 @@
 import type { DiscordUpdatePresence, ShardSocketRequest } from '@discordeno/bot'
 
-export type ManagerMessage = ManagerRequestIdentify | ManagerShardIdentified | ManagerShardInfo
-export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerPresencesUpdate | WorkerShardInfo
+export type ManagerMessage = ManagerRequestIdentify | ManagerShardIdentified | ManagerShardPrepared | ManagerShardInfo
+export type WorkerMessage =
+  | WorkerIdentifyShard
+  | WorkerPrepareShard
+  | WorkerSwitchShards
+  | WorkerAllowIdentify
+  | WorkerShardPayload
+  | WorkerPresencesUpdate
+  | WorkerShardInfo
 
 export interface WorkerIdentifyShard {
   type: 'IdentifyShard'
   shardId: number
+}
+
+export interface WorkerPrepareShard {
+  type: 'PrepareShard'
+  shardId: number
+  totalShards: number
+}
+
+export interface WorkerSwitchShards {
+  type: 'SwitchShards'
 }
 
 export interface WorkerAllowIdentify {
@@ -74,5 +91,10 @@ export interface ManagerGetShardInfoFromGuildId {
 
 export interface ManagerShardIdentified {
   type: 'ShardIdentified'
+  shardId: number
+}
+
+export interface ManagerShardPrepared {
+  type: 'ShardPrepared'
   shardId: number
 }
