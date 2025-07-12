@@ -48,6 +48,7 @@ import type {
   DiscordEntitlement,
   DiscordFollowedChannel,
   DiscordGetAnswerVotesResponse,
+  DiscordGetChannelPins,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -103,6 +104,7 @@ import type {
   FileContent,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetChannelPinsOptions,
   GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
@@ -2080,6 +2082,21 @@ export interface RestManager {
    */
   getOriginalInteractionResponse: (token: string) => Promise<Camelize<DiscordMessage>>
   /**
+   * Retrieves the list of pins in a channel.
+   *
+   * @param channelId - The ID of the channel to get the pins for.
+   * @param options - The options for the fetching of the pins.
+   * @returns A {@link DiscordGetChannelPins} objects
+   *
+   * @remarks
+   * Requires the `VIEW_CHANNEL` permission.
+   *
+   * If the user is missing the `READ_MESSAGE_HISTORY` permission in the channel, then no pins will be returned.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/message#get-channel-pins}
+   */
+  getChannelPins: (channelId: BigString, options?: GetChannelPinsOptions) => Promise<Camelize<DiscordGetChannelPins>>
+  /**
    * Gets the pinned messages for a channel.
    *
    * @param channelId - The ID of the channel to get the pinned messages for.
@@ -2091,7 +2108,8 @@ export interface RestManager {
    * If getting a message from a guild channel:
    * - Requires the `READ_MESSAGE_HISTORY` permission.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
+   * @see {@link https://discord.com/developers/docs/resources/message#get-pinned-messages-deprecated}
+   * @deprecated Use {@link getChannelPins} instead.
    */
   getPinnedMessages: (channelId: BigString) => Promise<Camelize<DiscordMessage>[]>
   /**
@@ -2896,15 +2914,11 @@ export interface RestManager {
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
-   *
    * Requires the `MANAGE_MESSAGES` permission.
-   *
-   * ⚠️ There can only be at max 50 messages pinned in a channel.
    *
    * Fires a _Channel Pins Update_ event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#pin-message}
+   * @see {@link https://discord.com/developers/docs/resources/message#pin-message}
    */
   pinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**
@@ -2957,20 +2971,18 @@ export interface RestManager {
    */
   unbanMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   /**
-   * Unpins a pinned message in a channel.
+   * Unpin a message in a channel.
    *
    * @param channelId - The ID of the channel where the message is pinned.
    * @param messageId - The ID of the message to unpin.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
-   *
    * Requires the `MANAGE_MESSAGES` permission.
    *
    * Fires a _Channel Pins Update_ event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
+   * @see {@link https://discord.com/developers/docs/resources/message#unpin-message}
    */
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**

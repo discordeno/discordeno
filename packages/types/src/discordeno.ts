@@ -1392,6 +1392,14 @@ export interface EditMessage {
   components?: MessageComponents
 }
 
+/** https://discord.com/developers/docs/resources/message#get-channel-pins-query-string-params */
+export interface GetChannelPinsOptions {
+  /** Get messages pinned before this timestamp */
+  before?: string
+  /** Max number of pins to return (1-50), defaults to 50 */
+  limit?: number
+}
+
 /** Additional properties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
@@ -1426,13 +1434,19 @@ export interface CreateGuild {
   systemChannelFlags?: SystemChannelFlags
 }
 
+/** https://discord.com/developers/docs/resources/guild#create-guild-role-json-params */
 export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[]
-  /** RGB color value, default: 0 */
+  /**
+   * RGB color value, default: 0
+   * @deprecated the {@link colors} field is recommended for use instead of this field
+   */
   color?: number
+  /** The role's color */
+  colors?: GuildRoleColors
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean
   /** Whether the role should be mentionable, default: false */
@@ -1443,13 +1457,28 @@ export interface CreateGuildRole {
   icon?: string
 }
 
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
+export interface GuildRoleColors {
+  /** The primary color for the role */
+  primaryColor: number
+  /** The secondary color for the role, this will make the role a gradient between the other provided colors */
+  secondaryColor?: number
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
+  tertiaryColor?: number
+}
+
 export interface EditGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[]
-  /** RGB color value, default: 0 */
+  /**
+   * RGB color value, default: 0
+   * @deprecated the {@link colors} field is recommended for use instead of this field
+   */
   color?: number
+  /** The role's color */
+  colors?: GuildRoleColors
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean
   /** Whether the role should be mentionable, default: false */

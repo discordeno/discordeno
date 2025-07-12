@@ -1,6 +1,6 @@
-import type { DiscordCollectibles, DiscordNameplate, DiscordUser } from '@discordeno/types'
+import type { DiscordCollectibles, DiscordNameplate, DiscordUser, DiscordUserPrimaryGuild } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { type Collectibles, type InternalBot, type Nameplate, ToggleBitfield, type User, UserToggles } from '../index.js'
+import { type Collectibles, type InternalBot, type Nameplate, ToggleBitfield, type User, type UserPrimaryGuild, UserToggles } from '../index.js'
 
 export const baseUser: InternalBot['transformers']['$inferredTypes']['user'] = {
   // This allows typescript to still check for type errors on functions below
@@ -43,6 +43,7 @@ export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bo
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     user.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
   if (props.collectibles && payload.collectibles) user.collectibles = bot.transformers.collectibles(bot, payload.collectibles)
+  if (props.primaryGuild && payload.primary_guild) user.primaryGuild = bot.transformers.userPrimaryGuild(bot, payload.primary_guild)
 
   return bot.transformers.customizers.user(bot, payload, user)
 }
@@ -66,4 +67,16 @@ export function transformNameplate(bot: InternalBot, payload: DiscordNameplate):
   if (props.palette && payload.palette) nameplate.palette = payload.palette
 
   return bot.transformers.customizers.nameplate(bot, payload, nameplate)
+}
+
+export function transformUserPrimaryGuild(bot: InternalBot, payload: DiscordUserPrimaryGuild): UserPrimaryGuild {
+  const userPrimaryGuild = {} as UserPrimaryGuild
+  const props = bot.transformers.desiredProperties.userPrimaryGuild
+
+  if (props.identityGuildId && payload.identity_guild_id) userPrimaryGuild.identityGuildId = bot.transformers.snowflake(payload.identity_guild_id)
+  if (props.identityEnabled && payload.identity_enabled) userPrimaryGuild.identityEnabled = payload.identity_enabled
+  if (props.tag && payload.tag) userPrimaryGuild.tag = payload.tag
+  if (props.badge && payload.badge) userPrimaryGuild.badge = iconHashToBigInt(payload.badge)
+
+  return bot.transformers.customizers.userPrimaryGuild(bot, payload, userPrimaryGuild)
 }

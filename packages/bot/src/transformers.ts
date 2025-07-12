@@ -50,12 +50,14 @@ import type {
   DiscordMessageCall,
   DiscordMessageComponent,
   DiscordMessageInteractionMetadata,
+  DiscordMessagePin,
   DiscordMessageSnapshot,
   DiscordNameplate,
   DiscordPoll,
   DiscordPollMedia,
   DiscordPresenceUpdate,
   DiscordRole,
+  DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
   DiscordSku,
@@ -70,6 +72,7 @@ import type {
   DiscordThreadMemberGuildCreate,
   DiscordUnfurledMediaItem,
   DiscordUser,
+  DiscordUserPrimaryGuild,
   DiscordVoiceRegion,
   DiscordVoiceState,
   DiscordWebhook,
@@ -130,12 +133,14 @@ import {
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
+  type MessagePin,
   type MessageSnapshot,
   type Nameplate,
   type Poll,
   type PollMedia,
   type PresenceUpdate,
   type Role,
+  type RoleColors,
   type ScheduledEvent,
   type ScheduledEventRecurrenceRule,
   type Sku,
@@ -150,6 +155,7 @@ import {
   type ThreadMemberGuildCreate,
   type UnfurledMediaItem,
   type User,
+  type UserPrimaryGuild,
   type VoiceRegion,
   type VoiceState,
   type Webhook,
@@ -211,6 +217,7 @@ import {
   transformPollMedia,
   transformPresence,
   transformRole,
+  transformRoleColors,
   transformScheduledEvent,
   transformScheduledEventRecurrenceRule,
   transformSku,
@@ -226,6 +233,7 @@ import {
   transformThreadMemberGuildCreate,
   transformUnfurledMediaItem,
   transformUser,
+  transformUserPrimaryGuild,
   transformUserToDiscordUser,
   transformVoiceRegion,
   transformVoiceState,
@@ -363,6 +371,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       payload: DiscordMessageInteractionMetadata,
       metadata: SetupDesiredProps<MessageInteractionMetadata, TProps, TBehavior>,
     ) => any
+    messagePin: (bot: Bot<TProps, TBehavior>, payload: DiscordMessagePin, call: SetupDesiredProps<MessagePin, TProps, TBehavior>) => any
     messageSnapshot: (
       bot: Bot<TProps, TBehavior>,
       payload: DiscordMessageSnapshot,
@@ -373,6 +382,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia, pollMedia: SetupDesiredProps<PollMedia, TProps, TBehavior>) => any
     presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
     role: (bot: Bot<TProps, TBehavior>, payload: DiscordRole, role: SetupDesiredProps<Role, TProps, TBehavior>) => any
+    roleColors: (bot: Bot<TProps, TBehavior>, payload: DiscordRoleColors, roleColors: SetupDesiredProps<RoleColors, TProps, TBehavior>) => any
     scheduledEvent: (
       bot: Bot<TProps, TBehavior>,
       payload: DiscordScheduledEvent,
@@ -407,6 +417,11 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     ) => any
     unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem, unfurledMediaItem: UnfurledMediaItem) => any
     user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser, user: SetupDesiredProps<User, TProps, TBehavior>) => any
+    userPrimaryGuild: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordUserPrimaryGuild,
+      userPrimaryGuild: SetupDesiredProps<UserPrimaryGuild, TProps, TBehavior>,
+    ) => any
     voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
     voiceState: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceState, voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => any
     webhook: (bot: Bot<TProps, TBehavior>, payload: DiscordWebhook, webhook: SetupDesiredProps<Webhook, TProps, TBehavior>) => any
@@ -514,6 +529,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     bot: Bot<TProps, TBehavior>,
     payload: DiscordMessageInteractionMetadata,
   ) => SetupDesiredProps<MessageInteractionMetadata, TProps, TBehavior>
+  messagePin: (bot: Bot<TProps, TBehavior>, payload: DiscordMessagePin) => SetupDesiredProps<MessagePin, TProps, TBehavior>
   messageSnapshot: (
     bot: Bot<TProps, TBehavior>,
     payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
@@ -523,6 +539,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia) => SetupDesiredProps<PollMedia, TProps, TBehavior>
   presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate) => PresenceUpdate
   role: (bot: Bot<TProps, TBehavior>, payload: { role: DiscordRole; guildId: BigString }) => SetupDesiredProps<Role, TProps, TBehavior>
+  roleColors: (bot: Bot<TProps, TBehavior>, payload: DiscordRoleColors) => SetupDesiredProps<RoleColors, TProps, TBehavior>
   scheduledEvent: (bot: Bot<TProps, TBehavior>, payload: DiscordScheduledEvent) => SetupDesiredProps<ScheduledEvent, TProps, TBehavior>
   scheduledEventRecurrenceRule: (
     bot: Bot<TProps, TBehavior>,
@@ -541,6 +558,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   threadMemberGuildCreate: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem) => UnfurledMediaItem
   user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>
+  userPrimaryGuild: (bot: Bot<TProps, TBehavior>, payload: DiscordUserPrimaryGuild) => SetupDesiredProps<UserPrimaryGuild, TProps, TBehavior>
   voiceRegion: (bot: Bot<TProps, TBehavior>, payload: DiscordVoiceRegion) => VoiceRegion
   voiceState: (
     bot: Bot<TProps, TBehavior>,
@@ -573,6 +591,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       automodRule: options.customizers?.automodRule ?? defaultCustomizer,
       avatarDecorationData: options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: options.customizers?.channel ?? defaultCustomizer,
+      collectibles: options.customizers?.collectibles ?? defaultCustomizer,
       component: options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       embed: options.customizers?.embed ?? defaultCustomizer,
@@ -602,10 +621,12 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       messageCall: options.customizers?.messageCall ?? defaultCustomizer,
       messageInteractionMetadata: options.customizers?.messageInteractionMetadata ?? defaultCustomizer,
       messageSnapshot: options.customizers?.messageSnapshot ?? defaultCustomizer,
+      nameplate: options.customizers?.nameplate ?? defaultCustomizer,
       poll: options.customizers?.poll ?? defaultCustomizer,
       pollMedia: options.customizers?.pollMedia ?? defaultCustomizer,
       presence: options.customizers?.presence ?? defaultCustomizer,
       role: options.customizers?.role ?? defaultCustomizer,
+      roleColors: options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
       sku: options.customizers?.sku ?? defaultCustomizer,
@@ -620,6 +641,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       threadMemberGuildCreate: options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
       unfurledMediaItem: options.customizers?.unfurledMediaItem ?? defaultCustomizer,
       user: options.customizers?.user ?? defaultCustomizer,
+      userPrimaryGuild: options.customizers?.userPrimaryGuild ?? defaultCustomizer,
       voiceRegion: options.customizers?.voiceRegion ?? defaultCustomizer,
       voiceState: options.customizers?.voiceState ?? defaultCustomizer,
       webhook: options.customizers?.webhook ?? defaultCustomizer,
@@ -696,6 +718,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     pollMedia: options.pollMedia ?? transformPollMedia,
     presence: options.presence ?? transformPresence,
     role: options.role ?? transformRole,
+    roleColors: options.roleColors ?? transformRoleColors,
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
     sku: options.sku ?? transformSku,
@@ -711,6 +734,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
     unfurledMediaItem: options.unfurledMediaItem ?? transformUnfurledMediaItem,
     user: options.user ?? transformUser,
+    userPrimaryGuild: options.userPrimaryGuild ?? transformUserPrimaryGuild,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     voiceState: options.voiceState ?? transformVoiceState,
     webhook: options.webhook ?? transformWebhook,
