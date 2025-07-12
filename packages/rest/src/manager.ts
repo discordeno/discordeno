@@ -574,7 +574,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         if (!result.ok) {
           // Sometime the Content-Type may be "application/json; charset=utf-8", for this reason we need to check the start of the header
-          const body = await (result.headers.get('Content-Type').startsWith('application/json') ? result.json() : result.text()).catch(() => null)
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
 
           error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
