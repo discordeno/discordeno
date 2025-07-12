@@ -1,7 +1,7 @@
 import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types'
-import { type Channel, type ForumTag, type InternalBot, calculatePermissions, iconHashToBigInt } from '../index.js'
-import { Permissions } from './toggles/Permissions.js'
+import { type Channel, calculatePermissions, type ForumTag, type InternalBot, iconHashToBigInt } from '../index.js'
 import { ChannelToggles } from './toggles/channel.js'
+import { Permissions } from './toggles/Permissions.js'
 
 const Mask = (1n << 64n) - 1n
 

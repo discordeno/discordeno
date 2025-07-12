@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { camelize, snakeToCamelCase, snakelize } from '../src/casing.js'
+import { camelize, snakelize, snakeToCamelCase } from '../src/casing.js'
 
 describe('casting.ts', () => {
   describe('camelize function', () => {

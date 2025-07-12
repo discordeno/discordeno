@@ -5,6 +5,7 @@ import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { createBot } from '../../src/bot.js'
 import { token } from './constants.js'
+
 chaiUse(chaiAsPromised)
 
 describe('[Bot] Delete any guild owned guilds', () => {
