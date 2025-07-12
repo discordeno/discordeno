@@ -1392,6 +1392,14 @@ export interface EditMessage {
   components?: MessageComponents
 }
 
+/** https://discord.com/developers/docs/resources/message#get-channel-pins-query-string-params */
+export interface GetChannelPinsOptions {
+  /** Get messages pinned before this timestamp */
+  before?: string
+  /** Max number of pins to return (1-50), defaults to 50 */
+  limit?: number
+}
+
 /** Additional properties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
@@ -1662,13 +1670,13 @@ export interface BeginGuildPrune {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
 export interface EditGuildOnboarding {
   /** Prompts shown during onboarding and in customize community */
-  prompts: Camelize<DiscordGuildOnboardingPrompt>[]
+  prompts?: Camelize<DiscordGuildOnboardingPrompt>[]
   /** Channel IDs that members get opted into automatically */
-  defaultChannelIds: BigString[]
+  defaultChannelIds?: BigString[]
   /** Whether onboarding is enabled in the guild */
-  enabled: boolean
+  enabled?: boolean
   /** Current mode of onboarding */
-  mode: DiscordGuildOnboardingMode
+  mode?: DiscordGuildOnboardingMode
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#list-entitlements-query-params */
