@@ -56,6 +56,7 @@ import type {
   DiscordPollMedia,
   DiscordPresenceUpdate,
   DiscordRole,
+  DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
   DiscordSku,
@@ -137,6 +138,7 @@ import {
   type PollMedia,
   type PresenceUpdate,
   type Role,
+  type RoleColors,
   type ScheduledEvent,
   type ScheduledEventRecurrenceRule,
   type Sku,
@@ -213,6 +215,7 @@ import {
   transformPollMedia,
   transformPresence,
   transformRole,
+  transformRoleColors,
   transformScheduledEvent,
   transformScheduledEventRecurrenceRule,
   transformSku,
@@ -376,6 +379,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia, pollMedia: SetupDesiredProps<PollMedia, TProps, TBehavior>) => any
     presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
     role: (bot: Bot<TProps, TBehavior>, payload: DiscordRole, role: SetupDesiredProps<Role, TProps, TBehavior>) => any
+    roleColors: (bot: Bot<TProps, TBehavior>, payload: DiscordRoleColors, roleColors: SetupDesiredProps<RoleColors, TProps, TBehavior>) => any
     scheduledEvent: (
       bot: Bot<TProps, TBehavior>,
       payload: DiscordScheduledEvent,
@@ -531,6 +535,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   pollMedia: (bot: Bot<TProps, TBehavior>, payload: DiscordPollMedia) => SetupDesiredProps<PollMedia, TProps, TBehavior>
   presence: (bot: Bot<TProps, TBehavior>, payload: DiscordPresenceUpdate) => PresenceUpdate
   role: (bot: Bot<TProps, TBehavior>, payload: { role: DiscordRole; guildId: BigString }) => SetupDesiredProps<Role, TProps, TBehavior>
+  roleColors: (bot: Bot<TProps, TBehavior>, payload: DiscordRoleColors) => SetupDesiredProps<RoleColors, TProps, TBehavior>
   scheduledEvent: (bot: Bot<TProps, TBehavior>, payload: DiscordScheduledEvent) => SetupDesiredProps<ScheduledEvent, TProps, TBehavior>
   scheduledEventRecurrenceRule: (
     bot: Bot<TProps, TBehavior>,
@@ -582,6 +587,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       automodRule: options.customizers?.automodRule ?? defaultCustomizer,
       avatarDecorationData: options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: options.customizers?.channel ?? defaultCustomizer,
+      collectibles: options.customizers?.collectibles ?? defaultCustomizer,
       component: options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       embed: options.customizers?.embed ?? defaultCustomizer,
@@ -611,10 +617,12 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       messageCall: options.customizers?.messageCall ?? defaultCustomizer,
       messageInteractionMetadata: options.customizers?.messageInteractionMetadata ?? defaultCustomizer,
       messageSnapshot: options.customizers?.messageSnapshot ?? defaultCustomizer,
+      nameplate: options.customizers?.nameplate ?? defaultCustomizer,
       poll: options.customizers?.poll ?? defaultCustomizer,
       pollMedia: options.customizers?.pollMedia ?? defaultCustomizer,
       presence: options.customizers?.presence ?? defaultCustomizer,
       role: options.customizers?.role ?? defaultCustomizer,
+      roleColors: options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
       sku: options.customizers?.sku ?? defaultCustomizer,
@@ -706,6 +714,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     pollMedia: options.pollMedia ?? transformPollMedia,
     presence: options.presence ?? transformPresence,
     role: options.role ?? transformRole,
+    roleColors: options.roleColors ?? transformRoleColors,
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
     sku: options.sku ?? transformSku,
