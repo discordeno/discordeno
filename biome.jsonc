@@ -55,7 +55,7 @@
       "!**/node_modules",
       // Ignore turbo and docusaurus cache/stuff
       "!**/.docusaurus",
-      "!**/.turbo"
+      "!**/.turbo",
       // Remove the yarn script as it is minified,
       "!**/.yarn",
       // Ignore build outputs
