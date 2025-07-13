@@ -453,7 +453,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
-      const startTime = Date.now()
       const response = await fetch(request).catch(async (error) => {
         rest.logger.error(error)
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body })
@@ -466,13 +465,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
         throw error
       })
-      const endTime = Date.now()
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       const body = response.headers.get('Content-Type') === 'application/json' ? ((await response.json()) as object) : await response.text()
 
       rest.events.response(request, response, {
-        timeTook: endTime - startTime,
         requestBody: options.requestBodyOptions?.body,
         responseBody: body,
       })
@@ -592,15 +589,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           body: options?.body,
         })
 
-        const startTime = Date.now()
         const result = await fetch(request)
-        const endTime = Date.now()
 
         // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
         const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
-         
+
         rest.events.response(request, result, {
-          timeTook: endTime - startTime,
           requestBody: options?.body,
           responseBody: body,
         })
