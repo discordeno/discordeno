@@ -304,13 +304,15 @@ export interface DiscordOptionalAuditEntryInfo {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export type DiscordAuditLogChangeObject<T> = {
-  [K in keyof T]: {
-    new_value?: T[K]
-    old_value?: T[K]
-    key: K
-  }
-}[keyof T]
+export type DiscordAuditLogChangeObject<T> = NonNullable<
+  {
+    [K in keyof T]: {
+      new_value?: T[K]
+      old_value?: T[K]
+      key: K
+    }
+  }[keyof T]
+>
 
 // Done manually as it is clearer in this way
 /** Partial role audit log entry change exception */
