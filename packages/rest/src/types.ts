@@ -205,14 +205,14 @@ export interface CreateRestManagerOptions {
      * Emitted when a request is made to the API.
      *
      * @remarks
-     * The body that will be sent to the API is available in the `extra` parameter, do not consume the body in the Request object.
+     * The body that will be sent to the API is available in the `extra` parameter. Do not consume the body in the `Request` object and use the one in the `extra` parameter instead.
      */
     request?: (request: Request, extra: { body: any }) => void
     /**
      * Emitted when a response is received from the API.
      *
      * @remarks
-     * Both the request and the response are available in the `extra` parameter.
+     * Both the request and the response body are available in the `extra` parameter. Do not consume the body in the `Request` or `Response` object and use the one in the `extra` parameter instead.
      */
     response?: (request: Request, response: Response, extra: { timeTook: number; requestBody: any; responseBody: string | object }) => void
     /**
