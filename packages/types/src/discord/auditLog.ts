@@ -208,6 +208,7 @@ export type DiscordAuditLogChange =
   | DiscordAuditLogChangeObject<DiscordIntegration>
   | DiscordAuditLogChangeObject<DiscordStageInstance>
   | DiscordAuditLogChangeObject<DiscordSticker>
+  | DiscordAuditLogChangeObject<DiscordScheduledEvent>
   | DiscordAuditLogChangeObject<DiscordThreadMetadata>
   | DiscordAuditLogChangeApplicationCommandPermissions
   | DiscordAuditLogChangeObject<DiscordSoundboardSound>
