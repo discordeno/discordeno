@@ -573,7 +573,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
+          // Sometime the Content-Type may be "application/json; charset=utf-8", for this reason we need to check the start of the header
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
 
           error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
