@@ -596,8 +596,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(request)
         const endTime = Date.now()
 
-        const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
-
+        // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
+         
         rest.events.response(request, result, {
           timeTook: endTime - startTime,
           requestBody: options?.body,
