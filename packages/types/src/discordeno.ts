@@ -1073,6 +1073,8 @@ export interface ModifyWebhook {
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
 export interface ExecuteWebhook {
+  // Query Parameters
+
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
   wait?: boolean
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
@@ -1084,10 +1086,9 @@ export interface ExecuteWebhook {
    * @default false
    */
   withComponents?: boolean
-  /** Name of the thread to create (target channel has to be type of forum channel) */
-  threadName?: string
-  /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
-  appliedTags?: BigString[]
+
+  // JSON Parameters
+
   /** The message contents (up to 2000 characters) */
   content?: string
   /** Override the default username of the webhook */
@@ -1096,8 +1097,6 @@ export interface ExecuteWebhook {
   avatarUrl?: string
   /** True if this is a TTS message */
   tts?: boolean
-  /** The contents of the files being sent */
-  files?: FileContent[]
   /** Embedded `rich` content */
   embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
@@ -1110,6 +1109,20 @@ export interface ExecuteWebhook {
    * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
    */
   components?: MessageComponents
+  /** The contents of the files being sent */
+  files?: FileContent[]
+  /** Attachment objects with filename and description */
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
+  /**
+   * Message flags combined in a bitfield
+   *
+   * @see {@link MessageFlags}
+   */
+  flags?: number
+  /** Name of the thread to create (target channel has to be type of forum channel) */
+  threadName?: string
+  /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
+  appliedTags?: BigString[]
   /** A poll object */
   poll?: CreatePoll
 }
