@@ -48,7 +48,21 @@
     }
   },
   "files": {
-    "includes": ["**", "!**/package.json", "!**/node_modules", "!**/.docusaurus", "!**/.turbo", "!**/.yarn", "!**/build", "!**/coverage", "!**/dist"],
+    "includes": [
+      "**",
+      // Ignore the package.json and leave yarn to format it
+      "!**/package.json",
+      "!**/node_modules",
+      // Ignore turbo and docusaurus cache/stuff
+      "!**/.docusaurus",
+      "!**/.turbo"
+      // Remove the yarn script as it is minified,
+      "!**/.yarn",
+      // Ignore build outputs
+      "!**/build",
+      "!**/coverage",
+      "!**/dist"
+    ],
     "ignoreUnknown": true
   }
 }
