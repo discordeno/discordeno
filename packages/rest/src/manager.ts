@@ -467,8 +467,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
-        // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
+      // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+      const body = await (response.headers.get('Content-Type')?.startsWith('application/json') ? response.json() : response.text()).catch(() => null)
 
       rest.events.response(request, response, {
         requestBody: options.requestBodyOptions?.body,
