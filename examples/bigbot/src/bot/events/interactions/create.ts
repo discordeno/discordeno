@@ -1,4 +1,4 @@
-import { InteractionTypes, LogLevels, commandOptionsParser, type logger } from '@discordeno/bot'
+import { commandOptionsParser, InteractionTypes, LogLevels, type logger } from '@discordeno/bot'
 import chalk from 'chalk'
 import { bot } from '../../bot.js'
 

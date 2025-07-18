@@ -1,5 +1,5 @@
 import { GatewayOpcodes, Intents } from '@discordeno/types'
-import { type GatewayManager, ShardSocketCloseCodes, createGatewayManager } from '../../src/index.js'
+import { createGatewayManager, type GatewayManager, ShardSocketCloseCodes } from '../../src/index.js'
 import { creatWSServer, heartbeatInterval } from './websocket.js'
 
 describe('Gateway Integration', () => {

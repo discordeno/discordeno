@@ -1,4 +1,4 @@
-import { type RequestMethods, createRestManager } from '@discordeno/rest'
+import { createRestManager, type RequestMethods } from '@discordeno/rest'
 import type { MultipartFile, MultipartValue } from '@fastify/multipart'
 import { buildFastifyApp } from './fastify.js'
 
