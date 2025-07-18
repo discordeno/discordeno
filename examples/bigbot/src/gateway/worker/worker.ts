@@ -44,8 +44,11 @@ parentPort.on('message', async (message: WorkerMessage) => {
   if (message.type === 'PrepareShard') {
     logger.info(`Preparing shard #${message.shardId}`)
     totalShards = message.totalShards
-    const shard = pendingShards.get(message.shardId) ?? createShard(message.shardId)
-    pendingShards.set(message.shardId, shard)
+    let shard = pendingShards.get(message.shardId)
+    if (!shard) {
+      shard = createShard(message.shardId)
+      pendingShards.set(message.shardId, shard)
+    }
 
     // Ignore the events
     // TODO: If you need 'gateway.resharding.updateGuildsShardId' it you can listen to only the ready event and use the data from that event for the function call

@@ -33,8 +33,11 @@ const gatewayManager = createGatewayManager({
 gatewayManager.resharding.tellWorkerToPrepare = async (workerId, shardId, bucketId) => {
   logger.info(`Tell worker to prepare, workerId: ${workerId}, shardId: ${shardId}, bucketId: ${bucketId}`)
 
-  const worker = workers.get(workerId) ?? createWorker(workerId)
-  workers.set(workerId, worker)
+  let worker = workers.get(workerId)
+  if (!worker) {
+    worker = createWorker(workerId)
+    workers.set(workerId, worker)
+  }
 
   worker.postMessage({
     type: 'PrepareShard',
