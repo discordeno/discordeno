@@ -456,7 +456,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const response = await fetch(request).catch(async (error) => {
         rest.logger.error(error)
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body })
-        // Mark request and completed
+        // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false)
         options.reject({
           ok: false,
@@ -475,7 +475,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         responseBody: body,
       })
 
-      // Mark request and completed
+      // Mark request as completed
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
@@ -514,7 +514,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await options.retryRequest?.(options)
       }
 
-      // Discord sometimes sends no response with no content.
+      // Discord sometimes sends a response with no content
       options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : body })
     },
 
