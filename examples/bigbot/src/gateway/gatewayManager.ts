@@ -57,7 +57,7 @@ gatewayManager.resharding.tellWorkerToPrepare = async (workerId, shardId, bucket
   worker.off('message', waitForShardPrepared)
 }
 
-gatewayManager.resharding.onReshardingSwich = async () => {
+gatewayManager.resharding.onReshardingSwitch = async () => {
   logger.info('Resharding switch triggered, telling workers to switch the shards')
 
   for (const worker of workers.values()) {

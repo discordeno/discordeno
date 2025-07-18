@@ -143,7 +143,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         gateway.logger.info(`[Resharding] All shards are now online.`)
 
-        await gateway.resharding.onReshardingSwich()
+        await gateway.resharding.onReshardingSwitch()
       },
       async tellWorkerToPrepare(workerId, shardId, bucketId) {
         gateway.logger.debug(`[Resharding] Telling worker to prepare. Worker: ${workerId} | Shard: ${shardId} | Bucket: ${bucketId}.`)
@@ -187,7 +187,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         gateway.logger.debug(`[Resharding] Shard #${shardId} identified.`)
       },
-      async onReshardingSwich() {
+      async onReshardingSwitch() {
         gateway.logger.debug(`[Resharding] Making the switch from the old shards to the new ones.`)
 
         // Move the events from the old shards to the new ones
@@ -722,7 +722,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
      *
      * @remarks
      * This function will resolve once the resharding is done.
-     * So when all the calls to {@link tellWorkerToPrepare} and {@link onReshardingSwich} are done.
+     * So when all the calls to {@link tellWorkerToPrepare} and {@link onReshardingSwitch} are done.
      */
     reshard: (info: Camelize<DiscordGetGatewayBot> & { firstShardId?: number; lastShardId?: number }) => Promise<void>
     /**
@@ -738,7 +738,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
      *
      * This should make the new resharded shards become the active ones and shutdown the old ones
      */
-    onReshardingSwich: () => Promise<void>
+    onReshardingSwitch: () => Promise<void>
   }
   /** Determine max number of shards to use based upon the max concurrency. */
   calculateTotalShards: () => number
