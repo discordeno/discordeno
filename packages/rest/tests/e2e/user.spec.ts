@@ -1,22 +1,22 @@
 import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { e2eCache, rest } from './utils.js'
+import { rest } from './utils.js'
 chaiUse(chaiAsPromised)
 
-before(async () => {
-  if (!e2eCache.guild) {
-    e2eCache.guild = await rest.createGuild({
-      name: 'Discordeno-test',
-    })
-  }
-})
+// before(async () => {
+//   if (!e2eCache.guild) {
+//     e2eCache.guild = await rest.createGuild({
+//       name: 'Discordeno-test',
+//     })
+//   }
+// })
 
-after(async () => {
-  if (e2eCache.guild.id && !e2eCache.deletedGuild) {
-    await rest.deleteGuild(e2eCache.guild.id)
-  }
-})
+// after(async () => {
+//   if (e2eCache.guild.id && !e2eCache.deletedGuild) {
+//     await rest.deleteGuild(e2eCache.guild.id)
+//   }
+// })
 
 describe('Get a user from the api', () => {
   it('With a valid user id', async () => {

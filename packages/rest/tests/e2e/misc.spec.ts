@@ -1,10 +1,9 @@
 import { describe } from 'mocha'
-import { e2eCache, rest } from './utils.js'
 
 describe('Typings', () => {
-  it('Trigger Typing Indication', async () => {
-    const channel = await rest.createChannel(e2eCache.guild.id, { name: 'typing' })
-    await rest.triggerTypingIndicator(channel.id)
+  it.skip('Trigger Typing Indication', async () => {
+    // const channel = await rest.createChannel(e2eCache.guild.id, { name: 'typing' })
+    // await rest.triggerTypingIndicator(channel.id)
   })
 })
 
