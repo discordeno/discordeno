@@ -9,7 +9,9 @@ export async function handleThreadMemberUpdate(bot: Bot, data: DiscordGatewayPay
   bot.events.threadMemberUpdate({
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),
-    joinedAt: Date.parse(payload.joined_at),
+    // TODO: remove this in the next major version
+    joinedAt: 'joined_at' in payload && typeof payload.joined_at === 'string' ? Date.parse(payload.joined_at) : 0,
+    joinedTimestamp: Date.parse(payload.join_timestamp),
     flags: payload.flags,
   })
 }

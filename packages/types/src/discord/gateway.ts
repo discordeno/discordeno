@@ -9,12 +9,15 @@ import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './
 import type { DiscordChannel, DiscordThreadMember } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
 import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guild.js'
+import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
 import type { TargetTypes } from './invite.js'
 import type { DiscordReactionType } from './message.js'
 import type { DiscordRole } from './permissions.js'
 import type { DiscordSoundboardSound } from './soundboard.js'
+import type { DiscordStageInstance } from './stageInstance.js'
 import type { DiscordSticker } from './sticker.js'
 import type { DiscordAvatarDecorationData, DiscordUser } from './user.js'
+import type { DiscordVoiceState } from './voice.js'
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -193,9 +196,9 @@ export interface DiscordSessionStartLimit {
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#receive-events */
-// TODO: Move 'RESUMED' from GatewayEventNames to GatewayDispatchEventNames
 export type GatewayDispatchEventNames =
   | 'READY'
+  | 'RESUMED'
   | 'APPLICATION_COMMAND_PERMISSIONS_UPDATE'
   | 'AUTO_MODERATION_RULE_CREATE'
   | 'AUTO_MODERATION_RULE_UPDATE'
@@ -271,7 +274,7 @@ export type GatewayDispatchEventNames =
   | 'MESSAGE_POLL_VOTE_REMOVE'
 
 /** https://discord.com/developers/docs/events/gateway-events#receive-events */
-export type GatewayEventNames = GatewayDispatchEventNames | 'RESUMED'
+export type GatewayEventNames = GatewayDispatchEventNames
 
 /** https://discord.com/developers/docs/events/gateway-events#payload-structure */
 export interface DiscordGatewayPayload {
@@ -363,6 +366,17 @@ export interface DiscordAutoModerationActionExecution {
   matched_content: string | null
 }
 
+/** https://discord.com/developers/docs/events/gateway-events#thread-create */
+export interface DiscordThreadCreateExtra {
+  /**
+   * When a thread is created this will be true on that channel payload for the thread.
+   *
+   * @remarks
+   * The Thread Create event may fire for a few reasons, however this fields only exists when it is fired because a thread was created.
+   */
+  newly_created?: boolean
+}
+
 /** https://discord.com/developers/docs/events/gateway-events#thread-list-sync-thread-list-sync-event-fields */
 export interface DiscordThreadListSync {
   /** The id of the guild */
@@ -376,16 +390,13 @@ export interface DiscordThreadListSync {
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
-export interface DiscordThreadMemberUpdate {
-  /** The id of the thread */
-  id: string
-  /** The id of the guild */
+export interface DiscordThreadMemberUpdateExtra {
+  /** Id of the guild */
   guild_id: string
-  /** The timestamp when the bot joined this thread. */
-  joined_at: string
-  /** The flags this user has for this thread. Not useful for bots. */
-  flags: number
 }
+
+/** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
+export interface DiscordThreadMemberUpdate extends DiscordThreadMember, DiscordThreadMemberUpdateExtra {}
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-members-update-thread-members-update-event-fields */
 export interface DiscordThreadMembersUpdate {
@@ -411,20 +422,74 @@ export interface DiscordChannelPinsUpdate {
   last_pin_timestamp?: string | null
 }
 
-// TODO: Add Guild Create: https://discord.com/developers/docs/events/gateway-events#guild-create-guild-create-extra-fields
-// TODO: Add Create Guild Audit Log Entry: https://discord.com/developers/docs/events/gateway-events#guild-audit-log-entry-create-guild-audit-log-entry-create-event-extra-fields
+/** https://discord.com/developers/docs/events/gateway-events#guild-create-guild-create-extra-fields */
+export interface DiscordGuildCreateExtra {
+  /** When this guild was joined at */
+  joined_at: string
+  /** If this is considered a large guild */
+  large: boolean
+  /** If the guild is unavailable due to an outage */
+  unavailable?: boolean
+  /** Total number of member in this guild */
+  member_count: number
+  /**
+   * States of members currently in voice channels
+   *
+   * @remarks
+   * Lacks the `guild_id` key
+   */
+  voice_states: Partial<DiscordVoiceState>[]
+  /** Users in the guild */
+  members: DiscordMemberWithUser[]
+  /** Channels in the guild */
+  channels: DiscordChannel[]
+  /** All active threads in the guild that the current user has permission to view */
+  threads: DiscordChannel[]
+  /**
+   * Presences of the members in the guild
+   *
+   * @remarks
+   * Will only include non-offline members if the size is greater than the large threshold.
+   */
+  presences?: Partial<DiscordPresenceUpdate>[]
+  /** Stage instances in the guild */
+  stage_instances?: DiscordStageInstance[]
+  /** Scheduled events in the guild */
+  guild_scheduled_events: DiscordScheduledEvent[]
+  /** Soundboard sounds in the guild */
+  soundboard_sounds: DiscordSoundboardSound[]
+}
 
-// TODO: Give both a name: https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields, https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields
-/**
- * https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields
- * https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields
- */
-export interface DiscordGuildBanAddRemove {
+/** https://discord.com/developers/docs/events/gateway-events#guild-audit-log-entry-create-guild-audit-log-entry-create-event-extra-fields */
+export interface DiscordGuildAuditLogEntryCreateExtra {
+  /** The id of the guild */
+  guild_id: string
+}
+
+/** https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields */
+export interface DiscordGuildBanAdd {
   /** id of the guild */
   guild_id: string
   /** The banned user */
   user: DiscordUser
 }
+
+/** https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields */
+export interface DsicordGuildBanRemove {
+  /** id of the guild */
+  guild_id: string
+  /** The banned user */
+  user: DiscordUser
+}
+
+/**
+ * https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields
+ * https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields
+ *
+ * @deprecated
+ * Use {@link DiscordGuildBanAdd} and {@link DsicordGuildBanRemove} instead.
+ */
+export interface DiscordGuildBanAddRemove extends DiscordGuildBanAdd {}
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-emojis-update-guild-emojis-update-event-fields */
 export interface DiscordGuildEmojisUpdate {
@@ -449,10 +514,13 @@ export interface DiscordGuildIntegrationsUpdate {
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
-export interface DiscordGuildMemberAdd extends DiscordMemberWithUser {
+export interface DiscordGuildMemberAddExtra {
   /** id of the guild */
   guild_id: string
 }
+
+/** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
+export interface DiscordGuildMemberAdd extends DiscordMemberWithUser, DiscordGuildMemberAddExtra {}
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-remove-guild-member-remove-event-fields */
 export interface DiscordGuildMemberRemove {
@@ -580,7 +648,18 @@ export interface DiscordSoundboardSounds {
   guild_id: string
 }
 
-// TODO: Add separate type for Integration Create and Integration Update: https://discord.com/developers/docs/events/gateway-events#integration-create-integration-create-event-additional-fields, https://discord.com/developers/docs/events/gateway-events#integration-update-integration-update-event-additional-fields
+/** https://discord.com/developers/docs/events/gateway-events#integration-create-integration-create-event-additional-fields */
+export interface DiscordIntegrationCreateExtra {
+  /** Id of the guild */
+  guild_id: string
+}
+
+/** https://discord.com/developers/docs/events/gateway-events#integration-update-integration-update-event-additional-fields */
+export interface DiscordIntegrationUpdateExtra {
+  /** Id of the guild */
+  guild_id: string
+}
+
 /**
  * https://discord.com/developers/docs/events/gateway-events#integration-create-integration-create-event-additional-fields
  * https://discord.com/developers/docs/events/gateway-events#integration-update-integration-update-event-additional-fields
@@ -638,7 +717,18 @@ export interface DiscordInviteDelete {
   code: string
 }
 
-// TODO: Add Message Create: https://discord.com/developers/docs/events/gateway-events#message-create-message-create-extra-fields
+/** https://discord.com/developers/docs/events/gateway-events#message-create-message-create-extra-fields */
+export interface DiscordMessageCreateExtra {
+  /** ID of the guild the message was sent in - unless it is an ephemeral message */
+  guild_id?: string
+  /** Member properties for this message's author. Missing for ephemeral messages and messages from webhooks */
+  member?: Partial<DiscordMemberWithUser>
+  /** Users specifically mentioned in the message */
+  mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>
+}
+
+/** https://discord.com/developers/docs/events/gateway-events#message-update */
+export type DiscordMessageUpdateExtra = DiscordMessageCreateExtra
 
 /** https://discord.com/developers/docs/events/gateway-events#message-delete-message-delete-event-fields */
 export interface DiscordMessageDelete {
@@ -684,17 +774,45 @@ export interface DiscordMessageReactionAdd {
   type: DiscordReactionType
 }
 
-// TODO: This should provably not depend on DiscordMessageReactionAdd
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-message-reaction-remove-event-fields */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member' | 'burst_colors'> {}
+export interface DiscordMessageReactionRemove {
+  /** The id of the user */
+  user_id: string
+  /** The id of the channel */
+  channel_id: string
+  /** The id of the message */
+  message_id: string
+  /** The id of the guild */
+  guild_id?: string
+  /** The emoji used to react */
+  emoji: Partial<DiscordEmoji>
+  /** true if this is a super-reaction */
+  burst: boolean
+  /** The type of reaction */
+  type: DiscordReactionType
+}
 
-// TODO: This should provably not depend on DiscordMessageReactionAdd
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-all-message-reaction-remove-all-event-fields */
-export interface DiscordMessageReactionRemoveAll extends Pick<DiscordMessageReactionAdd, 'channel_id' | 'message_id' | 'guild_id'> {}
+export interface DiscordMessageReactionRemoveAll {
+  /** The id of the channel */
+  channel_id: string
+  /** The id of the message */
+  message_id: string
+  /** The id of the guild */
+  guild_id?: string
+}
 
-// TODO: This should provably not depend on DiscordMessageReactionAdd
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-emoji-message-reaction-remove-emoji-event-fields */
-export type DiscordMessageReactionRemoveEmoji = Pick<DiscordMessageReactionAdd, 'channel_id' | 'guild_id' | 'message_id' | 'emoji'>
+export interface DiscordMessageReactionRemoveEmoji {
+  /** The id of the channel */
+  channel_id: string
+  /** The id of the message */
+  message_id: string
+  /** The id of the guild */
+  guild_id?: string
+  /** The emoji used to react */
+  emoji: Partial<DiscordEmoji>
+}
 
 /** https://discord.com/developers/docs/events/gateway-events#presence-update-presence-update-event-fields */
 export interface DiscordPresenceUpdate {
