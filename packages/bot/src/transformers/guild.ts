@@ -88,6 +88,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
   if (props.voiceStates && payload.guild.voice_states)
     guild.voiceStates = new Collection(
       payload.guild.voice_states.map((voiceState) => {
+        // @ts-expect-error The transformer cannot handle a partial voice state according to the types
         const result = bot.transformers.voiceState(bot, { voiceState, guildId })
         return [result.userId, result]
       }),

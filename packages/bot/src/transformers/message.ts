@@ -194,6 +194,7 @@ export function transformMessage(
     message.interaction = interaction
   }
   if (props.member && guildId && userId && payload.message.member)
+    // @ts-expect-error TODO: partial
     message.member = bot.transformers.member(bot, payload.message.member, guildId, userId)
   if (payload.message.mention_everyone) message.mentionEveryone = true
   if (props.mentionedChannelIds && payload.message.mention_channels?.length) {
