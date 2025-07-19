@@ -57,10 +57,8 @@ There you go. You now have an event handler working perfectly.
 Once, again we are going to create a quick http listener that will listen for events coming from the shards and process them accordingly. Create a file like `services/bot/index.ts` and paste the code below:
 
 ```ts
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import express from 'express'
-
-dotenv.config()
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
 
