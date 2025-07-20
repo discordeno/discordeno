@@ -467,6 +467,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
         bot.transformers.snowflake(text.substring(2, text.length - 1)),
       ),
     ],
+    // @ts-expect-error: partials
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
     nonce: payload.nonce,
   }
