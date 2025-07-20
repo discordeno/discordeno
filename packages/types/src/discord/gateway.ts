@@ -475,7 +475,7 @@ export interface DiscordGuildBanAdd {
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields */
-export interface DsicordGuildBanRemove {
+export interface DiscordGuildBanRemove {
   /** id of the guild */
   guild_id: string
   /** The banned user */
