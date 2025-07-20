@@ -730,18 +730,20 @@ export interface DiscordActivity {
   url?: string | null
   /** Unix timestamp of when the activity was added to the user's session */
   created_at: number
-  /** What the player is currently doing */
-  details?: string | null
-  /** The user's current party status */
-  state?: string | null
-  /** Whether or not the activity is an instanced game session */
-  instance?: boolean
-  /** Activity flags `OR`d together, describes what the payload includes */
-  flags?: number
   /** Unix timestamps for start and/or end of the game */
   timestamps?: DiscordActivityTimestamps
   /** Application id for the game */
   application_id?: string
+  /** Controls which field is displayed in the user's status text in the member list */
+  status_display_type?: DiscordStatusDisplayType | null
+  /** What the player is currently doing */
+  details?: string | null
+  /** URL that is linked when clicking on the details text */
+  details_url?: string | null
+  /** The user's current party status */
+  state?: string | null
+  /** URL that is linked when clicking on the state text */
+  state_url?: string | null
   /** The emoji used for a custom status */
   emoji?: DiscordActivityEmoji | null
   /** Information for the current party of the player */
@@ -750,6 +752,10 @@ export interface DiscordActivity {
   assets?: DiscordActivityAssets
   /** Secrets for Rich Presence joining and spectating */
   secrets?: DiscordActivitySecrets
+  /** Whether or not the activity is an instanced game session */
+  instance?: boolean
+  /** Activity flags `OR`d together, describes what the payload includes */
+  flags?: number
   /** The custom buttons shown in the Rich Presence (max 2) */
   buttons?: DiscordActivityButton[]
 }
@@ -765,6 +771,16 @@ export enum ActivityTypes {
   Watching = 3,
   Custom = 4,
   Competing = 5,
+}
+
+/** https://discord.com/developers/docs/events/gateway-events#activity-object-status-display-types */
+export enum DiscordStatusDisplayType {
+  /** Example: "Listening to Spotify" */
+  Name = 0,
+  /** Example: "Listening to Rick Astley" */
+  State = 1,
+  /** Example: "Listening to Never Gonna Give You Up" */
+  Details = 2,
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-timestamps */
@@ -795,14 +811,18 @@ export interface DiscordActivityParty {
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-assets */
 export interface DiscordActivityAssets {
-  /** Text displayed when hovering over the large image of the activity */
-  large_text?: string
-  /** Text displayed when hovering over the small image of the activity */
-  small_text?: string
   /** The id for a large asset of the activity, usually a snowflake */
   large_image?: string
+  /** Text displayed when hovering over the large image of the activity */
+  large_text?: string
+  /** URL that is opened when clicking on the large image */
+  large_url?: string
   /** The id for a small asset of the activity, usually a snowflake */
   small_image?: string
+  /** Text displayed when hovering over the small image of the activity */
+  small_text?: string
+  /** URL that is opened when clicking on the small image */
+  small_url?: string
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-secrets */
