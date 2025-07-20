@@ -777,7 +777,7 @@ export enum ActivityTypes {
 export enum DiscordStatusDisplayType {
   /** Shows the name of the activity */
   Name = 0,
-  /** Shows the name of the state of the activity */
+  /** Shows the state of the activity */
   State = 1,
   /** Shows the details of the activity */
   Details = 2,
