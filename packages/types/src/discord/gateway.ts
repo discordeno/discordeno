@@ -775,11 +775,11 @@ export enum ActivityTypes {
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-status-display-types */
 export enum DiscordStatusDisplayType {
-  /** Shows the name of the activity */
+  /** Example: "Listening to Spotify" */
   Name = 0,
-  /** Shows the state of the activity */
+  /** Example: "Listening to Rick Astley" */
   State = 1,
-  /** Shows the details of the activity */
+  /** Example: "Listening to Never Gonna Give You Up" */
   Details = 2,
 }
 
