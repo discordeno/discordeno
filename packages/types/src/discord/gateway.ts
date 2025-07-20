@@ -438,7 +438,7 @@ export interface DiscordGuildCreateExtra {
    * @remarks
    * Lacks the `guild_id` key
    */
-  voice_states: Partial<DiscordVoiceState>[]
+  voice_states: Omit<DiscordVoiceState, "guild_id">[]
   /** Users in the guild */
   members: DiscordMemberWithUser[]
   /** Channels in the guild */
