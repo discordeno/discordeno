@@ -487,7 +487,7 @@ export interface DiscordGuildBanRemove {
  * https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields
  *
  * @deprecated
- * Use {@link DiscordGuildBanAdd} and {@link DsicordGuildBanRemove} instead.
+ * Use {@link DiscordGuildBanAdd} and {@link DiscordGuildBanRemove} instead.
  */
 export interface DiscordGuildBanAddRemove extends DiscordGuildBanAdd {}
 
