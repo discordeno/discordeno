@@ -1,3 +1,4 @@
+import { after } from 'mocha'
 import { createRestManager } from '../../src/manager.js'
 import { E2E_TEST_GUILD_ID, token } from './constants.js'
 // For debugging purposes
@@ -9,12 +10,22 @@ export const rest = createRestManager({
 })
 rest.deleteQueueDelay = 10000
 
-// const guild = await rest.createGuild({ name: 'ddenotester' })
-// const channel = await rest.createChannel(guild.id, { name: 'ddenotestchannel' })
+const guild = await rest.getGuild(E2E_TEST_GUILD_ID)
+if (!guild) throw new Error('E2E_TEST_GUILD_ID does not exist or is not accessible.')
+
+const channel = await rest.createChannel(guild.id, {
+  name: 'discordeno-e2e',
+})
+
+after(async () => {
+  // Clean up the channel created for testing
+  if (channel.id) {
+    await rest.deleteChannel(channel.id)
+  }
+})
 
 export const e2eCache = {
-  // guild,
-  // channel,
-  // deletedGuild: false,
-  communityGuildId: E2E_TEST_GUILD_ID,
+  guildId: E2E_TEST_GUILD_ID,
+  guild,
+  channel,
 }

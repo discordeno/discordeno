@@ -4,20 +4,6 @@ import { describe, it } from 'mocha'
 import { rest } from './utils.js'
 chaiUse(chaiAsPromised)
 
-// before(async () => {
-//   if (!e2eCache.guild) {
-//     e2eCache.guild = await rest.createGuild({
-//       name: 'Discordeno-test',
-//     })
-//   }
-// })
-
-// after(async () => {
-//   if (e2eCache.guild.id && !e2eCache.deletedGuild) {
-//     await rest.deleteGuild(e2eCache.guild.id)
-//   }
-// })
-
 describe('Get a user from the api', () => {
   it('With a valid user id', async () => {
     const user = await rest.getUser('130136895395987456')
@@ -45,6 +31,6 @@ describe('Get a user from the api', () => {
   })
 
   it('With an invalid user id', async () => {
-    await expect(rest.getUser('123')).eventually.throws
+    await expect(rest.getUser('123')).eventually.rejected
   })
 })
