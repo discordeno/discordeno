@@ -4,21 +4,6 @@ import { describe, it } from 'mocha'
 import { e2eCache, rest } from './utils.js'
 chaiUse(chaiAsPromised)
 
-// before(async () => {
-//   if (!e2eCache.guild) {
-//     e2eCache.guild = await rest.createGuild({
-//       name: 'Discordeno-test',
-//     })
-//   }
-// })
-
-// after(async () => {
-//   if (e2eCache.guild.id && !e2eCache.deletedGuild) {
-//     e2eCache.deletedGuild = true
-//     await rest.deleteGuild(e2eCache.guild.id)
-//   }
-// })
-
 describe('Member tests', () => {
   it("Fetches the bot and compares the bot's id with the fetched member's id", async () => {
     const member = await rest.getMember(e2eCache.guildId, rest.applicationId)
