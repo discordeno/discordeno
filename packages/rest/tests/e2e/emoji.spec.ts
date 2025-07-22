@@ -79,6 +79,9 @@ describe('Edit and get emojis', () => {
     const role = await rest.createRole(e2eCache.guild.id, {
       name: 'dd-test-emoji',
     })
+    after(async () => {
+      await rest.deleteRole(e2eCache.guild.id, role.id)
+    })
     await rest.editEmoji(e2eCache.guild.id, emoji.id, {
       roles: [role.id],
     })
