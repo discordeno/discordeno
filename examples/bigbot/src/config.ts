@@ -1,5 +1,6 @@
-import { Intents } from '@discordeno/bot'
 import 'dotenv/config'
+
+import { Intents } from '@discordeno/bot'
 
 // #region Mapping of environment variables to javascript variables with some minimal parsing
 

@@ -21,10 +21,8 @@ After you installed the `@discordeno/bot` package with npm, yarn, pnpm or bun yo
 This is how you can use it to create a bot that logs into discord:
 
 ```ts
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import { createBot } from '@discordeno/bot'
-
-dotenv.config()
 
 const bot = createBot({
   token: process.env.token,

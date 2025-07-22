@@ -4,6 +4,10 @@ import { e2eCache, rest } from './utils.js'
 describe('Typings', () => {
   it('Trigger Typing Indication', async () => {
     const channel = await rest.createChannel(e2eCache.guild.id, { name: 'typing' })
+    after(async () => {
+      // Clean up the channel created for testing
+      await rest.deleteChannel(channel.id)
+    })
     await rest.triggerTypingIndicator(channel.id)
   })
 })

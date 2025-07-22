@@ -1,12 +1,13 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
 import type { DiscordMessageComponents } from './components.js'
+import type { DiscordThreadCreateExtra } from './gateway.js'
 import type { DiscordMember } from './guild.js'
 import type { DiscordAllowedMentions, DiscordAttachment, DiscordEmbed, MessageFlags } from './message.js'
 import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
-export interface DiscordChannel {
+export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   /** The id of the channel */
   id: string
   /** The type of channel */
@@ -133,13 +134,6 @@ export interface DiscordChannel {
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
   default_forum_layout?: ForumLayout
-  /**
-   * When a thread is created this will be true on that channel payload for the thread.
-   *
-   * @remarks
-   * This will only exists on Thread Create gateway events.
-   */
-  newly_created?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */

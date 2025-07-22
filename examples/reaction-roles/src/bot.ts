@@ -1,8 +1,7 @@
-import { createBot } from '@discordeno/bot'
-import { config } from 'dotenv'
-import events from './events/index.js'
+import 'dotenv/config'
 
-config()
+import { createBot } from '@discordeno/bot'
+import events from './events/index.js'
 
 const token = process.env.TOKEN
 

@@ -52,9 +52,7 @@ _or using yarn, pnpm or bun_
 We now need to load the `.env` from our code so let's add the following code to your typescript file:
 
 ```ts
-import dotenv from 'dotenv'
-
-dotenv.config()
+import 'dotenv/config'
 ```
 
 This will import the dotenv module and add all the variables we declared in our `.env` file into the node environment variables
