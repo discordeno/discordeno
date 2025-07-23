@@ -46,7 +46,7 @@ If you don't want or can't use the `--env-file` option you can do it with the `d
 
 First of all you need to install the `dotenv` package along it's type if you are using TypeScript
 
-`npm install dotenv @types/dotenv --save-dev`
+`npm install dotenv`
 _or using yarn, pnpm or bun_
 
 We now need to load the `.env` from our code so let's add the following code to your typescript file:
