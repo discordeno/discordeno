@@ -1325,7 +1325,7 @@ export interface EditAutoModerationRuleOptions {
      */
     allowList?: string[]
     /**
-     * Total number of unique role and user mentions allowed per message
+     * Total number of unique role and user mentions allowed per message.
      *
      * @remarks
      * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.

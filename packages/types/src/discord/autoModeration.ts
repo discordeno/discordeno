@@ -61,7 +61,7 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    */
   regex_patterns?: string[]
   /**
-   * The discord pre-defined wordsets which will be searched for in content.
+   * The Discord pre-defined wordsets which will be searched for in content.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
@@ -78,7 +78,7 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    */
   allow_list?: string[]
   /**
-   * Total number of unique role and user mentions allowed per message
+   * Total number of unique role and user mentions allowed per message.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
