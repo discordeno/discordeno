@@ -1,8 +1,8 @@
 import { Buffer } from 'node:buffer'
-import { type Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
+import { createInflate, type Inflate, inflateSync, constants as zlibConstants } from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import { camelize, delay, LeakyBucket, logger } from '@discordeno/utils'
 import type { Decompress as ZstdDecompress } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {

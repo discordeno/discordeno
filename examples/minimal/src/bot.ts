@@ -1,4 +1,4 @@
-import { Collection, Intents, createBot } from '@discordeno/bot'
+import { Collection, createBot, Intents } from '@discordeno/bot'
 import { configs } from './config.js'
 import type { Command } from './types/commands.js'
 

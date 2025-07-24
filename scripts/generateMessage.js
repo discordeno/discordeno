@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+
 const benchmarkData = await fetch(`https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js`)
   .then(async (res) => await res.text())
   .then((text) => JSON.parse(text.slice(24)))
