@@ -118,6 +118,8 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
    *
    * @remarks
    * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
+   *
+   * Maximum 512 characters.
    */
   url?: string
   /** Whether or not this button is disabled */
