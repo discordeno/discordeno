@@ -75,7 +75,13 @@ export enum PremiumTypes {
 export interface DiscordUserPrimaryGuild {
   /** The id of the primary guild */
   identity_guild_id: string | null
-  /** Whether the user is displaying the primary guild's server tag. This can be `null` if the system clears the identity, e.g. because the server no longer supports tags. */
+  /**
+   * Whether the user is displaying the primary guild's server tag.
+   *
+   * @remarks
+   * This can be `null` if the system clears the identity, e.g. because the server no longer supports tags.
+   * This will be `false` if the user manually removes their tag.
+   */
   identity_enabled: boolean | null
   /** The text of the user's server tag. Limited to 4 characters */
   tag: string | null
