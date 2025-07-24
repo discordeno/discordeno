@@ -1818,7 +1818,7 @@ export interface UserPrimaryGuild {
    * Whether the user is displaying the primary guild's server tag.
    *
    * @remarks
-   * This can be `null` if the system clears the identity, e.g. because the server no longer supports tags.
+   * This can be `undefined` if the system clears the identity, e.g. because the server no longer supports tags.
    * This will be `false` if the user manually removes their tag.
    */
   identityEnabled?: boolean
