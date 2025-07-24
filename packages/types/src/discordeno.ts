@@ -1281,6 +1281,7 @@ export interface CreateAutoModerationRuleOptions {
   exemptChannels?: BigString[]
 }
 
+/** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
