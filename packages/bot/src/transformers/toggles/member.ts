@@ -31,6 +31,8 @@ export const MemberToggle = {
   automodQuarantinedUsername: 1 << 10,
   /** Member has dismissed the DM settings upsell */
   dmSettingsUpsellAcknowledged: 1 << 11,
+  /** Member's guild tag is blocked by AutoMod */
+  automodQuarantinedGuildTag: 1 << 12,
 }
 
 export class MemberToggles extends ToggleBitfield {
@@ -55,6 +57,7 @@ export class MemberToggles extends ToggleBitfield {
         if (member.flags & MemberFlags.CompletedHomeActions) this.add(MemberToggle.completedHomeActions)
         if (member.flags & MemberFlags.AutomodQuarantinedUsername) this.add(MemberToggle.automodQuarantinedUsername)
         if (member.flags & MemberFlags.DmSettingsUpsellAcknowledged) this.add(MemberToggle.dmSettingsUpsellAcknowledged)
+        if (member.flags & MemberFlags.AutomodQuarantinedGuildTag) this.add(MemberToggle.automodQuarantinedGuildTag)
       }
     }
   }
@@ -71,6 +74,7 @@ export class MemberToggles extends ToggleBitfield {
     if (this.completedHomeActions) flags |= MemberFlags.CompletedHomeActions
     if (this.automodQuarantinedUsername) flags |= MemberFlags.AutomodQuarantinedUsername
     if (this.dmSettingsUpsellAcknowledged) flags |= MemberFlags.DmSettingsUpsellAcknowledged
+    if (this.automodQuarantinedGuildTag) flags |= MemberFlags.AutomodQuarantinedGuildTag
 
     return flags
   }
@@ -133,6 +137,11 @@ export class MemberToggles extends ToggleBitfield {
   /** Member has dismissed the DM settings upsell */
   get dmSettingsUpsellAcknowledged(): boolean {
     return this.has('dmSettingsUpsellAcknowledged')
+  }
+
+  /** Member's guild tag is blocked by AutoMod */
+  get automodQuarantinedGuildTag(): boolean {
+    return this.has('automodQuarantinedGuildTag')
   }
 
   /** Checks whether or not the permissions exist in this */
