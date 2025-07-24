@@ -43,12 +43,12 @@ export enum AutoModerationTriggerTypes {
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata */
 export interface DiscordAutoModerationRuleTriggerMetadata {
   /**
-   * The keywords needed to match.
+   * Substrings which will be searched for in content.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
    *
-   * Can have up to 1000 elements in the array and each string can have up to 60 characters
+   * Can have up to 1000 elements in the array and each string can have up to 60 characters.
    */
   keyword_filter?: string[]
   /**
@@ -57,28 +57,28 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
    *
-   * Can have up to 10 elements in the array and each string can have up to 260 characters
+   * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
    */
   regex_patterns?: string[]
   /**
-   * The pre-defined lists of words to match from.
+   * The discord pre-defined wordsets which will be searched for in content.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
    */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
   /**
-   * The substrings which will exempt from triggering the preset trigger type.
+   * The substrings which should not trigger the rule.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
    *
-   * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile} there can have up to 100 elements in the array and each string can have up to 60 characters.
-   * When used with {@link AutoModerationTriggerTypes.KeywordPreset} there can have up to 1000 elements in the array and each string can have up to 60 characters.
+   * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
+   * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
    */
   allow_list?: string[]
   /**
-   * Total number of mentions (role & user) allowed per message.
+   * Total number of unique role and user mentions allowed per message
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
