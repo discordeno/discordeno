@@ -178,7 +178,14 @@ export interface ButtonComponent extends BaseComponent {
   }
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: BigString
-  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url; Maximum 512 characters. */
+  /**
+   * optional url for link-style buttons that can navigate a user to the web.
+   * 
+   * @remarks
+   * Only {@link ButtonStyles.Link | Link} buttons can have a url.
+   *
+   * Maximum 512 characters.
+   */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
