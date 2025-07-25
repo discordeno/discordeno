@@ -25,8 +25,10 @@ While a single topic might not seem memory-intensive, this property can quickly 
 By choosing to store only the properties relevant to your bot’s functionality — like omitting `channel.topic` when it’s unnecessary — you can save gigabytes of memory.
 Desired Properties is thus an essential tool for bots needing scalable and efficient caching, allowing for minimal resource usage without sacrificing performance.
 
-:::tip
-Check the [TypeScript](#typescript) section if you are using typescript
+:::info[Typescript]
+When using Typescript you do need to enable `strictNullChecks` in your TSConfig, or else you may get type errors despire configuring stuff properly.
+
+Check the [TypeScript](#typescript) section for more useful information.
 :::
 
 ## Configuring
