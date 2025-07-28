@@ -395,6 +395,13 @@ export enum MemberFlags {
    * This value is not editable
    */
   DmSettingsUpsellAcknowledged = 1 << 9,
+  /**
+   * Member's guild tag is blocked by AutoMod
+   *
+   * @remarks
+   * This value is not editable
+   */
+  AutomodQuarantinedGuildTag = 1 << 10,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
