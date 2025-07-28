@@ -1814,7 +1814,13 @@ export interface Nameplate {
 export interface UserPrimaryGuild {
   /** The id of the primary guild */
   identityGuildId?: bigint
-  /** Whether the user is displaying the primary guild's server tag. This can be undefined if the system clears the identity, e.g. because the server no longer supports tags. */
+  /**
+   * Whether the user is displaying the primary guild's server tag.
+   *
+   * @remarks
+   * This can be `undefined` if the system clears the identity, e.g. because the server no longer supports tags.
+   * This will be `false` if the user manually removes their tag.
+   */
   identityEnabled?: boolean
   /** The text of the user's server tag. Limited to 4 characters */
   tag?: string
