@@ -1288,6 +1288,7 @@ export interface CreateAutoModerationRuleOptions {
   exemptChannels?: BigString[]
 }
 
+/** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
@@ -1295,14 +1296,57 @@ export interface EditAutoModerationRuleOptions {
   eventType: AutoModerationEventTypes
   /** The metadata to use for the trigger. */
   triggerMetadata: {
-    /** The keywords needed to match. Only present when TriggerType.Keyword */
+    /**
+     * Substrings which will be searched for in content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * Can have up to 1000 elements in the array and each string can have up to 60 characters.
+     */
     keywordFilter?: string[]
-    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+    /**
+     * Regular expression patterns which will be matched against content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
+     */
+    regexPatterns?: string[]
+    /**
+     * The discord pre-defined wordsets which will be searched for in content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+     */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    /**
+     * The substrings which should not trigger the rule.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
+     * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
+     */
     allowList?: string[]
-    /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
-    mentionTotalLimit: number
+    /**
+     * Total number of unique role and user mentions allowed per message.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+     *
+     * Maximum of 50
+     */
+    mentionTotalLimit?: number
+    /**
+     * Whether to automatically detect mention raids.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+     */
+    mentionRaidProtectionEnabled?: boolean
   }
   /** The actions that will trigger for this rule */
   actions: Array<{
