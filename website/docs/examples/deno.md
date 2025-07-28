@@ -20,7 +20,7 @@ This is how you can use it to create a bot that logs into discord:
 
 ```ts
 import { load } from 'https://deno.land/std@0.212.0/dotenv/mod.ts'
-import { createBot } from 'npm:@discordeno/bot@19.0.0'
+import { createBot } from 'npm:@discordeno/bot@21.0.0'
 
 const env = await load()
 
