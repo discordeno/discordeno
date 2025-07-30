@@ -13,13 +13,11 @@ import type {
   CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
-  CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
-  CreateGuildFromTemplate,
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
@@ -477,25 +475,6 @@ export interface RestManager {
     options?: CreateGlobalApplicationCommandOptions,
   ) => Promise<Camelize<DiscordApplicationCommand>>
   /**
-   * Creates a guild.
-   *
-   * @param options - The parameters for the creation of the guild.
-   * @returns An instance of the created {@link DiscordGuild}.
-   *
-   * @deprecated
-   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
-   *
-   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
-   *
-   * @remarks
-   * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
-   *
-   * Fires a _Guild Create_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
-   */
-  createGuild: (options: CreateGuild) => Promise<Camelize<DiscordGuild>>
-  /**
    * Creates an application command only accessible in a specific guild.
    *
    * @param command - The command to create.
@@ -517,27 +496,6 @@ export interface RestManager {
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<Camelize<DiscordApplicationCommand>>
-  /**
-   * Creates a guild from a template.
-   *
-   * @param templateCode - The code of the template.
-   * @param options - The parameters for the creation of the guild.
-   * @returns An instance of the created {@link DiscordGuild}.
-   *
-   * @deprecated
-   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
-   *
-   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
-   *
-   *
-   * @remarks
-   * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
-   *
-   * Fires a _Guild Create_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template}
-   */
-  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<Camelize<DiscordGuild>>
   /**
    * Create a new sticker for the guild.
    *

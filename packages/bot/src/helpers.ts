@@ -15,13 +15,11 @@ import type {
   CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
-  CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
-  CreateGuildFromTemplate,
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
@@ -170,14 +168,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     createGlobalApplicationCommand: async (command, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGlobalApplicationCommand(command, options)))
     },
-    createGuild: async (options) => {
-      return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.createGuild(options)), shardId: 0 })
-    },
     createGuildApplicationCommand: async (command, guildId, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGuildApplicationCommand(command, guildId, options)))
-    },
-    createGuildFromTemplate: async (templateCode, options) => {
-      return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.createGuildFromTemplate(templateCode, options)), shardId: 0 })
     },
     createGuildSticker: async (guildId, options, reason) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.createGuildSticker(guildId, options, reason)))
@@ -873,15 +865,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
-  /** @deprecated */
-  createGuild: (options: CreateGuild) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand>
-  /** @deprecated */
-  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildSticker: (
     guildId: BigString,
     options: CreateGuildStickerOptions,
