@@ -91,7 +91,6 @@ import type {
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
   ListThreadMembers,
-  MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
   ModifyGuild,
@@ -743,9 +742,6 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editChannelPositions: async (guildId, channelPositions) => {
       return await bot.rest.editChannelPositions(guildId, channelPositions)
     },
-    editGuildMfaLevel: async (guildId, mfaLevel, reason) => {
-      return await bot.rest.editGuildMfaLevel(guildId, mfaLevel, reason)
-    },
     editOwnVoiceState: async (guildId, options) => {
       return await bot.rest.editOwnVoiceState(guildId, options)
     },
@@ -1160,7 +1156,6 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
   editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
-  editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   joinThread: (channelId: BigString) => Promise<void>
