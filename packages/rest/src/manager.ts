@@ -729,10 +729,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
-    async createGuild(body) {
-      return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
-    },
-
     async createGuildApplicationCommand(body, guildId, options) {
       const restOptions: MakeRequestOptions = { body }
 
@@ -744,14 +740,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
-    },
-
-    async createGuildFromTemplate(templateCode, body) {
-      if (body.icon) {
-        body.icon = await urlToBase64(body.icon)
-      }
-
-      return await rest.post<DiscordGuild>(rest.routes.guilds.templates.code(templateCode), { body })
     },
 
     async createGuildSticker(guildId, options, reason) {
