@@ -124,7 +124,6 @@ import type {
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
   ListThreadMembers,
-  MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
   ModifyGuild,
@@ -1194,10 +1193,6 @@ export interface RestManager {
     guildId: BigString,
     options: CreateApplicationCommand,
   ) => Promise<Camelize<DiscordApplicationCommand>>
-  /** Modify a guild's MFA level. Requires guild ownership.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   */
-  editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   /**
    * Edit the given sticker.
    *

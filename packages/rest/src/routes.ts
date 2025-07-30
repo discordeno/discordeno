@@ -434,7 +434,6 @@ export function createRoutes(): RestRoutes {
           return url
         },
       },
-      mfa: (guildId) => `/guilds/${guildId}/mfa`,
       preview: (guildId) => {
         return `/guilds/${guildId}/preview`
       },
