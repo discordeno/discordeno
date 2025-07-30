@@ -15,13 +15,11 @@ import type {
   CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
-  CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
-  CreateGuildFromTemplate,
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
@@ -91,7 +89,6 @@ import type {
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
   ListThreadMembers,
-  MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
   ModifyGuild,
@@ -171,14 +168,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     createGlobalApplicationCommand: async (command, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGlobalApplicationCommand(command, options)))
     },
-    createGuild: async (options) => {
-      return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.createGuild(options)), shardId: 0 })
-    },
     createGuildApplicationCommand: async (command, guildId, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGuildApplicationCommand(command, guildId, options)))
-    },
-    createGuildFromTemplate: async (templateCode, options) => {
-      return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.createGuildFromTemplate(templateCode, options)), shardId: 0 })
     },
     createGuildSticker: async (guildId, options, reason) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.createGuildSticker(guildId, options, reason)))
@@ -743,9 +734,6 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editChannelPositions: async (guildId, channelPositions) => {
       return await bot.rest.editChannelPositions(guildId, channelPositions)
     },
-    editGuildMfaLevel: async (guildId, mfaLevel, reason) => {
-      return await bot.rest.editGuildMfaLevel(guildId, mfaLevel, reason)
-    },
     editOwnVoiceState: async (guildId, options) => {
       return await bot.rest.editOwnVoiceState(guildId, options)
     },
@@ -877,15 +865,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
-  /** @deprecated */
-  createGuild: (options: CreateGuild) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<ApplicationCommand>
-  /** @deprecated */
-  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   createGuildSticker: (
     guildId: BigString,
     options: CreateGuildStickerOptions,
@@ -1160,7 +1144,6 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
   editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
-  editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   joinThread: (channelId: BigString) => Promise<void>
