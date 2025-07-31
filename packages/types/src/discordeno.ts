@@ -1549,8 +1549,6 @@ export interface ModifyGuild {
   afkTimeout?: number
   /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
   icon?: string | null
-  /** User id to transfer guild ownership to (must be owner) */
-  ownerId?: BigString
   /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
   splash?: string | null
   /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */

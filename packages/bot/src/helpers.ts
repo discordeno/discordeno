@@ -671,9 +671,6 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     deleteGlobalApplicationCommand: async (commandId) => {
       return await bot.rest.deleteGlobalApplicationCommand(commandId)
     },
-    deleteGuild: async (guildId) => {
-      return await bot.rest.deleteGuild(guildId)
-    },
     deleteGuildApplicationCommand: async (commandId, guildId) => {
       return await bot.rest.deleteGuildApplicationCommand(commandId, guildId)
     },
@@ -1123,7 +1120,6 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteApplicationEmoji: (id: BigString) => Promise<void>
   deleteFollowupMessage: (token: string, messageId: BigString) => Promise<void>
   deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
-  deleteGuild: (guildId: BigString) => Promise<void>
   deleteGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<void>
   deleteGuildSticker: (guildId: BigString, stickerId: BigString, reason?: string) => Promise<void>
   deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>

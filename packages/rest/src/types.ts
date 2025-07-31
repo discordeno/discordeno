@@ -716,19 +716,6 @@ export interface RestManager {
    */
   deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
   /**
-   * Deletes a guild.
-   *
-   * @param guildId - The ID of the guild to delete.
-   *
-   * @remarks
-   * The bot user must be the owner of the guild.
-   *
-   * Fires a _Guild Delete_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
-   */
-  deleteGuild: (guildId: BigString) => Promise<void>
-  /**
    * Deletes an application command registered in a guild.
    *
    * @param guildId - The ID of the guild to delete the command from.

@@ -815,10 +815,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
-    async deleteGuild(guildId) {
-      await rest.delete(rest.routes.guilds.guild(guildId))
-    },
-
     async deleteGuildApplicationCommand(commandId, guildId) {
       await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
