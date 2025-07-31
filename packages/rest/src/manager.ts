@@ -56,7 +56,6 @@ import type {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
-  MfaLevels,
   ModifyGuildTemplate,
 } from '@discordeno/types'
 import {
@@ -729,10 +728,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
-    async createGuild(body) {
-      return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
-    },
-
     async createGuildApplicationCommand(body, guildId, options) {
       const restOptions: MakeRequestOptions = { body }
 
@@ -744,14 +739,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
-    },
-
-    async createGuildFromTemplate(templateCode, body) {
-      if (body.icon) {
-        body.icon = await urlToBase64(body.icon)
-      }
-
-      return await rest.post<DiscordGuild>(rest.routes.guilds.templates.code(templateCode), { body })
     },
 
     async createGuildSticker(guildId, options, reason) {
@@ -982,10 +969,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId), {
         body,
       })
-    },
-
-    async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
-      await rest.post(rest.routes.guilds.mfa(guildId), { body: { level: mfaLevel }, reason })
     },
 
     async editGuildSticker(guildId, stickerId, body, reason) {

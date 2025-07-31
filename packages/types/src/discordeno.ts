@@ -13,7 +13,6 @@ import type {
 } from './discord/autoModeration.js'
 import type {
   ChannelTypes,
-  DiscordChannel,
   DiscordDefaultReactionEmoji,
   DiscordForumTag,
   ForumLayout,
@@ -61,7 +60,7 @@ import type {
   DiscordReactionType,
   MessageFlags,
 } from './discord/message.js'
-import type { DiscordRole, PermissionStrings } from './discord/permissions.js'
+import type { PermissionStrings } from './discord/permissions.js'
 import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/poll.js'
 import type { Localization } from './discord/reference.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
@@ -1472,32 +1471,6 @@ export interface GetApplicationCommandPermissionOptions {
   applicationId: BigString
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild */
-export interface CreateGuild {
-  /** Name of the guild (1-100 characters) */
-  name: string
-  /** Base64 128x128 image for the guild icon */
-  icon?: string
-  /** Verification level */
-  verificationLevel?: VerificationLevels
-  /** Default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevels
-  /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevels
-  /** New guild roles (first role is the everyone role) */
-  roles?: Camelize<DiscordRole[]>
-  /** New guild's channels */
-  channels?: Partial<Camelize<DiscordChannel>>[]
-  /** Id for afk channel */
-  afkChannelId?: string
-  /** Afk timeout in seconds */
-  afkTimeout?: number
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: string
-  /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags
-}
-
 /** https://discord.com/developers/docs/resources/guild#create-guild-role-json-params */
 export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
@@ -1616,14 +1589,6 @@ export interface EditGuildStickerOptions {
   description?: string | null
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags?: string
-}
-
-/** https://discord.com/developers/docs/resources/template#create-guild-from-template-json-params */
-export interface CreateGuildFromTemplate {
-  /** Name of the guild (2-100 characters) */
-  name: string
-  /** base64 128x128 image for the guild icon */
-  icon?: string
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
