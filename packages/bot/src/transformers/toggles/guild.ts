@@ -31,6 +31,7 @@ const featureNames = [
   'vipRegions',
   'welcomeScreenEnabled',
   'guestsEnabled',
+  'guildTags',
   'enhancedRoleColors',
 ] as const
 
@@ -108,6 +109,8 @@ export const GuildToggle = {
   welcomeScreenEnabled: 1n << 18n,
   /** Whether the guild has access to guest invites */
   guestsEnabled: 1n << 26n,
+  /** Whether the guild has access to set guild tags */
+  guildTags: 1n << 36n,
   /** Whether the guild is able to set gradient colors to roles */
   enhancedRoleColors: 1n << 35n,
 }
@@ -158,6 +161,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.VipRegions)) this.add(GuildToggle.vipRegions)
       if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) this.add(GuildToggle.welcomeScreenEnabled)
       if (guild.features.includes(GuildFeatures.GuestsEnabled)) this.add(GuildToggle.guestsEnabled)
+      if (guild.features.includes(GuildFeatures.GuildTags)) this.add(GuildToggle.guildTags)
       if (guild.features.includes(GuildFeatures.EnhancedRoleColors)) this.add(GuildToggle.enhancedRoleColors)
     }
   }
@@ -347,6 +351,11 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild has access to guest invites */
   get guestsEnabled(): boolean {
     return this.has('guestsEnabled')
+  }
+
+  /** Whether the guild has access to set guild tags */
+  get guildTags(): boolean {
+    return this.has('guildTags')
   }
 
   /** Whether the guild is able to set gradient colors to roles */

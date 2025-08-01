@@ -21,6 +21,10 @@ If you need more specific packages, you can install them directly for example:
 npm install @discordeno/types # Using npm
 ```
 
+### Typescript
+
+If you are using Typescript you do need to enable `strictNullChecks` in your TSConfig, or else it may cause issues especially with [Desired Properties](#understanding-desired-properties-in-discordeno)
+
 ## Understanding Bot Helpers
 
 Whenever you want to do something on discord, you will need to talk to the discord api. To make this easy, we provide "helpers". For example, to send a message to a channel, you can call the `bot.helpers.sendMessage` method with the 2 required parameters:

@@ -44,9 +44,9 @@ You need to add this flag before the file you want to run also if you have multi
 
 If you don't want or can't use the `--env-file` option you can do it with the `dotenv` package
 
-First of all you need to install the `dotenv` package along it's type if you are using TypeScript
+First of all you need to install the `dotenv` package
 
-`npm install dotenv @types/dotenv --save-dev`
+`npm install dotenv`
 _or using yarn, pnpm or bun_
 
 We now need to load the `.env` from our code so let's add the following code to your typescript file:

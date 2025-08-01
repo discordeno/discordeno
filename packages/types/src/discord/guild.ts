@@ -232,6 +232,8 @@ export enum GuildFeatures {
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
   /** Guild has access to guest invites */
   GuestsEnabled = 'GUESTS_ENABLED',
+  /** Guild has access to set guild tags */
+  GuildTags = 'GUILD_TAGS',
   /** Guild is able to set gradient colors to roles */
   EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
@@ -395,6 +397,13 @@ export enum MemberFlags {
    * This value is not editable
    */
   DmSettingsUpsellAcknowledged = 1 << 9,
+  /**
+   * Member's guild tag is blocked by AutoMod
+   *
+   * @remarks
+   * This value is not editable
+   */
+  AutomodQuarantinedGuildTag = 1 << 10,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */

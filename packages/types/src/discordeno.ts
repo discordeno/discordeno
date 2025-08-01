@@ -13,7 +13,6 @@ import type {
 } from './discord/autoModeration.js'
 import type {
   ChannelTypes,
-  DiscordChannel,
   DiscordDefaultReactionEmoji,
   DiscordForumTag,
   ForumLayout,
@@ -61,7 +60,7 @@ import type {
   DiscordReactionType,
   MessageFlags,
 } from './discord/message.js'
-import type { DiscordRole, PermissionStrings } from './discord/permissions.js'
+import type { PermissionStrings } from './discord/permissions.js'
 import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/poll.js'
 import type { Localization } from './discord/reference.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
@@ -102,7 +101,7 @@ export interface CreateMessageOptions {
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
-  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_COMPONENTS_V2 can be set */
+  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_VOICE_MESSAGE, and IS_COMPONENTS_V2 can be set */
   flags?: MessageFlags
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
@@ -178,7 +177,14 @@ export interface ButtonComponent extends BaseComponent {
   }
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: BigString
-  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
+  /**
+   * optional url for link-style buttons that can navigate a user to the web.
+   *
+   * @remarks
+   * Only {@link ButtonStyles.Link | Link} buttons can have a url.
+   *
+   * Maximum 512 characters.
+   */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
@@ -1281,6 +1287,7 @@ export interface CreateAutoModerationRuleOptions {
   exemptChannels?: BigString[]
 }
 
+/** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
@@ -1288,14 +1295,57 @@ export interface EditAutoModerationRuleOptions {
   eventType: AutoModerationEventTypes
   /** The metadata to use for the trigger. */
   triggerMetadata: {
-    /** The keywords needed to match. Only present when TriggerType.Keyword */
+    /**
+     * Substrings which will be searched for in content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * Can have up to 1000 elements in the array and each string can have up to 60 characters.
+     */
     keywordFilter?: string[]
-    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+    /**
+     * Regular expression patterns which will be matched against content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
+     */
+    regexPatterns?: string[]
+    /**
+     * The discord pre-defined wordsets which will be searched for in content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+     */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    /**
+     * The substrings which should not trigger the rule.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
+     * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
+     */
     allowList?: string[]
-    /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
-    mentionTotalLimit: number
+    /**
+     * Total number of unique role and user mentions allowed per message.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+     *
+     * Maximum of 50
+     */
+    mentionTotalLimit?: number
+    /**
+     * Whether to automatically detect mention raids.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+     */
+    mentionRaidProtectionEnabled?: boolean
   }
   /** The actions that will trigger for this rule */
   actions: Array<{
@@ -1421,32 +1471,6 @@ export interface GetApplicationCommandPermissionOptions {
   applicationId: BigString
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild */
-export interface CreateGuild {
-  /** Name of the guild (1-100 characters) */
-  name: string
-  /** Base64 128x128 image for the guild icon */
-  icon?: string
-  /** Verification level */
-  verificationLevel?: VerificationLevels
-  /** Default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevels
-  /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevels
-  /** New guild roles (first role is the everyone role) */
-  roles?: Camelize<DiscordRole[]>
-  /** New guild's channels */
-  channels?: Partial<Camelize<DiscordChannel>>[]
-  /** Id for afk channel */
-  afkChannelId?: string
-  /** Afk timeout in seconds */
-  afkTimeout?: number
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: string
-  /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags
-}
-
 /** https://discord.com/developers/docs/resources/guild#create-guild-role-json-params */
 export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
@@ -1525,8 +1549,6 @@ export interface ModifyGuild {
   afkTimeout?: number
   /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
   icon?: string | null
-  /** User id to transfer guild ownership to (must be owner) */
-  ownerId?: BigString
   /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
   splash?: string | null
   /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
@@ -1567,14 +1589,6 @@ export interface EditGuildStickerOptions {
   description?: string | null
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags?: string
-}
-
-/** https://discord.com/developers/docs/resources/template#create-guild-from-template-json-params */
-export interface CreateGuildFromTemplate {
-  /** Name of the guild (2-100 characters) */
-  name: string
-  /** base64 128x128 image for the guild icon */
-  icon?: string
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
