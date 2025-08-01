@@ -1,6 +1,4 @@
-import { config } from 'dotenv'
-
-config()
+import 'dotenv/config'
 
 import { bot } from './bot.js'
 import commands from './commands/index.js'

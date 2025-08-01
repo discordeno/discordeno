@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "@discordeno/rest": "21.0.0",
-    "@fastify/env": "^4.4.0",
+    "@fastify/env": "^5.0.2",
     "@fastify/helmet": "^13.0.1",
-    "@fastify/multipart": "^8.3.1",
-    "fastify": "^4.29.1"
+    "@fastify/multipart": "^9.0.3",
+    "fastify": "^5.4.0"
   },
   "devDependencies": {
     "@favware/cliff-jumper": "^6.0.0",
-    "@swc/cli": "^0.7.7",
-    "@swc/core": "^1.11.29",
-    "dotenv": "^16.5.0"
+    "@swc/cli": "^0.7.8",
+    "@swc/core": "^1.13.3",
+    "dotenv": "^17.2.1"
   }
 }

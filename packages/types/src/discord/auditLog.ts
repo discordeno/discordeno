@@ -173,6 +173,8 @@ export enum AuditLogEvents {
   AudoModerationFlagMessage,
   /** Member was timed out by AutoMod */
   AutoModerationMemberTimedOut,
+  /** Member was quarantined by Auto Moderation */
+  AutoModerationQuarantineUser,
   /** Creator monetization request was created */
   CreatorMonetizationRequestCreated = 150,
   /** Creator monetization terms were accepted */
@@ -208,6 +210,7 @@ export type DiscordAuditLogChange =
   | DiscordAuditLogChangeObject<DiscordIntegration>
   | DiscordAuditLogChangeObject<DiscordStageInstance>
   | DiscordAuditLogChangeObject<DiscordSticker>
+  | DiscordAuditLogChangeObject<DiscordScheduledEvent>
   | DiscordAuditLogChangeObject<DiscordThreadMetadata>
   | DiscordAuditLogChangeApplicationCommandPermissions
   | DiscordAuditLogChangeObject<DiscordSoundboardSound>
@@ -228,21 +231,21 @@ export interface DiscordOptionalAuditEntryInfo {
    * Name of the Auto Moderation rule that was triggered.
    *
    * @remarks
-   * Only present on event of types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
+   * Only present on event of types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
    */
   auto_moderation_rule_name?: string
   /**
    * Trigger type of the Auto Moderation rule that was triggered.
    *
    * @remarks
-   * Only present on event of types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
+   * Only present on event of types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
    */
   auto_moderation_rule_trigger_type?: string
   /**
    * Channel in which the entities were targeted.
    *
    * @remarks
-   * Only present on event of types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   * Only present on event of types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`, `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
    */
   channel_id?: string
   /**
@@ -304,13 +307,15 @@ export interface DiscordOptionalAuditEntryInfo {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export type DiscordAuditLogChangeObject<T> = {
-  [K in keyof T]: {
-    new_value?: T[K]
-    old_value?: T[K]
-    key: K
-  }
-}[keyof T]
+export type DiscordAuditLogChangeObject<T> = NonNullable<
+  {
+    [K in keyof T]: {
+      new_value?: T[K]
+      old_value?: T[K]
+      key: K
+    }
+  }[keyof T]
+>
 
 // Done manually as it is clearer in this way
 /** Partial role audit log entry change exception */

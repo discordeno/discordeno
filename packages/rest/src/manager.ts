@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer'
+import { type InspectOptions, inspect } from 'node:util'
 import type {
   BigString,
   Camelize,
@@ -55,7 +56,6 @@ import type {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
-  MfaLevels,
   ModifyGuildTemplate,
 } from '@discordeno/types'
 import {
@@ -90,6 +90,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token)
 
   const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
+  // Discord error can get nested a lot, so we use a custom inspect to change the depth to Infinity
+  const baseErrorPrototype = {
+    [inspect.custom](_depth: number, options: InspectOptions, _inspect: typeof inspect) {
+      return _inspect(this, {
+        ...options,
+        depth: Infinity,
+        // Since we call inspect on ourself, we need to disable the calls to the inspect.custom symbol or else it will cause an infinite loop.
+        customInspect: false,
+      })
+    },
+  }
 
   const rest: RestManager = {
     applicationId,
@@ -561,13 +572,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const body = await (result.headers.get('Content-Type') === 'application/json' ? result.json() : result.text()).catch(() => null)
+          // Sometime the Content-Type may be "application/json; charset=utf-8", for this reason we need to check the start of the header
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
 
-          error.cause = {
+          error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
             status: result.status,
             body,
-          }
+          })
 
           throw error
         }
@@ -624,7 +636,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`
             }
 
-            error.cause = reason
+            error.cause = Object.assign(Object.create(baseErrorPrototype), reason)
             reject(error)
           },
           runThroughQueue: options?.runThroughQueue,
@@ -716,10 +728,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
-    async createGuild(body) {
-      return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
-    },
-
     async createGuildApplicationCommand(body, guildId, options) {
       const restOptions: MakeRequestOptions = { body }
 
@@ -731,14 +739,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
-    },
-
-    async createGuildFromTemplate(templateCode, body) {
-      if (body.icon) {
-        body.icon = await urlToBase64(body.icon)
-      }
-
-      return await rest.post<DiscordGuild>(rest.routes.guilds.templates.code(templateCode), { body })
     },
 
     async createGuildSticker(guildId, options, reason) {
@@ -813,10 +813,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteGlobalApplicationCommand(commandId) {
       await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
-    },
-
-    async deleteGuild(guildId) {
-      await rest.delete(rest.routes.guilds.guild(guildId))
     },
 
     async deleteGuildApplicationCommand(commandId, guildId) {
@@ -973,10 +969,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId), {
         body,
       })
-    },
-
-    async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
-      await rest.post(rest.routes.guilds.mfa(guildId), { body: { level: mfaLevel }, reason })
     },
 
     async editGuildSticker(guildId, stickerId, body, reason) {
@@ -1318,6 +1310,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true })
     },
 
+    async getChannelPins(channelId, options) {
+      return await rest.get(rest.routes.channels.messagePins(channelId, options))
+    },
+
     async getPinnedMessages(channelId) {
       return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId))
     },
@@ -1578,7 +1574,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async pinMessage(channelId, messageId, reason) {
-      await rest.put(rest.routes.channels.pin(channelId, messageId), { reason })
+      await rest.put(rest.routes.channels.messagePin(channelId, messageId), { reason })
     },
 
     async pruneMembers(guildId, body, reason) {
@@ -1609,7 +1605,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async unpinMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.pin(channelId, messageId), { reason })
+      await rest.delete(rest.routes.channels.messagePin(channelId, messageId), { reason })
     },
 
     async triggerTypingIndicator(channelId) {

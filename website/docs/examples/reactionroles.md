@@ -22,9 +22,8 @@ Before going forward, please make sure you have finished everything on this list
 First let's go ahead and set up the base files we need to make this work. Create an `src/index.ts` file.
 
 ```ts
+import 'dotenv/config'
 import { createBot } from '@discordeno/bot'
-import { config } from 'dotenv'
-config()
 
 export const bot = createBot({
   token: process.env.TOKEN,
@@ -412,12 +411,10 @@ In this file we can add all of the events we want. In this guide we only need th
 To tell Discordeno to run the events, we need another change. Go back to the `src/index.ts` file.
 
 ```ts
+import 'dotenv/config'
 import { createBot } from '@discordeno/bot'
-import { config } from 'dotenv'
 // insert-next-line
 import events from './events/index.js'
-
-config()
 
 export const bot = createBot({
   token: process.env.TOKEN,
