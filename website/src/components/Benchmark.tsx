@@ -1,6 +1,7 @@
-import { CategoryScale, Chart as ChartJS, Legend, LineController, LineElement, LinearScale, PointElement, Title, Tooltip } from 'chart.js'
+import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineController, LineElement, PointElement, Title, Tooltip } from 'chart.js'
 import { useEffect, useState } from 'react'
 import { Chart } from 'react-chartjs-2'
+
 ChartJS.register(CategoryScale, LineController, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
 const BenchmarkResultChart = ({

@@ -3,6 +3,7 @@ import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { e2eCache, rest } from './utils.js'
+
 chaiUse(chaiAsPromised)
 
 // waiting for channel

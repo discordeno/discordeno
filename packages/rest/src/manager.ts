@@ -59,10 +59,10 @@ import type {
   ModifyGuildTemplate,
 } from '@discordeno/types'
 import {
-  DISCORDENO_VERSION,
   calculateBits,
-  camelToSnakeCase,
   camelize,
+  camelToSnakeCase,
+  DISCORDENO_VERSION,
   delay,
   getBotIdFromToken,
   hasProperty,
