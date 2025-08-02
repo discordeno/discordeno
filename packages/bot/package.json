@@ -42,7 +42,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@swc/cli": "^0.5.2",
-    "@swc/core": "^1.12.9",
+    "@swc/core": "^1.13.3",
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.0.1",
