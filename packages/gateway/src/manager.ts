@@ -158,7 +158,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             async message(_shard, payload) {
               if (payload.t === 'READY') {
                 await gateway.resharding.updateGuildsShardId?.(
-                  (payload.d as DiscordReady).guilds.map((g: any) => g.id),
+                  (payload.d as DiscordReady).guilds.map((g) => g.id),
                   shardId,
                 )
               }
@@ -517,7 +517,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           query: options?.query ?? (options?.limit ? undefined : ''),
           limit: options?.limit ?? 0,
           presences: options?.presences ?? false,
-          user_ids: options?.userIds?.map((id: any) => id.toString()),
+          user_ids: options?.userIds?.map((id) => id.toString()),
           nonce: options?.nonce,
         },
       })
