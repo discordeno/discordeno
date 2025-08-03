@@ -8,7 +8,7 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK)](https://codecov.io/gh/discordeno/discordeno)
 ![action status](https://github.com/discordeno/discordeno/actions/workflows/lib-check.yml/badge.svg?event=push)
 
-# Installation
+## Installation
 ```
 - npm install @discordeno/bot
 - yarn add @discordeno/bot
