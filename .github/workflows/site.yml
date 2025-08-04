@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
           cache-dependency-path: |
             yarn.lock
@@ -38,6 +38,13 @@ jobs:
         run: yarn build:doc
       - run: yarn install --immutable
         working-directory: ./website
+      - name: Restore bundler cache
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-docusaurus-bundler-${{ github.sha }}
+          path: ./website/node_modules/.cache
+          restore-keys: |
+            ${{ runner.os }}-docusaurus-bundler-
       - name: Build website
         run: yarn build
         working-directory: ./website
@@ -51,7 +58,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
           cache-dependency-path: |
             yarn.lock

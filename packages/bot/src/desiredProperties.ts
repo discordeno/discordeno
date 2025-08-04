@@ -7,6 +7,7 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  Collectibles,
   Component,
   DefaultReactionEmoji,
   Emoji,
@@ -31,14 +32,17 @@ import type {
   MessageCall,
   MessageInteraction,
   MessageInteractionMetadata,
+  MessagePin,
   MessageReference,
   MessageSnapshot,
+  Nameplate,
   Poll,
   PollAnswer,
   PollAnswerCount,
   PollMedia,
   PollResult,
   Role,
+  RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
   Sku,
@@ -48,6 +52,7 @@ import type {
   Subscription,
   UnfurledMediaItem,
   User,
+  UserPrimaryGuild,
   VoiceState,
   Webhook,
 } from './transformers/index.js'
@@ -63,6 +68,7 @@ export interface TransformersObjects {
   attachment: Attachment
   avatarDecorationData: AvatarDecorationData
   channel: Channel
+  collectibles: Collectibles
   component: Component
   defaultReactionEmoji: DefaultReactionEmoji
   emoji: Emoji
@@ -79,33 +85,37 @@ export interface TransformersObjects {
   interactionResource: InteractionResource
   invite: Invite
   inviteStageInstance: InviteStageInstance
+  lobby: Lobby
+  lobbyMember: LobbyMember
   mediaGalleryItem: MediaGalleryItem
   member: Member
   message: Message
   messageCall: MessageCall
   messageInteraction: MessageInteraction
   messageInteractionMetadata: MessageInteractionMetadata
+  messagePin: MessagePin
   messageReference: MessageReference
   messageSnapshot: MessageSnapshot
+  nameplate: Nameplate
   poll: Poll
   pollAnswer: PollAnswer
   pollAnswerCount: PollAnswerCount
   pollMedia: PollMedia
   pollResult: PollResult
   role: Role
+  roleColors: RoleColors
   scheduledEvent: ScheduledEvent
   scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule
   sku: Sku
+  soundboardSound: SoundboardSound
   stageInstance: StageInstance
   sticker: Sticker
+  subscription: Subscription
   unfurledMediaItem: UnfurledMediaItem
   user: User
+  userPrimaryGuild: UserPrimaryGuild
   voiceState: VoiceState
   webhook: Webhook
-  subscription: Subscription
-  soundboardSound: SoundboardSound
-  lobby: Lobby
-  lobbyMember: LobbyMember
 }
 
 // NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
@@ -286,6 +296,10 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
     },
+    collectibles: {
+      nameplate: defaultValue,
+      ...desiredProperties.collectibles,
+    },
     component: {
       type: defaultValue,
       customId: defaultValue,
@@ -317,6 +331,8 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       file: defaultValue,
       media: defaultValue,
       accentColor: defaultValue,
+      name: defaultValue,
+      size: defaultValue,
       ...desiredProperties.component,
     },
     forumTag: {
@@ -464,6 +480,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       guildScheduledEvent: defaultValue,
       stageInstance: defaultValue,
       expiresAt: defaultValue,
+      flags: defaultValue,
       ...desiredProperties.invite,
     },
     member: {
@@ -530,6 +547,11 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       targetUser: defaultValue,
       ...desiredProperties.messageInteractionMetadata,
     },
+    messagePin: {
+      message: defaultValue,
+      pinnedAt: defaultValue,
+      ...desiredProperties.messagePin,
+    },
     messageInteraction: {
       id: defaultValue,
       member: defaultValue,
@@ -549,11 +571,19 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       endedTimestamp: defaultValue,
       ...desiredProperties.messageCall,
     },
+    nameplate: {
+      skuId: defaultValue,
+      asset: defaultValue,
+      label: defaultValue,
+      palette: defaultValue,
+      ...desiredProperties.nameplate,
+    },
     role: {
       name: defaultValue,
       guildId: defaultValue,
       position: defaultValue,
       color: defaultValue,
+      colors: defaultValue,
       id: defaultValue,
       permissions: defaultValue,
       icon: defaultValue,
@@ -562,6 +592,12 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       tags: defaultValue,
       toggles: defaultValue,
       ...desiredProperties.role,
+    },
+    roleColors: {
+      primaryColor: defaultValue,
+      secondaryColor: defaultValue,
+      tertiaryColor: defaultValue,
+      ...desiredProperties.roleColors,
     },
     scheduledEvent: {
       id: defaultValue,
@@ -637,6 +673,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       height: defaultValue,
       width: defaultValue,
       contentType: defaultValue,
+      attachmentId: defaultValue,
       ...desiredProperties.unfurledMediaItem,
     },
     user: {
@@ -654,7 +691,16 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       banner: defaultValue,
       avatarDecorationData: defaultValue,
       toggles: defaultValue,
+      collectibles: defaultValue,
+      primaryGuild: defaultValue,
       ...desiredProperties.user,
+    },
+    userPrimaryGuild: {
+      identityGuildId: defaultValue,
+      identityEnabled: defaultValue,
+      tag: defaultValue,
+      badge: defaultValue,
+      ...desiredProperties.userPrimaryGuild,
     },
     avatarDecorationData: {
       asset: defaultValue,
@@ -846,6 +892,11 @@ export type DesiredPropertiesMapper<T extends TransformersObjects[keyof Transfor
   [Key in DesirableProperties<T>]: boolean
 }
 
+declare const TypeErrorSymbol: unique symbol
+interface DesiredPropertiesError<T extends string> {
+  [TypeErrorSymbol]: T
+}
+
 type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
   [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : false
 }
@@ -856,7 +907,7 @@ type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefin
     ? // Yes, this is a key to include
       true
     : // No, this is a key to exclude
-      `This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`
+      DesiredPropertiesError<`This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
   : // No, it is a props with dependencies?
     TKey extends keyof TDependencies
     ? // Yes, has all of its dependencies satisfied?
@@ -864,7 +915,7 @@ type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefin
       ? // Yes, this is a key to include
         true
       : // No, this is a key to not include
-        `This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`
+        DesiredPropertiesError<`This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
     : // No, we include it but it does not have neither props nor dependencies
       true
 

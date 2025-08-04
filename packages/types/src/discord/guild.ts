@@ -2,17 +2,14 @@
 
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
-import type { DiscordPresenceUpdate } from './gateway.js'
+import type { DiscordGuildCreateExtra } from './gateway.js'
 import type { OAuth2Scope } from './oauth2.js'
 import type { DiscordRole } from './permissions.js'
-import type { DiscordSoundboardSound } from './soundboard.js'
-import type { DiscordStageInstance } from './stageInstance.js'
 import type { DiscordSticker } from './sticker.js'
 import type { DiscordAvatarDecorationData, DiscordUser } from './user.js'
-import type { DiscordVoiceState } from './voice.js'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-structure */
-export interface DiscordGuild {
+export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
   name: string
   /** True if the user is the owner of the guild */
@@ -33,12 +30,6 @@ export interface DiscordGuild {
   mfa_level: MfaLevels
   /** System channel flags */
   system_channel_flags: SystemChannelFlags
-  /** True if this is considered a large guild */
-  large?: boolean
-  /** True if this guild is unavailable due to an outage */
-  unavailable?: boolean
-  /** Total number of members in this guild */
-  member_count?: number
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
   max_presences?: number | null
   /** The maximum number of members for the guild */
@@ -91,18 +82,6 @@ export interface DiscordGuild {
   system_channel_id: string | null
   /** The id of the channel where community guilds can display rules and/or guidelines */
   rules_channel_id: string | null
-  /** When this guild was joined at */
-  joined_at?: string
-  /** States of members currently in voice channels; lacks the guild_id key */
-  voice_states?: Omit<DiscordVoiceState, 'guildId'>[]
-  /** Users in the guild */
-  members?: DiscordMember[]
-  /** Channels in the guild */
-  channels?: DiscordChannel[]
-  /** All active threads in the guild that the current user has permission to view */
-  threads?: DiscordChannel[]
-  /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Partial<DiscordPresenceUpdate>[]
   /** Banner hash */
   banner: string | null
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
@@ -111,21 +90,12 @@ export interface DiscordGuild {
   public_updates_channel_id: string | null
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcome_screen?: DiscordWelcomeScreen
-  /** Stage instances in the guild */
-  stage_instances?: DiscordStageInstance[]
   /** Custom guild stickers */
   stickers?: DiscordSticker[]
   /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
   safety_alerts_channel_id: string | null
   /** The incidents data for this guild */
   incidents_data: DiscordIncidentsData
-  /**
-   * Soundboard sounds in the guild
-   *
-   * @remarks
-   * Only sent by the gateway
-   */
-  soundboard_sounds?: DiscordSoundboardSound[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
@@ -202,16 +172,16 @@ export enum SystemChannelFlags {
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
 export enum GuildFeatures {
-  /** Guild has access to set an invite splash background */
-  InviteSplash = 'INVITE_SPLASH',
-  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
-  VipRegions = 'VIP_REGIONS',
-  /** Guild has access to set a vanity URL */
-  VanityUrl = 'VANITY_URL',
-  /** Guild is verified */
-  Verified = 'VERIFIED',
-  /** Guild is partnered */
-  Partnered = 'PARTNERED',
+  /** Guild has access to set an animated guild banner image */
+  AnimatedBanner = 'ANIMATED_BANNER',
+  /** Guild has access to set an animated guild icon */
+  AnimatedIcon = 'ANIMATED_ICON',
+  /** Guild is using the old permissions configuration behavior */
+  ApplicationCommandPermissionsV2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
+  /** Guild has set up auto moderation rules */
+  AutoModeration = 'AUTO_MODERATION',
+  /** Guild has access to set a guild banner image */
+  Banner = 'BANNER',
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = 'COMMUNITY',
   /** Guild has enabled monetization. */
@@ -220,28 +190,28 @@ export enum GuildFeatures {
   CreatorStorePage = 'CREATOR_STORE_PAGE',
   /** Guild has been set as a support server on the App Directory */
   DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
-  /** Guild has access to create news channels */
-  News = 'NEWS',
   /** Guild is able to be discovered in the directory */
   Discoverable = 'DISCOVERABLE',
   /** Guild is able to be featured in the directory */
   Featurable = 'FEATURABLE',
-  /** Guild has access to set an animated guild icon */
-  AnimatedIcon = 'ANIMATED_ICON',
-  /** Guild has access to set a guild banner image */
-  Banner = 'BANNER',
-  /** Guild has enabled the welcome screen */
-  WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
+  /** Guild has paused invites, preventing new users from joining */
+  InvitesDisabled = 'INVITES_DISABLED',
+  /** Guild has access to set an invite splash background */
+  InviteSplash = 'INVITE_SPLASH',
   /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
   MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
   /** Guild has increased custom soundboard sound slots. */
   MoreSoundboard = 'MORE_SOUNDBOARD',
-  /** Guild can be previewed before joining via Membership Screening or the directory */
-  PreviewEnabled = 'PREVIEW_ENABLED',
-  /** Guild has enabled ticketed events */
-  TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
   /** Guild has increased custom sticker slots */
   MoreStickers = 'MORE_STICKERS',
+  /** Guild has access to create news channels */
+  News = 'NEWS',
+  /** Guild is partnered */
+  Partnered = 'PARTNERED',
+  /** Guild can be previewed before joining via Membership Screening or the directory */
+  PreviewEnabled = 'PREVIEW_ENABLED',
+  /** Guild has disabled alerts for join raids in the configured safety alerts channel */
+  RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
   /** Guild is able to set role icons */
   RoleIcons = 'ROLE_ICONS',
   /** Guild has role subscriptions that can be purchased. */
@@ -250,16 +220,22 @@ export enum GuildFeatures {
   RoleSubscriptionsEnabled = 'ROLE_SUBSCRIPTIONS_ENABLED',
   /** Guild has created soundboard sounds. */
   Soundboard = 'SOUNDBOARD',
-  /** Guild has set up auto moderation rules */
-  AutoModeration = 'AUTO_MODERATION',
-  /** Guild has paused invites, preventing new users from joining */
-  InvitesDisabled = 'INVITES_DISABLED',
-  /** Guild has access to set an animated guild banner image */
-  AnimatedBanner = 'ANIMATED_BANNER',
-  /** Guild has disabled alerts for join raids in the configured safety alerts channel */
-  RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
-  /** Guild is using the old permissions configuration behavior */
-  ApplicationCommandPermissionsV2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
+  /** Guild has enabled ticketed events */
+  TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
+  /** Guild has access to set a vanity URL */
+  VanityUrl = 'VANITY_URL',
+  /** Guild is verified */
+  Verified = 'VERIFIED',
+  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
+  VipRegions = 'VIP_REGIONS',
+  /** Guild has enabled the welcome screen */
+  WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
+  /** Guild has access to guest invites */
+  GuestsEnabled = 'GUESTS_ENABLED',
+  /** Guild has access to set guild tags */
+  GuildTags = 'GUILD_TAGS',
+  /** Guild is able to set gradient colors to roles */
+  EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
@@ -338,8 +314,11 @@ export interface DiscordMember {
   banner?: string
   /** Array of role object ids */
   roles: string[]
-  /** When the user joined the guild */
-  joined_at: string
+  /**
+   * When the user joined the guild
+   * @remarks Member objects retrieved from `VOICE_STATE_UPDATE` events will have `joined_at` set as `null` if the member was invited as a guest.
+   */
+  joined_at: string | null
   /** When the user started boosting the guild */
   premium_since?: string | null
   /** The permissions this member has in the guild. Only present on interaction events and OAuth2 current member fetch. */
@@ -418,6 +397,13 @@ export enum MemberFlags {
    * This value is not editable
    */
   DmSettingsUpsellAcknowledged = 1 << 9,
+  /**
+   * Member's guild tag is blocked by AutoMod
+   *
+   * @remarks
+   * This value is not editable
+   */
+  AutomodQuarantinedGuildTag = 1 << 10,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */

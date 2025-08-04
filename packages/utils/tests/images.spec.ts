@@ -43,6 +43,14 @@ describe('images.ts', () => {
     it('can format emoji url with gif as ext', () => {
       expect(emojiUrl('1079584570661404724', true)).to.equal('https://cdn.discordapp.com/emojis/1079584570661404724.gif')
     })
+
+    it('can format emoji url with webp as ext', () => {
+      expect(emojiUrl('1079823706743918622', false, 'webp')).to.equal('https://cdn.discordapp.com/emojis/1079823706743918622.webp')
+    })
+
+    it('can format emoji url with webp as ext when animated', () => {
+      expect(emojiUrl('1079823706743918622', true, 'webp')).to.equal('https://cdn.discordapp.com/emojis/1079823706743918622.webp?animated=true')
+    })
   })
 
   describe('avatarUrl function', () => {

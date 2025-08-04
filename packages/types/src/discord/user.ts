@@ -37,7 +37,11 @@ export interface DiscordUser {
   /** the user's banner, or null if unset */
   banner?: string
   /** data for the user's avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
+  /** data for the user's collectibles */
+  collectibles?: DiscordCollectibles | null
+  /** The user's primary guild */
+  primary_guild?: DiscordUserPrimaryGuild | null
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
@@ -67,12 +71,48 @@ export enum PremiumTypes {
   NitroBasic,
 }
 
+/** https://discord.com/developers/docs/resources/user#user-object-user-primary-guild */
+export interface DiscordUserPrimaryGuild {
+  /** The id of the primary guild */
+  identity_guild_id: string | null
+  /**
+   * Whether the user is displaying the primary guild's server tag.
+   *
+   * @remarks
+   * This can be `null` if the system clears the identity, e.g. because the server no longer supports tags.
+   * This will be `false` if the user manually removes their tag.
+   */
+  identity_enabled: boolean | null
+  /** The text of the user's server tag. Limited to 4 characters */
+  tag: string | null
+  /** The server tag badge hash */
+  badge: string | null
+}
+
 /** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object-avatar-decoration-data-structure */
 export interface DiscordAvatarDecorationData {
   /** the avatar decoration hash */
   asset: string
   /** id of the avatar decoration's SKU */
   sku_id: string
+}
+
+/** https://discord.com/developers/docs/resources/user#collectibles-collectible-structure */
+export interface DiscordCollectibles {
+  /** object mapping of nameplate data */
+  nameplate?: DiscordNameplate
+}
+
+/** https://discord.com/developers/docs/resources/user#nameplate-nameplate-structure */
+export interface DiscordNameplate {
+  /** the nameplate's id */
+  sku_id: string
+  /** path to the nameplate asset */
+  asset: string
+  /** the label of this nameplate. Currently unused */
+  label: string
+  /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
+  palette: string
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */

@@ -99,7 +99,7 @@ Now let's break it down.
 
 ### Worker & Server Confusion
 
-The `shardsPerWorker` property represents how many shards we will run per **server** in this eaxmple. This property is called `perWorker` because for mid sized bots that don't require separate dedicated servers, it can use _worker threads_ to mitigate the load in that single server. Here, we are going to be aiming to scale much much larger so we need to think bigger. In our case, what we are telling our gateway manager is that it should create 500 shards per **server**. Sounds like a lot? Yes, but no problem! Those shards will then be split across _worker threads_ on each server.
+The `shardsPerWorker` property represents how many shards we will run per **server** in this example. This property is called `perWorker` because for mid sized bots that don't require separate dedicated servers, it can use _worker threads_ to mitigate the load in that single server. Here, we are going to be aiming to scale much much larger so we need to think bigger. In our case, what we are telling our gateway manager is that it should create 500 shards per **server**. Sounds like a lot? Yes, but no problem! Those shards will then be split across _worker threads_ on each server.
 
 The `totalWorkers` property represents the number of **servers** we have available for shards. For example, if we have 10 dedicated servers available to us, this will allow the manager to spread out the load across 10 total **servers**.
 
@@ -112,11 +112,9 @@ You can adjust the amount of **shardsPerWorker** and **totalWorkers** to fit you
 Let's make a file called `services/gateway/index.ts` and paste the following code:
 
 ```ts
+import 'dotenv/config'
 import { logger } from '@discordeno/utils'
-import dotenv from 'dotenv'
 import express from 'express'
-
-dotenv.config()
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
 
@@ -212,11 +210,9 @@ Now, we need to setup a sharder process to spawn all our shards in each server. 
 Just like before, we are going to make another http listener to listen for incoming requests from the gateway manager and delegate them outwards to different workers. Make a file called `services/gateway/sharding/index.ts`
 
 ```ts
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import express from 'express'
 import { Worker } from 'worker_threads'
-
-dotenv.config()
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
 
@@ -284,13 +280,11 @@ Most of this code is another http listener again. The part we are going to focus
 Now that we have our sharding master process ready, create a file called `services/gateway/sharding/worker.ts` for it to spawn and forward requests to.
 
 ```ts
+import 'dotenv/config'
 import { DiscordenoShard } from '@discordeno/gateway'
 import { logger } from '@discordeno/utils'
 import { Intents } from '@discordeno/types'
 import { parentPort, workerData } from 'worker_threads'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 if (!parentPort) throw new Error('Parent port is null')
 

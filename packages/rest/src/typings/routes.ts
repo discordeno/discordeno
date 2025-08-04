@@ -1,6 +1,7 @@
 import type {
   BigString,
   GetBans,
+  GetChannelPinsOptions,
   GetEntitlements,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -45,8 +46,12 @@ export interface RestRoutes {
     dmRecipient: (channelId: BigString, userId: BigString) => string
     /** Route for handling a specific pin. */
     pin: (channelId: BigString, messageId: BigString) => string
-    /** Route for handling a channels pins. */
+    /** Route for handling a channel's pins. */
     pins: (channelId: BigString) => string
+    /** Route for handling a channel's pins. */
+    messagePins: (channelId: BigString, options?: GetChannelPinsOptions) => string
+    /** Route for handling a specific pin. */
+    messagePin: (channelId: BigString, messageId: BigString) => string
     /** Route for non-specific webhook in a channel. */
     webhooks: (channelId: BigString) => string
     /** Route for a specific channel. */
@@ -168,8 +173,6 @@ export interface RestRoutes {
     widget: (guildId: BigString) => string
     /** Route for handling a guild's widget in the form of json. */
     widgetJson: (guildId: BigString) => string
-    /** Route for handling a guilds mfa level. */
-    mfa: (guildId: BigString) => string
     /** Routes for handling a guild's members. */
     members: {
       /** Route for handling a specific guild member's ban. */

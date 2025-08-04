@@ -13,7 +13,6 @@ import type {
 } from './discord/autoModeration.js'
 import type {
   ChannelTypes,
-  DiscordChannel,
   DiscordDefaultReactionEmoji,
   DiscordForumTag,
   ForumLayout,
@@ -61,7 +60,7 @@ import type {
   DiscordReactionType,
   MessageFlags,
 } from './discord/message.js'
-import type { DiscordRole, PermissionStrings } from './discord/permissions.js'
+import type { PermissionStrings } from './discord/permissions.js'
 import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from './discord/poll.js'
 import type { Localization } from './discord/reference.js'
 import type { DiscordWebhookEventType } from './discord/webhookEvents.js'
@@ -102,7 +101,7 @@ export interface CreateMessageOptions {
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
-  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_COMPONENTS_V2 can be set */
+  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_VOICE_MESSAGE, and IS_COMPONENTS_V2 can be set */
   flags?: MessageFlags
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
@@ -178,7 +177,14 @@ export interface ButtonComponent extends BaseComponent {
   }
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: BigString
-  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
+  /**
+   * optional url for link-style buttons that can navigate a user to the web.
+   *
+   * @remarks
+   * Only {@link ButtonStyles.Link | Link} buttons can have a url.
+   *
+   * Maximum 512 characters.
+   */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
@@ -383,6 +389,10 @@ export interface FileComponent extends BaseComponent {
   file: DiscordUnfurledMediaItem
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+  /** The name of the file. This field is ignored and provided by the API as part of the response */
+  name: string
+  /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
+  size: number
 }
 
 /** https://discord.com/developers/docs/components/reference#separator */
@@ -617,8 +627,7 @@ export interface CreateSlashApplicationCommand {
    * Interaction context types where the command is available.
    *
    * @remarks
-   * This value is available only for globally-scoped commands
-   * By default, all interaction context types are included for new commands
+   * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[]
   /**
@@ -662,7 +671,7 @@ export interface InteractionCallbackData {
   title?: string
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `SUPPRESS_NOTIFICATIONS` and `IS_COMPONENTS_V2` can be set) */
+  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `IS_COMPONENTS_V2`, `IS_VOICE_MESSAGE` and `SUPPRESS_NOTIFICATIONS` can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
@@ -1070,6 +1079,8 @@ export interface ModifyWebhook {
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
 export interface ExecuteWebhook {
+  // Query Parameters
+
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
   wait?: boolean
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
@@ -1081,10 +1092,9 @@ export interface ExecuteWebhook {
    * @default false
    */
   withComponents?: boolean
-  /** Name of the thread to create (target channel has to be type of forum channel) */
-  threadName?: string
-  /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
-  appliedTags?: BigString[]
+
+  // JSON Parameters
+
   /** The message contents (up to 2000 characters) */
   content?: string
   /** Override the default username of the webhook */
@@ -1093,8 +1103,6 @@ export interface ExecuteWebhook {
   avatarUrl?: string
   /** True if this is a TTS message */
   tts?: boolean
-  /** The contents of the files being sent */
-  files?: FileContent[]
   /** Embedded `rich` content */
   embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
@@ -1107,6 +1115,20 @@ export interface ExecuteWebhook {
    * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
    */
   components?: MessageComponents
+  /** The contents of the files being sent */
+  files?: FileContent[]
+  /** Attachment objects with filename and description */
+  attachments?: (Pick<Camelize<DiscordAttachment>, 'id'> & Omit<Partial<Camelize<DiscordAttachment>>, 'id'>)[]
+  /**
+   * Message flags combined in a bitfield
+   *
+   * @see {@link MessageFlags}
+   */
+  flags?: number
+  /** Name of the thread to create (target channel has to be type of forum channel) */
+  threadName?: string
+  /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
+  appliedTags?: BigString[]
   /** A poll object */
   poll?: CreatePoll
 }
@@ -1265,6 +1287,7 @@ export interface CreateAutoModerationRuleOptions {
   exemptChannels?: BigString[]
 }
 
+/** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
@@ -1272,14 +1295,57 @@ export interface EditAutoModerationRuleOptions {
   eventType: AutoModerationEventTypes
   /** The metadata to use for the trigger. */
   triggerMetadata: {
-    /** The keywords needed to match. Only present when TriggerType.Keyword */
+    /**
+     * Substrings which will be searched for in content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * Can have up to 1000 elements in the array and each string can have up to 60 characters.
+     */
     keywordFilter?: string[]
-    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+    /**
+     * Regular expression patterns which will be matched against content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
+     */
+    regexPatterns?: string[]
+    /**
+     * The discord pre-defined wordsets which will be searched for in content.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+     */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    /**
+     * The substrings which should not trigger the rule.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+     *
+     * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
+     * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
+     */
     allowList?: string[]
-    /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
-    mentionTotalLimit: number
+    /**
+     * Total number of unique role and user mentions allowed per message.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+     *
+     * Maximum of 50
+     */
+    mentionTotalLimit?: number
+    /**
+     * Whether to automatically detect mention raids.
+     *
+     * @remarks
+     * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+     */
+    mentionRaidProtectionEnabled?: boolean
   }
   /** The actions that will trigger for this rule */
   actions: Array<{
@@ -1389,6 +1455,14 @@ export interface EditMessage {
   components?: MessageComponents
 }
 
+/** https://discord.com/developers/docs/resources/message#get-channel-pins-query-string-params */
+export interface GetChannelPinsOptions {
+  /** Get messages pinned before this timestamp */
+  before?: string
+  /** Max number of pins to return (1-50), defaults to 50 */
+  limit?: number
+}
+
 /** Additional properties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
@@ -1397,39 +1471,19 @@ export interface GetApplicationCommandPermissionOptions {
   applicationId: BigString
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild */
-export interface CreateGuild {
-  /** Name of the guild (1-100 characters) */
-  name: string
-  /** Base64 128x128 image for the guild icon */
-  icon?: string
-  /** Verification level */
-  verificationLevel?: VerificationLevels
-  /** Default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevels
-  /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevels
-  /** New guild roles (first role is the everyone role) */
-  roles?: Camelize<DiscordRole[]>
-  /** New guild's channels */
-  channels?: Partial<Camelize<DiscordChannel>>[]
-  /** Id for afk channel */
-  afkChannelId?: string
-  /** Afk timeout in seconds */
-  afkTimeout?: number
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: string
-  /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags
-}
-
+/** https://discord.com/developers/docs/resources/guild#create-guild-role-json-params */
 export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[]
-  /** RGB color value, default: 0 */
+  /**
+   * RGB color value, default: 0
+   * @deprecated the {@link colors} field is recommended for use instead of this field
+   */
   color?: number
+  /** The role's color */
+  colors?: GuildRoleColors
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean
   /** Whether the role should be mentionable, default: false */
@@ -1440,13 +1494,28 @@ export interface CreateGuildRole {
   icon?: string
 }
 
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
+export interface GuildRoleColors {
+  /** The primary color for the role */
+  primaryColor: number
+  /** The secondary color for the role, this will make the role a gradient between the other provided colors */
+  secondaryColor?: number
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
+  tertiaryColor?: number
+}
+
 export interface EditGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[]
-  /** RGB color value, default: 0 */
+  /**
+   * RGB color value, default: 0
+   * @deprecated the {@link colors} field is recommended for use instead of this field
+   */
   color?: number
+  /** The role's color */
+  colors?: GuildRoleColors
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean
   /** Whether the role should be mentionable, default: false */
@@ -1480,8 +1549,6 @@ export interface ModifyGuild {
   afkTimeout?: number
   /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
   icon?: string | null
-  /** User id to transfer guild ownership to (must be owner) */
-  ownerId?: BigString
   /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
   splash?: string | null
   /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
@@ -1522,14 +1589,6 @@ export interface EditGuildStickerOptions {
   description?: string | null
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags?: string
-}
-
-/** https://discord.com/developers/docs/resources/template#create-guild-from-template-json-params */
-export interface CreateGuildFromTemplate {
-  /** Name of the guild (2-100 characters) */
-  name: string
-  /** base64 128x128 image for the guild icon */
-  icon?: string
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
@@ -1638,13 +1697,13 @@ export interface BeginGuildPrune {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
 export interface EditGuildOnboarding {
   /** Prompts shown during onboarding and in customize community */
-  prompts: Camelize<DiscordGuildOnboardingPrompt>[]
+  prompts?: Camelize<DiscordGuildOnboardingPrompt>[]
   /** Channel IDs that members get opted into automatically */
-  defaultChannelIds: BigString[]
+  defaultChannelIds?: BigString[]
   /** Whether onboarding is enabled in the guild */
-  enabled: boolean
+  enabled?: boolean
   /** Current mode of onboarding */
-  mode: DiscordGuildOnboardingMode
+  mode?: DiscordGuildOnboardingMode
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#list-entitlements-query-params */

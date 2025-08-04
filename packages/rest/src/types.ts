@@ -13,13 +13,11 @@ import type {
   CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
-  CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
-  CreateGuildFromTemplate,
   CreateGuildRole,
   CreateGuildSoundboardSound,
   CreateGuildStickerOptions,
@@ -48,6 +46,7 @@ import type {
   DiscordEntitlement,
   DiscordFollowedChannel,
   DiscordGetAnswerVotesResponse,
+  DiscordGetChannelPins,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -103,6 +102,7 @@ import type {
   FileContent,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetChannelPinsOptions,
   GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
@@ -124,7 +124,6 @@ import type {
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
   ListThreadMembers,
-  MfaLevels,
   ModifyApplicationEmoji,
   ModifyChannel,
   ModifyGuild,
@@ -476,25 +475,6 @@ export interface RestManager {
     options?: CreateGlobalApplicationCommandOptions,
   ) => Promise<Camelize<DiscordApplicationCommand>>
   /**
-   * Creates a guild.
-   *
-   * @param options - The parameters for the creation of the guild.
-   * @returns An instance of the created {@link DiscordGuild}.
-   *
-   * @deprecated
-   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
-   *
-   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
-   *
-   * @remarks
-   * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
-   *
-   * Fires a _Guild Create_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
-   */
-  createGuild: (options: CreateGuild) => Promise<Camelize<DiscordGuild>>
-  /**
    * Creates an application command only accessible in a specific guild.
    *
    * @param command - The command to create.
@@ -516,27 +496,6 @@ export interface RestManager {
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
   ) => Promise<Camelize<DiscordApplicationCommand>>
-  /**
-   * Creates a guild from a template.
-   *
-   * @param templateCode - The code of the template.
-   * @param options - The parameters for the creation of the guild.
-   * @returns An instance of the created {@link DiscordGuild}.
-   *
-   * @deprecated
-   * This endpoint is deprecated by Discord and will be disabled on July 15 2025.
-   *
-   * Check Discord announcement for details: {@link https://discord.com/developers/docs/change-log#deprecating-guild-creation-by-apps}
-   *
-   *
-   * @remarks
-   * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
-   *
-   * Fires a _Guild Create_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template}
-   */
-  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<Camelize<DiscordGuild>>
   /**
    * Create a new sticker for the guild.
    *
@@ -756,19 +715,6 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
    */
   deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
-  /**
-   * Deletes a guild.
-   *
-   * @param guildId - The ID of the guild to delete.
-   *
-   * @remarks
-   * The bot user must be the owner of the guild.
-   *
-   * Fires a _Guild Delete_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
-   */
-  deleteGuild: (guildId: BigString) => Promise<void>
   /**
    * Deletes an application command registered in a guild.
    *
@@ -1234,10 +1180,6 @@ export interface RestManager {
     guildId: BigString,
     options: CreateApplicationCommand,
   ) => Promise<Camelize<DiscordApplicationCommand>>
-  /** Modify a guild's MFA level. Requires guild ownership.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   */
-  editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   /**
    * Edit the given sticker.
    *
@@ -2080,6 +2022,21 @@ export interface RestManager {
    */
   getOriginalInteractionResponse: (token: string) => Promise<Camelize<DiscordMessage>>
   /**
+   * Retrieves the list of pins in a channel.
+   *
+   * @param channelId - The ID of the channel to get the pins for.
+   * @param options - The options for the fetching of the pins.
+   * @returns A {@link DiscordGetChannelPins} objects
+   *
+   * @remarks
+   * Requires the `VIEW_CHANNEL` permission.
+   *
+   * If the user is missing the `READ_MESSAGE_HISTORY` permission in the channel, then no pins will be returned.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/message#get-channel-pins}
+   */
+  getChannelPins: (channelId: BigString, options?: GetChannelPinsOptions) => Promise<Camelize<DiscordGetChannelPins>>
+  /**
    * Gets the pinned messages for a channel.
    *
    * @param channelId - The ID of the channel to get the pinned messages for.
@@ -2091,7 +2048,8 @@ export interface RestManager {
    * If getting a message from a guild channel:
    * - Requires the `READ_MESSAGE_HISTORY` permission.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
+   * @see {@link https://discord.com/developers/docs/resources/message#get-pinned-messages-deprecated}
+   * @deprecated Use {@link getChannelPins} instead.
    */
   getPinnedMessages: (channelId: BigString) => Promise<Camelize<DiscordMessage>[]>
   /**
@@ -2896,15 +2854,11 @@ export interface RestManager {
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
-   *
    * Requires the `MANAGE_MESSAGES` permission.
-   *
-   * ⚠️ There can only be at max 50 messages pinned in a channel.
    *
    * Fires a _Channel Pins Update_ event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#pin-message}
+   * @see {@link https://discord.com/developers/docs/resources/message#pin-message}
    */
   pinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**
@@ -2957,20 +2911,18 @@ export interface RestManager {
    */
   unbanMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   /**
-   * Unpins a pinned message in a channel.
+   * Unpin a message in a channel.
    *
    * @param channelId - The ID of the channel where the message is pinned.
    * @param messageId - The ID of the message to unpin.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
-   *
    * Requires the `MANAGE_MESSAGES` permission.
    *
    * Fires a _Channel Pins Update_ event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
+   * @see {@link https://discord.com/developers/docs/resources/message#unpin-message}
    */
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**

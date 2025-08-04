@@ -30,6 +30,9 @@ const featureNames = [
   'verified',
   'vipRegions',
   'welcomeScreenEnabled',
+  'guestsEnabled',
+  'guildTags',
+  'enhancedRoleColors',
 ] as const
 
 export const GuildToggle = {
@@ -45,7 +48,6 @@ export const GuildToggle = {
   premiumProgressBarEnabled: 1n << 4n,
 
   // GUILD FEATURES ARE BELOW THIS
-  // MISSING VALUES IN THE BITFIELD: 26, 35+
 
   /** Whether the guild has access to set an animated guild banner image */
   animatedBanner: 1n << 11n,
@@ -105,6 +107,12 @@ export const GuildToggle = {
   vipRegions: 1n << 6n,
   /** Whether the guild has enabled the welcome screen */
   welcomeScreenEnabled: 1n << 18n,
+  /** Whether the guild has access to guest invites */
+  guestsEnabled: 1n << 26n,
+  /** Whether the guild has access to set guild tags */
+  guildTags: 1n << 36n,
+  /** Whether the guild is able to set gradient colors to roles */
+  enhancedRoleColors: 1n << 35n,
 }
 
 export class GuildToggles extends ToggleBitfieldBigint {
@@ -152,6 +160,9 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified)
       if (guild.features.includes(GuildFeatures.VipRegions)) this.add(GuildToggle.vipRegions)
       if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) this.add(GuildToggle.welcomeScreenEnabled)
+      if (guild.features.includes(GuildFeatures.GuestsEnabled)) this.add(GuildToggle.guestsEnabled)
+      if (guild.features.includes(GuildFeatures.GuildTags)) this.add(GuildToggle.guildTags)
+      if (guild.features.includes(GuildFeatures.EnhancedRoleColors)) this.add(GuildToggle.enhancedRoleColors)
     }
   }
 
@@ -335,6 +346,21 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild has created soundboard sounds. */
   get soundboard(): boolean {
     return this.has('soundboard')
+  }
+
+  /** Whether the guild has access to guest invites */
+  get guestsEnabled(): boolean {
+    return this.has('guestsEnabled')
+  }
+
+  /** Whether the guild has access to set guild tags */
+  get guildTags(): boolean {
+    return this.has('guildTags')
+  }
+
+  /** Whether the guild is able to set gradient colors to roles */
+  get enhancedRoleColors(): boolean {
+    return this.has('enhancedRoleColors')
   }
 
   /** Checks whether or not the permissions exist in this */

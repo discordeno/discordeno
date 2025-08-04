@@ -11,7 +11,9 @@ const commitHash = execSync('git rev-parse HEAD').toString().slice(0, 7)
 
 const file = JSON.parse(await readFile(`packages/${packageName}/package.json`, 'utf-8'))
 
-file.version = `${file.version.split('-')[0]}-next.${commitHash}`
+const version = file.version.split('-')[0]
+
+file.version = `${bumpPatch(version)}-next.${commitHash}`
 
 if (file.dependencies) {
   Object.keys(file.dependencies).forEach((dependency) => {
@@ -21,4 +23,14 @@ if (file.dependencies) {
 
 await writeFile(`packages/${packageName}/package.json`, JSON.stringify(file, null, 2))
 
-console.log(`Bumped ${packageName} to ${file.version.split('-')[0]}-next.${commitHash}`)
+console.log(`Bumped ${packageName} to ${file.version}`)
+
+function bumpPatch(version) {
+  const parts = version.split('.').map(Number)
+  if (parts.length !== 3 || parts.some(isNaN)) {
+    throw new Error('Invalid semver format. Expected format "MAJOR.MINOR.PATCH"')
+  }
+
+  parts[2] += 1
+  return parts.join('.')
+}

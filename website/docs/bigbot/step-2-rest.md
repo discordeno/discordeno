@@ -52,10 +52,8 @@ This code we have created will maintain a manager that will handle all the outgo
 Now you can make another file like `services/rest/index.ts`. Then paste the code below:
 
 ```ts
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import express from 'express'
-
-dotenv.config()
 
 import { REST } from './rest.ts'
 

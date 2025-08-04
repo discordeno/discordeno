@@ -21,6 +21,10 @@ If you need more specific packages, you can install them directly for example:
 npm install @discordeno/types # Using npm
 ```
 
+### Typescript
+
+If you are using Typescript you do need to enable `strictNullChecks` in your TSConfig, or else it may cause issues especially with [Desired Properties](#understanding-desired-properties-in-discordeno)
+
 ## Understanding Bot Helpers
 
 Whenever you want to do something on discord, you will need to talk to the discord api. To make this easy, we provide "helpers". For example, to send a message to a channel, you can call the `bot.helpers.sendMessage` method with the 2 required parameters:
@@ -44,6 +48,6 @@ For more details checkout [the desired properties docs](./desired-properties.md)
 If you plan to use discordeno, this is a must read! Please do not skip! It is a very important concept to make your bot work in discordeno.
 :::
 
-## Minimal bot that logins into Discord
+## Minimal bot that logs into Discord
 
 You can check minimal examples with [Node.JS](./examples/node.md), [Deno](./examples/deno.md) or [Bun](./examples/bun.md). 

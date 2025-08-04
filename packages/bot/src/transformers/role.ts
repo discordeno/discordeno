@@ -1,5 +1,5 @@
-import type { BigString, DiscordRole } from '@discordeno/types'
-import { type InternalBot, type Role, iconHashToBigInt } from '../index.js'
+import type { BigString, DiscordRole, DiscordRoleColors } from '@discordeno/types'
+import { type InternalBot, type Role, type RoleColors, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
@@ -47,7 +47,8 @@ export function transformRole(bot: InternalBot, payload: { role: DiscordRole; gu
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)
-  if (props.name && payload.role.name) role.name = payload.role.name
+  // Role name can be an empty string
+  if (props.name && payload.role.name !== undefined) role.name = payload.role.name
   if (props.position) role.position = payload.role.position
   if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
   if (props.color && payload.role.color !== undefined) role.color = payload.role.color
@@ -67,4 +68,17 @@ export function transformRole(bot: InternalBot, payload: { role: DiscordRole; gu
   }
 
   return bot.transformers.customizers.role(bot, payload.role, role)
+}
+
+export function transformRoleColors(bot: InternalBot, payload: DiscordRoleColors): RoleColors {
+  const roleColors = {} as RoleColors
+  const props = bot.transformers.desiredProperties.roleColors
+
+  if (props.primaryColor && payload.primary_color !== undefined) roleColors.primaryColor = payload.primary_color
+  if (props.secondaryColor && payload.secondary_color !== undefined && payload.secondary_color !== null)
+    roleColors.secondaryColor = payload.secondary_color
+  if (props.tertiaryColor && payload.tertiary_color !== undefined && payload.tertiary_color !== null)
+    roleColors.tertiaryColor = payload.tertiary_color
+
+  return bot.transformers.customizers.roleColors(bot, payload, roleColors)
 }

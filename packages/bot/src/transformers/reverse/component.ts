@@ -50,13 +50,14 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
   }
 }
 
-export function transformUnfurledMediaItemToDiscordUnfurledMediaItem(_bot: Bot, payload: UnfurledMediaItem): DiscordUnfurledMediaItem {
+export function transformUnfurledMediaItemToDiscordUnfurledMediaItem(bot: Bot, payload: UnfurledMediaItem): DiscordUnfurledMediaItem {
   return {
     url: payload.url,
     proxy_url: payload.proxyUrl,
     height: payload.height,
     width: payload.width,
     content_type: payload.contentType,
+    attachment_id: payload.attachmentId ? bot.transformers.reverse.snowflake(payload.attachmentId) : undefined,
   }
 }
 
@@ -170,6 +171,8 @@ function transformFileComponent(bot: Bot, payload: Component): DiscordFileCompon
     id: payload.id,
     file: bot.transformers.reverse.unfurledMediaItem(bot, payload.file!),
     spoiler: payload.spoiler,
+    name: payload.name!,
+    size: payload.size!,
   }
 }
 

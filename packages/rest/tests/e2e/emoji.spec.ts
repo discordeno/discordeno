@@ -2,25 +2,10 @@ import type { Camelize, DiscordEmoji } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { after, afterEach, before, beforeEach, describe, it } from 'mocha'
+import { describe, it } from 'mocha'
 import { e2eCache, rest } from './utils.js'
 
 chaiUse(chaiAsPromised)
-
-before(async () => {
-  if (!e2eCache.guild) {
-    e2eCache.guild = await rest.createGuild({
-      name: 'Discordeno-test',
-    })
-  }
-})
-
-after(async () => {
-  if (e2eCache.guild.id && !e2eCache.deletedGuild) {
-    e2eCache.deletedGuild = true
-    await rest.deleteGuild(e2eCache.guild.id)
-  }
-})
 
 describe('Create and delete emojis', () => {
   it('create an emoji', async () => {
@@ -90,7 +75,6 @@ describe('Edit and get emojis', () => {
     })
 
     const edited = await rest.getEmoji(e2eCache.guild.id, emoji.id)
-
     expect(edited.name).to.equal('edited')
   })
 
@@ -99,24 +83,27 @@ describe('Edit and get emojis', () => {
     const role = await rest.createRole(e2eCache.guild.id, {
       name: 'dd-test-emoji',
     })
+    after(async () => {
+      await rest.deleteRole(e2eCache.guild.id, role.id)
+    })
     await rest.editEmoji(e2eCache.guild.id, emoji.id, {
       roles: [role.id],
     })
 
     const edited = await rest.getEmoji(e2eCache.guild.id, emoji.id)
-
     expect(edited.roles?.length).to.equal(1)
   })
 
   // get an emoji
   it('get an emoji', async () => {
     const exists = await rest.getEmoji(e2eCache.guild.id, emoji.id)
+
     expect(exists.id).to.be.exist
     expect(emoji.id).to.equal(exists.id)
   })
 
   it('get all guild emojis', async () => {
-    await rest.createEmoji(e2eCache.guild.id, {
+    const newEmoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'blamewolf2',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
       roles: [],
@@ -124,5 +111,9 @@ describe('Edit and get emojis', () => {
 
     const exists = await rest.getEmojis(e2eCache.guild.id)
     expect(exists.length).to.greaterThan(1)
+    expect(exists.find((x) => x.id === newEmoji.id)).to.exist
+    expect(exists.find((x) => x.id === emoji.id)).to.exist
+
+    await rest.deleteEmoji(e2eCache.guild.id, newEmoji.id!)
   })
 })
