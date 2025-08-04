@@ -1889,7 +1889,7 @@ export interface GuildWidget {
   name: string
   members: Partial<User>[]
   channels: Partial<Channel>[]
-  instant_invite: string
+  instantInvite?: string
   presenceCount: number
 }
 
