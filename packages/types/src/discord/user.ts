@@ -4,24 +4,14 @@ import type { DiscordIntegration } from './guild.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-structure */
 export interface DiscordUser {
-  /** The user's username, not unique across the platform */
-  username: string
-  /** The user's display name, if it is set. For bots, this is the application name */
-  global_name: string | null
-  /** The user's chosen language option */
-  locale?: string
-  /** The flags on a user's account */
-  flags?: number
-  /** The type of Nitro subscription on a user's account */
-  premium_type?: PremiumTypes
-  /** The public flags on a user's account */
-  public_flags?: number
-  /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accent_color?: number
   /** The user's id */
   id: string
+  /** The user's username, not unique across the platform */
+  username: string
   /** The user's discord-tag */
   discriminator: string
+  /** The user's display name, if it is set. For bots, this is the application name */
+  global_name: string | null
   /** The user's avatar hash */
   avatar: string | null
   /** Whether the user belongs to an OAuth2 application */
@@ -30,12 +20,22 @@ export interface DiscordUser {
   system?: boolean
   /** Whether the user has two factor enabled on their account */
   mfa_enabled?: boolean
+  /** the user's banner, or null if unset */
+  banner?: string | null
+  /** the user's banner color encoded as an integer representation of hexadecimal color code */
+  accent_color?: number
+  /** The user's chosen language option */
+  locale?: string
   /** Whether the email on this account has been verified */
   verified?: boolean
   /** The user's email */
   email?: string | null
-  /** the user's banner, or null if unset */
-  banner?: string
+  /** The flags on a user's account */
+  flags?: number
+  /** The type of Nitro subscription on a user's account */
+  premium_type?: PremiumTypes
+  /** The public flags on a user's account */
+  public_flags?: number
   /** data for the user's avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData | null
   /** data for the user's collectibles */
@@ -143,7 +143,7 @@ export interface DiscordConnection {
 export enum DiscordConnectionServiceType {
   AmazonMusic = 'amazon-music',
   BattleNet = 'battlenet',
-  Bungie = 'Bungie.net',
+  Bungie = 'bungie',
   Bluesky = 'bluesky',
   Crunchyroll = 'crunchyroll',
   Domain = 'domain',
