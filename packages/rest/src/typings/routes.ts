@@ -173,8 +173,6 @@ export interface RestRoutes {
     widget: (guildId: BigString) => string
     /** Route for handling a guild's widget in the form of json. */
     widgetJson: (guildId: BigString) => string
-    /** Route for handling a guilds mfa level. */
-    mfa: (guildId: BigString) => string
     /** Routes for handling a guild's members. */
     members: {
       /** Route for handling a specific guild member's ban. */

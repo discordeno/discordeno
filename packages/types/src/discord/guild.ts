@@ -2,17 +2,14 @@
 
 import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
-import type { DiscordPresenceUpdate } from './gateway.js'
+import type { DiscordGuildCreateExtra } from './gateway.js'
 import type { OAuth2Scope } from './oauth2.js'
 import type { DiscordRole } from './permissions.js'
-import type { DiscordSoundboardSound } from './soundboard.js'
-import type { DiscordStageInstance } from './stageInstance.js'
 import type { DiscordSticker } from './sticker.js'
 import type { DiscordAvatarDecorationData, DiscordUser } from './user.js'
-import type { DiscordVoiceState } from './voice.js'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-structure */
-export interface DiscordGuild {
+export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
   name: string
   /** True if the user is the owner of the guild */
@@ -33,12 +30,6 @@ export interface DiscordGuild {
   mfa_level: MfaLevels
   /** System channel flags */
   system_channel_flags: SystemChannelFlags
-  /** True if this is considered a large guild */
-  large?: boolean
-  /** True if this guild is unavailable due to an outage */
-  unavailable?: boolean
-  /** Total number of members in this guild */
-  member_count?: number
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
   max_presences?: number | null
   /** The maximum number of members for the guild */
@@ -91,18 +82,6 @@ export interface DiscordGuild {
   system_channel_id: string | null
   /** The id of the channel where community guilds can display rules and/or guidelines */
   rules_channel_id: string | null
-  /** When this guild was joined at */
-  joined_at?: string
-  /** States of members currently in voice channels; lacks the guild_id key */
-  voice_states?: Omit<DiscordVoiceState, 'guildId'>[]
-  /** Users in the guild */
-  members?: DiscordMember[]
-  /** Channels in the guild */
-  channels?: DiscordChannel[]
-  /** All active threads in the guild that the current user has permission to view */
-  threads?: DiscordChannel[]
-  /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Partial<DiscordPresenceUpdate>[]
   /** Banner hash */
   banner: string | null
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
@@ -111,21 +90,12 @@ export interface DiscordGuild {
   public_updates_channel_id: string | null
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcome_screen?: DiscordWelcomeScreen
-  /** Stage instances in the guild */
-  stage_instances?: DiscordStageInstance[]
   /** Custom guild stickers */
   stickers?: DiscordSticker[]
   /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
   safety_alerts_channel_id: string | null
   /** The incidents data for this guild */
   incidents_data: DiscordIncidentsData
-  /**
-   * Soundboard sounds in the guild
-   *
-   * @remarks
-   * Only sent by the gateway
-   */
-  soundboard_sounds?: DiscordSoundboardSound[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
@@ -262,6 +232,8 @@ export enum GuildFeatures {
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
   /** Guild has access to guest invites */
   GuestsEnabled = 'GUESTS_ENABLED',
+  /** Guild has access to set guild tags */
+  GuildTags = 'GUILD_TAGS',
   /** Guild is able to set gradient colors to roles */
   EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
@@ -425,6 +397,13 @@ export enum MemberFlags {
    * This value is not editable
    */
   DmSettingsUpsellAcknowledged = 1 << 9,
+  /**
+   * Member's guild tag is blocked by AutoMod
+   *
+   * @remarks
+   * This value is not editable
+   */
+  AutomodQuarantinedGuildTag = 1 << 10,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
