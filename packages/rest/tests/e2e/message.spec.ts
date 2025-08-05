@@ -3,8 +3,6 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { e2eCache, rest } from './utils.js'
 
-// TODO: we need to create this many channels?
-
 describe('Send a message', () => {
   it('With content', async () => {
     const message = await rest.sendMessage(e2eCache.channel.id, { content: 'testing rate limit manager' })
@@ -62,17 +60,15 @@ describe('Send a message', () => {
 
 describe('Manage reactions', async () => {
   it('Add and delete a unicode reaction', async () => {
-    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
-    after(async () => {
-      // Clean up the channel created for testing
-      await rest.deleteChannel(reactionChannel.id)
-    })
-    const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
+    const message = await rest.sendMessage(e2eCache.channel.id, { content: 'add reaction test' })
     await rest.addReaction(message.channelId, message.id, '📙')
+
     const reacted = await rest.getMessage(message.channelId, message.id)
     expect(reacted.reactions?.length).to.be.greaterThanOrEqual(1)
+
     await rest.deleteOwnReaction(message.channelId, message.id, '📙')
     const unreacted = await rest.getMessage(message.channelId, message.id)
+
     // Use boolean comparison because when its 0 length discord sends undefined
     expect(!!unreacted.reactions?.length).to.be.equal(false)
   })
@@ -82,20 +78,26 @@ describe('Manage reactions', async () => {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
     })
-    const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
-    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
+
     after(async () => {
-      // Clean up the channel created for testing
-      await rest.deleteChannel(reactionChannel.id)
+      // Clean up the emoji created for testing
+      await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
     })
-    const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
+
+    const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
+
+    const message = await rest.sendMessage(e2eCache.channel.id, { content: 'add reaction test' })
     await rest.addReaction(message.channelId, message.id, emojiCode)
+
     const reacted = await rest.getMessage(message.channelId, message.id)
     expect(reacted.reactions?.length).to.be.greaterThanOrEqual(1)
-    const reactions = await rest.getReactions(reactionChannel.id, message.id, processReactionString(emojiCode))
+
+    const reactions = await rest.getReactions(e2eCache.channel.id, message.id, processReactionString(emojiCode))
     expect(reactions?.length).to.be.greaterThanOrEqual(1)
+
     await rest.deleteOwnReaction(message.channelId, message.id, emojiCode)
     const unreacted = await rest.getMessage(message.channelId, message.id)
+
     // Use boolean comparison because when its 0 length discord sends undefined
     expect(!!unreacted.reactions?.length).to.be.equal(false)
   })
@@ -105,18 +107,23 @@ describe('Manage reactions', async () => {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
     })
-    const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
-    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
+
     after(async () => {
-      // Clean up the channel created for testing
-      await rest.deleteChannel(reactionChannel.id)
+      // Clean up the emoji created for testing
+      await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
     })
-    const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
+
+    const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
+
+    const message = await rest.sendMessage(e2eCache.channel.id, { content: 'add reaction test' })
     await rest.addReactions(message.channelId, message.id, [emojiCode, '📙'])
+
     const reacted = await rest.getMessage(message.channelId, message.id)
     expect(reacted.reactions?.length).to.be.greaterThanOrEqual(1)
+
     await rest.deleteReactionsAll(message.channelId, message.id)
     const unreacted = await rest.getMessage(message.channelId, message.id)
+
     // Use boolean comparison because when its 0 length discord sends undefined
     expect(!!unreacted.reactions?.length).to.equal(false)
   })
@@ -126,21 +133,28 @@ describe('Manage reactions', async () => {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
     })
-    const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
-    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
+
     after(async () => {
-      // Clean up the channel created for testing
-      await rest.deleteChannel(reactionChannel.id)
+      // Clean up the emoji created for testing
+      await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
     })
-    const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
+
+    const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
+
+    const message = await rest.sendMessage(e2eCache.channel.id, { content: 'add reaction test' })
     await rest.addReactions(message.channelId, message.id, [emojiCode, '📙'], true)
+
     const reacted = await rest.getMessage(message.channelId, message.id)
     expect(reacted.reactions?.length).to.be.greaterThanOrEqual(1)
+
     await rest.deleteReactionsEmoji(message.channelId, message.id, emojiCode)
+
     const unreacted = await rest.getMessage(message.channelId, message.id)
     expect(unreacted.reactions?.length).to.greaterThanOrEqual(1)
+
     await rest.deleteUserReaction(message.channelId, message.id, rest.applicationId.toString(), '📙')
     const noreacted = await rest.getMessage(message.channelId, message.id)
+
     // Use boolean comparison because when its 0 length discord sends undefined
     expect(!!noreacted.reactions?.length).to.equal(false)
   })
@@ -148,57 +162,50 @@ describe('Manage reactions', async () => {
 
 describe('Manage pins', () => {
   it('Pin, get, and unpin messages', async () => {
-    const channel = await rest.createChannel(e2eCache.guild.id, { name: 'pinning' })
-    after(async () => {
-      // Clean up the channel created for testing
-      await rest.deleteChannel(channel.id)
-    })
-    const message = await rest.sendMessage(channel.id, { content: 'pin me' })
-    const message2 = await rest.sendMessage(channel.id, { content: 'pin me 2' })
-    await rest.pinMessage(channel.id, message.id)
-    await rest.pinMessage(channel.id, message2.id, 'with a reason')
-    const pins = await rest.getPinnedMessages(channel.id)
-    expect(pins.length).to.equal(2)
-    expect(pins.some((p) => p.id === message.id)).to.equal(true)
-    await rest.unpinMessage(channel.id, message.id)
-    await rest.unpinMessage(channel.id, message2.id, 'with a reason')
-    const unpinned = await rest.getPinnedMessages(channel.id)
-    expect(unpinned.length).to.equal(0)
+    const message = await rest.sendMessage(e2eCache.channel.id, { content: 'pin me' })
+    const message2 = await rest.sendMessage(e2eCache.channel.id, { content: 'pin me 2' })
+
+    await rest.pinMessage(e2eCache.channel.id, message.id)
+    await rest.pinMessage(e2eCache.channel.id, message2.id, 'with a reason')
+
+    const pins = await rest.getChannelPins(e2eCache.channel.id)
+
+    expect(pins.items.length).to.equal(2)
+    expect(pins.items.some((p) => p.message.id === message.id)).to.equal(true)
+
+    await rest.unpinMessage(e2eCache.channel.id, message.id)
+    await rest.unpinMessage(e2eCache.channel.id, message2.id, 'with a reason')
+
+    const unpinned = await rest.getChannelPins(e2eCache.channel.id)
+    expect(unpinned.items.length).to.equal(0)
   })
 })
 
 describe('Rate limit manager testing', () => {
   it('Send 10 messages to 1 channel', async () => {
-    const channel = await rest.createChannel(e2eCache.guild.id, { name: 'rate-limit-1' })
-
-    after(async () => {
-      // Clean up the channel created for testing
-      await rest.deleteChannel(channel.id)
+    const promises = Array.from({ length: 10 }, async (_, i) => {
+      await rest.sendMessage(e2eCache.channel.id, { content: `10 messages to 1 channel testing rate limit manager ${i}` })
     })
 
-    await Promise.all(
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(async (i) => {
-        await rest.sendMessage(channel.id, { content: `10 messages to 1 channel testing rate limit manager ${i}` })
-      }),
-    )
+    await Promise.all(promises)
   })
 
   it('Send 10 messages to 10 channels', async () => {
-    await Promise.all(
-      [...Array(10).keys()].map(async () => {
-        const channel = await rest.createChannel(e2eCache.guild.id, { name: 'rate-limit-x' })
+    // Create 10 channels and send a message to each
+    const promises = Array.from({ length: 10 }, async (_, i) => {
+      const channel = await rest.createChannel(e2eCache.guild.id, { name: `rate-limit-${i}` })
 
-        after(async () => {
-          // Clean up the channel created for testing
-          await rest.deleteChannel(channel.id)
-        })
+      after(async () => {
+        await rest.deleteChannel(channel.id)
+      })
 
-        await Promise.all(
-          [...Array(10).keys()].map(async (_, index) => {
-            await rest.sendMessage(channel.id, { content: `testing rate limit manager ${index}` })
-          }),
-        )
-      }),
-    )
+      const messagePromises = Array.from({ length: 10 }, async (_, j) => {
+        await rest.sendMessage(channel.id, { content: `testing rate limit manager ${j}` })
+      })
+
+      await Promise.all(messagePromises)
+    })
+
+    await Promise.all(promises)
   })
 })

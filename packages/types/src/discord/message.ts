@@ -569,6 +569,6 @@ export enum DiscordReactionType {
 
 /** https://discord.com/developers/docs/resources/message#get-channel-pins-response-structure */
 export interface DiscordGetChannelPins {
-  items: DiscordMessagePin
+  items: DiscordMessagePin[]
   has_more: boolean
 }
