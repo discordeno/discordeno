@@ -1,9 +1,16 @@
 import type { DiscordWebhook } from '@discordeno/types'
-import { type InternalBot, type Webhook, iconHashToBigInt } from '../index.js'
+import {
+  type Bot,
+  type DesiredPropertiesBehavior,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
+  type Webhook,
+  iconHashToBigInt,
+} from '../index.js'
 
-export function transformWebhook(bot: InternalBot, payload: DiscordWebhook): typeof bot.transformers.$inferredTypes.webhook {
+export function transformWebhook(bot: Bot, payload: DiscordWebhook): typeof bot.transformers.$inferredTypes.webhook {
   const props = bot.transformers.desiredProperties.webhook
-  const webhook = {} as Webhook
+  const webhook = {} as SetupDesiredProps<Webhook, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) webhook.id = bot.transformers.snowflake(payload.id)
   if (props.type && payload.type) webhook.type = payload.type

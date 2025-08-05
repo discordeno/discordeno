@@ -10,21 +10,25 @@ import {
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
 import {
-  type InternalBot,
+  type Bot,
+  type DesiredPropertiesBehavior,
   type Message,
   type MessageCall,
+  type MessageInteraction,
   type MessageInteractionMetadata,
   type MessagePin,
   type MessageSnapshot,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
   snowflakeToTimestamp,
 } from '../index.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
 
-export const baseMessage: InternalBot['transformers']['$inferredTypes']['message'] = {
+export const baseMessage: Message = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['message']),
+  ...(undefined as unknown as Message),
 
   get crossposted() {
     return this.flags?.contains(MessageFlags.Crossposted) ?? false
@@ -138,14 +142,11 @@ export const baseMessage: InternalBot['transformers']['$inferredTypes']['message
   },
 }
 
-export function transformMessage(
-  bot: InternalBot,
-  payload: { message: DiscordMessage; shardId: number },
-): typeof bot.transformers.$inferredTypes.message {
+export function transformMessage(bot: Bot, payload: { message: DiscordMessage; shardId: number }): Message {
   const guildId = payload.message.guild_id ? bot.transformers.snowflake(payload.message.guild_id) : undefined
   const userId = payload.message.author?.id ? bot.transformers.snowflake(payload.message.author.id) : undefined
 
-  const message: Message = Object.create(baseMessage)
+  const message: SetupDesiredProps<Message, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseMessage)
   message.bitfield = new ToggleBitfield()
   message.flags = new ToggleBitfield(payload.message.flags)
 
@@ -171,7 +172,7 @@ export function transformMessage(
   if (props.interactionMetadata && payload.message.interaction_metadata)
     message.interactionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.message.interaction_metadata)
   if (props.interaction && payload.message.interaction) {
-    const interaction = {} as NonNullable<Message['interaction']>
+    const interaction = {} as SetupDesiredProps<MessageInteraction, TransformersDesiredProperties, DesiredPropertiesBehavior>
     const messageInteractionProps = bot.transformers.desiredProperties.messageInteraction
 
     if (messageInteractionProps.id) {
@@ -264,9 +265,9 @@ export function transformMessage(
   return bot.transformers.customizers.message(bot, payload.message, message)
 }
 
-export function transformMessagePin(bot: InternalBot, payload: DiscordMessagePin): MessagePin {
+export function transformMessagePin(bot: Bot, payload: DiscordMessagePin): MessagePin {
   const props = bot.transformers.desiredProperties.messagePin
-  const messagePin = {} as MessagePin
+  const messagePin = {} as SetupDesiredProps<MessagePin, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.pinnedAt && payload.pinned_at) messagePin.pinnedAt = Date.parse(payload.pinned_at)
   if (props.message && payload.message) messagePin.message = bot.transformers.message(bot, { message: payload.message, shardId: 0 })
@@ -274,25 +275,22 @@ export function transformMessagePin(bot: InternalBot, payload: DiscordMessagePin
   return bot.transformers.customizers.messagePin(bot, payload, messagePin)
 }
 
-export function transformMessageSnapshot(
-  bot: InternalBot,
-  payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number },
-): typeof bot.transformers.$inferredTypes.messageSnapshot {
+export function transformMessageSnapshot(bot: Bot, payload: { messageSnapshot: DiscordMessageSnapshot; shardId: number }): MessageSnapshot {
   const props = bot.transformers.desiredProperties.messageSnapshot
-  const messageSnapshot = {} as MessageSnapshot
+  const messageSnapshot = {} as SetupDesiredProps<MessageSnapshot, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.message && payload.messageSnapshot.message)
-    messageSnapshot.message = bot.transformers.message(bot, { message: payload.messageSnapshot.message as DiscordMessage, shardId: payload.shardId })
+    messageSnapshot.message = bot.transformers.message(bot, {
+      message: payload.messageSnapshot.message as DiscordMessage,
+      shardId: payload.shardId,
+    }) as Message
 
   return bot.transformers.customizers.messageSnapshot(bot, payload.messageSnapshot, messageSnapshot)
 }
 
-export function transformMessageInteractionMetadata(
-  bot: InternalBot,
-  payload: DiscordMessageInteractionMetadata,
-): typeof bot.transformers.$inferredTypes.messageInteractionMetadata {
+export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {
   const props = bot.transformers.desiredProperties.messageInteractionMetadata
-  const metadata = {} as MessageInteractionMetadata
+  const metadata = {} as SetupDesiredProps<MessageInteractionMetadata, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id) metadata.id = bot.transformers.snowflake(payload.id)
   if (props.authorizingIntegrationOwners) {
@@ -329,8 +327,8 @@ export function transformMessageInteractionMetadata(
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }
 
-export function transformMessageCall(bot: InternalBot, payload: DiscordMessageCall): typeof bot.transformers.$inferredTypes.messageCall {
-  const call = {} as MessageCall
+export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): MessageCall {
+  const call = {} as SetupDesiredProps<MessageCall, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.messageCall
 
   if (props.participants && payload.participants) call.participants = payload.participants.map((x) => bot.transformers.snowflake(x))

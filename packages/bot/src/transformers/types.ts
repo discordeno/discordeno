@@ -74,15 +74,17 @@ import type { Collection } from '@discordeno/utils'
 import type {
   Bot,
   ChannelToggles,
+  DesiredPropertiesBehavior,
   EmojiToggles,
   GuildFeatureKeys,
   GuildToggles,
-  InteractionResolvedChannel,
-  InteractionResolvedMember,
+  InteractionResolvedDataChannel,
+  InteractionResolvedDataMember,
   MemberToggles,
   Permissions,
   RoleToggles,
   ToggleBitfield,
+  TransformersDesiredProperties,
   UserToggles,
   VoiceStateToggles,
 } from '../index.js'
@@ -1030,9 +1032,9 @@ export interface InteractionData {
 export interface InteractionDataResolved {
   messages?: Collection<bigint, Message>
   users?: Collection<bigint, User>
-  members?: Collection<bigint, InteractionResolvedMember>
+  members?: Collection<bigint, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>>
   roles?: Collection<bigint, Role>
-  channels?: Collection<bigint, InteractionResolvedChannel>
+  channels?: Collection<bigint, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>>
   attachments?: Collection<bigint, Attachment>
 }
 
