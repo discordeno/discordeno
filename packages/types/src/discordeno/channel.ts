@@ -226,7 +226,7 @@ export interface ModifyChannel {
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum}.
    */
-  defaultFormLayout?: ForumLayout
+  defaultForumLayout?: ForumLayout
 
   // Thread
   /**

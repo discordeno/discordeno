@@ -79,7 +79,7 @@ export interface EditAutoModerationRuleOptions {
   /** The metadata to use for the trigger. */
   triggerMetadata: Camelize<DiscordAutoModerationRuleTriggerMetadata>
   /** The actions that will trigger for this rule */
-  actions: DiscordenoAutoModerationAction
+  actions: DiscordenoAutoModerationAction[]
   /** Whether the rule should be enabled. */
   enabled?: boolean
   /** The role ids that should not be effected by the rule */

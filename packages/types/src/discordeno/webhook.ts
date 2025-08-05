@@ -60,7 +60,7 @@ export interface ExecuteWebhook {
    *
    * @remarks
    * Application-owned webhooks can always send components.
-   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be ignored unless they set the `with_components` query param.
    */
   components?: MessageComponents
   /** The contents of the files being sent */
@@ -119,7 +119,7 @@ export interface EditWebhookMessageOptions {
    *
    * @remarks
    * Application-owned webhooks can always send components.
-   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be gnored unless they set the `with_components` query param.
+   * Non-application-owned webhooks cannot send interactive components, and the `components` field will be ignored unless they set the `with_components` query param.
    */
   components?: MessageComponents
   /** The contents of the files being sent */

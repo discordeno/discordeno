@@ -59,7 +59,7 @@ export interface InteractionCallbackData {
 
   // Autocomplete
   /** Autocomplete choices (max of 25 choices) */
-  choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
+  choices?: Camelize<DiscordApplicationCommandOptionChoice>[]
 
   // Modal
   /** The customId you want to use for this modal response. */
