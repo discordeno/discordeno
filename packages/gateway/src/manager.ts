@@ -256,6 +256,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             max: 1,
             refillAmount: 1,
             refillInterval: gateway.spawnShardDelay,
+            logger: this.logger,
           }),
         })
       }
