@@ -119,6 +119,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     token: options.token,
     version: options.version ?? DISCORD_API_VERSION,
     logger: options.logger ?? logger,
+    events: {
+      request: () => {},
+      response: () => {},
+      requestError: () => {},
+      ...options.events,
+    },
 
     routes: createRoutes(),
 
@@ -440,10 +446,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authorizationScheme} tokenhere`
       }
 
+      const request = new Request(url, payload)
+      rest.events.request(request, {
+        body: options.requestBodyOptions?.body,
+      })
+
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
-      const response = await fetch(url, payload).catch(async (error) => {
+      const response = await fetch(request).catch(async (error) => {
         rest.logger.error(error)
-        // Mark request and completed
+        rest.events.requestError(request, error, { body: options.requestBodyOptions?.body })
+        // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false)
         options.reject({
           ok: false,
@@ -454,7 +466,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
-      // Mark request and completed
+      // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+      const body = await (response.headers.get('Content-Type')?.startsWith('application/json') ? response.json() : response.text()).catch(() => null)
+
+      rest.events.response(request, response, {
+        requestBody: options.requestBodyOptions?.body,
+        responseBody: body,
+      })
+
+      // Mark request as completed
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
@@ -466,14 +486,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} failed.`)
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
-          const body = response.headers.get('Content-Type') === 'application/json' ? ((await response.json()) as object) : await response.text()
-
           options.reject({ ok: false, status: response.status, statusText: response.statusText, body })
           return
         }
-
-        // Consume the response body to avoid leaking memory
-        await response.arrayBuffer()
 
         rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
@@ -498,8 +513,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await options.retryRequest?.(options)
       }
 
-      // Discord sometimes sends no response with no content.
-      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : await response.text() })
+      // Discord sometimes sends a response with no content
+      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : body })
     },
 
     simplifyUrl(url, method) {
@@ -569,12 +584,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.headers[rest.authorizationHeader] = rest.authorization
         }
 
-        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
+        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
+        rest.events.request(request, {
+          body: options?.body,
+        })
+
+        const result = await fetch(request)
+
+        // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
+
+        rest.events.response(request, result, {
+          requestBody: options?.body,
+          responseBody: body,
+        })
 
         if (!result.ok) {
-          // Sometime the Content-Type may be "application/json; charset=utf-8", for this reason we need to check the start of the header
-          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
-
           error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
             status: result.status,
@@ -584,7 +609,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           throw error
         }
 
-        return result.status !== 204 ? await result.json() : undefined
+        return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined
       }
 
       return await new Promise(async (resolve, reject) => {
@@ -597,7 +622,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload)
           },
           resolve: (data) => {
-            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
+            resolve(data.status !== 204 ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : undefined)
           },
           reject: (reason) => {
             let errorText: string
