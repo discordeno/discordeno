@@ -6,6 +6,7 @@ import type {
   DiscordActionRow,
   DiscordContainerComponent,
   DiscordFileComponent,
+  DiscordLabelComponent,
   DiscordMediaGalleryComponent,
   DiscordMediaGalleryItem,
   DiscordSectionComponent,
@@ -43,6 +44,8 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       return transformMediaGalleryComponent(bot, payload)
     case MessageComponentTypes.Thumbnail:
       return transformThumbnailComponent(bot, payload)
+    case MessageComponentTypes.Label:
+      return transformLabelComponent(bot, payload)
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
       // As of now they are compatible
@@ -153,6 +156,7 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
       default: option.default,
     })),
     placeholder: payload.placeholder,
+    values: payload.values,
   }
 }
 
@@ -191,5 +195,15 @@ function transformThumbnailComponent(bot: Bot, payload: Component): DiscordThumb
     media: bot.transformers.reverse.unfurledMediaItem(bot, payload.media!),
     description: payload.description,
     spoiler: payload.spoiler,
+  }
+}
+
+function transformLabelComponent(bot: Bot, payload: Component): DiscordLabelComponent {
+  return {
+    type: MessageComponentTypes.Label,
+    id: payload.id,
+    label: payload.label!,
+    description: payload.description,
+    component: bot.transformers.reverse.component(bot, payload.component!) as DiscordLabelComponent['component'],
   }
 }

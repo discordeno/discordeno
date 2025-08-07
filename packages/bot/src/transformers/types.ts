@@ -574,6 +574,11 @@ export interface Component {
   name?: string
   /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
   size?: number
+  // TODO: Replace comments with actual docs description
+  /** The component the label describes */
+  component?: Component
+  /** The user selected values for the string select, this only exists in modals */
+  values?: string[]
 }
 
 export interface UnfurledMediaItem {
