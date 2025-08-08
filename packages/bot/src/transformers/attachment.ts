@@ -1,9 +1,9 @@
 import type { DiscordAttachment } from '@discordeno/types'
-import type { Attachment, InternalBot } from '../index.js'
+import type { Attachment, Bot, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
 
-export function transformAttachment(bot: InternalBot, payload: DiscordAttachment): typeof bot.transformers.$inferredTypes.attachment {
+export function transformAttachment(bot: Bot, payload: DiscordAttachment): typeof bot.transformers.$inferredTypes.attachment {
   const props = bot.transformers.desiredProperties.attachment
-  const attachment = {} as Attachment
+  const attachment = {} as SetupDesiredProps<Attachment, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) attachment.id = bot.transformers.snowflake(payload.id)
   if (props.filename && payload.filename) attachment.filename = payload.filename

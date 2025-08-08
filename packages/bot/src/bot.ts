@@ -180,6 +180,3 @@ export interface Bot<
   /** Shuts down all the bot connections to the gateway. */
   shutdown: () => Promise<void>
 }
-
-/** @internal This is subject to breaking changes without notice */
-export type InternalBot = Bot<CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>

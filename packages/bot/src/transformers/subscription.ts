@@ -1,9 +1,9 @@
 import type { DiscordSubscription } from '@discordeno/types'
-import type { InternalBot, Subscription } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, Subscription, TransformersDesiredProperties } from '../index.js'
 
-export function transformSubscription(bot: InternalBot, payload: DiscordSubscription): typeof bot.transformers.$inferredTypes.subscription {
+export function transformSubscription(bot: Bot, payload: DiscordSubscription): Subscription {
   const props = bot.transformers.desiredProperties.subscription
-  const subscription = {} as Subscription
+  const subscription = {} as SetupDesiredProps<Subscription, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) subscription.id = bot.transformers.snowflake(payload.id)
   if (props.userId && payload.user_id) subscription.userId = bot.transformers.snowflake(payload.user_id)

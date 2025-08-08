@@ -1,13 +1,10 @@
 import type { BigString, DiscordVoiceState } from '@discordeno/types'
-import type { InternalBot, VoiceState } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties, VoiceState } from '../index.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 
-export function transformVoiceState(
-  bot: InternalBot,
-  payload: { voiceState: DiscordVoiceState; guildId: BigString },
-): typeof bot.transformers.$inferredTypes.voiceState {
+export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState; guildId: BigString }): VoiceState {
   const props = bot.transformers.desiredProperties.voiceState
-  const voiceState = {} as VoiceState
+  const voiceState = {} as SetupDesiredProps<VoiceState, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.requestToSpeakTimestamp && payload.voiceState.request_to_speak_timestamp)
     voiceState.requestToSpeakTimestamp = Date.parse(payload.voiceState.request_to_speak_timestamp)

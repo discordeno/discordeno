@@ -1,5 +1,14 @@
 import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types'
-import { type Channel, type ForumTag, type InternalBot, calculatePermissions, iconHashToBigInt } from '../index.js'
+import {
+  type Bot,
+  type Channel,
+  type DesiredPropertiesBehavior,
+  type ForumTag,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
+  calculatePermissions,
+  iconHashToBigInt,
+} from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 
@@ -20,9 +29,9 @@ export function separateOverwrites(v: bigint): [number, bigint, bigint, bigint] 
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
-export const baseChannel: InternalBot['transformers']['$inferredTypes']['channel'] = {
+export const baseChannel: Channel = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['channel']),
+  ...(undefined as unknown as Channel),
 
   get archived() {
     return !!this.toggles?.archived
@@ -67,11 +76,8 @@ export const baseChannel: InternalBot['transformers']['$inferredTypes']['channel
   },
 }
 
-export function transformChannel(
-  bot: InternalBot,
-  payload: { channel: DiscordChannel; guildId?: BigString },
-): typeof bot.transformers.$inferredTypes.channel {
-  const channel = Object.create(baseChannel) as Channel
+export function transformChannel(bot: Bot, payload: { channel: DiscordChannel; guildId?: BigString }) {
+  const channel = Object.create(baseChannel) as SetupDesiredProps<Channel, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
 
@@ -127,9 +133,9 @@ export function transformChannel(
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
 
-export function transformForumTag(bot: InternalBot, payload: DiscordForumTag): typeof bot.transformers.$inferredTypes.forumTag {
+export function transformForumTag(bot: Bot, payload: DiscordForumTag): ForumTag {
   const props = bot.transformers.desiredProperties.forumTag
-  const forumTag = {} as ForumTag
+  const forumTag = {} as SetupDesiredProps<ForumTag, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) forumTag.id = bot.transformers.snowflake(payload.id)
   if (props.name && payload.name) forumTag.name = payload.name

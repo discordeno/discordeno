@@ -1,11 +1,11 @@
 import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
-import type { Channel, Guild, InternalBot } from '../index.js'
+import type { Bot, Channel, DesiredPropertiesBehavior, Guild, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
 import { GuildToggles } from './toggles/guild.js'
 
-export const baseGuild: InternalBot['transformers']['$inferredTypes']['guild'] = {
+export const baseGuild: Guild = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['guild']),
+  ...(undefined as unknown as Guild),
 
   get threads() {
     if (!this.channels) return new Collection<bigint, Channel>()
@@ -21,10 +21,10 @@ export const baseGuild: InternalBot['transformers']['$inferredTypes']['guild'] =
   },
 }
 
-export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild; shardId: number }): typeof bot.transformers.$inferredTypes.guild {
+export function transformGuild(bot: Bot, payload: { guild: DiscordGuild; shardId: number }): Guild {
   const guildId = bot.transformers.snowflake(payload.guild.id)
   const props = bot.transformers.desiredProperties.guild
-  const guild: Guild = Object.create(baseGuild)
+  const guild: SetupDesiredProps<Guild, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseGuild)
 
   if (props.afkTimeout && payload.guild.afk_timeout) guild.afkTimeout = payload.guild.afk_timeout
   if (props.approximateMemberCount && payload.guild.approximate_member_count) guild.approximateMemberCount = payload.guild.approximate_member_count
@@ -61,6 +61,8 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.channels = new Collection(
       [...(payload.guild.channels ?? []), ...(payload.guild.threads ?? [])].map((channel) => {
         const result = bot.transformers.channel(bot, { channel, guildId })
+        // TODO: We should check that id exists, or else the collection will have undefined as it's key (This is valid for all the collections below as well)
+        // @ts-expect-error: We TODO above
         return [result.id, result]
       }),
     )
@@ -68,6 +70,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.members = new Collection(
       payload.guild.members.map((member) => {
         const result = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user!.id))
+        // @ts-expect-error: We TODO above
         return [result.id, result]
       }),
     )
@@ -75,6 +78,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.roles = new Collection(
       payload.guild.roles.map((role) => {
         const result = bot.transformers.role(bot, { role, guildId })
+        // @ts-expect-error: We TODO above
         return [result.id, result]
       }),
     )
@@ -82,6 +86,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.emojis = new Collection(
       payload.guild.emojis.map((emoji) => {
         const result = bot.transformers.emoji(bot, emoji)
+        // @ts-expect-error: We TODO above
         return [result.id!, result]
       }),
     )
@@ -89,6 +94,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.voiceStates = new Collection(
       payload.guild.voice_states.map((voiceState) => {
         const result = bot.transformers.voiceState(bot, { voiceState, guildId })
+        // @ts-expect-error: We TODO above
         return [result.userId, result]
       }),
     )
@@ -96,6 +102,7 @@ export function transformGuild(bot: InternalBot, payload: { guild: DiscordGuild;
     guild.stickers = new Collection(
       payload.guild.stickers?.map((sticker) => {
         const result = bot.transformers.sticker(bot, sticker)
+        // @ts-expect-error: We TODO above
         return [result.id, result]
       }),
     )

@@ -1,9 +1,9 @@
 import type { DiscordSoundboardSound } from '@discordeno/types'
-import type { InternalBot, SoundboardSound } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, SoundboardSound, TransformersDesiredProperties } from '../index.js'
 
-export function transformSoundboardSound(bot: InternalBot, payload: DiscordSoundboardSound): typeof bot.transformers.$inferredTypes.soundboardSound {
+export function transformSoundboardSound(bot: Bot, payload: DiscordSoundboardSound): SoundboardSound {
   const props = bot.transformers.desiredProperties.soundboardSound
-  const soundboardSound = {} as SoundboardSound
+  const soundboardSound = {} as SetupDesiredProps<SoundboardSound, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.name && payload.name) soundboardSound.name = payload.name
   if (props.soundId && payload.sound_id) soundboardSound.soundId = bot.transformers.snowflake(payload.sound_id)

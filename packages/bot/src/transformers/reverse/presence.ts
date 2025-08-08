@@ -1,5 +1,5 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { InternalBot, PresenceUpdate } from '../../index.js'
+import type { Bot, PresenceUpdate } from '../../index.js'
 
 export const reverseStatusTypes = Object.freeze({
   0: 'online',
@@ -8,7 +8,7 @@ export const reverseStatusTypes = Object.freeze({
   4: 'offline',
 } as const)
 
-export function transformPresenceToDiscordPresence(bot: InternalBot, payload: PresenceUpdate): DiscordPresenceUpdate {
+export function transformPresenceToDiscordPresence(bot: Bot, payload: PresenceUpdate): DiscordPresenceUpdate {
   return {
     user: bot.transformers.reverse.user(bot, payload.user),
     guild_id: bot.transformers.reverse.snowflake(payload.guildId),
