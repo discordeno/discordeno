@@ -442,7 +442,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 
       return {
         hasMore: res.has_more,
-        items: bot.transformers.messagePin(bot, res.items),
+        items: res.items.map((item) => bot.transformers.messagePin(bot, item)),
       }
     },
     getPinnedMessages: async (channelId) => {
@@ -1003,7 +1003,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getChannelPins: (
     channelId: BigString,
     options?: GetChannelPinsOptions,
-  ) => Promise<{ items: SetupDesiredProps<MessagePin, TProps, TBehavior>; hasMore: boolean }>
+  ) => Promise<{ items: SetupDesiredProps<MessagePin, TProps, TBehavior>[]; hasMore: boolean }>
   /** @deprecated Use {@link BotHelpers.getChannelPins} instead */
   getPinnedMessages: (channelId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>
   getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>

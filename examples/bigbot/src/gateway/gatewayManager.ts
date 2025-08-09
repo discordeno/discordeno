@@ -25,7 +25,50 @@ const gatewayManager = createGatewayManager({
   shardsPerWorker: SHARDS_PER_WORKER,
   totalShards: TOTAL_SHARDS,
   totalWorkers: TOTAL_WORKERS,
+  resharding: {
+    getSessionInfo: restManager.getGatewayBot,
+  },
 })
+
+gatewayManager.resharding.tellWorkerToPrepare = async (workerId, shardId, bucketId) => {
+  logger.info(`Tell worker to prepare, workerId: ${workerId}, shardId: ${shardId}, bucketId: ${bucketId}`)
+
+  let worker = workers.get(workerId)
+  if (!worker) {
+    worker = createWorker(workerId)
+    workers.set(workerId, worker)
+  }
+
+  worker.postMessage({
+    type: 'PrepareShard',
+    shardId,
+    totalShards: gatewayManager.totalShards,
+  } satisfies WorkerMessage)
+
+  const { promise, resolve } = promiseWithResolvers<void>()
+
+  const waitForShardPrepared = (message: ManagerMessage) => {
+    if (message.type === 'ShardPrepared' && message.shardId === shardId) {
+      resolve()
+    }
+  }
+
+  worker.on('message', waitForShardPrepared)
+
+  await promise
+
+  worker.off('message', waitForShardPrepared)
+}
+
+gatewayManager.resharding.onReshardingSwitch = async () => {
+  logger.info('Resharding switch triggered, telling workers to switch the shards')
+
+  for (const worker of workers.values()) {
+    worker.postMessage({
+      type: 'SwitchShards',
+    } satisfies WorkerMessage)
+  }
+}
 
 gatewayManager.tellWorkerToIdentify = async (workerId, shardId, bucketId) => {
   logger.info(`Tell worker to identify, workerId: ${workerId}, shardId: ${shardId}, bucketId: ${bucketId}`)

@@ -30,7 +30,9 @@ describe('Create and delete emojis', () => {
 
     // Assertions
     expect(emoji.id).to.be.exist
+
     await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
+
     await expect(rest.getEmoji(e2eCache.guild.id, emoji.id!)).to.eventually.rejected
   })
 
@@ -44,7 +46,9 @@ describe('Create and delete emojis', () => {
 
     // Assertions
     expect(emoji.id).to.be.exist
+
     await rest.deleteEmoji(e2eCache.guild.id, emoji.id!, 'with a reason')
+
     await expect(rest.getEmoji(e2eCache.guild.id, emoji.id!)).to.eventually.rejected
   })
 })

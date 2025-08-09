@@ -6,12 +6,10 @@ export interface DiscordEntitlement {
   id: string
   /** ID of the SKU */
   sku_id: string
-  /** ID of the user that is granted access to the entitlement's sku */
-  user_id?: string
-  /** ID of the guild that is granted access to the entitlement's sku */
-  guild_id?: string
   /** ID of the parent application */
   application_id: string
+  /** ID of the user that is granted access to the entitlement's sku */
+  user_id?: string
   /** Type of entitlement */
   type: DiscordEntitlementType
   /** Entitlement was deleted */
@@ -20,6 +18,8 @@ export interface DiscordEntitlement {
   starts_at: string | null
   /** Date at which the entitlement is no longer valid. */
   ends_at: string | null
+  /** ID of the guild that is granted access to the entitlement's sku */
+  guild_id?: string
   /** For consumable items, whether or not the entitlement has been consumed */
   consumed?: boolean
 }
