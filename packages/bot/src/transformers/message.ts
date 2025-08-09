@@ -244,6 +244,7 @@ export function transformMessage(
         burst: reaction.count_details.burst,
         normal: reaction.count_details.normal,
       },
+      // @ts-expect-error TODO: Deal with partials
       emoji: bot.transformers.emoji(bot, reaction.emoji),
       burstColors: reaction.burst_colors,
     }))

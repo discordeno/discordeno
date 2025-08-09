@@ -15,6 +15,7 @@ export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPay
     guildId,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
     user: payload.member ? bot.transformers.user(bot, payload.member.user) : undefined,
+    // @ts-expect-error TODO: Deal with partials
     emoji: bot.transformers.emoji(bot, payload.emoji),
     messageAuthorId: payload.message_author_id ? bot.transformers.snowflake(payload.message_author_id) : undefined,
     burst: payload.burst,

@@ -10,6 +10,7 @@ export async function handleMessageReactionRemoveEmoji(bot: Bot, data: DiscordGa
     channelId: bot.transformers.snowflake(payload.channel_id),
     messageId: bot.transformers.snowflake(payload.message_id),
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
+    // @ts-expect-error TODO: Deal with partials
     emoji: bot.transformers.emoji(bot, payload.emoji),
   })
 }
