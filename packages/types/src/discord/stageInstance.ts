@@ -1,18 +1,28 @@
 /** Types for: https://discord.com/developers/docs/resources/stage-instance */
 
 /** https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-stage-instance-structure */
-// TODO: this is missing a bunch of fields, including: privacy_level, discoverable_disabled
 export interface DiscordStageInstance {
-  /** The topic of the Stage instance (1-120 characters) */
-  topic: string
   /** The id of this Stage instance */
   id: string
   /** The guild id of the associated Stage channel */
   guild_id: string
   /** The id of the associated Stage channel */
   channel_id: string
+  /** The topic of the Stage instance (1-120 characters) */
+  topic: string
+  /** The privacy level of the Stage instance */
+  privacy_level: DiscordStageInstancePrivacyLevel
+  /**
+   * Whether or not Stage Discovery is disabled
+   * @deprecated
+   */
+  discoverable_disabled: boolean
   /** The id of the scheduled event for this Stage instance */
-  guild_scheduled_event_id?: string
+  guild_scheduled_event_id: string | null
 }
 
-// TODO: Add DiscordStageInstancePrivacyLevel https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level
+/** https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level */
+export enum DiscordStageInstancePrivacyLevel {
+  Public = 1,
+  GuildOnly = 2,
+}
