@@ -1806,6 +1806,7 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
    */
   getGlobalApplicationCommand: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  // TODO: Add with_localizations query param
   /**
    * Gets the list of your bot's global application commands.
    *
@@ -1847,6 +1848,7 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
    */
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  // TODO: Add the with_localizations query param
   /**
    * Gets the list of application commands registered by your bot in a guild.
    *

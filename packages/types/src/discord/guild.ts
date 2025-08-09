@@ -686,6 +686,7 @@ export interface DiscordVanityUrl {
   uses: number
 }
 
+// TODO: this is a request type, we usually don't have these, we could move it to discordeno/guild.ts and remove this one
 /** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
 export interface DiscordModifyGuildWelcomeScreen {
   /** Whether the welcome screen is enabled */
