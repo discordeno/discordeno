@@ -46,19 +46,20 @@ describe('[rest] manager', () => {
 
   describe('rest.simplifyUrl', () => {
     describe('the ending id', () => {
-      it('Will change to x for channel, guild, message, messages', () => {
+      it('Will change to x minor params', () => {
         const rest = createRestManager({ token })
-        expect(rest.simplifyUrl('/messages/555555555555555555', 'PUT')).to.be.equal('/messages/x')
-        expect(rest.simplifyUrl('/users/555555555555555555', 'PUT')).to.be.equal('/users/x')
-        expect(rest.simplifyUrl('/webhooks/555555555555555555', 'PUT')).to.be.equal('/webhooks/x')
-        expect(rest.simplifyUrl('/channel/555555555555555555', 'PUT')).to.be.equal('/channel/x')
-        expect(rest.simplifyUrl('/guild/555555555555555555', 'PUT')).to.be.equal('/guild/x')
+        expect(rest.simplifyUrl('/messages/555555555555555555', 'PUT')).to.be.equal('PUT:/messages/x')
+        expect(rest.simplifyUrl('/users/555555555555555555', 'PUT')).to.be.equal('PUT:/users/x')
+        expect(rest.simplifyUrl('/abc/555555555555555555', 'PUT')).to.be.equal('PUT:/abc/x')
+        expect(rest.simplifyUrl('/test1/555555555555555555', 'PUT')).to.be.equal('PUT:/test1/x')
+        expect(rest.simplifyUrl('/test2/555555555555555555', 'PUT')).to.be.equal('PUT:/test2/x')
       })
 
-      it('Will not change to x for channels, guilds', () => {
+      it('Will not change to x major params', () => {
         const rest = createRestManager({ token })
-        expect(rest.simplifyUrl('/channels/555555555555555555', 'PUT')).to.be.equal('/channels/555555555555555555')
-        expect(rest.simplifyUrl('/guilds/555555555555555555', 'PUT')).to.be.equal('/guilds/555555555555555555')
+        expect(rest.simplifyUrl('/channels/555555555555555555', 'PUT')).to.be.equal('PUT:/channels/555555555555555555')
+        expect(rest.simplifyUrl('/guilds/555555555555555555', 'PUT')).to.be.equal('PUT:/guilds/555555555555555555')
+        expect(rest.simplifyUrl('/webhooks/555555555555555555', 'PUT')).to.be.equal('PUT:/webhooks/555555555555555555')
       })
     })
 
@@ -66,30 +67,39 @@ describe('[rest] manager', () => {
       describe('/reactions', () => {
         it('Will remove path after reactions', () => {
           const rest = createRestManager({ token })
-          expect(rest.simplifyUrl('/channels/555555555555555555/reactions/555555555555555555/wdiubaibfwuabfobaowbfoibnion', 'PUT')).to.be.equal(
-            '/channels/555555555555555555/reactions',
-          )
+          expect(
+            rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555/reactions/wdiubaibfwuabfobaowbfoibnion/@me', 'PUT'),
+          ).to.be.equal('PUT:/channels/555555555555555555/messages/x/reactions/x/@me')
         })
       })
 
       describe('/messages', () => {
-        it('Will add method in front route if method is DELETE', () => {
+        it('Will add method in front route', () => {
           const rest = createRestManager({ token })
-          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'DELETE')).to.be.equal(
-            'D/channels/555555555555555555/messages/x',
+          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'POST')).to.be.equal(
+            'POST:/channels/555555555555555555/messages/x',
+          )
+          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'GET')).to.be.equal(
+            'GET:/channels/555555555555555555/messages/x',
+          )
+          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'PUT')).to.be.equal(
+            'PUT:/channels/555555555555555555/messages/x',
+          )
+        })
+      })
+
+      describe('/webhook/id/token', () => {
+        it('Will not change to x major params', () => {
+          const rest = createRestManager({ token })
+          expect(rest.simplifyUrl('/webhooks/555555555555555555/abcdefg1234567', 'POST')).to.be.equal(
+            'POST:/webhooks/555555555555555555/abcdefg1234567',
           )
         })
 
-        it('Will not add method in front route', () => {
+        it('Will change to x minor params', () => {
           const rest = createRestManager({ token })
-          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'POST')).to.be.equal(
-            '/channels/555555555555555555/messages/x',
-          )
-          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'GET')).to.be.equal(
-            '/channels/555555555555555555/messages/x',
-          )
-          expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'PUT')).to.be.equal(
-            '/channels/555555555555555555/messages/x',
+          expect(rest.simplifyUrl('/webhooks/555555555555555555/abcdefg1234567/messages/2222222222222222222', 'POST')).to.be.equal(
+            'POST:/webhooks/555555555555555555/abcdefg1234567/messages/x',
           )
         })
       })
