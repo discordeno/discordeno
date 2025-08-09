@@ -109,18 +109,6 @@ export type PermissionStrings = keyof typeof BitwisePermissionFlags
 export interface DiscordRole {
   /** Role id */
   id: string
-  /** If this role is showed separately in the user listing */
-  hoist: boolean
-  /** Permission bit set */
-  permissions: string
-  /** Whether this role is managed by an integration */
-  managed: boolean
-  /** Whether this role is mentionable */
-  mentionable: boolean
-  /** The tags this role has */
-  tags?: DiscordRoleTags
-  /** the role emoji hash */
-  icon?: string
   /** Role name */
   name: string
   /**
@@ -130,10 +118,22 @@ export interface DiscordRole {
   color: number
   /** The role's color */
   colors: DiscordRoleColors
-  /** Position of this role (roles with the same position are sorted by id) */
-  position: number
+  /** If this role is showed separately in the user listing */
+  hoist: boolean
+  /** the role emoji hash */
+  icon?: string
   /** role unicode emoji */
   unicode_emoji?: string
+  /** Position of this role (roles with the same position are sorted by id) */
+  position: number
+  /** Permission bit set */
+  permissions: string
+  /** Whether this role is managed by an integration */
+  managed: boolean
+  /** Whether this role is mentionable */
+  mentionable: boolean
+  /** The tags this role has */
+  tags?: DiscordRoleTags
   /** Role flags combined as a bitfield */
   flags: RoleFlags
 }
