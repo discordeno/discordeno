@@ -16,6 +16,7 @@ import type {
   Bot,
   Component,
   DiscordContainerComponent,
+  DiscordLabelComponent,
   DiscordMediaGalleryItem,
   DiscordUnfurledMediaItem,
   MediaGalleryItem,
@@ -63,6 +64,9 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
       break
     case MessageComponentTypes.TextDisplay:
       component = transformTextDisplayComponent(bot, payload)
+      break
+    case MessageComponentTypes.Label:
+      component = transformLabelComponent(bot, payload)
       break
   }
 
@@ -184,6 +188,7 @@ function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuCompon
       default: option.default,
     }))
   if (props.disabled && payload.disabled) select.disabled = payload.disabled
+  if (props.values && payload.values) select.values = payload.values
 
   return select
 }
@@ -259,4 +264,17 @@ function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponen
   if (props.spacing && payload.spacing) separator.spacing = payload.spacing
 
   return separator
+}
+
+function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent): Component {
+  const props = bot.transformers.desiredProperties.component
+  const label = {} as Component
+
+  if (props.type && payload.type) label.type = payload.type
+  if (props.id && payload.id) label.id = payload.id
+  if (props.label && payload.label) label.label = payload.label
+  if (props.description && payload.description) label.description = payload.description
+  if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component)
+
+  return label
 }

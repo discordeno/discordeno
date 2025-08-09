@@ -126,6 +126,7 @@ export type MessageComponent =
   | SeparatorComponent
   | ContainerComponent
   | FileComponent
+  | LabelComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface BaseComponent {
@@ -206,6 +207,9 @@ export interface StringSelectComponent extends BaseComponent {
   options: SelectOption[]
   /** Whether or not this select is disabled */
   disabled?: boolean
+  // TODO: Align with Discord docs
+  /** The string select is required */
+  required?: boolean
 }
 
 /** https://discord.com/developers/docs/components/reference#user-select-user-select-structure */
@@ -329,8 +333,13 @@ export interface TextInputComponent extends BaseComponent {
   style: TextStyles
   /** The customId of the InputText */
   customId: string
-  /** The label of the InputText. Maximum 45 characters */
-  label: string
+  // TODO: Align with Discord docs
+  /**
+   * The label of the InputText. Maximum 45 characters
+   *
+   * @deprecated Use the label component
+   */
+  label?: string
   /** The placeholder of the InputText */
   placeholder?: string
   /** The minimum length of the text the user has to provide */
@@ -415,6 +424,19 @@ export interface ContainerComponent extends BaseComponent {
   accentColor?: number
   /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+}
+
+/** TBD Docs link */
+export interface LabelComponent extends BaseComponent {
+  type: MessageComponentTypes.Label
+
+  // TODO: Replace comments with actual docs description
+  /** The title for the label */
+  label: string
+  /** Description for the label */
+  description?: string
+  /** The component this label describes */
+  component: StringSelectComponent | TextInputComponent
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
