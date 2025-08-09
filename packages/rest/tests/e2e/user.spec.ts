@@ -2,6 +2,7 @@ import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { rest } from './utils.js'
+
 chaiUse(chaiAsPromised)
 
 describe('Get a user from the api', () => {
