@@ -11,7 +11,7 @@ export interface DiscordSticker {
   /** Name of the sticker */
   name: string
   /** Description of the sticker */
-  description: string
+  description: string | null
   /** a unicode emoji representing the sticker's expression */
   tags: string
   /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
