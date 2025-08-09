@@ -239,6 +239,7 @@ export function transformInteractionDataResolved(
   if (payload.guildId && payload.resolved.members) {
     transformed.members = new Collection(
       Object.entries(payload.resolved.members).map(([id, value]) => {
+        // @ts-expect-error TODO: Deal with partials, value is missing 2 values but the transformer can handle it, despite what the types says
         const member: Member = bot.transformers.member(bot, value, payload.guildId!, bot.transformers.snowflake(id))
         return [member.id, member]
       }),

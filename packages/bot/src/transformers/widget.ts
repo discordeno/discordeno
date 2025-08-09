@@ -1,24 +1,15 @@
 import type { DiscordGuildWidget } from '@discordeno/types'
-import { type Bot, type GuildWidget, iconHashToBigInt } from '../index.js'
+import type { Bot, GuildWidget } from '../index.js'
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWidget {
   const widget = {
     id: bot.transformers.snowflake(payload.id),
     name: payload.name,
-    instant_invite: payload.instant_invite,
-    channels: payload.channels.map((channel) => ({
-      id: bot.transformers.snowflake(channel.id),
-      name: channel.name,
-      position: channel.position,
-    })),
-    members: payload.members.map((member) => ({
-      id: bot.transformers.snowflake(member.id),
-      username: member.username,
-      discriminator: member.discriminator,
-      avatar: member.avatar ? iconHashToBigInt(member.avatar) : undefined,
-      status: member.status,
-      avatarUrl: member.avatar_url,
-    })),
+    instantInvite: payload.instant_invite ?? undefined,
+    // @ts-expect-error TODO: Deal with partials
+    channels: payload.channels.map((channel) => bot.transformers.channel(bot, { channel })),
+    // @ts-expect-error TODO: Deal with partials
+    members: payload.members.map((user) => bot.transformers.user(bot, user)),
     presenceCount: payload.presence_count,
   } as GuildWidget
 
