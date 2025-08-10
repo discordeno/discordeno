@@ -81,11 +81,11 @@ import type {
 } from '@discordeno/types'
 import type { Bot } from './bot.js'
 import {
+  createDesiredPropertiesObject,
   type DesiredPropertiesBehavior,
   type SetupDesiredProps,
-  type TransformProperty,
   type TransformersDesiredProperties,
-  createDesiredPropertiesObject,
+  type TransformProperty,
 } from './desiredProperties.js'
 import { transformIncidentsData } from './transformers/incidentsData.js'
 import {
@@ -154,13 +154,6 @@ import {
   type Template,
   type ThreadMember,
   type ThreadMemberGuildCreate,
-  type UnfurledMediaItem,
-  type User,
-  type UserPrimaryGuild,
-  type VoiceRegion,
-  type VoiceState,
-  type Webhook,
-  type WelcomeScreen,
   transformActivity,
   transformActivityInstance,
   transformActivityLocation,
@@ -243,6 +236,13 @@ import {
   transformWelcomeScreen,
   transformWidget,
   transformWidgetSettings,
+  type UnfurledMediaItem,
+  type User,
+  type UserPrimaryGuild,
+  type VoiceRegion,
+  type VoiceState,
+  type Webhook,
+  type WelcomeScreen,
 } from './transformers/index.js'
 import {
   transformAllowedMentionsToDiscordAllowedMentions,

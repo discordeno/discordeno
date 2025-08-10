@@ -11,7 +11,7 @@ import {
   GatewayOpcodes,
   type RequestGuildMembers,
 } from '@discordeno/types'
-import { Collection, LeakyBucket, jsonSafeReplacer, logger } from '@discordeno/utils'
+import { Collection, jsonSafeReplacer, LeakyBucket, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type TransportCompression, type UpdateVoiceState } from './types.js'
 
@@ -256,6 +256,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             max: 1,
             refillAmount: 1,
             refillInterval: gateway.spawnShardDelay,
+            logger: this.logger,
           }),
         })
       }

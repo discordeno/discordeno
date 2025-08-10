@@ -19,8 +19,8 @@ import {
   type MessagePin,
   type MessageSnapshot,
   type SetupDesiredProps,
-  type TransformersDesiredProperties,
   snowflakeToTimestamp,
+  type TransformersDesiredProperties,
 } from '../index.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 

@@ -2,11 +2,11 @@ import type { DiscordScheduledEvent, DiscordScheduledEventRecurrenceRule } from 
 import {
   type Bot,
   type DesiredPropertiesBehavior,
+  iconHashToBigInt,
   type ScheduledEvent,
   type ScheduledEventRecurrenceRule,
   type SetupDesiredProps,
   type TransformersDesiredProperties,
-  iconHashToBigInt,
 } from '../index.js'
 
 export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {

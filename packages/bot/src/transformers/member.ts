@@ -2,8 +2,8 @@ import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
-import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
+import { Permissions } from './toggles/Permissions.js'
 import type { Member } from './types.js'
 
 export const baseMember: Member = {

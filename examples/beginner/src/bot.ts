@@ -1,4 +1,4 @@
-import { Intents, createBot } from '@discordeno/bot'
+import { createBot, Intents } from '@discordeno/bot'
 import { createProxyCache } from 'dd-cache-proxy'
 import { configs } from './config.js'
 

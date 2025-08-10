@@ -3,10 +3,10 @@ import {
   type Bot,
   type DesiredPropertiesBehavior,
   type Invite,
+  isInviteWithMetadata,
   type SetupDesiredProps,
   ToggleBitfield,
   type TransformersDesiredProperties,
-  isInviteWithMetadata,
 } from '../index.js'
 
 export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }): Invite {

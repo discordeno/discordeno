@@ -28,8 +28,8 @@ import type {
   Message,
   Role,
   SetupDesiredProps,
-  TransformProperty,
   TransformersDesiredProperties,
+  TransformProperty,
   User,
 } from '../index.js'
 

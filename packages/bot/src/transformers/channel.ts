@@ -2,15 +2,15 @@ import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/typ
 import {
   type Bot,
   type Channel,
+  calculatePermissions,
   type DesiredPropertiesBehavior,
   type ForumTag,
+  iconHashToBigInt,
   type SetupDesiredProps,
   type TransformersDesiredProperties,
-  calculatePermissions,
-  iconHashToBigInt,
 } from '../index.js'
-import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
+import { Permissions } from './toggles/Permissions.js'
 
 const Mask = (1n << 64n) - 1n
 
