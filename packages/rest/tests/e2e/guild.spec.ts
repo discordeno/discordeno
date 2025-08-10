@@ -3,6 +3,7 @@ import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { e2eCache, rest } from './utils.js'
+
 chaiUse(chaiAsPromised)
 
 describe('Manage Guilds', async () => {
@@ -19,7 +20,13 @@ describe('Manage Guilds', async () => {
       name: 'e2e-afk-channel',
       type: ChannelTypes.GuildVoice,
     })
+
     expect(voiceChannel.id).to.be.exist
+
+    after(async () => {
+      // Clean up the AFK channel created for testing
+      await rest.deleteChannel(voiceChannel.id)
+    })
 
     // Set the AFK channel
     const edited = await rest.editGuild(e2eCache.guild.id, {
@@ -33,9 +40,6 @@ describe('Manage Guilds', async () => {
     // Reset the AFK channel
     const edited2 = await rest.editGuild(e2eCache.guild.id, { afkChannelId: null })
     expect(edited2.afkChannelId).to.be.null
-
-    // Clean up the AFK channel
-    await rest.deleteChannel(voiceChannel.id)
   })
 
   it('Get audit logs', async () => {
@@ -51,14 +55,7 @@ describe('Manage Guilds', async () => {
 
   it('Banning members', async () => {
     // Ban members
-    await rest.banMember(
-      e2eCache.guild.id,
-      '379643682984296448',
-      {
-        deleteMessageSeconds: 604800,
-      },
-      'Blame Wolf',
-    )
+    await rest.banMember(e2eCache.guild.id, '379643682984296448', { deleteMessageSeconds: 604800 }, 'Blame Wolf')
     await rest.banMember(e2eCache.guild.id, '416477607966670869')
 
     const fetchedBan = await rest.getBan(e2eCache.guild.id, '379643682984296448')

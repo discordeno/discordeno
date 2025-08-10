@@ -1,5 +1,3 @@
-// biome-ignore lint/correctness/noUnusedImports: <explanation>
-import type { RestManager } from '@discordeno/rest'
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
@@ -76,8 +74,8 @@ import type {
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
@@ -442,7 +440,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 
       return {
         hasMore: res.has_more,
-        items: bot.transformers.messagePin(bot, res.items),
+        items: res.items.map((item) => bot.transformers.messagePin(bot, item)),
       }
     },
     getPinnedMessages: async (channelId) => {
@@ -894,9 +892,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: Partial<EditAutoModerationRuleOptions>,
     reason?: string,
   ) => Promise<AutoModerationRule>
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null }) => Promise<
-    SetupDesiredProps<User, TProps, TBehavior>
-  >
+  editBotProfile: (options: {
+    username?: string
+    botAvatarURL?: string | null
+    botBannerURL?: string | null
+  }) => Promise<SetupDesiredProps<User, TProps, TBehavior>>
   editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   editApplicationEmoji: (id: BigString, options: ModifyApplicationEmoji) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
@@ -1003,7 +1003,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getChannelPins: (
     channelId: BigString,
     options?: GetChannelPinsOptions,
-  ) => Promise<{ items: SetupDesiredProps<MessagePin, TProps, TBehavior>; hasMore: boolean }>
+  ) => Promise<{ items: SetupDesiredProps<MessagePin, TProps, TBehavior>[]; hasMore: boolean }>
   /** @deprecated Use {@link BotHelpers.getChannelPins} instead */
   getPinnedMessages: (channelId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>
   getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordListArchivedThreads>>

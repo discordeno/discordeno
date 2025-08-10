@@ -1,5 +1,5 @@
 import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
-import { type InternalBot, type Invite, ToggleBitfield, isInviteWithMetadata } from '../index.js'
+import { type InternalBot, type Invite, isInviteWithMetadata, ToggleBitfield } from '../index.js'
 
 export function transformInvite(
   bot: InternalBot,

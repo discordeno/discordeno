@@ -2,19 +2,20 @@ import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { e2eCache, rest } from './utils.js'
+
 chaiUse(chaiAsPromised)
 
 describe('Member tests', () => {
   it("Fetches the bot and compares the bot's id with the fetched member's id", async () => {
     const member = await rest.getMember(e2eCache.guildId, rest.applicationId)
+
     expect(member?.user.id).to.exist
     expect(member?.user.id).to.equal(rest.applicationId.toString())
   })
 
   it('Gets a member list and checks if the bot is in the member list', async () => {
-    const members = await rest.getMembers(e2eCache.guildId, {
-      limit: 10,
-    })
+    const members = await rest.getMembers(e2eCache.guildId, { limit: 10 })
+
     expect(members.some((m) => m.user.id === rest.applicationId.toString())).to.equal(true)
   })
 
@@ -27,15 +28,11 @@ describe('Member tests', () => {
 
   it("Edit a bot's nickname", async () => {
     const nick = 'lts20050703'
-    const member = await rest.editBotMember(e2eCache.guildId, {
-      nick,
-    })
+    const member = await rest.editBotMember(e2eCache.guildId, { nick })
     expect(member.nick).to.equal(nick)
 
     // Change nickname back
-    const member2 = await rest.editBotMember(e2eCache.guildId, {
-      nick: null,
-    })
+    const member2 = await rest.editBotMember(e2eCache.guildId, { nick: null })
     expect(member2.nick).to.null
   })
 
