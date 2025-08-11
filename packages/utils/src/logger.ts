@@ -25,13 +25,7 @@ const colorFunctions = new Map<LogLevels, (str: string) => string>([
   [LogLevels.Fatal, (str: string) => red(bold(italic(str)))],
 ])
 
-export function createLogger({
-  logLevel = LogLevels.Info,
-  name,
-}: {
-  logLevel?: LogLevels
-  name?: string
-} = {}) {
+export function createLogger({ logLevel = LogLevels.Info, name }: { logLevel?: LogLevels; name?: string } = {}) {
   function log(level: LogLevels, ...args: any[]) {
     if (level < logLevel) return
 

@@ -177,7 +177,7 @@ function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuCompon
       emoji: option.emoji
         ? {
             id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
-            name: option.emoji.name,
+            name: option.emoji.name ?? undefined,
             animated: option.emoji.animated,
           }
         : undefined,
