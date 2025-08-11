@@ -221,6 +221,7 @@ export function transformInteractionDataResolved(
   if (payload.resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.resolved.messages).map(([_id, value]) => {
+        // @ts-expect-error TODO: Deal with partials
         const message: Message = bot.transformers.message(bot, { message: value, shardId: payload.shardId })
         return [message.id, message]
       }),

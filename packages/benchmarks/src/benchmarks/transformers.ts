@@ -2,8 +2,10 @@ import {
   ApplicationFlags,
   type Bot,
   ButtonStyles,
+  createBot,
   type DiscordMessage,
   InteractionTypes,
+  iconHashToBigInt,
   MemberToggles,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -13,8 +15,6 @@ import {
   TeamMembershipStates,
   TextStyles,
   UserFlags,
-  createBot,
-  iconHashToBigInt,
 } from '@discordeno/bot'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
