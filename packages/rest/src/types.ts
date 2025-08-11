@@ -111,8 +111,8 @@ import type {
   GetMessagesOptions,
   GetPollAnswerVotes,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
@@ -196,6 +196,8 @@ export interface CreateRestManagerOptions {
    * @default logger // The logger exported by `@discordeno/utils`
    */
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /** Events for the rest manager */
+  events?: Partial<RestManagerEvents>
 }
 
 export interface RestManager {
@@ -241,6 +243,8 @@ export interface RestManager {
   routes: RestRoutes
   /** The logger to use for the rest manager */
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  /** Events for the rest manager */
+  events: RestManagerEvents
   /** Allows the user to inject custom headers that will be sent with every request. */
   createBaseHeaders: () => Record<string, string>
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
@@ -1978,7 +1982,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel from which to get the messages.
    * @param options - The parameters for the fetching of the messages.
-   * @returns A collection of {@link DiscordMessage} objects assorted by message ID.
+   * @returns Returns an array of {@link DiscordMessage} objects from newest to oldest on success.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
@@ -3251,7 +3255,8 @@ export interface RestRateLimitedPath {
 export interface RestRequestResponse {
   ok: boolean
   status: number
-  body?: string
+  /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
+  body?: string | object
 }
 
 export interface RestRequestRejection {
@@ -3262,4 +3267,30 @@ export interface RestRequestRejection {
   /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
   body?: string | object
   error?: string
+}
+
+export interface RestManagerEvents {
+  /**
+   * Emitted when a request is made to the API.
+   *
+   * @remarks
+   * The body that will be sent to the API is available in the `extra` parameter. Do not consume the body in the `Request` object and use the one in the `extra` parameter instead.
+   */
+  request: (request: Request, extra: { body: any }) => void
+  /**
+   * Emitted when a response is received from the API.
+   *
+   * @remarks
+   * This is fired for both successful and failed requests, you should check the Response object to determine if the request was successful or not.
+   *
+   * Both the request and the response body are available in the `extra` parameter. Do not consume the body in the `Request` or `Response` object and use the one in the `extra` parameter instead.
+   */
+  response: (request: Request, response: Response, extra: { requestBody: any; responseBody: string | object }) => void
+  /**
+   * Emitted when a request errors due to fetch error.
+   *
+   * @remarks
+   * The body that was sent to the API is available in the `extra` parameter.
+   */
+  requestError: (request: Request, error: any, extra: { body: any }) => void
 }

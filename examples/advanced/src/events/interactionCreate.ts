@@ -1,4 +1,4 @@
-import { InteractionTypes, commandOptionsParser } from '@discordeno/bot'
+import { commandOptionsParser, InteractionTypes } from '@discordeno/bot'
 import { bot } from '../bot.js'
 import { commands } from '../commands.js'
 
