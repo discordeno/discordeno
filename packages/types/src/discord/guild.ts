@@ -23,15 +23,27 @@ export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   splash: string | null
   /** Discovery splash hash; only present for guilds with the "DISCOVERABLE" feature */
   discovery_splash: string | null
-  /** True if the user is the owner of the guild */
+  /**
+   * True if the user is the owner of the guild
+   *
+   * @remarks
+   * This field is only sent when using the `Get Guilds` endpoint
+   */
   owner?: boolean
   /** Id of the owner */
   owner_id: string
-  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
+  /**
+   * Total permissions for the user in the guild (excludes overwrites and implicit permissions)
+   *
+   * @remarks
+   * This field is only sent when using the `Get Guilds` endpoint
+   */
   permissions?: string
   /**
    * Voice region id for the guild
+   *
    * @deprecated
+   * This field is deprecated and is replaced by {@link DiscordChannel.rtc_region | Channel.rtc_region}
    */
   region?: string | null
   /** Id of afk channel */
