@@ -22,7 +22,10 @@ export interface DiscordInteraction {
   application_id: string
   /** The type of interaction */
   type: InteractionTypes
-  /** the command data payload */
+  /**
+   * The command data payload
+   * @remarks This is always present on application command, message component, and modal submit interaction types. It is optional for future-proofing against new interaction types
+   */
   data?: DiscordInteractionData
   /** Guild that the interaction was sent from */
   guild?: Partial<DiscordGuild>
@@ -47,7 +50,10 @@ export interface DiscordInteraction {
   version: 1
   /** For components or modals triggered by components, the message they were attached to */
   message?: DiscordMessage
-  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
+  /**
+   * Bitwise set of permissions the app has in the source location of the interaction
+   * @remarks app_permissions includes ATTACH_FILES | EMBED_LINKS | MENTION_EVERYONE permissions for (G)DMs with other users, and additionally includes USE_EXTERNAL_EMOJIS for DMs with the app's bot user
+   */
   app_permissions: string
   /** The selected language of the invoking user */
   locale?: string
@@ -63,7 +69,7 @@ export interface DiscordInteraction {
   attachment_size_limit: number
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure specifcly the member propriety */
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure (Specifically, the member propriety) */
 export interface DiscordInteractionMember extends DiscordMemberWithUser {
   /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
   permissions: string
@@ -118,6 +124,7 @@ export interface DiscordInteractionData {
   // Message Component Data
   /** The custom id provided for this component. */
   custom_id?: string
+  /** The type of {@link MessageComponentTypes | Message Component} */
   component_type?: MessageComponentTypes
   /** The values chosen by the user. */
   values?: string[]
