@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { LogLevels, createLogger } from '../src/logger.js'
+import { createLogger, LogLevels } from '../src/logger.js'
 
 describe('Logger', () => {
   it('create logger with default options', () => {
