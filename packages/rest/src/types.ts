@@ -111,8 +111,8 @@ import type {
   GetMessagesOptions,
   GetPollAnswerVotes,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
@@ -1984,7 +1984,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel from which to get the messages.
    * @param options - The parameters for the fetching of the messages.
-   * @returns A collection of {@link DiscordMessage} objects assorted by message ID.
+   * @returns Returns an array of {@link DiscordMessage} objects from newest to oldest on success.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
