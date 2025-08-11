@@ -132,10 +132,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   stageInstanceCreate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceDelete: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceUpdate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
-  guildEmojisUpdate: (payload: {
-    guildId: bigint
-    emojis: Collection<bigint, SetupDesiredProps<Emoji, TProps, TBehavior>>
-  }) => unknown
+  guildEmojisUpdate: (payload: { guildId: bigint; emojis: Collection<bigint, SetupDesiredProps<Emoji, TProps, TBehavior>> }) => unknown
   guildBanAdd: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildBanRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildCreate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
