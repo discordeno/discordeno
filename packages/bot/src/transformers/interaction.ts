@@ -234,6 +234,7 @@ export function transformInteractionDataResolved(
   if (payload.resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.resolved.messages).map(([_id, value]) => {
+        // @ts-expect-error TODO: Deal with partials
         const message = bot.transformers.message(bot, { message: value, shardId: payload.shardId }) as Message
         return [message.id, message]
       }),
@@ -252,10 +253,12 @@ export function transformInteractionDataResolved(
   if (payload.guildId && payload.resolved.members) {
     transformed.members = new Collection(
       Object.entries(payload.resolved.members).map(([id, value]) => {
+        // @ts-expect-error TODO: Deal with partials, value is missing 2 values but the transformer can handle it, despite what the types says
         const member = bot.transformers.member(bot, value, payload.guildId!, bot.transformers.snowflake(id)) as InteractionResolvedDataMember<
           TransformersDesiredProperties,
           DesiredPropertiesBehavior
         >
+
         // We need to tell TS that we are sure the id is a bigint
         return [member.id as bigint, member]
       }),

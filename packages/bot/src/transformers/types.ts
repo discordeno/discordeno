@@ -199,13 +199,13 @@ export interface ApplicationInstallParams {
 
 export interface ApplicationCommand {
   options?: ApplicationCommandOption[]
-  description?: string
+  description: string
   guildId?: bigint
   nameLocalizations?: Localization
   descriptionLocalizations?: Localization
   defaultMemberPermissions?: bigint
   type?: ApplicationCommandTypes
-  version?: string
+  version: string
   id: bigint
   name: string
   applicationId: bigint
@@ -1891,7 +1891,7 @@ export interface GuildWidget {
   name: string
   members: Partial<User>[]
   channels: Partial<Channel>[]
-  instant_invite: string
+  instantInvite?: string
   presenceCount: number
 }
 

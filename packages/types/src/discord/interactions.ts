@@ -22,6 +22,11 @@ export interface DiscordInteraction {
   application_id: string
   /** The type of interaction */
   type: InteractionTypes
+  /**
+   * The command data payload
+   * @remarks This is always present on application command, message component, and modal submit interaction types. It is optional for future-proofing against new interaction types
+   */
+  data?: DiscordInteractionData
   /** Guild that the interaction was sent from */
   guild?: Partial<DiscordGuild>
   /** The guild it was sent from */
@@ -45,14 +50,15 @@ export interface DiscordInteraction {
   version: 1
   /** For components or modals triggered by components, the message they were attached to */
   message?: DiscordMessage
-  /** the command data payload */
-  data?: DiscordInteractionData
+  /**
+   * Bitwise set of permissions the app has in the source location of the interaction
+   * @remarks app_permissions includes ATTACH_FILES | EMBED_LINKS | MENTION_EVERYONE permissions for (G)DMs with other users, and additionally includes USE_EXTERNAL_EMOJIS for DMs with the app's bot user
+   */
+  app_permissions: string
   /** The selected language of the invoking user */
   locale?: string
   /** The guild's preferred locale, if invoked in a guild */
   guild_locale?: string
-  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
-  app_permissions: string
   /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
   entitlements: DiscordEntitlement[]
   /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
@@ -61,6 +67,12 @@ export interface DiscordInteraction {
   context?: DiscordInteractionContextType
   /** Attachment size limit in bytes */
   attachment_size_limit: number
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure (Specifically, the member propriety) */
+export interface DiscordInteractionMember extends DiscordMemberWithUser {
+  /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
+  permissions: string
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type */
@@ -85,44 +97,60 @@ export enum DiscordInteractionContextType {
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object */
 export type DiscordAuthorizingIntegrationOwners = Partial<Record<DiscordApplicationIntegrationType, string>>
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data */
+// Since this is a merge of 3 types, the properties appear in order of their first appearance in the 3 types
+/**
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-data-structure
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-message-component-data-structure
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-modal-submit-data-structure
+ */
 export interface DiscordInteractionData {
-  /** The type of component */
-  component_type?: MessageComponentTypes
-  /** The custom id provided for this component. */
-  custom_id?: string
-  /** The components if its a Modal Submit interaction. */
-  components?: DiscordMessageComponents
-  /** The values chosen by the user. */
-  values?: string[]
+  // Application Command Data
   /** The Id of the invoked command */
   id: string
   /** The name of the invoked command */
   name: string
   /** the type of the invoked command */
   type: ApplicationCommandTypes
+  /** The type of component */
   /** Converted users + roles + channels + attachments */
   resolved?: DiscordInteractionDataResolved
   /** The params + values from the user */
   options?: DiscordInteractionDataOption[]
-  /** The target id if this is a context menu command. */
-  target_id?: string
   /** the id of the guild the command is registered to */
   guild_id?: string
+  /** The target id if this is a context menu command. */
+  target_id?: string
+
+  // Message Component Data
+  /** The custom id provided for this component. */
+  custom_id?: string
+  /** The type of {@link MessageComponentTypes | Message Component} */
+  component_type?: MessageComponentTypes
+  /** The values chosen by the user. */
+  values?: string[]
+
+  // Modal Submit Data
+  /** The components if its a Modal Submit interaction. */
+  components?: DiscordMessageComponents
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-resolved-data-structure */
 export interface DiscordInteractionDataResolved {
-  /** The Ids and Message objects */
-  messages?: Record<string, DiscordMessage>
   /** The Ids and User objects */
   users?: Record<string, DiscordUser>
   /** The Ids and partial Member objects */
-  members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
+  members?: Record<string, Omit<DiscordMember, 'user' | 'deaf' | 'mute'>>
   /** The Ids and Role objects */
   roles?: Record<string, DiscordRole>
-  /** The Ids and partial Channel objects */
-  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
+  /**
+   * The Ids and partial Channel objects
+   *
+   * @remarks
+   * Only threads include `thread_metadata` and `parent_id` properties.
+   */
+  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions' | 'thread_metadata' | 'parent_id'>>
+  /** The Ids and Message objects */
+  messages?: Record<string, Partial<DiscordMessage>>
   /** The ids and attachment objects */
   attachments: Record<string, DiscordAttachment>
 }
@@ -236,13 +264,74 @@ export interface DiscordActivityInstanceResource {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-export interface DiscordApplicationCommand extends DiscordCreateApplicationCommand {
+export interface DiscordApplicationCommand {
   /** Unique ID of command */
   id: string
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  type?: ApplicationCommandTypes
   /** ID of the parent application */
   application_id: string
   /** Guild id of the command, if not global */
   guild_id?: string
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. */
+  description: string
+  /** Localization object for `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: Localization | null
+  /** Parameters for the command, max of 25 */
+  options?: DiscordApplicationCommandOption[]
+  /** Set of permissions represented as a bit set */
+  default_member_permissions: string | null
+  /**
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   *
+   * @deprecated use {@link contexts} instead
+   */
+  dm_permission?: boolean
+  /**
+   * Indicates whether the command is enabled by default when the app is added to a guild
+   *
+   * @remarks
+   * Not recommended for use as field will soon be deprecated
+   *
+   * @default true
+   */
+  default_permission?: boolean
+  /** Indicates whether the command is age-restricted, defaults to false */
+  nsfw?: boolean
+  /**
+   * Installation contexts where the command is available
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * Defaults to the application configured contexts
+   */
+  integration_types?: DiscordApplicationIntegrationType[]
+  /**
+   * Interaction context(s) where the command can be used
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands.
+   */
+  contexts?: DiscordInteractionContextType[] | null
+  /** Auto incrementing version identifier updated during substantial record changes */
+  version: string
+  /**
+   * Determines whether the interaction is handled by the app's interactions handler or by Discord
+   *
+   * @remarks
+   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   */
+  handler?: DiscordInteractionEntryPointCommandHandlerType
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types */
@@ -304,15 +393,6 @@ export interface DiscordApplicationCommandOption {
    */
   options?: DiscordApplicationCommandOption[]
   /**
-   * If autocomplete interactions are enabled for this option.
-   *
-   * @remarks
-   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
-   *
-   * When {@link DiscordApplicationCommandOption.choices | choices} are provided, this may not be set to true
-   */
-  autocomplete?: boolean
-  /**
    * The channels shown will be restricted to these types
    *
    * @remarks
@@ -347,6 +427,15 @@ export interface DiscordApplicationCommandOption {
    * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
    */
   max_length?: number
+  /**
+   * If autocomplete interactions are enabled for this option.
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * When {@link DiscordApplicationCommandOption.choices | choices} are provided, this may not be set to true
+   */
+  autocomplete?: boolean
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type */
@@ -354,13 +443,18 @@ export enum ApplicationCommandOptionTypes {
   SubCommand = 1,
   SubCommandGroup,
   String,
+  /** Any integer between -2^53 and 2^53 */
   Integer,
   Boolean,
   User,
+  /** Includes all channel types + categories */
   Channel,
   Role,
+  /** Includes users and roles */
   Mentionable,
+  /** Any double between -2^53 and 2^53 */
   Number,
+  /** Attachment object */
   Attachment,
 }
 
@@ -411,15 +505,8 @@ export enum ApplicationCommandPermissionTypes {
   Channel,
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure specifcly the member propriety */
-export interface DiscordInteractionMember extends DiscordMemberWithUser {
-  /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
-  permissions: string
-}
-
 // TODO: This type does not match any structure discord defines it is however a subset of the props in
 // https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure
-// that is used by DiscordApplicationCommand.
 // We should provably remove this type and merge it with DiscordApplicationCommand and re-define it as
 // https://discord.com/developers/docs/interactions/application-commands#create-global-application-command-json-params
 // as that would match the name

@@ -35,8 +35,8 @@ export function transformMemberToDiscordMember(bot: Bot, payload: typeof bot.tra
     avatar: _payload.avatar ? iconBigintToHash(_payload.avatar) : undefined,
     permissions: _payload.permissions?.toString(),
     communication_disabled_until: _payload.communicationDisabledUntil ? new Date(_payload.communicationDisabledUntil).toISOString() : undefined,
-    deaf: _payload.toggles?.deaf,
-    mute: _payload.toggles?.mute,
+    deaf: _payload.toggles?.deaf ?? false,
+    mute: _payload.toggles?.mute ?? false,
     pending: _payload.toggles?.pending,
     flags: _payload.flags ?? 0,
     avatar_decoration_data: _payload.avatarDecorationData
