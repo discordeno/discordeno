@@ -1,6 +1,5 @@
 /** Types for: https://discord.com/developers/docs/resources/stage-instance */
 
-// @ts-expect-error Requires #4295 to be merged
 import type { DiscordStageInstancePrivacyLevel } from '../discord/stageInstance.js'
 import type { BigString } from '../shared.js'
 
