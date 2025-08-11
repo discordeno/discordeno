@@ -23,7 +23,7 @@ export interface DiscordUser {
   /** the user's banner, or null if unset */
   banner?: string | null
   /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accent_color?: number
+  accent_color?: number | null
   /** The user's chosen language option */
   locale?: string
   /** Whether the email on this account has been verified */
