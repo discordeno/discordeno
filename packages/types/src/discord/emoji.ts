@@ -6,7 +6,12 @@ import type { DiscordUser } from './user.js'
 export interface DiscordEmoji {
   /** Emoji id */
   id: string | null
-  /** Emoji name (can be null only in reaction emoji objects) */
+  /**
+   * Emoji name
+   *
+   * @remarks
+   * Can be null only in reaction emoji objects
+   */
   name: string | null
   /** Roles allowed to use this emoji */
   roles?: string[]
