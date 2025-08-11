@@ -399,6 +399,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
     reactions: payload.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
+      // @ts-expect-error: TODO: Deal with partials
       emoji: bot.transformers.emoji(bot, reaction.emoji),
     })),
     type: payload.type,

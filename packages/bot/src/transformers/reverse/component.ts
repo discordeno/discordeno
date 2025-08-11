@@ -99,8 +99,8 @@ function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonCo
     disabled: payload.disabled,
     emoji: payload.emoji
       ? {
-          id: payload.emoji.id ? bot.transformers.reverse.snowflake(payload.emoji.id) : undefined,
-          name: payload.emoji.name,
+          id: payload.emoji.id ? bot.transformers.reverse.snowflake(payload.emoji.id) : null,
+          name: payload.emoji.name ?? null,
           animated: payload.emoji.animated,
         }
       : undefined,
@@ -145,8 +145,8 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
       description: option.description,
       emoji: option.emoji
         ? {
-            id: option.emoji.id ? bot.transformers.reverse.snowflake(option.emoji.id) : undefined,
-            name: option.emoji.name,
+            id: option.emoji.id ? bot.transformers.reverse.snowflake(option.emoji.id) : null,
+            name: option.emoji.name ?? null,
             animated: option.emoji.animated,
           }
         : undefined,

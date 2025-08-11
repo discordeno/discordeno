@@ -1,6 +1,7 @@
 /** Types for: https://discord.com/developers/docs/components/reference */
 
 import type { ChannelTypes } from './channel.js'
+import type { DiscordEmoji } from './emoji.js'
 
 /** https://discord.com/developers/docs/components/reference#component-object-component-types */
 export enum MessageComponentTypes {
@@ -91,14 +92,7 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
    * @remarks
    * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
    */
-  emoji?: {
-    /** Emoji id */
-    id?: string
-    /** Emoji name */
-    name?: string
-    /** Whether this emoji is animated */
-    animated?: boolean
-  }
+  emoji?: Pick<DiscordEmoji, 'id' | 'name' | 'animated'>
   /**
    * A dev-defined unique string sent on click (max 100 characters).
    *
@@ -193,14 +187,7 @@ export interface DiscordSelectOption {
   /** An additional description of the option. Maximum 50 characters. */
   description?: string
   /** The id, name, and animated properties of an emoji. */
-  emoji?: {
-    /** Emoji id */
-    id?: string
-    /** Emoji name */
-    name?: string
-    /** Whether this emoji is animated */
-    animated?: boolean
-  }
+  emoji?: Pick<DiscordEmoji, 'id' | 'name' | 'animated'>
   /** Will render this option as already-selected by default. */
   default?: boolean
 }
