@@ -344,22 +344,22 @@ export interface DiscordReady {
 export interface DiscordAutoModerationActionExecution {
   /** The id of the guild */
   guild_id: string
-  /** The id of the rule that was executed */
-  rule_id: string
-  /** The id of the user which generated the content which triggered the rule */
-  user_id: string
-  /** The content from the user */
-  content: string
   /** Action which was executed */
   action: DiscordAutoModerationAction
+  /** The id of the rule that was executed */
+  rule_id: string
   /** The trigger type of the rule that was executed. */
   rule_trigger_type: AutoModerationTriggerTypes
+  /** The id of the user which generated the content which triggered the rule */
+  user_id: string
   /** The id of the channel in which user content was posted */
-  channel_id?: string | null
+  channel_id?: string
   /** The id of the message. Will not exist if message was blocked by automod or content was not part of any message */
-  message_id?: string | null
+  message_id?: string
   /** The id of any system auto moderation messages posted as a result of this action */
-  alert_system_message_id?: string | null
+  alert_system_message_id?: string
+  /** The content from the user */
+  content: string
   /** The word or phrase that triggerred the rule. */
   matched_keyword: string | null
   /** The substring in content that triggered the rule */
@@ -404,12 +404,12 @@ export interface DiscordThreadMembersUpdate {
   id: string
   /** The id of the guild */
   guild_id: string
+  /** the approximate number of members in the thread, capped at 50 */
+  member_count: number
   /** The users who were added to the thread */
   added_members?: DiscordThreadMember[]
   /** The id of the users who were removed from the thread */
   removed_member_ids?: string[]
-  /** the approximate number of members in the thread, capped at 50 */
-  member_count: number
 }
 
 /** https://discord.com/developers/docs/events/gateway#channel-pins-update */
@@ -438,7 +438,7 @@ export interface DiscordGuildCreateExtra {
    * @remarks
    * Lacks the `guild_id` key
    */
-  voice_states: Omit<DiscordVoiceState, "guild_id">[]
+  voice_states: Omit<DiscordVoiceState, 'guild_id'>[]
   /** Users in the guild */
   members: DiscordMemberWithUser[]
   /** Channels in the guild */
@@ -451,9 +451,9 @@ export interface DiscordGuildCreateExtra {
    * @remarks
    * Will only include non-offline members if the size is greater than the large threshold.
    */
-  presences?: Partial<DiscordPresenceUpdate>[]
+  presences: Partial<DiscordPresenceUpdate>[]
   /** Stage instances in the guild */
-  stage_instances?: DiscordStageInstance[]
+  stage_instances: DiscordStageInstance[]
   /** Scheduled events in the guild */
   guild_scheduled_events: DiscordScheduledEvent[]
   /** Soundboard sounds in the guild */
@@ -541,11 +541,11 @@ export interface DiscordGuildMemberUpdate {
   /** Nickname of the user in the guild */
   nick?: string | null
   /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */
-  avatar: string
+  avatar: string | null
   /** the member's guild banner hash */
-  banner: string
+  banner: string | null
   /** When the user joined the guild */
-  joined_at: string
+  joined_at: string | null
   /** When the user starting boosting the guild */
   premium_since?: string | null
   /** whether the user is deafened in voice channels */
@@ -555,11 +555,11 @@ export interface DiscordGuildMemberUpdate {
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
-  communication_disabled_until?: string
-  /** Data for the member's guild avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData
+  communication_disabled_until?: string | null
   /** Guild member flags */
   flags?: number
+  /** Data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-members-chunk-guild-members-chunk-event-fields */
@@ -806,22 +806,22 @@ export interface DiscordMessageReactionRemoveAll {
 export interface DiscordMessageReactionRemoveEmoji {
   /** The id of the channel */
   channel_id: string
-  /** The id of the message */
-  message_id: string
   /** The id of the guild */
   guild_id?: string
+  /** The id of the message */
+  message_id: string
   /** The emoji used to react */
   emoji: Partial<DiscordEmoji>
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#presence-update-presence-update-event-fields */
 export interface DiscordPresenceUpdate {
-  /** Either "idle", "dnd", "online", or "offline" */
-  status: 'idle' | 'dnd' | 'online' | 'offline'
   /** The user presence is being updated for */
   user: DiscordUser
   /** id of the guild */
   guild_id: string
+  /** Either "idle", "dnd", "online", or "offline" */
+  status: 'idle' | 'dnd' | 'online' | 'offline'
   /** User's current activities */
   activities: DiscordActivity[]
   /** User's platform-dependent status */
@@ -976,14 +976,14 @@ export interface DiscordActivityButton {
 
 /** https://discord.com/developers/docs/events/gateway-events#typing-start-typing-start-event-fields */
 export interface DiscordTypingStart {
-  /** Unix time (in seconds) of when the user started typing */
-  timestamp: number
   /** id of the channel */
   channel_id: string
   /** id of the guild */
   guild_id?: string
   /** id of the user */
   user_id: string
+  /** Unix time (in seconds) of when the user started typing */
+  timestamp: number
   /** The member who started typing if this happened in a guild */
   member?: DiscordMember
 }
@@ -1001,7 +1001,7 @@ export interface DiscordVoiceChannelEffectSend {
   /** The type of emoji animation, for emoji reaction and soundboard effects */
   animation_type?: DiscordVoiceChannelEffectAnimationType | null
   /** The ID of the emoji animation, for emoji reaction and soundboard effects */
-  animation_id?: number | null
+  animation_id?: number
   /** The ID of the soundboard sound, for soundboard effects */
   sound_id?: string | number
   /** The volume of the soundboard sound, from 0 to 1, for soundboard effects */
