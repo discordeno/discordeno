@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import ReactFlow, { Background, Controls, Handle, Position, useEdgesState, useNodesState, type Edge, type Node } from 'reactflow'
+import ReactFlow, { Background, Controls, type Edge, Handle, type Node, Position, useEdgesState, useNodesState } from 'reactflow'
 import 'reactflow/dist/style.css'
 
 export const multiplier = 225
@@ -17,13 +17,7 @@ export const defaultGroupOptions = {
   draggable: false,
 }
 
-export default function BaseFlowChart({
-  initialNodes = [],
-  initialEdges = [],
-}: {
-  initialNodes: Node[]
-  initialEdges: Edge[]
-}) {
+export default function BaseFlowChart({ initialNodes = [], initialEdges = [] }: { initialNodes: Node[]; initialEdges: Edge[] }) {
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window
     return {

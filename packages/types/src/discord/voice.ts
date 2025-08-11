@@ -4,8 +4,6 @@ import type { DiscordMemberWithUser } from './guild.js'
 
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface DiscordVoiceState {
-  /** The session id for this voice state */
-  session_id: string
   /** The guild id this voice state is for */
   guild_id?: string
   /** The channel id this user is connected to */
@@ -14,6 +12,8 @@ export interface DiscordVoiceState {
   user_id: string
   /** The guild member this voice state is for */
   member?: DiscordMemberWithUser
+  /** The session id for this voice state */
+  session_id: string
   /** Whether this user is deafened by the server */
   deaf: boolean
   /** Whether this user is muted by the server */

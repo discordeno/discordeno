@@ -1,15 +1,7 @@
 import { FaqAnswer, FaqContainer, FaqQuestion, FaqSection } from '@site/src/styling'
 import { useState } from 'react'
 
-const Faq = ({
-  question,
-  answer,
-  defaultExpanded,
-}: {
-  question: string
-  answer: string
-  defaultExpanded?: boolean
-}) => {
+const Faq = ({ question, answer, defaultExpanded }: { question: string; answer: string; defaultExpanded?: boolean }) => {
   const [visible, setVisible] = useState(defaultExpanded ?? false)
 
   const toggleVisibility = () => {
