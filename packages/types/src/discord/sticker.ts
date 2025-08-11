@@ -12,7 +12,12 @@ export interface DiscordSticker {
   name: string
   /** Description of the sticker */
   description: string | null
-  /** a unicode emoji representing the sticker's expression */
+  /**
+   * Autocomplete/suggestion tags for the sticker
+   * @remarks
+   * Max 200 characters
+   * A comma separated list of keywords is the format used in this field by standard stickers, but this is just a convention. Incidentally the client will always use a name generated from an emoji as the value of this field when creating or modifying a guild sticker.
+   */
   tags: string
   /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
   type: StickerTypes
