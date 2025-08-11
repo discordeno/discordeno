@@ -3,7 +3,7 @@
 import type { DiscordApplication } from './application.js'
 import type { DiscordGuild } from './guild.js'
 import type { DiscordUser } from './user.js'
-import type { DiscordIncomingWebhook } from './webhook.js'
+import type { DiscordWebhook } from './webhook.js'
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
 export enum OAuth2Scope {
@@ -161,7 +161,7 @@ export interface DiscordAccessTokenResponse {
   /** The scopes for the access token */
   scope: string
   /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
-  webhook?: DiscordIncomingWebhook
+  webhook?: DiscordWebhook
   /** The guild the bot has been added. Requires the `bot` scope */
   guild?: DiscordGuild
 }
