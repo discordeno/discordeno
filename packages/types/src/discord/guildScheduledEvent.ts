@@ -1,5 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/guild-scheduled-event */
 
+import type { DiscordMember } from './guild.js'
 import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-structure */
@@ -15,7 +16,7 @@ export interface DiscordScheduledEvent {
   /** the name of the scheduled event */
   name: string
   /** the description of the scheduled event */
-  description?: string
+  description?: string | null
   /** the time the scheduled event will start */
   scheduled_start_time: string
   /** the time the scheduled event will end if it does end. */
@@ -67,7 +68,15 @@ export interface DiscordScheduledEventEntityMetadata {
   location?: string
 }
 
-// TODO: missing ScheduledEventUser: https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object-guild-scheduled-event-user-structure
+/** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object-guild-scheduled-event-user-structure */
+export interface DiscordScheduledEventUser {
+  /** The scheduled event id which the user subscribed to */
+  guild_scheduled_event_id: string
+  /** User which subscribed to an event */
+  user: DiscordUser
+  /** Guild member data for this user for the guild which this event belongs to, if any */
+  member?: DiscordMember
+}
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-recurrence-rule-object-guild-scheduled-event-recurrence-rule-structure */
 export interface DiscordScheduledEventRecurrenceRule {
