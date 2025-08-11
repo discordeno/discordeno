@@ -1,6 +1,6 @@
 import type React from 'react'
 import { useEffect, useState } from 'react'
-import ReactFlow, { Background, Controls, Handle, Position, useEdgesState, useNodesState, type Edge, type Node } from 'reactflow'
+import ReactFlow, { Background, Controls, type Edge, Handle, type Node, Position, useEdgesState, useNodesState } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { defaultNodeOptions, height, multiplier, widthMultiplier } from './BaseFlowChart'
 

@@ -9,7 +9,7 @@ export interface DiscordLobby {
   /** application that created the lobby */
   application_id: string
   /** dictionary of string key/value pairs. The max total length is 1000. */
-  metadata?: Record<string, string>
+  metadata: Record<string, string> | null
   /** members of the lobby */
   members: DiscordLobbyMember[]
   /** the guild channel linked to the lobby */
@@ -21,7 +21,7 @@ export interface DiscordLobbyMember {
   /** The id of the user */
   id: string
   /** dictionary of string key/value pairs. The max total length is 1000. */
-  metadata?: Record<string, string>
+  metadata?: Record<string, string> | null
   /** lobby member flags combined as as bitfield */
   flags?: number
 }
