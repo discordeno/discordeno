@@ -10,9 +10,9 @@ export enum DiscordTeamMemberRole {
    * Teams are limited to 1 owner.
    *
    * @remarks
-   * Despite this having a value, discord does not document any value for this.
-   * */
-  Owner = 'owner',
+   * The owner role is not represented in the role field on the team member object. Instead, the owner_user_id field on the team object should be used to identify which user has the owner role for the team.
+   */
+  Owner = '',
   /** Admins have similar access as owners, except they cannot take destructive actions on the team or team-owned apps. */
   Admin = 'admin',
   /**
