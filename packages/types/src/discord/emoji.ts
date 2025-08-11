@@ -4,10 +4,15 @@ import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface DiscordEmoji {
-  /** Emoji name (can only be null in reaction emoji objects) */
-  name?: string
   /** Emoji id */
-  id?: string
+  id: string | null
+  /**
+   * Emoji name
+   *
+   * @remarks
+   * Can be null only in reaction emoji objects
+   */
+  name: string | null
   /** Roles allowed to use this emoji */
   roles?: string[]
   /** User that created this emoji */
