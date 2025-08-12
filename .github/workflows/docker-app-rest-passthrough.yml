@@ -90,6 +90,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
