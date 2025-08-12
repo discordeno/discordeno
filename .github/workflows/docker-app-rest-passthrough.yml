@@ -103,19 +103,19 @@ jobs:
       - name: Load Docker image
         run: docker load --input /tmp/rest-passthrough-image.tar
 
-      # - name: Run Trivy vulnerability scanner
-      #   uses: aquasecurity/trivy-action@0.32.0
-      #   with:
-      #     image-ref: 'discordeno/app-rest-passthrough:latest'
-      #     exit-code: '0'
-      #     vuln-type: 'os,library'
-      #     severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
-      #     format: 'sarif'
-      #     output: 'trivy-results.sarif'
-      # - name: Upload Trivy scan results to GitHub Security tab
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: 'trivy-results.sarif'
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          image-ref: 'discordeno/app-rest-passthrough:latest'
+          exit-code: '0'
+          vuln-type: 'os,library'
+          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
 
       - name: Run Snyk to check Docker image for vulnerabilities
         continue-on-error: true
@@ -125,11 +125,31 @@ jobs:
         with:
           image: 'discordeno/app-rest-passthrough:latest'
           args: --file=docker-apps/rest-passthrough/Dockerfile
+
       # Snyk will use a security-severify of "null" when the CVE didn't get an assigned score
       - name: Replace security-severity null for non assigned CVE scores
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
           sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
+
+      - name: Change the Snyk tool names to different names
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const filePath = 'snyk.sarif';
+            const data = fs.readFileSync(filePath, 'utf8');
+            const json = JSON.parse(datà);
+
+            let index = 0;
+            for (const run in json.runs) {
+              if (run.tool.driver.name === "Snyk Container") {
+                run.tool.driver.name = `Snyk Container #${index++}`;
+              }
+            }
+
+            fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
