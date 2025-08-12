@@ -103,15 +103,19 @@ jobs:
       - name: Load Docker image
         run: docker load --input /tmp/rest-passthrough-image.tar
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.32.0
-        with:
-          image-ref: 'discordeno/app-rest-passthrough:latest'
-          exit-code: '0'
-          vuln-type: 'os,library'
-          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+      # - name: Run Trivy vulnerability scanner
+      #   uses: aquasecurity/trivy-action@0.32.0
+      #   with:
+      #     image-ref: 'discordeno/app-rest-passthrough:latest'
+      #     exit-code: '0'
+      #     vuln-type: 'os,library'
+      #     severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+      #     format: 'sarif'
+      #     output: 'trivy-results.sarif'
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: 'trivy-results.sarif'
 
       - name: Run Snyk to check Docker image for vulnerabilities
         continue-on-error: true
@@ -126,17 +130,10 @@ jobs:
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
           sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
-
-      - name: Place both sarif files in a directory
-        run: |
-          mkdir sarif-files
-          mv 'trivy-results.sarif' sarif-files
-          mv snyk.sarif sarif-files
-
       - name: Upload snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: sarif-files
+          sarif_file: snyk.sarif
 
   build-all-arch:
     name: Build image for all architectures
