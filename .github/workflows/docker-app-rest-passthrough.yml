@@ -38,6 +38,7 @@ jobs:
     outputs:
       version: ${{ steps.package-version.outputs.current-version }}
     steps:
+      - name: Checkout repository
       - uses: actions/checkout@v4
       - name: get-npm-version
         id: package-version
