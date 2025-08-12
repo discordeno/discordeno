@@ -72,7 +72,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Check Formatting
-        run: yarn check:all --cache-dir=".turbo"
+        run: yarn check:all
 
   test-type-unit-and-integration-test:
     name: Typecheck Tests
