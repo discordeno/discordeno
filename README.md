@@ -132,7 +132,7 @@ yarn test:unit
 Other useful information are available on the [website under the contributing documentation](https://discordeno.js.org/docs/contributing)
 
 Other useful scripts
-(if you run in the package's directory, you need build dist before for test and types before for check. Running in root directory should automatically do it for you)
+(if you run in a package's directory, you need to build dist before test and build types before check. Running in root directory should automatically do it for you)
 
 ```sh
 # format and lint the code
