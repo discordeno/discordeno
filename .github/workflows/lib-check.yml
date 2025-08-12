@@ -64,6 +64,8 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+      - name: Build Types
+        run: yarn build:type --cache-dir=".turbo"
       - name: Check Formatting
         run: yarn biome ci --reporter=github
 
