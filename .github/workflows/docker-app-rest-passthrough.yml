@@ -134,6 +134,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
+          category: snyk-report
 
   build-all-arch:
     name: Build image for all architectures
