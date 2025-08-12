@@ -59,20 +59,13 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-lint-${{ github.sha }}
       - name: Build type cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Check Formatting
-        run: yarn lint --cache-dir=".turbo"
+        run: yarn biome ci --reporter=github
 
   test-type-unit-and-integration-test:
     name: Typecheck Tests
