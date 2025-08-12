@@ -1,7 +1,7 @@
 import type { FeatureList } from '@site/src/types'
 import clsx from 'clsx'
 
-export default function Feature({ data }: FeatureList): JSX.Element {
+export default function Feature({ data }: FeatureList) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">{data.feature.Svg}</div>
