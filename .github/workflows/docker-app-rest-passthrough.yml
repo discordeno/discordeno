@@ -139,10 +139,10 @@ jobs:
             const fs = require('fs');
             const filePath = 'snyk.sarif';
             const data = fs.readFileSync(filePath, 'utf8');
-            const json = JSON.parse(datà);
+            const json = JSON.parse(data);
 
             let index = 0;
-            for (const run in json.runs) {
+            for (const run of json.runs) {
               if (run.tool.driver.name === "Snyk Container") {
                 run.tool.driver.name = `Snyk Container #${index++}`;
               }
