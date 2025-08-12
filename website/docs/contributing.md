@@ -125,15 +125,15 @@ This will invoke the Typescript compiler (tsc) to compile the type definitions (
 
 This will run both the `build` script and `build:type` one.
 
-#### `yarn fmt`
+#### `yarn check`
 
-This will format your code to match the rest of the codebase.
+This will do all the checking, linting and formatting to make sure your code follows the linting and formatting rules in place.
 
-This will run every time you make a commit. If you disable this you should still run it manually before creating the pr
+Every time you make a commit a check will also run. If you disable this you should still run it manually before creating the pr
 
-#### `yarn lint`
+#### `yarn check:all`
 
-This will do all the checking and linting to make sure your code is in a useable state. There is also one other key thing to note about this. When you change something in the `@discordeno/types` package, you can run `yarn lint` to rebuild all the types.
+This is a script that only exists in the root of the repository, it will check all the files in repo including examples, website, etc
 
 #### `yarn test:unit`
 
@@ -185,5 +185,5 @@ This requires you have setup the required environment variables, see above for m
 
 - If the contribution is relatively small go ahead and do it! If it is a larger change, I would highly recommend you read the guides we have on the website in order to understand our library better before undertaking such a big action.
 - If an issue exists for the contribution you want to make, leave a comment on it so no one else begins working on it as well. If an issue does NOT exist for the contribution, then create an issue first before working on it to get some feedback to decide whether it is worth doing.
-- Formatting and linting will be automatically handled by Husky and lint-staged. However, if it doesn't work you can format by doing `yarn fmt` and you can lint by doing `yarn lint`.
+- Formatting and linting will be automatically handled by Husky and lint-staged. However, if it doesn't work you can format and lint by doing `yarn check`
 - If you want to edit a docker app (rest proxy for example), the website or some examples you will need to run `yarn` to install the dependencies of those

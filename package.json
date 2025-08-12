@@ -21,9 +21,8 @@
     "test:e2e": "turbo test:e2e",
     "test:type": "turbo build:type",
     "test:test-type": "turbo test:test-type",
-    "fmt": "turbo fmt",
-    "lint": "turbo lint",
-    "format": "biome format --write",
+    "check": "turbo check",
+    "check:all": "biome check --write",
     "postinstall": "husky"
   },
   "devDependencies": {
