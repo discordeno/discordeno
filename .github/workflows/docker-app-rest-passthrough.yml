@@ -9,7 +9,6 @@ on:
       - 'docker-apps/rest-passthrough/**'
   pull_request:
   merge_group:
-  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
 
@@ -90,7 +89,7 @@ jobs:
     name: Image scan
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
@@ -132,6 +131,10 @@ jobs:
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
           sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
 
+      # Snyk will test 3 projects and will use for ALL 3 the same tool driver name, which is not supported anymore by github/codeql-action/upload-sarif
+      # So since there seem to be no way to tell the Snyk CLI (what the snyk/actions/docker actions actually runs) to use distict names or generate multiple
+      # sarif file to then assign different categories to we need to modify the SARIF file itself before uploading it to make sure that each run described
+      # by the sarif file has a unique tool name
       - name: Change the Snyk tool names to different names
         uses: actions/github-script@v7
         with:
@@ -150,11 +153,6 @@ jobs:
 
             fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Snyk sarif report
-          path: snyk.sarif
       - name: Upload snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
