@@ -125,7 +125,7 @@ __metadata:
     "@swc/core": "npm:^1.13.3"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.3"
     chai: "npm:^5.2.1"
@@ -133,7 +133,7 @@ __metadata:
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -148,7 +148,7 @@ __metadata:
     "@swc/core": "npm:^1.13.3"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.14"
     c8: "npm:^10.1.3"
@@ -158,7 +158,7 @@ __metadata:
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
     ws: "npm:^8.18.1"
   dependenciesMeta:
     fzstd:
@@ -178,7 +178,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/chai-as-promised": "npm:^8.0.1"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.3"
     chai: "npm:^5.2.1"
@@ -188,7 +188,7 @@ __metadata:
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -200,12 +200,12 @@ __metadata:
     "@swc/cli": "npm:^0.5.2"
     "@swc/core": "npm:^1.13.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     c8: "npm:^10.1.3"
     mocha: "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -219,7 +219,7 @@ __metadata:
     "@swc/core": "npm:^1.13.3"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^10.1.3"
     chai: "npm:^5.2.1"
@@ -227,7 +227,7 @@ __metadata:
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -903,12 +903,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.1.0":
-  version: 24.1.0
-  resolution: "@types/node@npm:24.1.0"
+"@types/node@npm:^24.2.1":
+  version: 24.2.1
+  resolution: "@types/node@npm:24.2.1"
   dependencies:
-    undici-types: "npm:~7.8.0"
-  checksum: 10c0/6c4686bc144f6ce7bffd4cadc3e1196e2217c1da4c639c637213719c8a3ee58b6c596b994befcbffeacd9d9eb0c3bff6529d2bc27da5d1cb9d58b1da0056f9f4
+    undici-types: "npm:~7.10.0"
+  checksum: 10c0/439a3c7edf88a298e0c92e46f670234070b892589c3b06e82cc86c47a7e1cf220f4a4b4736ec6ac7e4b9e1c40d7b6d443a1e22f99dd17f13f9dd15de3b32011b
   languageName: node
   linkType: hard
 
@@ -1267,11 +1267,11 @@ __metadata:
     "@swc/cli": "npm:^0.5.2"
     "@swc/core": "npm:^1.13.3"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     benchmark: "npm:^2.1.4"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -1777,7 +1777,7 @@ __metadata:
     turbo: "npm:^2.5.4"
     typedoc: "npm:^0.28.5"
     typedoc-plugin-markdown: "npm:^4.7.0"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -1795,13 +1795,13 @@ __metadata:
     "@swc/core": "npm:^1.13.3"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.2.1"
     c8: "npm:^10.1.3"
     chai: "npm:^5.2.1"
     mocha: "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:^5.8.3"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -4022,23 +4022,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.8.3":
-  version: 5.8.3
-  resolution: "typescript@npm:5.8.3"
+"typescript@npm:^5.9.2":
+  version: 5.9.2
+  resolution: "typescript@npm:5.9.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
+  checksum: 10c0/cd635d50f02d6cf98ed42de2f76289701c1ec587a363369255f01ed15aaf22be0813226bff3c53e99d971f9b540e0b3cc7583dbe05faded49b1b0bed2f638a18
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.8.3#optional!builtin<compat/typescript>":
-  version: 5.8.3
-  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
+"typescript@patch:typescript@npm%3A^5.9.2#optional!builtin<compat/typescript>":
+  version: 5.9.2
+  resolution: "typescript@patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
+  checksum: 10c0/34d2a8e23eb8e0d1875072064d5e1d9c102e0bdce56a10a25c0b917b8aa9001a9cf5c225df12497e99da107dc379360bc138163c66b55b95f5b105b50578067e
   languageName: node
   linkType: hard
 
@@ -4066,10 +4066,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~7.8.0":
-  version: 7.8.0
-  resolution: "undici-types@npm:7.8.0"
-  checksum: 10c0/9d9d246d1dc32f318d46116efe3cfca5a72d4f16828febc1918d94e58f6ffcf39c158aa28bf5b4fc52f410446bc7858f35151367bd7a49f21746cab6497b709b
+"undici-types@npm:~7.10.0":
+  version: 7.10.0
+  resolution: "undici-types@npm:7.10.0"
+  checksum: 10c0/8b00ce50e235fe3cc601307f148b5e8fb427092ee3b23e8118ec0a5d7f68eca8cee468c8fc9f15cbb2cf2a3797945ebceb1cbd9732306a1d00e0a9b6afa0f635
   languageName: node
   linkType: hard
 
