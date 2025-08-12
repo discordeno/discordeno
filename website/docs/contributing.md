@@ -133,7 +133,7 @@ Every time you make a commit a check will also run. If you disable this you shou
 
 #### `yarn check:all`
 
-This is a script that only exists in the root of the repository, it will check all the files in repo including examples, website, etc
+This is a script that only exists in the root of the repository. It will check all the files in repo including examples, website, etc
 
 #### `yarn test:unit`
 
