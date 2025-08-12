@@ -130,6 +130,11 @@ jobs:
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
           sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Snyk sarif report
+          path: snyk.sarif
       - name: Upload snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
