@@ -144,14 +144,14 @@ jobs:
           image: 'discordeno/app-rest-passthrough:latest'
           args: --file=docker-apps/rest-passthrough/Dockerfile
       # Snyk will use a security-severity of "null" when the CVE didn't get an assigned score
-      - name: Replace security-severity null for non assigned CVE scores
-        run: |
-          sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
-          sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
+      # - name: Replace security-severity null for non assigned CVE scores
+      #   run: |
+      #     sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
+      #     sed -i 's/"cvssv3_baseScore": null/"cvssv3_baseScore": 0/g' snyk.sarif
       - name: Upload snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: snyk.sarif
+          sarif_file: 'snyk.sarif'
           category: 'snyk'
 
   build-all-arch:
