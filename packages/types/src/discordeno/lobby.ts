@@ -8,7 +8,14 @@ export interface CreateLobby {
   metadata?: Record<string, string> | null
   /** Optional array of up to 25 users to be added to the lobby */
   members?: CreateLobbyMember[]
-  /** Seconds to wait before shutting down a lobby after it becomes idle. Value can be between 5 and 604800 (7 days). */
+  /**
+   * Seconds to wait before shutting down a lobby after it becomes idle.
+   *
+   * @remarks
+   * Value can be between 5 and 604800 (7 days).
+   *
+   * @see {@link https://discord.com/developers/docs/social-sdk/classdiscordpp_1_1LobbyHandle.html#a04cebab69ab0e7fb930346a14a87e843 | LobbyHandle} for more details on this behavior.
+   */
   idleTimeoutSeconds?: number
 }
 
@@ -28,7 +35,14 @@ export interface ModifyLobby {
   metadata?: Record<string, string> | null
   /** Optional array of up to 25 users to replace the lobby members with. If provided, lobby members not in this list will be removed from the lobby. */
   members?: CreateLobbyMember[]
-  /** Seconds to wait before shutting down a lobby after it becomes idle. Value can be between 5 and 604800 (7 days). */
+  /**
+   * Seconds to wait before shutting down a lobby after it becomes idle.
+   *
+   * @remarks
+   * Value can be between 5 and 604800 (7 days).
+   *
+   * @see {@link https://discord.com/developers/docs/social-sdk/classdiscordpp_1_1LobbyHandle.html#a04cebab69ab0e7fb930346a14a87e843 | LobbyHandle} for more details on this behavior.
+   */
   idleTimeoutSeconds?: number
 }
 

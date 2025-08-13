@@ -2,7 +2,7 @@
 
 import type { BigString } from '../shared.js'
 
-/** https://discord.com/developers/docs/monetization/entitlements#list-entitlements-query-params */
+/** https://discord.com/developers/docs/resources/entitlement#list-entitlements-query-string-params */
 export interface GetEntitlements {
   /** User ID to look up entitlements for */
   userId?: BigString
