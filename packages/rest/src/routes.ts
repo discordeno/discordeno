@@ -357,9 +357,6 @@ export function createRoutes(): RestRoutes {
           if (options.withCounts !== undefined) {
             url += `with_counts=${options.withCounts.toString()}`
           }
-          if (options.withExpiration !== undefined) {
-            url += `&with_expiration=${options.withExpiration.toString()}`
-          }
           if (options.scheduledEventId) {
             url += `&guild_scheduled_event_id=${options.scheduledEventId}`
           }
