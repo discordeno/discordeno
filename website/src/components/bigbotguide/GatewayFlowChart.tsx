@@ -1,5 +1,5 @@
-import ReactFlow, { Background, Controls, type Edge, type Node, Position } from 'reactflow'
-import 'reactflow/dist/style.css'
+import { Background, Controls, type Edge, type Node, Position, ReactFlow } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 
 export const defaultNodeOptions = {
   targetPosition: Position.Top,
@@ -116,11 +116,14 @@ const edges: Edge<any>[] = [
 ]
 
 function Flow() {
+  const colorMode = document.documentElement.dataset['theme'] || 'light'
+
   return (
     <div style={{ height: '40vh' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        colorMode={colorMode === 'dark' ? 'dark' : 'light'}
         nodeTypes={{
           baseLineNodeText: (n) => (
             <div
