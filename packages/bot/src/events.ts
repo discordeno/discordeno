@@ -136,8 +136,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   guildBanAdd: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildBanRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildCreate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
-  guildDelete: (id: bigint, shardId: number) => unknown
-  guildUnavailable: (id: bigint, shardId: number) => unknown
+  guildDelete: (data: { id: bigint; unavailable: boolean }, shardId: number) => unknown
   guildUpdate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: SetupDesiredProps<Role, TProps, TBehavior>) => unknown

@@ -580,8 +580,6 @@ export interface GetScheduledEventUsers {
 export interface GetInvite {
   /** Whether the invite should contain approximate member counts */
   withCounts?: boolean
-  /** Whether the invite should contain the expiration date */
-  withExpiration?: boolean
   /** the guild scheduled event to include with the invite */
   scheduledEventId?: BigString
 }
@@ -1604,7 +1602,7 @@ export interface EditOwnVoiceState {
 /** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
 export interface EditUserVoiceState {
   /** The id of the channel the user is currently in */
-  channelId: BigString
+  channelId?: BigString
   /** Toggles the user's suppress state */
   suppress?: boolean
   /** The user id to target */
