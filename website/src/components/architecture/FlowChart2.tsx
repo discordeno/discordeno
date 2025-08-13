@@ -1,5 +1,5 @@
-import { type Edge, type Node, Position } from 'reactflow'
-import 'reactflow/dist/style.css'
+import { type Edge, type Node, Position } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import BaseFlowChart, { defaultGroupOptions, defaultNodeOptions, multiplier } from './BaseFlowChart'
 
 const initialNodes: Node[] = [
@@ -74,7 +74,7 @@ const initialNodes: Node[] = [
     position: { x: 0.125 * multiplier, y: 20 },
     data: { label: 'webSocket' },
     ...defaultNodeOptions,
-    parentNode: 'shard-1',
+    parentId: 'shard-1',
     extent: 'parent',
   },
   {
@@ -82,7 +82,7 @@ const initialNodes: Node[] = [
     position: { x: 1.125 * multiplier, y: 20 },
     data: { label: 'HandleMessage' },
     ...defaultNodeOptions,
-    parentNode: 'shard-1',
+    parentId: 'shard-1',
     extent: 'parent',
   },
   {
@@ -98,7 +98,7 @@ const initialNodes: Node[] = [
     position: { x: 0.125 * multiplier, y: 20 },
     data: { label: 'webSocket' },
     ...defaultNodeOptions,
-    parentNode: 'shard-2',
+    parentId: 'shard-2',
     extent: 'parent',
   },
   {
@@ -106,7 +106,7 @@ const initialNodes: Node[] = [
     position: { x: 1.125 * multiplier, y: 20 },
     data: { label: 'HandleMessage' },
     ...defaultNodeOptions,
-    parentNode: 'shard-2',
+    parentId: 'shard-2',
     extent: 'parent',
   },
   {
@@ -122,7 +122,7 @@ const initialNodes: Node[] = [
     position: { x: 0.125 * multiplier, y: 20 },
     data: { label: 'webSocket' },
     ...defaultNodeOptions,
-    parentNode: 'shard-3',
+    parentId: 'shard-3',
     extent: 'parent',
   },
   {
@@ -130,7 +130,7 @@ const initialNodes: Node[] = [
     position: { x: 1.125 * multiplier, y: 20 },
     data: { label: 'HandleMessage' },
     ...defaultNodeOptions,
-    parentNode: 'shard-3',
+    parentId: 'shard-3',
     extent: 'parent',
   },
   {
@@ -146,7 +146,7 @@ const initialNodes: Node[] = [
     position: { x: 0.125 * multiplier, y: 20 },
     data: { label: 'webSocket' },
     ...defaultNodeOptions,
-    parentNode: 'shard-n',
+    parentId: 'shard-n',
     extent: 'parent',
   },
   {
@@ -154,7 +154,7 @@ const initialNodes: Node[] = [
     position: { x: 1.125 * multiplier, y: 20 },
     data: { label: 'HandleMessage' },
     ...defaultNodeOptions,
-    parentNode: 'shard-n',
+    parentId: 'shard-n',
     extent: 'parent',
   },
   {
