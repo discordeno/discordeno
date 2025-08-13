@@ -2,8 +2,10 @@ import {
   ApplicationFlags,
   type Bot,
   ButtonStyles,
+  createBot,
   type DiscordMessage,
   InteractionTypes,
+  iconHashToBigInt,
   MemberToggles,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -13,8 +15,6 @@ import {
   TeamMembershipStates,
   TextStyles,
   UserFlags,
-  createBot,
-  iconHashToBigInt,
 } from '@discordeno/bot'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
@@ -399,6 +399,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
     reactions: payload.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
+      // @ts-expect-error: TODO: Deal with partials
       emoji: bot.transformers.emoji(bot, reaction.emoji),
     })),
     type: payload.type,

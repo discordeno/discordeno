@@ -51,8 +51,14 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
     if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
       throw new Error('Cannot respond to a modal interaction with another modal.')
 
+    const result = await this.bot.helpers.sendInteractionResponse(
+      this.id,
+      this.token,
+      { type, data: response },
+      { withResponse: options?.withResponse },
+    )
     this.acknowledged = true
-    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type, data: response }, { withResponse: options?.withResponse })
+    return result
   },
   async edit(response, messageId, options) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
@@ -68,13 +74,14 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
       if (this.type !== InteractionTypes.MessageComponent && this.type !== InteractionTypes.ModalSubmit)
         throw new Error("This interaction has not been responded to yet and this isn't a MessageComponent or ModalSubmit interaction.")
 
-      this.acknowledged = true
-      return await this.bot.helpers.sendInteractionResponse(
+      const result = await this.bot.helpers.sendInteractionResponse(
         this.id,
         this.token,
         { type: InteractionResponseTypes.UpdateMessage, data: response },
         options,
       )
+      this.acknowledged = true
+      return result
     }
 
     return await this.bot.helpers.editOriginalInteractionResponse(this.token, response)
@@ -86,14 +93,19 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
     if (this.type !== InteractionTypes.MessageComponent && this.type !== InteractionTypes.ModalSubmit)
       throw new Error("Cannot defer to then edit an interaction that isn't a MessageComponent or ModalSubmit interaction.")
 
+    const result = await this.bot.helpers.sendInteractionResponse(
+      this.id,
+      this.token,
+      { type: InteractionResponseTypes.DeferredUpdateMessage },
+      options,
+    )
     this.acknowledged = true
-    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DeferredUpdateMessage }, options)
+    return result
   },
   async defer(isPrivate, options) {
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
 
-    this.acknowledged = true
-    return await this.bot.helpers.sendInteractionResponse(
+    const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
       this.token,
       {
@@ -104,6 +116,8 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
       },
       options,
     )
+    this.acknowledged = true
+    return result
   },
   async delete(messageId) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
@@ -207,6 +221,7 @@ export function transformInteractionDataResolved(
   if (payload.resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.resolved.messages).map(([_id, value]) => {
+        // @ts-expect-error TODO: Deal with partials
         const message: Message = bot.transformers.message(bot, { message: value, shardId: payload.shardId })
         return [message.id, message]
       }),
@@ -225,6 +240,7 @@ export function transformInteractionDataResolved(
   if (payload.guildId && payload.resolved.members) {
     transformed.members = new Collection(
       Object.entries(payload.resolved.members).map(([id, value]) => {
+        // @ts-expect-error TODO: Deal with partials, value is missing 2 values but the transformer can handle it, despite what the types says
         const member: Member = bot.transformers.member(bot, value, payload.guildId!, bot.transformers.snowflake(id))
         return [member.id, member]
       }),

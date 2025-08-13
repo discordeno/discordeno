@@ -1,6 +1,6 @@
 import { type CreateApplicationCommand, hasProperty } from '@discordeno/bot'
 import { bot } from '../bot.js'
-import { type SubCommand, type SubCommandGroup, commands } from '../commands.js'
+import { commands, type SubCommand, type SubCommandGroup } from '../commands.js'
 import { createLogger } from './logger.js'
 
 const logger = createLogger({ name: 'Helpers' })
