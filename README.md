@@ -8,17 +8,19 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK)](https://codecov.io/gh/discordeno/discordeno)
 ![action status](https://github.com/discordeno/discordeno/actions/workflows/lib-check.yml/badge.svg?event=push)
 
-## Installation
+## Getting started
+
+More details are available in the [documentation](https://discordeno.js.org/docs/getting-started)
+
 ```
 - npm install @discordeno/bot
 - yarn add @discordeno/bot
 - pnpm install @discordeno/bot
 - bun install @discordeno/bot
 ```
-## Tips
 
-- If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.js.org/)
-- To learn if Discordeno is right for you, read everything below.
+> [!TIP]
+> If you are not sure if Discordeno is right for you check everything below. 
 
 ## Packages
 
@@ -97,10 +99,6 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
 ### Custom Cache
 
 Have your cache setup in any way you like. Redis, PGSQL or any cache layer you would like.
-
-## Getting Started
-
-Interested? [Check the website](https://discordeno.js.org/) for more details on getting started.
 
 ## Links
 
