@@ -145,7 +145,7 @@ export interface ShardEvents {
   /** The shard has started to identify itself to Discord. */
   identifying?: (shard: Shard) => unknown
   /** The shard has successfully been identified itself with Discord. */
-  identified?: (shard: Shard) => unknown
+  ready?: (shard: Shard) => unknown
   /** The shard has received a message from Discord. */
   message?: (shard: Shard, payload: Camelize<DiscordGatewayPayload>) => unknown
 }
