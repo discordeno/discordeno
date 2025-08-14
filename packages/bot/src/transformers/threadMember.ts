@@ -6,7 +6,6 @@ export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, ex
     id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
     joinTimestamp: Date.parse(payload.join_timestamp),
-    guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
     flags: payload.flags,
     member: payload.member
       ? bot.transformers.member(

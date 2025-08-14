@@ -1744,8 +1744,6 @@ export interface ThreadMember {
   joinTimestamp: number
   /** The member object of the user */
   member?: Member
-  /** The id of the guild */
-  guildId?: bigint
 }
 
 export interface ThreadMemberGuildCreate {
