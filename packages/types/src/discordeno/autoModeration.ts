@@ -69,17 +69,16 @@ export interface CreateAutoModerationRuleOptions {
   exemptChannels?: BigString[]
 }
 
-// TODO: Discord documents this as "All parameters for this endpoint are optional.", however we do have some partials and it is used with Partial<T> in the rest manager
 /** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
-  name: string
+  name?: string
   /** The type of event to trigger the rule on. */
-  eventType: AutoModerationEventTypes
+  eventType?: AutoModerationEventTypes
   /** The metadata to use for the trigger. */
-  triggerMetadata: Camelize<DiscordAutoModerationRuleTriggerMetadata>
+  triggerMetadata?: Camelize<DiscordAutoModerationRuleTriggerMetadata>
   /** The actions that will trigger for this rule */
-  actions: DiscordenoAutoModerationAction[]
+  actions?: DiscordenoAutoModerationAction[]
   /** Whether the rule should be enabled. */
   enabled?: boolean
   /** The role ids that should not be effected by the rule */

@@ -6,7 +6,7 @@ import type { BigString, Camelize } from '../shared.js'
 /** https://discord.com/developers/docs/resources/poll#poll-create-request-object */
 export interface CreatePoll {
   /** The question of the poll. Only `text` is supported. */
-  question: Camelize<DiscordPollMedia>
+  question: Pick<Camelize<DiscordPollMedia>, 'text'>
   /** Each of the answers available in the poll, up to 10 */
   answers: Omit<Camelize<DiscordPollAnswer>, 'answerId'>[]
   /**
