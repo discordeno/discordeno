@@ -10,7 +10,6 @@ import type {
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
-  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuildApplicationCommandOptions,
@@ -26,6 +25,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateTestEntitlement,
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
@@ -1806,6 +1806,7 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
    */
   getGlobalApplicationCommand: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  // TODO: Add with_localizations query param
   /**
    * Gets the list of your bot's global application commands.
    *
@@ -1847,6 +1848,7 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
    */
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  // TODO: Add the with_localizations query param
   /**
    * Gets the list of application commands registered by your bot in a guild.
    *
@@ -2985,7 +2987,7 @@ export interface RestManager {
    * This endpoint returns a partial entitlement object.
    * It will not contain subscription_id, starts_at, or ends_at, as it's valid in perpetuity.
    */
-  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Camelize<DiscordEntitlement>>>
+  createTestEntitlement: (applicationId: BigString, body: CreateTestEntitlement) => Promise<Partial<Camelize<DiscordEntitlement>>>
   /**
    * Deletes a currently-active test entitlement. Discord will act as though that user or guild no longer has entitlement to your premium offering.
    *

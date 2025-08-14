@@ -308,7 +308,6 @@ export class DiscordenoShard {
 
     return await new Promise((resolve) => {
       this.resolves.set('READY', () => {
-        this.events.identified?.(this)
         resolve()
       })
       // When identifying too fast, Discord sends an invalid session payload.
@@ -680,6 +679,7 @@ export class DiscordenoShard {
         break
       case 'READY': {
         const payload = packet.d as DiscordReady
+        this.events.ready?.(this)
 
         // Important for future resumes.
         this.resumeGatewayUrl = payload.resume_gateway_url

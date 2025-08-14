@@ -10,7 +10,6 @@ import type {
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
-  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuildApplicationCommandOptions,
@@ -26,6 +25,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateTestEntitlement,
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
@@ -1168,7 +1168,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   ) => Promise<SetupDesiredProps<GuildOnboarding, TProps, TBehavior>>
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>[]>
   getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>>
-  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>
+  createTestEntitlement: (
+    applicationId: BigString,
+    body: CreateTestEntitlement,
+  ) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   listSkus: (applicationId: BigString) => Promise<SetupDesiredProps<Sku, TProps, TBehavior>[]>
   listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<SetupDesiredProps<Subscription, TProps, TBehavior>[]>

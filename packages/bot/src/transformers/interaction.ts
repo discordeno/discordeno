@@ -12,23 +12,32 @@ import {
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type {
+  Attachment,
   Bot,
+  CompleteDesiredProperties,
+  DesiredPropertiesBehavior,
   DiscordChannel,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
   InteractionDataOption,
   InteractionDataResolved,
-  InteractionResolvedChannel,
+  InteractionResolvedDataChannel,
+  InteractionResolvedDataMember,
   InteractionResource,
-  InternalBot,
-  Member,
   Message,
+  Role,
+  SetupDesiredProps,
+  TransformersDesiredProperties,
+  TransformProperty,
+  User,
 } from '../index.js'
 
-export const baseInteraction: InternalBot['transformers']['$inferredTypes']['interaction'] = {
+// Assume we have all desired properties for this or else typescript will get very confused for the return types of these functions.
+// This is used as a prototype, so the actual type with the user desired properties will be set later.
+export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey> = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['interaction']),
+  ...(undefined as unknown as SetupDesiredProps<Interaction, CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>),
 
   async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
@@ -127,14 +136,10 @@ export const baseInteraction: InternalBot['transformers']['$inferredTypes']['int
   },
 }
 
-export function transformInteraction(
-  bot: InternalBot,
-  payload: { interaction: DiscordInteraction; shardId: number },
-): typeof bot.transformers.$inferredTypes.interaction {
+export function transformInteraction(bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }): Interaction {
   const guildId = payload.interaction.guild_id ? bot.transformers.snowflake(payload.interaction.guild_id) : undefined
-  const user = bot.transformers.user(bot, payload.interaction.member?.user ?? payload.interaction.user!)
 
-  const interaction: Interaction = Object.create(baseInteraction)
+  const interaction: SetupDesiredProps<Interaction, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseInteraction)
   const props = bot.transformers.desiredProperties.interaction
   // Typescript has an hard time with this, so we need to tell him for sure this is a Bot
   interaction.bot = bot as unknown as Bot
@@ -152,7 +157,10 @@ export function transformInteraction(
     // @ts-expect-error payload.interaction.guild is a Partial<DiscordGuild>
     interaction.guild = bot.transformers.guild(bot, { guild: payload.interaction.guild, shardId: payload.shardId })
   if (props.guildId && guildId) interaction.guildId = guildId
-  if (props.user && user) interaction.user = user
+  if (props.user) {
+    if (payload.interaction.member?.user) interaction.user = bot.transformers.user(bot, payload.interaction.member?.user)
+    else if (payload.interaction.user) interaction.user = bot.transformers.user(bot, payload.interaction.user)
+  }
   if (props.appPermissions && payload.interaction.app_permissions)
     interaction.appPermissions = bot.transformers.snowflake(payload.interaction.app_permissions)
   if (props.message && payload.interaction.message)
@@ -161,7 +169,12 @@ export function transformInteraction(
     interaction.channel = bot.transformers.channel(bot, { channel: payload.interaction.channel as DiscordChannel, guildId })
   if (props.channelId && payload.interaction.channel_id) interaction.channelId = bot.transformers.snowflake(payload.interaction.channel_id)
   if (props.member && guildId && payload.interaction.member)
-    interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, user.id)
+    interaction.member = bot.transformers.member(
+      bot,
+      payload.interaction.member,
+      guildId,
+      payload.interaction.member?.user.id ?? payload.interaction.user?.id,
+    )
   if (props.entitlements && payload.interaction.entitlements)
     interaction.entitlements = payload.interaction.entitlements.map((e) => bot.transformers.entitlement(bot, e))
   if (props.authorizingIntegrationOwners && payload.interaction.authorizing_integration_owners) {
@@ -213,16 +226,16 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
 }
 
 export function transformInteractionDataResolved(
-  bot: InternalBot,
+  bot: Bot,
   payload: { resolved: DiscordInteractionDataResolved; shardId: number; guildId?: bigint },
-): InteractionDataResolved {
+): TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> {
   const transformed: InteractionDataResolved = {}
 
   if (payload.resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.resolved.messages).map(([_id, value]) => {
         // @ts-expect-error TODO: Deal with partials
-        const message: Message = bot.transformers.message(bot, { message: value, shardId: payload.shardId })
+        const message = bot.transformers.message(bot, { message: value, shardId: payload.shardId }) as Message
         return [message.id, message]
       }),
     )
@@ -231,7 +244,7 @@ export function transformInteractionDataResolved(
   if (payload.resolved.users) {
     transformed.users = new Collection(
       Object.entries(payload.resolved.users).map(([_id, value]) => {
-        const user = bot.transformers.user(bot, value)
+        const user = bot.transformers.user(bot, value) as User
         return [user.id, user]
       }),
     )
@@ -241,8 +254,13 @@ export function transformInteractionDataResolved(
     transformed.members = new Collection(
       Object.entries(payload.resolved.members).map(([id, value]) => {
         // @ts-expect-error TODO: Deal with partials, value is missing 2 values but the transformer can handle it, despite what the types says
-        const member: Member = bot.transformers.member(bot, value, payload.guildId!, bot.transformers.snowflake(id))
-        return [member.id, member]
+        const member = bot.transformers.member(bot, value, payload.guildId!, bot.transformers.snowflake(id)) as InteractionResolvedDataMember<
+          TransformersDesiredProperties,
+          DesiredPropertiesBehavior
+        >
+
+        // We need to tell TS that we are sure the id is a bigint
+        return [member.id as bigint, member]
       }),
     )
   }
@@ -250,7 +268,7 @@ export function transformInteractionDataResolved(
   if (payload.guildId && payload.resolved.roles) {
     transformed.roles = new Collection(
       Object.entries(payload.resolved.roles).map(([_id, value]) => {
-        const role = bot.transformers.role(bot, { role: value, guildId: payload.guildId! })
+        const role = bot.transformers.role(bot, { role: value, guildId: payload.guildId! }) as Role
         return [role.id, role]
       }),
     )
@@ -259,8 +277,12 @@ export function transformInteractionDataResolved(
   if (payload.resolved.channels) {
     transformed.channels = new Collection(
       Object.entries(payload.resolved.channels).map(([_id, value]) => {
-        const channel = bot.transformers.channel(bot, { channel: value }) as InteractionResolvedChannel
-        return [channel.id, channel]
+        const channel = bot.transformers.channel(bot, { channel: value }) as unknown as InteractionResolvedDataChannel<
+          TransformersDesiredProperties,
+          DesiredPropertiesBehavior
+        >
+        // We need to tell TS that we are sure the id is a bigint
+        return [channel.id as bigint, channel]
       }),
     )
   }
@@ -269,7 +291,8 @@ export function transformInteractionDataResolved(
     transformed.attachments = new Collection(
       Object.entries(payload.resolved.attachments).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
-        return [id, bot.transformers.attachment(bot, value)]
+        const attachment = bot.transformers.attachment(bot, value) as Attachment
+        return [id, attachment]
       }),
     )
   }
@@ -278,11 +301,11 @@ export function transformInteractionDataResolved(
 }
 
 export function transformInteractionCallbackResponse(
-  bot: InternalBot,
+  bot: Bot,
   payload: { interactionCallbackResponse: DiscordInteractionCallbackResponse; shardId: number },
-): typeof bot.transformers.$inferredTypes.interactionCallbackResponse {
+): InteractionCallbackResponse {
   const props = bot.transformers.desiredProperties.interactionCallbackResponse
-  const response = {} as InteractionCallbackResponse
+  const response = {} as SetupDesiredProps<InteractionCallbackResponse, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.interaction && payload.interactionCallbackResponse.interaction)
     response.interaction = bot.transformers.interactionCallback(bot, payload.interactionCallbackResponse.interaction)
@@ -295,12 +318,9 @@ export function transformInteractionCallbackResponse(
   return bot.transformers.customizers.interactionCallbackResponse(bot, payload.interactionCallbackResponse, response)
 }
 
-export function transformInteractionCallback(
-  bot: InternalBot,
-  payload: DiscordInteractionCallback,
-): typeof bot.transformers.$inferredTypes.interactionCallback {
+export function transformInteractionCallback(bot: Bot, payload: DiscordInteractionCallback): InteractionCallback {
   const props = bot.transformers.desiredProperties.interactionCallback
-  const callback = {} as InteractionCallback
+  const callback = {} as SetupDesiredProps<InteractionCallback, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) callback.id = bot.transformers.snowflake(payload.id)
   if (props.type && payload.type) callback.type = payload.type
@@ -313,11 +333,11 @@ export function transformInteractionCallback(
 }
 
 export function transformInteractionResource(
-  bot: InternalBot,
+  bot: Bot,
   payload: { interactionResource: DiscordInteractionResource; shardId: number },
-): typeof bot.transformers.$inferredTypes.interactionResource {
+): InteractionResource {
   const props = bot.transformers.desiredProperties.interactionResource
-  const resource = {} as InteractionResource
+  const resource = {} as SetupDesiredProps<InteractionResource, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.type && payload.interactionResource.type) resource.type = payload.interactionResource.type
   if (props.activityInstance && payload.interactionResource.activity_instance)
