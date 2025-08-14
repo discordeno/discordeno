@@ -518,30 +518,67 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     simplifyUrl(url, method) {
-      const parts = url.split('/')
-      const secondLastPart = parts[parts.length - 2]
+      const routeInformationKey: string[] = [method]
 
-      if (secondLastPart === 'channels' || secondLastPart === 'guilds') {
-        return url
+      const queryParamIndex = url.indexOf('?')
+      const route = queryParamIndex !== -1 ? url.slice(0, queryParamIndex) : url
+
+      // Since the urls start with / the first part will always be empty
+      const splittedRoute = route.split('/')
+
+      // 1) Strip the minor params
+      //    The only majors are channels, guilds, webhooks and webhooks with their token
+
+      const strippedRoute = splittedRoute
+        .map((part, index, array) => {
+          // While parseInt will truncate the snowflake id, it will still tell us if it is a number
+          const isNumber = Number.isFinite(parseInt(part, 10))
+
+          if (!isNumber) {
+            // Reactions emoji need to be stripped as it is a minor parameter
+            if (index >= 1 && array[index - 1] === 'reactions') return 'x'
+            // If we are on a webhook or if it is part of the route, keep it as it is a major parameter
+            return part
+          }
+
+          // Check if we are on a channel id, a guild id or a webhook id
+          const isMajor = index >= 1 && (array[index - 1] === 'channels' || array[index - 1] === 'guilds' || array[index - 1] === 'webhooks')
+
+          if (isMajor) return part
+
+          return 'x'
+        })
+        .join('/')
+
+      routeInformationKey.push(strippedRoute)
+
+      // 2) Account for exceptions
+      //    - https://github.com/discord/discord-api-docs/issues/1092
+      //    - https://github.com/discord/discord-api-docs/issues/1295
+
+      // The 2 exceptions are for message delete, so we need to check if we are in that route
+      if (method === 'DELETE' && splittedRoute.length === 5 && splittedRoute[1] === 'channels' && strippedRoute.endsWith('/messages/x')) {
+        const messageId = BigInt(splittedRoute[4])
+
+        // TODO: We should move the utility from @discordeno/bot to @discordeno/utils and use that here
+        // See https://discord.com/developers/docs/reference#snowflakes-snowflake-id-format-structure-left-to-right
+        const timestamp = Number(messageId >> 22n) + 1420070400000
+
+        const now = Date.now()
+
+        // https://github.com/discord/discord-api-docs/issues/1092
+        if (now - timestamp < 10_000) {
+          routeInformationKey.push('message-delete-10s')
+        }
+
+        // https://github.com/discord/discord-api-docs/issues/1295
+        // 2 weeks = 2 * 7 * 24 * 60 * 60 * 1000 = 1209600000
+        if (now - timestamp > 1209600000) {
+          routeInformationKey.push('message-delete-2w')
+        }
       }
 
-      if (secondLastPart === 'reactions' || parts[parts.length - 1] === '@me') {
-        parts.splice(-2)
-        parts.push('reactions')
-      } else {
-        parts.splice(-1)
-        parts.push('x')
-      }
-
-      if (parts[parts.length - 3] === 'reactions') {
-        parts.splice(-2)
-      }
-
-      if (method === 'DELETE' && secondLastPart === 'messages') {
-        return `D${parts.join('/')}`
-      }
-
-      return parts.join('/')
+      return routeInformationKey.join(':')
     },
 
     async processRequest(request: SendRequestOptions) {
