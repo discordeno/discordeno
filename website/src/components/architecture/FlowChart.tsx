@@ -1,5 +1,5 @@
-import type { Edge, Node } from 'reactflow'
-import 'reactflow/dist/style.css'
+import type { Edge, Node } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import BaseFlowChart, { defaultNodeOptions, multiplier } from './BaseFlowChart'
 
 const initialNodes: Node[] = [
