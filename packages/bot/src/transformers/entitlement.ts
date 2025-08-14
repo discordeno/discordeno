@@ -1,9 +1,9 @@
 import type { DiscordEntitlement } from '@discordeno/types'
-import type { Entitlement, InternalBot } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, Entitlement, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
 
-export function transformEntitlement(bot: InternalBot, payload: DiscordEntitlement): typeof bot.transformers.$inferredTypes.entitlement {
+export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Entitlement {
   const props = bot.transformers.desiredProperties.entitlement
-  const entitlement = {} as Entitlement
+  const entitlement = {} as SetupDesiredProps<Entitlement, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) entitlement.id = bot.transformers.snowflake(payload.id)
   if (props.skuId && payload.sku_id) entitlement.skuId = bot.transformers.snowflake(payload.sku_id)
