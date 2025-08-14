@@ -1,8 +1,8 @@
 import { Buffer } from 'node:buffer'
-import { type Inflate, createInflate, inflateSync, constants as zlibConstants } from 'node:zlib'
+import { createInflate, type Inflate, inflateSync, constants as zlibConstants } from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import { camelize, delay, LeakyBucket, logger } from '@discordeno/utils'
 import type { Decompress as ZstdDecompress } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {
@@ -308,7 +308,6 @@ export class DiscordenoShard {
 
     return await new Promise((resolve) => {
       this.resolves.set('READY', () => {
-        this.events.identified?.(this)
         resolve()
       })
       // When identifying too fast, Discord sends an invalid session payload.
@@ -680,6 +679,7 @@ export class DiscordenoShard {
         break
       case 'READY': {
         const payload = packet.d as DiscordReady
+        this.events.ready?.(this)
 
         // Important for future resumes.
         this.resumeGatewayUrl = payload.resume_gateway_url

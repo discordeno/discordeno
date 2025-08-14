@@ -1,10 +1,10 @@
 import type { DiscordDefaultReactionEmoji, DiscordEmoji } from '@discordeno/types'
-import type { DefaultReactionEmoji, Emoji, InternalBot } from '../index.js'
+import type { Bot, DefaultReactionEmoji, DesiredPropertiesBehavior, Emoji, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
-export const baseEmoji: InternalBot['transformers']['$inferredTypes']['emoji'] = {
+export const baseEmoji: Emoji = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['emoji']),
+  ...(undefined as unknown as Emoji),
 
   get animated() {
     return this.toggles?.animated
@@ -20,9 +20,9 @@ export const baseEmoji: InternalBot['transformers']['$inferredTypes']['emoji'] =
   },
 }
 
-export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof bot.transformers.$inferredTypes.emoji {
+export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
   const props = bot.transformers.desiredProperties.emoji
-  const emoji = Object.create(baseEmoji) as Emoji
+  const emoji = Object.create(baseEmoji) as SetupDesiredProps<Emoji, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) emoji.id = bot.transformers.snowflake(payload.id)
   if (props.name && payload.name) emoji.name = payload.name
@@ -34,12 +34,9 @@ export function transformEmoji(bot: InternalBot, payload: DiscordEmoji): typeof 
   return bot.transformers.customizers.emoji(bot, payload, emoji)
 }
 
-export function transformDefaultReactionEmoji(
-  bot: InternalBot,
-  payload: DiscordDefaultReactionEmoji,
-): typeof bot.transformers.$inferredTypes.defaultReactionEmoji {
+export function transformDefaultReactionEmoji(bot: Bot, payload: DiscordDefaultReactionEmoji): DefaultReactionEmoji {
   const props = bot.transformers.desiredProperties.defaultReactionEmoji
-  const defaultReactionEmoji = {} as DefaultReactionEmoji
+  const defaultReactionEmoji = {} as SetupDesiredProps<DefaultReactionEmoji, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.emojiId && payload.emoji_id) defaultReactionEmoji.emojiId = bot.transformers.snowflake(payload.emoji_id)
   if (props.emojiName && payload.emoji_name) defaultReactionEmoji.emojiName = payload.emoji_name

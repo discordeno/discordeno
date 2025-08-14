@@ -1,10 +1,10 @@
 import type { DiscordEmoji } from '@discordeno/types'
-import type { Emoji, InternalBot } from '../../index.js'
+import type { Bot, Emoji } from '../../index.js'
 
-export function transformEmojiToDiscordEmoji(bot: InternalBot, payload: Emoji): DiscordEmoji {
+export function transformEmojiToDiscordEmoji(bot: Bot, payload: Emoji): DiscordEmoji {
   return {
-    id: payload.id ? bot.transformers.reverse.snowflake(payload.id) : undefined,
-    name: payload.name ?? undefined,
+    id: payload.id ? bot.transformers.reverse.snowflake(payload.id) : null,
+    name: payload.name ?? null,
     roles: payload.roles?.map((id) => bot.transformers.reverse.snowflake(id)),
     user: payload.user ? bot.transformers.reverse.user(bot, payload.user) : undefined,
     require_colons: payload.toggles.requireColons,

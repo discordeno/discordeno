@@ -1,9 +1,17 @@
 import type { DiscordScheduledEvent, DiscordScheduledEventRecurrenceRule } from '@discordeno/types'
-import { type InternalBot, type ScheduledEvent, type ScheduledEventRecurrenceRule, iconHashToBigInt } from '../index.js'
+import {
+  type Bot,
+  type DesiredPropertiesBehavior,
+  iconHashToBigInt,
+  type ScheduledEvent,
+  type ScheduledEventRecurrenceRule,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
+} from '../index.js'
 
-export function transformScheduledEvent(bot: InternalBot, payload: DiscordScheduledEvent): typeof bot.transformers.$inferredTypes.scheduledEvent {
+export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {
   const props = bot.transformers.desiredProperties.scheduledEvent
-  const scheduledEvent = {} as ScheduledEvent
+  const scheduledEvent = {} as SetupDesiredProps<ScheduledEvent, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) scheduledEvent.id = bot.transformers.snowflake(payload.id)
   if (props.guildId && payload.guild_id) scheduledEvent.guildId = bot.transformers.snowflake(payload.guild_id)
@@ -27,12 +35,9 @@ export function transformScheduledEvent(bot: InternalBot, payload: DiscordSchedu
   return bot.transformers.customizers.scheduledEvent(bot, payload, scheduledEvent)
 }
 
-export function transformScheduledEventRecurrenceRule(
-  bot: InternalBot,
-  payload: DiscordScheduledEventRecurrenceRule,
-): typeof bot.transformers.$inferredTypes.scheduledEventRecurrenceRule {
+export function transformScheduledEventRecurrenceRule(bot: Bot, payload: DiscordScheduledEventRecurrenceRule): ScheduledEventRecurrenceRule {
   const props = bot.transformers.desiredProperties.scheduledEventRecurrenceRule
-  const recurrenceRule = {} as ScheduledEventRecurrenceRule
+  const recurrenceRule = {} as SetupDesiredProps<ScheduledEventRecurrenceRule, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.start && payload.start) recurrenceRule.start = Date.parse(payload.start)
   if (props.end && payload.end) recurrenceRule.end = Date.parse(payload.end)

@@ -1,13 +1,14 @@
 import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import type { InternalBot } from '../bot.js'
-import { Permissions } from './toggles/Permissions.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
 import { MemberToggles } from './toggles/member.js'
+import { Permissions } from './toggles/Permissions.js'
 import type { Member } from './types.js'
 
-export const baseMember: InternalBot['transformers']['$inferredTypes']['member'] = {
+export const baseMember: Member = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['member']),
+  ...(undefined as unknown as Member),
 
   get deaf() {
     return !!this.toggles?.has('deaf')
@@ -35,13 +36,8 @@ export const baseMember: InternalBot['transformers']['$inferredTypes']['member']
   },
 }
 
-export function transformMember(
-  bot: InternalBot,
-  payload: DiscordMember,
-  guildId: BigString,
-  userId: BigString,
-): typeof bot.transformers.$inferredTypes.member {
-  const member: Member = Object.create(baseMember)
+export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString | undefined, userId: BigString): Member {
+  const member: SetupDesiredProps<Member, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 
   if (props.id && userId) member.id = typeof userId === 'string' ? bot.transformers.snowflake(userId) : userId

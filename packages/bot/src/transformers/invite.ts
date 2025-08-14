@@ -1,12 +1,17 @@
 import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
-import { type InternalBot, type Invite, ToggleBitfield, isInviteWithMetadata } from '../index.js'
+import {
+  type Bot,
+  type DesiredPropertiesBehavior,
+  type Invite,
+  isInviteWithMetadata,
+  type SetupDesiredProps,
+  ToggleBitfield,
+  type TransformersDesiredProperties,
+} from '../index.js'
 
-export function transformInvite(
-  bot: InternalBot,
-  payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number },
-): typeof bot.transformers.$inferredTypes.invite {
+export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }): Invite {
   const props = bot.transformers.desiredProperties.invite
-  const invite = {} as Invite
+  const invite = {} as SetupDesiredProps<Invite, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.type && 'type' in payload.invite) invite.type = payload.invite.type
   if (props.code && payload.invite.code) invite.code = payload.invite.code
@@ -33,10 +38,10 @@ export function transformInvite(
       invite.approximatePresenceCount = payload.invite.approximate_presence_count
     if (props.guildScheduledEvent && payload.invite.guild_scheduled_event)
       invite.guildScheduledEvent = bot.transformers.scheduledEvent(bot, payload.invite.guild_scheduled_event)
-    if (props.stageInstance && invite.guildId && payload.invite.stage_instance) {
+    if (props.stageInstance && payload.invite.guild?.id && payload.invite.stage_instance) {
       invite.stageInstance = bot.transformers.inviteStageInstance(bot, {
         ...payload.invite.stage_instance,
-        guildId: invite.guildId,
+        guildId: bot.transformers.snowflake(payload.invite.guild.id),
       })
     }
     if (props.expiresAt && payload.invite.expires_at) {

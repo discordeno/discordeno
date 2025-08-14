@@ -1,5 +1,5 @@
 import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/gateway'
-import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
+import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { BigString, GatewayDispatchEventNames, GatewayIntents, RecursivePartial } from '@discordeno/types'
@@ -12,9 +12,9 @@ import type {
   TransformersObjects,
 } from './desiredProperties.js'
 import type { EventHandlers } from './events.js'
-import { type BotGatewayHandler, type GatewayHandlers, createBotGatewayHandlers } from './handlers.js'
+import { type BotGatewayHandler, createBotGatewayHandlers, type GatewayHandlers } from './handlers.js'
 import { type BotHelpers, createBotHelpers } from './helpers.js'
-import { type Transformers, createTransformers } from './transformers.js'
+import { createTransformers, type Transformers } from './transformers.js'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -180,6 +180,3 @@ export interface Bot<
   /** Shuts down all the bot connections to the gateway. */
   shutdown: () => Promise<void>
 }
-
-/** @internal This is subject to breaking changes without notice */
-export type InternalBot = Bot<CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>

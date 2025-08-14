@@ -132,15 +132,11 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   stageInstanceCreate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceDelete: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceUpdate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
-  guildEmojisUpdate: (payload: {
-    guildId: bigint
-    emojis: Collection<bigint, SetupDesiredProps<Emoji, TProps, TBehavior>>
-  }) => unknown
+  guildEmojisUpdate: (payload: { guildId: bigint; emojis: Collection<bigint, SetupDesiredProps<Emoji, TProps, TBehavior>> }) => unknown
   guildBanAdd: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildBanRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildCreate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
-  guildDelete: (id: bigint, shardId: number) => unknown
-  guildUnavailable: (id: bigint, shardId: number) => unknown
+  guildDelete: (data: { id: bigint; unavailable: boolean }, shardId: number) => unknown
   guildUpdate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: SetupDesiredProps<Role, TProps, TBehavior>) => unknown

@@ -1,11 +1,19 @@
 import type { BigString, DiscordRole, DiscordRoleColors } from '@discordeno/types'
-import { type InternalBot, type Role, type RoleColors, iconHashToBigInt } from '../index.js'
+import {
+  type Bot,
+  type DesiredPropertiesBehavior,
+  iconHashToBigInt,
+  type Role,
+  type RoleColors,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
+} from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-export const baseRole: InternalBot['transformers']['$inferredTypes']['role'] = {
+export const baseRole: Role = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['role']),
+  ...(undefined as unknown as Role),
 
   get tags() {
     return {
@@ -43,8 +51,8 @@ export const baseRole: InternalBot['transformers']['$inferredTypes']['role'] = {
   },
 }
 
-export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferredTypes.role {
-  const role: Role = Object.create(baseRole)
+export function transformRole(bot: Bot, payload: { role: DiscordRole; guildId: BigString }): Role {
+  const role: SetupDesiredProps<Role, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)
   // Role name can be an empty string
@@ -70,8 +78,8 @@ export function transformRole(bot: InternalBot, payload: { role: DiscordRole; gu
   return bot.transformers.customizers.role(bot, payload.role, role)
 }
 
-export function transformRoleColors(bot: InternalBot, payload: DiscordRoleColors): RoleColors {
-  const roleColors = {} as RoleColors
+export function transformRoleColors(bot: Bot, payload: DiscordRoleColors): RoleColors {
+  const roleColors = {} as SetupDesiredProps<RoleColors, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.roleColors
 
   if (props.primaryColor && payload.primary_color !== undefined) roleColors.primaryColor = payload.primary_color
