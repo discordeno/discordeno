@@ -79,6 +79,7 @@ import type {
   DiscordWelcomeScreen,
   RecursivePartial,
 } from '@discordeno/types'
+import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import {
   createDesiredPropertiesObject,
@@ -250,7 +251,6 @@ import {
   transformMediaGalleryItemToDiscordMediaGalleryItem,
   transformUnfurledMediaItemToDiscordUnfurledMediaItem,
 } from './transformers/reverse/index.js'
-import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
 export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   customizers: {
