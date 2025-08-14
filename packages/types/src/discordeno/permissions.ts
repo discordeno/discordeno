@@ -6,11 +6,6 @@ export interface GuildRoleColors {
   primaryColor: number
   /** The secondary color for the role, this will make the role a gradient between the other provided colors */
   secondaryColor?: number
-  /**
-   * The tertiary color for the role, this will turn the gradient into a holographic style
-   *
-   * @remarks
-   * When sending tertiaryColor, the API enforces the role color to be a holographic style with values of: primaryColor = 11127295, secondaryColor = 16759788, and tertiaryColor = 16761760
-   */
+  /** The tertiary color for the role, this will turn the gradient into a holographic style */
   tertiaryColor?: number
 }

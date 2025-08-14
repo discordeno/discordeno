@@ -19,5 +19,5 @@ export interface GetGroupDmOptions {
   /** Access tokens of users that have granted your app the `gdm.join` scope */
   accessTokens: string[]
   /** A mapping of user ids to their respective nicknames */
-  nicks: Record<string, string>
+  nicks?: Record<string, string>
 }

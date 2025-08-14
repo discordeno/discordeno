@@ -10,16 +10,7 @@ export interface CreateGuildStickerOptions {
   description: string
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags: string
-  /**
-   * The sticker file to upload, must be a PNG, APNG, or Lottie JSON file
-   *
-   * @remarks
-   * max 512 KB.
-   *
-   * Lottie stickers can only be uploaded on guilds that have either the VERIFIED and/or the PARTNERED [guild feature](https://discord.com/developers/docs/resources/guild#guild-object-guild-features).
-   *
-   * Uploaded stickers are constrained to 5 seconds in length for animated stickers, and 320 x 320 pixels.
-   */
+  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 512 KB */
   file: FileContent
 }
 

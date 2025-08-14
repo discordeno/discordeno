@@ -13,13 +13,7 @@ import type { BigString, Camelize } from '../shared.js'
 export interface DiscordenoAutoModerationAction {
   /** The type of action to take when a rule is triggered */
   type: AutoModerationActionType
-  /**
-   * Additional metadata needed during execution for this specific action type
-   *
-   * @remarks
-   * Can be omitted based on type. See the Associated Action Types column in [action metadata](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata)
-   * to understand which type values require metadata to be set.
-   */
+  /** additional metadata needed during execution for this specific action type */
   metadata?: DiscordenoAutoModerationActionMetadata
 }
 
@@ -63,48 +57,29 @@ export interface CreateAutoModerationRuleOptions {
   eventType: AutoModerationEventTypes
   /** The type of trigger to use for the rule. */
   triggerType: AutoModerationTriggerTypes
-  /**
-   * The metadata to use for the trigger.
-   *
-   * @remarks
-   * Can be omitted based on triggerType. See the Associated Trigger Types column in [trigger metadata](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata)
-   * to understand which triggerType values require triggerMetadata to be set.
-   */
+  /** The metadata to use for the trigger. */
   triggerMetadata: Camelize<DiscordAutoModerationRuleTriggerMetadata>
   /** The actions that will trigger for this rule */
   actions: DiscordenoAutoModerationAction[]
-  /**
-   * Whether the rule should be enabled.
-   *
-   * @default false
-   */
+  /** Whether the rule should be enabled, true by default. */
   enabled?: boolean
-  /**
-   * The role ids that should not be effected by the rule.
-   *
-   * @remarks
-   * Maximum of 20.
-   */
+  /** The role ids that should not be effected by the rule */
   exemptRoles?: BigString[]
-  /**
-   * The channel ids that should not be effected by the rule.
-   *
-   * @remarks
-   * Maximum of 50.
-   */
+  /** The channel ids that should not be effected by the rule. */
   exemptChannels?: BigString[]
 }
 
+// TODO: Discord documents this as "All parameters for this endpoint are optional.", however we do have some partials and it is used with Partial<T> in the rest manager
 /** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
-  name?: string
+  name: string
   /** The type of event to trigger the rule on. */
-  eventType?: AutoModerationEventTypes
+  eventType: AutoModerationEventTypes
   /** The metadata to use for the trigger. */
-  triggerMetadata?: Camelize<DiscordAutoModerationRuleTriggerMetadata>
+  triggerMetadata: Camelize<DiscordAutoModerationRuleTriggerMetadata>
   /** The actions that will trigger for this rule */
-  actions?: DiscordenoAutoModerationAction[]
+  actions: DiscordenoAutoModerationAction[]
   /** Whether the rule should be enabled. */
   enabled?: boolean
   /** The role ids that should not be effected by the rule */
