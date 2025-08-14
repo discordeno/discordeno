@@ -35,6 +35,9 @@ export enum MessageComponentTypes {
   Separator,
   /** Container that visually groups a set of components */
   Container = 17,
+  // TODO: Replace with the actual comment in the dscord docs
+  /** Label a component in a modal */
+  Label = 18,
 }
 
 export type DiscordMessageComponents = DiscordMessageComponent[]
@@ -50,6 +53,7 @@ export type DiscordMessageComponent =
   | DiscordSeparatorComponent
   | DiscordContainerComponent
   | DiscordFileComponent
+  | DiscordLabelComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface DiscordBaseComponent {
@@ -176,6 +180,9 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
   default_values?: DiscordSelectMenuDefaultValue[]
   /** List of channel types to include in a channel select menu options list */
   channel_types?: ChannelTypes[]
+  // TODO: Replace with the actual comment in the discord docs
+  /** The user selected values for the string select, this only exists in modals */
+  values?: string[]
 }
 
 /** https://discord.com/developers/docs/components/reference#string-select-select-option-structure */
@@ -324,6 +331,19 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   accent_color?: number | null
   /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+}
+
+/** TBD Docs link */
+export interface DiscordLabelComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.Label
+
+  // TODO: Replace comments with actual docs description
+  /** The title for the label */
+  label: string
+  /** Description for the label */
+  description?: string
+  /** The component this label describes */
+  component: DiscordSelectMenuComponent | DiscordTextInputComponent
 }
 
 /** https://discord.com/developers/docs/components/reference#unfurled-media-item-structure */
