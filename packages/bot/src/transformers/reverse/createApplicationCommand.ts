@@ -12,8 +12,12 @@ export function transformCreateApplicationCommandToDiscordCreateApplicationComma
       description: '',
       description_localizations: {},
       type: payload.type,
-      default_member_permissions: payload.defaultMemberPermissions ? calculateBits(payload.defaultMemberPermissions) : null,
-      dm_permission: payload.dmPermission,
+      default_member_permissions: payload.defaultMemberPermissions
+        ? typeof payload.defaultMemberPermissions === 'string'
+          ? payload.defaultMemberPermissions
+          : calculateBits(payload.defaultMemberPermissions)
+        : null,
+      dm_permission: payload.dmPermission ?? undefined,
     }
   }
 
@@ -24,7 +28,11 @@ export function transformCreateApplicationCommandToDiscordCreateApplicationComma
     description_localizations: payload.descriptionLocalizations,
     type: payload.type,
     options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option as unknown as ApplicationCommandOption)),
-    default_member_permissions: payload.defaultMemberPermissions ? calculateBits(payload.defaultMemberPermissions) : null,
-    dm_permission: payload.dmPermission,
+    default_member_permissions: payload.defaultMemberPermissions
+      ? typeof payload.defaultMemberPermissions === 'string'
+        ? payload.defaultMemberPermissions
+        : calculateBits(payload.defaultMemberPermissions)
+      : null,
+    dm_permission: payload.dmPermission ?? undefined,
   }
 }
