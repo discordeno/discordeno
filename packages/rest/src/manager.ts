@@ -537,10 +537,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           if (!isNumber) {
             // Reactions emoji need to be stripped as it is a minor parameter
             if (index >= 1 && array[index - 1] === 'reactions') return 'x'
-            // Check if we are on a webhook token, as it is a major parameter
-            if (index >= 2 && array[index - 2] === 'webhooks') return part
-
-            // If it is part of the route keep it
+            // If we are on a webhook or if it is part of the route, keep it as it is a major parameter
             return part
           }
 
