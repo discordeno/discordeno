@@ -67,7 +67,9 @@ import type {
   GetBans,
   GetChannelPinsOptions,
   GetEntitlements,
+  GetGlobalApplicationCommandsOptions,
   GetGroupDmOptions,
+  GetGuildApplicationCommandsOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
@@ -373,8 +375,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getGlobalApplicationCommand: async (commandId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGlobalApplicationCommand(commandId)))
     },
-    getGlobalApplicationCommands: async () => {
-      return (await bot.rest.getGlobalApplicationCommands()).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
+    getGlobalApplicationCommands: async (options) => {
+      return (await bot.rest.getGlobalApplicationCommands(options)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
     },
     getGuild: async (guildId, options) => {
       return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.getGuild(guildId, options)), shardId: 0 })
@@ -388,8 +390,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getGuildApplicationCommand: async (commandId, guildId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGuildApplicationCommand(commandId, guildId)))
     },
-    getGuildApplicationCommands: async (guildId) => {
-      return (await bot.rest.getGuildApplicationCommands(guildId)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
+    getGuildApplicationCommands: async (guildId, options) => {
+      return (await bot.rest.getGuildApplicationCommands(guildId, options)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
     },
     getGuildPreview: async (guildId) => {
       return await bot.rest.getGuildPreview(guildId)
@@ -982,11 +984,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getFollowupMessage: (token: string, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>
-  getGlobalApplicationCommands: () => Promise<ApplicationCommand[]>
+  getGlobalApplicationCommands: (options?: GetGlobalApplicationCommandsOptions) => Promise<ApplicationCommand[]>
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<SetupDesiredProps<Guild, TProps, TBehavior>>[]>
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>
-  getGuildApplicationCommands: (guildId: BigString) => Promise<ApplicationCommand[]>
+  getGuildApplicationCommands: (guildId: BigString, options?: GetGuildApplicationCommandsOptions) => Promise<ApplicationCommand[]>
   getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>
   getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
   getGuildStickers: (guildId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>[]>

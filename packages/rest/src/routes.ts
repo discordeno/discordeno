@@ -517,23 +517,29 @@ export function createRoutes(): RestRoutes {
     interactions: {
       commands: {
         // Application Endpoints
-        commands: (applicationId) => {
-          return `/applications/${applicationId}/commands`
+        commands: (applicationId, withLocalizations) => {
+          let url = `/applications/${applicationId}/commands?`
+
+          if (withLocalizations !== undefined) {
+            url += `with_localizations=${withLocalizations.toString()}`
+          }
+
+          return url
         },
 
         guilds: {
-          all(applicationId, guildId) {
-            return `/applications/${applicationId}/guilds/${guildId}/commands`
-          },
-
-          one(applicationId, guildId, commandId, withLocalizations) {
-            let url = `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}?`
+          all(applicationId, guildId, withLocalizations) {
+            let url = `/applications/${applicationId}/guilds/${guildId}/commands?`
 
             if (withLocalizations !== undefined) {
               url += `with_localizations=${withLocalizations.toString()}`
             }
 
             return url
+          },
+
+          one(applicationId, guildId, commandId) {
+            return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`
           },
         },
         permissions: (applicationId, guildId) => {

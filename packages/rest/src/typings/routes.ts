@@ -232,13 +232,13 @@ export interface RestRoutes {
     /** Routes for interaction command related endpoints. */
     commands: {
       /** Route for non-specific commands. */
-      commands: (applicationId: BigString) => string
+      commands: (applicationId: BigString, withLocalizations?: boolean) => string
       /** Route for guild related commands. */
       guilds: {
         /** Route for non-specific guild commands. */
-        all: (applicationId: BigString, guildId: BigString) => string
+        all: (applicationId: BigString, guildId: BigString, withLocalizations?: boolean) => string
         /** Route for a specific guild command. */
-        one: (applicationId: BigString, guildId: BigString, commandId: BigString, withLocalizations?: boolean) => string
+        one: (applicationId: BigString, guildId: BigString, commandId: BigString) => string
       }
       /** Route for non-specific command permissions. */
       permissions: (applicationId: BigString, guildId: BigString) => string
