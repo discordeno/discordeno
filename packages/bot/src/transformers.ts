@@ -1,7 +1,6 @@
 import type {
   AllowedMentions,
   BigString,
-  CreateApplicationCommand,
   DiscordActivity,
   DiscordActivityInstance,
   DiscordActivityLocation,
@@ -17,7 +16,6 @@ import type {
   DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordCollectibles,
-  DiscordCreateApplicationCommand,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
   DiscordEmoji,
@@ -248,7 +246,6 @@ import {
 } from './transformers/index.js'
 import {
   transformAllowedMentionsToDiscordAllowedMentions,
-  transformCreateApplicationCommandToDiscordCreateApplicationCommand,
   transformMediaGalleryItemToDiscordMediaGalleryItem,
   transformUnfurledMediaItemToDiscordUnfurledMediaItem,
 } from './transformers/reverse/index.js'
@@ -446,7 +443,6 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
     attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment
     component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent
-    createApplicationCommand: (bot: Bot<TProps, TBehavior>, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
@@ -670,7 +666,6 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
         _options.reverse?.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
       attachment: _options.reverse?.attachment ?? transformAttachmentToDiscordAttachment,
       component: _options.reverse?.component ?? transformComponentToDiscordComponent,
-      createApplicationCommand: _options.reverse?.createApplicationCommand ?? transformCreateApplicationCommandToDiscordCreateApplicationCommand,
       embed: _options.reverse?.embed ?? transformEmbedToDiscordEmbed,
       mediaGalleryItem: _options.reverse?.mediaGalleryItem ?? transformMediaGalleryItemToDiscordMediaGalleryItem,
       member: _options.reverse?.member ?? transformMemberToDiscordMember,
