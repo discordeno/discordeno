@@ -22,9 +22,8 @@ export interface GetEntitlements {
   excludeDeleted?: boolean
 }
 
-// TODO: This should provably get renamed to CreateTestEntitlement
 /** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params */
-export interface CreateEntitlement {
+export interface CreateTestEntitlement {
   /** ID of the SKU to grant the entitlement to */
   skuId: BigString
   /** ID of the guild or user to grant the entitlement to */

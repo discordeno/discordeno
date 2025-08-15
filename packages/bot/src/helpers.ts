@@ -10,7 +10,6 @@ import type {
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
-  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuildApplicationCommandOptions,
@@ -26,6 +25,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateTestEntitlement,
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
@@ -138,6 +138,7 @@ import type {
   Subscription,
   Template,
   ThreadMember,
+  ThreadMemberTransformerExtra,
   User,
   VoiceState,
   Webhook,
@@ -281,7 +282,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       const result = await bot.rest.getActiveThreads(guildId)
       return {
         threads: result.threads.map((thread) => bot.transformers.channel(bot, { guildId, channel: snakelize(thread) })),
-        members: result.members.map((member) => bot.transformers.threadMember(bot, snakelize(member))),
+        members: result.members.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
       }
     },
     getApplicationInfo: async () => {
@@ -493,11 +494,11 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getSticker: async (stickerId) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.getSticker(stickerId)))
     },
-    getThreadMember: async (channelId, userId, options) => {
-      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId, options)))
+    getThreadMember: async (channelId, userId, options, extra) => {
+      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId, options)), extra)
     },
-    getThreadMembers: async (channelId, options) => {
-      return (await bot.rest.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, snakelize(res)))
+    getThreadMembers: async (channelId, options, extra) => {
+      return (await bot.rest.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, snakelize(res), extra))
     },
     getReactions: async (channelId, messageId, reaction, options) => {
       return (await bot.rest.getReactions(channelId, messageId, reaction, options)).map((res) => bot.transformers.user(bot, snakelize(res)))
@@ -1028,8 +1029,8 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getOwnVoiceState: (guildId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getSticker: (stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
-  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember) => Promise<ThreadMember>
-  getThreadMembers: (channelId: BigString, options?: ListThreadMembers) => Promise<ThreadMember[]>
+  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember, extra?: ThreadMemberTransformerExtra) => Promise<ThreadMember>
+  getThreadMembers: (channelId: BigString, options?: ListThreadMembers, extra?: ThreadMemberTransformerExtra) => Promise<ThreadMember[]>
   getReactions: (
     channelId: BigString,
     messageId: BigString,
@@ -1168,7 +1169,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   ) => Promise<SetupDesiredProps<GuildOnboarding, TProps, TBehavior>>
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>[]>
   getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>>
-  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>
+  createTestEntitlement: (
+    applicationId: BigString,
+    body: CreateTestEntitlement,
+  ) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   listSkus: (applicationId: BigString) => Promise<SetupDesiredProps<Sku, TProps, TBehavior>[]>
   listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<SetupDesiredProps<Subscription, TProps, TBehavior>[]>

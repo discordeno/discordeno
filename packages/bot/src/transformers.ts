@@ -77,6 +77,7 @@ import type {
   DiscordWelcomeScreen,
   RecursivePartial,
 } from '@discordeno/types'
+import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import {
   createDesiredPropertiesObject,
@@ -152,6 +153,7 @@ import {
   type Template,
   type ThreadMember,
   type ThreadMemberGuildCreate,
+  type ThreadMemberTransformerExtra,
   transformActivity,
   transformActivityInstance,
   transformActivityLocation,
@@ -247,7 +249,6 @@ import {
   transformMediaGalleryItemToDiscordMediaGalleryItem,
   transformUnfurledMediaItemToDiscordUnfurledMediaItem,
 } from './transformers/reverse/index.js'
-import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
 export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   customizers: {
@@ -412,7 +413,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     subscription: (bot: Bot<TProps, TBehavior>, payload: DiscordSubscription, subscription: SetupDesiredProps<Subscription, TProps, TBehavior>) => any
     team: (bot: Bot<TProps, TBehavior>, payload: DiscordTeam, team: Team) => any
     template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate, template: Template) => any
-    threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember, threadMember: ThreadMember, extra?: ThreadMemberTransformerExtra) => any
     threadMemberGuildCreate: (
       bot: Bot<TProps, TBehavior>,
       payload: DiscordThreadMemberGuildCreate,
@@ -556,7 +557,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   subscription: (bot: Bot<TProps, TBehavior>, payload: DiscordSubscription) => SetupDesiredProps<Subscription, TProps, TBehavior>
   team: (bot: Bot<TProps, TBehavior>, payload: DiscordTeam) => Team
   template: (bot: Bot<TProps, TBehavior>, payload: DiscordTemplate) => Template
-  threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember) => ThreadMember
+  threadMember: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMember, extra?: ThreadMemberTransformerExtra) => ThreadMember
   threadMemberGuildCreate: (bot: Bot<TProps, TBehavior>, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: DiscordUnfurledMediaItem) => UnfurledMediaItem
   user: (bot: Bot<TProps, TBehavior>, payload: DiscordUser) => SetupDesiredProps<User, TProps, TBehavior>

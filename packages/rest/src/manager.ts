@@ -68,6 +68,7 @@ import {
   hasProperty,
   logger,
   processReactionString,
+  snowflakeToTimestamp,
   urlToBase64,
 } from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -558,12 +559,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // The 2 exceptions are for message delete, so we need to check if we are in that route
       if (method === 'DELETE' && splittedRoute.length === 5 && splittedRoute[1] === 'channels' && strippedRoute.endsWith('/messages/x')) {
-        const messageId = BigInt(splittedRoute[4])
-
-        // TODO: We should move the utility from @discordeno/bot to @discordeno/utils and use that here
-        // See https://discord.com/developers/docs/reference#snowflakes-snowflake-id-format-structure-left-to-right
-        const timestamp = Number(messageId >> 22n) + 1420070400000
-
+        const messageId = splittedRoute[4]
+        const timestamp = snowflakeToTimestamp(messageId)
         const now = Date.now()
 
         // https://github.com/discord/discord-api-docs/issues/1092
