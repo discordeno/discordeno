@@ -161,6 +161,24 @@ export interface CreateContextApplicationCommand extends Omit<CreateSlashApplica
   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
 }
 
+/** https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands-query-string-params */
+export interface GetGlobalApplicationCommandsOptions {
+  /**
+   * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
+   * @default false
+   */
+  withLocalizations?: boolean
+}
+
+/** https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands-query-string-params */
+export interface GetGuildApplicationCommandsOptions {
+  /**
+   * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
+   * @default false
+   */
+  withLocalizations?: boolean
+}
+
 export interface CreateGlobalApplicationCommandOptions {
   /** The bearer token of the developer of the application */
   bearerToken: string

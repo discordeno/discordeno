@@ -104,7 +104,9 @@ import type {
   GetBans,
   GetChannelPinsOptions,
   GetEntitlements,
+  GetGlobalApplicationCommandsOptions,
   GetGroupDmOptions,
+  GetGuildApplicationCommandsOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
@@ -1806,15 +1808,15 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
    */
   getGlobalApplicationCommand: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
-  // TODO: Add with_localizations query param
   /**
    * Gets the list of your bot's global application commands.
    *
+   * @param options - The parameters for the fetching of global application commands
    * @returns A collection of {@link DiscordApplicationCommand} objects assorted by command ID.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
    */
-  getGlobalApplicationCommands: () => Promise<Camelize<DiscordApplicationCommand>[]>
+  getGlobalApplicationCommands: (options?: GetGlobalApplicationCommandsOptions) => Promise<Camelize<DiscordApplicationCommand>[]>
   /**
    * Gets a guild by its ID.
    *
@@ -1848,16 +1850,16 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
    */
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
-  // TODO: Add the with_localizations query param
   /**
    * Gets the list of application commands registered by your bot in a guild.
    *
    * @param guildId - The ID of the guild the commands are registered in.
+   * @param options - The parameters for the fetching of guild application commands
    * @returns A collection of {@link DiscordApplicationCommand} objects assorted by command ID.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
-  getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>[]>
+  getGuildApplicationCommands: (guildId: BigString, options?: GetGuildApplicationCommandsOptions) => Promise<Camelize<DiscordApplicationCommand>[]>
   /**
    * Gets the preview of a guild by a guild's ID.
    *

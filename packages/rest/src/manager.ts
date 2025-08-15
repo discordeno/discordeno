@@ -1292,8 +1292,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
-    async getGlobalApplicationCommands() {
-      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId))
+    async getGlobalApplicationCommands(options) {
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId, options?.withLocalizations))
     },
 
     async getGuild(guildId, options = { counts: true }) {
@@ -1317,8 +1317,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
 
-    async getGuildApplicationCommands(guildId) {
-      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId))
+    async getGuildApplicationCommands(guildId, options) {
+      return await rest.get<DiscordApplicationCommand[]>(
+        rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId, options?.withLocalizations),
+      )
     },
 
     async getGuildPreview(guildId) {
