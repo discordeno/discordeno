@@ -12,6 +12,7 @@ import type {
   CreateChannelInvite,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
+  CreateGroupDmOptions,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
@@ -105,7 +106,6 @@ import type {
   GetChannelPinsOptions,
   GetEntitlements,
   GetGlobalApplicationCommandsOptions,
-  GetGroupDmOptions,
   GetGuildApplicationCommandsOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -1730,7 +1730,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/user#create-group-dm}
    */
-  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<Camelize<DiscordChannel>>
+  getGroupDmChannel: (options: CreateGroupDmOptions) => Promise<Camelize<DiscordChannel>>
   /**
    * Gets an emoji by its ID.
    *
