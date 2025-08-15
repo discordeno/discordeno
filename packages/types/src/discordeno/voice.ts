@@ -18,6 +18,8 @@ export interface EditUserVoiceState {
   channelId?: BigString
   /** Toggles the user's suppress state */
   suppress?: boolean
+
+  // This is part of the route but it is included in here
   /** The user id to target */
   userId: BigString
 }
