@@ -117,7 +117,8 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel; g
   if (props.recipients && payload.channel.recipients) channel.recipients = payload.channel.recipients.map((u) => bot.transformers.user(bot, u))
   if (props.icon && payload.channel.icon) channel.icon = iconHashToBigInt(payload.channel.icon)
   if (props.applicationId && payload.channel.application_id) channel.applicationId = bot.transformers.snowflake(payload.channel.application_id)
-  if (props.member && payload.channel.member) channel.member = bot.transformers.threadMember(bot, payload.channel.member)
+  if (props.member && payload.channel.member)
+    channel.member = bot.transformers.threadMember(bot, payload.channel.member, { guildId: payload.guildId })
   if (props.totalMessageSent && payload.channel.total_message_sent !== undefined) channel.totalMessageSent = payload.channel.total_message_sent
   if (props.availableTags && payload.channel.available_tags)
     channel.availableTags = payload.channel.available_tags.map((x) => bot.transformers.forumTag(bot, x))
