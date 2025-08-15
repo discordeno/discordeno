@@ -1,9 +1,7 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
-import type { DiscordMessageComponents } from './components.js'
 import type { DiscordThreadCreateExtra } from './gateway.js'
 import type { DiscordMember } from './guild.js'
-import type { DiscordAllowedMentions, DiscordAttachment, DiscordEmbed, MessageFlags } from './message.js'
 import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
@@ -299,117 +297,6 @@ export interface DiscordForumTag {
   emoji_id: string | null
   /** The unicode character of the emoji. At most one of emoji_id and emoji_name may be set. */
   emoji_name: string | null
-}
-
-/** https://discord.com/developers/docs/resources/channel#modify-channel */
-export interface DiscordModifyChannel {
-  /** 1-100 character channel name */
-  name?: string
-  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-  type?: ChannelTypes
-  /** The position of the channel in the left-hand listing */
-  position?: number | null
-  /** 0-1024 character channel topic */
-  topic?: string | null
-  /** Whether the channel is nsfw */
-  nsfw?: boolean | null
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rate_limit_per_user?: number | null
-  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-  bitrate?: number | null
-  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-  user_limit?: number | null
-  /** Channel or category-specific permissions */
-  permission_overwrites?: DiscordOverwrite[] | null
-  /** Id of the new parent category for a channel */
-  parent_id?: string | null
-  /** Voice region id for the voice channel, automatic when set to null */
-  rtc_region?: string | null
-  /** The camera video quality mode of the voice channel */
-  video_quality_mode?: VideoQualityModes
-  /** Whether the thread is archived */
-  archived?: boolean
-  /** Duration in minutes to automatically archive the thread after recent activity */
-  auto_archive_duration?: 60 | 1440 | 4320 | 10080
-  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked?: boolean
-  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable?: boolean
-  /** The set of tags that can be used in a GUILD_FORUM channel */
-  available_tags?: Array<{
-    /** The id of the tag */
-    id: string
-    /** The name of the tag (0-20 characters) */
-    name: string
-    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-    moderated: boolean
-    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
-    emoji_id: string
-    /** The unicode character of the emoji */
-    emoji_name: string
-  }>
-  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
-  applied_tags?: string[]
-  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
-  default_reaction_emoji?: {
-    /** The id of a guild's custom emoji */
-    emoji_id: string
-    /** The unicode character of the emoji */
-    emoji_name: string | null
-  }
-  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
-  default_thread_rate_limit_per_user?: number
-  /** the default sort order type used to order posts in forum channels */
-  default_sort_order?: SortOrderTypes | null
-  /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: ForumLayout
-}
-
-/** https://discord.com/developers/docs/resources/channel#edit-channel-permissions-json-params */
-export interface DiscordEditChannelPermissionOverridesOptions {
-  /** Permission bit set */
-  allow: string
-  /** Permission bit set */
-  deny: string
-  /** Either 0 (role) or 1 (member) */
-  type: OverwriteTypes
-}
-
-/** https://discord.com/developers/docs/resources/channel#follow-announcement-channel-json-params */
-export interface DiscordFollowAnnouncementChannel {
-  /** The id of the channel to send announcements to. */
-  webhook_channel_id: string
-}
-
-/** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-jsonform-params */
-export interface DiscordCreateForumPostWithMessage {
-  /** 1-100 character channel name */
-  name: string
-  /** duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  auto_archive_duration?: 60 | 1440 | 4320 | 10080
-  /** amount of seconds a user has to wait before sending another message (0-21600) */
-  rate_limit_per_user?: number
-  /** contents of the first message in the forum thread */
-  message: {
-    /** Message contents (up to 2000 characters) */
-    content?: string
-    /** Embedded rich content (up to 6000 characters) */
-    embeds?: DiscordEmbed[]
-    /** Allowed mentions for the message */
-    allowed_mentions?: DiscordAllowedMentions[]
-    /** Components to include with the message */
-    components?: DiscordMessageComponents[]
-    /** IDs of up to 3 stickers in the server to send in the message */
-    sticker_ids?: string[]
-    /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-    payload_json?: string
-    /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-    attachments?: DiscordAttachment[]
-    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and IS_COMPONENTS_V2 can be set */
-    flags?: MessageFlags
-  }
-  /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
-  applied_tags?: string[]
 }
 
 /**
