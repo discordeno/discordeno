@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
-import type { ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js'
+import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js'
 import type { TargetTypes } from '../discord/invite.js'
 import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js'
 import type { PermissionStrings } from '../discord/permissions.js'
@@ -16,11 +16,13 @@ export interface Overwrite {
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes
 
-  // We allow PermissionStrings[] because in the rest manager we convert these value to the actual string discord wants
+  // NOTE:
+  // - We allow PermissionStrings[] because in the rest manager we convert these value to the actual string discord wants
+  // - Discord says that these are always present, we keep them as optional (and allow for null) because when it is sent it can be null / not present, https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params, specificly the **
   /** Permission bit set */
-  allow?: PermissionStrings[] | string
+  allow?: PermissionStrings[] | string | null
   /** Permission bit set */
-  deny?: PermissionStrings[] | string
+  deny?: PermissionStrings[] | string | null
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
@@ -46,9 +48,6 @@ export interface DiscordenoForumTag {
   /** The unicode character of the emoji. At most one of emoji_id and emoji_name may be set. */
   emoji_name: string | null
 }
-
-/** https://discord.com/developers/docs/resources/channel#overwrite-object-overwrite-structure */
-export interface OverwriteReadable extends Overwrite {}
 
 // Since this is a merge of 3 types, the properties appear in order of their first appearance in the 3 types
 /**
@@ -146,9 +145,9 @@ export interface ModifyChannel {
    * Channel or category-specific permissions
    *
    * @remarks
-   * This is only valid when editing a guild channel of any type
+   * This is valid when editing a guild channel of any type
    */
-  permissionOverwrites?: OverwriteReadable[] | null
+  permissionOverwrites?: Overwrite[] | null
   /**
    * Id of the new parent category for a channel
    *
@@ -186,6 +185,8 @@ export interface ModifyChannel {
    * - `PINNED` can only be set for threads in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   *
+   * @see {@link ChannelFlags}
    */
   flags?: number
   /**
@@ -275,6 +276,7 @@ export interface EditChannelPermissionOverridesOptions {
   // This is included in here however it is a route parameter
   /** Role or user id */
   id: BigString
+
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes
 
@@ -365,8 +367,12 @@ export interface ForumAndMediaThreadMessage {
   stickerIds?: BigString[]
   /** Attachment objects with `filename` and `description` */
   attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[]
-  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set */
-  flags?: MessageFlags
+  /**
+   * Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set
+   *
+   * @see {@link MessageFlags}
+   */
+  flags?: number
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-thread-member-query-string-params */
