@@ -42,15 +42,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     threads: SetupDesiredProps<Channel, TProps, TBehavior>[]
     members: ThreadMember[]
   }) => unknown
-  threadMemberUpdate: (payload: {
-    id: bigint
-    guildId: bigint
-    // TODO: remove this in the next major version
-    /** @deprecated Use joinedTimestamp */
-    joinedAt: number
-    joinedTimestamp: number
-    flags: number
-  }) => unknown
+  threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedTimestamp: number; flags: number }) => unknown
   threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown
   threadUpdate: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
   scheduledEventCreate: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown
