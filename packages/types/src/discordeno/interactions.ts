@@ -13,7 +13,7 @@ import type {
   DiscordInteractionEntryPointCommandHandlerType,
   InteractionResponseTypes,
 } from '../discord/interactions.js'
-import type { DiscordAttachment, DiscordEmbed } from '../discord/message.js'
+import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js'
 import type { PermissionStrings } from '../discord/permissions.js'
 import type { Localization } from '../discord/reference.js'
 import type { BigString, Camelize } from '../shared.js'
@@ -46,7 +46,11 @@ export interface InteractionCallbackData {
   embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `IS_COMPONENTS_V2`, `IS_VOICE_MESSAGE` and `SUPPRESS_NOTIFICATIONS` can be set) */
+  /**
+   * Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, `IS_COMPONENTS_V2`, `IS_VOICE_MESSAGE` and `SUPPRESS_NOTIFICATIONS` can be set)
+   *
+   * @see {@link MessageFlags}
+   */
   flags?: number
   /** The components you would like to have sent in this message */
   components?: MessageComponents
@@ -76,19 +80,34 @@ export interface InteractionCallbackOptions {
   withResponse?: boolean
 }
 
-/**
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params
- * - https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command-json-params
- */
-export type CreateApplicationCommand = CreateSlashApplicationCommand | CreateContextApplicationCommand
+/** https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands-query-string-params */
+export interface GetGlobalApplicationCommandsOptions {
+  /**
+   * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
+   * @default false
+   */
+  withLocalizations?: boolean
+}
 
 /**
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params
+ * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
+ *
+ * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ */
+export interface CreateGlobalApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+/**
+ * - https://discord.com/developers/docs/interactions/application-commands#create-global-application-command-json-params
  * - https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command-json-params
  */
-export interface CreateSlashApplicationCommand {
+export interface CreateApplicationCommand {
   /**
    * Name of command, 1-32 characters.
+   *
+   * @remarks
    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
@@ -151,23 +170,24 @@ export interface CreateSlashApplicationCommand {
   handler?: DiscordInteractionEntryPointCommandHandlerType
 }
 
-// TODO: Aside from one single note on `description` i can't find anywhere that says something about context commands having a special need, so, should we remove this?
 /**
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params
- * - https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command-json-params
+ * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
+ *
+ * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
  */
-export interface CreateContextApplicationCommand extends Omit<CreateSlashApplicationCommand, 'options' | 'description' | 'descriptionLocalizations'> {
-  /** The type of the command */
-  type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
+export interface UpsertGlobalApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands-query-string-params */
-export interface GetGlobalApplicationCommandsOptions {
-  /**
-   * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
-   * @default false
-   */
-  withLocalizations?: boolean
+/**
+ * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
+ *
+ * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ */
+export interface CreateGuildApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands-query-string-params */
@@ -179,27 +199,25 @@ export interface GetGuildApplicationCommandsOptions {
   withLocalizations?: boolean
 }
 
-export interface CreateGlobalApplicationCommandOptions {
-  /** The bearer token of the developer of the application */
-  bearerToken: string
-}
-
-export interface CreateGuildApplicationCommandOptions {
-  /** The bearer token of the developer of the application */
-  bearerToken: string
-}
-
-export interface UpsertGlobalApplicationCommandOptions {
-  /** The bearer token of the developer of the application */
-  bearerToken: string
-}
-
+/**
+ * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
+ *
+ * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ */
 export interface UpsertGuildApplicationCommandOptions {
   /** The bearer token of the developer of the application */
   bearerToken: string
 }
 
-/** Additional properties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions */
+/**
+ * Additional properties for:
+ * - https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
+ * - https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
+ *
+ * The access token is documented implicitly by the description of the `applications.commands.update` Oauth2 scope
+ *
+ * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
   accessToken: string

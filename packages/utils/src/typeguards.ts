@@ -1,14 +1,11 @@
-import {
-  ApplicationCommandTypes,
-  type CreateApplicationCommand,
-  type CreateContextApplicationCommand,
-  type DiscordInviteCreate,
-  type DiscordInviteMetadata,
-  type GetMessagesAfter,
-  type GetMessagesAround,
-  type GetMessagesBefore,
-  type GetMessagesLimit,
-  type GetMessagesOptions,
+import type {
+  DiscordInviteCreate,
+  DiscordInviteMetadata,
+  GetMessagesAfter,
+  GetMessagesAround,
+  GetMessagesBefore,
+  GetMessagesLimit,
+  GetMessagesOptions,
 } from '@discordeno/types'
 import { hasProperty } from './utils.js'
 
@@ -30,8 +27,4 @@ export function isGetMessagesLimit(options: GetMessagesOptions): options is GetM
 
 export function isInviteWithMetadata(options: DiscordInviteCreate | DiscordInviteMetadata): options is DiscordInviteMetadata {
   return !hasProperty(options, 'channel_id')
-}
-
-export function isContextApplicationCommand(command: CreateApplicationCommand): command is CreateContextApplicationCommand {
-  return command.type === ApplicationCommandTypes.Message || command.type === ApplicationCommandTypes.User
 }
