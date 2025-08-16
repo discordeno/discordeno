@@ -1,5 +1,6 @@
 name: Benchmark with retry
-
+permissions:
+  contents: read
 on:
   pull_request:
     paths-ignore:

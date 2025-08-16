@@ -1,5 +1,8 @@
 name: Benchmark
-
+permissions:
+  contents: write
+  deployments: write
+  actions: write
 on:
   workflow_call:
     inputs:
