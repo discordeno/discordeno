@@ -8,6 +8,7 @@ import type {
   DiscordWelcomeScreenChannel,
   ExplicitContentFilterLevels,
   GuildFeatures,
+  MemberFlags,
   SystemChannelFlags,
   VerificationLevels,
 } from '../discord/guild.js'
@@ -40,8 +41,12 @@ export interface ModifyGuild {
   banner?: string | null
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
   systemChannelId?: BigString | null
-  /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags
+  /**
+   * System channel flags
+   *
+   * @see {@link SystemChannelFlags}
+   */
+  systemChannelFlags?: number
   /** The id of the channel where Community guilds display rules and/or guidelines */
   rulesChannelId?: BigString | null
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
@@ -75,7 +80,7 @@ export interface CreateGuildChannel {
   /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** The channel's permission overwrites */
-  permissionOverwrites?: Partial<Overwrite>[]
+  permissionOverwrites?: Overwrite[]
   /** Id of the parent category for a channel */
   parentId?: BigString
   /** Whether the channel is nsfw */
@@ -105,7 +110,7 @@ export interface ModifyGuildChannelPositions {
   /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
-  lockPositions?: boolean | null
+  lockPermissions?: boolean | null
   /** The new parent ID for the channel that is moved */
   parentId?: BigString | null
 }
@@ -154,7 +159,11 @@ export interface ModifyGuildMember {
   channelId?: BigString | null
   /** When the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
   communicationDisabledUntil?: string | null
-  /** Set the flags for the guild member. Requires the `MANAGE_GUILD` or `MANAGE_ROLES` or the combination of `MODERATE_MEMBERS` and `KICK_MEMBERS` and `BAN_MEMBERS` */
+  /**
+   * Set the flags for the guild member. Requires the `MANAGE_GUILD` or `MANAGE_ROLES` or the combination of `MODERATE_MEMBERS` and `KICK_MEMBERS` and `BAN_MEMBERS`
+   *
+   * @see {@link MemberFlags}
+   */
   flags?: number
 }
 
