@@ -15,7 +15,7 @@ export interface GetUserGuilds {
 }
 
 /** https://discord.com/developers/docs/resources/user#create-group-dm-json-params */
-export interface GetGroupDmOptions {
+export interface CreateGroupDmOptions {
   /** Access tokens of users that have granted your app the `gdm.join` scope */
   accessTokens: string[]
   /** A mapping of user ids to their respective nicknames */

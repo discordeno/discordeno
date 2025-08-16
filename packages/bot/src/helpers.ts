@@ -12,6 +12,7 @@ import type {
   CreateChannelInvite,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
+  CreateGroupDmOptions,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
@@ -68,7 +69,6 @@ import type {
   GetChannelPinsOptions,
   GetEntitlements,
   GetGlobalApplicationCommandsOptions,
-  GetGroupDmOptions,
   GetGuildApplicationCommandsOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -976,7 +976,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getChannels: (guildId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>[]>
   getChannelWebhooks: (channelId: BigString) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>[]>
   getDmChannel: (userId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
-  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
+  getGroupDmChannel: (options: CreateGroupDmOptions) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   getEmoji: (guildId: BigString, emojiId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   getApplicationEmoji: (emojiId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   getEmojis: (guildId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>[]>
