@@ -5,7 +5,7 @@ export async function handleChannelUpdate(bot: Bot, data: DiscordGatewayPayload)
   if (!bot.events.channelUpdate) return
 
   const payload = data.d as DiscordChannel
-  const channel = bot.transformers.channel(bot, { channel: payload })
+  const channel = bot.transformers.channel(bot, payload)
 
   bot.events.channelUpdate(channel)
 }
