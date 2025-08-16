@@ -5,7 +5,7 @@ export interface CreateTemplate {
   /** Name which the template should have */
   name: string
   /** Description of the template */
-  description?: string
+  description?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/guild-template#modify-guild-template-json-params */
