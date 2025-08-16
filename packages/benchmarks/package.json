@@ -36,9 +36,9 @@
     "@swc/cli": "^0.5.2",
     "@swc/core": "^1.13.3",
     "@types/benchmark": "^2.1.5",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.2.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }
