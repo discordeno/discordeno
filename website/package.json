@@ -13,8 +13,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "lint": "biome lint --write",
-    "format": "biome format --write"
+    "check": "biome check --write"
   },
   "dependencies": {
     "@docusaurus/core": "^3.8.1",
