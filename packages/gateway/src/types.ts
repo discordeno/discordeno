@@ -32,7 +32,9 @@ export enum TransportCompression {
    * ZStd-Stream Transport Compression.
    *
    * @remarks
-   * Uses `fzstd` to decompress the payloads. `fzstd` is an optional dependency, it is required to be installed for this compression.
+   * This will use `node:zlib` zstd implementation if available (node v22.15+ or node v23.8+) or `fzstd` otherwise.
+   *
+   * `fzstd` is an optional dependency. You will need to install it to be able to use it.
    *
    * @see https://discord.com/developers/docs/topics/gateway#zstdstream
    */
