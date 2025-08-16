@@ -17,7 +17,7 @@ export function transformLobby(bot: Bot, payload: DiscordLobby): Lobby {
   if (props.applicationId && payload.application_id) lobby.applicationId = bot.transformers.snowflake(payload.application_id)
   if (props.metadata && payload.metadata) lobby.metadata = payload.metadata
   if (props.members && payload.members) lobby.members = payload.members.map((member) => bot.transformers.lobbyMember(bot, member))
-  if (props.linkedChannel && payload.linked_channel) lobby.linkedChannel = bot.transformers.channel(bot, { channel: payload.linked_channel })
+  if (props.linkedChannel && payload.linked_channel) lobby.linkedChannel = bot.transformers.channel(bot, payload.linked_channel)
 
   return bot.transformers.customizers.lobby(bot, payload, lobby)
 }

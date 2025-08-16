@@ -8,12 +8,10 @@ export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, ex
     joinTimestamp: Date.parse(payload.join_timestamp),
     flags: payload.flags,
     member: payload.member
-      ? bot.transformers.member(
-          bot,
-          payload.member,
-          extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
-          bot.transformers.snowflake(payload.user_id),
-        )
+      ? bot.transformers.member(bot, payload.member, {
+          guildId: extra?.guildId,
+          userId: payload.user_id,
+        })
       : undefined,
   } as ThreadMember
 

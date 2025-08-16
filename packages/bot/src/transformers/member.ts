@@ -36,12 +36,12 @@ export const baseMember: Member = {
   },
 }
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString | undefined, userId: BigString): Member {
+export function transformMember(bot: Bot, payload: DiscordMember, extra?: { guildId?: BigString; userId?: BigString }): Member {
   const member: SetupDesiredProps<Member, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 
-  if (props.id && userId) member.id = typeof userId === 'string' ? bot.transformers.snowflake(userId) : userId
-  if (props.guildId && guildId) member.guildId = typeof guildId === 'string' ? bot.transformers.snowflake(guildId) : guildId
+  if (props.id && extra?.userId) member.id = typeof extra.userId === 'string' ? bot.transformers.snowflake(extra.userId) : extra.userId
+  if (props.guildId && extra?.guildId) member.guildId = typeof extra.guildId === 'string' ? bot.transformers.snowflake(extra.guildId) : extra.guildId
   if (props.user && payload.user) member.user = bot.transformers.user(bot, payload.user)
   if (props.nick && payload.nick) member.nick = payload.nick
   if (props.roles && payload.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
@@ -56,5 +56,8 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
-  return bot.transformers.customizers.member(bot, payload, member)
+  return bot.transformers.customizers.member(bot, payload, member, {
+    guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
+    userId: extra?.userId ? bot.transformers.snowflake(extra.userId) : undefined,
+  })
 }

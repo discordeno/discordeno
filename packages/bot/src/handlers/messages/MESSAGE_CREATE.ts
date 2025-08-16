@@ -6,5 +6,5 @@ export async function handleMessageCreate(bot: Bot, data: DiscordGatewayPayload,
 
   const payload = data.d as DiscordMessage
 
-  bot.events.messageCreate(bot.transformers.message(bot, { message: payload, shardId }))
+  bot.events.messageCreate(bot.transformers.message(bot, payload, { shardId }))
 }
