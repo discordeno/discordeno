@@ -6,7 +6,7 @@ import type { BigString } from '../shared.js'
 export interface CreateGuildEmoji {
   /** Name of the emoji */
   name: string
-  /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
+  /** The 128x128 emoji image. */
   image: string
   /** Roles allowed to use this emoji */
   roles: BigString[]
@@ -24,12 +24,12 @@ export interface ModifyGuildEmoji {
 export interface CreateApplicationEmoji {
   /** Name of the emoji */
   name: string
-  /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
+  /** The 128x128 emoji image. */
   image: string
 }
 
 /** https://discord.com/developers/docs/resources/emoji#modify-application-emoji */
 export interface ModifyApplicationEmoji {
   /** Name of the emoji */
-  name?: string
+  name: string
 }

@@ -49,7 +49,7 @@ import type {
   MessageTypes,
   MfaLevels,
   OAuth2Scope,
-  OverwriteReadable,
+  Overwrite,
   PremiumTiers,
   PremiumTypes,
   PresenceStatus,
@@ -467,7 +467,7 @@ export interface Channel {
   /** for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope */
   managed: boolean
   /** Explicit permission overwrites for members and roles. */
-  permissionOverwrites: OverwriteReadable[]
+  permissionOverwrites: Overwrite[]
 }
 
 export interface ForumTag {

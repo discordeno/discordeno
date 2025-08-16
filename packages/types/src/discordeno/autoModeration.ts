@@ -13,7 +13,12 @@ import type { BigString, Camelize } from '../shared.js'
 export interface DiscordenoAutoModerationAction {
   /** The type of action to take when a rule is triggered */
   type: AutoModerationActionType
-  /** additional metadata needed during execution for this specific action type */
+  /**
+   * Additional metadata needed during execution for this specific action type
+   *
+   * @remarks
+   * Can be omitted based on `type`.
+   */
   metadata?: DiscordenoAutoModerationActionMetadata
 }
 

@@ -554,39 +554,6 @@ export interface DiscordMessagePin {
   message: DiscordMessage
 }
 
-// TODO: We usually don't have the create types, we should consider removing this.
-/** https://discord.com/developers/docs/resources/message#create-message-jsonform-params */
-export interface DiscordCreateMessage {
-  /** The message contents (up to 2000 characters) */
-  content?: string
-  /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
-  nonce?: string | number
-  /** true if this is a TTS message */
-  tts?: boolean
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: DiscordEmbed[]
-  /** Allowed mentions for the message */
-  allowed_mentions?: DiscordAllowedMentions
-  /** Include to make your message a reply */
-  message_reference?: {
-    /** id of the originating message */
-    message_id?: string
-    /**
-     * id of the originating message's channel
-     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-     */
-    channel_id?: string
-    /** id of the originating message's guild */
-    guild_id?: string
-    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-    fail_if_not_exists: boolean
-  }
-  /** The components you would like to have sent in this message */
-  components?: DiscordMessageComponents
-  /** IDs of up to 3 stickers in the server to send in the message */
-  stickerIds?: [string] | [string, string] | [string, string, string]
-}
-
 /** https://discord.com/developers/docs/resources/message#get-reactions-reaction-types */
 export enum DiscordReactionType {
   Normal,
