@@ -20,7 +20,7 @@ export interface CreateStageInstance {
 /** https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance-json-params */
 export interface EditStageInstanceOptions {
   /** The topic of the Stage instance (1-120 characters) */
-  topic: string
+  topic?: string
   /** The privacy level of the Stage instance */
   privacyLevel?: DiscordStageInstancePrivacyLevel
 }

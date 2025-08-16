@@ -8,7 +8,6 @@ import type {
 } from '../discord/application.js'
 import type { DiscordWebhookEventType } from '../discord/webhookEvents.js'
 
-// TODO: Do we want to move the "All parameters to this endpoint are optional" of this to the rest manager itself?
 /** https://discord.com/developers/docs/resources/application#edit-current-application-json-params */
 export interface EditApplication {
   /** Default custom authorization URL for the app, if enabled */
@@ -25,9 +24,11 @@ export interface EditApplication {
    * App's public flags
    *
    * @remarks
-   * Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
+   * Only limited intent flags `GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
+   *
+   * @see {@link ApplicationFlags}
    */
-  flags?: ApplicationFlags
+  flags?: number
   /** Icon for the app */
   icon?: string | null
   /** Default rich presence invite cover image for the app */
@@ -49,7 +50,7 @@ export interface EditApplication {
   /** Event webhook URL for the app to receive webhook events */
   eventWebhooksUrl?: string
   /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
-  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
+  eventWebhooksStatus?: DiscordApplicationEventWebhookStatus
   /** List of Webhook event types the app subscribes to */
   eventWebhooksTypes?: DiscordWebhookEventType[]
 }

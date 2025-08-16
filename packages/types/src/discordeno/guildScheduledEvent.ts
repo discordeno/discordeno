@@ -41,21 +41,23 @@ export interface CreateScheduledEvent {
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event-json-params */
 export interface EditScheduledEvent {
   /** the channel id of the scheduled event. null if switching to external event. */
-  channelId: BigString | null
+  channelId?: BigString | null
+  /** The entity metadata for the scheduled event */
+  entityMetadata?: DiscordScheduledEventEntityMetadata | null
   /** the name of the scheduled event */
-  name: string
+  name?: string
   /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel
+  privacyLevel?: ScheduledEventPrivacyLevel
   /** the time the scheduled event will start */
-  scheduledStartTime: string
+  scheduledStartTime?: string
   /** the time the scheduled event will end if it does end. */
   scheduledEndTime?: string
   /** the description of the scheduled event */
-  description?: string
+  description?: string | null
   /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType
+  entityType?: ScheduledEventEntityType
   /** the status of the scheduled event */
-  status: ScheduledEventStatus
+  status?: ScheduledEventStatus
   /** the cover image of the scheduled event */
   image?: string
   /** the definition for how often this event should recur */
