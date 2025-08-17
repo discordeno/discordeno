@@ -584,23 +584,28 @@ export class DiscordenoShard {
         return await decompressionPromise
       }
 
-      // @ts-expect-error A- this is for testing B- the types don't declrate but it does exist
-      if (this.inflate && this.inflate instanceof zlib.ZstdDecompress) {
-        const zstd = this.inflate as zlib.ZstdDecompress
+      if (this.inflate) {
+        // Alias, used to avoid some null checks in the Promise constructor
+        const decompress = this.inflate
 
         const writePromise = new Promise<void>((resolve, reject) => {
-          zstd.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()))
+          decompress.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()))
         })
 
         await writePromise
 
-        const decodedData = this.textDecoder.decode(this.inflateBuffer!)
+        if (!this.inflateBuffer) {
+          this.logger.warn('[Shard] The ZLib inflate buffer was cleared at an unexpected moment.')
+          return null
+        }
+
+        const decodedData = this.textDecoder.decode(this.inflateBuffer)
         this.inflateBuffer = null
 
         return JSON.parse(decodedData)
       }
 
-      this.logger.fatal('[Shard] zstd-stream transport compression was enabled but no instance of Decompress was found.')
+      this.logger.fatal('[Shard] zstd-stream transport compression was enabled but no zstd decompressor was found.')
       return null
     }
 
