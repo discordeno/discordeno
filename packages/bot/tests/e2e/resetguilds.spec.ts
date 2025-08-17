@@ -11,6 +11,7 @@ describe('[Bot] Can start and stop the bot', () => {
   it('Start and stop the bot', async () => {
     const bot = createBot({
       token,
+      desiredProperties: {},
     })
 
     await bot.start()

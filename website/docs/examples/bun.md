@@ -25,8 +25,13 @@ import { createBot } from '@discordeno/bot'
 
 const bot = createBot({
   token: Bun.env.token,
+  desiredProperties: {
+    user: {
+      id: true,
+    },
+  },
   events: {
-    ready: ({ shardId }) => console.log(`Shard ${shardId} ready`),
+    ready: ({ shardId, user }) => console.log(`Shard ${shardId} ready, user id: ${user.id}`),
   },
 })
 
