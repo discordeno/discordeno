@@ -279,9 +279,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       let body: string | FormData | undefined
 
-      // TODO: check if we need to add specific check for GET method
-      // Since GET does not allow bodies
-
       // Have to check for attachments first, since body then has to be send in a different way.
       if (options?.files !== undefined) {
         const form = new FormData()
