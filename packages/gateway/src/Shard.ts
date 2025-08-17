@@ -238,8 +238,6 @@ export class DiscordenoShard {
             this.inflateBuffer = data
           })
         } else {
-          this.logger.debug('[Shard] Attempting to use fzstd zstd decompression.')
-
           const fzstd = await getFZStd().catch(() => {
             this.logger.warn('[Shard] "fzstd" is not installed. Disabled transport compression.')
             url.searchParams.delete('compress')
