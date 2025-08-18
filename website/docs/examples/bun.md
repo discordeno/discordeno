@@ -39,7 +39,7 @@ await bot.start()
 ```
 
 :::note
-If you want you can use bun with any package manager, so if you want to can use npm to install the `node_modules` and use bun to run the code
+If you want, you can use bun with any package manager, so if you want to, you can use npm to install the `node_modules` and use bun to run the code
 :::
 
 You are free to expand from this point with whatever code you want. Happy coding!
