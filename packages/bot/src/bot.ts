@@ -129,10 +129,8 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>>
   /**
    * Set the desired properties for the bot
-   *
-   * @default {}
    */
-  desiredProperties?: TProps
+  desiredProperties: TProps
   /**
    * Set the desired properties behavior for undesired properties
    *

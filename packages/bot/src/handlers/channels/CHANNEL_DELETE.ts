@@ -5,7 +5,6 @@ export async function handleChannelDelete(bot: Bot, data: DiscordGatewayPayload)
   if (!bot.events.channelDelete) return
 
   const payload = data.d as DiscordChannel
-  if (!payload.guild_id) return
 
   bot.events.channelDelete(bot.transformers.channel(bot, payload, { guildId: payload.guild_id }))
 }
