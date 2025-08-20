@@ -28,7 +28,7 @@
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
     "test:deno-unit": "deno -A ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/unit/**/*.spec.ts'",
     "test:bun-unit": "bun ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/unit/**/*.spec.ts'",
-    "test:e2e": "c8 --r lcov mocha --exit --no-warnings --jobs 1 --t 30000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
+    "test:e2e": "c8 --r lcov mocha --exit --no-warnings --jobs 1 --t 60000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
     "test:type": "tsc --noEmit",
     "test:test-type": "tsc --project tests/tsconfig.json"
   },

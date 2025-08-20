@@ -1,11 +1,19 @@
 import type { BigString, DiscordRole, DiscordRoleColors } from '@discordeno/types'
-import { type InternalBot, iconHashToBigInt, type Role, type RoleColors } from '../index.js'
+import {
+  type Bot,
+  type DesiredPropertiesBehavior,
+  iconHashToBigInt,
+  type Role,
+  type RoleColors,
+  type SetupDesiredProps,
+  type TransformersDesiredProperties,
+} from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-export const baseRole: InternalBot['transformers']['$inferredTypes']['role'] = {
+export const baseRole: Role = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['role']),
+  ...(undefined as unknown as Role),
 
   get tags() {
     return {
@@ -43,35 +51,35 @@ export const baseRole: InternalBot['transformers']['$inferredTypes']['role'] = {
   },
 }
 
-export function transformRole(bot: InternalBot, payload: { role: DiscordRole; guildId: BigString }): typeof bot.transformers.$inferredTypes.role {
-  const role: Role = Object.create(baseRole)
+export function transformRole(bot: Bot, payload: DiscordRole, extra?: { guildId?: BigString }): Role {
+  const role: SetupDesiredProps<Role, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
-  if (props.id && payload.role.id) role.id = bot.transformers.snowflake(payload.role.id)
+  if (props.id && payload.id) role.id = bot.transformers.snowflake(payload.id)
   // Role name can be an empty string
-  if (props.name && payload.role.name !== undefined) role.name = payload.role.name
-  if (props.position) role.position = payload.role.position
-  if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
-  if (props.color && payload.role.color !== undefined) role.color = payload.role.color
-  if (props.permissions && payload.role.permissions) role.permissions = new Permissions(payload.role.permissions)
-  if (props.icon && payload.role.icon) role.icon = iconHashToBigInt(payload.role.icon)
-  if (props.unicodeEmoji && payload.role.unicode_emoji) role.unicodeEmoji = payload.role.unicode_emoji
-  if (props.flags) role.flags = payload.role.flags
-  if (props.tags && payload.role.tags) {
+  if (props.name && payload.name !== undefined) role.name = payload.name
+  if (props.position) role.position = payload.position
+  if (props.guildId && extra?.guildId) role.guildId = bot.transformers.snowflake(extra?.guildId)
+  if (props.color && payload.color !== undefined) role.color = payload.color
+  if (props.permissions && payload.permissions) role.permissions = new Permissions(payload.permissions)
+  if (props.icon && payload.icon) role.icon = iconHashToBigInt(payload.icon)
+  if (props.unicodeEmoji && payload.unicode_emoji) role.unicodeEmoji = payload.unicode_emoji
+  if (props.flags) role.flags = payload.flags
+  if (props.tags && payload.tags) {
     role.internalTags = {}
-    if (payload.role.tags.bot_id) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
-    if (payload.role.tags.integration_id) role.internalTags.integrationId = bot.transformers.snowflake(payload.role.tags.integration_id)
-    if (payload.role.tags.subscription_listing_id)
-      role.internalTags.subscriptionListingId = bot.transformers.snowflake(payload.role.tags.subscription_listing_id)
+    if (payload.tags.bot_id) role.internalTags.botId = bot.transformers.snowflake(payload.tags.bot_id)
+    if (payload.tags.integration_id) role.internalTags.integrationId = bot.transformers.snowflake(payload.tags.integration_id)
+    if (payload.tags.subscription_listing_id)
+      role.internalTags.subscriptionListingId = bot.transformers.snowflake(payload.tags.subscription_listing_id)
   }
-  if (props.toggles) {
-    role.toggles = new RoleToggles(payload.role)
-  }
+  if (props.toggles) role.toggles = new RoleToggles(payload)
 
-  return bot.transformers.customizers.role(bot, payload.role, role)
+  return bot.transformers.customizers.role(bot, payload, role, {
+    guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
+  })
 }
 
-export function transformRoleColors(bot: InternalBot, payload: DiscordRoleColors): RoleColors {
-  const roleColors = {} as RoleColors
+export function transformRoleColors(bot: Bot, payload: DiscordRoleColors): RoleColors {
+  const roleColors = {} as SetupDesiredProps<RoleColors, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.roleColors
 
   if (props.primaryColor && payload.primary_color !== undefined) roleColors.primaryColor = payload.primary_color
