@@ -13,7 +13,7 @@ export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPay
     channelId: bot.transformers.snowflake(payload.channel_id),
     messageId: bot.transformers.snowflake(payload.message_id),
     guildId,
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, { guildId, userId }) : undefined,
     user: payload.member ? bot.transformers.user(bot, payload.member.user) : undefined,
     // @ts-expect-error TODO: Deal with partials
     emoji: bot.transformers.emoji(bot, payload.emoji),

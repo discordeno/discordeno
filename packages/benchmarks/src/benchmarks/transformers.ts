@@ -103,7 +103,7 @@ await memoryBenchmark(
   () => ({
     cache: [] as any[],
   }), // function returns a new instance of object wanted to test with
-  (object, event: DiscordMessage) => object.cache.push(bot.transformers.message(bot, { message: event, shardId: 0 })),
+  (object, event: DiscordMessage) => object.cache.push(bot.transformers.message(bot, event)),
   // function specify how to add event to the object/ run the object
   [...new Array(MESSAGE_SIZE)].map(
     () =>
@@ -442,7 +442,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
             : undefined,
         }
       : undefined,
-    thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
+    thread: payload.thread ? bot.transformers.channel(bot, payload.thread, { guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: payload.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),

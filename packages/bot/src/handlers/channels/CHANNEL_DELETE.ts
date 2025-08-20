@@ -6,10 +6,5 @@ export async function handleChannelDelete(bot: Bot, data: DiscordGatewayPayload)
 
   const payload = data.d as DiscordChannel
 
-  bot.events.channelDelete(
-    bot.transformers.channel(bot, {
-      channel: payload,
-      guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-    }),
-  )
+  bot.events.channelDelete(bot.transformers.channel(bot, payload, { guildId: payload.guild_id }))
 }

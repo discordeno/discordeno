@@ -10,5 +10,5 @@ export async function handleVoiceStateUpdate(bot: Bot, data: DiscordGatewayPaylo
 
   const guildId = bot.transformers.snowflake(payload.guild_id)
 
-  bot.events.voiceStateUpdate(bot.transformers.voiceState(bot, { voiceState: payload, guildId }))
+  bot.events.voiceStateUpdate(bot.transformers.voiceState(bot, payload, { guildId }))
 }
