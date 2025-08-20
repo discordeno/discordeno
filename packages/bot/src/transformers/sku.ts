@@ -1,9 +1,9 @@
 import type { DiscordSku } from '@discordeno/types'
-import type { InternalBot, Sku } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, Sku, TransformersDesiredProperties } from '../index.js'
 
-export function transformSku(bot: InternalBot, payload: DiscordSku): typeof bot.transformers.$inferredTypes.sku {
+export function transformSku(bot: Bot, payload: DiscordSku): Sku {
   const props = bot.transformers.desiredProperties.sku
-  const sku = {} as Sku
+  const sku = {} as SetupDesiredProps<Sku, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) sku.id = bot.transformers.snowflake(payload.id)
   if (props.type && payload.type) sku.type = payload.type

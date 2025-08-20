@@ -26,8 +26,13 @@ const env = await load()
 
 const bot = createBot({
   token: env.token,
+  desiredProperties: {
+    user: {
+      id: true,
+    },
+  },
   events: {
-    ready: ({ shardId }) => console.log(`Shard ${shardId} ready`),
+    ready: ({ shardId, user }) => console.log(`Shard ${shardId} ready, user id: ${user.id}`),
   },
 })
 

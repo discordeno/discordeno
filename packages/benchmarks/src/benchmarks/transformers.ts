@@ -26,38 +26,45 @@ const bot = createBot({
   token: process.env.DISCORD_TOKEN ?? ' ',
   applicationId: 1n,
   events: {},
+  desiredProperties: {
+    message: {
+      activity: true,
+      application: true,
+      applicationId: true,
+      attachments: true,
+      author: true,
+      channelId: true,
+      components: true,
+      content: true,
+      editedTimestamp: true,
+      embeds: true,
+      guildId: true,
+      id: true,
+      member: true,
+      mentionedChannelIds: true,
+      mentionedRoleIds: true,
+      mentions: true,
+      nonce: true,
+      reactions: true,
+      stickerItems: true,
+      thread: true,
+      type: true,
+      webhookId: true,
+    },
+    messageInteraction: {
+      id: true,
+      member: true,
+      name: true,
+      user: true,
+      type: true,
+    },
+    messageReference: {
+      channelId: true,
+      guildId: true,
+      messageId: true,
+    },
+  },
 })
-
-bot.transformers.desiredProperties.message.activity = true
-bot.transformers.desiredProperties.message.application = true
-bot.transformers.desiredProperties.message.applicationId = true
-bot.transformers.desiredProperties.message.attachments = true
-bot.transformers.desiredProperties.message.author = true
-bot.transformers.desiredProperties.message.channelId = true
-bot.transformers.desiredProperties.message.components = true
-bot.transformers.desiredProperties.message.content = true
-bot.transformers.desiredProperties.message.editedTimestamp = true
-bot.transformers.desiredProperties.message.embeds = true
-bot.transformers.desiredProperties.message.guildId = true
-bot.transformers.desiredProperties.message.id = true
-bot.transformers.desiredProperties.messageInteraction.id = true
-bot.transformers.desiredProperties.messageInteraction.member = true
-bot.transformers.desiredProperties.messageInteraction.name = true
-bot.transformers.desiredProperties.messageInteraction.user = true
-bot.transformers.desiredProperties.messageInteraction.type = true
-bot.transformers.desiredProperties.message.member = true
-bot.transformers.desiredProperties.message.mentionedChannelIds = true
-bot.transformers.desiredProperties.message.mentionedRoleIds = true
-bot.transformers.desiredProperties.message.mentions = true
-bot.transformers.desiredProperties.messageReference.messageId = true
-bot.transformers.desiredProperties.messageReference.channelId = true
-bot.transformers.desiredProperties.messageReference.guildId = true
-bot.transformers.desiredProperties.message.nonce = true
-bot.transformers.desiredProperties.message.reactions = true
-bot.transformers.desiredProperties.message.stickerItems = true
-bot.transformers.desiredProperties.message.thread = true
-bot.transformers.desiredProperties.message.type = true
-bot.transformers.desiredProperties.message.webhookId = true
 
 const URL = 'https://discordeno.js.org/'
 const IMAGE_HASH = '5fff867ae5f666fcd0626bd84f5e69c0'
@@ -96,7 +103,7 @@ await memoryBenchmark(
   () => ({
     cache: [] as any[],
   }), // function returns a new instance of object wanted to test with
-  (object, event: DiscordMessage) => object.cache.push(bot.transformers.message(bot, { message: event, shardId: 0 })),
+  (object, event: DiscordMessage) => object.cache.push(bot.transformers.message(bot, event)),
   // function specify how to add event to the object/ run the object
   [...new Array(MESSAGE_SIZE)].map(
     () =>
@@ -435,7 +442,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
             : undefined,
         }
       : undefined,
-    thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
+    thread: payload.thread ? bot.transformers.channel(bot, payload.thread, { guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: payload.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),

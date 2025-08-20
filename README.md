@@ -8,10 +8,19 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK)](https://codecov.io/gh/discordeno/discordeno)
 ![action status](https://github.com/discordeno/discordeno/actions/workflows/lib-check.yml/badge.svg?event=push)
 
-## Tips
+## Getting started
 
-- If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.js.org/)
-- To learn if Discordeno is right for you, read everything below.
+More details are available in the [documentation](https://discordeno.js.org/docs/getting-started)
+
+```
+- npm install @discordeno/bot
+- yarn add @discordeno/bot
+- pnpm install @discordeno/bot
+- bun install @discordeno/bot
+```
+
+> [!TIP]
+> If you are not sure if Discordeno is right for you check everything below. 
 
 ## Packages
 
@@ -91,10 +100,6 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
 
 Have your cache setup in any way you like. Redis, PGSQL or any cache layer you would like.
 
-## Getting Started
-
-Interested? [Check the website](https://discordeno.js.org/) for more details on getting started.
-
 ## Links
 
 - [Website](https://discordeno.js.org/)
@@ -132,14 +137,11 @@ yarn test:unit
 Other useful information are available on the [website under the contributing documentation](https://discordeno.js.org/docs/contributing)
 
 Other useful scripts
-(if you run in the package's directory, you need build dist before for test and types before for lint/fmt. Running in root directory should automatically do it for you)
+(if you run in a package's directory, you need to build dist before test and build types before check. Running in root directory should automatically do it for you)
 
 ```sh
-# check style
-yarn lint
-
-# format code
-yarn fmt
+# format and lint the code
+yarn check
 
 # check type
 yarn test:type

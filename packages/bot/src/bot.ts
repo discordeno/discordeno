@@ -129,10 +129,8 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>>
   /**
    * Set the desired properties for the bot
-   *
-   * @default {}
    */
-  desiredProperties?: TProps
+  desiredProperties: TProps
   /**
    * Set the desired properties behavior for undesired properties
    *
@@ -180,6 +178,3 @@ export interface Bot<
   /** Shuts down all the bot connections to the gateway. */
   shutdown: () => Promise<void>
 }
-
-/** @internal This is subject to breaking changes without notice */
-export type InternalBot = Bot<CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>
