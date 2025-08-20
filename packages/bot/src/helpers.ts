@@ -46,7 +46,6 @@ import type {
   DiscordInviteMetadata,
   DiscordListArchivedThreads,
   DiscordMessage,
-  DiscordModifyGuildWelcomeScreen,
   DiscordPrunedCount,
   DiscordTokenExchange,
   DiscordTokenRevocation,
@@ -97,6 +96,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyGuildWelcomeScreen,
   ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
@@ -941,7 +941,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     token: string,
     options: Omit<ModifyWebhook, 'channelId'>,
   ) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>>
-  editWelcomeScreen: (guildId: BigString, options: Camelize<DiscordModifyGuildWelcomeScreen>, reason?: string) => Promise<WelcomeScreen>
+  editWelcomeScreen: (guildId: BigString, options: ModifyGuildWelcomeScreen, reason?: string) => Promise<WelcomeScreen>
   editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>, reason?: string) => Promise<GuildWidgetSettings>
   editUserApplicationRoleConnection: (
     bearerToken: string,

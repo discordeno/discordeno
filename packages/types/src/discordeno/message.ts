@@ -13,18 +13,6 @@ import type { MessageComponents } from './components.js'
 import type { CreatePoll } from './poll.js'
 import type { FileContent } from './reference.js'
 
-/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export interface AllowedMentions {
-  /** An array of allowed mention types to parse from the content. */
-  parse?: AllowedMentionsTypes[]
-  /** For replies, whether to mention the author of the message being replied to (default false) */
-  repliedUser?: boolean
-  /** Array of role_ids to mention (Max size of 100) */
-  roles?: bigint[]
-  /** Array of user_ids to mention (Max size of 100) */
-  users?: bigint[]
-}
-
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
 /** https://discord.com/developers/docs/resources/message#message-reference-structure */
 export interface DiscordenoMessageReference {
@@ -41,6 +29,18 @@ export interface DiscordenoMessageReference {
   guildId?: BigString
   /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
   failIfNotExists?: boolean
+}
+
+/** https://discord.com/developers/docs/resources/message#allowed-mentions-object-default-settings-for-allowed-mentions */
+export interface AllowedMentions {
+  /** An array of allowed mention types to parse from the content. */
+  parse?: AllowedMentionsTypes[]
+  /** For replies, whether to mention the author of the message being replied to (default false) */
+  repliedUser?: boolean
+  /** Array of role_ids to mention (Max size of 100) */
+  roles?: bigint[]
+  /** Array of user_ids to mention (Max size of 100) */
+  users?: bigint[]
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
@@ -87,13 +87,20 @@ export interface CreateMessageOptions {
   /** The components you would like to have sent in this message */
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
-  stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
+  stickerIds?: BigString[]
   /** The contents of the files being sent */
   files?: FileContent[]
   /** Attachment objects with filename and description */
   attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[]
-  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_VOICE_MESSAGE, and IS_COMPONENTS_V2 can be set */
-  flags?: MessageFlags
+  /**
+   * Message flags combined as a bitfield
+   *
+   * @readonly
+   * Only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS, IS_VOICE_MESSAGE, and IS_COMPONENTS_V2 can be set
+   *
+   * @see {@link MessageFlags}
+   */
+  flags?: number
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
   /** A poll object */
@@ -116,8 +123,15 @@ export interface EditMessage {
   content?: string | null
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Camelize<DiscordEmbed>[] | null
-  /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
-  flags?: MessageFlags | null
+  /**
+   * Edit the flags of the message
+   *
+   * @remarks
+   * Only `SUPPRESS_EMBEDS` and `IS_COMPONENT_V2`, only `SUPPRESS_EMBEDS` can be unset, both can be set
+   *
+   * @see {@link MessageFlags}
+   */
+  flags?: number | null
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null
   /** The components you would like to have sent in this message */

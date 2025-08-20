@@ -1,5 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/lobby */
 
+import type { DiscordLobbyMemberFlags } from '../discord/lobby.js'
 import type { BigString } from '../shared.js'
 
 /** https://discord.com/developers/docs/resources/lobby#create-lobby */
@@ -18,7 +19,11 @@ export interface CreateLobbyMember {
   id: BigString
   /** Optional dictionary of string key/value pairs. The max total length is 1000. */
   metadata?: Record<string, string> | null
-  /** Lobby member flags combined as a bitfield */
+  /**
+   * Lobby member flags combined as a bitfield
+   *
+   * @see {@link DiscordLobbyMemberFlags}
+   */
   flags?: number
 }
 

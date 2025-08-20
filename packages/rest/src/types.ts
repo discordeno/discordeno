@@ -67,7 +67,6 @@ import type {
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
-  DiscordModifyGuildWelcomeScreen,
   DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
@@ -135,6 +134,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyGuildWelcomeScreen,
   ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
@@ -1446,11 +1446,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
    */
-  editWelcomeScreen: (
-    guildId: BigString,
-    options: Camelize<DiscordModifyGuildWelcomeScreen>,
-    reason?: string,
-  ) => Promise<Camelize<DiscordWelcomeScreen>>
+  editWelcomeScreen: (guildId: BigString, options: ModifyGuildWelcomeScreen, reason?: string) => Promise<Camelize<DiscordWelcomeScreen>>
   /**
    * Edits the settings of a guild's widget.
    *
