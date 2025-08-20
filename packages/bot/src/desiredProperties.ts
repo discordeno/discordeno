@@ -1,6 +1,7 @@
 import type { RecursivePartial } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
 import type { Bot } from './bot.js'
+import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from './index.js'
 import type {
   ActivityInstance,
   ActivityLocation,
@@ -956,6 +957,8 @@ type IsObject<T> = T extends object ? (T extends Function ? false : true) : fals
 //      - Is it a collection?
 //      - Is it a bot?
 //      - Is it a transformed object?
+//      - Is it an interaction resolved data member?
+//      - Is it an interaction resolved data channel?
 //      - Is it an object?
 //      - It's not an object
 export type TransformProperty<T, TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = T extends Array<infer U> // is it an array?
@@ -973,12 +976,20 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
         T extends TransformersObjects[keyof TransformersObjects]
         ? // Yes, apply the desired props
           SetupDesiredProps<T, TProps, TBehavior>
-        : // Is it an object?
-          IsObject<T> extends true
-          ? // Yes, we need to ensure nested inside there aren't transformed objects
-            { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
-          : // No, this is a normal value such as string / bigint / number
-            T
+        : // No, is it an interaction resolved data member? | We need to check this here because the type itself has not way of getting the desired props
+          T extends InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>
+          ? // Yes, apply the desired props
+            InteractionResolvedDataMember<TProps, TBehavior>
+          : // No, is it an interaction resolved data channel? | We need to check this here because the type itself has not way of getting the desired props
+            T extends InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>
+            ? // Yes, apply the desired props
+              InteractionResolvedDataChannel<TProps, TBehavior>
+            : // Is it an object?
+              IsObject<T> extends true
+              ? // Yes, we need to ensure nested inside there aren't transformed objects
+                { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
+              : // No, this is a normal value such as string / bigint / number
+                T
 
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],

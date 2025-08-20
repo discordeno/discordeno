@@ -7,7 +7,7 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWid
     name: payload.name,
     instantInvite: payload.instant_invite ?? undefined,
     // @ts-expect-error TODO: Deal with partials
-    channels: payload.channels.map((channel) => bot.transformers.channel(bot, { channel })),
+    channels: payload.channels.map((channel) => bot.transformers.channel(bot, channel)),
     // @ts-expect-error TODO: Deal with partials
     members: payload.members.map((user) => bot.transformers.user(bot, user)),
     presenceCount: payload.presence_count,

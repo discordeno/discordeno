@@ -1,9 +1,9 @@
 import type { DiscordSticker, DiscordStickerPack } from '@discordeno/types'
-import type { InternalBot, Sticker, StickerPack } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, Sticker, StickerPack, TransformersDesiredProperties } from '../index.js'
 
-export function transformSticker(bot: InternalBot, payload: DiscordSticker): typeof bot.transformers.$inferredTypes.sticker {
+export function transformSticker(bot: Bot, payload: DiscordSticker): Sticker {
   const props = bot.transformers.desiredProperties.sticker
-  const sticker = {} as Sticker
+  const sticker = {} as SetupDesiredProps<Sticker, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) sticker.id = bot.transformers.snowflake(payload.id)
   if (props.packId && payload.pack_id) sticker.packId = bot.transformers.snowflake(payload.pack_id)
@@ -20,7 +20,7 @@ export function transformSticker(bot: InternalBot, payload: DiscordSticker): typ
   return bot.transformers.customizers.sticker(bot, payload, sticker)
 }
 
-export function transformStickerPack(bot: InternalBot, payload: DiscordStickerPack): StickerPack {
+export function transformStickerPack(bot: Bot, payload: DiscordStickerPack): StickerPack {
   const pack = {
     id: bot.transformers.snowflake(payload.id),
     stickers: payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),

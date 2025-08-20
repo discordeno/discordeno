@@ -109,7 +109,7 @@ const FeatureList: FeatureItem[] = [
   },
 ]
 
-export default function DiscordenoFeatures(): JSX.Element {
+export default function DiscordenoFeatures() {
   return (
     <section className={styles.features}>
       <div className="container">

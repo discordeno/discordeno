@@ -1,7 +1,7 @@
 import Link from '@docusaurus/Link'
 import { Button, Header, HeaderBody, Highlight } from '@site/src/styling'
 
-export default function DiscordenoHeader(): JSX.Element {
+export default function DiscordenoHeader() {
   return (
     <>
       <Header>

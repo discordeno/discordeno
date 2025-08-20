@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/resources/guild */
 
-import type { ChannelTypes, DiscordChannel, DiscordOverwrite, DiscordThreadMember, SortOrderTypes } from './channel.js'
+import type { DiscordChannel, DiscordThreadMember } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
 import type { DiscordGuildCreateExtra } from './gateway.js'
 import type { DiscordInvite } from './invite.js'
@@ -630,68 +630,6 @@ export interface DiscordIncidentsData {
   raid_detected_at?: string | null
 }
 
-// TODO: We usually don't have types for the JSON request params, we should probably remove this
-/** https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params */
-export interface DiscordCreateGuildChannel {
-  /** Channel name (1-100 characters) */
-  name: string
-  /** The type of channel */
-  type?: ChannelTypes
-  /** Channel topic (0-1024 characters) */
-  topic?: string
-  /** The bitrate (in bits) of the voice channel (voice only) */
-  bitrate?: number
-  /** The user limit of the voice channel (voice only) */
-  user_limit?: number
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rate_limit_per_user?: number
-  /** Sorting position of the channel */
-  position?: number
-  /** The channel's permission overwrites */
-  permission_overwrites?: DiscordOverwrite[]
-  /** Id of the parent category for a channel */
-  parent_id?: string
-  /** Whether the channel is nsfw */
-  nsfw?: boolean
-  /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
-  default_auto_archive_duration?: number
-  /** Emoji to show in the add reaction button on a thread in a forum channel */
-  default_reaction_emoji?: {
-    /** The id of a guild's custom emoji. Exactly one of `emojiId` and `emojiName` must be set. */
-    emoji_id?: string | null
-    /** The unicode character of the emoji. Exactly one of `emojiId` and `emojiName` must be set. */
-    emoji_name?: string | null
-  }
-  /** Set of tags that can be used in a forum channel */
-  available_tags?: Array<{
-    /** The id of the tag */
-    id: string
-    /** The name of the tag (0-20 characters) */
-    name: string
-    /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-    moderated: boolean
-    /** The id of a guild's custom emoji */
-    emoji_id: string
-    /** The unicode character of the emoji */
-    emoji_name?: string
-  }>
-  /** the default sort order type used to order posts in forum channels */
-  default_sort_order?: SortOrderTypes | null
-}
-
-// TODO: We usually don't have types for the JSON request params, we should probably remove this
-/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
-export interface DiscordModifyGuildChannelPositions {
-  /** Channel id */
-  id: string
-  /** Sorting position of the channel */
-  position?: number | null
-  /** Syncs the permission overwrites with the new parent, if moving to a new category */
-  lock_positions?: boolean | null
-  /** The new parent ID for the channel that is moved */
-  parent_id?: string | null
-}
-
 /** https://discord.com/developers/docs/resources/guild#list-active-guild-threads-response-body */
 export interface DiscordListActiveThreads {
   /** The active threads */
@@ -718,15 +656,4 @@ export interface DiscordPrunedCount {
 export interface DiscordVanityUrl extends Partial<Omit<DiscordInvite, 'code'>> {
   code: string | null
   uses: number
-}
-
-// TODO: We usually don't have types for the JSON request params, we should probably remove this
-/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
-export interface DiscordModifyGuildWelcomeScreen {
-  /** Whether the welcome screen is enabled */
-  enabled?: boolean | null
-  /** Channels linked in the welcome screen and their display options */
-  welcome_screen?: DiscordWelcomeScreenChannel[] | null
-  /** The server description to show in the welcome screen */
-  description?: string | null
 }
