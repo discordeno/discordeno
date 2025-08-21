@@ -1,9 +1,9 @@
 import type { DiscordStageInstance } from '@discordeno/types'
-import type { InternalBot, StageInstance } from '../index.js'
+import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, StageInstance, TransformersDesiredProperties } from '../index.js'
 
-export function transformStageInstance(bot: InternalBot, payload: DiscordStageInstance): typeof bot.transformers.$inferredTypes.stageInstance {
+export function transformStageInstance(bot: Bot, payload: DiscordStageInstance): StageInstance {
   const props = bot.transformers.desiredProperties.stageInstance
-  const stageInstance = {} as StageInstance
+  const stageInstance = {} as SetupDesiredProps<StageInstance, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) stageInstance.id = bot.transformers.snowflake(payload.id)
   if (props.guildId && payload.guild_id) stageInstance.guildId = bot.transformers.snowflake(payload.guild_id)

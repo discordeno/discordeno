@@ -1,5 +1,6 @@
 name: E2E Test
-
+permissions:
+  contents: read
 on:
   workflow_call:
     inputs:

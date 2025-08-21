@@ -5,9 +5,9 @@ export function snowflakeToBigint(snowflake: BigString): bigint {
 }
 
 export function bigintToSnowflake(snowflake: BigString): string {
-  return snowflake ? snowflake.toString() : ''
+  return snowflake.toString()
 }
 
 export function snowflakeToTimestamp(snowflake: BigString): number {
-  return Number(BigInt(snowflake) / 4194304n + 1420070400000n)
+  return Number(BigInt(snowflake) >> 22n) + 1420070400000
 }

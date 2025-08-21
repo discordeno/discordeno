@@ -77,6 +77,7 @@ describe('Manage reactions', async () => {
     const emoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
+      roles: [],
     })
 
     after(async () => {
@@ -106,6 +107,7 @@ describe('Manage reactions', async () => {
     const emoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
+      roles: [],
     })
 
     after(async () => {
@@ -132,6 +134,7 @@ describe('Manage reactions', async () => {
     const emoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
+      roles: [],
     })
 
     after(async () => {

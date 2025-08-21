@@ -6,5 +6,5 @@ export async function handleGuildUpdate(bot: Bot, data: DiscordGatewayPayload, s
 
   const payload = data.d as DiscordGuild
 
-  bot.events.guildUpdate(bot.transformers.guild(bot, { guild: payload, shardId }))
+  bot.events.guildUpdate(bot.transformers.guild(bot, payload, { shardId }))
 }
