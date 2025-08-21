@@ -35,11 +35,8 @@
       "outputs": ["coverage/**"],
       "env": ["DISCORD_TOKEN", "E2E_TEST_GUILD_ID"]
     },
-    "lint": {
+    "check": {
       "dependsOn": ["build:type"],
-      "cache": false
-    },
-    "fmt": {
       "cache": false
     }
   }
