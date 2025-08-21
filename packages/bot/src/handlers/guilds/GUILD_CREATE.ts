@@ -5,5 +5,5 @@ export async function handleGuildCreate(bot: Bot, data: DiscordGatewayPayload, s
   if (!bot.events.guildCreate) return
 
   const payload = data.d as DiscordGuild
-  bot.events.guildCreate(bot.transformers.guild(bot, { guild: payload, shardId }))
+  bot.events.guildCreate(bot.transformers.guild(bot, payload, { shardId }))
 }

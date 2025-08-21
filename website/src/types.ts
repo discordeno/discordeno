@@ -7,8 +7,8 @@ export interface FeatureList {
 
 export interface FeatureItem {
   title: string
-  Svg: JSX.Element
-  description: JSX.Element
+  Svg: React.JSX.Element
+  description: React.JSX.Element
 }
 
 export enum DiscordLibraries {

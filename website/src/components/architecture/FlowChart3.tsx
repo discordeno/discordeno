@@ -1,8 +1,9 @@
+import { useColorMode } from '@docusaurus/theme-common'
+import { Background, Controls, type Edge, Handle, type Node, Position, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
 import type React from 'react'
 import { useEffect, useState } from 'react'
-import ReactFlow, { Background, Controls, type Edge, Handle, type Node, Position, useEdgesState, useNodesState } from 'reactflow'
-import 'reactflow/dist/style.css'
-import { defaultNodeOptions, height, multiplier, widthMultiplier } from './BaseFlowChart'
+import '@xyflow/react/dist/style.css'
+import { defaultNodeOptions, height, multiplier } from './BaseFlowChart'
 
 const handlers: Record<
   string,
@@ -30,31 +31,8 @@ const handlers: Record<
 }
 
 export default function FlowChart() {
-  function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window
-    return {
-      width,
-      height,
-    }
-  }
-
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions())
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
-
   const transformers = []
-
   const events = []
-
   const initialNodes: Node[] = [
     {
       id: 'baseNode-gateway',
@@ -294,7 +272,6 @@ export default function FlowChart() {
 
   const [nodes] = useNodesState(initialNodes)
   const [edges, setEdges] = useEdgesState(initialEdges)
-  const [, setHandlerIndex] = useState(0)
   const [userClick, setUserClick] = useState(false)
 
   const nodeMouseHandler = (_: React.MouseEvent, node: Node, userTrigger = true) => {
@@ -433,7 +410,6 @@ export default function FlowChart() {
           false,
         )
       }
-      setHandlerIndex(randomIndex)
     }, 1000)
     return () => {
       clearInterval(interval)
@@ -451,20 +427,19 @@ export default function FlowChart() {
     }
   }, [userClick])
 
+  const color = useColorMode()
+
   return (
     <>
       <div
         style={{
-          width:
-            windowDimensions.width >= 997
-              ? `${(100 * ((windowDimensions.width - 300 - (windowDimensions.width >= 1620 ? (windowDimensions.width - 1620) * 0.5 : 0)) / windowDimensions.width) - 2) * widthMultiplier}vw`
-              : '95vw',
           height: '50vh',
         }}
       >
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          colorMode={color.isDarkTheme ? 'dark' : 'light'}
           defaultEdgeOptions={{ focusable: false }}
           onNodeDoubleClick={nodeMouseHandler}
           onNodeClick={nodeMouseHandler}

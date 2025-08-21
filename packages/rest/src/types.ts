@@ -10,9 +10,9 @@ import type {
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
-  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
+  CreateGroupDmOptions,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
@@ -26,6 +26,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateTestEntitlement,
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
@@ -66,7 +67,6 @@ import type {
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
-  DiscordModifyGuildWelcomeScreen,
   DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
@@ -104,7 +104,8 @@ import type {
   GetBans,
   GetChannelPinsOptions,
   GetEntitlements,
-  GetGroupDmOptions,
+  GetGlobalApplicationCommandsOptions,
+  GetGuildApplicationCommandsOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
@@ -133,6 +134,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyGuildWelcomeScreen,
   ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
@@ -1444,11 +1446,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
    */
-  editWelcomeScreen: (
-    guildId: BigString,
-    options: Camelize<DiscordModifyGuildWelcomeScreen>,
-    reason?: string,
-  ) => Promise<Camelize<DiscordWelcomeScreen>>
+  editWelcomeScreen: (guildId: BigString, options: ModifyGuildWelcomeScreen, reason?: string) => Promise<Camelize<DiscordWelcomeScreen>>
   /**
    * Edits the settings of a guild's widget.
    *
@@ -1728,7 +1726,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/user#create-group-dm}
    */
-  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<Camelize<DiscordChannel>>
+  getGroupDmChannel: (options: CreateGroupDmOptions) => Promise<Camelize<DiscordChannel>>
   /**
    * Gets an emoji by its ID.
    *
@@ -1809,11 +1807,12 @@ export interface RestManager {
   /**
    * Gets the list of your bot's global application commands.
    *
+   * @param options - The parameters for the fetching of global application commands
    * @returns A collection of {@link DiscordApplicationCommand} objects assorted by command ID.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
    */
-  getGlobalApplicationCommands: () => Promise<Camelize<DiscordApplicationCommand>[]>
+  getGlobalApplicationCommands: (options?: GetGlobalApplicationCommandsOptions) => Promise<Camelize<DiscordApplicationCommand>[]>
   /**
    * Gets a guild by its ID.
    *
@@ -1851,11 +1850,12 @@ export interface RestManager {
    * Gets the list of application commands registered by your bot in a guild.
    *
    * @param guildId - The ID of the guild the commands are registered in.
+   * @param options - The parameters for the fetching of guild application commands
    * @returns A collection of {@link DiscordApplicationCommand} objects assorted by command ID.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
-  getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>[]>
+  getGuildApplicationCommands: (guildId: BigString, options?: GetGuildApplicationCommandsOptions) => Promise<Camelize<DiscordApplicationCommand>[]>
   /**
    * Gets the preview of a guild by a guild's ID.
    *
@@ -2985,7 +2985,7 @@ export interface RestManager {
    * This endpoint returns a partial entitlement object.
    * It will not contain subscription_id, starts_at, or ends_at, as it's valid in perpetuity.
    */
-  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Camelize<DiscordEntitlement>>>
+  createTestEntitlement: (applicationId: BigString, body: CreateTestEntitlement) => Promise<Partial<Camelize<DiscordEntitlement>>>
   /**
    * Deletes a currently-active test entitlement. Discord will act as though that user or guild no longer has entitlement to your premium offering.
    *
