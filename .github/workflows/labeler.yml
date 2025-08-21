@@ -1,5 +1,7 @@
 name: Labeler
-
+permissions:
+  issues: write
+  pull-requests: write
 on:
   pull_request_target:
     types: ['edited', 'opened', 'reopened', 'synchronize']
