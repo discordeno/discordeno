@@ -3,10 +3,12 @@ import type {
   ActivityInstance,
   ActivityLocation,
   Bot,
+  DesiredPropertiesBehavior,
   DiscordActivity,
   DiscordActivityInstance,
   DiscordActivityLocation,
-  InternalBot,
+  SetupDesiredProps,
+  TransformersDesiredProperties,
 } from '../index.js'
 
 export function transformActivity(bot: Bot, payload: DiscordActivity): Activity {
@@ -45,12 +47,9 @@ export function transformActivity(bot: Bot, payload: DiscordActivity): Activity 
   return bot.transformers.customizers.activity(bot, payload, activity)
 }
 
-export function transformActivityInstance(
-  bot: InternalBot,
-  payload: DiscordActivityInstance,
-): typeof bot.transformers.$inferredTypes.activityInstance {
+export function transformActivityInstance(bot: Bot, payload: DiscordActivityInstance): ActivityInstance {
   const props = bot.transformers.desiredProperties.activityInstance
-  const activityInstance = {} as ActivityInstance
+  const activityInstance = {} as SetupDesiredProps<ActivityInstance, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.applicationId && payload.application_id) activityInstance.applicationId = bot.transformers.snowflake(payload.application_id)
   if (props.instanceId && payload.instance_id) activityInstance.instanceId = payload.instance_id
@@ -61,12 +60,9 @@ export function transformActivityInstance(
   return bot.transformers.customizers.activityInstance(bot, payload, activityInstance)
 }
 
-export function transformActivityLocation(
-  bot: InternalBot,
-  payload: DiscordActivityLocation,
-): typeof bot.transformers.$inferredTypes.activityLocation {
+export function transformActivityLocation(bot: Bot, payload: DiscordActivityLocation): ActivityLocation {
   const props = bot.transformers.desiredProperties.activityLocation
-  const activityLocation = {} as ActivityLocation
+  const activityLocation = {} as SetupDesiredProps<ActivityLocation, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.id && payload.id) activityLocation.id = payload.id
   if (props.kind && payload.kind) activityLocation.kind = payload.kind

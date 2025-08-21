@@ -9,6 +9,7 @@ await memoryBenchmark(
       token: ' ',
       applicationId: 1n,
       events: {},
+      desiredProperties: {},
     }),
   (bot, event) => {
     const eventName = snakeToCamelCase(event.payload.t!)
