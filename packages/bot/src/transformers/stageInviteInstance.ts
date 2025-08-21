@@ -1,26 +1,24 @@
-import type { BigString, DiscordInviteStageInstance, DiscordMember } from '@discordeno/types'
-import type { InternalBot, InviteStageInstance } from '../index.js'
+import type { BigString, DiscordInviteStageInstance } from '@discordeno/types'
+import type { Bot, DesiredPropertiesBehavior, InviteStageInstance, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
 
-export function transformInviteStageInstance(
-  bot: InternalBot,
-  payload: DiscordInviteStageInstance & { guildId: BigString },
-): typeof bot.transformers.$inferredTypes.inviteStageInstance {
+export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteStageInstance, extra?: { guildId?: BigString }): InviteStageInstance {
   const props = bot.transformers.desiredProperties.inviteStageInstance
-  const inviteStageInstance = {} as InviteStageInstance
+  const inviteStageInstance = {} as SetupDesiredProps<InviteStageInstance, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.members && payload.members) {
     inviteStageInstance.members = payload.members.map((member) =>
-      bot.transformers.member(
-        bot,
-        member as DiscordMember,
-        payload.guildId,
-        member.user?.id ? bot.transformers.snowflake(member.user.id) : undefined!,
-      ),
+      // @ts-expect-error TODO: Partials
+      bot.transformers.member(bot, member, {
+        guildId: extra?.guildId,
+        userId: member.user?.id,
+      }),
     )
   }
   if (props.participantCount) inviteStageInstance.participantCount = payload.participant_count
   if (props.speakerCount) inviteStageInstance.participantCount = payload.participant_count
   if (props.topic && payload.topic) inviteStageInstance.topic = payload.topic
 
-  return bot.transformers.customizers.inviteStageInstance(bot, payload, inviteStageInstance)
+  return bot.transformers.customizers.inviteStageInstance(bot, payload, inviteStageInstance, {
+    guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
+  })
 }

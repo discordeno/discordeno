@@ -1,16 +1,16 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { InternalBot, PresenceUpdate } from '../index.js'
+import type { Bot, PresenceUpdate, User } from '../index.js'
 
-export function transformPresence(bot: InternalBot, payload: DiscordPresenceUpdate): PresenceUpdate {
-  const presence = {
-    user: bot.transformers.user(bot, payload.user),
-    guildId: bot.transformers.snowflake(payload.guild_id),
-    status: PresenceStatus[payload.status],
-    activities: payload.activities.map((activity) => bot.transformers.activity(bot, activity)),
-    desktop: payload.client_status.desktop,
-    mobile: payload.client_status.mobile,
-    web: payload.client_status.web,
-  } as PresenceUpdate
+export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
+  const presence = {} as PresenceUpdate
+
+  if (payload.user) presence.user = bot.transformers.user(bot, payload.user) as User
+  if (payload.guild_id) presence.guildId = bot.transformers.snowflake(payload.guild_id)
+  if (payload.status) presence.status = PresenceStatus[payload.status]
+  if (payload.activities) presence.activities = payload.activities.map((activity) => bot.transformers.activity(bot, activity))
+  if (payload.client_status.desktop) presence.desktop = payload.client_status.desktop
+  if (payload.client_status.mobile) presence.mobile = payload.client_status.mobile
+  if (payload.client_status.web) presence.web = payload.client_status.web
 
   return bot.transformers.customizers.presence(bot, payload, presence)
 }
