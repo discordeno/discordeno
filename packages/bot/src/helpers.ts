@@ -10,9 +10,9 @@ import type {
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
-  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
+  CreateGroupDmOptions,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildBulkBan,
@@ -26,6 +26,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  CreateTestEntitlement,
   CreateWebhook,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
@@ -44,8 +45,6 @@ import type {
   DiscordInvite,
   DiscordInviteMetadata,
   DiscordListArchivedThreads,
-  DiscordMessage,
-  DiscordModifyGuildWelcomeScreen,
   DiscordPrunedCount,
   DiscordTokenExchange,
   DiscordTokenRevocation,
@@ -68,7 +67,8 @@ import type {
   GetBans,
   GetChannelPinsOptions,
   GetEntitlements,
-  GetGroupDmOptions,
+  GetGlobalApplicationCommandsOptions,
+  GetGuildApplicationCommandsOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
@@ -95,6 +95,7 @@ import type {
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
+  ModifyGuildWelcomeScreen,
   ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
@@ -138,6 +139,7 @@ import type {
   Subscription,
   Template,
   ThreadMember,
+  ThreadMemberTransformerExtra,
   User,
   VoiceState,
   Webhook,
@@ -152,7 +154,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.automodRule(bot, snakelize(await bot.rest.createAutomodRule(guildId, options, reason)))
     },
     createChannel: async (guildId, options, reason) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.createChannel(guildId, options, reason)), guildId })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.createChannel(guildId, options, reason)), { guildId })
     },
     createEmoji: async (guildId, options, reason) => {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.createEmoji(guildId, options, reason)))
@@ -161,7 +163,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.emoji(bot, snakelize(await bot.rest.createApplicationEmoji(options)))
     },
     createForumThread: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.createForumThread(channelId, options, reason)) })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.createForumThread(channelId, options, reason)))
     },
     createGlobalApplicationCommand: async (command, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGlobalApplicationCommand(command, options)))
@@ -179,7 +181,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.createInvite(channelId, options, reason)
     },
     createRole: async (guildId, options, reason) => {
-      return bot.transformers.role(bot, { role: snakelize(await bot.rest.createRole(guildId, options, reason)), guildId })
+      return bot.transformers.role(bot, snakelize(await bot.rest.createRole(guildId, options, reason)), { guildId })
     },
     createScheduledEvent: async (guildId, options, reason) => {
       return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.createScheduledEvent(guildId, options, reason)))
@@ -203,7 +205,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.user(bot, snakelize(await bot.rest.editBotProfile(options)))
     },
     editChannel: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.editChannel(channelId, options, reason)) })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.editChannel(channelId, options, reason)))
     },
     editEmoji: async (guildId, id, options, reason) => {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.editEmoji(guildId, id, options, reason)))
@@ -212,13 +214,13 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.emoji(bot, snakelize(await bot.rest.editApplicationEmoji(id, options)))
     },
     editFollowupMessage: async (token, messageId, options) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.editFollowupMessage(token, messageId, options)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.editFollowupMessage(token, messageId, options)))
     },
     editGlobalApplicationCommand: async (commandId, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.editGlobalApplicationCommand(commandId, options)))
     },
     editGuild: async (guildId, options, reason) => {
-      return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.editGuild(guildId, options, reason)), shardId: 0 })
+      return bot.transformers.guild(bot, snakelize(await bot.rest.editGuild(guildId, options, reason)))
     },
     editGuildApplicationCommand: async (commandId, guildId, options) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.editGuildApplicationCommand(commandId, guildId, options)))
@@ -230,19 +232,16 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.template(bot, snakelize(await bot.rest.editGuildTemplate(guildId, templateCode, options)))
     },
     editMessage: async (channelId, messageId, options) => {
-      return bot.transformers.message(bot, {
-        message: snakelize(await bot.rest.editMessage(channelId, messageId, options)) as DiscordMessage,
-        shardId: 0,
-      })
+      return bot.transformers.message(bot, snakelize(await bot.rest.editMessage(channelId, messageId, options)))
     },
     editOriginalInteractionResponse: async (token, options) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.editOriginalInteractionResponse(token, options)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalInteractionResponse(token, options)))
     },
     editRole: async (guildId, roleId, options, reason) => {
-      return bot.transformers.role(bot, { role: snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), guildId })
+      return bot.transformers.role(bot, snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), { guildId })
     },
     editRolePositions: async (guildId, options, reason) => {
-      return snakelize(await bot.rest.editRolePositions(guildId, options, reason)).map((role) => bot.transformers.role(bot, { role, guildId }))
+      return snakelize(await bot.rest.editRolePositions(guildId, options, reason)).map((role) => bot.transformers.role(bot, role, { guildId }))
     },
     editScheduledEvent: async (guildId, eventId, options, reason) => {
       return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.editScheduledEvent(guildId, eventId, options, reason)))
@@ -254,10 +253,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhook(webhookId, options, reason)))
     },
     editWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, {
-        message: snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)) as DiscordMessage,
-        shardId: 0,
-      })
+      return bot.transformers.message(bot, snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)))
     },
     editWebhookWithToken: async (webhookId, token, options) => {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhookWithToken(webhookId, token, options)))
@@ -272,7 +268,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       const result = await bot.rest.executeWebhook(webhookId, token, options)
       if (!result) return
 
-      return bot.transformers.message(bot, { message: snakelize(result) as DiscordMessage, shardId: 0 })
+      return bot.transformers.message(bot, snakelize(result))
     },
     followAnnouncement: async (sourceChannelId, targetChannelId) => {
       return await bot.rest.followAnnouncement(sourceChannelId, targetChannelId)
@@ -280,15 +276,15 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getActiveThreads: async (guildId) => {
       const result = await bot.rest.getActiveThreads(guildId)
       return {
-        threads: result.threads.map((thread) => bot.transformers.channel(bot, { guildId, channel: snakelize(thread) })),
-        members: result.members.map((member) => bot.transformers.threadMember(bot, snakelize(member))),
+        threads: result.threads.map((thread) => bot.transformers.channel(bot, snakelize(thread), { guildId })),
+        members: result.members.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
       }
     },
     getApplicationInfo: async () => {
-      return bot.transformers.application(bot, { application: snakelize(await bot.rest.getApplicationInfo()), shardId: 0 })
+      return bot.transformers.application(bot, snakelize(await bot.rest.getApplicationInfo()))
     },
     editApplicationInfo: async (body) => {
-      return bot.transformers.application(bot, { application: snakelize(await bot.rest.editApplicationInfo(body)), shardId: 0 })
+      return bot.transformers.application(bot, snakelize(await bot.rest.editApplicationInfo(body)))
     },
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken)
@@ -329,23 +325,23 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.getBans(guildId, options)
     },
     getChannel: async (channelId) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.getChannel(channelId)) })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.getChannel(channelId)))
     },
     getChannelInvites: async (channelId) => {
       return await bot.rest.getChannelInvites(channelId)
       // return (await bot.rest.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
     },
     getChannels: async (guildId) => {
-      return (await bot.rest.getChannels(guildId)).map((res) => bot.transformers.channel(bot, { channel: snakelize(res), guildId }))
+      return (await bot.rest.getChannels(guildId)).map((res) => bot.transformers.channel(bot, snakelize(res), { guildId }))
     },
     getChannelWebhooks: async (channelId) => {
       return (await bot.rest.getChannelWebhooks(channelId)).map((res) => bot.transformers.webhook(bot, snakelize(res)))
     },
     getDmChannel: async (userId) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.getDmChannel(userId)) })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.getDmChannel(userId)))
     },
     getGroupDmChannel: async (options) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.getGroupDmChannel(options)) })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.getGroupDmChannel(options)))
     },
     getEmoji: async (guildId, emojiId) => {
       return bot.transformers.emoji(bot, snakelize(await bot.rest.getEmoji(guildId, emojiId)))
@@ -364,7 +360,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       }
     },
     getFollowupMessage: async (token, messageId) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getFollowupMessage(token, messageId)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.getFollowupMessage(token, messageId)))
     },
     getGatewayBot: async () => {
       return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getGatewayBot()))
@@ -372,23 +368,23 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getGlobalApplicationCommand: async (commandId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGlobalApplicationCommand(commandId)))
     },
-    getGlobalApplicationCommands: async () => {
-      return (await bot.rest.getGlobalApplicationCommands()).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
+    getGlobalApplicationCommands: async (options) => {
+      return (await bot.rest.getGlobalApplicationCommands(options)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
     },
     getGuild: async (guildId, options) => {
-      return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.getGuild(guildId, options)), shardId: 0 })
+      return bot.transformers.guild(bot, snakelize(await bot.rest.getGuild(guildId, options)))
     },
     getGuilds: async (bearerToken, options) => {
       return (await bot.rest.getGuilds(bearerToken, options)).map<Partial<typeof bot.transformers.$inferredTypes.guild>>((res) =>
         // @ts-expect-error getGuilds returns partial guilds
-        bot.transformers.guild(bot, { guild: snakelize(res), shardId: 0 }),
+        bot.transformers.guild(bot, snakelize(res)),
       )
     },
     getGuildApplicationCommand: async (commandId, guildId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGuildApplicationCommand(commandId, guildId)))
     },
-    getGuildApplicationCommands: async (guildId) => {
-      return (await bot.rest.getGuildApplicationCommands(guildId)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
+    getGuildApplicationCommands: async (guildId, options) => {
+      return (await bot.rest.getGuildApplicationCommands(guildId, options)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
     },
     getGuildPreview: async (guildId) => {
       return await bot.rest.getGuildPreview(guildId)
@@ -415,16 +411,16 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       )
     },
     getInvite: async (inviteCode, options) => {
-      return bot.transformers.invite(bot, { invite: snakelize(await bot.rest.getInvite(inviteCode, options)), shardId: 0 })
+      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
     },
     getInvites: async (guildId) => {
-      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, { invite: snakelize(res), shardId: 0 }))
+      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
     },
     getMessage: async (channelId, messageId) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getMessage(channelId, messageId)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
     },
     getMessages: async (channelId, options) => {
-      return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, { message: snakelize(res), shardId: 0 }))
+      return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)))
     },
     getStickerPack: async (stickerPackId) => {
       return bot.transformers.stickerPack(bot, snakelize(await bot.rest.getStickerPack(stickerPackId)))
@@ -433,7 +429,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return (await bot.rest.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
     },
     getOriginalInteractionResponse: async (token) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getOriginalInteractionResponse(token)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.getOriginalInteractionResponse(token)))
     },
     getChannelPins: async (channelId, options) => {
       const res = snakelize(await bot.rest.getChannelPins(channelId, options))
@@ -444,7 +440,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       }
     },
     getPinnedMessages: async (channelId) => {
-      return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, { message: snakelize(res), shardId: 0 }))
+      return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, snakelize(res)))
     },
     getPrivateArchivedThreads: async (channelId, options) => {
       return await bot.rest.getPrivateArchivedThreads(channelId, options)
@@ -459,10 +455,10 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.getPublicArchivedThreads(channelId, options)
     },
     getRoles: async (guildId) => {
-      return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, { role, guildId }))
+      return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, role, { guildId }))
     },
     getRole: async (guildId, roleId) => {
-      return bot.transformers.role(bot, { role: snakelize(await bot.rest.getRole(guildId, roleId)), guildId })
+      return bot.transformers.role(bot, snakelize(await bot.rest.getRole(guildId, roleId)), { guildId })
     },
     getScheduledEvent: async (guildId, eventId, options) => {
       return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.getScheduledEvent(guildId, eventId, options)))
@@ -474,7 +470,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return (await bot.rest.getScheduledEventUsers(guildId, eventId, options)).map((u) => {
         return {
           user: bot.transformers.user(bot, snakelize(u.user)),
-          member: u.member && bot.transformers.member(bot, snakelize(u.member), guildId, bot.transformers.snowflake(u.user.id)),
+          member: u.member && bot.transformers.member(bot, snakelize(u.member), { guildId, userId: bot.transformers.snowflake(u.user.id) }),
         }
       })
     },
@@ -485,19 +481,19 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.stageInstance(bot, snakelize(await bot.rest.getStageInstance(channelId)))
     },
     getOwnVoiceState: async (guildId) => {
-      return bot.transformers.voiceState(bot, { guildId, voiceState: snakelize(await bot.rest.getOwnVoiceState(guildId)) })
+      return bot.transformers.voiceState(bot, snakelize(await bot.rest.getOwnVoiceState(guildId)), { guildId })
     },
     getUserVoiceState: async (guildId, userId) => {
-      return bot.transformers.voiceState(bot, { guildId, voiceState: snakelize(await bot.rest.getUserVoiceState(guildId, userId)) })
+      return bot.transformers.voiceState(bot, snakelize(await bot.rest.getUserVoiceState(guildId, userId)), { guildId })
     },
     getSticker: async (stickerId) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.getSticker(stickerId)))
     },
-    getThreadMember: async (channelId, userId, options) => {
-      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId, options)))
+    getThreadMember: async (channelId, userId, options, extra) => {
+      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId, options)), extra)
     },
-    getThreadMembers: async (channelId, options) => {
-      return (await bot.rest.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, snakelize(res)))
+    getThreadMembers: async (channelId, options, extra) => {
+      return (await bot.rest.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, snakelize(res), extra))
     },
     getReactions: async (channelId, messageId, reaction, options) => {
       return (await bot.rest.getReactions(channelId, messageId, reaction, options)).map((res) => bot.transformers.user(bot, snakelize(res)))
@@ -524,7 +520,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.webhook(bot, snakelize(await bot.rest.getWebhook(webhookId)))
     },
     getWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.getWebhookMessage(webhookId, token, messageId, options)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.getWebhookMessage(webhookId, token, messageId, options)))
     },
     getWebhookWithToken: async (webhookId, token) => {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.getWebhookWithToken(webhookId, token)))
@@ -539,21 +535,19 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)))
     },
     publishMessage: async (channelId, messageId) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.publishMessage(channelId, messageId)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)))
     },
     sendMessage: async (channelId, options) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.sendMessage(channelId, options)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.sendMessage(channelId, options)))
     },
     sendFollowupMessage: async (token, options) => {
-      return bot.transformers.message(bot, { message: snakelize(await bot.rest.sendFollowupMessage(token, options)), shardId: 0 })
+      return bot.transformers.message(bot, snakelize(await bot.rest.sendFollowupMessage(token, options)))
     },
     startThreadWithMessage: async (channelId, messageId, options, reason) => {
-      return bot.transformers.channel(bot, {
-        channel: snakelize(await bot.rest.startThreadWithMessage(channelId, messageId, options, reason)),
-      })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.startThreadWithMessage(channelId, messageId, options, reason)))
     },
     startThreadWithoutMessage: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.startThreadWithoutMessage(channelId, options, reason)) })
+      return bot.transformers.channel(bot, snakelize(await bot.rest.startThreadWithoutMessage(channelId, options, reason)))
     },
     syncGuildTemplate: async (guildId) => {
       return bot.transformers.template(bot, snakelize(await bot.rest.syncGuildTemplate(guildId)))
@@ -569,21 +563,21 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       )
     },
     editBotMember: async (guildId, options, reason) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.editBotMember(guildId, options, reason)), guildId, bot.id)
+      return bot.transformers.member(bot, snakelize(await bot.rest.editBotMember(guildId, options, reason)), { guildId, userId: bot.id })
     },
     editMember: async (guildId, userId, options, reason) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.editMember(guildId, userId, options, reason)), guildId, userId)
+      return bot.transformers.member(bot, snakelize(await bot.rest.editMember(guildId, userId, options, reason)), { guildId, userId })
     },
     getMember: async (guildId, userId) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.getMember(guildId, userId)), guildId, userId)
+      return bot.transformers.member(bot, snakelize(await bot.rest.getMember(guildId, userId)), { guildId, userId })
     },
     getCurrentMember: async (guildId, bearerToken) => {
       const res = await bot.rest.getCurrentMember(guildId, bearerToken)
-      return bot.transformers.member(bot, snakelize(res), guildId, bot.transformers.snowflake(res.user.id))
+      return bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) })
     },
     getMembers: async (guildId, options) => {
       return (await bot.rest.getMembers(guildId, options)).map((res) =>
-        bot.transformers.member(bot, snakelize(res), guildId, bot.transformers.snowflake(res.user.id)),
+        bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) }),
       )
     },
     pruneMembers: async (guildId, options, reason) => {
@@ -591,7 +585,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     searchMembers: async (guildId, query, options) => {
       return (await bot.rest.searchMembers(guildId, query, options)).map((res) =>
-        bot.transformers.member(bot, snakelize(res), guildId, bot.transformers.snowflake(res.user.id)),
+        bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) }),
       )
     },
     bulkBanMembers: async (guildId, options, reason) => {
@@ -761,7 +755,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 
       if (!response) return
 
-      return bot.transformers.interactionCallbackResponse(bot, { interactionCallbackResponse: snakelize(response), shardId: 0 })
+      return bot.transformers.interactionCallbackResponse(bot, snakelize(response))
     },
     triggerTypingIndicator: async (channelId) => {
       return await bot.rest.triggerTypingIndicator(channelId)
@@ -938,7 +932,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     token: string,
     options: Omit<ModifyWebhook, 'channelId'>,
   ) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>>
-  editWelcomeScreen: (guildId: BigString, options: Camelize<DiscordModifyGuildWelcomeScreen>, reason?: string) => Promise<WelcomeScreen>
+  editWelcomeScreen: (guildId: BigString, options: ModifyGuildWelcomeScreen, reason?: string) => Promise<WelcomeScreen>
   editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>, reason?: string) => Promise<GuildWidgetSettings>
   editUserApplicationRoleConnection: (
     bearerToken: string,
@@ -973,7 +967,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getChannels: (guildId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>[]>
   getChannelWebhooks: (channelId: BigString) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>[]>
   getDmChannel: (userId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
-  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
+  getGroupDmChannel: (options: CreateGroupDmOptions) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>
   getEmoji: (guildId: BigString, emojiId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   getApplicationEmoji: (emojiId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>
   getEmojis: (guildId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>[]>
@@ -981,11 +975,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getFollowupMessage: (token: string, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>
   getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>
-  getGlobalApplicationCommands: () => Promise<ApplicationCommand[]>
+  getGlobalApplicationCommands: (options?: GetGlobalApplicationCommandsOptions) => Promise<ApplicationCommand[]>
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>
   getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<SetupDesiredProps<Guild, TProps, TBehavior>>[]>
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>
-  getGuildApplicationCommands: (guildId: BigString) => Promise<ApplicationCommand[]>
+  getGuildApplicationCommands: (guildId: BigString, options?: GetGuildApplicationCommandsOptions) => Promise<ApplicationCommand[]>
   getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>
   getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
   getGuildStickers: (guildId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>[]>
@@ -1028,8 +1022,8 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getOwnVoiceState: (guildId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>
   getSticker: (stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
-  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember) => Promise<ThreadMember>
-  getThreadMembers: (channelId: BigString, options?: ListThreadMembers) => Promise<ThreadMember[]>
+  getThreadMember: (channelId: BigString, userId: BigString, options?: GetThreadMember, extra?: ThreadMemberTransformerExtra) => Promise<ThreadMember>
+  getThreadMembers: (channelId: BigString, options?: ListThreadMembers, extra?: ThreadMemberTransformerExtra) => Promise<ThreadMember[]>
   getReactions: (
     channelId: BigString,
     messageId: BigString,
@@ -1168,7 +1162,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   ) => Promise<SetupDesiredProps<GuildOnboarding, TProps, TBehavior>>
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>[]>
   getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>>
-  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>
+  createTestEntitlement: (
+    applicationId: BigString,
+    body: CreateTestEntitlement,
+  ) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   listSkus: (applicationId: BigString) => Promise<SetupDesiredProps<Sku, TProps, TBehavior>[]>
   listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<SetupDesiredProps<Subscription, TProps, TBehavior>[]>

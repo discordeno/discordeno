@@ -68,6 +68,7 @@ import {
   hasProperty,
   logger,
   processReactionString,
+  snowflakeToTimestamp,
   urlToBase64,
 } from '@discordeno/utils'
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -277,9 +278,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       let body: string | FormData | undefined
-
-      // TODO: check if we need to add specific check for GET method
-      // Since GET does not allow bodies
 
       // Have to check for attachments first, since body then has to be send in a different way.
       if (options?.files !== undefined) {
@@ -518,30 +516,63 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     simplifyUrl(url, method) {
-      const parts = url.split('/')
-      const secondLastPart = parts[parts.length - 2]
+      const routeInformationKey: string[] = [method]
 
-      if (secondLastPart === 'channels' || secondLastPart === 'guilds') {
-        return url
+      const queryParamIndex = url.indexOf('?')
+      const route = queryParamIndex !== -1 ? url.slice(0, queryParamIndex) : url
+
+      // Since the urls start with / the first part will always be empty
+      const splittedRoute = route.split('/')
+
+      // 1) Strip the minor params
+      //    The only majors are channels, guilds, webhooks and webhooks with their token
+
+      const strippedRoute = splittedRoute
+        .map((part, index, array) => {
+          // While parseInt will truncate the snowflake id, it will still tell us if it is a number
+          const isNumber = Number.isFinite(parseInt(part, 10))
+
+          if (!isNumber) {
+            // Reactions emoji need to be stripped as it is a minor parameter
+            if (index >= 1 && array[index - 1] === 'reactions') return 'x'
+            // If we are on a webhook or if it is part of the route, keep it as it is a major parameter
+            return part
+          }
+
+          // Check if we are on a channel id, a guild id or a webhook id
+          const isMajor = index >= 1 && (array[index - 1] === 'channels' || array[index - 1] === 'guilds' || array[index - 1] === 'webhooks')
+
+          if (isMajor) return part
+
+          return 'x'
+        })
+        .join('/')
+
+      routeInformationKey.push(strippedRoute)
+
+      // 2) Account for exceptions
+      //    - https://github.com/discord/discord-api-docs/issues/1092
+      //    - https://github.com/discord/discord-api-docs/issues/1295
+
+      // The 2 exceptions are for message delete, so we need to check if we are in that route
+      if (method === 'DELETE' && splittedRoute.length === 5 && splittedRoute[1] === 'channels' && strippedRoute.endsWith('/messages/x')) {
+        const messageId = splittedRoute[4]
+        const timestamp = snowflakeToTimestamp(messageId)
+        const now = Date.now()
+
+        // https://github.com/discord/discord-api-docs/issues/1092
+        if (now - timestamp < 10_000) {
+          routeInformationKey.push('message-delete-10s')
+        }
+
+        // https://github.com/discord/discord-api-docs/issues/1295
+        // 2 weeks = 2 * 7 * 24 * 60 * 60 * 1000 = 1209600000
+        if (now - timestamp > 1209600000) {
+          routeInformationKey.push('message-delete-2w')
+        }
       }
 
-      if (secondLastPart === 'reactions' || parts[parts.length - 1] === '@me') {
-        parts.splice(-2)
-        parts.push('reactions')
-      } else {
-        parts.splice(-1)
-        parts.push('x')
-      }
-
-      if (parts[parts.length - 3] === 'reactions') {
-        parts.splice(-2)
-      }
-
-      if (method === 'DELETE' && secondLastPart === 'messages') {
-        return `D${parts.join('/')}`
-      }
-
-      return parts.join('/')
+      return routeInformationKey.join(':')
     },
 
     async processRequest(request: SendRequestOptions) {
@@ -1258,8 +1289,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
-    async getGlobalApplicationCommands() {
-      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId))
+    async getGlobalApplicationCommands(options) {
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId, options?.withLocalizations))
     },
 
     async getGuild(guildId, options = { counts: true }) {
@@ -1283,8 +1314,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
 
-    async getGuildApplicationCommands(guildId) {
-      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId))
+    async getGuildApplicationCommands(guildId, options) {
+      return await rest.get<DiscordApplicationCommand[]>(
+        rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId, options?.withLocalizations),
+      )
     },
 
     async getGuildPreview(guildId) {

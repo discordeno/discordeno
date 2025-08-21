@@ -1,10 +1,21 @@
 import type { DiscordCollectibles, DiscordNameplate, DiscordUser, DiscordUserPrimaryGuild } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { type Collectibles, type InternalBot, type Nameplate, ToggleBitfield, type User, type UserPrimaryGuild, UserToggles } from '../index.js'
+import {
+  type Bot,
+  type Collectibles,
+  type DesiredPropertiesBehavior,
+  type Nameplate,
+  type SetupDesiredProps,
+  ToggleBitfield,
+  type TransformersDesiredProperties,
+  type User,
+  type UserPrimaryGuild,
+  UserToggles,
+} from '../index.js'
 
-export const baseUser: InternalBot['transformers']['$inferredTypes']['user'] = {
+export const baseUser: User = {
   // This allows typescript to still check for type errors on functions below
-  ...(undefined as unknown as InternalBot['transformers']['$inferredTypes']['user']),
+  ...(undefined as unknown as User),
 
   get tag() {
     return `${this.username}#${this.discriminator}`
@@ -23,8 +34,8 @@ export const baseUser: InternalBot['transformers']['$inferredTypes']['user'] = {
   },
 }
 
-export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bot.transformers.$inferredTypes.user {
-  const user: User = Object.create(baseUser)
+export function transformUser(bot: Bot, payload: DiscordUser): User {
+  const user: SetupDesiredProps<User, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 
   if (props.toggles) user.toggles = new UserToggles(payload)
@@ -48,8 +59,8 @@ export function transformUser(bot: InternalBot, payload: DiscordUser): typeof bo
   return bot.transformers.customizers.user(bot, payload, user)
 }
 
-export function transformCollectibles(bot: InternalBot, payload: DiscordCollectibles): Collectibles {
-  const collectibles = {} as Collectibles
+export function transformCollectibles(bot: Bot, payload: DiscordCollectibles): Collectibles {
+  const collectibles = {} as SetupDesiredProps<Collectibles, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.collectibles
 
   if (props.nameplate && payload.nameplate) collectibles.nameplate = bot.transformers.nameplate(bot, payload.nameplate)
@@ -57,8 +68,8 @@ export function transformCollectibles(bot: InternalBot, payload: DiscordCollecti
   return bot.transformers.customizers.collectibles(bot, payload, collectibles)
 }
 
-export function transformNameplate(bot: InternalBot, payload: DiscordNameplate): Nameplate {
-  const nameplate = {} as Nameplate
+export function transformNameplate(bot: Bot, payload: DiscordNameplate): Nameplate {
+  const nameplate = {} as SetupDesiredProps<Nameplate, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.nameplate
 
   if (props.skuId && payload.sku_id) nameplate.skuId = bot.transformers.snowflake(payload.sku_id)
@@ -69,8 +80,8 @@ export function transformNameplate(bot: InternalBot, payload: DiscordNameplate):
   return bot.transformers.customizers.nameplate(bot, payload, nameplate)
 }
 
-export function transformUserPrimaryGuild(bot: InternalBot, payload: DiscordUserPrimaryGuild): UserPrimaryGuild {
-  const userPrimaryGuild = {} as UserPrimaryGuild
+export function transformUserPrimaryGuild(bot: Bot, payload: DiscordUserPrimaryGuild): UserPrimaryGuild {
+  const userPrimaryGuild = {} as SetupDesiredProps<UserPrimaryGuild, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.userPrimaryGuild
 
   if (props.identityGuildId && payload.identity_guild_id) userPrimaryGuild.identityGuildId = bot.transformers.snowflake(payload.identity_guild_id)
