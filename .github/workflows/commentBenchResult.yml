@@ -1,5 +1,8 @@
 name: Comment Benchmark Result
-
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
 on:
   workflow_run:
     workflows: [Benchmark with retry]
