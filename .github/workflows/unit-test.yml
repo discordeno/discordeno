@@ -1,5 +1,6 @@
 name: Package Test
-
+permissions:
+  contents: read
 on:
   workflow_call:
     inputs:
