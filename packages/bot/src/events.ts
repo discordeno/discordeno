@@ -42,15 +42,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     threads: SetupDesiredProps<Channel, TProps, TBehavior>[]
     members: ThreadMember[]
   }) => unknown
-  threadMemberUpdate: (payload: {
-    id: bigint
-    guildId: bigint
-    // TODO: remove this in the next major version
-    /** @deprecated Use joinedTimestamp */
-    joinedAt: number
-    joinedTimestamp: number
-    flags: number
-  }) => unknown
+  threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedTimestamp: number; flags: number }) => unknown
   threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown
   threadUpdate: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown
   scheduledEventCreate: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown
@@ -136,8 +128,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   guildBanAdd: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildBanRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
   guildCreate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
-  guildDelete: (id: bigint, shardId: number) => unknown
-  guildUnavailable: (id: bigint, shardId: number) => unknown
+  guildDelete: (data: { id: bigint; unavailable: boolean }, shardId: number) => unknown
   guildUpdate: (guild: SetupDesiredProps<Guild, TProps, TBehavior>) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: SetupDesiredProps<Role, TProps, TBehavior>) => unknown

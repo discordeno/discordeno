@@ -21,16 +21,15 @@
     "test:e2e": "turbo test:e2e",
     "test:type": "turbo build:type",
     "test:test-type": "turbo test:test-type",
-    "fmt": "turbo fmt",
-    "lint": "turbo lint",
-    "format": "biome format --write",
+    "check": "turbo check",
+    "check:all": "biome check --write",
     "postinstall": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.3",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "turbo": "^2.5.4",
+    "turbo": "^2.5.5",
     "typedoc": "^0.28.5",
     "typedoc-plugin-markdown": "^4.7.0",
     "typescript": "^5.9.2"
