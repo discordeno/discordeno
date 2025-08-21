@@ -27,18 +27,26 @@ yarn add dd-cache-proxy
 
 ```js
 import { createProxyCache } from 'dd-cache-proxy';
-import { createBot, Bot, Intents } from '@discordeno/bot';
+import { createBot, Bot, Intents, createDesiredPropertiesObject, DesiredPropertiesBehavior } from '@discordeno/bot';
+
+// Fill your discordeno desired properties here. This can have more properties than you'd like to store in your cache, as you can provide those properties later separately.
+// Check here - https://discordeno.js.org/desired-props to learn more about discordeno's desired properties.
+const desiredProperties = createDesiredPropertiesObject({});
+
+// This will be needed to provide the type for the bot parameter of our function.
+interface BotDesiredProperties extends Required<typeof desiredProperties> {}
 
 // Create a function for easier use and cleaner code.
-const getProxyCacheBot = (bot: Bot) =>
+const getProxyCacheBot = (bot: Bot<BotDesiredProperties, DesiredPropertiesBehavior.RemoveKey>) =>
   createProxyCache(bot, {
-    // Define what properties of individual cache you wish to cache. Caches no props by default. Or you can use the `undesiredProps` prop to reverse the behavior of `desiredProps`.
+      // Define what properties of individual cache you wish to cache. This property must also be in your discordeno's desired properties.
+      // Caches all props from discordeno's desired props by default. Or you can use the `undesiredProps` prop to reverse the behavior of `desiredProps`.
     desiredProps: {
       // Example props that are cached in channels and other cache. Accepts an array of props of the cache. All props are optional.
       guild: ['channels', 'icon', 'id', 'name', 'roles'],
       user: ['avatar', 'id', 'username'],
     },
-    // Define what to cache in memory. All props are optional except `default`. By default, all props inside `cacheInMemory` are set to `true`.
+    // Define what to cache in memory. By default, all props inside `cacheInMemory` are set to `true`.
     cacheInMemory: {
       // Whether or not to cache guilds.
       guild: true,
@@ -46,7 +54,7 @@ const getProxyCacheBot = (bot: Bot) =>
       // Default value for the properties that are not provided inside `cacheInMemory`.
       default: false,
     },
-    // Define what to cache outside memory. All props are optional except `default`. By default, all props inside `cacheOutsideMemory` are set to `false`.
+    // Define what to cache outside memory. By default, all props inside `cacheOutsideMemory` are set to `false`.
     cacheOutsideMemory: {
       // Whether or not to cache channels.
       channel: false,
@@ -54,7 +62,8 @@ const getProxyCacheBot = (bot: Bot) =>
       // Default value for the properties that are not provided inside `cacheOutsideMemory`.
       default: true,
     },
-    // Function to get an item from outside cache. `getItem`, `setItem`, `removeItem` must be provided if you cache outside memory, can be omitted if you don't store outside memory.
+    // Function to set an item into the outside memory cache.
+    // `getItem`, `setItem`, `removeItem` must be provided if you cache outside memory. Otherwise, you can omit these.
     setItem: (table, item) => {
       if (table === 'channel') {
         // Custom code to store data into your cache outside memory, say redis or a database or whichever you use.
@@ -64,11 +73,12 @@ const getProxyCacheBot = (bot: Bot) =>
 
 // Pass the created bot object to `getProxyCacheBot` so it can add the cache proxy to it.
 const bot = getProxyCacheBot(
-  // Create the bot object.
-  createBot({
-    token,
-    intents: Intents.Guilds,
-  })
+    // Create the bot object.
+    createBot({
+        token,
+        desiredProperties,
+        intents: Intents.Guilds,
+    })
 );
 ```
 
@@ -102,7 +112,7 @@ export type CachedGuild = typeof bot.cache.$inferredTypes.guild;
 
 Now you can import `CachedGuild` in your code and use it.
 
-### Important Points To Note
+### Important Things To Note
 
 -   Make sure to include the correct `bot.transformers.desiredProperties` somewhere in your code, this must include at least **all** the properties from `bot.cache.options.desiredProps` for it to cache all those properties you want to cache.
 -   It's not recommended to dynamically change `bot.cache.options.cacheInMemory` or `bot.cache.options.cacheOutsideMemory` since it may not cache newly added cache if events for that isn't setup. If you need to do so, you need to manually rerun the `setupDummyEvents` function.
@@ -110,7 +120,7 @@ Now you can import `CachedGuild` in your code and use it.
 
 ### Useful Options To Note
 
-#### `options.shouldCache`:
+### `options.shouldCache`:
 
 This is a property with which you can conditionally cache only certain objects and leave out the others. For example, if you only want to cache guild channels, you can simply do:
 
@@ -131,9 +141,16 @@ For example, if you store guild channels individually in a database separate fro
 
 This provides the following props: (should be self explanatory with intellisense)
 
+-   `options.bulk.removeChannel`
 -   `options.bulk.removeGuild`
 -   `options.bulk.removeRole`
 -   `options.bulk.replaceInternalBulkRemover` - To set props under this prop to tell the cache proxy whether or not to run internal bulk removers.
+
+#### Note: If you cache outside memory, you must handle bulk removals yourself, otherwise they will **NOT** be deleted. The following are the bulk remover functions and the actions they should perform:
+
+-   `removeChannel` - This should remove the channel and all the thread channels that are in this channel.
+-   `removeGuild` - This should remove the guild, all the channels, members, roles that are in this guild.
+-   `removeRole` - This should remove the role and remove it from the role list of every member who has it.
 
 #### `options.sweeper`:
 
