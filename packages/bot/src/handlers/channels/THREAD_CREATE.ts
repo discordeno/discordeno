@@ -6,5 +6,5 @@ export async function handleThreadCreate(bot: Bot, data: DiscordGatewayPayload):
 
   const payload = data.d as DiscordChannel
 
-  bot.events.threadCreate(bot.transformers.channel(bot, { channel: payload }))
+  bot.events.threadCreate(bot.transformers.channel(bot, payload))
 }

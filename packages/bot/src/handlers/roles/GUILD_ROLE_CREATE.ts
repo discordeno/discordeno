@@ -6,8 +6,7 @@ export async function handleGuildRoleCreate(bot: Bot, data: DiscordGatewayPayloa
 
   const payload = data.d as DiscordGuildRoleCreate
   bot.events.roleCreate(
-    bot.transformers.role(bot, {
-      role: payload.role,
+    bot.transformers.role(bot, payload.role, {
       guildId: bot.transformers.snowflake(payload.guild_id),
     }),
   )
