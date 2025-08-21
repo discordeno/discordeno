@@ -13,8 +13,7 @@
     "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
-    "fmt": "biome format --write",
-    "lint": "biome lint --write",
+    "check": "biome check --write",
     "build-message": "swc src/generateMessage.ts --strip-leading-paths -C sourceMaps=false --out-dir ../../scripts",
     "bench": "node dist/index.js"
   },
