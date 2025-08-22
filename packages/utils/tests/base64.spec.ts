@@ -9,14 +9,14 @@ describe('base64.ts', () => {
       expect(encode('Man Ё𤭢')).to.be.equal('TWFuINCB8KStog==')
     })
     it('can encode Uint8Array to base64', () => {
-      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173, 162]).buffer)).to.be.equal('TWFuINCB8KStog==')
-      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173]).buffer)).to.be.equal('TWFuINCB8KSt')
-      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63]).buffer)).to.be.equal('TWFuINCB8KStoj8=')
+      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173, 162]))).to.be.equal('TWFuINCB8KStog==')
+      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173]))).to.be.equal('TWFuINCB8KSt')
+      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63]))).to.be.equal('TWFuINCB8KStoj8=')
     })
     it('can encode Buffer to base64', () => {
-      expect(encode(new Uint8Array(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162])).buffer)).to.be.equal('TWFuINCB8KStog==')
-      expect(encode(new Uint8Array(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173])).buffer)).to.be.equal('TWFuINCB8KSt')
-      expect(encode(new Uint8Array(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63])).buffer)).to.be.equal('TWFuINCB8KStoj8=')
+      expect(encode(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162]))).to.be.equal('TWFuINCB8KStog==')
+      expect(encode(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173]))).to.be.equal('TWFuINCB8KSt')
+      expect(encode(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63]))).to.be.equal('TWFuINCB8KStoj8=')
     })
   })
 

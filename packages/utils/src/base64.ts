@@ -3,7 +3,7 @@
  * Encodes a given Uint8Array, ArrayBuffer or string into RFC4648 base64 representation
  * @param data
  */
-export function encode(data: ArrayBuffer | string): string {
+export function encode(data: Uint8Array | ArrayBuffer | string): string {
   const uint8 = typeof data === 'string' ? new TextEncoder().encode(data) : data instanceof Uint8Array ? data : new Uint8Array(data)
   let result = ''
   let i
