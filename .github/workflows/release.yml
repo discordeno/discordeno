@@ -40,7 +40,7 @@ jobs:
         working-directory: packages/${{ matrix.package }}
 
       # If the action is running from a release, if prerelease use beta tag else use latest tag, otherwise use the next tag
-      - run: npm publish package.tgz --tag ${{ github.event_name == 'release' && github.event.action == 'published' && (github.event.release.prerelease && 'beta' || 'latest') || 'next' }}
-        working-directory: packages/${{ matrix.package }} --access public --provenance
+      - run: npm publish package.tgz --tag ${{ github.event_name == 'release' && github.event.action == 'published' && (github.event.release.prerelease && 'beta' || 'latest') || 'next' }} --access public --provenance
+        working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
