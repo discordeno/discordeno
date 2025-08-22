@@ -9,14 +9,14 @@ describe('base64.ts', () => {
       expect(encode('Man Ё𤭢')).to.be.equal('TWFuINCB8KStog==')
     })
     it('can encode Uint8Array to base64', () => {
-      expect(encode(Uint8Array.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162]).buffer)).to.be.equal('TWFuINCB8KStog==')
-      expect(encode(Uint8Array.from([77, 97, 110, 32, 208, 129, 240, 164, 173]).buffer)).to.be.equal('TWFuINCB8KSt')
-      expect(encode(Uint8Array.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63]).buffer)).to.be.equal('TWFuINCB8KStoj8=')
+      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173, 162]).buffer)).to.be.equal('TWFuINCB8KStog==')
+      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173]).buffer)).to.be.equal('TWFuINCB8KSt')
+      expect(encode(new Uint8Array([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63]).buffer)).to.be.equal('TWFuINCB8KStoj8=')
     })
     it('can encode Buffer to base64', () => {
-      expect(encode(Uint8Array.from(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162])).buffer)).to.be.equal('TWFuINCB8KStog==')
-      expect(encode(Uint8Array.from(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173])).buffer)).to.be.equal('TWFuINCB8KSt')
-      expect(encode(Uint8Array.from(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63])).buffer)).to.be.equal('TWFuINCB8KStoj8=')
+      expect(encode(new Uint8Array(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162])).buffer)).to.be.equal('TWFuINCB8KStog==')
+      expect(encode(new Uint8Array(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173])).buffer)).to.be.equal('TWFuINCB8KSt')
+      expect(encode(new Uint8Array(Buffer.from([77, 97, 110, 32, 208, 129, 240, 164, 173, 162, 63])).buffer)).to.be.equal('TWFuINCB8KStoj8=')
     })
   })
 
@@ -37,11 +37,11 @@ describe('base64.ts', () => {
 
   /** Old test */
   it('[utils] encode some bytes to base64', () => {
-    expect(encode(Uint8Array.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer)).to.be.deep.equal('AQIDBAUGBwgJCg==')
+    expect(encode(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer)).to.be.deep.equal('AQIDBAUGBwgJCg==')
   })
 
   it('[utils] decode some base64 to bytes', () => {
-    expect(decode('AQIDBAUGBwgJCg==')).to.be.deep.equal(Uint8Array.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+    expect(decode('AQIDBAUGBwgJCg==')).to.be.deep.equal(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
   })
 
   it('[utils] encode/decode base64 roundtrip should work', () => {
@@ -50,7 +50,7 @@ describe('base64.ts', () => {
       for (let i = 0; i < 10000; i++) {
         bytes.push(Math.floor(Math.random() * 256))
       }
-      const data = Uint8Array.from(bytes)
+      const data = new Uint8Array(bytes)
       expect(decode(encode(data.buffer))).to.be.deep.equal(data)
     }
   })
