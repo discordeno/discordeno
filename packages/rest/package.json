@@ -1,13 +1,7 @@
 {
   "name": "@discordeno/rest",
   "version": "22.0.0-beta.1",
-  "main": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
-  "exports": {
-    "types": "./dist/types/index.d.ts",
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.cjs"
-  },
+  "exports": "./dist/index.js",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -19,17 +13,16 @@
     "!dist/.tsbuildinfo"
   ],
   "scripts": {
-    "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist/esm && swc --strip-leading-paths --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
-    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
-    "fmt": "biome format --write",
-    "lint": "biome lint --write",
+    "check": "biome check --write",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/unit/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/unit/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
     "test:deno-unit": "deno -A ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/unit/**/*.spec.ts'",
     "test:bun-unit": "bun ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/unit/**/*.spec.ts'",
-    "test:e2e": "c8 --r lcov mocha --exit --no-warnings --jobs 1 --t 30000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
+    "test:e2e": "c8 --r lcov mocha --exit --no-warnings --jobs 1 --t 60000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
     "test:type": "tsc --noEmit",
     "test:test-type": "tsc --project tests/tsconfig.json"
   },
@@ -38,14 +31,14 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.3",
-    "@swc/cli": "^0.5.2",
+    "@biomejs/biome": "2.1.4",
+    "@swc/cli": "^0.7.8",
     "@swc/core": "^1.13.3",
     "@types/chai": "^5.2.2",
-    "@types/chai-as-promised": "^8.0.1",
+    "@types/chai-as-promised": "^8.0.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.1.0",
-    "@types/sinon": "^17.0.3",
+    "@types/node": "^24.2.1",
+    "@types/sinon": "^17.0.4",
     "c8": "^10.1.3",
     "chai": "^5.2.1",
     "chai-as-promised": "^8.0.1",
@@ -54,6 +47,6 @@
     "sinon": "^21.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }

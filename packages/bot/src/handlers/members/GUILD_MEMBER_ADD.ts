@@ -7,6 +7,6 @@ export async function handleGuildMemberAdd(bot: Bot, data: DiscordGatewayPayload
   const payload = data.d as DiscordGuildMemberAdd
   const guildId = bot.transformers.snowflake(payload.guild_id)
   const user = bot.transformers.user(bot, payload.user)
-  const member = bot.transformers.member(bot, payload, guildId, payload.user.id)
+  const member = bot.transformers.member(bot, payload, { guildId, userId: payload.user.id })
   bot.events.guildMemberAdd(member, user)
 }

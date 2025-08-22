@@ -7,7 +7,7 @@
     },
     "build:type": {
       "dependsOn": ["^build:type"],
-      "outputs": ["dist/types/**/*.d.ts", "dist/types/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
+      "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
     },
     "test:unit-coverage": {
       "dependsOn": ["^build"],
@@ -35,11 +35,8 @@
       "outputs": ["coverage/**"],
       "env": ["DISCORD_TOKEN", "E2E_TEST_GUILD_ID"]
     },
-    "lint": {
+    "check": {
       "dependsOn": ["build:type"],
-      "cache": false
-    },
-    "fmt": {
       "cache": false
     }
   }
