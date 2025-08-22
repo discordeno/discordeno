@@ -7,7 +7,7 @@
     },
     "build:type": {
       "dependsOn": ["^build:type"],
-      "outputs": ["dist/types/**/*.d.ts", "dist/types/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
+      "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
     },
     "test:unit-coverage": {
       "dependsOn": ["^build"],
