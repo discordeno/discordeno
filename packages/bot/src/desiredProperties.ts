@@ -334,6 +334,8 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       accentColor: defaultValue,
       name: defaultValue,
       size: defaultValue,
+      component: defaultValue,
+      values: defaultValue,
       ...desiredProperties.component,
     },
     forumTag: {

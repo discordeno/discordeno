@@ -1,28 +1,27 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordContainerComponent,
   type DiscordFileComponent,
+  type DiscordLabelComponent,
   type DiscordMediaGalleryComponent,
+  type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
+  type DiscordMessageComponentModelInteractionResponse,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
+  type DiscordStringSelectInteractionModalResponse,
   type DiscordTextDisplayComponent,
   type DiscordTextInputComponent,
+  type DiscordTextInputInteractionResponse,
   type DiscordThumbnailComponent,
+  type DiscordUnfurledMediaItem,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type {
-  Bot,
-  Component,
-  DiscordContainerComponent,
-  DiscordMediaGalleryItem,
-  DiscordUnfurledMediaItem,
-  MediaGalleryItem,
-  UnfurledMediaItem,
-} from '../index.js'
+import type { Bot, Component, MediaGalleryItem, UnfurledMediaItem } from '../index.js'
 
-export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
+export function transformComponent(bot: Bot, payload: DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse): Component {
   let component: Component
 
   // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
@@ -63,6 +62,9 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent): 
       break
     case MessageComponentTypes.TextDisplay:
       component = transformTextDisplayComponent(bot, payload)
+      break
+    case MessageComponentTypes.Label:
+      component = transformLabelComponent(bot, payload)
       break
   }
 
@@ -135,55 +137,65 @@ function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent): Co
   return button
 }
 
-function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponent): Component {
+function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponent | DiscordTextInputInteractionResponse): Component {
   const props = bot.transformers.desiredProperties.component
   const input = {} as Component
 
   if (props.type && payload.type) input.type = payload.type
   if (props.id && payload.id) input.id = payload.id
-  if (props.style && payload.style) input.style = payload.style
-  if (props.required && payload.required) input.required = payload.required
-  if (props.customId && payload.custom_id) input.customId = payload.custom_id
-  if (props.label && payload.label) input.label = payload.label
-  if (props.placeholder && payload.placeholder) input.placeholder = payload.placeholder
-  if (props.minLength && payload.min_length) input.minLength = payload.min_length
-  if (props.maxLength && payload.max_length) input.maxLength = payload.max_length
   if (props.value && payload.value) input.value = payload.value
+
+  // Check if it is the component or the response
+  if ('style' in payload) {
+    if (props.style && payload.style) input.style = payload.style
+    if (props.required && payload.required) input.required = payload.required
+    if (props.customId && payload.custom_id) input.customId = payload.custom_id
+    if (props.label && payload.label) input.label = payload.label
+    if (props.placeholder && payload.placeholder) input.placeholder = payload.placeholder
+    if (props.minLength && payload.min_length) input.minLength = payload.min_length
+    if (props.maxLength && payload.max_length) input.maxLength = payload.max_length
+  }
 
   return input
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent): Component {
+function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent | DiscordStringSelectInteractionModalResponse): Component {
   const props = bot.transformers.desiredProperties.component
   const select = {} as Component
 
   if (props.type && payload.type) select.type = payload.type
   if (props.id && payload.id) select.id = payload.id
   if (props.customId && payload.custom_id) select.customId = payload.custom_id
-  if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
-  if (props.minValues && payload.min_values) select.minValues = payload.min_values
-  if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
-  if (props.defaultValues && payload.default_values)
-    select.defaultValues = payload.default_values.map((defaultValue) => ({
-      id: bot.transformers.snowflake(defaultValue.id),
-      type: defaultValue.type,
-    }))
-  if (props.channelTypes && payload.channel_types) select.channelTypes = payload.channel_types
-  if (props.options && payload.options)
-    select.options = payload.options.map((option) => ({
-      label: option.label,
-      value: option.value,
-      description: option.description,
-      emoji: option.emoji
-        ? {
-            id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
-            name: option.emoji.name ?? undefined,
-            animated: option.emoji.animated,
-          }
-        : undefined,
-      default: option.default,
-    }))
-  if (props.disabled && payload.disabled) select.disabled = payload.disabled
+
+  // Check if this is the string select response
+  if ('values' in payload) {
+    if (props.values && payload.values) select.values = payload.values
+  } else {
+    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
+    if (props.minValues && payload.min_values) select.minValues = payload.min_values
+    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
+    if (props.defaultValues && payload.default_values)
+      select.defaultValues = payload.default_values.map((defaultValue) => ({
+        id: bot.transformers.snowflake(defaultValue.id),
+        type: defaultValue.type,
+      }))
+    if (props.channelTypes && payload.channel_types) select.channelTypes = payload.channel_types
+    if (props.options && payload.options)
+      select.options = payload.options.map((option) => ({
+        label: option.label,
+        value: option.value,
+        description: option.description,
+        emoji: option.emoji
+          ? {
+              id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
+              name: option.emoji.name ?? undefined,
+              animated: option.emoji.animated,
+            }
+          : undefined,
+        default: option.default,
+      }))
+    if (props.disabled && payload.disabled) select.disabled = payload.disabled
+  }
 
   return select
 }
@@ -259,4 +271,17 @@ function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponen
   if (props.spacing && payload.spacing) separator.spacing = payload.spacing
 
   return separator
+}
+
+function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent): Component {
+  const props = bot.transformers.desiredProperties.component
+  const label = {} as Component
+
+  if (props.type && payload.type) label.type = payload.type
+  if (props.id && payload.id) label.id = payload.id
+  if (props.label && payload.label) label.label = payload.label
+  if (props.description && payload.description) label.description = payload.description
+  if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component)
+
+  return label
 }

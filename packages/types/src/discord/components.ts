@@ -2,6 +2,7 @@
 
 import type { ChannelTypes } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
+import type { DiscordInteractionDataResolved } from './interactions.js'
 
 /** https://discord.com/developers/docs/components/reference#component-object-component-types */
 export enum MessageComponentTypes {
@@ -35,6 +36,8 @@ export enum MessageComponentTypes {
   Separator,
   /** Container that visually groups a set of components */
   Container = 17,
+  /** Container associating a label and description with a component */
+  Label,
 }
 
 export type DiscordMessageComponents = DiscordMessageComponent[]
@@ -50,6 +53,27 @@ export type DiscordMessageComponent =
   | DiscordSeparatorComponent
   | DiscordContainerComponent
   | DiscordFileComponent
+  | DiscordLabelComponent
+
+export type DiscordMessageComponentResponse =
+  | DiscordTextInputInteractionResponse
+  | DiscordRoleSelectInteractionResponse
+  | DiscordUserSelectInteractionResponse
+  | DiscordStringSelectInteractionResponse
+  | DiscordChannelSelectInteractionResponse
+  | DiscordMentionableSelectInteractionResponse
+
+export type DiscordMessageComponentModelInteractionResponse = DiscordTextInputInteractionResponse | DiscordStringSelectInteractionModalResponse
+
+export type DiscordMessageComponentMessageComponentInteractionResponse =
+  | DiscordRoleSelectInteractionResponse
+  | DiscordUserSelectInteractionResponse
+  | DiscordStringSelectInteractionMessageComponentResponse
+  | DiscordChannelSelectInteractionResponse
+  | DiscordMentionableSelectInteractionResponse
+
+// TODO: Do we move this type elsewere? maybe the shared.ts file?
+type Require<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: T[P] }
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface DiscordBaseComponent {
@@ -68,6 +92,8 @@ export interface DiscordActionRow extends DiscordBaseComponent {
    *
    * @remarks
    * Up to 5 button components, a single select component or a single text input component
+   *
+   * Using a {@link DiscordTextInputComponent} inside the Action Row for modals is deprecated.
    */
   components: (DiscordButtonComponent | DiscordSelectMenuComponent | DiscordTextInputComponent)[]
 }
@@ -162,7 +188,19 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number
   /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
    * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
    *
    * @default false
    */
@@ -192,6 +230,31 @@ export interface DiscordSelectOption {
   default?: boolean
 }
 
+/** https://discord.com/developers/docs/components/reference#string-select-strings-select-interaction-response-structure */
+export interface DiscordStringSelectInteractionResponse {
+  /**
+   * @remarks
+   * This is only returned for interaction responses from modals
+   */
+  type?: MessageComponentTypes.StringSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from message interactions
+   */
+  component_type?: MessageComponentTypes.StringSelect
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The custom id for the string select menu */
+  custom_id: string
+  /** The text of the selected options */
+  values: string[]
+}
+
+/** https://discord.com/developers/docs/components/reference#string-select-strings-select-interaction-response-structure */
+export type DiscordStringSelectInteractionModalResponse = Require<Omit<DiscordStringSelectInteractionResponse, 'component_type'>, 'type'>
+/** https://discord.com/developers/docs/components/reference#string-select-strings-select-interaction-response-structure */
+export type DiscordStringSelectInteractionMessageComponentResponse = Require<Omit<DiscordStringSelectInteractionResponse, 'type'>, 'component_type'>
+
 /** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
 export interface DiscordTextInputComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.TextInput
@@ -200,8 +263,15 @@ export interface DiscordTextInputComponent extends DiscordBaseComponent {
   custom_id: string
   /** The style of the InputText */
   style: TextStyles
-  /** The label of the InputText (max 45 characters) */
-  label: string
+  /**
+   * The label of the InputText.
+   *
+   * @remarks
+   * Maximum 45 characters
+   *
+   * @deprecated Use the `label` and `description` from the {@link LabelComponent}
+   */
+  label?: string
   /** The minimum length of the text the user has to provide */
   min_length?: number
   /** The maximum length of the text the user has to provide */
@@ -222,12 +292,75 @@ export enum TextStyles {
   Paragraph = 2,
 }
 
+/** https://discord.com/developers/docs/components/reference#text-input-text-input-interaction-response-structure */
+export interface DiscordTextInputInteractionResponse {
+  type: MessageComponentTypes.TextInput
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The custom id for the text input */
+  custom_id: string
+  /** The user's input text */
+  value: string
+}
+
 /** https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure */
 export interface DiscordSelectMenuDefaultValue {
   /** ID of a user, role, or channel */
   id: string
   /** Type of value that id represents. */
   type: 'user' | 'role' | 'channel'
+}
+
+/** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
+export interface DiscordUserSelectInteractionResponse {
+  component_type: MessageComponentTypes.UserSelect
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The custom id for the user select */
+  custom_id: string
+  /** Resolved entities from selected options */
+  resolved: DiscordInteractionDataResolved
+  /** IDs of the selected users */
+  values: string[]
+}
+
+/** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
+export interface DiscordRoleSelectInteractionResponse {
+  component_type: MessageComponentTypes.RoleSelect
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The custom id for the role select */
+  custom_id: string
+  /** Resolved entities from selected options */
+  resolved: DiscordInteractionDataResolved
+  /** IDs of the selected roles */
+  values: string[]
+}
+
+/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
+export interface DiscordMentionableSelectInteractionResponse {
+  component_type: MessageComponentTypes.MentionableSelect
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The custom id for the mentionable select */
+  custom_id: string
+  /** Resolved entities from selected options */
+  resolved: DiscordInteractionDataResolved
+  /** IDs of the selected mentionables */
+  values: string[]
+}
+
+/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
+export interface DiscordChannelSelectInteractionResponse {
+  component_type: MessageComponentTypes.ChannelSelect
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The custom id for the channel select */
+  custom_id: string
+  /** Resolved entities from selected options */
+  resolved: DiscordInteractionDataResolved
+  /** IDs of the selected channels */
+  values: string[]
 }
 
 /** https://discord.com/developers/docs/components/reference#section-section-structure */
@@ -324,6 +457,18 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   accent_color?: number | null
   /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+}
+
+/** https://discord.com/developers/docs/components/reference#label-label-structure */
+export interface DiscordLabelComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.Label
+
+  /** The label text */
+  label: string
+  /** An optional description text for the label */
+  description?: string
+  /** The component within the label */
+  component: DiscordTextInputComponent | DiscordSelectMenuComponent
 }
 
 /** https://discord.com/developers/docs/components/reference#unfurled-media-item-structure */
