@@ -12,6 +12,7 @@ import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordU
 import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
 import type { TargetTypes } from './invite.js'
 import type { DiscordReactionType } from './message.js'
+import type { GatewayOpcodes } from './opcodes.js'
 import type { DiscordRole } from './permissions.js'
 import type { DiscordSoundboardSound } from './soundboard.js'
 import type { DiscordStageInstance } from './stageInstance.js'
@@ -199,6 +200,7 @@ export interface DiscordSessionStartLimit {
 export type GatewayDispatchEventNames =
   | 'READY'
   | 'RESUMED'
+  | 'RATE_LIMITED'
   | 'APPLICATION_COMMAND_PERMISSIONS_UPDATE'
   | 'AUTO_MODERATION_RULE_CREATE'
   | 'AUTO_MODERATION_RULE_UPDATE'
@@ -1060,4 +1062,27 @@ export interface DiscordPollVoteRemove {
   guild_id?: string
   /** ID of the answer. */
   answer_id: number
+}
+
+/** https://discord.com/developers/docs/events/gateway-events#rate-limited-rate-limited-fields */
+export interface DiscordRateLimited {
+  /** Gateway opcode of the event that was rate limited */
+  opcode: GatewayOpcodes
+  /** The number of seconds to wait before submitting another request */
+  retry_after: number
+  /**
+   * Metadata for the event that was rate limited
+   *
+   * @remarks
+   * This is dependent on the {@link opcode} field in this object
+   */
+  meta: DiscordRequestGuildMemberRateLimitMetadata
+}
+
+/** https://discord.com/developers/docs/events/gateway-events#rate-limited-request-guild-member-rate-limit-metadata-structure */
+export interface DiscordRequestGuildMemberRateLimitMetadata {
+  /** ID of the guild to get members for */
+  guild_id: string
+  /** nonce to identify the Guild Members Chunk response */
+  nonce?: string
 }
