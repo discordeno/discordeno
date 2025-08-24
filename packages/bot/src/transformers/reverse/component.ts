@@ -1,24 +1,32 @@
-import { type DiscordButtonComponent, type DiscordMessageComponent, MessageComponentTypes, type TextStyles } from '@discordeno/types'
-import type {
-  Bot,
-  ButtonStyles,
-  Component,
-  DiscordActionRow,
-  DiscordContainerComponent,
-  DiscordFileComponent,
-  DiscordMediaGalleryComponent,
-  DiscordMediaGalleryItem,
-  DiscordSectionComponent,
-  DiscordSelectMenuComponent,
-  DiscordTextDisplayComponent,
-  DiscordTextInputComponent,
-  DiscordThumbnailComponent,
-  DiscordUnfurledMediaItem,
-  MediaGalleryItem,
-  UnfurledMediaItem,
-} from '../../index.js'
+import {
+  type ButtonStyles,
+  type DiscordActionRow,
+  type DiscordButtonComponent,
+  type DiscordContainerComponent,
+  type DiscordFileComponent,
+  type DiscordLabelComponent,
+  type DiscordMediaGalleryComponent,
+  type DiscordMediaGalleryItem,
+  type DiscordMessageComponent,
+  type DiscordMessageComponentModelInteractionResponse,
+  type DiscordSectionComponent,
+  type DiscordSelectMenuComponent,
+  type DiscordStringSelectInteractionModalResponse,
+  type DiscordTextDisplayComponent,
+  type DiscordTextInputComponent,
+  type DiscordTextInputInteractionResponse,
+  type DiscordThumbnailComponent,
+  type DiscordUnfurledMediaItem,
+  MessageComponentTypes,
+  type TextStyles,
+} from '@discordeno/types'
+import type { Bot } from '../../bot.js'
+import type { Component, MediaGalleryItem, UnfurledMediaItem } from '../types.js'
 
-export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordMessageComponent {
+export function transformComponentToDiscordComponent(
+  bot: Bot,
+  payload: Component,
+): DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse {
   // This switch should include all cases
   switch (payload.type) {
     case MessageComponentTypes.ActionRow:
@@ -43,6 +51,8 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       return transformMediaGalleryComponent(bot, payload)
     case MessageComponentTypes.Thumbnail:
       return transformThumbnailComponent(bot, payload)
+    case MessageComponentTypes.Label:
+      return transformLabelComponent(bot, payload)
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
       // As of now they are compatible
@@ -110,7 +120,7 @@ function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonCo
   }
 }
 
-function transformInputTextComponent(_bot: Bot, payload: Component): DiscordTextInputComponent {
+function transformInputTextComponent(_bot: Bot, payload: Component): DiscordTextInputComponent | DiscordTextInputInteractionResponse {
   // Since Component is a merge of all components, some casts are necessary
   return {
     type: MessageComponentTypes.TextInput,
@@ -126,7 +136,16 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
   }
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent {
+function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent | DiscordStringSelectInteractionModalResponse {
+  if (payload.values) {
+    return {
+      type: MessageComponentTypes.StringSelect,
+      values: payload.values,
+      custom_id: payload.customId!,
+      id: payload.id!,
+    }
+  }
+
   return {
     type: payload.type as DiscordSelectMenuComponent['type'],
     id: payload.id,
@@ -153,6 +172,7 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
       default: option.default,
     })),
     placeholder: payload.placeholder,
+    required: payload.required,
   }
 }
 
@@ -191,5 +211,15 @@ function transformThumbnailComponent(bot: Bot, payload: Component): DiscordThumb
     media: bot.transformers.reverse.unfurledMediaItem(bot, payload.media!),
     description: payload.description,
     spoiler: payload.spoiler,
+  }
+}
+
+function transformLabelComponent(bot: Bot, payload: Component): DiscordLabelComponent {
+  return {
+    type: MessageComponentTypes.Label,
+    id: payload.id,
+    label: payload.label!,
+    description: payload.description,
+    component: bot.transformers.reverse.component(bot, payload.component!) as DiscordLabelComponent['component'],
   }
 }

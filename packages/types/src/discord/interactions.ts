@@ -6,7 +6,7 @@
 
 import type { DiscordApplicationIntegrationType } from './application.js'
 import type { ChannelTypes, DiscordChannel } from './channel.js'
-import type { DiscordMessageComponents, MessageComponentTypes } from './components.js'
+import type { DiscordMessageComponentModelInteractionResponse, MessageComponentTypes } from './components.js'
 import type { DiscordEntitlement } from './entitlement.js'
 import type { DiscordGuild, DiscordMember, DiscordMemberWithUser } from './guild.js'
 import type { DiscordAttachment, DiscordMessage } from './message.js'
@@ -131,7 +131,7 @@ export interface DiscordInteractionData {
 
   // Modal Submit Data
   /** The components if its a Modal Submit interaction. */
-  components?: DiscordMessageComponents
+  components?: DiscordMessageComponentModelInteractionResponse[]
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-resolved-data-structure */

@@ -47,6 +47,7 @@ import type {
   DiscordMessage,
   DiscordMessageCall,
   DiscordMessageComponent,
+  DiscordMessageComponentModelInteractionResponse,
   DiscordMessageInteractionMetadata,
   DiscordMessagePin,
   DiscordMessageSnapshot,
@@ -300,7 +301,11 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
       extra?: { guildId?: bigint },
     ) => any
     collectibles: (bot: Bot<TProps, TBehavior>, payload: DiscordCollectibles, collectibles: SetupDesiredProps<Collectibles, TProps, TBehavior>) => any
-    component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent, component: Component) => any
+    component: (
+      bot: Bot<TProps, TBehavior>,
+      payload: DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse,
+      component: Component,
+    ) => any
     defaultReactionEmoji: (
       bot: Bot<TProps, TBehavior>,
       payload: DiscordDefaultReactionEmoji,
@@ -479,7 +484,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
     applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
     attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment
-    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent
+    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
@@ -509,7 +514,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   ) => SetupDesiredProps<AvatarDecorationData, TProps, TBehavior>
   channel: (bot: Bot<TProps, TBehavior>, payload: DiscordChannel, extra?: { guildId?: BigString }) => SetupDesiredProps<Channel, TProps, TBehavior>
   collectibles: (bot: Bot<TProps, TBehavior>, payload: DiscordCollectibles) => SetupDesiredProps<Collectibles, TProps, TBehavior>
-  component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent) => Component
+  component: (bot: Bot<TProps, TBehavior>, payload: DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse) => Component
   defaultReactionEmoji: (
     bot: Bot<TProps, TBehavior>,
     payload: DiscordDefaultReactionEmoji,
