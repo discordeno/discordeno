@@ -100,6 +100,8 @@ export const BitwisePermissionFlags = {
   SEND_POLLS: 1n << 49n,
   /** Allows user-installed apps to send public responses. When disabled, users will still be allowed to use their apps but the responses will be ephemeral. This only applies to apps not also installed to the server. */
   USE_EXTERNAL_APPS: 1n << 50n,
+  /** Allows pinning and unpinning messages */
+  PIN_MESSAGES: 1n << 51n,
 } as const
 
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
