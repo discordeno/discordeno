@@ -1,22 +1,23 @@
-import { type DiscordButtonComponent, type DiscordMessageComponent, MessageComponentTypes, type TextStyles } from '@discordeno/types'
-import type {
-  Bot,
-  ButtonStyles,
-  Component,
-  DiscordActionRow,
-  DiscordContainerComponent,
-  DiscordFileComponent,
-  DiscordMediaGalleryComponent,
-  DiscordMediaGalleryItem,
-  DiscordSectionComponent,
-  DiscordSelectMenuComponent,
-  DiscordTextDisplayComponent,
-  DiscordTextInputComponent,
-  DiscordThumbnailComponent,
-  DiscordUnfurledMediaItem,
-  MediaGalleryItem,
-  UnfurledMediaItem,
-} from '../../index.js'
+import {
+  type ButtonStyles,
+  type DiscordActionRow,
+  type DiscordButtonComponent,
+  type DiscordContainerComponent,
+  type DiscordFileComponent,
+  type DiscordMediaGalleryComponent,
+  type DiscordMediaGalleryItem,
+  type DiscordMessageComponent,
+  type DiscordSectionComponent,
+  type DiscordSelectMenuComponent,
+  type DiscordTextDisplayComponent,
+  type DiscordTextInputComponent,
+  type DiscordThumbnailComponent,
+  type DiscordUnfurledMediaItem,
+  MessageComponentTypes,
+  type TextStyles,
+} from '@discordeno/types'
+import type { Bot } from '../../bot.js'
+import type { Component, MediaGalleryItem, UnfurledMediaItem } from '../types.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordMessageComponent {
   // This switch should include all cases

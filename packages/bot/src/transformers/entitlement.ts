@@ -1,5 +1,7 @@
 import type { DiscordEntitlement } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, Entitlement, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { Entitlement } from './types.js'
 
 export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Entitlement {
   const props = bot.transformers.desiredProperties.entitlement

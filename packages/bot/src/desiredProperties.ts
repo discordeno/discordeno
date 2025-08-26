@@ -1,7 +1,7 @@
 import type { RecursivePartial } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
 import type { Bot } from './bot.js'
-import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from './index.js'
+import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from './commandOptionsParser.js'
 import type {
   ActivityInstance,
   ActivityLocation,
@@ -56,7 +56,7 @@ import type {
   UserPrimaryGuild,
   VoiceState,
   Webhook,
-} from './transformers/index.js'
+} from './transformers/types.js'
 
 /**
  * All the objects that support desired properties

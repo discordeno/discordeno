@@ -1,5 +1,7 @@
 import type { DiscordStageInstance } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, StageInstance, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { StageInstance } from './types.js'
 
 export function transformStageInstance(bot: Bot, payload: DiscordStageInstance): StageInstance {
   const props = bot.transformers.desiredProperties.stageInstance

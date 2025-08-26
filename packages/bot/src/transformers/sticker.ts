@@ -1,5 +1,7 @@
 import type { DiscordSticker, DiscordStickerPack } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, Sticker, StickerPack, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { Sticker, StickerPack } from './types.js'
 
 export function transformSticker(bot: Bot, payload: DiscordSticker): Sticker {
   const props = bot.transformers.desiredProperties.sticker

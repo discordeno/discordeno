@@ -1,5 +1,7 @@
 import type { DiscordSku } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, Sku, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { Sku } from './types.js'
 
 export function transformSku(bot: Bot, payload: DiscordSku): Sku {
   const props = bot.transformers.desiredProperties.sku

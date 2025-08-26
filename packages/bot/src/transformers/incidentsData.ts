@@ -1,5 +1,7 @@
 import type { DiscordIncidentsData } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, IncidentsData, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { IncidentsData } from './types.js'
 
 export function transformIncidentsData(bot: Bot, payload: DiscordIncidentsData): IncidentsData {
   const props = bot.transformers.desiredProperties.incidentsData

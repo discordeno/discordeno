@@ -1,5 +1,6 @@
 import type { DiscordApplicationCommand } from '@discordeno/types'
-import type { ApplicationCommand, Bot } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { ApplicationCommand } from './types.js'
 
 export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand): ApplicationCommand {
   const applicationCommand = {

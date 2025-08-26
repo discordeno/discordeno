@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordPollVoteAdd } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleMessagePollVoteAdd(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   if (!bot.events.messagePollVoteAdd) return

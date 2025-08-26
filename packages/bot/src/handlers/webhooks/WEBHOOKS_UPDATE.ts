@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordWebhookUpdate } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleWebhooksUpdate(bot: Bot, data: DiscordGatewayPayload, _shardId: number): Promise<void> {
   if (!bot.events.webhooksUpdate) return

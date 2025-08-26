@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordGuildMemberRemove } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleGuildMemberRemove(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   if (!bot.events.guildMemberRemove) return

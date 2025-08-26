@@ -1,5 +1,6 @@
 import type { DiscordWelcomeScreen } from '@discordeno/types'
-import type { Bot, WelcomeScreen } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { WelcomeScreen } from './types.js'
 
 export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen): WelcomeScreen {
   const welcomeScreen = {

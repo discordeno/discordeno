@@ -1,5 +1,7 @@
 import type { DiscordSubscription } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, Subscription, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { Subscription } from './types.js'
 
 export function transformSubscription(bot: Bot, payload: DiscordSubscription): Subscription {
   const props = bot.transformers.desiredProperties.subscription

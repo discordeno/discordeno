@@ -1,8 +1,10 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordMediaGalleryComponent,
+  type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
@@ -10,17 +12,11 @@ import {
   type DiscordTextDisplayComponent,
   type DiscordTextInputComponent,
   type DiscordThumbnailComponent,
+  type DiscordUnfurledMediaItem,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type {
-  Bot,
-  Component,
-  DiscordContainerComponent,
-  DiscordMediaGalleryItem,
-  DiscordUnfurledMediaItem,
-  MediaGalleryItem,
-  UnfurledMediaItem,
-} from '../index.js'
+import type { Bot } from '../bot.js'
+import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent): Component {
   let component: Component

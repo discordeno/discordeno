@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordReady } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleReady(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
   if (!bot.events.ready) return

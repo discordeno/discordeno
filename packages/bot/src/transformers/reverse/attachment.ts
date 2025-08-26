@@ -1,4 +1,6 @@
-import type { Attachment, Bot, DiscordAttachment } from '../../index.js'
+import type { DiscordAttachment } from '@discordeno/types'
+import type { Bot } from '../../bot.js'
+import type { Attachment } from '../types.js'
 
 export function transformAttachmentToDiscordAttachment(bot: Bot, payload: typeof bot.transformers.$inferredTypes.attachment): DiscordAttachment {
   const _payload = payload as Partial<Attachment>

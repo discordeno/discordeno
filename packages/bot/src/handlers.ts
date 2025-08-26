@@ -1,5 +1,7 @@
+import type { DiscordGatewayPayload, GatewayDispatchEventNames } from '@discordeno/types'
+import type { Bot } from './bot.js'
+import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
 import * as handlers from './handlers/index.js'
-import type { Bot, DesiredPropertiesBehavior, DiscordGatewayPayload, GatewayDispatchEventNames, TransformersDesiredProperties } from './index.js'
 
 export function createBotGatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   options: Partial<GatewayHandlers<TProps, TBehavior>>,

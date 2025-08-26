@@ -1,5 +1,6 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { Bot, PresenceUpdate } from '../../index.js'
+import type { Bot } from '../../bot.js'
+import type { PresenceUpdate } from '../types.js'
 
 export const reverseStatusTypes = Object.freeze({
   0: 'online',

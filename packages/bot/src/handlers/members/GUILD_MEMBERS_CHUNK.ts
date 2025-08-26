@@ -1,6 +1,6 @@
 import type { DiscordGatewayPayload, DiscordGuildMembersChunk } from '@discordeno/types'
 import { camelize } from '@discordeno/utils'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const payload = data.d as DiscordGuildMembersChunk

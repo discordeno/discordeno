@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordMessage } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleMessageCreate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
   if (!bot.events.messageCreate) return

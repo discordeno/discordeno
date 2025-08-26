@@ -1,4 +1,5 @@
-import type { AllowedMentions, Bot, DiscordAllowedMentions } from '../../index.js'
+import type { AllowedMentions, DiscordAllowedMentions } from '@discordeno/types'
+import type { Bot } from '../../bot.js'
 
 export function transformAllowedMentionsToDiscordAllowedMentions(_bot: Bot, mentions: AllowedMentions): DiscordAllowedMentions {
   return {

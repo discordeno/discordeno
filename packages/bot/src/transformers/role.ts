@@ -1,15 +1,10 @@
 import type { BigString, DiscordRole, DiscordRoleColors } from '@discordeno/types'
-import {
-  type Bot,
-  type DesiredPropertiesBehavior,
-  iconHashToBigInt,
-  type Role,
-  type RoleColors,
-  type SetupDesiredProps,
-  type TransformersDesiredProperties,
-} from '../index.js'
+import { iconHashToBigInt } from '@discordeno/utils'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
+import type { Role, RoleColors } from './types.js'
 
 export const baseRole: Role = {
   // This allows typescript to still check for type errors on functions below

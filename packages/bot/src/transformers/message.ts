@@ -7,21 +7,12 @@ import {
   type DiscordMessageSnapshot,
   MessageFlags,
 } from '@discordeno/types'
+import { snowflakeToTimestamp } from '@discordeno/utils'
+import type { Bot } from '../bot.js'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import {
-  type Bot,
-  type DesiredPropertiesBehavior,
-  type Message,
-  type MessageCall,
-  type MessageInteraction,
-  type MessageInteractionMetadata,
-  type MessagePin,
-  type MessageSnapshot,
-  type SetupDesiredProps,
-  snowflakeToTimestamp,
-  type TransformersDesiredProperties,
-} from '../index.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
+import type { Message, MessageCall, MessageInteraction, MessageInteractionMetadata, MessagePin, MessageSnapshot } from './types.js'
 
 const EMPTY_STRING = ''
 

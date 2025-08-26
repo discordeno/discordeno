@@ -1,15 +1,7 @@
-import type {
-  Activity,
-  ActivityInstance,
-  ActivityLocation,
-  Bot,
-  DesiredPropertiesBehavior,
-  DiscordActivity,
-  DiscordActivityInstance,
-  DiscordActivityLocation,
-  SetupDesiredProps,
-  TransformersDesiredProperties,
-} from '../index.js'
+import type { DiscordActivity, DiscordActivityInstance, DiscordActivityLocation } from '@discordeno/types'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { Activity, ActivityInstance, ActivityLocation } from './types.js'
 
 export function transformActivity(bot: Bot, payload: DiscordActivity): Activity {
   const activity = {

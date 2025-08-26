@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordThreadListSync } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload): Promise<any> {
   if (!bot.events.threadListSync) return
