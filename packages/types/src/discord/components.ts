@@ -157,9 +157,9 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
   options?: DiscordSelectOption[]
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   min_values?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
   max_values?: number
   /**
    * Whether select menu is disabled
