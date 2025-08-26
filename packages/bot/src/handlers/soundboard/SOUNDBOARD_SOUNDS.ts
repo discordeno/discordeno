@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordSoundboardSounds } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleSoundboardSounds(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   if (!bot.events.soundboardSounds) return

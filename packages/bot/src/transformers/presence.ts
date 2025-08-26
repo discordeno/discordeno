@@ -1,5 +1,6 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { Bot, PresenceUpdate, User } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { PresenceUpdate, User } from './types.js'
 
 export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
   const presence = {} as PresenceUpdate

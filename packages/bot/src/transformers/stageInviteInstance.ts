@@ -1,5 +1,7 @@
 import type { BigString, DiscordInviteStageInstance } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, InviteStageInstance, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { InviteStageInstance } from './types.js'
 
 export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteStageInstance, extra?: { guildId?: BigString }): InviteStageInstance {
   const props = bot.transformers.desiredProperties.inviteStageInstance

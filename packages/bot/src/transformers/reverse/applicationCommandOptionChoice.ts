@@ -1,4 +1,6 @@
-import type { ApplicationCommandOptionChoice, Bot, Camelize, DiscordApplicationCommandOptionChoice } from '../../index.js'
+import type { Camelize, DiscordApplicationCommandOptionChoice } from '@discordeno/types'
+import type { Bot } from '../../bot.js'
+import type { ApplicationCommandOptionChoice } from '../types.js'
 
 export function transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice(
   _bot: Bot,

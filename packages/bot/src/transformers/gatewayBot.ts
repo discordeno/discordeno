@@ -1,5 +1,6 @@
 import type { DiscordGetGatewayBot } from '@discordeno/types'
-import type { Bot, GetGatewayBot } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { GetGatewayBot } from './types.js'
 
 export function transformGatewayBot(bot: Bot, payload: DiscordGetGatewayBot): GetGatewayBot {
   const gatewayBot = {

@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordIntegrationCreateUpdate } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot } from '../../bot.js'
 
 export async function handleIntegrationCreate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   if (!bot.events.integrationCreate) return

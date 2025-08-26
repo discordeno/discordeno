@@ -1,13 +1,8 @@
 import type { DiscordLobby, DiscordLobbyMember } from '@discordeno/types'
-import {
-  type Bot,
-  type DesiredPropertiesBehavior,
-  type Lobby,
-  type LobbyMember,
-  type SetupDesiredProps,
-  ToggleBitfield,
-  type TransformersDesiredProperties,
-} from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { ToggleBitfield } from './toggles/ToggleBitfield.js'
+import type { Lobby, LobbyMember } from './types.js'
 
 export function transformLobby(bot: Bot, payload: DiscordLobby): Lobby {
   const props = bot.transformers.desiredProperties.lobby

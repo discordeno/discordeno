@@ -1,4 +1,5 @@
-import type { Bot, DiscordGatewayPayload, DiscordGuildStickersUpdate } from '../../index.js'
+import type { DiscordGatewayPayload, DiscordGuildStickersUpdate } from '@discordeno/types'
+import type { Bot } from '../../bot.js'
 
 export async function handleGuildStickersUpdate(bot: Bot, data: DiscordGatewayPayload, _shardId: number): Promise<void> {
   if (!bot.events.guildStickersUpdate) return
