@@ -352,9 +352,19 @@ export interface ContainerComponent extends BaseComponent {
 export interface LabelComponent extends BaseComponent {
   type: MessageComponentTypes.Label
 
-  /** The label text */
+  /**
+   * The label text
+   *
+   * @remarks
+   * Max 45 characters.
+   */
   label: string
-  /** An optional description text for the label */
+  /**
+   * An optional description text for the label
+   *
+   * @remarks
+   * Max 100 characters.
+   */
   description?: string
   /** The component within the label */
   component: TextInputComponent | StringSelectComponent
