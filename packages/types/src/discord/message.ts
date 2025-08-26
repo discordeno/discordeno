@@ -303,7 +303,7 @@ export enum DiscordMessageReferenceType {
    *
    * This value can only be used for basic messages;
    * i.e. messages which do not have strong bindings to a non global entity.
-   * Thus we support only messages with `DEFAULT` or `REPLY` types, but disallowed if there are any polls, calls, or components.
+   * Thus we support only messages with type `DEFAULT`, `REPLY`, `CHAT_INPUT_COMMAND`, or `CONTEXT_MENU_COMMAND`, and don't support messages with a poll, call, or activity.
    */
   Forward,
 }

@@ -68,7 +68,7 @@ jobs:
       - name: Build Types
         run: yarn build:type --cache-dir=".turbo"
       - name: Check Formatting
-        run: yarn check:all
+        run: yarn biome ci --reporter=github
 
   test-type-unit-and-integration-test:
     name: Typecheck Tests
