@@ -1,5 +1,7 @@
 import type { DiscordEmoji, DiscordPoll, DiscordPollMedia } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, Poll, PollMedia, PollResult, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { Poll, PollMedia, PollResult } from './types.js'
 
 export function transformPoll(bot: Bot, payload: DiscordPoll): Poll {
   const props = bot.transformers.desiredProperties.poll

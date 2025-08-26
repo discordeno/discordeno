@@ -1,17 +1,6 @@
 import { ApplicationCommandOptionTypes } from '@discordeno/types'
-import type {
-  Attachment,
-  Channel,
-  CompleteDesiredProperties,
-  DesiredPropertiesBehavior,
-  Interaction,
-  InteractionDataOption,
-  Member,
-  Role,
-  SetupDesiredProps,
-  TransformersDesiredProperties,
-  User,
-} from './index.js'
+import type { CompleteDesiredProperties, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js'
+import type { Attachment, Channel, Interaction, InteractionDataOption, Member, Role, User } from './transformers/types.js'
 
 export function commandOptionsParser<
   TProps extends TransformersDesiredProperties & { interaction: { data: true } },

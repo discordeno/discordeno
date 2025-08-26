@@ -1,5 +1,6 @@
 import type { BigString, DiscordThreadMember, DiscordThreadMemberGuildCreate } from '@discordeno/types'
-import type { Bot, ThreadMember, ThreadMemberGuildCreate } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { ThreadMember, ThreadMemberGuildCreate } from './types.js'
 
 export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, extra?: ThreadMemberTransformerExtra): ThreadMember {
   const threadMember = {

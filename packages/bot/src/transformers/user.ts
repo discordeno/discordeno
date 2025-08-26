@@ -1,17 +1,10 @@
 import type { DiscordCollectibles, DiscordNameplate, DiscordUser, DiscordUserPrimaryGuild } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import {
-  type Bot,
-  type Collectibles,
-  type DesiredPropertiesBehavior,
-  type Nameplate,
-  type SetupDesiredProps,
-  ToggleBitfield,
-  type TransformersDesiredProperties,
-  type User,
-  type UserPrimaryGuild,
-  UserToggles,
-} from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { ToggleBitfield } from './toggles/ToggleBitfield.js'
+import { UserToggles } from './toggles/user.js'
+import type { Collectibles, Nameplate, User, UserPrimaryGuild } from './types.js'
 
 export const baseUser: User = {
   // This allows typescript to still check for type errors on functions below

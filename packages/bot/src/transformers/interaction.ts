@@ -1,4 +1,5 @@
 import {
+  type BigString,
   DiscordApplicationIntegrationType,
   type DiscordInteraction,
   type DiscordInteractionCallback,
@@ -11,27 +12,26 @@ import {
   MessageFlags,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
+import type { Bot } from '../bot.js'
+import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js'
 import type {
-  Attachment,
-  BigString,
-  Bot,
   CompleteDesiredProperties,
   DesiredPropertiesBehavior,
+  SetupDesiredProps,
+  TransformersDesiredProperties,
+  TransformProperty,
+} from '../desiredProperties.js'
+import type {
+  Attachment,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
   InteractionDataOption,
   InteractionDataResolved,
-  InteractionResolvedDataChannel,
-  InteractionResolvedDataMember,
   InteractionResource,
-  Message,
   Role,
-  SetupDesiredProps,
-  TransformersDesiredProperties,
-  TransformProperty,
   User,
-} from '../index.js'
+} from './types.js'
 
 // Assume we have all desired properties for this or else typescript will get very confused for the return types of these functions.
 // This is used as a prototype, so the actual type with the user desired properties will be set later.

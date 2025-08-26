@@ -1,6 +1,8 @@
 import type { BigString, DiscordVoiceState } from '@discordeno/types'
-import type { Bot, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties, VoiceState } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
 import { VoiceStateToggles } from './toggles/voice.js'
+import type { VoiceState } from './types.js'
 
 export function transformVoiceState(bot: Bot, payload: DiscordVoiceState, extra?: { guildId?: BigString }): VoiceState {
   const props = bot.transformers.desiredProperties.voiceState

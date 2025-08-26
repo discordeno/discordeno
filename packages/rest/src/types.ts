@@ -2858,7 +2858,7 @@ export interface RestManager {
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires the `MANAGE_MESSAGES` permission.
+   * Requires the `PIN_MESSAGES` permission.
    *
    * Fires a _Channel Pins Update_ event.
    *
@@ -2922,7 +2922,7 @@ export interface RestManager {
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires the `MANAGE_MESSAGES` permission.
+   * Requires the `PIN_MESSAGES` permission.
    *
    * Fires a _Channel Pins Update_ event.
    *

@@ -1,4 +1,4 @@
-import type { DiscordGatewayPayload, DiscordReady, DiscordVoiceChannelEffectAnimationType } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordRateLimited, DiscordReady, DiscordVoiceChannelEffectAnimationType } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js'
 import type {
@@ -62,6 +62,8 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     },
     rawPayload: DiscordReady,
   ) => unknown
+  resumed: (shardId: number) => unknown
+  rateLimited: (data: DiscordRateLimited, shardId: number) => unknown
   interactionCreate: (interaction: SetupDesiredProps<Interaction, TProps, TBehavior>) => unknown
   integrationCreate: (integration: Integration) => unknown
   integrationDelete: (payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => unknown

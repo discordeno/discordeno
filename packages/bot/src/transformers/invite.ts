@@ -1,13 +1,9 @@
 import type { DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
-import {
-  type Bot,
-  type DesiredPropertiesBehavior,
-  type Invite,
-  isInviteWithMetadata,
-  type SetupDesiredProps,
-  ToggleBitfield,
-  type TransformersDesiredProperties,
-} from '../index.js'
+import { isInviteWithMetadata } from '@discordeno/utils'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { ToggleBitfield } from './toggles/ToggleBitfield.js'
+import type { Invite } from './types.js'
 
 export function transformInvite(bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, extra?: { shardId?: number }): Invite {
   const props = bot.transformers.desiredProperties.invite

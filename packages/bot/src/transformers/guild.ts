@@ -1,7 +1,9 @@
 import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
-import type { Bot, Channel, DesiredPropertiesBehavior, Guild, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
 import { GuildToggles } from './toggles/guild.js'
+import type { Channel, Guild } from './types.js'
 
 export const baseGuild: Guild = {
   // This allows typescript to still check for type errors on functions below

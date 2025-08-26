@@ -1,13 +1,7 @@
 import type { DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordGuildOnboardingPromptOption } from '@discordeno/types'
-import type {
-  Bot,
-  DesiredPropertiesBehavior,
-  GuildOnboarding,
-  GuildOnboardingPrompt,
-  GuildOnboardingPromptOption,
-  SetupDesiredProps,
-  TransformersDesiredProperties,
-} from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { GuildOnboarding, GuildOnboardingPrompt, GuildOnboardingPromptOption } from './types.js'
 
 export function transformGuildOnboarding(bot: Bot, payload: DiscordGuildOnboarding): GuildOnboarding {
   const props = bot.transformers.desiredProperties.guildOnboarding

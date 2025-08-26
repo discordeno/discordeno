@@ -71,23 +71,18 @@ import type {
   WebhookTypes,
 } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
-import type {
-  Bot,
-  ChannelToggles,
-  DesiredPropertiesBehavior,
-  EmojiToggles,
-  GuildFeatureKeys,
-  GuildToggles,
-  InteractionResolvedDataChannel,
-  InteractionResolvedDataMember,
-  MemberToggles,
-  Permissions,
-  RoleToggles,
-  ToggleBitfield,
-  TransformersDesiredProperties,
-  UserToggles,
-  VoiceStateToggles,
-} from '../index.js'
+import type { Bot } from '../bot.js'
+import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js'
+import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from '../desiredProperties.js'
+import type { ChannelToggles } from './toggles/channel.js'
+import type { EmojiToggles } from './toggles/emoji.js'
+import type { GuildFeatureKeys, GuildToggles } from './toggles/guild.js'
+import type { MemberToggles } from './toggles/member.js'
+import type { Permissions } from './toggles/Permissions.js'
+import type { RoleToggles } from './toggles/role.js'
+import type { ToggleBitfield } from './toggles/ToggleBitfield.js'
+import type { UserToggles } from './toggles/user.js'
+import type { VoiceStateToggles } from './toggles/voice.js'
 
 export interface Activity {
   join?: string

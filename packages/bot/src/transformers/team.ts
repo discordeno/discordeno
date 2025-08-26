@@ -1,5 +1,7 @@
 import type { DiscordTeam } from '@discordeno/types'
-import { type Bot, iconHashToBigInt, type Team } from '../index.js'
+import { iconHashToBigInt } from '@discordeno/utils'
+import type { Bot } from '../bot.js'
+import type { Team } from './types.js'
 
 export function transformTeam(bot: Bot, payload: DiscordTeam): Team {
   const id = bot.transformers.snowflake(payload.id)

@@ -1,5 +1,6 @@
 import type { DiscordAutoModerationActionExecution } from '@discordeno/types'
-import type { AutoModerationActionExecution, Bot } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { AutoModerationActionExecution } from './types.js'
 
 export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution): AutoModerationActionExecution {
   const rule = {

@@ -106,9 +106,9 @@ export interface StringSelectComponent extends BaseComponent {
   options: SelectOption[]
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
   /**
    * Whether this component is required to be filled
@@ -194,9 +194,9 @@ export interface UserSelectComponent extends BaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   defaultValues?: SelectMenuDefaultValue[]
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
   /** Whether or not this select is disabled */
   disabled?: boolean
@@ -223,9 +223,9 @@ export interface RoleSelectComponent extends BaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   defaultValues?: SelectMenuDefaultValue[]
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
   /** Whether or not this select is disabled */
   disabled?: boolean
@@ -244,9 +244,9 @@ export interface MentionableSelectComponent extends BaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   defaultValues?: SelectMenuDefaultValue[]
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
   /** Whether or not this select is disabled */
   disabled?: boolean
@@ -267,9 +267,9 @@ export interface ChannelSelectComponent extends BaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   defaultValues?: SelectMenuDefaultValue[]
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
   /** Whether or not this select is disabled */
   disabled?: boolean

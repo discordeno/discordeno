@@ -109,6 +109,7 @@ import type {
 import { snakelize } from '@discordeno/utils'
 import type { Bot } from './bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js'
+import type { ThreadMemberTransformerExtra } from './transformers/threadMember.js'
 import type {
   Application,
   ApplicationCommand,
@@ -139,12 +140,11 @@ import type {
   Subscription,
   Template,
   ThreadMember,
-  ThreadMemberTransformerExtra,
   User,
   VoiceState,
   Webhook,
   WelcomeScreen,
-} from './transformers/index.js'
+} from './transformers/types.js'
 
 export function createBotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   bot: Bot<TProps, TBehavior>,

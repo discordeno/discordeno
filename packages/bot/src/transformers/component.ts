@@ -19,7 +19,8 @@ import {
   type DiscordUnfurledMediaItem,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type { Bot, Component, MediaGalleryItem, UnfurledMediaItem } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js'
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse): Component {
   let component: Component

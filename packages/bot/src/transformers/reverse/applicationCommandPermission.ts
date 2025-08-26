@@ -1,4 +1,6 @@
-import type { Bot, DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions } from '../../index.js'
+import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
+import type { Bot } from '../../bot.js'
+import type { GuildApplicationCommandPermissions } from '../types.js'
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission(
   bot: Bot,

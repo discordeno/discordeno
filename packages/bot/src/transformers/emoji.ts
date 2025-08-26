@@ -1,6 +1,8 @@
 import type { DiscordDefaultReactionEmoji, DiscordEmoji } from '@discordeno/types'
-import type { Bot, DefaultReactionEmoji, DesiredPropertiesBehavior, Emoji, SetupDesiredProps, TransformersDesiredProperties } from '../index.js'
+import type { Bot } from '../bot.js'
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
 import { EmojiToggles } from './toggles/emoji.js'
+import type { DefaultReactionEmoji, Emoji } from './types.js'
 
 export const baseEmoji: Emoji = {
   // This allows typescript to still check for type errors on functions below
