@@ -93,7 +93,8 @@ export interface DiscordActionRow extends DiscordBaseComponent {
    * @remarks
    * Up to 5 button components, a single select component or a single text input component
    *
-   * Using a {@link DiscordTextInputComponent} inside the Action Row for modals is deprecated.
+   * Using a {@link DiscordTextInputComponent} inside the Action Row is deprecated,
+   * use a {@link DiscordLabelComponent} for modals
    */
   components: (DiscordButtonComponent | DiscordSelectMenuComponent | DiscordTextInputComponent)[]
 }
@@ -269,7 +270,7 @@ export interface DiscordTextInputComponent extends DiscordBaseComponent {
    * @remarks
    * Maximum 45 characters
    *
-   * @deprecated Use the `label` and `description` from the {@link LabelComponent}
+   * @deprecated Use the `label` and `description` from the {@link DiscordLabelComponent}
    */
   label?: string
   /** The minimum length of the text the user has to provide */

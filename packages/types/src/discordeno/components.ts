@@ -48,7 +48,8 @@ export interface ActionRow extends BaseComponent {
    * @remarks
    * Up to 5 button components, a single select component or a single text input component
    *
-   * Using a {@link TextInputComponent} inside the Action Row for modals is deprecated.
+   * Using a {@link TextInputComponent} inside the Action Row is deprecated,
+   * use a {@link LabelComponent} for modals
    */
   components: (
     | ButtonComponent
