@@ -1,11 +1,12 @@
 import type { DiscordAuditLogEntry } from '@discordeno/types'
+import { snakelize } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import type { AuditLogEntry } from '../types.js'
 
 export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
   return {
     id: bot.transformers.reverse.snowflake(payload.id),
-    changes: payload.changes,
+    changes: snakelize(payload.changes),
     user_id: payload.userId ? bot.transformers.reverse.snowflake(payload.userId) : null,
     target_id: payload.targetId ? bot.transformers.reverse.snowflake(payload.targetId) : null,
     action_type: payload.actionType,

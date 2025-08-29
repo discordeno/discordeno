@@ -1,11 +1,12 @@
 import type { DiscordAuditLogEntry } from '@discordeno/types'
+import { camelize } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { AuditLogEntry } from './types.js'
 
 export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry): AuditLogEntry {
   const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),
-    changes: payload.changes,
+    changes: camelize(payload.changes),
     userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
     targetId: payload.target_id ? bot.transformers.snowflake(payload.target_id) : undefined,
     actionType: payload.action_type,

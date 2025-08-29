@@ -11,6 +11,7 @@ import type {
   AutoModerationTriggerTypes,
   BigString,
   ButtonStyles,
+  Camelize,
   ChannelTypes,
   DefaultMessageNotificationLevels,
   DiscordActivityInstanceResource,
@@ -295,7 +296,7 @@ export interface AuditLogEntry {
   id: bigint
   userId?: bigint
   reason?: string
-  changes?: DiscordAuditLogChange[]
+  changes?: Camelize<DiscordAuditLogChange>[]
   targetId?: bigint
   actionType: AuditLogEvents
   options?: OptionalAuditEntryInfo
