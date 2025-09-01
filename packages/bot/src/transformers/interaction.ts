@@ -224,8 +224,6 @@ export function transformInteractionDataResolved(
 ): TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> {
   const transformed: TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> = {}
 
-  // We use `as bigint` in the Collection constructors below as otherwise TypeScript would infer the type as bigint | DesiredPropertiesError<...>
-
   if (payload.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.messages).map(([key, value]) => {
