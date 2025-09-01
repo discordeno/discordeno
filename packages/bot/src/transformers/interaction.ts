@@ -29,8 +29,6 @@ import type {
   InteractionDataOption,
   InteractionDataResolved,
   InteractionResource,
-  Role,
-  User,
 } from './types.js'
 
 // Assume we have all desired properties for this or else typescript will get very confused for the return types of these functions.
@@ -224,60 +222,69 @@ export function transformInteractionDataResolved(
   payload: DiscordInteractionDataResolved,
   extra?: { shardId?: number; guildId?: BigString },
 ): TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> {
-  const transformed: InteractionDataResolved = {}
+  const transformed: TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> = {}
+
+  // We use `as bigint` in the Collection constructors below as otherwise TypeScript would infer the type as bigint | DesiredPropertiesError<...>
 
   if (payload.messages) {
     transformed.messages = new Collection(
-      Object.entries(payload.messages).map(([_id, value]) => {
+      Object.entries(payload.messages).map(([key, value]) => {
         // @ts-expect-error TODO: Deal with partials
-        const message = bot.transformers.message(bot, value, { shardId: extra?.shardId }) as Message
-        return [message.id, message]
+        const message = bot.transformers.message(bot, value, { shardId: extra?.shardId })
+        const id = bot.transformers.snowflake(key)
+
+        return [id, message]
       }),
     )
   }
 
   if (payload.users) {
     transformed.users = new Collection(
-      Object.entries(payload.users).map(([_id, value]) => {
-        const user = bot.transformers.user(bot, value) as User
-        return [user.id, user]
+      Object.entries(payload.users).map(([key, value]) => {
+        const user = bot.transformers.user(bot, value)
+        const id = bot.transformers.snowflake(key)
+
+        return [id, user]
       }),
     )
   }
 
   if (extra?.guildId && payload.members) {
     transformed.members = new Collection(
-      Object.entries(payload.members).map(([id, value]) => {
+      Object.entries(payload.members).map(([key, value]) => {
         // @ts-expect-error TODO: Deal with partials, value is missing 2 values but the transformer can handle it, despite what the types says
         const member = bot.transformers.member(bot, value, {
           guildId: extra.guildId,
-          userId: bot.transformers.snowflake(id),
-        }) as InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>
+          userId: bot.transformers.snowflake(key),
+        }) as InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>
+        const id = bot.transformers.snowflake(key)
 
-        // We need to tell TS that we are sure the id is a bigint
-        return [member.id as bigint, member]
+        return [id, member]
       }),
     )
   }
 
   if (extra?.guildId && payload.roles) {
     transformed.roles = new Collection(
-      Object.entries(payload.roles).map(([_id, value]) => {
-        const role = bot.transformers.role(bot, value, { guildId: extra.guildId }) as Role
-        return [role.id, role]
+      Object.entries(payload.roles).map(([key, value]) => {
+        const role = bot.transformers.role(bot, value, { guildId: extra.guildId })
+        const id = bot.transformers.snowflake(key)
+
+        return [id, role]
       }),
     )
   }
 
   if (payload.channels) {
     transformed.channels = new Collection(
-      Object.entries(payload.channels).map(([_id, value]) => {
-        const channel = bot.transformers.channel(bot, value) as unknown as InteractionResolvedDataChannel<
+      Object.entries(payload.channels).map(([key, value]) => {
+        const channel = bot.transformers.channel(bot, value) as InteractionResolvedDataChannel<
           TransformersDesiredProperties,
-          DesiredPropertiesBehavior
+          DesiredPropertiesBehavior.RemoveKey
         >
-        // We need to tell TS that we are sure the id is a bigint
-        return [channel.id as bigint, channel]
+        const id = bot.transformers.snowflake(key)
+
+        return [id, channel]
       }),
     )
   }
@@ -286,7 +293,12 @@ export function transformInteractionDataResolved(
     transformed.attachments = new Collection(
       Object.entries(payload.attachments).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
-        const attachment = bot.transformers.attachment(bot, value) as Attachment
+        const attachment = bot.transformers.attachment(bot, value) as SetupDesiredProps<
+          Attachment,
+          TransformersDesiredProperties,
+          DesiredPropertiesBehavior.RemoveKey
+        >
+
         return [id, attachment]
       }),
     )
