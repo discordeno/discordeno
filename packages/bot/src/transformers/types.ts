@@ -411,7 +411,7 @@ export interface Channel {
   /**
    * Thread-specific fields not needed by other channels.
    *
-   * @internal
+   * @private
    * This field is an internal field, subject to breaking changes.
    */
   internalThreadMetadata?: InternalChannelThreadMetadata
@@ -425,7 +425,7 @@ export interface Channel {
   /**
    * Explicit permission overwrites for members and roles
    *
-   * @internal
+   * @private
    * Use channel.permissionOverwrites. This is for internal use only, and prone to breaking changes.
    */
   internalOverwrites?: bigint[]
@@ -480,7 +480,7 @@ export interface ForumTag {
 }
 
 /**
- * @internal
+ * @private
  * This is for internal purposes only, and subject to breaking changes
  */
 export interface InternalChannelThreadMetadata {
@@ -1502,7 +1502,7 @@ export interface Role {
   /**
    * Role tags
    *
-   * @internal
+   * @private
    * Use role.tags. This is for internal use only, and prone to breaking changes.
    */
   internalTags?: InternalRoleTags
@@ -1532,7 +1532,7 @@ export interface Role {
 }
 
 /**
- * @internal
+ * @private
  * This is for internal purposes only, and subject to breaking changes
  */
 export interface InternalRoleTags {

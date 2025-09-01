@@ -2,6 +2,10 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPointStrategy": "packages",
   "entryPoints": ["packages/bot", "packages/gateway", "packages/rest", "packages/types", "packages/utils"],
+  "packageOptions": {
+    "entryPoints": ["./src/index.ts"],
+    "exclude": ["**/dist/**/*"]
+  },
   "out": "./website/api_reference/generated",
   "readme": "./website/api_reference/generated/_media/README.md",
   "cleanOutputDir": false,
