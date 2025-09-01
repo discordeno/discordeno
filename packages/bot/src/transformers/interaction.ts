@@ -22,7 +22,6 @@ import type {
   TransformProperty,
 } from '../desiredProperties.js'
 import type {
-  Attachment,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
@@ -291,11 +290,7 @@ export function transformInteractionDataResolved(
     transformed.attachments = new Collection(
       Object.entries(payload.attachments).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
-        const attachment = bot.transformers.attachment(bot, value) as SetupDesiredProps<
-          Attachment,
-          TransformersDesiredProperties,
-          DesiredPropertiesBehavior.RemoveKey
-        >
+        const attachment = bot.transformers.attachment(bot, value)
 
         return [id, attachment]
       }),
