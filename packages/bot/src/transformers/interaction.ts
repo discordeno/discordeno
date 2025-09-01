@@ -13,7 +13,7 @@ import {
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
-import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js'
+import type { InteractionResolvedDataChannel } from '../commandOptionsParser.js'
 import type {
   CompleteDesiredProperties,
   DesiredPropertiesBehavior,
@@ -254,7 +254,7 @@ export function transformInteractionDataResolved(
         const member = bot.transformers.member(bot, value, {
           guildId: extra.guildId,
           userId: bot.transformers.snowflake(key),
-        }) as InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>
+        })
         const id = bot.transformers.snowflake(key)
 
         return [id, member]
