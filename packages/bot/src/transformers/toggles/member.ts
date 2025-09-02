@@ -1,7 +1,8 @@
 import { type DiscordMember, MemberFlags } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
 
-const memberFlags = ['didRejoin', 'startedOnboarding', 'bypassesVerification', 'completedOnboarding'] as const
+/** @private This is subject to breaking changes without notices */
+export const memberFlags = ['didRejoin', 'startedOnboarding', 'bypassesVerification', 'completedOnboarding'] as const
 
 export const MemberToggle = {
   /** Whether the user is deafened in voice channels */
