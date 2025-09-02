@@ -16,7 +16,9 @@ export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, ex
       : undefined,
   } as ThreadMember
 
-  return bot.transformers.customizers.threadMember(bot, payload, threadMember, extra)
+  return bot.transformers.customizers.threadMember(bot, payload, threadMember, {
+    guildId: extra?.guildId ? bot.transformers.snowflake(extra?.guildId) : undefined,
+  })
 }
 
 export interface ThreadMemberTransformerExtra {

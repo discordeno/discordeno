@@ -61,7 +61,7 @@ export class DiscordenoShard {
    * @remarks
    * This will be true if the close method has been called with either 1000 or 1001
    *
-   * @internal
+   * @private
    * This is for internal purposes only, and subject to breaking changes.
    */
   goingOffline = false
@@ -78,7 +78,7 @@ export class DiscordenoShard {
   /**
    * A function that will be called once the socket is closed and handleClose() has finished updating internal states.
    *
-   * @internal
+   * @private
    * This is for internal purposes only, and subject to breaking changes.
    */
   resolveAfterClose?: (close: CloseEvent) => void
