@@ -6,6 +6,7 @@ import type {
   BeginGuildPrune,
   BigString,
   Camelize,
+  ChannelTypes,
   CreateApplicationCommand,
   CreateApplicationEmoji,
   CreateAutoModerationRuleOptions,
@@ -34,6 +35,7 @@ import type {
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
+  DiscordApplicationIntegrationType,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
   DiscordAuditLog,
@@ -57,6 +59,7 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordIncidentsData,
   DiscordIntegration,
+  DiscordInteraction,
   DiscordInteractionCallbackResponse,
   DiscordInvite,
   DiscordInviteMetadata,
@@ -117,6 +120,7 @@ import type {
   GetThreadMember,
   GetUserGuilds,
   GetWebhookMessageOptions,
+  GuildFeatures,
   InteractionCallbackData,
   InteractionCallbackOptions,
   InteractionResponse,
@@ -138,6 +142,8 @@ import type {
   ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
+  ScheduledEventEntityType,
+  ScheduledEventStatus,
   SearchMembers,
   SendSoundboardSound,
   StartThreadWithMessage,
@@ -2079,7 +2085,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link DiscordArchivedThreads}.
+   * @returns An instance of {@link DiscordListArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -2109,7 +2115,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link DiscordArchivedThreads}.
+   * @returns An instance of {@link DiscordListArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.

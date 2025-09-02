@@ -1,5 +1,0 @@
-{
-  "entryPoints": ["./src/index.ts"],
-  // Exclude other packages' dist folders to avoid duplicated types in the documentation
-  "exclude": ["../*/dist/**/*"]
-}
