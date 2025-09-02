@@ -61,7 +61,7 @@ import type {
 /**
  * All the objects that support desired properties
  *
- * @internal This is subject to breaking changes at any time
+ * @private This is subject to breaking changes at any time
  */
 export interface TransformersObjects {
   activityInstance: ActivityInstance
@@ -122,8 +122,12 @@ export interface TransformersObjects {
 // NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
 //       internal properties needs to be in the alwaysPresents array, depending on an always present value is accepted
 
-/** Metadata for typescript to create the correct types for desired properties */
-interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadata {
+/**
+ * Metadata for typescript to create the correct types for desired properties
+ *
+ * @private This is subject to breaking changes without notices
+ */
+export interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadata {
   channel: {
     dependencies: {
       archived: ['toggles']
@@ -854,21 +858,25 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
   } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>
 }
 
-type KeyByValue<TObj, TValue> = {
+/** @private This is subject to breaking changes without notices */
+export type KeyByValue<TObj, TValue> = {
   [Key in keyof TObj]: TObj[Key] extends TValue ? Key : never
 }[keyof TObj]
 
-type Complete<TObj, TDefault> = {
+/** @private This is subject to breaking changes without notices */
+export type Complete<TObj, TDefault> = {
   [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
 }
 
-type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]
+/** @private This is subject to breaking changes without notices */
+export type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]
   ? R['length'] extends 0
     ? F
     : `${F}${TDelimiter}${JoinTuple<R, TDelimiter>}`
   : ''
 
-type DesiredPropertiesMetadata = {
+/** @private This is subject to breaking changes without notices */
+export type DesiredPropertiesMetadata = {
   [K in keyof TransformersObjects]: {
     dependencies?: {
       [Key in keyof TransformersObjects[K]]?: (keyof TransformersObjects[K])[]
@@ -877,7 +885,8 @@ type DesiredPropertiesMetadata = {
   }
 }
 
-type DesirableProperties<
+/** @private This is subject to breaking changes without notices */
+export type DesirableProperties<
   T extends TransformersObjects[keyof TransformersObjects],
   TKey extends keyof TransformersObjects = KeyByValue<TransformersObjects, T>,
 > = Exclude<
@@ -890,21 +899,25 @@ type DesirableProperties<
       : NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number])
 >
 
-/** @internal This is subject to breaking changes without notices */
+/** @private This is subject to breaking changes without notices */
 export type DesiredPropertiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
   [Key in DesirableProperties<T>]: boolean
 }
 
 declare const TypeErrorSymbol: unique symbol
-interface DesiredPropertiesError<T extends string> {
+
+/** @private This is subject to breaking changes without notices */
+export interface DesiredPropertiesError<T extends string> {
   [TypeErrorSymbol]: T
 }
 
-type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
+/** @private This is subject to breaking changes without notices */
+export type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
   [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : false
 }
 
-type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TKey extends keyof TProps // The key has a desired props?
+/** @private This is subject to breaking changes without notices */
+export type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TKey extends keyof TProps // The key has a desired props?
   ? // Yes, is it true?
     TProps[TKey] extends true
     ? // Yes, this is a key to include
@@ -930,7 +943,8 @@ export enum DesiredPropertiesBehavior {
   ChangeType,
 }
 
-type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredProperties> = IsKeyDesired<
+/** @private This is subject to breaking changes without notices */
+export type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredProperties> = IsKeyDesired<
   Key,
   TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
   TProps[KeyByValue<TransformersObjects, T>]
@@ -938,7 +952,8 @@ type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredProperties> 
   ? Key
   : never
 
-type GetErrorWhenUndesired<
+/** @private This is subject to breaking changes without notices */
+export type GetErrorWhenUndesired<
   Key extends keyof T,
   T,
   TProps extends TransformersDesiredProperties,
@@ -951,7 +966,8 @@ type GetErrorWhenUndesired<
   >,
 > = TIsDesired extends true ? TransformProperty<T[Key], TProps, TBehavior> : TIsDesired
 
-type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
+/** @private This is subject to breaking changes without notices */
+export type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
 
 // If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
 // NOTE: changing the order of these ternaries can cause bugs, for this reason we check in this order:
@@ -963,6 +979,10 @@ type IsObject<T> = T extends object ? (T extends Function ? false : true) : fals
 //      - Is it an interaction resolved data channel?
 //      - Is it an object?
 //      - It's not an object
+
+/**
+ * Transform a generic object properties based on the desired properties and behavior for other transformer objects in the object.
+ */
 export type TransformProperty<T, TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = T extends Array<infer U> // is it an array?
   ? // Yes, apply the desired props
     TransformProperty<U, TProps, TBehavior>[]
@@ -993,6 +1013,9 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
               : // No, this is a normal value such as string / bigint / number
                 T
 
+/**
+ * Apply desired properties to a transformer object.
+ */
 export type SetupDesiredProps<
   T extends TransformersObjects[keyof TransformersObjects],
   TProps extends TransformersDesiredProperties,
@@ -1007,11 +1030,14 @@ export type SetupDesiredProps<
     : TransformProperty<T[Key], TProps, TBehavior>
 }
 
+/**
+ * The desired properties for each transformer object.
+ */
 export type TransformersDesiredProperties = {
   [Key in keyof TransformersObjects]: DesiredPropertiesMapper<TransformersObjects[Key]>
 }
 
-/** @internal This is subject to breaking changes without notices */
+/** @private This is subject to breaking changes without notices */
 export type CompleteDesiredProperties<T extends RecursivePartial<TransformersDesiredProperties>, TTDefault extends boolean = false> = {
   [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TTDefault>
 }

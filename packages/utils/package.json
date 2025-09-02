@@ -29,15 +29,15 @@
     "@discordeno/types": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.4",
+    "@biomejs/biome": "2.2.2",
     "@swc/cli": "^0.7.8",
-    "@swc/core": "^1.13.3",
+    "@swc/core": "^1.13.5",
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.2.1",
     "@types/sinon": "^17.0.4",
     "c8": "^10.1.3",
-    "chai": "^5.2.1",
+    "chai": "^6.0.1",
     "mocha": "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch",
     "sinon": "^21.0.0",
     "ts-node": "^10.9.2",
