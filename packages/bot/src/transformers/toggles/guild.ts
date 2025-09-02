@@ -1,7 +1,8 @@
 import { type DiscordGuild, GuildFeatures } from '@discordeno/types'
 import { ToggleBitfieldBigint } from './ToggleBitfield.js'
 
-const featureNames = [
+/** @private This is subject to breaking changes without notices */
+export const guildFeatureNames = [
   'animatedBanner',
   'animatedIcon',
   'applicationCommandPermissionsV2',
@@ -169,7 +170,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
   get features(): GuildFeatureKeys[] {
     const features: GuildFeatureKeys[] = []
     for (const key of Object.keys(GuildToggle)) {
-      if (!featureNames.includes(key as GuildFeatureKeys)) continue
+      if (!guildFeatureNames.includes(key as GuildFeatureKeys)) continue
       if (!super.contains(GuildToggle[key as GuildToggleKeys])) continue
 
       features.push(key as GuildFeatureKeys)
@@ -383,4 +384,4 @@ export class GuildToggles extends ToggleBitfieldBigint {
 
 export type GuildToggleKeys = keyof typeof GuildToggle
 
-export type GuildFeatureKeys = (typeof featureNames)[number]
+export type GuildFeatureKeys = (typeof guildFeatureNames)[number]
