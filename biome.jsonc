@@ -1,69 +1,69 @@
 {
-	"root": false,
-	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
-	"formatter": {
-		"enabled": true,
-		"formatWithErrors": false,
-		"indentStyle": "space",
-		"indentWidth": 2,
-		"lineEnding": "lf",
-		"lineWidth": 150
-	},
-	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
-		}
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": false,
-			"correctness": {
-				"noUnusedVariables": "error",
-				"noUnusedImports": "error"
-			},
-			"style": {
-				"noNamespace": "error",
-				"noNonNullAssertion": "off",
-				"useImportType": "error",
-				"useConsistentArrayType": {
-					"level": "error",
-					"options": { "syntax": "shorthand" }
-				}
-			}
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"trailingCommas": "all",
-			"semicolons": "asNeeded",
-			"quoteStyle": "single"
-		}
-	},
-	"json": {
-		"parser": {
-			"allowComments": true,
-			"allowTrailingCommas": true
-		}
-	},
-	"files": {
-		"includes": [
-			"**",
-			// Ignore the package.json and leave yarn to format it
-			"!**/package.json",
-			"!**/node_modules",
-			// Ignore turbo and docusaurus cache/stuff
-			"!**/.docusaurus",
-			"!**/.turbo",
-			// Remove the yarn script as it is minified,
-			"!**/.yarn",
-			// Ignore build outputs
-			"!**/build",
-			"!**/coverage",
-			"!**/dist"
-		],
-		"ignoreUnknown": true
-	}
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "root": true,
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 150
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error"
+      },
+      "style": {
+        "noNamespace": "error",
+        "noNonNullAssertion": "off",
+        "useImportType": "error",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": { "syntax": "shorthand" }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },
+  "json": {
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": true
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      // Ignore the package.json and leave yarn to format it
+      "!**/package.json",
+      "!**/node_modules",
+      // Ignore turbo and docusaurus cache/stuff
+      "!**/.docusaurus",
+      "!**/.turbo",
+      // Remove the yarn script as it is minified,
+      "!**/.yarn",
+      // Ignore build outputs
+      "!**/build",
+      "!**/coverage",
+      "!**/dist"
+    ],
+    "ignoreUnknown": true
+  }
 }
