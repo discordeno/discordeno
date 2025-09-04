@@ -1962,7 +1962,7 @@ export interface RestManager {
    * @returns A collection of {@link DiscordInviteMetadata} objects assorted by invite code.
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` permission.
+   * Requires the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
    */
