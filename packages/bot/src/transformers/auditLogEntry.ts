@@ -3,7 +3,7 @@ import { camelize } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { AuditLogEntry } from './types.js'
 
-export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry): AuditLogEntry {
+export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
   const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),
     changes: camelize(payload.changes),

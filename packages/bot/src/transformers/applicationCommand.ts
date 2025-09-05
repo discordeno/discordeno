@@ -2,7 +2,7 @@ import type { DiscordApplicationCommand } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { ApplicationCommand } from './types.js'
 
-export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand): ApplicationCommand {
+export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand) {
   const applicationCommand = {
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),

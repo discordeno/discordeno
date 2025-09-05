@@ -1,9 +1,10 @@
 import type { DiscordSoundboardSound } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { SoundboardSound } from './types.js'
 
-export function transformSoundboardSound(bot: Bot, payload: DiscordSoundboardSound): SoundboardSound {
+export function transformSoundboardSound(bot: Bot, payload: Partial<DiscordSoundboardSound>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.soundboardSound
   const soundboardSound = {} as SetupDesiredProps<SoundboardSound, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -16,5 +17,7 @@ export function transformSoundboardSound(bot: Bot, payload: DiscordSoundboardSou
   if (props.available && payload.available) soundboardSound.available = payload.available
   if (props.user && payload.user) soundboardSound.user = bot.transformers.user(bot, payload.user)
 
-  return bot.transformers.customizers.soundboardSound(bot, payload, soundboardSound)
+  return callCustomizer('soundboardSound', bot, payload, soundboardSound, {
+    partial: extra?.partial ?? false,
+  })
 }

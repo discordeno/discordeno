@@ -1,9 +1,10 @@
 import type { DiscordSticker, DiscordStickerPack } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { Sticker, StickerPack } from './types.js'
 
-export function transformSticker(bot: Bot, payload: DiscordSticker): Sticker {
+export function transformSticker(bot: Bot, payload: Partial<DiscordSticker>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.sticker
   const sticker = {} as SetupDesiredProps<Sticker, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -19,10 +20,12 @@ export function transformSticker(bot: Bot, payload: DiscordSticker): Sticker {
   if (props.user && payload.user) sticker.user = bot.transformers.user(bot, payload.user)
   if (props.sortValue && payload.sort_value !== undefined) sticker.sortValue = payload.sort_value
 
-  return bot.transformers.customizers.sticker(bot, payload, sticker)
+  return callCustomizer('sticker', bot, payload, sticker, {
+    partial: extra?.partial ?? false,
+  })
 }
 
-export function transformStickerPack(bot: Bot, payload: DiscordStickerPack): StickerPack {
+export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
   const pack = {
     id: bot.transformers.snowflake(payload.id),
     stickers: payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),

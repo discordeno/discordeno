@@ -406,8 +406,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
     reactions: payload.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
-      // @ts-expect-error: TODO: Deal with partials
-      emoji: bot.transformers.emoji(bot, reaction.emoji),
+      emoji: bot.transformers.emoji(bot, reaction.emoji, { partial: true }),
     })),
     type: payload.type,
     activity: payload.activity
@@ -475,8 +474,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
         bot.transformers.snowflake(text.substring(2, text.length - 1)),
       ),
     ],
-    // @ts-expect-error: partials
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, { guildId, userId, partial: true }) : undefined,
     nonce: payload.nonce,
   }
 
