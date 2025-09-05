@@ -84,7 +84,6 @@ import {
   type DesiredPropertiesBehavior,
   type SetupDesiredProps,
   type TransformersDesiredProperties,
-  type TransformersObjects,
 } from './desiredProperties.js'
 import { transformActivity, transformActivityInstance, transformActivityLocation } from './transformers/activity.js'
 import { transformApplication } from './transformers/application.js'
