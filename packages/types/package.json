@@ -13,7 +13,7 @@
     "!dist/.tsbuildinfo"
   ],
   "scripts": {
-    "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist",
+    "build": "swc src --strip-leading-paths src --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
     "check": "biome check --write",

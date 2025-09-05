@@ -10,7 +10,7 @@
     "url": "git+https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
+    "build": "swc src --strip-leading-paths --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
     "check": "biome check --write",
