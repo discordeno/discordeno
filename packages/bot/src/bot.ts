@@ -63,7 +63,6 @@ export function createBot<
   }
 
   options.gateway.intents = options.intents
-  options.gateway.preferSnakeCase = true
 
   const id = getBotIdFromToken(options.token)
 

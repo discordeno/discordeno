@@ -2,7 +2,7 @@ import { Buffer } from 'node:buffer'
 import zlib from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { camelize, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { delay, LeakyBucket, logger } from '@discordeno/utils'
 import type { Decompress as FZstdDecompress } from 'fzstd'
 import NodeWebSocket from 'ws'
 import {
@@ -759,13 +759,7 @@ export class DiscordenoShard {
       this.previousSequenceNumber = packet.s
     }
 
-    this.forwardToBot(packet)
-  }
-
-  forwardToBot(packet: DiscordGatewayPayload): void {
-    // The necessary handling required for the Shards connection has been finished.
-    // Now the event can be safely forwarded.
-    this.events.message?.(this, camelize(packet))
+    this.events.message?.(this, packet)
   }
 
   /**
