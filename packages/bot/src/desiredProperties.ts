@@ -119,114 +119,122 @@ export interface TransformersObjects {
   webhook: Webhook
 }
 
-// NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
-//       internal properties needs to be in the alwaysPresents array, depending on an always present value is accepted
+/**
+ * Metadata for typescript to create the correct types for desired properties
+ *
+ * @private This is subject to breaking changes without notices
+ */
+export const transformersDesiredPropertiesMetadata = {
+  channel: {
+    dependencies: {
+      archived: ['toggles'],
+      invitable: ['toggles'],
+      locked: ['toggles'],
+      nsfw: ['toggles'],
+      newlyCreated: ['toggles'],
+      managed: ['toggles'],
+    },
+    alwaysPresents: ['toggles', 'internalOverwrites', 'internalThreadMetadata'],
+  },
+
+  guild: {
+    dependencies: {
+      threads: ['channels'],
+      features: ['toggles'],
+    },
+    alwaysPresents: [],
+  },
+
+  interaction: {
+    dependencies: {
+      respond: ['type', 'token', 'id'],
+      edit: ['type', 'token', 'id'],
+      deferEdit: ['type', 'token', 'id'],
+      defer: ['type', 'token', 'id'],
+      delete: ['type', 'token'],
+    },
+    alwaysPresents: ['bot', 'acknowledged'],
+  },
+
+  member: {
+    dependencies: {
+      deaf: ['toggles'],
+      mute: ['toggles'],
+      pending: ['toggles'],
+      flags: ['toggles'],
+      didRejoin: ['toggles'],
+      startedOnboarding: ['toggles'],
+      bypassesVerification: ['toggles'],
+      completedOnboarding: ['toggles'],
+    },
+    alwaysPresents: [],
+  },
+
+  message: {
+    dependencies: {
+      crossposted: ['flags'],
+      ephemeral: ['flags'],
+      failedToMentionSomeRolesInThread: ['flags'],
+      hasThread: ['flags'],
+      isCrosspost: ['flags'],
+      loading: ['flags'],
+      mentionedUserIds: ['mentions'],
+      mentionEveryone: ['bitfield'],
+      pinned: ['bitfield'],
+      sourceMessageDeleted: ['flags'],
+      suppressEmbeds: ['flags'],
+      suppressNotifications: ['flags'],
+      timestamp: ['id'],
+      tts: ['bitfield'],
+      urgent: ['flags'],
+    },
+    alwaysPresents: ['bitfield', 'flags'],
+  },
+
+  role: {
+    dependencies: {
+      hoist: ['toggles'],
+      managed: ['toggles'],
+      mentionable: ['toggles'],
+      premiumSubscriber: ['toggles'],
+      availableForPurchase: ['toggles'],
+      guildConnections: ['toggles'],
+    },
+    alwaysPresents: ['internalTags'],
+  },
+
+  user: {
+    dependencies: {
+      tag: ['username', 'discriminator'],
+      bot: ['toggles'],
+      system: ['toggles'],
+      mfaEnabled: ['toggles'],
+      verified: ['toggles'],
+    },
+    alwaysPresents: [],
+  },
+
+  emoji: {
+    dependencies: {
+      animated: ['toggles'],
+      available: ['toggles'],
+      managed: ['toggles'],
+      requireColons: ['toggles'],
+    },
+    alwaysPresents: ['toggles'],
+  },
+} as const satisfies DesiredPropertiesMetadata
 
 /**
  * Metadata for typescript to create the correct types for desired properties
  *
  * @private This is subject to breaking changes without notices
  */
-export interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadata {
-  channel: {
-    dependencies: {
-      archived: ['toggles']
-      invitable: ['toggles']
-      locked: ['toggles']
-      nsfw: ['toggles']
-      newlyCreated: ['toggles']
-      managed: ['toggles']
-    }
-    alwaysPresents: ['toggles', 'internalOverwrites', 'internalThreadMetadata']
-  }
-
-  guild: {
-    dependencies: {
-      threads: ['channels']
-      features: ['toggles']
-    }
-    alwaysPresents: []
-  }
-
-  interaction: {
-    dependencies: {
-      respond: ['type', 'token', 'id']
-      edit: ['type', 'token', 'id']
-      deferEdit: ['type', 'token', 'id']
-      defer: ['type', 'token', 'id']
-      delete: ['type', 'token']
-    }
-    alwaysPresents: ['bot', 'acknowledged']
-  }
-
-  member: {
-    dependencies: {
-      deaf: ['toggles']
-      mute: ['toggles']
-      pending: ['toggles']
-      flags: ['toggles']
-      didRejoin: ['toggles']
-      startedOnboarding: ['toggles']
-      bypassesVerification: ['toggles']
-      completedOnboarding: ['toggles']
-    }
-    alwaysPresents: []
-  }
-
-  message: {
-    dependencies: {
-      crossposted: ['flags']
-      ephemeral: ['flags']
-      failedToMentionSomeRolesInThread: ['flags']
-      hasThread: ['flags']
-      isCrosspost: ['flags']
-      loading: ['flags']
-      mentionedUserIds: ['mentions']
-      mentionEveryone: ['bitfield']
-      pinned: ['bitfield']
-      sourceMessageDeleted: ['flags']
-      suppressEmbeds: ['flags']
-      suppressNotifications: ['flags']
-      timestamp: ['id']
-      tts: ['bitfield']
-      urgent: ['flags']
-    }
-    alwaysPresents: ['bitfield', 'flags']
-  }
-
-  role: {
-    dependencies: {
-      hoist: ['toggles']
-      managed: ['toggles']
-      mentionable: ['toggles']
-      premiumSubscriber: ['toggles']
-      availableForPurchase: ['toggles']
-      guildConnections: ['toggles']
-    }
-    alwaysPresents: ['internalTags']
-  }
-
-  user: {
-    dependencies: {
-      tag: ['username', 'discriminator']
-      bot: ['toggles']
-      system: ['toggles']
-      mfaEnabled: ['toggles']
-      verified: ['toggles']
-    }
-    alwaysPresents: []
-  }
-
-  emoji: {
-    dependencies: {
-      animated: ['toggles']
-      available: ['toggles']
-      managed: ['toggles']
-      requireColons: ['toggles']
-    }
-    alwaysPresents: ['toggles']
-  }
-}
+type TransformersDesiredPropertiesMetadata = CompleteByKeys<
+  typeof transformersDesiredPropertiesMetadata,
+  keyof DesiredPropertiesMetadata,
+  { dependencies: {}; alwaysPresents: [] }
+>
 
 export function createDesiredPropertiesObject<T extends RecursivePartial<TransformersDesiredProperties>, TDefault extends boolean = false>(
   desiredProperties: T,
@@ -859,12 +867,17 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
 
 /** @private This is subject to breaking changes without notices */
 export type KeyByValue<TObj, TValue> = {
-  [Key in keyof TObj]: TObj[Key] extends TValue ? Key : never
+  [Key in keyof TObj]: Required<TObj[Key]> extends Required<TValue> ? Key : never
 }[keyof TObj]
 
 /** @private This is subject to breaking changes without notices */
 export type Complete<TObj, TDefault> = {
   [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
+}
+
+/** @private This is subject to breaking changes without notices */
+export type CompleteByKeys<TObj, Keys extends string, TDefault> = {
+  [K in Keys]-?: K extends keyof TObj ? (undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>) : TDefault
 }
 
 /** @private This is subject to breaking changes without notices */
@@ -876,11 +889,11 @@ export type JoinTuple<T extends string[], TDelimiter extends string> = T extends
 
 /** @private This is subject to breaking changes without notices */
 export type DesiredPropertiesMetadata = {
-  [K in keyof TransformersObjects]: {
-    dependencies?: {
+  [K in keyof TransformersObjects]?: {
+    dependencies: {
       [Key in keyof TransformersObjects[K]]?: (keyof TransformersObjects[K])[]
     }
-    alwaysPresents?: (keyof TransformersObjects[K])[]
+    alwaysPresents: (keyof TransformersObjects[K])[]
   }
 }
 
@@ -893,9 +906,9 @@ export type DesirableProperties<
   // Exclude the props that depend on something else from the desirable properties
   | keyof TransformersDesiredPropertiesMetadata[TKey]['dependencies']
   // Check if all the keys are "always presents", if this is the case it means we did not specify any always present key
-  | (keyof T extends NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number]
+  | (keyof T extends TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents'][number]
       ? never
-      : NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number])
+      : TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents'][number])
 >
 
 /** @private This is subject to breaking changes without notices */
@@ -1013,10 +1026,13 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
                 T
 
 /**
- * Apply desired properties to a transformer object.
+ * Apply desired properties to an object.
+ *
+ * @remarks
+ * If the object is not a transformed object that supports desired properties this function behaves the same as TransformProperty on the entire object
  */
 export type SetupDesiredProps<
-  T extends TransformersObjects[keyof TransformersObjects],
+  T,
   TProps extends TransformersDesiredProperties,
   TBehavior extends DesiredPropertiesBehavior = DesiredPropertiesBehavior.RemoveKey,
 > = {
