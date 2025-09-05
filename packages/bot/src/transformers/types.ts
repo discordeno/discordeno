@@ -572,6 +572,10 @@ export interface Component {
   name?: string
   /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
   size?: number
+  /** The component within the label */
+  component?: Component
+  /** The text of the selected options */
+  values?: string[]
 }
 
 export interface UnfurledMediaItem {
