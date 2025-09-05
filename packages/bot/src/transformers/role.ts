@@ -2,6 +2,7 @@ import type { BigString, DiscordRole, DiscordRoleColors } from '@discordeno/type
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 import type { Role, RoleColors } from './types.js'
@@ -46,19 +47,19 @@ export const baseRole: Role = {
   },
 }
 
-export function transformRole(bot: Bot, payload: DiscordRole, extra?: { guildId?: BigString }): Role {
+export function transformRole(bot: Bot, payload: Partial<DiscordRole>, extra?: { guildId?: BigString; partial?: boolean }) {
   const role: SetupDesiredProps<Role, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (props.id && payload.id) role.id = bot.transformers.snowflake(payload.id)
   // Role name can be an empty string
   if (props.name && payload.name !== undefined) role.name = payload.name
-  if (props.position) role.position = payload.position
+  if (props.position && payload.position !== undefined) role.position = payload.position
   if (props.guildId && extra?.guildId) role.guildId = bot.transformers.snowflake(extra?.guildId)
   if (props.color && payload.color !== undefined) role.color = payload.color
   if (props.permissions && payload.permissions) role.permissions = new Permissions(payload.permissions)
   if (props.icon && payload.icon) role.icon = iconHashToBigInt(payload.icon)
   if (props.unicodeEmoji && payload.unicode_emoji) role.unicodeEmoji = payload.unicode_emoji
-  if (props.flags) role.flags = payload.flags
+  if (props.flags && payload.flags !== undefined) role.flags = payload.flags
   if (props.tags && payload.tags) {
     role.internalTags = {}
     if (payload.tags.bot_id) role.internalTags.botId = bot.transformers.snowflake(payload.tags.bot_id)
@@ -68,12 +69,13 @@ export function transformRole(bot: Bot, payload: DiscordRole, extra?: { guildId?
   }
   if (props.toggles) role.toggles = new RoleToggles(payload)
 
-  return bot.transformers.customizers.role(bot, payload, role, {
+  return callCustomizer('role', bot, payload, role, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
+    partial: extra?.partial ?? false,
   })
 }
 
-export function transformRoleColors(bot: Bot, payload: DiscordRoleColors): RoleColors {
+export function transformRoleColors(bot: Bot, payload: Partial<DiscordRoleColors>, extra?: { partial?: boolean }) {
   const roleColors = {} as SetupDesiredProps<RoleColors, TransformersDesiredProperties, DesiredPropertiesBehavior>
   const props = bot.transformers.desiredProperties.roleColors
 
@@ -83,5 +85,7 @@ export function transformRoleColors(bot: Bot, payload: DiscordRoleColors): RoleC
   if (props.tertiaryColor && payload.tertiary_color !== undefined && payload.tertiary_color !== null)
     roleColors.tertiaryColor = payload.tertiary_color
 
-  return bot.transformers.customizers.roleColors(bot, payload, roleColors)
+  return callCustomizer('roleColors', bot, payload, roleColors, {
+    partial: extra?.partial ?? false,
+  })
 }

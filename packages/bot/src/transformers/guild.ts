@@ -2,6 +2,7 @@ import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@di
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import { GuildToggles } from './toggles/guild.js'
 import type { Channel, Guild } from './types.js'
 
@@ -23,30 +24,32 @@ export const baseGuild: Guild = {
   },
 }
 
-export function transformGuild(bot: Bot, payload: DiscordGuild, extra?: { shardId?: number }): Guild {
-  const guildId = bot.transformers.snowflake(payload.id)
+export function transformGuild(bot: Bot, payload: Partial<DiscordGuild>, extra?: { shardId?: number; partial?: boolean }) {
   const props = bot.transformers.desiredProperties.guild
   const guild: SetupDesiredProps<Guild, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseGuild)
+
+  const guildId = payload.id ? bot.transformers.snowflake(payload.id) : undefined
 
   if (props.afkTimeout && payload.afk_timeout) guild.afkTimeout = payload.afk_timeout
   if (props.approximateMemberCount && payload.approximate_member_count) guild.approximateMemberCount = payload.approximate_member_count
   if (props.approximatePresenceCount && payload.approximate_presence_count) guild.approximatePresenceCount = payload.approximate_presence_count
-  if (props.defaultMessageNotifications) guild.defaultMessageNotifications = payload.default_message_notifications
+  if (props.defaultMessageNotifications && payload.default_message_notifications !== undefined)
+    guild.defaultMessageNotifications = payload.default_message_notifications
   if (props.description && payload.description) guild.description = payload.description
   if (props.toggles) guild.toggles = new GuildToggles(payload)
-  if (props.explicitContentFilter) guild.explicitContentFilter = payload.explicit_content_filter
+  if (props.explicitContentFilter && payload.explicit_content_filter !== undefined) guild.explicitContentFilter = payload.explicit_content_filter
   if (props.maxMembers && payload.max_members) guild.maxMembers = payload.max_members
   if (props.maxPresences && payload.max_presences) guild.maxPresences = payload.max_presences ?? undefined
   if (props.maxVideoChannelUsers && payload.max_video_channel_users) guild.maxVideoChannelUsers = payload.max_video_channel_users
   if (props.maxStageVideoChannelUsers && payload.max_stage_video_channel_users)
     guild.maxStageVideoChannelUsers = payload.max_stage_video_channel_users
-  if (props.mfaLevel) guild.mfaLevel = payload.mfa_level
+  if (props.mfaLevel && payload.mfa_level !== undefined) guild.mfaLevel = payload.mfa_level
   if (props.name && payload.name) guild.name = payload.name
-  if (props.nsfwLevel) guild.nsfwLevel = payload.nsfw_level
+  if (props.nsfwLevel && payload.nsfw_level !== undefined) guild.nsfwLevel = payload.nsfw_level
   if (props.preferredLocale && payload.preferred_locale) guild.preferredLocale = payload.preferred_locale
   if (props.premiumSubscriptionCount && payload.premium_subscription_count !== undefined)
     guild.premiumSubscriptionCount = payload.premium_subscription_count
-  if (props.premiumTier) guild.premiumTier = payload.premium_tier
+  if (props.premiumTier && payload.premium_tier !== undefined) guild.premiumTier = payload.premium_tier
   if (props.stageInstances && payload.stage_instances)
     guild.stageInstances = payload.stage_instances.map((si) => ({
       /** The id of this Stage instance */
@@ -62,54 +65,48 @@ export function transformGuild(bot: Bot, payload: DiscordGuild, extra?: { shardI
     guild.channels = new Collection(
       [...(payload.channels ?? []), ...(payload.threads ?? [])].map((channel) => {
         const result = bot.transformers.channel(bot, channel, { guildId })
-        // TODO: We should check that id exists, or else the collection will have undefined as it's key (This is valid for all the collections below as well)
-        // @ts-expect-error: See TODO above
-        return [result.id, result]
+        return [bot.transformers.snowflake(channel.id), result]
       }),
     )
   if (props.members && payload.members)
     guild.members = new Collection(
       payload.members.map((member) => {
-        const result = bot.transformers.member(bot, member, { guildId, userId: bot.transformers.snowflake(member.user!.id) })
-        // @ts-expect-error: See TODO above
-        return [result.id, result]
+        const userId = bot.transformers.snowflake(member.user.id)
+        const result = bot.transformers.member(bot, member, { guildId, userId })
+        return [userId, result]
       }),
     )
   if (props.roles && payload.roles)
     guild.roles = new Collection(
       payload.roles.map((role) => {
         const result = bot.transformers.role(bot, role, { guildId })
-        // @ts-expect-error: See TODO above
-        return [result.id, result]
+        return [bot.transformers.snowflake(role.id), result]
       }),
     )
   if (props.emojis && payload.emojis)
     guild.emojis = new Collection(
       payload.emojis.map((emoji) => {
         const result = bot.transformers.emoji(bot, emoji)
-        // @ts-expect-error: See TODO above
-        return [result.id!, result]
+        return [bot.transformers.snowflake(emoji.id!), result]
       }),
     )
   if (props.voiceStates && payload.voice_states)
     guild.voiceStates = new Collection(
       payload.voice_states.map((voiceState) => {
         const result = bot.transformers.voiceState(bot, voiceState, { guildId })
-        // @ts-expect-error: See TODO above
-        return [result.userId, result]
+        return [bot.transformers.snowflake(voiceState.user_id), result]
       }),
     )
   if (props.stickers && payload.stickers)
     guild.stickers = new Collection(
       payload.stickers?.map((sticker) => {
         const result = bot.transformers.sticker(bot, sticker)
-        // @ts-expect-error: See TODO above
-        return [result.id, result]
+        return [bot.transformers.snowflake(sticker.id), result]
       }),
     )
   if (props.systemChannelFlags && payload.system_channel_flags) guild.systemChannelFlags = payload.system_channel_flags
   if (props.vanityUrlCode && payload.vanity_url_code) guild.vanityUrlCode = payload.vanity_url_code
-  if (props.verificationLevel) guild.verificationLevel = payload.verification_level
+  if (props.verificationLevel && payload.verification_level !== undefined) guild.verificationLevel = payload.verification_level
   if (props.welcomeScreen && payload.welcome_screen)
     guild.welcomeScreen = {
       description: payload.welcome_screen.description ?? undefined,
@@ -127,7 +124,7 @@ export function transformGuild(bot: Bot, payload: DiscordGuild, extra?: { shardI
   if (props.icon && payload.icon) guild.icon = iconHashToBigInt(payload.icon)
   if (props.banner && payload.banner) guild.banner = iconHashToBigInt(payload.banner)
   if (props.splash && payload.splash) guild.splash = iconHashToBigInt(payload.splash)
-  if (props.id && payload.id) guild.id = guildId
+  if (props.id && guildId) guild.id = guildId
   if (props.ownerId && payload.owner_id) guild.ownerId = bot.transformers.snowflake(payload.owner_id)
   if (props.permissions && payload.permissions) guild.permissions = bot.transformers.snowflake(payload.permissions)
   if (props.afkChannelId && payload.afk_channel_id) guild.afkChannelId = bot.transformers.snowflake(payload.afk_channel_id)
@@ -149,5 +146,8 @@ export function transformGuild(bot: Bot, payload: DiscordGuild, extra?: { shardI
     guild.safetyAlertsChannelId = bot.transformers.snowflake(payload.safety_alerts_channel_id)
   if (props.incidentsData && payload.incidents_data) guild.incidentsData = bot.transformers.incidentsData(bot, payload.incidents_data)
 
-  return bot.transformers.customizers.guild(bot, payload, guild, extra)
+  return callCustomizer('guild', bot, payload, guild, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  })
 }

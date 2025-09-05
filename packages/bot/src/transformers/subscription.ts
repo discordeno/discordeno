@@ -1,9 +1,10 @@
 import type { DiscordSubscription } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { Subscription } from './types.js'
 
-export function transformSubscription(bot: Bot, payload: DiscordSubscription): Subscription {
+export function transformSubscription(bot: Bot, payload: Partial<DiscordSubscription>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.subscription
   const subscription = {} as SetupDesiredProps<Subscription, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -20,5 +21,7 @@ export function transformSubscription(bot: Bot, payload: DiscordSubscription): S
   if (props.canceledAt && payload.canceled_at) subscription.canceledAt = Date.parse(payload.canceled_at)
   if (props.country && payload.country) subscription.country = payload.country
 
-  return bot.transformers.customizers.subscription(bot, payload, subscription)
+  return callCustomizer('subscription', bot, payload, subscription, {
+    partial: extra?.partial ?? false,
+  })
 }

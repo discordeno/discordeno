@@ -373,10 +373,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.guild(bot, snakelize(await bot.rest.getGuild(guildId, options)))
     },
     getGuilds: async (bearerToken, options) => {
-      return (await bot.rest.getGuilds(bearerToken, options)).map<Partial<typeof bot.transformers.$inferredTypes.guild>>((res) =>
-        // @ts-expect-error getGuilds returns partial guilds
-        bot.transformers.guild(bot, snakelize(res)),
-      )
+      return (await bot.rest.getGuilds(bearerToken, options)).map((res) => bot.transformers.guild(bot, snakelize(res), { partial: true }))
     },
     getGuildApplicationCommand: async (commandId, guildId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGuildApplicationCommand(commandId, guildId)))
@@ -787,10 +784,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.entitlement(bot, snakelize(await bot.rest.getEntitlement(applicationId, entitlementId)))
     },
     createTestEntitlement: async (applicationId, body) => {
-      // @ts-expect-error createTestEntitlement gives a partial, and this method returns a partial
-      return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body))) as Partial<
-        typeof bot.transformers.$inferredTypes.entitlement
-      >
+      return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body)), { partial: true })
     },
     deleteTestEntitlement: async (applicationId, entitlementId) => {
       await bot.rest.deleteTestEntitlement(applicationId, entitlementId)

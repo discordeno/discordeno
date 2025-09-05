@@ -117,7 +117,7 @@ export const GuildToggle = {
 }
 
 export class GuildToggles extends ToggleBitfieldBigint {
-  constructor(guildOrTogglesBigint: DiscordGuild | bigint) {
+  constructor(guildOrTogglesBigint: Partial<DiscordGuild> | bigint) {
     super()
 
     if (typeof guildOrTogglesBigint === 'bigint') this.bitfield = guildOrTogglesBigint

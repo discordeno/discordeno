@@ -1,6 +1,7 @@
 import type { DiscordDefaultReactionEmoji, DiscordEmoji } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import { EmojiToggles } from './toggles/emoji.js'
 import type { DefaultReactionEmoji, Emoji } from './types.js'
 
@@ -22,7 +23,7 @@ export const baseEmoji: Emoji = {
   },
 }
 
-export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
+export function transformEmoji(bot: Bot, payload: Partial<DiscordEmoji>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.emoji
   const emoji = Object.create(baseEmoji) as SetupDesiredProps<Emoji, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -33,15 +34,19 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
 
   emoji.toggles = new EmojiToggles(payload)
 
-  return bot.transformers.customizers.emoji(bot, payload, emoji)
+  return callCustomizer('emoji', bot, payload, emoji, {
+    partial: extra?.partial ?? false,
+  })
 }
 
-export function transformDefaultReactionEmoji(bot: Bot, payload: DiscordDefaultReactionEmoji): DefaultReactionEmoji {
+export function transformDefaultReactionEmoji(bot: Bot, payload: Partial<DiscordDefaultReactionEmoji>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.defaultReactionEmoji
   const defaultReactionEmoji = {} as SetupDesiredProps<DefaultReactionEmoji, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.emojiId && payload.emoji_id) defaultReactionEmoji.emojiId = bot.transformers.snowflake(payload.emoji_id)
   if (props.emojiName && payload.emoji_name) defaultReactionEmoji.emojiName = payload.emoji_name
 
-  return bot.transformers.customizers.defaultReactionEmoji(bot, payload, defaultReactionEmoji)
+  return callCustomizer('defaultReactionEmoji', bot, payload, defaultReactionEmoji, {
+    partial: extra?.partial ?? false,
+  })
 }

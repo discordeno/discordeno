@@ -65,6 +65,7 @@ import type {
   StickerFormatTypes,
   StickerTypes,
   SystemChannelFlags,
+  TargetTypes,
   TeamMembershipStates,
   TextStyles,
   VerificationLevels,
@@ -1064,14 +1065,14 @@ export interface Invite {
   /** The maximum number of times the invite can be used */
   maxUses: number
   /** The type of target for this voice channel invite */
-  targetType: number
+  targetType: TargetTypes
   /** The target user for this invite */
   targetUser: User
   /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Application
+  targetApplication?: Partial<Application>
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
   temporary: boolean
-  /** How many times the invite has been used (always will be 0) */
+  /** How many times the invite has been used */
   uses: number
   /** Approximate count of online members (only present when target_user is set) */
   approximateMemberCount: number

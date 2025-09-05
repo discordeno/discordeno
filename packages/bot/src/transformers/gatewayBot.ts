@@ -2,7 +2,7 @@ import type { DiscordGetGatewayBot } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { GetGatewayBot } from './types.js'
 
-export function transformGatewayBot(bot: Bot, payload: DiscordGetGatewayBot): GetGatewayBot {
+export function transformGatewayBot(bot: Bot, payload: DiscordGetGatewayBot) {
   const gatewayBot = {
     url: payload.url,
     shards: payload.shards,

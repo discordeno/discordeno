@@ -1,7 +1,7 @@
 import type { DiscordTemplate } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { Template } from './types.js'
-export function transformTemplate(bot: Bot, payload: DiscordTemplate): Template {
+export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
   const template = {
     code: payload.code,
     name: payload.name,
