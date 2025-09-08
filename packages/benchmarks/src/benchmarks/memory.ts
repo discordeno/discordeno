@@ -13,7 +13,7 @@ await memoryBenchmark(
     }),
   (bot, event) => {
     const eventName = snakeToCamelCase(event.payload.t!)
-    bot.events[eventName as keyof typeof bot.events]?.(event.payload.d as never, {})
+    bot.events[eventName as keyof typeof bot.events]?.(event.payload.d as never, {} as never)
   },
   dbEvents.filter((event) => event.payload.t),
 )
