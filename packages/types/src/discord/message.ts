@@ -197,12 +197,12 @@ export enum MessageFlags {
   /** This message has a snapshot (via Message Forwarding) */
   HasSnapshot = 1 << 14,
   /**
-   * Allows you to create fully component driven messages
+   * Allows you to create fully component-driven messages
    *
    * @remarks
    * Once a message has been sent with this flag, it can't be removed from that message.
    */
-  IsComponentV2 = 1 << 15,
+  IsComponentsV2 = 1 << 15,
 }
 
 /** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object */
