@@ -483,7 +483,6 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       approximateMemberCount: defaultValue,
       approximatePresenceCount: defaultValue,
       guildScheduledEvent: defaultValue,
-      stageInstance: defaultValue,
       expiresAt: defaultValue,
       flags: defaultValue,
       ...desiredProperties.invite,

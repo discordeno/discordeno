@@ -30,12 +30,6 @@ export interface DiscordInvite {
   approximate_member_count?: number
   /** The expiration date of this invite */
   expires_at: string | null
-  /**
-   * Stage instance data if there is a public Stage instance in the Stage channel this invite is for
-   *
-   * @deprecated
-   */
-  stage_instance?: DiscordInviteStageInstance
   /** guild scheduled event data */
   guild_scheduled_event?: DiscordScheduledEvent
   /**
