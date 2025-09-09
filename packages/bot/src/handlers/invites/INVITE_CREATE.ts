@@ -6,5 +6,20 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, 
 
   const payload = data.d as DiscordInviteCreate
 
-  bot.events.inviteCreate(bot.transformers.invite(bot, payload, { shardId }))
+  bot.events.inviteCreate({
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    code: payload.code,
+    createdAt: Date.parse(payload.created_at),
+    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
+    inviter: payload.inviter ? bot.transformers.user(bot, payload.inviter) : undefined,
+    maxAge: payload.max_age,
+    maxUses: payload.max_uses,
+    targetType: payload.target_type,
+    targetUser: payload.target_user ? bot.transformers.user(bot, payload.target_user) : undefined,
+    targetApplication: payload.target_application
+      ? bot.transformers.application(bot, payload.target_application, { shardId, partial: true })
+      : undefined,
+    temporary: payload.temporary,
+    uses: payload.uses,
+  })
 }

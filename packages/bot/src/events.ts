@@ -1,7 +1,8 @@
-import type { DiscordGatewayPayload, DiscordRateLimited, DiscordReady, DiscordVoiceChannelEffectAnimationType } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordRateLimited, DiscordReady, DiscordVoiceChannelEffectAnimationType, TargetTypes } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js'
 import type {
+  Application,
   AuditLogEntry,
   AutoModerationActionExecution,
   AutoModerationRule,
@@ -12,7 +13,6 @@ import type {
   GuildApplicationCommandPermissions,
   Integration,
   Interaction,
-  Invite,
   Member,
   Message,
   PresenceUpdate,
@@ -72,7 +72,20 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   integrationCreate: (integration: SetupDesiredProps<Integration, TProps, TBehavior>) => unknown
   integrationDelete: (payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => unknown
   integrationUpdate: (payload: { guildId: bigint }) => unknown
-  inviteCreate: (invite: SetupDesiredProps<Invite, TProps, TBehavior>) => unknown
+  inviteCreate: (invite: {
+    channelId: bigint
+    code: string
+    createdAt: number
+    guildId?: bigint
+    inviter?: SetupDesiredProps<User, TProps, TBehavior>
+    maxAge: number
+    maxUses: number
+    targetType: TargetTypes
+    targetUser?: SetupDesiredProps<User, TProps, TBehavior>
+    targetApplication?: Partial<SetupDesiredProps<Application, TProps, TBehavior>>
+    temporary: boolean
+    uses: number
+  }) => unknown
   inviteDelete: (payload: { channelId: bigint; guildId?: bigint; code: string }) => unknown
   guildMemberAdd: (member: SetupDesiredProps<Member, TProps, TBehavior>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown
   guildMemberRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown
@@ -89,7 +102,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     guildId?: bigint
     member?: SetupDesiredProps<Member, TProps, TBehavior>
     user?: SetupDesiredProps<User, TProps, TBehavior>
-    emoji: SetupDesiredProps<Emoji, TProps, TBehavior>
+    emoji: Partial<SetupDesiredProps<Emoji, TProps, TBehavior>>
     messageAuthorId?: bigint
     burst: boolean
     burstColors?: string[]
@@ -99,14 +112,14 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     channelId: bigint
     messageId: bigint
     guildId?: bigint
-    emoji: SetupDesiredProps<Emoji, TProps, TBehavior>
+    emoji: Partial<SetupDesiredProps<Emoji, TProps, TBehavior>>
     burst: boolean
   }) => unknown
   reactionRemoveEmoji: (payload: {
     channelId: bigint
     messageId: bigint
     guildId?: bigint
-    emoji: SetupDesiredProps<Emoji, TProps, TBehavior>
+    emoji: Partial<SetupDesiredProps<Emoji, TProps, TBehavior>>
   }) => unknown
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown
   presenceUpdate: (presence: SetupDesiredProps<PresenceUpdate, TProps, TBehavior>) => unknown
