@@ -15,7 +15,7 @@ WORKDIR /app
 # copy the source files
 COPY src/ src/
 # copy the compiler config
-COPY .swcrc ./
+COPY tsconfig.json ./
 # compile the files
 RUN yarn build
 
