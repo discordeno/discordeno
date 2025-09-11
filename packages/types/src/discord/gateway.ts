@@ -707,6 +707,8 @@ export interface DiscordInviteCreate {
   temporary: boolean
   /** How many times the invite has been used (always will be 0) */
   uses: number
+  /** The expiration date of this invite. */
+  expires_at: string
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#invite-delete-invite-delete-event-fields */
