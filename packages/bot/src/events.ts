@@ -27,7 +27,6 @@ import type {
 } from './transformers/types.js'
 
 export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
-  debug: (text: string, ...args: any[]) => unknown
   applicationCommandPermissionsUpdate: (command: GuildApplicationCommandPermissions) => unknown
   guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
   automodRuleCreate: (rule: AutoModerationRule) => unknown

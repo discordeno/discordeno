@@ -125,7 +125,7 @@ __metadata:
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     "@types/sinon": "npm:^17.0.4"
     c8: "npm:^10.1.3"
     chai: "npm:^6.0.1"
@@ -148,7 +148,7 @@ __metadata:
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     "@types/sinon": "npm:^17.0.4"
     "@types/ws": "npm:^8.18.1"
     c8: "npm:^10.1.3"
@@ -178,7 +178,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     "@types/sinon": "npm:^17.0.4"
     c8: "npm:^10.1.3"
     chai: "npm:^6.0.1"
@@ -200,7 +200,7 @@ __metadata:
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     c8: "npm:^10.1.3"
     mocha: "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch"
     ts-node: "npm:^10.9.2"
@@ -219,7 +219,7 @@ __metadata:
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     "@types/sinon": "npm:^17.0.4"
     c8: "npm:^10.1.3"
     chai: "npm:^6.0.1"
@@ -238,16 +238,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gerrit0/mini-shiki@npm:^3.9.0":
-  version: 3.11.0
-  resolution: "@gerrit0/mini-shiki@npm:3.11.0"
+"@gerrit0/mini-shiki@npm:^3.12.0":
+  version: 3.12.1
+  resolution: "@gerrit0/mini-shiki@npm:3.12.1"
   dependencies:
-    "@shikijs/engine-oniguruma": "npm:^3.11.0"
-    "@shikijs/langs": "npm:^3.11.0"
-    "@shikijs/themes": "npm:^3.11.0"
-    "@shikijs/types": "npm:^3.11.0"
+    "@shikijs/engine-oniguruma": "npm:^3.12.1"
+    "@shikijs/langs": "npm:^3.12.1"
+    "@shikijs/themes": "npm:^3.12.1"
+    "@shikijs/types": "npm:^3.12.1"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
-  checksum: 10c0/9e58d72447c6ae09aeadfd4b005e165508a9579bd4a44bdbbf7a54dc3da5d1ccdc69c05c71d51898be6d0de9d8b8e74e55b9a021551c88d0be078c3323091f84
+  checksum: 10c0/d4cea3464cd9cef69e8a849b6b0f98ae9a15a5c5d842c1874932f257a45f2619c03f0f5d299e6b725d07c171d7c12c7ed760d48b9afeaed9fc32cf6a55d28e5d
   languageName: node
   linkType: hard
 
@@ -509,41 +509,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/engine-oniguruma@npm:^3.11.0":
-  version: 3.11.0
-  resolution: "@shikijs/engine-oniguruma@npm:3.11.0"
+"@shikijs/engine-oniguruma@npm:^3.12.1":
+  version: 3.12.1
+  resolution: "@shikijs/engine-oniguruma@npm:3.12.1"
   dependencies:
-    "@shikijs/types": "npm:3.11.0"
+    "@shikijs/types": "npm:3.12.1"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
-  checksum: 10c0/bacad748f0526fbbf5cf0ea22f60c76d93774a925898cebfb5fc9ae681a52ef47f09a6fc3e20aef8eb879a8200527cecb1897a67825f09c81059a903762dc6d2
+  checksum: 10c0/713d6d7d408d8c46939f512e72cc8b1d26a97447281136eac929396c9c670aaa546b31b2ba3124d5004d488872b2009418bac8e4c01d1bdfbfd17b0526c3ba07
   languageName: node
   linkType: hard
 
-"@shikijs/langs@npm:^3.11.0":
-  version: 3.11.0
-  resolution: "@shikijs/langs@npm:3.11.0"
+"@shikijs/langs@npm:^3.12.1":
+  version: 3.12.1
+  resolution: "@shikijs/langs@npm:3.12.1"
   dependencies:
-    "@shikijs/types": "npm:3.11.0"
-  checksum: 10c0/6eb1e9ba28a319da9ea402881d520f52907b98254cfc9c39d70301557c1a7eb2fc2a0e7f3ef0f7fd91707d92ee8c34d2afd80af6b3f478787a710ae30a71a531
+    "@shikijs/types": "npm:3.12.1"
+  checksum: 10c0/524338fe4a7363f76c6d699772c22acec78834aa735c75adb3403696dde4faeb06dbe1bab1ac94a33a0cda815ffbd13baf77208dba5f6157f9b937fbcbfcc30b
   languageName: node
   linkType: hard
 
-"@shikijs/themes@npm:^3.11.0":
-  version: 3.11.0
-  resolution: "@shikijs/themes@npm:3.11.0"
+"@shikijs/themes@npm:^3.12.1":
+  version: 3.12.1
+  resolution: "@shikijs/themes@npm:3.12.1"
   dependencies:
-    "@shikijs/types": "npm:3.11.0"
-  checksum: 10c0/825576620d9a696a0da799453081117815738cb63109117e980a88775f9740e8eed428173983fb0a0c902e16f3254af23f19483c5470e40509f9f70065b17706
+    "@shikijs/types": "npm:3.12.1"
+  checksum: 10c0/20b457cde62ca191c3e146ff06523a575b912a915754eb189acc7b7563e97729cead5bbe38ef9fc22568fe180ae2ebbe3270e731a6cc93391ee77d97a414f280
   languageName: node
   linkType: hard
 
-"@shikijs/types@npm:3.11.0, @shikijs/types@npm:^3.11.0":
-  version: 3.11.0
-  resolution: "@shikijs/types@npm:3.11.0"
+"@shikijs/types@npm:3.12.1, @shikijs/types@npm:^3.12.1":
+  version: 3.12.1
+  resolution: "@shikijs/types@npm:3.12.1"
   dependencies:
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/a209a84d86d8501091a06198cf11f79fc6485bb836554e96d5b3e04a7043c1a993e46a858b32a3117328becfa93c24fef1c716ead0919ae5b2677078ffb11eaf
+  checksum: 10c0/0b6ca50a4c7eecd00aad6144ca419d3ddea441d0f71bb04a6ed6fa82eba431fb1d6a8406ab643abc8e25597991e11b58c75f62c5f22d276693bf36bb2a008b53
   languageName: node
   linkType: hard
 
@@ -876,12 +876,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.2.1":
-  version: 24.2.1
-  resolution: "@types/node@npm:24.2.1"
+"@types/node@npm:^24.3.0":
+  version: 24.3.0
+  resolution: "@types/node@npm:24.3.0"
   dependencies:
     undici-types: "npm:~7.10.0"
-  checksum: 10c0/439a3c7edf88a298e0c92e46f670234070b892589c3b06e82cc86c47a7e1cf220f4a4b4736ec6ac7e4b9e1c40d7b6d443a1e22f99dd17f13f9dd15de3b32011b
+  checksum: 10c0/96bdeca01f690338957c2dcc92cb9f76c262c10398f8d91860865464412b0f9d309c24d9b03d0bdd26dd47fa7ee3f8227893d5c89bc2009d919a525a22512030
   languageName: node
   linkType: hard
 
@@ -1233,7 +1233,7 @@ __metadata:
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     benchmark: "npm:^2.1.4"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -1430,10 +1430,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "chalk@npm:5.5.0"
-  checksum: 10c0/23063b544f7c2fe57d25ff814807de561f8adfff72e4f0051051eaa606f772586470507ccd38d89166300eeaadb0164acde8bb8a0716a0f2d56ccdf3761d5e4f
+"chalk@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "chalk@npm:5.6.0"
+  checksum: 10c0/f8558fc12fd9805f167611803b325b0098bbccdc9f1d3bafead41c9bac61f263357f3c0df0cbe28bc2fd5fca3edcf618b01d6771a5a776b4c15d061482a72b23
   languageName: node
   linkType: hard
 
@@ -1726,9 +1726,9 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:2.2.2"
     husky: "npm:^9.1.7"
-    lint-staged: "npm:^16.1.5"
+    lint-staged: "npm:^16.1.6"
     turbo: "npm:^2.5.6"
-    typedoc: "npm:^0.28.10"
+    typedoc: "npm:^0.28.12"
     typedoc-plugin-markdown: "npm:^4.8.1"
     typescript: "npm:^5.9.2"
   languageName: unknown
@@ -1748,7 +1748,7 @@ __metadata:
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.2.1"
+    "@types/node": "npm:^24.3.0"
     c8: "npm:^10.1.3"
     chai: "npm:^6.0.1"
     mocha: "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch"
@@ -2534,15 +2534,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^16.1.5":
-  version: 16.1.5
-  resolution: "lint-staged@npm:16.1.5"
+"lint-staged@npm:^16.1.6":
+  version: 16.1.6
+  resolution: "lint-staged@npm:16.1.6"
   dependencies:
-    chalk: "npm:^5.5.0"
+    chalk: "npm:^5.6.0"
     commander: "npm:^14.0.0"
     debug: "npm:^4.4.1"
     lilconfig: "npm:^3.1.3"
-    listr2: "npm:^9.0.1"
+    listr2: "npm:^9.0.3"
     micromatch: "npm:^4.0.8"
     nano-spawn: "npm:^1.0.2"
     pidtree: "npm:^0.6.0"
@@ -2550,13 +2550,13 @@ __metadata:
     yaml: "npm:^2.8.1"
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 10c0/771e7be871f1d74ed09ef4e4eae5f835ed962965db7709be26cccf71bef8fed34f8d5d92f193b2a6fad32c12d955850aa74008e6180fabea8a7a6666cba2ac39
+  checksum: 10c0/e695edfec7e330f2c7cd0bb0e56220aa95d3b3655fe64a87a02140609a3594df67e1ea7abc2cc4ce69aa010418e406b1b24703ba4bd026c873a5b43a5ab16c6a
   languageName: node
   linkType: hard
 
-"listr2@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "listr2@npm:9.0.1"
+"listr2@npm:^9.0.3":
+  version: 9.0.3
+  resolution: "listr2@npm:9.0.3"
   dependencies:
     cli-truncate: "npm:^4.0.0"
     colorette: "npm:^2.0.20"
@@ -2564,7 +2564,7 @@ __metadata:
     log-update: "npm:^6.1.0"
     rfdc: "npm:^1.4.1"
     wrap-ansi: "npm:^9.0.0"
-  checksum: 10c0/73462e84a3c4f05de5a3cdea5eaa0209c6ab04a2fdb4046545049806e9ba17b6ee84a097ebf7ffc0e903b0f2a9094c0c480cd2f2bb21d7d21e20969e17a3c32b
+  checksum: 10c0/29978a32f9fb052f1efc11e8ad7745426c5bf706af87151672cb98e49fa11dc83a44f5065267f7f20a299e0942fed85677ab368e1cef8367800243675c50a20e
   languageName: node
   linkType: hard
 
@@ -3912,20 +3912,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc@npm:^0.28.10":
-  version: 0.28.10
-  resolution: "typedoc@npm:0.28.10"
+"typedoc@npm:^0.28.12":
+  version: 0.28.12
+  resolution: "typedoc@npm:0.28.12"
   dependencies:
-    "@gerrit0/mini-shiki": "npm:^3.9.0"
+    "@gerrit0/mini-shiki": "npm:^3.12.0"
     lunr: "npm:^2.3.9"
     markdown-it: "npm:^14.1.0"
     minimatch: "npm:^9.0.5"
-    yaml: "npm:^2.8.0"
+    yaml: "npm:^2.8.1"
   peerDependencies:
     typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x || 5.8.x || 5.9.x
   bin:
     typedoc: bin/typedoc
-  checksum: 10c0/e1a91b87d2282857937e60940eb54b557b15699b413e06ad0895765b519ecf2b0f285902a1e700d96576b1bb8178f67561dbc1698342a2001b6f779014a50e1e
+  checksum: 10c0/b83a182df0887dce0a27df462e86e9ad771b3eff32eeef07b2b2424e57794050de540cd4667a640165518360fe47393cc92b55bc4ca861bd5746ed696df086d0
   languageName: node
   linkType: hard
 
@@ -4119,7 +4119,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.8.0, yaml@npm:^2.8.1":
+"yaml@npm:^2.8.1":
   version: 2.8.1
   resolution: "yaml@npm:2.8.1"
   bin:
