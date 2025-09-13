@@ -1,5 +1,6 @@
 /** Types for: https://discord.com/developers/docs/components/reference */
 
+import type { Require } from '../shared.js'
 import type { ChannelTypes } from './channel.js'
 import type { DiscordEmoji } from './emoji.js'
 import type { DiscordInteractionDataResolved } from './interactions.js'
@@ -71,9 +72,6 @@ export type DiscordMessageComponentMessageComponentInteractionResponse =
   | DiscordStringSelectInteractionMessageComponentResponse
   | DiscordChannelSelectInteractionResponse
   | DiscordMentionableSelectInteractionResponse
-
-// TODO: Do we move this type elsewere? maybe the shared.ts file?
-type Require<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: T[P] }
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface DiscordBaseComponent {
