@@ -148,7 +148,26 @@ export interface DiscordInteractionDataResolved {
    * @remarks
    * Only threads include `thread_metadata` and `parent_id` properties.
    */
-  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions' | 'thread_metadata' | 'parent_id'>>
+  channels?: Record<
+    string,
+    Pick<
+      DiscordChannel,
+      | 'id'
+      | 'name'
+      | 'type'
+      | 'permissions'
+      | 'last_message_id'
+      | 'last_pin_timestamp'
+      | 'nsfw'
+      | 'parent_id'
+      | 'guild_id'
+      | 'flags'
+      | 'rate_limit_per_user'
+      | 'topic'
+      | 'position'
+      | 'thread_metadata'
+    >
+  >
   /** The Ids and Message objects */
   messages?: Record<string, Partial<DiscordMessage>>
   /** The ids and attachment objects */
@@ -232,9 +251,9 @@ export interface DiscordInteractionCallback {
   activity_instance_id?: string
   /** ID of the message that was created by the interaction */
   response_message_id?: string
-  /** Whether or not the message is in a loading state */
+  /** Whether the message is in a loading state */
   response_message_loading?: boolean
-  /** Whether or not the response message was ephemeral */
+  /** Whether the response message is ephemeral */
   response_message_ephemeral?: boolean
 }
 
