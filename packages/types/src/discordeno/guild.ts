@@ -169,7 +169,14 @@ export interface ModifyGuildMember {
 
 /** https://discord.com/developers/docs/resources/guild#modify-current-member-json-params */
 export interface EditBotMemberOptions {
+  /** Value to set user's nickname to	 */
   nick?: string | null
+  /** Data URI base64 encoded banner image */
+  banner?: string | null
+  /** Data URI base64 encoded avatar image */
+  avatar?: string | null
+  /** Guild member bio */
+  bio?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-bans-query-string-params */
