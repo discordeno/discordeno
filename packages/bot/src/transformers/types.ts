@@ -1075,8 +1075,6 @@ export interface Invite {
   uses: number
   /** Approximate count of online members (only present when target_user is set) */
   approximateMemberCount: number
-  /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
-  stageInstance?: InviteStageInstance
   /** The expiration date of this invite, returned from the GET /invites/code endpoint when with_expiration is true */
   expiresAt?: number
   /** guild scheduled event data */

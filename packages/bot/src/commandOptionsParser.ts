@@ -75,7 +75,23 @@ export interface InteractionResolvedDataUser<TProps extends TransformersDesiredP
 
 export type InteractionResolvedDataChannel<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Pick<
   SetupDesiredProps<Channel, TProps, TBehavior>,
-  Extract<keyof SetupDesiredProps<Channel, TProps, TBehavior>, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
+  Extract<
+    keyof SetupDesiredProps<Channel, TProps, TBehavior>,
+    | 'id'
+    | 'name'
+    | 'type'
+    | 'permissions'
+    | 'lastMessageId'
+    | 'lastPinTimestamp'
+    | 'nsfw'
+    | 'parentId'
+    | 'guildId'
+    | 'flags'
+    | 'rateLimitPerUser'
+    | 'topic'
+    | 'position'
+    | 'threadMetadata'
+  >
 >
 
 export type InteractionResolvedDataMember<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Omit<
@@ -90,7 +106,23 @@ export interface InteractionResolvedUser {
 }
 
 /** @deprecated Use {@link InteractionResolvedDataChannel} */
-export type InteractionResolvedChannel = Pick<Channel, 'id' | 'name' | 'type' | 'permissions' | 'threadMetadata' | 'parentId'>
+export type InteractionResolvedChannel = Pick<
+  Channel,
+  | 'id'
+  | 'name'
+  | 'type'
+  | 'permissions'
+  | 'lastMessageId'
+  | 'lastPinTimestamp'
+  | 'nsfw'
+  | 'parentId'
+  | 'guildId'
+  | 'flags'
+  | 'rateLimitPerUser'
+  | 'topic'
+  | 'position'
+  | 'threadMetadata'
+>
 
 /** @deprecated Use {@link InteractionResolvedDataMember} */
 export type InteractionResolvedMember = Omit<Member, 'user' | 'deaf' | 'mute'>
