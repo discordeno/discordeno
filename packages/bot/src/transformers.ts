@@ -47,7 +47,7 @@ import type {
   DiscordMessage,
   DiscordMessageCall,
   DiscordMessageComponent,
-  DiscordMessageComponentModelInteractionResponse,
+  DiscordMessageComponentFromModalInteractionResponse,
   DiscordMessageInteractionMetadata,
   DiscordMessagePin,
   DiscordMessageSnapshot,
@@ -270,7 +270,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   component: TransformerFunction<
     TProps,
     TBehavior,
-    DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse,
+    DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse,
     Component,
     {},
     'unchanged'
@@ -360,7 +360,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
     applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
     attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment
-    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse
+    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember

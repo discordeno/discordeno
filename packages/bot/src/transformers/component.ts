@@ -7,11 +7,11 @@ import {
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
-  type DiscordMessageComponentModelInteractionResponse,
+  type DiscordMessageComponentFromModalInteractionResponse,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
-  type DiscordStringSelectInteractionModalResponse,
+  type DiscordStringSelectInteractionResponseFromModal,
   type DiscordTextDisplayComponent,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
@@ -22,7 +22,7 @@ import {
 import type { Bot } from '../bot.js'
 import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js'
 
-export function transformComponent(bot: Bot, payload: DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse): Component {
+export function transformComponent(bot: Bot, payload: DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse): Component {
   let component: Component
 
   // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
@@ -160,7 +160,7 @@ function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponen
   return input
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent | DiscordStringSelectInteractionModalResponse): Component {
+function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent | DiscordStringSelectInteractionResponseFromModal): Component {
   const props = bot.transformers.desiredProperties.component
   const select = {} as Component
 

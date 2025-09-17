@@ -8,10 +8,10 @@ import {
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
-  type DiscordMessageComponentModelInteractionResponse,
+  type DiscordMessageComponentFromModalInteractionResponse,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
-  type DiscordStringSelectInteractionModalResponse,
+  type DiscordStringSelectInteractionResponseFromModal,
   type DiscordTextDisplayComponent,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
@@ -26,7 +26,7 @@ import type { Component, MediaGalleryItem, UnfurledMediaItem } from '../types.js
 export function transformComponentToDiscordComponent(
   bot: Bot,
   payload: Component,
-): DiscordMessageComponent | DiscordMessageComponentModelInteractionResponse {
+): DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse {
   // This switch should include all cases
   switch (payload.type) {
     case MessageComponentTypes.ActionRow:
@@ -136,7 +136,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
   }
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent | DiscordStringSelectInteractionModalResponse {
+function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent | DiscordStringSelectInteractionResponseFromModal {
   if (payload.values) {
     return {
       type: MessageComponentTypes.StringSelect,

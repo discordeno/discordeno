@@ -64,12 +64,14 @@ export type DiscordMessageComponentResponse =
   | DiscordChannelSelectInteractionResponse
   | DiscordMentionableSelectInteractionResponse
 
-export type DiscordMessageComponentModelInteractionResponse = DiscordTextInputInteractionResponse | DiscordStringSelectInteractionModalResponse
+export type DiscordMessageComponentFromModalInteractionResponse =
+  | DiscordTextInputInteractionResponse
+  | DiscordStringSelectInteractionResponseFromModal
 
-export type DiscordMessageComponentMessageComponentInteractionResponse =
+export type DiscordMessageComponentFromMessageComponentInteractionResponse =
   | DiscordRoleSelectInteractionResponse
   | DiscordUserSelectInteractionResponse
-  | DiscordStringSelectInteractionMessageComponentResponse
+  | DiscordStringSelectInteractionResponseFromMessageComponent
   | DiscordChannelSelectInteractionResponse
   | DiscordMentionableSelectInteractionResponse
 
@@ -249,10 +251,13 @@ export interface DiscordStringSelectInteractionResponse {
   values: string[]
 }
 
-/** https://discord.com/developers/docs/components/reference#string-select-strings-select-interaction-response-structure */
-export type DiscordStringSelectInteractionModalResponse = Require<Omit<DiscordStringSelectInteractionResponse, 'component_type'>, 'type'>
-/** https://discord.com/developers/docs/components/reference#string-select-strings-select-interaction-response-structure */
-export type DiscordStringSelectInteractionMessageComponentResponse = Require<Omit<DiscordStringSelectInteractionResponse, 'type'>, 'component_type'>
+/** https://discord.com/developers/docs/components/reference#string-select-string-select-interaction-response-structure */
+export type DiscordStringSelectInteractionResponseFromModal = Require<Omit<DiscordStringSelectInteractionResponse, 'component_type'>, 'type'>
+/** https://discord.com/developers/docs/components/reference#string-select-string-select-interaction-response-structure */
+export type DiscordStringSelectInteractionResponseFromMessageComponent = Require<
+  Omit<DiscordStringSelectInteractionResponse, 'type'>,
+  'component_type'
+>
 
 /** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
 export interface DiscordTextInputComponent extends DiscordBaseComponent {
