@@ -13,7 +13,7 @@
     "!dist/.tsbuildinfo"
   ],
   "scripts": {
-    "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist",
+    "build": "swc src --strip-leading-paths src --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
     "check": "biome check --write",
@@ -42,7 +42,7 @@
     "@types/sinon": "^17.0.4",
     "c8": "^10.1.3",
     "chai": "^6.0.1",
-    "mocha": "patch:mocha@npm%3A11.0.2#~/.yarn/patches/mocha-npm-11.0.2-b5d6b95284.patch",
+    "mocha": "^11.7.2",
     "sinon": "^21.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",

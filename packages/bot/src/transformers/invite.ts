@@ -31,9 +31,6 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate | Discord
       invite.approximatePresenceCount = payload.approximate_presence_count
     if (props.guildScheduledEvent && payload.guild_scheduled_event)
       invite.guildScheduledEvent = bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event)
-    if (props.stageInstance && payload.guild?.id && payload.stage_instance) {
-      invite.stageInstance = bot.transformers.inviteStageInstance(bot, payload.stage_instance, { guildId: payload.guild.id })
-    }
     if (props.expiresAt && payload.expires_at) {
       invite.expiresAt = Date.parse(payload.expires_at)
     }

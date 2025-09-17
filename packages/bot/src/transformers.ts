@@ -47,6 +47,7 @@ import type {
   DiscordMessage,
   DiscordMessageCall,
   DiscordMessageComponent,
+  DiscordMessageComponentFromModalInteractionResponse,
   DiscordMessageInteractionMetadata,
   DiscordMessagePin,
   DiscordMessageSnapshot,
@@ -266,7 +267,14 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   avatarDecorationData: TransformerFunction<TProps, TBehavior, DiscordAvatarDecorationData, AvatarDecorationData>
   channel: TransformerFunction<TProps, TBehavior, DiscordChannel, Channel, { guildId?: BigString }>
   collectibles: TransformerFunction<TProps, TBehavior, DiscordCollectibles, Collectibles>
-  component: TransformerFunction<TProps, TBehavior, DiscordMessageComponent, Component, {}, 'unchanged'>
+  component: TransformerFunction<
+    TProps,
+    TBehavior,
+    DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse,
+    Component,
+    {},
+    'unchanged'
+  >
   defaultReactionEmoji: TransformerFunction<TProps, TBehavior, DiscordDefaultReactionEmoji, DefaultReactionEmoji>
   embed: TransformerFunction<TProps, TBehavior, DiscordEmbed, Embed, {}, 'unchanged'>
   emoji: TransformerFunction<TProps, TBehavior, DiscordEmoji, Emoji>
@@ -352,7 +360,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
     applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
     attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment
-    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent
+    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
