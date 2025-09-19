@@ -8,7 +8,7 @@ export default function Feature({ data }: FeatureList) {
 
       <div className="text--center padding-horiz--md">
         <h3>{data.feature.title}</h3>
-        <p>{data.feature.description}</p>
+        {data.feature.description}
       </div>
     </div>
   )

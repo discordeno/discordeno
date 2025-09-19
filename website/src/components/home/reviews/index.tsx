@@ -1,16 +1,5 @@
-import {
-  ReviewsBox,
-  ReviewsElement,
-  ReviewsElementWrapper,
-  ReviewsHeader,
-  ReviewsLeft,
-  ReviewsOtherContainer,
-  ReviewsRight,
-  ReviewsSection,
-  StarContainer,
-  StarIcon,
-} from '@site/src/styling'
 import { DiscordLibraries, type IReview } from '@site/src/types'
+import style from './index.module.css'
 
 const reviewList: IReview[] = [
   {
@@ -97,46 +86,53 @@ const reviewList: IReview[] = [
 
 export default function DiscordenoReviews() {
   return (
-    <ReviewsSection>
+    <div className={style.reviewsSection}>
       <div>
         <div>
           <h1>Discordeno Community Feedback</h1>
         </div>
-        <ReviewsElementWrapper>
+        <div className={style.reviewsElementWrapper}>
           {reviewList
             .sort((a, b) => {
               return b.bot.guild_count - a.bot.guild_count
             })
             .map((review) => (
-              <ReviewsElement key={review.bot.username}>
-                <ReviewsHeader>
-                  <ReviewsLeft>
+              <div className={style.reviewsElement} key={review.bot.username}>
+                <div className={style.reviewsHeader}>
+                  <div className={style.reviewsLeft}>
                     <img src={review.bot.avatar} alt={review.bot.username} />
                     <div>
                       <span>
-                        <div id="username">{review.bot.username}</div>
-                        <div id="discriminator">#{review.bot.discriminator}</div>
-                        <div id="badge">
+                        <div className={style.username}>{review.bot.username}</div>
+                        <div className={style.discriminator}>#{review.bot.discriminator}</div>
+                        <div className={style.badge}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
                             <path fill="#fff" fillRule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"></path>
                           </svg>
                           Bot
                         </div>
                       </span>
-                      <div id="sub_header">
-                        by <div id="username">{review.developer.usernames.join(', ')}</div>
+                      <div className={style.sub_header}>
+                        by <div className={style.username}>{review.developer.usernames.join(', ')}</div>
                       </div>
                     </div>
-                  </ReviewsLeft>
-                  <ReviewsRight>
-                    <StarContainer>
-                      {([1, 2, 3, 4, 5] as const).map((star) => (
-                        <StarIcon key={star} active={star > review.stars} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true">
+                  </div>
+                  <div className={style.reviewsRight}>
+                    <div className={style.starContainer}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                          key={star}
+                          className={style.reviewStar}
+                          data-active={star > review.stars}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          aria-hidden="true"
+                        >
                           <title>{`Star ${star}`}</title>
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </StarIcon>
+                        </svg>
                       ))}
-                    </StarContainer>
+                    </div>
                     <div>
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -148,12 +144,12 @@ export default function DiscordenoReviews() {
                           fill="currentColor"
                         />
                       </svg>
-                      {String(review.bot.guild_count).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} guilds
+                      {review.bot.guild_count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} guilds
                     </div>
-                  </ReviewsRight>
-                </ReviewsHeader>
-                <ReviewsBox>{review.review}</ReviewsBox>
-                <ReviewsOtherContainer>
+                  </div>
+                </div>
+                <div className={style.reviewsBox}>{review.review}</div>
+                <div className={style.reviewsOtherContainer}>
                   <a href={review.bot.invite_url} target="_blank" rel="noopener noreferrer">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -200,11 +196,11 @@ export default function DiscordenoReviews() {
                       )}
                     </div>
                   </div>
-                </ReviewsOtherContainer>
-              </ReviewsElement>
+                </div>
+              </div>
             ))}
-        </ReviewsElementWrapper>
+        </div>
       </div>
-    </ReviewsSection>
+    </div>
   )
 }

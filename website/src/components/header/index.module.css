@@ -1,0 +1,104 @@
+.header {
+  background: url("/img/deno_background.png") repeat center center fixed;
+  background-repeat: repeat;
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+
+  ::before {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    height: 10px;
+    background: linear-gradient(0deg, var(--ifm-navbar-background-color), hsla(0, 0%, 7%, 0));
+    z-index: 100;
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--ifm-color-white);
+    line-height: 1.25;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--ifm-color-white);
+    line-height: 1.25;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+.highlight {
+  background: linear-gradient(135deg, #000, #443281, #443281, #7289da), repeating-linear-gradient(135deg, #000, #000 10px, #000 10px, #443281 20px);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 600% 600%;
+  animation: gradient 10s ease infinite;
+  height: 100vh;
+  -webkit-text-decoration-color: transparent;
+  text-decoration-color: transparent;
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+.headerBody {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headerButton {
+  background: transparent;
+  border: transparent;
+
+  a {
+    background: #181818;
+    color: #fff;
+    text-decoration-color: transparent;
+    outline: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border: 2px solid black;
+    padding: 0.7rem 1.1rem;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
+    transition: all 0.3s ease-in-out;
+
+    :hover {
+      background: #0f0f0f;
+    }
+  }
+}
