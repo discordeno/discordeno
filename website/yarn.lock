@@ -7162,15 +7162,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/react@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "@mdx-js/react@npm:3.1.0"
+"@mdx-js/react@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@mdx-js/react@npm:3.1.1"
   dependencies:
     "@types/mdx": "npm:^2.0.0"
   peerDependencies:
     "@types/react": ">=16"
     react: ">=16"
-  checksum: 10c0/381ed1211ba2b8491bf0ad9ef0d8d1badcdd114e1931d55d44019d4b827cc2752586708f9c7d2f9c3244150ed81f1f671a6ca95fae0edd5797fb47a22e06ceca
+  checksum: 10c0/34ca98bc2a0f969894ea144dc5c8a5294690505458cd24965cd9be854d779c193ad9192bf9143c4c18438fafd1902e100d99067e045c69319288562d497558c6
   languageName: node
   linkType: hard
 
@@ -8675,12 +8675,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.1.10":
-  version: 19.1.10
-  resolution: "@types/react@npm:19.1.10"
+"@types/react@npm:^19.1.13":
+  version: 19.1.13
+  resolution: "@types/react@npm:19.1.13"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10c0/fb583deacd0a815e2775dc1b9f764532d8cacb748ddd2c2914805a46c257ce6c237b4078f44009692074db212ab61a390301c6470f07f5aa5bfdeb78a2acfda1
+  checksum: 10c0/75e35b54883f5ed07d3b5cb16a4711b6dbb7ec6b74301bcb9bfa697c9d9fff022ec508e1719e7b2c69e2e8b042faac1125be7717b5e5e084f816a2c88e136920
   languageName: node
   linkType: hard
 
@@ -9191,23 +9191,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xyflow/react@npm:^12.8.2":
-  version: 12.8.2
-  resolution: "@xyflow/react@npm:12.8.2"
+"@xyflow/react@npm:^12.8.5":
+  version: 12.8.5
+  resolution: "@xyflow/react@npm:12.8.5"
   dependencies:
-    "@xyflow/system": "npm:0.0.66"
+    "@xyflow/system": "npm:0.0.69"
     classcat: "npm:^5.0.3"
     zustand: "npm:^4.4.0"
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 10c0/70231378b49ddbd71c64234bfe6ba68ea716432911761b396ee4b9868628f336114535c2243c9434c4353e133ac814f5f06c114ceff2c16ff6d78c021fd91b43
+  checksum: 10c0/7cdd23e9595783250b3080a4459c12819da1dceaad42063d08ca815b07a4516725ba8a8ce66a6ba24a8f4ac3ee89b4930f206c950c07b0fc781bef908ab07f3a
   languageName: node
   linkType: hard
 
-"@xyflow/system@npm:0.0.66":
-  version: 0.0.66
-  resolution: "@xyflow/system@npm:0.0.66"
+"@xyflow/system@npm:0.0.69":
+  version: 0.0.69
+  resolution: "@xyflow/system@npm:0.0.69"
   dependencies:
     "@types/d3-drag": "npm:^3.0.7"
     "@types/d3-interpolate": "npm:^3.0.4"
@@ -9218,7 +9218,7 @@ __metadata:
     d3-interpolate: "npm:^3.0.1"
     d3-selection: "npm:^3.0.0"
     d3-zoom: "npm:^3.0.0"
-  checksum: 10c0/87199b801ffe15ae53e5fb39cb79abea6b5a5d7a85ea5077e5d1909442b6154c1dd5ab5c8ac89b7536e4f6e27adce4734c53d93663f8d3033c3a0020c03bd053
+  checksum: 10c0/c05089c50802df9a73813696148b285e7b0411d15c34f63b458beb69bf471b2a3c4cf01eca1f8d0cfae002ee7d25d04c0b01952747ae9033201955754f74269e
   languageName: node
   linkType: hard
 
@@ -19936,9 +19936,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.101.1":
-  version: 5.101.1
-  resolution: "webpack@npm:5.101.1"
+"webpack@npm:5.101.3":
+  version: 5.101.3
+  resolution: "webpack@npm:5.101.3"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.8"
@@ -19970,7 +19970,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/4a616c637c489cf78c3f2858dde7b934fff6c303dd08a237ccfc683caaf06f88f461b1a47ce6ee6705bcfb6c21f73077fbf286859b2ac10b4490f4548f4a747c
+  checksum: 10c0/3c204d4f1df0ef2774ae043f62e4db56c11b7a0594e82fbb1fbbaf69893570f3bf08a8b5d2d5a0302ce6346132bf3eb9dbde81e4fab3d68307b2e506d606f064
   languageName: node
   linkType: hard
 
@@ -20094,9 +20094,9 @@ __metadata:
     "@docusaurus/tsconfig": "npm:^3.8.1"
     "@docusaurus/types": "npm:^3.8.1"
     "@easyops-cn/docusaurus-search-local": "npm:^0.52.1"
-    "@mdx-js/react": "npm:^3.1.0"
-    "@types/react": "npm:^19.1.10"
-    "@xyflow/react": "npm:^12.8.2"
+    "@mdx-js/react": "npm:^3.1.1"
+    "@types/react": "npm:^19.1.13"
+    "@xyflow/react": "npm:^12.8.5"
     chart.js: "npm:^4.5.0"
     clsx: "npm:^2.1.1"
     prism-react-renderer: "npm:^2.4.1"
@@ -20104,7 +20104,7 @@ __metadata:
     react-chartjs-2: "npm:^5.3.0"
     react-dom: "npm:^19.1.1"
     typescript: "npm:5.9.2"
-    webpack: "npm:5.101.1"
+    webpack: "npm:5.101.3"
   languageName: unknown
   linkType: soft
 
