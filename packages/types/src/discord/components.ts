@@ -445,7 +445,7 @@ export interface DiscordTextDisplayComponent extends DiscordBaseComponent {
 
 /** https://discord.com/developers/docs/components/reference#text-display-text-display-interaction-response-structure */
 export interface DiscordTextDisplayComponentInteractionResponse {
-  type?: MessageComponentTypes.TextDisplay
+  type: MessageComponentTypes.TextDisplay
   /** 32 bit integer used as an optional identifier for component */
   id: number
 }
@@ -552,7 +552,7 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
 
 /** https://discord.com/developers/docs/components/reference#label-label-interaction-response-structure */
 export interface DiscordLabelComponentInteractionResponse {
-  type?: MessageComponentTypes.Label
+  type: MessageComponentTypes.Label
   /** 32 bit integer used as an optional identifier for component */
   id: number
   /** The component within the label */
