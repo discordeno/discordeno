@@ -537,7 +537,7 @@ async execute(interaction, args: CommandArgs) {
       ],
     })
 
-    await interaction.respond(
+    await interaction.reply(
       {
         content: 'Use the buttons in this message to edit the message below.',
         components: [
@@ -596,11 +596,11 @@ Let's start by trying to understand the object we pass to `sendMessage` that all
 - A `label` or `emoji` - What Discord should display as the text in the buttons
 - A `customId` - Developer defined ID that can be up to 100 characters long. This is where we can store information and use it to tell the buttons apart from one another. We will see how this is useful soon
 
-This also applies to the `interaction.respond` function that we call. It too has a `content` for the message and a `components` array, inside of which is an action row containing 3 buttons that we defined.
+This also applies to the `interaction.reply` function that we call. It too has a `content` for the message and a `components` array, inside of which is an action row containing 3 buttons that we defined.
 
-If you save and then run the bot, you might noticed that Discord still says that the application did not respond, but how is that possibile?
+If you save and then run the bot, you might noticed that Discord still says that the application did not reply, but how is that possibile?
 
-Although we just added the code to respond to the interaction, we have forgot a Discordeno concept called `desired properties`. This is an optimization Discordeno uses to make your code more performant however it requires you do write some code. You can learn more on the [desired properties page](../desired-properties.md).
+Although we just added the code to reply to the interaction, we have forgot a Discordeno concept called `desired properties`. This is an optimization Discordeno uses to make your code more performant however it requires you do write some code. You can learn more on the [desired properties page](../desired-properties.md).
 
 Looking through the code we have written so far we can see that
 
@@ -691,7 +691,7 @@ export const event: typeof bot.event.interactionCreate = async interaction => {
 }
 ```
 
-In here you are defining a `Set` (for what we use, we can see it exactly the same as an array with a few helpful methods) of these collectors and when we receive an interaction from Discord we collect in all the collectors that have been added to then handle the interaction, so if the have just received the button click interaction we will now able to respond to it.
+In here you are defining a `Set` (for what we use, we can see it exactly the same as an array with a few helpful methods) of these collectors and when we receive an interaction from Discord we collect in all the collectors that have been added to then handle the interaction, so if the have just received the button click interaction we will now able to reply to it.
 
 To do this we need to update the command, `src/events/roles.ts`:
 
@@ -709,7 +709,7 @@ async execute(interaction, args: CommandArgs) {
     // THE REST OF YOUR CODE
 
     // remove-start
-    await interaction.respond(
+    await interaction.reply(
       {
         // all the options we defined earlier
       },
@@ -718,7 +718,7 @@ async execute(interaction, args: CommandArgs) {
     // remove-end
     // insert-start
     await interaction.defer(true);
-    const message = await interaction.respond(
+    const message = await interaction.reply(
       {
         // all the options we defined earlier
       },
@@ -733,7 +733,7 @@ async execute(interaction, args: CommandArgs) {
         return
       }
 
-      await i.respond("Hello world");
+      await i.reply("Hello world");
     })
 
     // insert-end
@@ -743,7 +743,7 @@ async execute(interaction, args: CommandArgs) {
 // THE REST OF YOUR CODE
 ```
 
-In the `onItem` function, we are making sure we are only responding if the message object of the interaction is for this command. This is accomplished by checking the `i.message.id` and comparing it to the id of the message we just sent. But wait, you might think, we don't have the ID of the message we just sent, do we? And you would be right, as of right now, we don't. We need to make a small change: we can get the message object from the return value of `interaction.respond`. We also need to add an `interaction.defer` before `interaction.respond`. We won't go into details as for why we need to do this, just know it is due to how Discord interactions work.
+In the `onItem` function, we are making sure we are only responding if the message object of the interaction is for this command. This is accomplished by checking the `i.message.id` and comparing it to the id of the message we just sent. But wait, you might think, we don't have the ID of the message we just sent, do we? And you would be right, as of right now, we don't. We need to make a small change: we can get the message object from the return value of `interaction.reply`. We also need to add an `interaction.defer` before `interaction.reply`. We won't go into details as for why we need to do this, just know it is due to how Discord interactions work.
 
 :::warning
 A mis-use of the interaction from the code that uses these interaction by using the ItemCollector can lead to unexpected behavior, so make sure to check the interaction "nature" before using it, like in our example by making sure it is related to our message.
@@ -792,7 +792,7 @@ itemCollector.onItem(async i => {
   }
 
   // remove-next-line
-  await i.respond('Hello world')
+  await i.reply('Hello world')
 
   // insert-start
   if (i.data?.customId === 'reactionRoles-save') {
@@ -1051,7 +1051,7 @@ if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
 
 And now we are left just one thing, the add button. For this we now need to use a new type of interaction responses: modals
 
-Modals are popups that we can create to require the user to input something, for example the emoji and (optionally) the label. To use them with the `interaction.respond` method we can add a `title` (a required property by modals) to the objects.
+Modals are popups that we can create to require the user to input something, for example the emoji and (optionally) the label. To use them with the `interaction.reply` method we can add a `title` (a required property by modals) to the objects.
 
 Other than emoji and labels, we also need the role to give and the color for the button. Unfortunately we can't add them directly in our modal, Discord does not allow it, so we need to find another way. We can
 
@@ -1159,7 +1159,7 @@ if (i.data?.customId === 'reactionRoles-add-color') {
 
   partialRoleInfo.color = color
 
-  await i.respond({
+  await i.reply({
     content: 'Hello world',
   })
 
@@ -1183,12 +1183,12 @@ if (i.data?.customId === 'reactionRoles-add-color') {
   partialRoleInfo.color = color
 
   // remove-start
-  await i.respond({
+  await i.reply({
     content: 'Hello world',
   })
   // remove-end
   // insert-start
-  await i.respond({
+  await i.reply({
     title: 'Pick an emoji and label for the reaction role',
     components: [
       {
@@ -1233,7 +1233,7 @@ if (i.data?.customId === 'reactionRoles-add-color') {
 
   partialRoleInfo.color = color
 
-  await i.respond({
+  await i.reply({
     title: 'Pick an emoji and label for the reaction role',
     components: [
       {
@@ -1287,7 +1287,7 @@ if (i.data?.customId === 'reactionRoles-add-modal') {
     components: [messageActionRow],
   })
 
-  await i.respond(
+  await i.reply(
     'Reaction role created successfully. You can use the message above to add/remove a role',
     { isPrivate: true },
   )
@@ -1326,7 +1326,7 @@ if (
 ) {
   if (!interaction.data?.customId?.startsWith('reactionRoles-role-')) return
 
-  await interaction.respond('Hello world')
+  await interaction.reply('Hello world')
 }
 // insert-end
 ```
@@ -1335,7 +1335,7 @@ We are checking what message component interaction type we received, in this cas
 
 1. Get the role id of the role we need to give the user
 1. Assign it to them
-1. Respond to the interaction
+1. Reply to the interaction
 
 So let's do this:
 
@@ -1356,7 +1356,7 @@ if (
     roleId,
     `Reaction role button for role id ${roleId}`,
   )
-  await interaction.respond(`I added to you the <@&${roleId}> role.`, {
+  await interaction.reply(`I added to you the <@&${roleId}> role.`, {
     isPrivate: true,
   })
   // insert-end
@@ -1421,7 +1421,7 @@ if (
     roleId,
     `Reaction role button for role id ${roleId}`,
   )
-  await interaction.respond(`I added to you the <@&${roleId}> role.`, {
+  await interaction.reply(`I added to you the <@&${roleId}> role.`, {
     isPrivate: true,
   })
   // remove-end
@@ -1437,7 +1437,7 @@ if (
       roleId,
       `Reaction role button for role id ${roleId}`,
     )
-    await interaction.respond(`I removed from you the <@&${roleId}> role.`, {
+    await interaction.reply(`I removed from you the <@&${roleId}> role.`, {
       isPrivate: true,
     })
     return
@@ -1449,7 +1449,7 @@ if (
     roleId,
     `Reaction role button for role id ${roleId}`,
   )
-  await interaction.respond(`I added to you the <@&${roleId}> role.`, {
+  await interaction.reply(`I added to you the <@&${roleId}> role.`, {
     isPrivate: true,
   })
   // insert-end

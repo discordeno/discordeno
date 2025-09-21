@@ -12,7 +12,7 @@ bot.events.interactionCreate = async (interaction) => {
 
   if (!command) {
     logCommand(interaction, 'Missing', interaction.data.name)
-    await interaction.respond('❌ Something went wrong. I was not able to find this command.')
+    await interaction.reply('❌ Something went wrong. I was not able to find this command.')
 
     return
   }
@@ -31,7 +31,7 @@ bot.events.interactionCreate = async (interaction) => {
     logCommand(interaction, 'Success', interaction.data.name)
   } catch (error) {
     logCommand(interaction, 'Failure', interaction.data.name, LogLevels.Error, error)
-    await interaction.respond('❌ Something went wrong. The command execution has thrown an error.')
+    await interaction.reply('❌ Something went wrong. The command execution has thrown an error.')
   }
 }
 

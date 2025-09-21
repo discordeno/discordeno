@@ -51,7 +51,7 @@ Again, this is **NOT** RECOMMENDED, especially if you plan to ship your bot to p
 
 ### Computed Properties
 
-Some properties in these object may depend on some other property, notable examples are `user.bot` and `interaction.respond`. If you do not include all the properties they depend on, you might see undefined values / unexpected bheavior when using them.
+Some properties in these object may depend on some other property, notable examples are `user.bot` and `interaction.reply`. If you do not include all the properties they depend on, you might see undefined values / unexpected bheavior when using them.
 
 ### Examples
 

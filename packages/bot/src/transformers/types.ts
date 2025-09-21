@@ -945,7 +945,7 @@ export interface Interaction {
    *
    * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
    */
-  respond: (
+  reply: (
     response: string | InteractionCallbackData,
     options?: { isPrivate?: boolean; withResponse?: boolean },
   ) => Promise<Message | InteractionCallbackResponse | void>

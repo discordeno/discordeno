@@ -73,7 +73,7 @@ const command: Command = {
     if (args.reactions?.create) {
       // Ensure that there is a channelId
       if (!interaction.channelId) {
-        await interaction.respond('Could not get the current channel.', { isPrivate: true })
+        await interaction.reply('Could not get the current channel.', { isPrivate: true })
         return
       }
 
@@ -90,7 +90,7 @@ const command: Command = {
       // NOTE: we use a copy so when we edit this actionRow the edits don't get applied to all the command executions, only this one, for example we do disable some buttons in some conditional cases
       const messageActionRow = structuredClone(messageActionRowTemplate)
 
-      const message = await interaction.respond(
+      const message = await interaction.reply(
         {
           content: 'Use the buttons in this message to edit the message below.',
           components: [messageActionRow],
@@ -99,7 +99,7 @@ const command: Command = {
       )
 
       if (!message) {
-        await interaction.respond('❌ Unable to send the message correctly. Cancelling', { isPrivate: true })
+        await interaction.reply('❌ Unable to send the message correctly. Cancelling', { isPrivate: true })
         return
       }
 
@@ -173,7 +173,7 @@ const command: Command = {
           partialRoleInfo.color = color
 
           // Ask the user to input the emoji and optionally a label for the button
-          await i.respond({
+          await i.reply({
             title: 'Pick an emoji and label for the reaction role',
             components: [selectEmojiActionRow, selectLabelActionRow],
             customId: 'reactionRoles-add-modal',
@@ -229,8 +229,8 @@ const command: Command = {
             components: [messageActionRow],
           })
 
-          // Respond to the modal. A modal submit (type 5) interaction can't edit the original response
-          await i.respond('Reaction role created successfully. You can use the message above to add/remove a role', { isPrivate: true })
+          // Replies to the modal. A modal submit (type 5) interaction can't edit the original response
+          await i.reply('Reaction role created successfully. You can use the message above to add/remove a role', { isPrivate: true })
 
           return
         }

@@ -146,7 +146,7 @@ interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadat
 
   interaction: {
     dependencies: {
-      respond: ['type', 'token', 'id']
+      reply: ['type', 'token', 'id']
       edit: ['type', 'token', 'id']
       deferEdit: ['type', 'token', 'id']
       defer: ['type', 'token', 'id']

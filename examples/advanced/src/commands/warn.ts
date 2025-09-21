@@ -23,7 +23,7 @@ createCommand({
   ],
   async execute(interaction, options) {
     if (!interaction.guildId || !interaction.member) {
-      await interaction.respond('This command can only be ran in guilds')
+      await interaction.reply('This command can only be ran in guilds')
       return
     }
 
@@ -33,7 +33,7 @@ createCommand({
     const guild = await bot.cache.guilds.get(interaction.guildId)
 
     if (!guild || !guild.roles) {
-      await interaction.respond('An error has occurred')
+      await interaction.reply('An error has occurred')
       return
     }
 
@@ -45,7 +45,7 @@ createCommand({
     const kickMembersPerm = adminPerm || perms.has('KICK_MEMBERS')
 
     if (!kickMembersPerm) {
-      await interaction.respond("You don't have the necessary permissions to warn a members (this command requires `Kick members`)")
+      await interaction.reply("You don't have the necessary permissions to warn a members (this command requires `Kick members`)")
       return
     }
 
@@ -66,11 +66,11 @@ createCommand({
     } catch (error) {
       bot.logger.error(`There was an error in the warn command:`, error)
 
-      await interaction.respond(`Could not warn user <@${user.user.id}> | They likely do not have their DMs open.`)
+      await interaction.reply(`Could not warn user <@${user.user.id}> | They likely do not have their DMs open.`)
       return
     }
 
-    await interaction.respond({ embeds })
+    await interaction.reply({ embeds })
   },
 })
 
