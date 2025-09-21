@@ -13,7 +13,7 @@ export const UserToggle = {
 }
 
 export class UserToggles extends ToggleBitfield {
-  constructor(userOrTogglesInt: DiscordUser | number) {
+  constructor(userOrTogglesInt: Partial<DiscordUser> | number) {
     super()
 
     if (typeof userOrTogglesInt === 'number') this.bitfield = userOrTogglesInt
