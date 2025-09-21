@@ -21,5 +21,6 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, 
       : undefined,
     temporary: payload.temporary,
     uses: payload.uses,
+    expiresAt: Date.parse(payload.expires_at),
   })
 }
