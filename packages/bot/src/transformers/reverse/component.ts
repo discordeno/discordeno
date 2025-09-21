@@ -55,8 +55,9 @@ export function transformComponentToDiscordComponent(
       return transformLabelComponent(bot, payload)
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
+    case MessageComponentTypes.FileUpload:
       // As of now they are compatible
-      return payload as DiscordMessageComponent
+      return payload as DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse
   }
 }
 
