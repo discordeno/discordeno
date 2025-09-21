@@ -4,7 +4,7 @@ import {
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordLabelComponent,
-  type DiscordLabelComponentInteractionResponse,
+  type DiscordLabelInteractionResponse,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
@@ -14,7 +14,7 @@ import {
   type DiscordSeparatorComponent,
   type DiscordStringSelectInteractionResponseFromModal,
   type DiscordTextDisplayComponent,
-  type DiscordTextDisplayComponentInteractionResponse,
+  type DiscordTextDisplayInteractionResponse,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
   type DiscordThumbnailComponent,
@@ -253,7 +253,7 @@ function transformFileComponent(bot: Bot, payload: DiscordFileComponent): Compon
   return file
 }
 
-function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComponent | DiscordTextDisplayComponentInteractionResponse): Component {
+function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComponent | DiscordTextDisplayInteractionResponse): Component {
   const props = bot.transformers.desiredProperties.component
   const textDisplay = {} as Component
 
@@ -279,7 +279,7 @@ function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponen
   return separator
 }
 
-function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent | DiscordLabelComponentInteractionResponse): Component {
+function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent | DiscordLabelInteractionResponse): Component {
   const props = bot.transformers.desiredProperties.component
   const label = {} as Component
 
