@@ -56,24 +56,17 @@ export type DiscordMessageComponent =
   | DiscordFileComponent
   | DiscordLabelComponent
 
-export type DiscordMessageComponentResponse =
-  | DiscordTextInputInteractionResponse
-  | DiscordRoleSelectInteractionResponse
-  | DiscordUserSelectInteractionResponse
-  | DiscordStringSelectInteractionResponse
-  | DiscordChannelSelectInteractionResponse
-  | DiscordMentionableSelectInteractionResponse
-
 export type DiscordMessageComponentFromModalInteractionResponse =
   | DiscordTextInputInteractionResponse
-  | DiscordStringSelectInteractionResponseFromModal
+  | DiscordTextDisplayComponentInteractionResponse
+  | DiscordLabelComponentInteractionResponse
 
 export type DiscordMessageComponentFromMessageComponentInteractionResponse =
-  | DiscordRoleSelectInteractionResponse
-  | DiscordUserSelectInteractionResponse
+  | DiscordRoleSelectInteractionResponseFromMessageComponent
+  | DiscordUserSelectInteractionResponseFromMessageComponent
   | DiscordStringSelectInteractionResponseFromMessageComponent
-  | DiscordChannelSelectInteractionResponse
-  | DiscordMentionableSelectInteractionResponse
+  | DiscordChannelSelectInteractionResponseFromMessageComponent
+  | DiscordMentionableSelectInteractionResponseFromMessageComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface DiscordBaseComponent {
@@ -192,7 +185,7 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
    * Whether this component is required to be filled
    *
    * @remarks
-   * This value is only valid for string select menus in modals
+   * This value is only valid for select menus in modals
    *
    * @default true
    */
@@ -317,7 +310,16 @@ export interface DiscordSelectMenuDefaultValue {
 
 /** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
 export interface DiscordUserSelectInteractionResponse {
-  component_type: MessageComponentTypes.UserSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from modals
+   */
+  type?: MessageComponentTypes.UserSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from message interactions
+   */
+  component_type?: MessageComponentTypes.UserSelect
   /** 32 bit integer used as an optional identifier for component */
   id: number
   /** The custom id for the user select */
@@ -328,9 +330,23 @@ export interface DiscordUserSelectInteractionResponse {
   values: string[]
 }
 
+/** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
+export type DiscordUserSelectInteractionResponseFromModal = Require<Omit<DiscordUserSelectInteractionResponse, 'component_type'>, 'type'>
+/** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
+export type DiscordUserSelectInteractionResponseFromMessageComponent = Require<Omit<DiscordUserSelectInteractionResponse, 'type'>, 'component_type'>
+
 /** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
 export interface DiscordRoleSelectInteractionResponse {
-  component_type: MessageComponentTypes.RoleSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from modals
+   */
+  type?: MessageComponentTypes.RoleSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from message interactions
+   */
+  component_type?: MessageComponentTypes.RoleSelect
   /** 32 bit integer used as an optional identifier for component */
   id: number
   /** The custom id for the role select */
@@ -341,9 +357,23 @@ export interface DiscordRoleSelectInteractionResponse {
   values: string[]
 }
 
+/** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
+export type DiscordRoleSelectInteractionResponseFromModal = Require<Omit<DiscordRoleSelectInteractionResponse, 'component_type'>, 'type'>
+/** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
+export type DiscordRoleSelectInteractionResponseFromMessageComponent = Require<Omit<DiscordRoleSelectInteractionResponse, 'type'>, 'component_type'>
+
 /** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
 export interface DiscordMentionableSelectInteractionResponse {
-  component_type: MessageComponentTypes.MentionableSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from modals
+   */
+  type?: MessageComponentTypes.MentionableSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from message interactions
+   */
+  component_type?: MessageComponentTypes.MentionableSelect
   /** 32 bit integer used as an optional identifier for component */
   id: number
   /** The custom id for the mentionable select */
@@ -354,9 +384,29 @@ export interface DiscordMentionableSelectInteractionResponse {
   values: string[]
 }
 
+/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
+export type DiscordMentionableSelectInteractionResponseFromModal = Require<
+  Omit<DiscordMentionableSelectInteractionResponse, 'component_type'>,
+  'type'
+>
+/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
+export type DiscordMentionableSelectInteractionResponseFromMessageComponent = Require<
+  Omit<DiscordMentionableSelectInteractionResponse, 'type'>,
+  'component_type'
+>
+
 /** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
 export interface DiscordChannelSelectInteractionResponse {
-  component_type: MessageComponentTypes.ChannelSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from modals
+   */
+  type?: MessageComponentTypes.ChannelSelect
+  /**
+   * @remarks
+   * This is only returned for interaction responses from message interactions
+   */
+  component_type?: MessageComponentTypes.ChannelSelect
   /** 32 bit integer used as an optional identifier for component */
   id: number
   /** The custom id for the channel select */
@@ -366,6 +416,14 @@ export interface DiscordChannelSelectInteractionResponse {
   /** IDs of the selected channels */
   values: string[]
 }
+
+/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
+export type DiscordChannelSelectInteractionResponseFromModal = Require<Omit<DiscordChannelSelectInteractionResponse, 'component_type'>, 'type'>
+/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
+export type DiscordChannelSelectInteractionResponseFromMessageComponent = Require<
+  Omit<DiscordChannelSelectInteractionResponse, 'type'>,
+  'component_type'
+>
 
 /** https://discord.com/developers/docs/components/reference#section-section-structure */
 export interface DiscordSectionComponent extends DiscordBaseComponent {
@@ -383,6 +441,13 @@ export interface DiscordTextDisplayComponent extends DiscordBaseComponent {
 
   /** Text that will be displayed similar to a message */
   content: string
+}
+
+/** https://discord.com/developers/docs/components/reference#text-display-text-display-interaction-response-structure */
+export interface DiscordTextDisplayComponentInteractionResponse {
+  type?: MessageComponentTypes.TextDisplay
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
 }
 
 export interface DiscordThumbnailComponent extends DiscordBaseComponent {
@@ -483,6 +548,21 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
   description?: string
   /** The component within the label */
   component: DiscordTextInputComponent | DiscordSelectMenuComponent
+}
+
+/** https://discord.com/developers/docs/components/reference#label-label-interaction-response-structure */
+export interface DiscordLabelComponentInteractionResponse {
+  type?: MessageComponentTypes.Label
+  /** 32 bit integer used as an optional identifier for component */
+  id: number
+  /** The component within the label */
+  component:
+    | DiscordTextInputInteractionResponse
+    | DiscordStringSelectInteractionResponseFromModal
+    | DiscordUserSelectInteractionResponseFromModal
+    | DiscordRoleSelectInteractionResponseFromModal
+    | DiscordMentionableSelectInteractionResponseFromModal
+    | DiscordChannelSelectInteractionResponseFromModal
 }
 
 /** https://discord.com/developers/docs/components/reference#unfurled-media-item-structure */
