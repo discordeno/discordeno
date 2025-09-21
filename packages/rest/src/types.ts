@@ -2558,7 +2558,7 @@ export interface RestManager {
   /**
    * Sends a response to an interaction.
    *
-   * @param interactionId - The ID of the interaction to respond to.
+   * @param interactionId - The ID of the interaction to reply to.
    * @param token - The interaction token to use, provided in the original interaction.
    * @param options - The parameters for the creation of the message.
    * @param params - The query parameters for the response of the callback

@@ -40,17 +40,17 @@ export const event: typeof bot.events.interactionCreate = async (interaction) =>
     try {
       if (alreadyHasRole) {
         await bot.helpers.removeRole(interaction.guildId, interaction.user.id, roleId, `Reaction role button for role id ${roleId}`)
-        await interaction.respond(`I removed from you the <@&${roleId}> role.`, { isPrivate: true })
+        await interaction.reply(`I removed from you the <@&${roleId}> role.`, { isPrivate: true })
         return
       }
 
       // You will get an invalid request made if the bot attempts to give a bot role, a role higher then him hightest role, a link role or if it does not have the Manage Roles permission
       // This could be prevented by checking for the roles that the bot owns and the role that the bot is trying to add
       await bot.helpers.addRole(interaction.guildId, interaction.user.id, roleId, `Reaction role button for role id ${roleId}`)
-      await interaction.respond(`I added to you the <@&${roleId}> role.`, { isPrivate: true })
+      await interaction.reply(`I added to you the <@&${roleId}> role.`, { isPrivate: true })
     } catch {
-      // Respond with an error message
-      await interaction.respond(
+      // Reply with an error message
+      await interaction.reply(
         'I could not give you the role. Possible reasons are:\n- My permissions are not configured correctly, make sure i have the `Manage Roles` permission\n- The role is **above** my hightest role in the server setup\n- The role does not exist or is non-manageable (for example: bot roles, link roles or @everyone)',
         { isPrivate: true },
       )
