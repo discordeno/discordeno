@@ -766,13 +766,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/benchmark@npm:^2.1.5":
-  version: 2.1.5
-  resolution: "@types/benchmark@npm:2.1.5"
-  checksum: 10c0/31ca163891bea0dbe28ad517ae95d18531518049e95cfac218e082590b33edd75cda23fc3e4abf72112b3928e844488c9b029b33aa29f825a83a16d2ed202154
-  languageName: node
-  linkType: hard
-
 "@types/chai-as-promised@npm:^8.0.2":
   version: 8.0.2
   resolution: "@types/chai-as-promised@npm:8.0.2"
@@ -1104,37 +1097,6 @@ __metadata:
   checksum: 10c0/f23823513b63173a001030fae4f2dabe283b99a9d324ade3ad3d148e218134676f1ee8568c877cd79ec1c53158dcf2d2ba527a97c606618928ba99dd930102bf
   languageName: node
   linkType: hard
-
-"benchmark@npm:^2.1.4":
-  version: 2.1.4
-  resolution: "benchmark@npm:2.1.4"
-  dependencies:
-    lodash: "npm:^4.17.4"
-    platform: "npm:^1.3.3"
-  checksum: 10c0/510224c01f7578e9aa60cef67ec3dd8f84ac6670007bcc96285f87865375122aca0853ab4e542cc80cfeeed436356dfdd63bb66cb5e72365abb912685b2139be
-  languageName: node
-  linkType: hard
-
-"benchmarks@workspace:packages/benchmarks":
-  version: 0.0.0-use.local
-  resolution: "benchmarks@workspace:packages/benchmarks"
-  dependencies:
-    "@biomejs/biome": "npm:2.2.2"
-    "@discordeno/bot": "workspace:^"
-    "@discordeno/gateway": "workspace:^"
-    "@discordeno/rest": "workspace:^"
-    "@discordeno/types": "workspace:^"
-    "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.8"
-    "@swc/core": "npm:^1.13.5"
-    "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^24.3.0"
-    benchmark: "npm:^2.1.4"
-    ts-node: "npm:^10.9.2"
-    tsconfig: "npm:*"
-    typescript: "npm:^5.9.2"
-  languageName: unknown
-  linkType: soft
 
 "bin-version-check@npm:^5.1.0":
   version: 5.1.0
@@ -2112,13 +2074,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.4":
-  version: 4.17.21
-  resolution: "lodash@npm:4.17.21"
-  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
-  languageName: node
-  linkType: hard
-
 "log-symbols@npm:^4.1.0":
   version: 4.1.0
   resolution: "log-symbols@npm:4.1.0"
@@ -2492,13 +2447,6 @@ __metadata:
     "@napi-rs/nice":
       optional: true
   checksum: 10c0/963ee0dc0862e936c88357b21b0b4fa32407ab21e9600756504411f368dcfae7478c8a19e13d0dd8afed56a8252a8e5967ee4413aa33dd436751b7ee2804531e
-  languageName: node
-  linkType: hard
-
-"platform@npm:^1.3.3":
-  version: 1.3.6
-  resolution: "platform@npm:1.3.6"
-  checksum: 10c0/69f2eb692e15f1a343dd0d9347babd9ca933824c8673096be746ff66f99f2bdc909fadd8609076132e6ec768349080babb7362299f2a7f885b98f1254ae6224b
   languageName: node
   linkType: hard
 
