@@ -145,7 +145,7 @@ jobs:
       # sarif file to then assign different categories to we need to modify the SARIF file itself before uploading it to make sure that each run described
       # by the sarif file has a unique tool name
       - name: Change the Snyk tool names to different names
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
