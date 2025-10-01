@@ -107,13 +107,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/helmet@npm:^13.0.1":
-  version: 13.0.1
-  resolution: "@fastify/helmet@npm:13.0.1"
+"@fastify/helmet@npm:^13.0.2":
+  version: 13.0.2
+  resolution: "@fastify/helmet@npm:13.0.2"
   dependencies:
     fastify-plugin: "npm:^5.0.0"
     helmet: "npm:^8.0.0"
-  checksum: 10c0/f79553b17e536fc6d05fbcb1335a957768abaad1f0c2654354b363b3e34e6498429fa53160e9db065d6fc3a8af001f406ad8cf54d66836abb56e836a67d8e3a9
+  checksum: 10c0/d0dbabdd3ccafc723eb5c1d0dbf76c462c69c9a7f7b54d299c776f327ed2e708b4a9b335b92a6b1f9a2d9b5c46a64d0936b0955b9f2733df34004be92968a51b
   languageName: node
   linkType: hard
 
@@ -1130,7 +1130,7 @@ __metadata:
   dependencies:
     "@discordeno/rest": "npm:21.0.0"
     "@fastify/env": "npm:^5.0.2"
-    "@fastify/helmet": "npm:^13.0.1"
+    "@fastify/helmet": "npm:^13.0.2"
     "@fastify/multipart": "npm:^9.0.3"
     "@favware/cliff-jumper": "npm:^6.0.0"
     "@types/node": "npm:^24.3.1"
