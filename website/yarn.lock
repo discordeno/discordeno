@@ -7228,13 +7228,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kurkle/color@npm:^0.3.0":
-  version: 0.3.2
-  resolution: "@kurkle/color@npm:0.3.2"
-  checksum: 10c0/a9e8e3e35dcd59dec4dd4f0105919c05e24823a96347bcf152965c29e48d6290b66d5fb96c071875db752e10930724c48ce6d338fefbd65e0ce5082d5c78970e
-  languageName: node
-  linkType: hard
-
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
@@ -10559,15 +10552,6 @@ __metadata:
   version: 2.0.1
   resolution: "character-reference-invalid@npm:2.0.1"
   checksum: 10c0/2ae0dec770cd8659d7e8b0ce24392d83b4c2f0eb4a3395c955dce5528edd4cc030a794cfa06600fcdd700b3f2de2f9b8e40e309c0011c4180e3be64a0b42e6a1
-  languageName: node
-  linkType: hard
-
-"chart.js@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "chart.js@npm:4.5.0"
-  dependencies:
-    "@kurkle/color": "npm:^0.3.0"
-  checksum: 10c0/f12c7f9a238ee7ce6d3f7111628e9daba86bb8ff8e54cfe63525fde6ded9003c72c4c8d2c7d5702539dc0aff7e682dfec058660ade8d03a970da002656d4ac91
   languageName: node
   linkType: hard
 
@@ -18126,16 +18110,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-chartjs-2@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "react-chartjs-2@npm:5.3.0"
-  peerDependencies:
-    chart.js: ^4.1.1
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/4415d40217c084a49f9a936fbd30f67e0e705148e6f8359bec65601033d1076f31085c45793839fc29ec833e6c427b0bf9861a0c54c432c08d35bc9590ffa41a
-  languageName: node
-  linkType: hard
-
 "react-dev-utils@npm:^12.0.1":
   version: 12.0.1
   resolution: "react-dev-utils@npm:12.0.1"
@@ -20817,10 +20791,8 @@ __metadata:
     "@mdx-js/react": "npm:^3.1.1"
     "@types/react": "npm:^19.2.0"
     "@xyflow/react": "npm:^12.8.6"
-    chart.js: "npm:^4.5.0"
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.0"
-    react-chartjs-2: "npm:^5.3.0"
     react-dom: "npm:^19.2.0"
     typescript: "npm:5.9.3"
     webpack: "npm:5.102.0"

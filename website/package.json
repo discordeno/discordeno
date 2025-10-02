@@ -25,10 +25,8 @@
     "@easyops-cn/docusaurus-search-local": "^0.52.1",
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.8.6",
-    "chart.js": "^4.5.0",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.0",
-    "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
