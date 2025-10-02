@@ -1,20 +1,20 @@
 import Link from '@docusaurus/Link'
-import { Button, Header, HeaderBody, Highlight } from '@site/src/styling'
+import style from './index.module.css'
 
 export default function DiscordenoHeader() {
   return (
     <>
-      <Header>
+      <div className={style.header}>
         <h1>Its time to ditch Eris and Discord.js</h1>
         <h2>
-          Making <Highlight>Scalable</Highlight> Bots Easy!
+          Making <span className={style.highlight}>Scalable</span> Bots Easy!
         </h2>
-        <HeaderBody>
-          <Button variant="primary">
+        <div className={style.headerBody}>
+          <button className={style.headerButton}>
             <Link to="/docs/intro">Documentation</Link>
-          </Button>
-        </HeaderBody>
-      </Header>
+          </button>
+        </div>
+      </div>
     </>
   )
 }
