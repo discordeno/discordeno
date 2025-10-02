@@ -9,13 +9,17 @@ updates:
     directory: '/'
     # Check the npm registry for updates every month
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       # Check for updates to GitHub Actions every month
-      interval: 'monthly'
+      interval: 'weekly'
   - package-ecosystem: 'npm'
     directory: '/docker-apps/rest-passthrough'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
+  - package-ecosystem: 'npm'
+    directory: '/website'
+    schedule:
+      interval: 'weekly'
