@@ -38,7 +38,7 @@
     "@docusaurus/types": "^3.8.1",
     "@types/react": "^19.1.10",
     "typescript": "5.9.2",
-    "webpack": "5.101.2"
+    "webpack": "5.102.0"
   },
   "browserslist": {
     "production": [
