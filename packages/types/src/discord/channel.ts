@@ -108,7 +108,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
    * @remarks
    * The computed permissions include channel overwrites but does not include implicit permissions, those need to be checked separatly.
    *
-   * Only presented when part of `resolved` data received from a slash command interaction.
+   * Only presented when part of `resolved` data received on an interaction.
    */
   permissions?: string
   /** The flags of the channel */
