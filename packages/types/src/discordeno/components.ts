@@ -198,7 +198,23 @@ export interface UserSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -227,7 +243,23 @@ export interface RoleSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -248,7 +280,23 @@ export interface MentionableSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -271,7 +319,23 @@ export interface ChannelSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -368,5 +432,11 @@ export interface LabelComponent extends BaseComponent {
    */
   description?: string
   /** The component within the label */
-  component: TextInputComponent | StringSelectComponent
+  component:
+    | TextInputComponent
+    | StringSelectComponent
+    | UserSelectComponent
+    | RoleSelectComponent
+    | MentionableSelectComponent
+    | ChannelSelectComponent
 }
