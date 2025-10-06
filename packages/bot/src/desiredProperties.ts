@@ -150,9 +150,9 @@ export interface TransformersDesiredPropertiesMetadata extends DesiredProperties
 
   interaction: {
     dependencies: {
-      respond: ['type', 'token', 'id']
+      reply: ['type', 'token', 'id']
       edit: ['type', 'token', 'id']
-      deferEdit: ['type', 'token', 'id']
+      deferUpdate: ['type', 'token', 'id']
       defer: ['type', 'token', 'id']
       delete: ['type', 'token']
     }

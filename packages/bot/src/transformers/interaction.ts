@@ -36,7 +36,7 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
   // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as SetupDesiredProps<Interaction, CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>),
 
-  async respond(response, options) {
+  async reply(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
 
     // If user provides a string, change it to a response object
@@ -55,7 +55,7 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
 
     // Modals cannot be chained
     if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
-      throw new Error('Cannot respond to a modal interaction with another modal.')
+      throw new Error('Cannot reply to a modal interaction with another modal.')
 
     const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
@@ -92,7 +92,7 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
 
     return await this.bot.helpers.editOriginalInteractionResponse(this.token, response)
   },
-  async deferEdit(options) {
+  async deferUpdate(options) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
 
