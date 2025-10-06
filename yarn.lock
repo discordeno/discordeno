@@ -183,7 +183,7 @@ __metadata:
     c8: "npm:^10.1.3"
     chai: "npm:^6.0.1"
     chai-as-promised: "npm:^8.0.2"
-    dotenv: "npm:^17.2.1"
+    dotenv: "npm:^17.2.3"
     mocha: "npm:^11.7.2"
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
@@ -1462,10 +1462,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"dotenv@npm:^17.2.1":
-  version: 17.2.1
-  resolution: "dotenv@npm:17.2.1"
-  checksum: 10c0/918dd2f9d8b8f86b0afabad9534793d51de3718c437f9e7b6525628cf68c1d4ae768cc37a5afff38c066f58a8ecf549f4ac6cd5617485bd328e826112cc2650a
+"dotenv@npm:^17.2.3":
+  version: 17.2.3
+  resolution: "dotenv@npm:17.2.3"
+  checksum: 10c0/c884403209f713214a1b64d4d1defa4934c2aa5b0002f5a670ae298a51e3c3ad3ba79dfee2f8df49f01ae74290fcd9acdb1ab1d09c7bfb42b539036108bb2ba0
   languageName: node
   linkType: hard
 
