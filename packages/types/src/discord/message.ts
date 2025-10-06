@@ -105,7 +105,7 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   position?: number
   /** data of the role subscription purchase or renewal that prompted this ROLE_SUBSCRIPTION_PURCHASE message */
   role_subscription_data?: DiscordRoleSubscriptionData
-  /** data for users, members, channels, and roles in the message's auto-populated select menus */
+  /** data for users, members, channels, and roles referenced in this message */
   resolved?: DiscordInteractionDataResolved
   /** The poll object */
   poll?: DiscordPoll
