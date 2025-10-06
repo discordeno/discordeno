@@ -462,7 +462,7 @@ export enum ApplicationCommandOptionTypes {
   SubCommand = 1,
   SubCommandGroup,
   String,
-  /** Any integer between -2^53 and 2^53 */
+  /** Any integer between -2^53+1 and 2^53-1 */
   Integer,
   Boolean,
   User,
