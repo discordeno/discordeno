@@ -34,7 +34,7 @@
     "@docusaurus/module-type-aliases": "^3.9.1",
     "@docusaurus/tsconfig": "^3.9.1",
     "@docusaurus/types": "^3.9.1",
-    "@types/react": "^19.2.0",
+    "@types/react": "^19.2.2",
     "typescript": "5.9.3",
     "webpack": "5.102.1"
   },
