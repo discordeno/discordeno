@@ -43,7 +43,7 @@
     "chai": "^6.2.0",
     "chai-as-promised": "^8.0.2",
     "dotenv": "^17.2.3",
-    "mocha": "^11.7.2",
+    "mocha": "^11.7.4",
     "sinon": "^21.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
