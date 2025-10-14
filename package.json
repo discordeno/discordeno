@@ -28,7 +28,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.3",
+    "lint-staged": "^16.2.4",
     "turbo": "^2.5.8",
     "typedoc": "^0.28.14",
     "typedoc-plugin-markdown": "^4.9.0",
