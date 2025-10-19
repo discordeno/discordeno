@@ -39,6 +39,8 @@ export enum MessageComponentTypes {
   Container = 17,
   /** Container associating a label and description with a component */
   Label,
+  /** Component for uploading files */
+  FileUpload,
 }
 
 export type DiscordMessageComponents = DiscordMessageComponent[]
@@ -55,6 +57,7 @@ export type DiscordMessageComponent =
   | DiscordContainerComponent
   | DiscordFileComponent
   | DiscordLabelComponent
+  | DiscordFileUploadComponent
 
 export type DiscordMessageComponentFromModalInteractionResponse =
   | DiscordTextInputInteractionResponse
@@ -547,7 +550,7 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
    */
   description?: string
   /** The component within the label */
-  component: DiscordTextInputComponent | DiscordSelectMenuComponent
+  component: DiscordTextInputComponent | DiscordSelectMenuComponent | DiscordFileUploadComponent
 }
 
 /** https://discord.com/developers/docs/components/reference#label-label-interaction-response-structure */
@@ -563,6 +566,50 @@ export interface DiscordLabelInteractionResponse {
     | DiscordRoleSelectInteractionResponseFromModal
     | DiscordMentionableSelectInteractionResponseFromModal
     | DiscordChannelSelectInteractionResponseFromModal
+    | DiscordFileUploadInteractionResponse
+}
+
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
+export interface DiscordFileUploadComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.FileUpload
+
+  /** The custom id for the file upload */
+  custom_id: string
+  /**
+   * The minimum number of files that must be uploaded
+   *
+   * @remarks
+   * Between 0-10
+   *
+   * @default 1
+   */
+  min_values?: number
+  /** The maximum number of files that can be uploaded
+   *
+   * @remarks
+   * Between 1-10
+   *
+   * @default 1
+   */
+  max_values?: number
+  /**
+   * Whether this component is required to be filled
+   *
+   * @default true
+   */
+  required?: boolean
+}
+
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-interaction-response-structure */
+export interface DiscordFileUploadInteractionResponse {
+  type: MessageComponentTypes.FileUpload
+
+  /** Unique identifier for the component */
+  id: number
+  /** The custom id for the file upload */
+  custom_id: string
+  /** IDs of the uploaded files found in the resolved data */
+  values: string[]
 }
 
 /** https://discord.com/developers/docs/components/reference#unfurled-media-item-structure */
