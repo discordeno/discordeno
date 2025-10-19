@@ -443,8 +443,7 @@ export interface LabelComponent extends BaseComponent {
     | FileUploadComponent
 }
 
-// TODO(file-uploads-modal): Update when file uploads in modals is live
-/** https://discord.com/developers/docs/components/reference#?????????? */
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
 export interface FileUploadComponent extends BaseComponent {
   type: MessageComponentTypes.FileUpload
 
