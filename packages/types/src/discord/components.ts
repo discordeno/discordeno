@@ -39,8 +39,7 @@ export enum MessageComponentTypes {
   Container = 17,
   /** Container associating a label and description with a component */
   Label,
-  // TODO(file-uploads-modal): Change description when file uploads in modals is live
-  /** A component for uploading files in modals */
+  /** Component for uploading files */
   FileUpload,
 }
 
@@ -570,24 +569,27 @@ export interface DiscordLabelInteractionResponse {
     | DiscordFileUploadInteractionResponse
 }
 
-// TODO(file-uploads-modal): Update when file uploads in modals is live
-/** https://discord.com/developers/docs/components/reference#?????????? */
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
 export interface DiscordFileUploadComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.FileUpload
 
-  /** The custom id for the channel select */
+  /** The custom id for the file upload */
   custom_id: string
   /**
    * The minimum number of files that must be uploaded
    *
    * @remarks
    * Between 0-10
+   *
+   * @default 1
    */
   min_values?: number
   /** The maximum number of files that can be uploaded
    *
    * @remarks
    * Between 1-10
+   *
+   * @default 1
    */
   max_values?: number
   /**
@@ -598,16 +600,15 @@ export interface DiscordFileUploadComponent extends DiscordBaseComponent {
   required?: boolean
 }
 
-// TODO(file-uploads-modal): Update when file uploads in modals is live
-/** https://discord.com/developers/docs/components/reference#???? */
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-interaction-response-structure */
 export interface DiscordFileUploadInteractionResponse {
   type: MessageComponentTypes.FileUpload
 
-  /** 32 bit integer used as an optional identifier for component */
+  /** Unique identifier for the component */
   id: number
   /** The custom id for the file upload */
   custom_id: string
-  /** IDs of the uploaded files */
+  /** IDs of the uploaded files found in the resolved data */
   values: string[]
 }
 
