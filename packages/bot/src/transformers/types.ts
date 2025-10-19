@@ -103,6 +103,7 @@ export interface Activity {
   largeText?: string
   smallImage?: string
   smallText?: string
+  inviteCoverImage?: string
   match?: string
   instance?: boolean
   buttons?: ActivityButton[]
