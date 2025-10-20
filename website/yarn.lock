@@ -6787,7 +6787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/types@npm:3.9.1, @docusaurus/types@npm:^3.9.1":
+"@docusaurus/types@npm:3.9.1":
   version: 3.9.1
   resolution: "@docusaurus/types@npm:3.9.1"
   dependencies:
@@ -6805,6 +6805,27 @@ __metadata:
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
   checksum: 10c0/6e42f10ca3ba14a67ba17d078f6fb74551641b3ee1027700522b8d04298006b97587b6ecb7d395a0432ee64c0708f954a16452ca8cc10555c02122e6f9dfa65b
+  languageName: node
+  linkType: hard
+
+"@docusaurus/types@npm:^3.9.2":
+  version: 3.9.2
+  resolution: "@docusaurus/types@npm:3.9.2"
+  dependencies:
+    "@mdx-js/mdx": "npm:^3.0.0"
+    "@types/history": "npm:^4.7.11"
+    "@types/mdast": "npm:^4.0.2"
+    "@types/react": "npm:*"
+    commander: "npm:^5.1.0"
+    joi: "npm:^17.9.2"
+    react-helmet-async: "npm:@slorber/react-helmet-async@1.3.0"
+    utility-types: "npm:^3.10.0"
+    webpack: "npm:^5.95.0"
+    webpack-merge: "npm:^5.9.0"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  checksum: 10c0/e50a9931e97944d39375a97a45ded13bc35baf3c9c14fe66d30944ebe1203df7748a7631291f937bef1a7a98db73c23505620cd8f03d109fbbdfa83725fb2857
   languageName: node
   linkType: hard
 
@@ -20798,7 +20819,7 @@ __metadata:
     "@docusaurus/preset-classic": "npm:^3.9.1"
     "@docusaurus/theme-common": "npm:^3.9.1"
     "@docusaurus/tsconfig": "npm:^3.9.1"
-    "@docusaurus/types": "npm:^3.9.1"
+    "@docusaurus/types": "npm:^3.9.2"
     "@easyops-cn/docusaurus-search-local": "npm:^0.52.1"
     "@mdx-js/react": "npm:^3.1.1"
     "@types/react": "npm:^19.2.2"
