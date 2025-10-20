@@ -21,7 +21,7 @@
     "@docusaurus/plugin-client-redirects": "^3.9.1",
     "@docusaurus/plugin-content-docs": "^3.9.1",
     "@docusaurus/preset-classic": "^3.9.1",
-    "@docusaurus/theme-common": "^3.9.1",
+    "@docusaurus/theme-common": "^3.9.2",
     "@easyops-cn/docusaurus-search-local": "^0.52.1",
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.8.6",
