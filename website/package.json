@@ -16,12 +16,12 @@
     "check": "biome check --write"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.9.1",
-    "@docusaurus/faster": "^3.9.1",
-    "@docusaurus/plugin-client-redirects": "^3.9.1",
-    "@docusaurus/plugin-content-docs": "^3.9.1",
-    "@docusaurus/preset-classic": "^3.9.1",
-    "@docusaurus/theme-common": "^3.9.1",
+    "@docusaurus/core": "^3.9.2",
+    "@docusaurus/faster": "^3.9.2",
+    "@docusaurus/plugin-client-redirects": "^3.9.2",
+    "@docusaurus/plugin-content-docs": "^3.9.2",
+    "@docusaurus/preset-classic": "^3.9.2",
+    "@docusaurus/theme-common": "^3.9.2",
     "@easyops-cn/docusaurus-search-local": "^0.52.1",
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.8.6",
@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
-    "@docusaurus/module-type-aliases": "^3.9.1",
-    "@docusaurus/tsconfig": "^3.9.1",
-    "@docusaurus/types": "^3.9.1",
+    "@docusaurus/module-type-aliases": "^3.9.2",
+    "@docusaurus/tsconfig": "^3.9.2",
+    "@docusaurus/types": "^3.9.2",
     "@types/react": "^19.2.2",
     "typescript": "5.9.3",
     "webpack": "5.102.1"
