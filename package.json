@@ -26,13 +26,13 @@
     "postinstall": "husky"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.5",
+    "@biomejs/biome": "2.2.6",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.3",
-    "turbo": "^2.5.6",
-    "typedoc": "^0.28.13",
+    "lint-staged": "^16.2.4",
+    "turbo": "^2.5.8",
+    "typedoc": "^0.28.14",
     "typedoc-plugin-markdown": "^4.9.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20.19.0"
