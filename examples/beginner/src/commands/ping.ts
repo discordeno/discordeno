@@ -10,6 +10,6 @@ createCommand({
   async execute(interaction) {
     const ping = Date.now() - snowflakeToTimestamp(interaction.id)
 
-    await interaction.respond(`🏓 Pong! Ping ${ping}ms (${humanizeMilliseconds(ping)})`)
+    await interaction.reply(`🏓 Pong! Ping ${ping}ms (${humanizeMilliseconds(ping)})`)
   },
 })
