@@ -29,7 +29,11 @@ export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
  * @param octetLength - The length of the code verifier in octets (default is 32).
  * @return The base64url encoded code verifier
  *
+ * @remarks
+ * The entropy of the code verifier should be between 256 and 768 bits (32 to 96 octets), as the resulting base64url encoded string has to be between 43 and 128 characters long.
+ *
  * @see https://datatracker.ietf.org/doc/html/rfc7636#section-7.1 for the octet length
+ * @see https://datatracker.ietf.org/doc/html/rfc7636#section-4.1 for why 32 octets is the default
  */
 export function generateCodeVerifier(octetLength: number = 32) {
   const randomBytes = new Uint8Array(octetLength)
@@ -41,11 +45,10 @@ export function generateCodeVerifier(octetLength: number = 32) {
  * Creates a code challenge from the code verifier using the specified method.
  *
  * @param verifier - The code verifier to use.
- * @param method - The method to use for the code challenge (default is 'S256').
  * @returns The code challenge.
  *
  * @remarks
- * This only allows for S256, the option is present for future uses
+ * This performs a SHA-256 hash on the verifier and encodes it using base64url encoding. Discord only supports 'S256' as the code challenge method.
  */
 export async function createCodeChallenge(verifier: string) {
   const hashed = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))

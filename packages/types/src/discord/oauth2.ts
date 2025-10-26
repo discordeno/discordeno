@@ -142,7 +142,7 @@ export interface DiscordTokenExchangeAuthorizationCode {
   /** The redirect_uri associated with this authorization */
   redirect_uri: string
   /** The code verifier for the token exchange if one was sent during the authorization request */
-  code_verifier: string
+  code_verifier?: string
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-access-token-response */
