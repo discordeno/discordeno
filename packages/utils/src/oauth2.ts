@@ -1,4 +1,5 @@
 import type { BigString, DiscordApplicationIntegrationType, OAuth2Scope, PermissionStrings } from '@discordeno/types'
+import { encodeBase64Url } from './base64.js'
 import { calculateBits } from './permissions.js'
 
 export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
@@ -15,7 +16,43 @@ export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
   if (options.disableGuildSelect !== undefined) url += `&disable_guild_select=${options.disableGuildSelect}`
   if (options.integrationType) url += `&integration_type=${options.integrationType}`
 
+  // Options defined by RFC 7636 (https://datatracker.ietf.org/doc/html/rfc7636)
+  if (options.codeChallenge) url += `&code_challenge=${options.codeChallenge}`
+  if (options.codeChallengeMethod) url += `&code_challenge_method=${options.codeChallengeMethod}`
+
   return url
+}
+
+/**
+ * Generates a code verifier for use in the PKCE extension to OAuth2.
+ *
+ * @param octetLength - The length of the code verifier in octets (default is 32).
+ * @return The base64url encoded code verifier
+ *
+ * @remarks
+ * The entropy of the code verifier should be between 256 and 768 bits (32 to 96 octets), as the resulting base64url encoded string has to be between 43 and 128 characters long.
+ *
+ * @see https://datatracker.ietf.org/doc/html/rfc7636#section-7.1 for the octet length
+ * @see https://datatracker.ietf.org/doc/html/rfc7636#section-4.1 for why 32 octets is the default
+ */
+export function generateCodeVerifier(octetLength: number = 32) {
+  const randomBytes = new Uint8Array(octetLength)
+  crypto.getRandomValues(randomBytes)
+  return encodeBase64Url(randomBytes)
+}
+
+/**
+ * Creates a code challenge from the code verifier using the specified method.
+ *
+ * @param verifier - The code verifier to use.
+ * @returns The code challenge.
+ *
+ * @remarks
+ * This performs a SHA-256 hash on the verifier and encodes it using base64url encoding. Discord only supports 'S256' as the code challenge method.
+ */
+export async function createCodeChallenge(verifier: string) {
+  const hashed = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))
+  return encodeBase64Url(hashed)
 }
 
 export interface CreateOAuth2LinkOptions {
@@ -83,4 +120,19 @@ export interface CreateOAuth2LinkOptions {
    * The application must be configured in the Developer Portal to support the provided `integrationType`.
    */
   integrationType?: DiscordApplicationIntegrationType
+  /**
+   * The code challenge used to verify the authorization request
+   *
+   * @see https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+   */
+  codeChallenge?: string
+  /**
+   * The challenge method used to generate the code challenge
+   *
+   * @remarks
+   * While the RFC allows for the 'plain' value to be set, discord does not allow it
+   *
+   * @see https://datatracker.ietf.org/doc/html/rfc7636#section-4.2
+   */
+  codeChallengeMethod?: 'S256'
 }
