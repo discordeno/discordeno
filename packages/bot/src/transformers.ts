@@ -319,7 +319,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   TBehavior
 > & {
   customizers: TransformerCustomizers<TProps, TBehavior>
-  desiredProperties: TransformersDesiredProperties
+  desiredProperties: TProps
   reverse: {
     activity: (bot: Bot<TProps, TBehavior>, payload: Activity) => DiscordActivity
     allowedMentions: (bot: Bot<TProps, TBehavior>, payload: AllowedMentions) => DiscordAllowedMentions

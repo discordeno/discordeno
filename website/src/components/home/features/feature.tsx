@@ -1,14 +1,13 @@
 import type { FeatureList } from '@site/src/types'
-import clsx from 'clsx'
 
 export default function Feature({ data }: FeatureList) {
   return (
-    <div className={clsx('col col--4')}>
+    <div className="col col--4">
       <div className="text--center">{data.feature.Svg}</div>
 
       <div className="text--center padding-horiz--md">
         <h3>{data.feature.title}</h3>
-        <p>{data.feature.description}</p>
+        {data.feature.description}
       </div>
     </div>
   )

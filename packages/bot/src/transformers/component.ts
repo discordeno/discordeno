@@ -4,6 +4,7 @@ import {
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordLabelComponent,
+  type DiscordLabelInteractionResponse,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
@@ -13,6 +14,7 @@ import {
   type DiscordSeparatorComponent,
   type DiscordStringSelectInteractionResponse,
   type DiscordTextDisplayComponent,
+  type DiscordTextDisplayInteractionResponse,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
   type DiscordThumbnailComponent,
@@ -162,12 +164,12 @@ function transformInputTextComponent(bot: Bot, payload: Partial<DiscordTextInput
   if (props.type && payload.type) input.type = payload.type
   if (props.id && payload.id) input.id = payload.id
   if (props.value && payload.value) input.value = payload.value
+  if (props.customId && payload.custom_id) input.customId = payload.custom_id
 
   // Check if it is the component or the response
   if ('style' in payload) {
     if (props.style && payload.style) input.style = payload.style
     if (props.required && payload.required) input.required = payload.required
-    if (props.customId && payload.custom_id) input.customId = payload.custom_id
     if (props.label && payload.label) input.label = payload.label
     if (props.placeholder && payload.placeholder) input.placeholder = payload.placeholder
     if (props.minLength && payload.min_length) input.minLength = payload.min_length
@@ -270,13 +272,16 @@ function transformFileComponent(bot: Bot, payload: Partial<DiscordFileComponent>
   return file
 }
 
-function transformTextDisplayComponent(bot: Bot, payload: Partial<DiscordTextDisplayComponent>) {
+function transformTextDisplayComponent(bot: Bot, payload: Partial<DiscordTextDisplayComponent> | Partial<DiscordTextDisplayInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component
   const textDisplay = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.type && payload.type) textDisplay.type = payload.type
   if (props.id && payload.id) textDisplay.id = payload.id
-  if (props.content && payload.content) textDisplay.content = payload.content
+  // That that this isn't a response
+  if ('content' in payload) {
+    if (props.content && payload.content) textDisplay.content = payload.content
+  }
 
   return textDisplay
 }
@@ -293,14 +298,17 @@ function transformSeparatorComponent(bot: Bot, payload: Partial<DiscordSeparator
   return separator
 }
 
-function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponent>) {
+function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponent> | Partial<DiscordLabelInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component
   const label = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
   if (props.type && payload.type) label.type = payload.type
   if (props.id && payload.id) label.id = payload.id
-  if (props.label && payload.label) label.label = payload.label
-  if (props.description && payload.description) label.description = payload.description
+  // Check that this isn't a response
+  if ('label' in payload) {
+    if (props.label && payload.label) label.label = payload.label
+    if (props.description && payload.description) label.description = payload.description
+  }
   if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component)
 
   return label

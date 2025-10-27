@@ -29,6 +29,7 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     largeText: payload.assets?.large_text,
     smallImage: payload.assets?.small_image,
     smallText: payload.assets?.small_text,
+    inviteCoverImage: payload.assets?.invite_cover_image,
     join: payload.secrets?.join,
     spectate: payload.secrets?.spectate,
     match: payload.secrets?.match,
