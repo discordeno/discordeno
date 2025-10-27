@@ -4,6 +4,7 @@ import {
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordLabelComponent,
+  type DiscordLabelInteractionResponse,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
@@ -13,6 +14,7 @@ import {
   type DiscordSeparatorComponent,
   type DiscordStringSelectInteractionResponseFromModal,
   type DiscordTextDisplayComponent,
+  type DiscordTextDisplayInteractionResponse,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
   type DiscordThumbnailComponent,
@@ -251,13 +253,16 @@ function transformFileComponent(bot: Bot, payload: DiscordFileComponent): Compon
   return file
 }
 
-function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComponent): Component {
+function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComponent | DiscordTextDisplayInteractionResponse): Component {
   const props = bot.transformers.desiredProperties.component
   const textDisplay = {} as Component
 
   if (props.type && payload.type) textDisplay.type = payload.type
   if (props.id && payload.id) textDisplay.id = payload.id
-  if (props.content && payload.content) textDisplay.content = payload.content
+  // That that this isn't a response
+  if ('content' in payload) {
+    if (props.content && payload.content) textDisplay.content = payload.content
+  }
 
   return textDisplay
 }
@@ -274,14 +279,17 @@ function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponen
   return separator
 }
 
-function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent): Component {
+function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent | DiscordLabelInteractionResponse): Component {
   const props = bot.transformers.desiredProperties.component
   const label = {} as Component
 
   if (props.type && payload.type) label.type = payload.type
   if (props.id && payload.id) label.id = payload.id
-  if (props.label && payload.label) label.label = payload.label
-  if (props.description && payload.description) label.description = payload.description
+  // Check that this isn't a response
+  if ('label' in payload) {
+    if (props.label && payload.label) label.label = payload.label
+    if (props.description && payload.description) label.description = payload.description
+  }
   if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component)
 
   return label
