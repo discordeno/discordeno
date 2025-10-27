@@ -1,0 +1,74 @@
+.faqContainer {
+  border: 1px solid var(--ifm-footer-background-color);
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 55vw;
+  background-color: var(--ifm-footer-background-color);
+
+  #rotated {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.faqQuestion {
+  cursor: pointer;
+  padding: 10px;
+  margin: 0;
+  background-color: var(--ifm-footer-background-color);
+  color: var(--ifm-color-white);
+  user-select: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  svg {
+    fill: var(--ifm-color-white);
+  }
+}
+
+.faqAnswer {
+  background-color: var(--ifm-footer-background-color);
+  color: #fff;
+  padding-inline: 10px;
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.3s;
+  /* Firefox and Safari don't support this yet, however since it is just for an animation this is fine */
+  /* https://developer.mozilla.org/en-US/docs/Web/CSS/interpolate-size */
+  interpolate-size: allow-keywords;
+
+  &[data-visible="true"] {
+    height: auto;
+    padding-block-end: 10px;
+  }
+}
+
+.faqSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+  margin-left: 2vw;
+  margin-right: 2vw;
+
+  h1 {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--ifm-color-white);
+    line-height: 1.25;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+}

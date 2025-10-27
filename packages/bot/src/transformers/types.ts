@@ -103,6 +103,7 @@ export interface Activity {
   largeText?: string
   smallImage?: string
   smallText?: string
+  inviteCoverImage?: string
   match?: string
   instance?: boolean
   buttons?: ActivityButton[]
@@ -418,7 +419,7 @@ export interface Channel {
   member?: ThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   defaultAutoArchiveDuration?: number
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions
   /** The flags of the channel */
   flags?: number
@@ -1234,6 +1235,10 @@ export interface Message {
   tts: boolean
   /** Whether this message came from the urgent message system */
   urgent: boolean
+  // TODO: Adding this causes errors in the interaction functions due to how `InteractionResolvedDataMember` and `InteractionResolvedDataChannel` are treated by `TransformProperty`, since they get their desired props changed
+  // and fixing this requires a few changes in `SetupDesiredProps` and `TransformProperty` so this is going to be done in another pr
+  // /** data for users, members, channels, and roles referenced in this message */
+  // resolved?: InteractionDataResolved
 }
 
 export interface MessageActivity {
