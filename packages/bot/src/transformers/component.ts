@@ -23,10 +23,20 @@ import {
 } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js'
 
-export function transformComponent(bot: Bot, payload: DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse): Component {
+export function transformComponent(
+  bot: Bot,
+  payload: Partial<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse>,
+  extra?: { partial?: boolean },
+) {
   let component: SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+
+  // I don't know what we could do with a component without a type, so we just throw an error
+  if (!payload.type) {
+    throw new Error(`[Component transformer] Received component payload without a type.`)
+  }
 
   // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
   switch (payload.type) {
@@ -72,10 +82,12 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent | 
       break
   }
 
-  return bot.transformers.customizers.component(bot, payload, component)
+  return callCustomizer('component', bot, payload, component, {
+    partial: extra?.partial ?? false,
+  })
 }
 
-export function transformUnfurledMediaItem(bot: Bot, payload: DiscordUnfurledMediaItem): UnfurledMediaItem {
+export function transformUnfurledMediaItem(bot: Bot, payload: Partial<DiscordUnfurledMediaItem>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.unfurledMediaItem
   const mediaItem = {} as SetupDesiredProps<UnfurledMediaItem, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -86,10 +98,12 @@ export function transformUnfurledMediaItem(bot: Bot, payload: DiscordUnfurledMed
   if (props.contentType && payload.content_type) mediaItem.contentType = payload.content_type
   if (props.attachmentId && payload.attachment_id) mediaItem.attachmentId = bot.transformers.snowflake(payload.attachment_id)
 
-  return bot.transformers.customizers.unfurledMediaItem(bot, payload, mediaItem)
+  return callCustomizer('unfurledMediaItem', bot, payload, mediaItem, {
+    partial: extra?.partial ?? false,
+  })
 }
 
-export function transformMediaGalleryItem(bot: Bot, payload: DiscordMediaGalleryItem): MediaGalleryItem {
+export function transformMediaGalleryItem(bot: Bot, payload: Partial<DiscordMediaGalleryItem>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.mediaGalleryItem
   const galleryItem = {} as SetupDesiredProps<MediaGalleryItem, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -97,10 +111,12 @@ export function transformMediaGalleryItem(bot: Bot, payload: DiscordMediaGallery
   if (props.description && payload.description) galleryItem.description = payload.description
   if (props.spoiler && payload.spoiler) galleryItem.spoiler = payload.spoiler
 
-  return bot.transformers.customizers.mediaGalleryItem(bot, payload, galleryItem)
+  return callCustomizer('mediaGalleryItem', bot, payload, galleryItem, {
+    partial: extra?.partial ?? false,
+  })
 }
 
-function transformActionRow(bot: Bot, payload: DiscordActionRow) {
+function transformActionRow(bot: Bot, payload: Partial<DiscordActionRow>) {
   const props = bot.transformers.desiredProperties.component
   const actionRow = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -111,7 +127,7 @@ function transformActionRow(bot: Bot, payload: DiscordActionRow) {
   return actionRow
 }
 
-function transformContainerComponent(bot: Bot, payload: DiscordContainerComponent) {
+function transformContainerComponent(bot: Bot, payload: Partial<DiscordContainerComponent>) {
   const props = bot.transformers.desiredProperties.component
   const container = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -124,7 +140,7 @@ function transformContainerComponent(bot: Bot, payload: DiscordContainerComponen
   return container
 }
 
-function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent) {
+function transformButtonComponent(bot: Bot, payload: Partial<DiscordButtonComponent>) {
   const props = bot.transformers.desiredProperties.component
   const button = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -141,7 +157,7 @@ function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent) {
   return button
 }
 
-function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponent | DiscordTextInputInteractionResponse) {
+function transformInputTextComponent(bot: Bot, payload: Partial<DiscordTextInputComponent | DiscordTextInputInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component
   const input = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -163,7 +179,7 @@ function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponen
   return input
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuComponent | DiscordStringSelectInteractionResponse) {
+function transformSelectMenuComponent(bot: Bot, payload: Partial<DiscordSelectMenuComponent | DiscordStringSelectInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component
   const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -171,10 +187,12 @@ function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuCompon
   if (props.id && payload.id) select.id = payload.id
   if (props.customId && payload.custom_id) select.customId = payload.custom_id
 
-  // Check if this is the string select response
+  // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values
   } else {
+    payload = payload as Partial<DiscordSelectMenuComponent>
+
     if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
     if (props.minValues && payload.min_values) select.minValues = payload.min_values
     if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
@@ -204,7 +222,7 @@ function transformSelectMenuComponent(bot: Bot, payload: DiscordSelectMenuCompon
   return select
 }
 
-function transformSectionComponent(bot: Bot, payload: DiscordSectionComponent) {
+function transformSectionComponent(bot: Bot, payload: Partial<DiscordSectionComponent>) {
   const props = bot.transformers.desiredProperties.component
   const section = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -216,7 +234,7 @@ function transformSectionComponent(bot: Bot, payload: DiscordSectionComponent) {
   return section
 }
 
-function transformThumbnailComponent(bot: Bot, payload: DiscordThumbnailComponent) {
+function transformThumbnailComponent(bot: Bot, payload: Partial<DiscordThumbnailComponent>) {
   const props = bot.transformers.desiredProperties.component
   const thumbnail = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -229,7 +247,7 @@ function transformThumbnailComponent(bot: Bot, payload: DiscordThumbnailComponen
   return thumbnail
 }
 
-function transformMediaGalleryComponent(bot: Bot, payload: DiscordMediaGalleryComponent) {
+function transformMediaGalleryComponent(bot: Bot, payload: Partial<DiscordMediaGalleryComponent>) {
   const props = bot.transformers.desiredProperties.component
   const mediaGallery = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -240,7 +258,7 @@ function transformMediaGalleryComponent(bot: Bot, payload: DiscordMediaGalleryCo
   return mediaGallery
 }
 
-function transformFileComponent(bot: Bot, payload: DiscordFileComponent) {
+function transformFileComponent(bot: Bot, payload: Partial<DiscordFileComponent>) {
   const props = bot.transformers.desiredProperties.component
   const file = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -254,7 +272,7 @@ function transformFileComponent(bot: Bot, payload: DiscordFileComponent) {
   return file
 }
 
-function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComponent | DiscordTextDisplayInteractionResponse) {
+function transformTextDisplayComponent(bot: Bot, payload: Partial<DiscordTextDisplayComponent> | Partial<DiscordTextDisplayInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component
   const textDisplay = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -268,7 +286,7 @@ function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComp
   return textDisplay
 }
 
-function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponent) {
+function transformSeparatorComponent(bot: Bot, payload: Partial<DiscordSeparatorComponent>) {
   const props = bot.transformers.desiredProperties.component
   const separator = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -280,7 +298,7 @@ function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponen
   return separator
 }
 
-function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent | DiscordLabelInteractionResponse) {
+function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponent> | Partial<DiscordLabelInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component
   const label = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
