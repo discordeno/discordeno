@@ -338,6 +338,8 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       accentColor: defaultValue,
       name: defaultValue,
       size: defaultValue,
+      component: defaultValue,
+      values: defaultValue,
       ...desiredProperties.component,
     },
     forumTag: {
@@ -483,7 +485,6 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       approximateMemberCount: defaultValue,
       approximatePresenceCount: defaultValue,
       guildScheduledEvent: defaultValue,
-      stageInstance: defaultValue,
       expiresAt: defaultValue,
       flags: defaultValue,
       ...desiredProperties.invite,

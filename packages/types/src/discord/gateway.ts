@@ -707,6 +707,8 @@ export interface DiscordInviteCreate {
   temporary: boolean
   /** How many times the invite has been used (always will be 0) */
   uses: number
+  /** The expiration date of this invite. */
+  expires_at: string
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#invite-delete-invite-delete-event-fields */
@@ -943,6 +945,8 @@ export interface DiscordActivityAssets {
   small_text?: string
   /** URL that is opened when clicking on the small image */
   small_url?: string
+  /** See Activity Asset Image. Displayed as a banner on a Game Invite. */
+  invite_cover_image?: string
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-secrets */

@@ -308,22 +308,7 @@ parentPort.on('message', async data => {
           } shard (${data.shardId})`,
         )
 
-        const shard =
-          SHARDS.get(data.shardId) ??
-          new DiscordenoShard({
-            id: data.shardId,
-            connection: {
-              compress: data.compress,
-              intents: data.intents,
-              properties: data.properties,
-              token: data.token,
-              totalShards: data.totalShards,
-              url: data.url,
-              version: data.version,
-            },
-            // Enable this in the next portion of the guide.
-            // events,
-          })
+        const shard = SHARDS.get(data.shardId) ?? createShard(data)
 
         SHARDS.set(shard.id, shard)
 
@@ -344,6 +329,25 @@ parentPort.on('message', async data => {
 console.log(
   `[Sharding Worker #${workerData.workerId}] Sharding Worker Started.`,
 )
+
+function createShard(data) {
+  const shard = new DiscordenoShard({
+    id: data.shardId,
+    connection: {
+      compress: data.compress,
+      intents: data.intents,
+      properties: data.properties,
+      token: data.token,
+      totalShards: data.totalShards,
+      url: data.url,
+      version: data.version,
+    },
+    // Enable this in the next portion of the guide.
+    // events,
+  })
+
+  return shard
+}
 ```
 
 Here, we listen to the master process for message event, through which we'll receive requests to identify shards or any other requests from the gateway manager. Each message is passed into a switch statement which determines which type of request to handle. If it is the `identify` request, it will begin identifying the shard. First it checks if an existing shard exists and triggers identify on that which will internally handle this cleanly by closing existing shard, and opening a new one. If no shard exists, we create this shard and save it to our SHARDS cache. Using this method, you can support many different types of communication between your gateway manager and your shards.
@@ -354,35 +358,46 @@ Next, we will focus on the `events` portion which we had commented out above. Ea
 Shard events are NOT the same as your regular bot events. **All** your bot events will be received on the `shard.events.message` function.
 :::
 
-```diff
-const shard =
-  SHARDS.get(req.body.shardId) ??
-  new DiscordenoShard({
-    id: req.body.shardId,
+```ts
+function createShard(data) {
+  const shard = new DiscordenoShard({
+    id: data.shardId,
     connection: {
-      compress: req.body.compress,
-      intents: req.body.intents,
-      properties: req.body.properties,
-      token: req.body.token,
-      totalShards: req.body.totalShards,
-      url: req.body.url,
-      version: req.body.version,
+      compress: data.compress,
+      intents: data.intents,
+      properties: data.properties,
+      token: data.token,
+      totalShards: data.totalShards,
+      url: data.url,
+      version: data.version,
     },
-+    events: {
-+      async message(shard, payload) {
-+        await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
-+          method: 'POST',
-+          headers: {
-+            'Content-Type': 'application/json',
-+            authorization: AUTHORIZATION,
-+          },
-+          body: JSON.stringify({ payload, shardId: shard.id }),
-+        })
-+          .then(res => res.text())
-+          .catch(logger.error)
-+      },
-+    },
+// insert-start
+    events: {
+      async message(shard, payload) {
+        await fetch(getUrlFromShardId(data.totalShards, shard.id), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: AUTHORIZATION,
+          },
+          body: JSON.stringify({ payload, shardId: shard.id }),
+        })
+          .then(res => res.text())
+          .catch(logger.error)
+      },
+    },
+// insert-end
   })
+
+// insert-start
+  // By default the shard will convert to camelCase the packets, however when we send them to the bot it expects them in snake_case
+  shard.forwardToBot = function (packet) {
+    this.events.message?.(this, packet)
+  }
+// insert-end
+
+  return shard
+}
 ```
 
 Now, whenever the shard gets an event, it will send that payload to the event listener url. The event listener is also known as the "bot".
@@ -432,23 +447,25 @@ Now, we can begin implementing influxdb in our sharder. Go back to `services/gat
 ```ts
 events: {
   async message(shard, payload) {
+// insert-start
     Influx?.writePoint(
       new Point('gatewayEvents')
         .timestamp(new Date())
         .stringField('type', payload.t ?? "NA")
         .tag('shard', shardId),
     );
+// insert-end
 
-    await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
-+     method: 'POST',
-+     headers: {
-+       'Content-Type': 'application/json',
-+       authorization: AUTHORIZATION,
-+     },
-+     body: JSON.stringify({ payload, shardId: shard.id }),
-+   })
-+     .then(res => res.text())
-+     .catch(logger.error)
+    await fetch(getUrlFromShardId(data.totalShards, shard.id), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: AUTHORIZATION,
+      },
+      body: JSON.stringify({ payload, shardId: shard.id }),
+    })
+      .then(res => res.text())
+      .catch(logger.error)
   },
 },
 ```
@@ -514,21 +531,23 @@ events: {
         .tag('shard', shardId),
     );
 
+// insert-start
     if (payload.t === "READY") {
       // Marks which guilds the bot in when initial loading in cache
       payload.d.guilds.forEach((g) => cache.loadingGuildIds.add(g.id));
     }
+// insert-end
 
-    await fetch(getUrlFromShardId(req.body.totalShards, shard.id), {
-+     method: 'POST',
-+     headers: {
-+       'Content-Type': 'application/json',
-+       authorization: AUTHORIZATION,
-+     },
-+     body: JSON.stringify({ payload, shardId: shard.id }),
-+   })
-+     .then(res => res.text())
-+     .catch(logger.error)
+    await fetch(getUrlFromShardId(data.totalShards, shard.id), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: AUTHORIZATION,
+      },
+      body: JSON.stringify({ payload, shardId: shard.id }),
+    })
+      .then(res => res.text())
+      .catch(logger.error)
   },
 },
 ```

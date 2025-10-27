@@ -76,7 +76,7 @@ app.all('/*', async (req, res) => {
 
   try {
     const result = await REST.makeRequest(req.method, req.url.substring(4), {
-      body: req.method !== 'DELETE' && req.method !== 'GET' ? {} : req.body,
+      body: req.method !== 'DELETE' && req.method !== 'GET' ? req.body : undefined,
     })
 
     if (result) {

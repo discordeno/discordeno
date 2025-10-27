@@ -518,6 +518,9 @@ export enum HTTPJsonErrorCodes {
   /** Cannot update onboarding while below requirements */
   OnboardingBelowRequirements = 350001,
 
+  /** Access to file uploads has been limited for this guild */
+  FileUploadsLimited = 400001,
+
   /** Failed to ban users */
   BanFailed = 500000,
 

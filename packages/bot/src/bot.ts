@@ -41,7 +41,6 @@ export function createBot<
   type TypedBot = Bot<CompleteProps, TBehavior>
 
   if (!options.transformers) options.transformers = {}
-  if (!options.transformers.desiredProperties) options.transformers.desiredProperties = options.desiredProperties
   if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
   if (!options.rest.token) options.rest.token = options.token
   if (!options.rest.logger && options.loggerFactory) options.rest.logger = options.loggerFactory('REST')
@@ -63,7 +62,7 @@ export function createBot<
   }
 
   options.gateway.intents = options.intents
-  options.gateway.preferSnakeCase = true
+  ;(options.transformers as Transformers<CompleteProps, TBehavior>).desiredProperties = options.desiredProperties as CompleteProps
 
   const id = getBotIdFromToken(options.token)
 
@@ -124,7 +123,7 @@ export interface CreateBotOptions<TProps extends RecursivePartial<TransformersDe
   /** The event handlers. */
   events?: Partial<EventHandlers<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>
   /** The functions that should transform discord objects to discordeno shaped objects. */
-  transformers?: RecursivePartial<Transformers<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>
+  transformers?: RecursivePartial<Omit<Transformers<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>, 'desiredProperties'>>
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
   handlers?: Partial<Record<GatewayDispatchEventNames, BotGatewayHandler<CompleteDesiredProperties<NoInfer<TProps>>, TBehavior>>>
   /**

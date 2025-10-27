@@ -28,6 +28,7 @@ export type MessageComponent =
   | SeparatorComponent
   | ContainerComponent
   | FileComponent
+  | LabelComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface BaseComponent {
@@ -46,6 +47,9 @@ export interface ActionRow extends BaseComponent {
    *
    * @remarks
    * Up to 5 button components, a single select component or a single text input component
+   *
+   * Using a {@link TextInputComponent} inside the Action Row is deprecated,
+   * use a {@link LabelComponent} for modals
    */
   components: (
     | ButtonComponent
@@ -106,7 +110,23 @@ export interface StringSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -140,8 +160,15 @@ export interface TextInputComponent extends BaseComponent {
   customId: string
   /** The style of the InputText */
   style: TextStyles
-  /** The label of the InputText. Maximum 45 characters */
-  label: string
+  /**
+   * The label of the InputText.
+   *
+   * @remarks
+   * Maximum 45 characters
+   *
+   * @deprecated Use the `label` and `description` from the {@link LabelComponent}
+   */
+  label?: string
   /** The minimum length of the text the user has to provide */
   minLength?: number
   /** The maximum length of the text the user has to provide */
@@ -171,7 +198,23 @@ export interface UserSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -200,7 +243,23 @@ export interface RoleSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -221,7 +280,23 @@ export interface MentionableSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -244,7 +319,23 @@ export interface ChannelSelectComponent extends BaseComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Max 25. */
   maxValues?: number
-  /** Whether or not this select is disabled */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
   disabled?: boolean
 }
 
@@ -320,4 +411,32 @@ export interface ContainerComponent extends BaseComponent {
   accentColor?: number | null
   /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean
+}
+
+/** https://discord.com/developers/docs/components/reference#label-label-structure */
+export interface LabelComponent extends BaseComponent {
+  type: MessageComponentTypes.Label
+
+  /**
+   * The label text
+   *
+   * @remarks
+   * Max 45 characters.
+   */
+  label: string
+  /**
+   * An optional description text for the label
+   *
+   * @remarks
+   * Max 100 characters.
+   */
+  description?: string
+  /** The component within the label */
+  component:
+    | TextInputComponent
+    | StringSelectComponent
+    | UserSelectComponent
+    | RoleSelectComponent
+    | MentionableSelectComponent
+    | ChannelSelectComponent
 }
