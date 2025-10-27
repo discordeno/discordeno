@@ -123,7 +123,7 @@ __metadata:
     "@discordeno/utils": "workspace:^"
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
-    "@types/chai": "npm:^5.2.2"
+    "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.9.1"
     "@types/sinon": "npm:^17.0.4"
@@ -146,7 +146,7 @@ __metadata:
     "@discordeno/utils": "workspace:^"
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
-    "@types/chai": "npm:^5.2.2"
+    "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.9.1"
     "@types/sinon": "npm:^17.0.4"
@@ -175,7 +175,7 @@ __metadata:
     "@discordeno/utils": "workspace:^"
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
-    "@types/chai": "npm:^5.2.2"
+    "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.9.1"
@@ -217,7 +217,7 @@ __metadata:
     "@discordeno/types": "workspace:^"
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
-    "@types/chai": "npm:^5.2.2"
+    "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.9.1"
     "@types/sinon": "npm:^17.0.4"
@@ -782,12 +782,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:^5.2.2":
-  version: 5.2.2
-  resolution: "@types/chai@npm:5.2.2"
+"@types/chai@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "@types/chai@npm:5.2.3"
   dependencies:
     "@types/deep-eql": "npm:*"
-  checksum: 10c0/49282bf0e8246800ebb36f17256f97bd3a8c4fb31f92ad3c0eaa7623518d7e87f1eaad4ad206960fcaf7175854bdff4cb167e4fe96811e0081b4ada83dd533ec
+    assertion-error: "npm:^2.0.1"
+  checksum: 10c0/e0ef1de3b6f8045a5e473e867c8565788c444271409d155588504840ad1a53611011f85072188c2833941189400228c1745d78323dac13fcede9c2b28bacfb2f
   languageName: node
   linkType: hard
 
@@ -1067,6 +1068,13 @@ __metadata:
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
   checksum: 10c0/c5640c2d89045371c7cedd6a70212a04e360fd34d6edeae32f6952c63949e3525ea77dbec0289d8213a99bbaeab5abfa860b5c12cf88a2e6cf8106e90dd27a7e
+  languageName: node
+  linkType: hard
+
+"assertion-error@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "assertion-error@npm:2.0.1"
+  checksum: 10c0/bbbcb117ac6480138f8c93cf7f535614282dea9dc828f540cdece85e3c665e8f78958b96afac52f29ff883c72638e6a87d469ecc9fe5bc902df03ed24a55dba8
   languageName: node
   linkType: hard
 
@@ -1450,7 +1458,7 @@ __metadata:
     "@discordeno/utils": "workspace:^"
     "@swc/cli": "npm:^0.7.8"
     "@swc/core": "npm:^1.13.5"
-    "@types/chai": "npm:^5.2.2"
+    "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.9.1"
     c8: "npm:^10.1.3"
