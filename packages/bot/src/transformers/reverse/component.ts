@@ -4,6 +4,7 @@ import {
   type DiscordButtonComponent,
   type DiscordContainerComponent,
   type DiscordFileComponent,
+  type DiscordFileUploadComponent,
   type DiscordLabelComponent,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
@@ -53,11 +54,12 @@ export function transformComponentToDiscordComponent(
       return transformThumbnailComponent(bot, payload)
     case MessageComponentTypes.Label:
       return transformLabelComponent(bot, payload)
+    case MessageComponentTypes.FileUpload:
+      return transformFileUploadComponent(bot, payload)
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
-    case MessageComponentTypes.FileUpload:
       // As of now they are compatible
-      return payload as DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse
+      return payload as DiscordMessageComponent
   }
 }
 
@@ -222,5 +224,16 @@ function transformLabelComponent(bot: Bot, payload: Component): DiscordLabelComp
     label: payload.label!,
     description: payload.description,
     component: bot.transformers.reverse.component(bot, payload.component!) as DiscordLabelComponent['component'],
+  }
+}
+
+function transformFileUploadComponent(bot: Bot, payload: Component): DiscordFileUploadComponent {
+  return {
+    type: MessageComponentTypes.FileUpload,
+    id: payload.id,
+    custom_id: payload.customId!,
+    max_values: payload.maxValues,
+    min_values: payload.minValues,
+    required: payload.required,
   }
 }

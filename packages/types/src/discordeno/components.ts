@@ -447,7 +447,7 @@ export interface LabelComponent extends BaseComponent {
 export interface FileUploadComponent extends BaseComponent {
   type: MessageComponentTypes.FileUpload
 
-  /** The custom id for the channel select */
+  /** The custom id for the file upload */
   customId: string
   /**
    * The minimum number of files that must be uploaded
