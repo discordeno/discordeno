@@ -147,12 +147,12 @@ function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponen
   if (props.type && payload.type) input.type = payload.type
   if (props.id && payload.id) input.id = payload.id
   if (props.value && payload.value) input.value = payload.value
+  if (props.customId && payload.custom_id) input.customId = payload.custom_id
 
   // Check if it is the component or the response
   if ('style' in payload) {
     if (props.style && payload.style) input.style = payload.style
     if (props.required && payload.required) input.required = payload.required
-    if (props.customId && payload.custom_id) input.customId = payload.custom_id
     if (props.label && payload.label) input.label = payload.label
     if (props.placeholder && payload.placeholder) input.placeholder = payload.placeholder
     if (props.minLength && payload.min_length) input.minLength = payload.min_length
