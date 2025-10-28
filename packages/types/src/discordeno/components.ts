@@ -29,6 +29,7 @@ export type MessageComponent =
   | ContainerComponent
   | FileComponent
   | LabelComponent
+  | FileUploadComponent
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface BaseComponent {
@@ -439,4 +440,32 @@ export interface LabelComponent extends BaseComponent {
     | RoleSelectComponent
     | MentionableSelectComponent
     | ChannelSelectComponent
+    | FileUploadComponent
+}
+
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
+export interface FileUploadComponent extends BaseComponent {
+  type: MessageComponentTypes.FileUpload
+
+  /** The custom id for the file upload */
+  customId: string
+  /**
+   * The minimum number of files that must be uploaded
+   *
+   * @remarks
+   * Between 0-10
+   */
+  minValues?: number
+  /** The maximum number of files that can be uploaded
+   *
+   * @remarks
+   * Between 1-10
+   */
+  maxValues?: number
+  /**
+   * Whether this component is required to be filled
+   *
+   * @default true
+   */
+  required?: boolean
 }
