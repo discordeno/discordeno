@@ -85,8 +85,6 @@ import {
   type DesiredPropertiesBehavior,
   type SetupDesiredProps,
   type TransformersDesiredProperties,
-  type TransformersObjects,
-  type TransformProperty,
 } from './desiredProperties.js'
 import { transformActivity, transformActivityInstance, transformActivityLocation } from './transformers/activity.js'
 import { transformApplication } from './transformers/application.js'
@@ -238,55 +236,34 @@ import { transformWidget } from './transformers/widget.js'
 import { transformWidgetSettings } from './transformers/widgetSettings.js'
 
 export type TransformerFunctions<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
-  activity: TransformerFunction<TProps, TBehavior, DiscordActivity, Activity, {}, 'unchanged'>
+  activity: TransformerFunction<TProps, TBehavior, DiscordActivity, Activity>
   activityInstance: TransformerFunction<TProps, TBehavior, DiscordActivityInstance, ActivityInstance>
   activityLocation: TransformerFunction<TProps, TBehavior, DiscordActivityLocation, ActivityLocation>
-  application: TransformerFunction<TProps, TBehavior, DiscordApplication, Application, { shardId?: number }, 'unchanged'>
-  applicationCommand: TransformerFunction<TProps, TBehavior, DiscordApplicationCommand, ApplicationCommand, {}, 'unchanged'>
-  applicationCommandOption: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOption, ApplicationCommandOption, {}, 'unchanged'>
-  applicationCommandOptionChoice: TransformerFunction<
-    TProps,
-    TBehavior,
-    DiscordApplicationCommandOptionChoice,
-    ApplicationCommandOptionChoice,
-    {},
-    'unchanged'
-  >
-  applicationCommandPermission: TransformerFunction<
-    TProps,
-    TBehavior,
-    DiscordGuildApplicationCommandPermissions,
-    GuildApplicationCommandPermissions,
-    {},
-    'unchanged'
-  >
+  application: TransformerFunction<TProps, TBehavior, DiscordApplication, Application, { shardId?: number }>
+  applicationCommand: TransformerFunction<TProps, TBehavior, DiscordApplicationCommand, ApplicationCommand>
+  applicationCommandOption: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOption, ApplicationCommandOption>
+  applicationCommandOptionChoice: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice>
+  applicationCommandPermission: TransformerFunction<TProps, TBehavior, DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions>
   attachment: TransformerFunction<TProps, TBehavior, DiscordAttachment, Attachment>
-  auditLogEntry: TransformerFunction<TProps, TBehavior, DiscordAuditLogEntry, AuditLogEntry, {}, 'unchanged'>
-  automodActionExecution: TransformerFunction<TProps, TBehavior, DiscordAutoModerationActionExecution, AutoModerationActionExecution, {}, 'unchanged'>
-  automodRule: TransformerFunction<TProps, TBehavior, DiscordAutoModerationRule, AutoModerationRule, {}, 'unchanged'>
+  auditLogEntry: TransformerFunction<TProps, TBehavior, DiscordAuditLogEntry, AuditLogEntry>
+  automodActionExecution: TransformerFunction<TProps, TBehavior, DiscordAutoModerationActionExecution, AutoModerationActionExecution>
+  automodRule: TransformerFunction<TProps, TBehavior, DiscordAutoModerationRule, AutoModerationRule>
   avatarDecorationData: TransformerFunction<TProps, TBehavior, DiscordAvatarDecorationData, AvatarDecorationData>
   channel: TransformerFunction<TProps, TBehavior, DiscordChannel, Channel, { guildId?: BigString }>
   collectibles: TransformerFunction<TProps, TBehavior, DiscordCollectibles, Collectibles>
-  component: TransformerFunction<
-    TProps,
-    TBehavior,
-    DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse,
-    Component,
-    {},
-    'unchanged'
-  >
+  component: TransformerFunction<TProps, TBehavior, DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>
   defaultReactionEmoji: TransformerFunction<TProps, TBehavior, DiscordDefaultReactionEmoji, DefaultReactionEmoji>
-  embed: TransformerFunction<TProps, TBehavior, DiscordEmbed, Embed, {}, 'unchanged'>
+  embed: TransformerFunction<TProps, TBehavior, DiscordEmbed, Embed>
   emoji: TransformerFunction<TProps, TBehavior, DiscordEmoji, Emoji>
   entitlement: TransformerFunction<TProps, TBehavior, DiscordEntitlement, Entitlement>
   forumTag: TransformerFunction<TProps, TBehavior, DiscordForumTag, ForumTag>
-  gatewayBot: TransformerFunction<TProps, TBehavior, DiscordGetGatewayBot, GetGatewayBot, {}, 'unchanged'>
+  gatewayBot: TransformerFunction<TProps, TBehavior, DiscordGetGatewayBot, GetGatewayBot>
   guild: TransformerFunction<TProps, TBehavior, DiscordGuild, Guild, { shardId?: number }>
   guildOnboarding: TransformerFunction<TProps, TBehavior, DiscordGuildOnboarding, GuildOnboarding>
   guildOnboardingPrompt: TransformerFunction<TProps, TBehavior, DiscordGuildOnboardingPrompt, GuildOnboardingPrompt>
   guildOnboardingPromptOption: TransformerFunction<TProps, TBehavior, DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption>
   incidentsData: TransformerFunction<TProps, TBehavior, DiscordIncidentsData, IncidentsData>
-  integration: TransformerFunction<TProps, TBehavior, DiscordIntegrationCreateUpdate, Integration, {}, 'unchanged'>
+  integration: TransformerFunction<TProps, TBehavior, DiscordIntegrationCreateUpdate, Integration>
   interaction: TransformerFunction<TProps, TBehavior, DiscordInteraction, Interaction, { shardId?: number }>
   interactionCallback: TransformerFunction<TProps, TBehavior, DiscordInteractionCallback, InteractionCallback>
   interactionCallbackResponse: TransformerFunction<
@@ -296,21 +273,20 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
     InteractionCallbackResponse,
     { shardId?: number }
   >
-  interactionDataOptions: TransformerFunction<TProps, TBehavior, DiscordInteractionDataOption, InteractionDataOption, {}, 'unchanged'>
+  interactionDataOptions: TransformerFunction<TProps, TBehavior, DiscordInteractionDataOption, InteractionDataOption>
   interactionDataResolved: TransformerFunction<
     TProps,
     TBehavior,
     DiscordInteractionDataResolved,
     InteractionDataResolved,
-    { shardId?: number; guildId?: BigString },
-    'transform'
+    { shardId?: number; guildId?: BigString }
   >
   interactionResource: TransformerFunction<TProps, TBehavior, DiscordInteractionResource, InteractionResource, { shardId?: number }>
   invite: TransformerFunction<TProps, TBehavior, DiscordInviteCreate | DiscordInviteMetadata, Invite, { shardId?: number }>
   inviteStageInstance: TransformerFunction<TProps, TBehavior, DiscordInviteStageInstance, InviteStageInstance, { guildId?: BigString }>
   lobby: TransformerFunction<TProps, TBehavior, DiscordLobby, Lobby>
   lobbyMember: TransformerFunction<TProps, TBehavior, DiscordLobbyMember, LobbyMember>
-  mediaGalleryItem: TransformerFunction<TProps, TBehavior, DiscordMediaGalleryItem, MediaGalleryItem, {}, 'unchanged'>
+  mediaGalleryItem: TransformerFunction<TProps, TBehavior, DiscordMediaGalleryItem, MediaGalleryItem>
   member: TransformerFunction<TProps, TBehavior, DiscordMember, Member, { guildId?: BigString; userId?: BigString }>
   message: TransformerFunction<TProps, TBehavior, DiscordMessage, Message, { shardId?: number }>
   messageCall: TransformerFunction<TProps, TBehavior, DiscordMessageCall, MessageCall>
@@ -320,7 +296,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   nameplate: TransformerFunction<TProps, TBehavior, DiscordNameplate, Nameplate>
   poll: TransformerFunction<TProps, TBehavior, DiscordPoll, Poll>
   pollMedia: TransformerFunction<TProps, TBehavior, DiscordPollMedia, PollMedia>
-  presence: TransformerFunction<TProps, TBehavior, DiscordPresenceUpdate, PresenceUpdate, {}, 'unchanged'>
+  presence: TransformerFunction<TProps, TBehavior, DiscordPresenceUpdate, PresenceUpdate>
   role: TransformerFunction<TProps, TBehavior, DiscordRole, Role, { guildId?: BigString }>
   roleColors: TransformerFunction<TProps, TBehavior, DiscordRoleColors, RoleColors>
   scheduledEvent: TransformerFunction<TProps, TBehavior, DiscordScheduledEvent, ScheduledEvent>
@@ -329,21 +305,21 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   soundboardSound: TransformerFunction<TProps, TBehavior, DiscordSoundboardSound, SoundboardSound>
   stageInstance: TransformerFunction<TProps, TBehavior, DiscordStageInstance, StageInstance>
   sticker: TransformerFunction<TProps, TBehavior, DiscordSticker, Sticker>
-  stickerPack: TransformerFunction<TProps, TBehavior, DiscordStickerPack, StickerPack, {}, 'unchanged'>
+  stickerPack: TransformerFunction<TProps, TBehavior, DiscordStickerPack, StickerPack>
   subscription: TransformerFunction<TProps, TBehavior, DiscordSubscription, Subscription>
-  team: TransformerFunction<TProps, TBehavior, DiscordTeam, Team, {}, 'unchanged'>
-  template: TransformerFunction<TProps, TBehavior, DiscordTemplate, Template, {}, 'unchanged'>
-  threadMember: TransformerFunction<TProps, TBehavior, DiscordThreadMember, ThreadMember, ThreadMemberTransformerExtra, 'unchanged'>
-  threadMemberGuildCreate: TransformerFunction<TProps, TBehavior, DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate, {}, 'unchanged'>
-  unfurledMediaItem: TransformerFunction<TProps, TBehavior, DiscordUnfurledMediaItem, UnfurledMediaItem, {}, 'unchanged'>
+  team: TransformerFunction<TProps, TBehavior, DiscordTeam, Team>
+  template: TransformerFunction<TProps, TBehavior, DiscordTemplate, Template>
+  threadMember: TransformerFunction<TProps, TBehavior, DiscordThreadMember, ThreadMember, ThreadMemberTransformerExtra>
+  threadMemberGuildCreate: TransformerFunction<TProps, TBehavior, DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate>
+  unfurledMediaItem: TransformerFunction<TProps, TBehavior, DiscordUnfurledMediaItem, UnfurledMediaItem>
   user: TransformerFunction<TProps, TBehavior, DiscordUser, User>
   userPrimaryGuild: TransformerFunction<TProps, TBehavior, DiscordUserPrimaryGuild, UserPrimaryGuild>
-  voiceRegion: TransformerFunction<TProps, TBehavior, DiscordVoiceRegion, VoiceRegion, {}, 'unchanged'>
+  voiceRegion: TransformerFunction<TProps, TBehavior, DiscordVoiceRegion, VoiceRegion>
   voiceState: TransformerFunction<TProps, TBehavior, DiscordVoiceState, VoiceState, { guildId?: BigString }>
   webhook: TransformerFunction<TProps, TBehavior, DiscordWebhook, Webhook>
-  welcomeScreen: TransformerFunction<TProps, TBehavior, DiscordWelcomeScreen, WelcomeScreen, {}, 'unchanged'>
-  widget: TransformerFunction<TProps, TBehavior, DiscordGuildWidget, GuildWidget, {}, 'unchanged'>
-  widgetSettings: TransformerFunction<TProps, TBehavior, DiscordGuildWidgetSettings, GuildWidgetSettings, {}, 'unchanged'>
+  welcomeScreen: TransformerFunction<TProps, TBehavior, DiscordWelcomeScreen, WelcomeScreen>
+  widget: TransformerFunction<TProps, TBehavior, DiscordGuildWidget, GuildWidget>
+  widgetSettings: TransformerFunction<TProps, TBehavior, DiscordGuildWidgetSettings, GuildWidgetSettings>
 }
 
 export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = TransformerFunctions<
@@ -555,20 +531,7 @@ export type TransformerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-  // Detecting what kind of transformation is being applied is actually pretty hard, so we just do it manually
-  TKind extends 'desired-props' | 'transform' | 'unchanged' = 'desired-props',
-> = (
-  bot: Bot<TProps, TBehavior>,
-  payload: TPayload,
-  extra?: TExtra,
-) => TKind extends 'desired-props'
-  ? TTransformed extends TransformersObjects[keyof TransformersObjects]
-    ? SetupDesiredProps<TTransformed, TProps, TBehavior>
-    : // As fair as i can tell, no transformer is actually in this case
-      'ERROR: Invalid transformer kind'
-  : TKind extends 'transform'
-    ? TransformProperty<TTransformed, TProps, TBehavior>
-    : TTransformed
+> = (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra) => SetupDesiredProps<TTransformed, TProps, TBehavior>
 
 export type TransformerCustomizerFunction<
   TProps extends TransformersDesiredProperties,
@@ -583,18 +546,10 @@ export type TransformerCustomizers<TProps extends TransformersDesiredProperties,
     TProps,
     TBehavior,
     infer TPayload,
-    infer _TTransformed,
-    infer TExtra,
-    infer _TKind
+    infer TTransformed,
+    infer TExtra
   >
-    ? TransformerCustomizerFunction<
-        TProps,
-        TBehavior,
-        TPayload,
-        // We use ReturnType instead of inferring the transformed value so we don't need to do the logic on the kind as well
-        ReturnType<Transformers<TProps, TBehavior>[K]>,
-        BigStringsToBigints<TExtra>
-      >
+    ? TransformerCustomizerFunction<TProps, TBehavior, TPayload, SetupDesiredProps<TTransformed, TProps, TBehavior>, BigStringsToBigints<TExtra>>
     : 'ERROR: Invalid transformer found'
 }
 
