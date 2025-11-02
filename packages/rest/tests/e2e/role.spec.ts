@@ -58,7 +58,7 @@ describe('Role tests', async () => {
       color: 0x0000ff,
       hoist: true,
       mentionable: true,
-      permissions: ['SEND_MESSAGES', 'VIEW_CHANNEL'],
+      permissions: calculateBits(['SEND_MESSAGES', 'VIEW_CHANNEL']),
     })
 
     expect(edited.name).to.equal('test role 4')
