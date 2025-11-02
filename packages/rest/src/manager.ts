@@ -235,7 +235,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             continue
           }
 
-          // Some falsy values should be allowed like null or 0
           if (value !== undefined) {
             switch (key) {
               case 'nameLocalizations':
