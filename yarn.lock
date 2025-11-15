@@ -121,7 +121,7 @@ __metadata:
     "@discordeno/rest": "workspace:^"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.8"
+    "@swc/cli": "npm:^0.7.9"
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -144,7 +144,7 @@ __metadata:
     "@biomejs/biome": "npm:2.3.1"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.8"
+    "@swc/cli": "npm:^0.7.9"
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -173,7 +173,7 @@ __metadata:
     "@biomejs/biome": "npm:2.3.1"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.8"
+    "@swc/cli": "npm:^0.7.9"
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
@@ -197,7 +197,7 @@ __metadata:
   resolution: "@discordeno/types@workspace:packages/types"
   dependencies:
     "@biomejs/biome": "npm:2.3.1"
-    "@swc/cli": "npm:^0.7.8"
+    "@swc/cli": "npm:^0.7.9"
     "@swc/core": "npm:^1.13.5"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.9.1"
@@ -215,7 +215,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:2.3.1"
     "@discordeno/types": "workspace:^"
-    "@swc/cli": "npm:^0.7.8"
+    "@swc/cli": "npm:^0.7.9"
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -563,9 +563,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/cli@npm:^0.7.8":
-  version: 0.7.8
-  resolution: "@swc/cli@npm:0.7.8"
+"@swc/cli@npm:^0.7.9":
+  version: 0.7.9
+  resolution: "@swc/cli@npm:0.7.9"
   dependencies:
     "@swc/counter": "npm:^0.1.3"
     "@xhmikosr/bin-wrapper": "npm:^13.0.5"
@@ -586,7 +586,7 @@ __metadata:
     spack: bin/spack.js
     swc: bin/swc.js
     swcx: bin/swcx.js
-  checksum: 10c0/b31380414800ae6820b228efb602083e7bcaf6e9d468011b211bb6b4f85a164fe96bfae54a16d8e8741a8d84e0a428a3750242b2ef8abc7dee50ae3e3d2fe5b9
+  checksum: 10c0/6b8cc41dd9a2230cef78a50550c77b09f987df33c057e2bd36d402f939f4c547a525e21a8fcff01551fc500901ecefff00389f69e32d1c11a9a77f598bd947e7
   languageName: node
   linkType: hard
 
@@ -1456,7 +1456,7 @@ __metadata:
     "@discordeno/rest": "workspace:^"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.8"
+    "@swc/cli": "npm:^0.7.9"
     "@swc/core": "npm:^1.13.5"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
