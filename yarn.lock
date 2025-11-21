@@ -126,10 +126,10 @@ __metadata:
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.10.1"
-    "@types/sinon": "npm:^17.0.4"
+    "@types/sinon": "npm:^21.0.0"
     c8: "npm:^10.1.3"
-    chai: "npm:^6.2.0"
-    mocha: "npm:^11.7.4"
+    chai: "npm:^6.2.1"
+    mocha: "npm:^11.7.5"
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -149,12 +149,12 @@ __metadata:
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.10.1"
-    "@types/sinon": "npm:^17.0.4"
+    "@types/sinon": "npm:^21.0.0"
     "@types/ws": "npm:^8.18.1"
     c8: "npm:^10.1.3"
-    chai: "npm:^6.2.0"
+    chai: "npm:^6.2.1"
     fzstd: "npm:^0.1.1"
-    mocha: "npm:^11.7.4"
+    mocha: "npm:^11.7.5"
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -179,12 +179,12 @@ __metadata:
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.10.1"
-    "@types/sinon": "npm:^17.0.4"
+    "@types/sinon": "npm:^21.0.0"
     c8: "npm:^10.1.3"
-    chai: "npm:^6.2.0"
+    chai: "npm:^6.2.1"
     chai-as-promised: "npm:^8.0.2"
     dotenv: "npm:^17.2.3"
-    mocha: "npm:^11.7.4"
+    mocha: "npm:^11.7.5"
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -202,7 +202,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.10.1"
     c8: "npm:^10.1.3"
-    mocha: "npm:^11.7.4"
+    mocha: "npm:^11.7.5"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^5.9.3"
@@ -220,10 +220,10 @@ __metadata:
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.10.1"
-    "@types/sinon": "npm:^17.0.4"
+    "@types/sinon": "npm:^21.0.0"
     c8: "npm:^10.1.3"
-    chai: "npm:^6.2.0"
-    mocha: "npm:^11.7.4"
+    chai: "npm:^6.2.1"
+    mocha: "npm:^11.7.5"
     sinon: "npm:^21.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -845,12 +845,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sinon@npm:^17.0.4":
-  version: 17.0.4
-  resolution: "@types/sinon@npm:17.0.4"
+"@types/sinon@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "@types/sinon@npm:21.0.0"
   dependencies:
     "@types/sinonjs__fake-timers": "npm:*"
-  checksum: 10c0/7c67ae1050d98a86d8dd771f0a764e97adb9d54812bf3b001195f8cfaa1e2bdfc725d5b970b91e7b0bb6b7c1ca209f47993f2c6f84f1f868313c37441313ca5b
+  checksum: 10c0/276d610b5f975eba875c207075d031389d9321d407ff2210106301471893e1198fe83798c507b241620f498735806ab729aaca59b51a340d31875e5d61e18d3a
   languageName: node
   linkType: hard
 
@@ -1235,10 +1235,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "chai@npm:6.2.0"
-  checksum: 10c0/a4b7d7f5907187e09f1847afa838d6d1608adc7d822031b7900813c4ed5d9702911ac2468bf290676f22fddb3d727b1be90b57c1d0a69b902534ee29cdc6ff8a
+"chai@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "chai@npm:6.2.1"
+  checksum: 10c0/0c2d84392d7c6d44ca5d14d94204f1760e22af68b83d1f4278b5c4d301dabfc0242da70954dd86b1eda01e438f42950de6cf9d569df2103678538e4014abe50b
   languageName: node
   linkType: hard
 
@@ -1439,7 +1439,7 @@ __metadata:
     "@biomejs/biome": "npm:2.3.7"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^16.2.6"
-    turbo: "npm:^2.6.0"
+    turbo: "npm:^2.6.1"
     typedoc: "npm:^0.28.14"
     typedoc-plugin-markdown: "npm:^4.9.0"
     typescript: "npm:^5.9.3"
@@ -1462,8 +1462,8 @@ __metadata:
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^24.10.1"
     c8: "npm:^10.1.3"
-    chai: "npm:^6.2.0"
-    mocha: "npm:^11.7.4"
+    chai: "npm:^6.2.1"
+    mocha: "npm:^11.7.5"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^5.9.3"
@@ -2238,9 +2238,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^11.7.4":
-  version: 11.7.4
-  resolution: "mocha@npm:11.7.4"
+"mocha@npm:^11.7.5":
+  version: 11.7.5
+  resolution: "mocha@npm:11.7.5"
   dependencies:
     browser-stdout: "npm:^1.3.1"
     chokidar: "npm:^4.0.1"
@@ -2266,7 +2266,7 @@ __metadata:
   bin:
     _mocha: bin/_mocha
     mocha: bin/mocha.js
-  checksum: 10c0/f84252dd93b7d67e20e3ca09c6be0da77d43795d502132a976450c5c19025de632bbaab6751dd1d8fd6311a3063d2f3647e61db84feb17900995d52e01cfb3b8
+  checksum: 10c0/e6150cba85345aaabbc5b2e7341b1e6706b878f5a9782960cad57fd4cc458730a76d08c5f1a3e05d3ebb49cad93b455764bb00727bd148dcaf0c6dd4fa665b3d
   languageName: node
   linkType: hard
 
@@ -2918,58 +2918,58 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"turbo-darwin-64@npm:2.6.0":
-  version: 2.6.0
-  resolution: "turbo-darwin-64@npm:2.6.0"
+"turbo-darwin-64@npm:2.6.1":
+  version: 2.6.1
+  resolution: "turbo-darwin-64@npm:2.6.1"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-darwin-arm64@npm:2.6.0":
-  version: 2.6.0
-  resolution: "turbo-darwin-arm64@npm:2.6.0"
+"turbo-darwin-arm64@npm:2.6.1":
+  version: 2.6.1
+  resolution: "turbo-darwin-arm64@npm:2.6.1"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-64@npm:2.6.0":
-  version: 2.6.0
-  resolution: "turbo-linux-64@npm:2.6.0"
+"turbo-linux-64@npm:2.6.1":
+  version: 2.6.1
+  resolution: "turbo-linux-64@npm:2.6.1"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm64@npm:2.6.0":
-  version: 2.6.0
-  resolution: "turbo-linux-arm64@npm:2.6.0"
+"turbo-linux-arm64@npm:2.6.1":
+  version: 2.6.1
+  resolution: "turbo-linux-arm64@npm:2.6.1"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-windows-64@npm:2.6.0":
-  version: 2.6.0
-  resolution: "turbo-windows-64@npm:2.6.0"
+"turbo-windows-64@npm:2.6.1":
+  version: 2.6.1
+  resolution: "turbo-windows-64@npm:2.6.1"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-windows-arm64@npm:2.6.0":
-  version: 2.6.0
-  resolution: "turbo-windows-arm64@npm:2.6.0"
+"turbo-windows-arm64@npm:2.6.1":
+  version: 2.6.1
+  resolution: "turbo-windows-arm64@npm:2.6.1"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "turbo@npm:2.6.0"
+"turbo@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "turbo@npm:2.6.1"
   dependencies:
-    turbo-darwin-64: "npm:2.6.0"
-    turbo-darwin-arm64: "npm:2.6.0"
-    turbo-linux-64: "npm:2.6.0"
-    turbo-linux-arm64: "npm:2.6.0"
-    turbo-windows-64: "npm:2.6.0"
-    turbo-windows-arm64: "npm:2.6.0"
+    turbo-darwin-64: "npm:2.6.1"
+    turbo-darwin-arm64: "npm:2.6.1"
+    turbo-linux-64: "npm:2.6.1"
+    turbo-linux-arm64: "npm:2.6.1"
+    turbo-windows-64: "npm:2.6.1"
+    turbo-windows-arm64: "npm:2.6.1"
   dependenciesMeta:
     turbo-darwin-64:
       optional: true
@@ -2985,7 +2985,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 10c0/736a11be685a5b2841102966574ee44ba068ddcea3201169b922f35e1c216b5550d658a7c755f19f594019e1128910c755b4c884bd59bf421285c17f1b3e1eef
+  checksum: 10c0/9875f8d85c5e1b26fbf95dec77b91a1f05ee4545b754469c6ddabe55759289bef02a08693380439d4443db72003e576df30b5852cbfa0da703c08b6e84c557a5
   languageName: node
   linkType: hard
 
