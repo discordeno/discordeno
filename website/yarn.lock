@@ -9442,23 +9442,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xyflow/react@npm:^12.9.2":
-  version: 12.9.2
-  resolution: "@xyflow/react@npm:12.9.2"
+"@xyflow/react@npm:^12.9.3":
+  version: 12.9.3
+  resolution: "@xyflow/react@npm:12.9.3"
   dependencies:
-    "@xyflow/system": "npm:0.0.72"
+    "@xyflow/system": "npm:0.0.73"
     classcat: "npm:^5.0.3"
     zustand: "npm:^4.4.0"
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 10c0/1cef85006f4581ce1b8bc077361661a789a1c127fd22676d24d3b54949cd195ccbbbaf0199b553acc8e139d4d845aeab3fc4f86f25545ac52a4145fe94c8631c
+  checksum: 10c0/aa6b6503fd3e80d21b5d77db9c1365a7df4eba662796c214520cd1004e783d88e390f8030a7b7860feb966b268fecba3980ca42eabe0427b1118b18c3204a9a3
   languageName: node
   linkType: hard
 
-"@xyflow/system@npm:0.0.72":
-  version: 0.0.72
-  resolution: "@xyflow/system@npm:0.0.72"
+"@xyflow/system@npm:0.0.73":
+  version: 0.0.73
+  resolution: "@xyflow/system@npm:0.0.73"
   dependencies:
     "@types/d3-drag": "npm:^3.0.7"
     "@types/d3-interpolate": "npm:^3.0.4"
@@ -9469,7 +9469,7 @@ __metadata:
     d3-interpolate: "npm:^3.0.1"
     d3-selection: "npm:^3.0.0"
     d3-zoom: "npm:^3.0.0"
-  checksum: 10c0/832f2b0bacb8bd4403e9c5ec8a205758b1ee54dc2bcf580477f2b7de1a01accca0485a32b7dedfc13da7893f4be914b486882ce6481a151b86a29b1ba1579a6d
+  checksum: 10c0/41b4a42b22d0ce68a07e9620ccd7e7e5f90d1aaabc37046dbc51d502c71a0085fa4266676de33d375ee5968c73c1c0bda851f7cf895cdcfdf88b046d228d8581
   languageName: node
   linkType: hard
 
@@ -20802,7 +20802,7 @@ __metadata:
     "@easyops-cn/docusaurus-search-local": "npm:^0.52.1"
     "@mdx-js/react": "npm:^3.1.1"
     "@types/react": "npm:^19.2.2"
-    "@xyflow/react": "npm:^12.9.2"
+    "@xyflow/react": "npm:^12.9.3"
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
