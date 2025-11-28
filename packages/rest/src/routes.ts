@@ -2,29 +2,34 @@ import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/typ
 import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils'
 import type { RestRoutes } from './typings/routes.js'
 
+// The types for encodeURIComponent do not allow for bigint, however it does support it.
+// The specification for this function states that the first step it performs is to convert the input to a string: "1. Let componentString be ? ToString(uriComponent)."
+// https://tc39.es/ecma262/multipage/global-object.html#sec-encodeuricomponent-uricomponent
+const encode = encodeURIComponent as (uriComponent: string | number | bigint | boolean) => string
+
 export function createRoutes(): RestRoutes {
   return {
     webhooks: {
       id: (webhookId) => {
-        return `/webhooks/${webhookId}`
+        return `/webhooks/${encode(webhookId)}`
       },
       message: (webhookId, token, messageId, options) => {
-        let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
+        let url = `/webhooks/${encode(webhookId)}/${encode(token)}/messages/${encode(messageId)}?`
 
         if (options) {
-          if (options.threadId) url += `thread_id=${options.threadId}`
-          if (options.withComponents) url += `&with_components=${options.withComponents}`
+          if (options.threadId) url += `thread_id=${encode(options.threadId)}`
+          if (options.withComponents) url += `&with_components=${encode(options.withComponents)}`
         }
 
         return url
       },
       webhook: (webhookId, token, options) => {
-        let url = `/webhooks/${webhookId}/${token}?`
+        let url = `/webhooks/${encode(webhookId)}/${encode(token)}?`
 
         if (options) {
-          if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
-          if (options.threadId) url += `&thread_id=${options.threadId}`
-          if (options.withComponents) url += `&with_components=${options.withComponents}`
+          if (options?.wait !== undefined) url += `wait=${encode(options.wait)}`
+          if (options.threadId) url += `&thread_id=${encode(options.threadId)}`
+          if (options.withComponents) url += `&with_components=${encode(options.withComponents)}`
         }
 
         return url
@@ -34,106 +39,104 @@ export function createRoutes(): RestRoutes {
     // Channel Endpoints
     channels: {
       bulk: (channelId) => {
-        return `/channels/${channelId}/messages/bulk-delete`
+        return `/channels/${encode(channelId)}/messages/bulk-delete`
       },
       dm: () => {
         return '/users/@me/channels'
       },
       dmRecipient: (channelId, userId) => {
-        return `/channels/${channelId}/recipients/${userId}`
+        return `/channels/${encode(channelId)}/recipients/${encode(userId)}`
       },
       pin: (channelId, messageId) => {
-        return `/channels/${channelId}/pins/${messageId}`
+        return `/channels/${encode(channelId)}/pins/${encode(messageId)}`
       },
       pins: (channelId) => {
-        return `/channels/${channelId}/pins`
+        return `/channels/${encode(channelId)}/pins`
       },
       messagePins: (channelId, options) => {
-        let url = `/channels/${channelId}/messages/pins?`
+        let url = `/channels/${encode(channelId)}/messages/pins?`
 
         if (options) {
-          if (options.before) url += `before=${options.before}`
-          if (options.limit) url += `&limit=${options.limit}`
+          if (options.before) url += `before=${encode(options.before)}`
+          if (options.limit) url += `&limit=${encode(options.limit)}`
         }
 
         return url
       },
       messagePin: (channelId, messageId) => {
-        return `/channels/${channelId}/messages/pins/${messageId}`
+        return `/channels/${encode(channelId)}/messages/pins/${encode(messageId)}`
       },
       reactions: {
         bot: (channelId, messageId, emoji) => {
-          return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}/@me`
         },
         user: (channelId, messageId, emoji, userId) => {
-          return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/${userId}`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}/${encode(userId)}`
         },
         all: (channelId, messageId) => {
-          return `/channels/${channelId}/messages/${messageId}/reactions`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions`
         },
         emoji: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}?`
 
           if (options) {
-            if (options.type) url += `type=${options.type}`
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            if (options.after) url += `&after=${options.after}`
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            if (options.limit) url += `&limit=${options.limit}`
+            if (options.type) url += `type=${encode(options.type)}`
+            if (options.after) url += `&after=${encode(options.after)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
           }
 
           return url
         },
         message: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}?`
 
           if (options) {
-            if (options.after) url += `after=${options.after}`
-            if (options.limit) url += `&limit=${options.limit}`
+            if (options.after) url += `after=${encode(options.after)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
           }
 
           return url
         },
       },
       webhooks: (channelId) => {
-        return `/channels/${channelId}/webhooks`
+        return `/channels/${encode(channelId)}/webhooks`
       },
 
       channel: (channelId) => {
-        return `/channels/${channelId}`
+        return `/channels/${encode(channelId)}`
       },
 
       follow: (channelId) => {
-        return `/channels/${channelId}/followers`
+        return `/channels/${encode(channelId)}/followers`
       },
 
       forum: (channelId) => {
-        return `/channels/${channelId}/threads`
+        return `/channels/${encode(channelId)}/threads`
       },
 
       invites: (channelId) => {
-        return `/channels/${channelId}/invites`
+        return `/channels/${encode(channelId)}/invites`
       },
 
       message: (channelId, messageId) => {
-        return `/channels/${channelId}/messages/${messageId}`
+        return `/channels/${encode(channelId)}/messages/${encode(messageId)}`
       },
 
       messages: (channelId, options?: GetMessagesOptions) => {
-        let url = `/channels/${channelId}/messages?`
+        let url = `/channels/${encode(channelId)}/messages?`
 
         if (options) {
           if (isGetMessagesAfter(options) && options.after) {
-            url += `after=${options.after}`
+            url += `after=${encode(options.after)}`
           }
           if (isGetMessagesBefore(options) && options.before) {
-            url += `&before=${options.before}`
+            url += `&before=${encode(options.before)}`
           }
           if (isGetMessagesAround(options) && options.around) {
-            url += `&around=${options.around}`
+            url += `&around=${encode(options.around)}`
           }
           if (isGetMessagesLimit(options) && options.limit) {
-            url += `&limit=${options.limit}`
+            url += `&limit=${encode(options.limit)}`
           }
         }
 
@@ -141,11 +144,11 @@ export function createRoutes(): RestRoutes {
       },
 
       overwrite: (channelId, overwriteId) => {
-        return `/channels/${channelId}/permissions/${overwriteId}`
+        return `/channels/${encode(channelId)}/permissions/${encode(overwriteId)}`
       },
 
       crosspost: (channelId, messageId) => {
-        return `/channels/${channelId}/messages/${messageId}/crosspost`
+        return `/channels/${encode(channelId)}/messages/${encode(messageId)}/crosspost`
       },
 
       stages: () => {
@@ -153,81 +156,84 @@ export function createRoutes(): RestRoutes {
       },
 
       stage: (channelId) => {
-        return `/stage-instances/${channelId}`
+        return `/stage-instances/${encode(channelId)}`
       },
 
       // Thread Endpoints
       threads: {
         message: (channelId, messageId) => {
-          return `/channels/${channelId}/messages/${messageId}/threads`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/threads`
         },
         all: (channelId) => {
-          return `/channels/${channelId}/threads`
+          return `/channels/${encode(channelId)}/threads`
         },
         active: (guildId) => {
-          return `/guilds/${guildId}/threads/active`
+          return `/guilds/${encode(guildId)}/threads/active`
         },
         members: (channelId, options) => {
-          let url = `/channels/${channelId}/thread-members?`
+          let url = `/channels/${encode(channelId)}/thread-members?`
 
           if (options) {
-            if (options.withMember) url += `with_member=${options.withMember}`
-            if (options.limit) url += `&limit=${options.limit}`
-            if (options.after) url += `&after=${options.after}`
+            if (options.withMember) url += `with_member=${encode(options.withMember)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.after) url += `&after=${encode(options.after)}`
           }
 
           return url
         },
         me: (channelId) => {
-          return `/channels/${channelId}/thread-members/@me`
+          return `/channels/${encode(channelId)}/thread-members/@me`
         },
         getUser(channelId, userId, options) {
-          let url = `/channels/${channelId}/thread-members/${userId}?`
+          let url = `/channels/${encode(channelId)}/thread-members/${encode(userId)}?`
 
           if (options) {
-            if (options.withMember) url += `with_member=${options.withMember}`
+            if (options.withMember) url += `with_member=${encode(options.withMember)}`
           }
 
           return url
         },
         user: (channelId, userId) => {
-          return `/channels/${channelId}/thread-members/${userId}`
+          return `/channels/${encode(channelId)}/thread-members/${encode(userId)}`
         },
         archived: (channelId) => {
-          return `/channels/${channelId}/threads/archived`
+          return `/channels/${encode(channelId)}/threads/archived`
         },
         public: (channelId, options) => {
-          let url = `/channels/${channelId}/threads/archived/public?`
+          let url = `/channels/${encode(channelId)}/threads/archived/public?`
 
           if (options) {
             if (options.before) {
-              url += `before=${new Date(options.before).toISOString()}`
+              const iso = new Date(options.before).toISOString()
+              url += `before=${encode(iso)}`
             }
-            if (options.limit) url += `&limit=${options.limit}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
           }
 
           return url
         },
         private: (channelId, options) => {
-          let url = `/channels/${channelId}/threads/archived/private?`
+          let url = `/channels/${encode(channelId)}/threads/archived/private?`
 
           if (options) {
             if (options.before) {
-              url += `before=${new Date(options.before).toISOString()}`
+              const iso = new Date(options.before).toISOString()
+              url += `before=${encode(iso)}`
             }
-            if (options.limit) url += `&limit=${options.limit}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
           }
 
           return url
         },
         joined: (channelId, options) => {
-          let url = `/channels/${channelId}/users/@me/threads/archived/private?`
+          let url = `/channels/${encode(channelId)}/users/@me/threads/archived/private?`
 
           if (options) {
             if (options.before) {
-              url += `before=${new Date(options.before).toISOString()}`
+              const iso = new Date(options.before).toISOString()
+              url += `before=${encode(iso)}`
             }
-            if (options.limit) url += `&limit=${options.limit}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
           }
 
           return url
@@ -235,22 +241,22 @@ export function createRoutes(): RestRoutes {
       },
 
       typing: (channelId) => {
-        return `/channels/${channelId}/typing`
+        return `/channels/${encode(channelId)}/typing`
       },
 
       polls: {
         votes: (channelId, messageId, answerId, options) => {
-          let url = `/channels/${channelId}/polls/${messageId}/answers/${answerId}?`
+          let url = `/channels/${encode(channelId)}/polls/${encode(messageId)}/answers/${encode(answerId)}?`
 
           if (options) {
-            if (options.after) url += `after=${options.after}`
-            if (options.limit) url += `&limit=${options.limit}`
+            if (options.after) url += `after=${encode(options.after)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`
           }
 
           return url
         },
         expire: (channelId, messageId) => {
-          return `/channels/${channelId}/polls/${messageId}/expire`
+          return `/channels/${encode(channelId)}/polls/${encode(messageId)}/expire`
         },
       },
     },
@@ -264,167 +270,167 @@ export function createRoutes(): RestRoutes {
         let url = '/users/@me/guilds?'
 
         if (options) {
-          if (options.after) url += `after=${options.after}`
-          if (options.before) url += `&before=${options.before}`
-          if (options.limit) url += `&limit=${options.limit}`
-          if (options.withCounts) url += `&with_counts=${options.withCounts}`
+          if (options.after) url += `after=${encode(options.after)}`
+          if (options.before) url += `&before=${encode(options.before)}`
+          if (options.limit) url += `&limit=${encode(options.limit)}`
+          if (options.withCounts) url += `&with_counts=${encode(options.withCounts)}`
         }
 
         return url
       },
       auditlogs: (guildId, options) => {
-        let url = `/guilds/${guildId}/audit-logs?`
+        let url = `/guilds/${encode(guildId)}/audit-logs?`
 
         if (options) {
-          if (options.actionType) url += `action_type=${options.actionType}`
-          if (options.before) url += `&before=${options.before}`
-          if (options.after) url += `&after=${options.after}`
-          if (options.limit) url += `&limit=${options.limit}`
-          if (options.userId) url += `&user_id=${options.userId}`
+          if (options.actionType) url += `action_type=${encode(options.actionType)}`
+          if (options.before) url += `&before=${encode(options.before)}`
+          if (options.after) url += `&after=${encode(options.after)}`
+          if (options.limit) url += `&limit=${encode(options.limit)}`
+          if (options.userId) url += `&user_id=${encode(options.userId)}`
         }
 
         return url
       },
       automod: {
         rule: (guildId, ruleId) => {
-          return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`
+          return `/guilds/${encode(guildId)}/auto-moderation/rules/${encode(ruleId)}`
         },
         rules: (guildId) => {
-          return `/guilds/${guildId}/auto-moderation/rules`
+          return `/guilds/${encode(guildId)}/auto-moderation/rules`
         },
       },
       channels: (guildId) => {
-        return `/guilds/${guildId}/channels`
+        return `/guilds/${encode(guildId)}/channels`
       },
       emoji: (guildId, emojiId) => {
-        return `/guilds/${guildId}/emojis/${emojiId}`
+        return `/guilds/${encode(guildId)}/emojis/${encode(emojiId)}`
       },
       emojis: (guildId) => {
-        return `/guilds/${guildId}/emojis`
+        return `/guilds/${encode(guildId)}/emojis`
       },
       events: {
         events: (guildId, withUserCount?: boolean) => {
-          let url = `/guilds/${guildId}/scheduled-events?`
+          let url = `/guilds/${encode(guildId)}/scheduled-events?`
 
           if (withUserCount !== undefined) {
-            url += `with_user_count=${withUserCount.toString()}`
+            url += `with_user_count=${encode(withUserCount)}`
           }
           return url
         },
         event: (guildId, eventId, withUserCount?: boolean) => {
-          let url = `/guilds/${guildId}/scheduled-events/${eventId}`
+          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}`
 
           if (withUserCount !== undefined) {
-            url += `with_user_count=${withUserCount.toString()}`
+            url += `with_user_count=${encode(withUserCount)}`
           }
 
           return url
         },
         users: (guildId, eventId, options?: GetScheduledEventUsers) => {
-          let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
+          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}/users?`
 
           if (options) {
-            if (options.limit !== undefined) url += `limit=${options.limit}`
+            if (options.limit !== undefined) url += `limit=${encode(options.limit)}`
             if (options.withMember !== undefined) {
-              url += `&with_member=${options.withMember.toString()}`
+              url += `&with_member=${encode(options.withMember)}`
             }
-            if (options.after !== undefined) url += `&after=${options.after}`
-            if (options.before !== undefined) url += `&before=${options.before}`
+            if (options.after !== undefined) url += `&after=${encode(options.after)}`
+            if (options.before !== undefined) url += `&before=${encode(options.before)}`
           }
 
           return url
         },
       },
       guild(guildId, withCounts) {
-        let url = `/guilds/${guildId}?`
+        let url = `/guilds/${encode(guildId)}?`
 
         if (withCounts !== undefined) {
-          url += `with_counts=${withCounts.toString()}`
+          url += `with_counts=${encode(withCounts)}`
         }
 
         return url
       },
       integration(guildId, integrationId) {
-        return `/guilds/${guildId}/integrations/${integrationId}`
+        return `/guilds/${encode(guildId)}/integrations/${encode(integrationId)}`
       },
       integrations: (guildId) => {
-        return `/guilds/${guildId}/integrations?include_applications=true`
+        return `/guilds/${encode(guildId)}/integrations?include_applications=true`
       },
       invite(inviteCode, options) {
-        let url = `/invites/${inviteCode}?`
+        let url = `/invites/${encode(inviteCode)}?`
 
         if (options) {
           if (options.withCounts !== undefined) {
-            url += `with_counts=${options.withCounts.toString()}`
+            url += `with_counts=${encode(options.withCounts)}`
           }
           if (options.scheduledEventId) {
-            url += `&guild_scheduled_event_id=${options.scheduledEventId}`
+            url += `&guild_scheduled_event_id=${encode(options.scheduledEventId)}`
           }
         }
 
         return url
       },
       invites: (guildId) => {
-        return `/guilds/${guildId}/invites`
+        return `/guilds/${encode(guildId)}/invites`
       },
       leave: (guildId) => {
-        return `/users/@me/guilds/${guildId}`
+        return `/users/@me/guilds/${encode(guildId)}`
       },
       members: {
         ban: (guildId, userId) => {
-          return `/guilds/${guildId}/bans/${userId}`
+          return `/guilds/${encode(guildId)}/bans/${encode(userId)}`
         },
         bans: (guildId, options) => {
-          let url = `/guilds/${guildId}/bans?`
+          let url = `/guilds/${encode(guildId)}/bans?`
 
           if (options) {
-            if (options.limit) url += `limit=${options.limit}`
-            if (options.after) url += `&after=${options.after}`
-            if (options.before) url += `&before=${options.before}`
+            if (options.limit) url += `limit=${encode(options.limit)}`
+            if (options.after) url += `&after=${encode(options.after)}`
+            if (options.before) url += `&before=${encode(options.before)}`
           }
 
           return url
         },
         bulkBan: (guildId) => {
-          return `/guilds/${guildId}/bulk-ban`
+          return `/guilds/${encode(guildId)}/bulk-ban`
         },
         bot: (guildId) => {
-          return `/guilds/${guildId}/members/@me`
+          return `/guilds/${encode(guildId)}/members/@me`
         },
         member: (guildId, userId) => {
-          return `/guilds/${guildId}/members/${userId}`
+          return `/guilds/${encode(guildId)}/members/${encode(userId)}`
         },
         currentMember: (guildId) => {
-          return `/users/@me/guilds/${guildId}/member`
+          return `/users/@me/guilds/${encode(guildId)}/member`
         },
         members: (guildId, options) => {
-          let url = `/guilds/${guildId}/members?`
+          let url = `/guilds/${encode(guildId)}/members?`
 
           if (options !== undefined) {
-            if (options.limit) url += `limit=${options.limit}`
-            if (options.after) url += `&after=${options.after}`
+            if (options.limit) url += `limit=${encode(options.limit)}`
+            if (options.after) url += `&after=${encode(options.after)}`
           }
 
           return url
         },
         search: (guildId, query, options) => {
-          let url = `/guilds/${guildId}/members/search?query=${encodeURIComponent(query)}`
+          let url = `/guilds/${encode(guildId)}/members/search?query=${encode(query)}`
 
           if (options) {
-            if (options.limit !== undefined) url += `&limit=${options.limit}`
+            if (options.limit !== undefined) url += `&limit=${encode(options.limit)}`
           }
 
           return url
         },
         prune: (guildId, options) => {
-          let url = `/guilds/${guildId}/prune?`
+          let url = `/guilds/${encode(guildId)}/prune?`
 
           if (options) {
-            if (options.days) url += `days=${options.days}`
+            if (options.days) url += `days=${encode(options.days)}`
             if (Array.isArray(options.includeRoles)) {
-              url += `&include_roles=${options.includeRoles.join(',')}`
+              url += `&include_roles=${encode(options.includeRoles.join(','))}`
             } else if (options.includeRoles) {
-              url += `&include_roles=${options.includeRoles}`
+              url += `&include_roles=${encode(options.includeRoles)}`
             }
           }
 
@@ -432,17 +438,17 @@ export function createRoutes(): RestRoutes {
         },
       },
       preview: (guildId) => {
-        return `/guilds/${guildId}/preview`
+        return `/guilds/${encode(guildId)}/preview`
       },
       prune: (guildId, options) => {
-        let url = `/guilds/${guildId}/prune?`
+        let url = `/guilds/${encode(guildId)}/prune?`
 
         if (options) {
-          if (options.days) url += `days=${options.days}`
+          if (options.days) url += `days=${encode(options.days)}`
           if (Array.isArray(options.includeRoles)) {
-            url += `&include_roles=${options.includeRoles.join(',')}`
+            url += `&include_roles=${encode(options.includeRoles.join(','))}`
           } else if (options.includeRoles) {
-            url += `&include_roles=${options.includeRoles}`
+            url += `&include_roles=${encode(options.includeRoles)}`
           }
         }
 
@@ -450,63 +456,63 @@ export function createRoutes(): RestRoutes {
       },
       roles: {
         one: (guildId, roleId) => {
-          return `/guilds/${guildId}/roles/${roleId}`
+          return `/guilds/${encode(guildId)}/roles/${encode(roleId)}`
         },
         all: (guildId) => {
-          return `/guilds/${guildId}/roles`
+          return `/guilds/${encode(guildId)}/roles`
         },
         member: (guildId, memberId, roleId) => {
-          return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`
+          return `/guilds/${encode(guildId)}/members/${encode(memberId)}/roles/${encode(roleId)}`
         },
       },
       stickers: (guildId) => {
-        return `/guilds/${guildId}/stickers`
+        return `/guilds/${encode(guildId)}/stickers`
       },
       sticker: (guildId, stickerId) => {
-        return `/guilds/${guildId}/stickers/${stickerId}`
+        return `/guilds/${encode(guildId)}/stickers/${encode(stickerId)}`
       },
       voice: (guildId, userId) => {
-        return `/guilds/${guildId}/voice-states/${userId ?? '@me'}`
+        return `/guilds/${encode(guildId)}/voice-states/${encode(userId ?? '@me')}`
       },
       templates: {
         code: (code) => {
-          return `/guilds/templates/${code}`
+          return `/guilds/templates/${encode(code)}`
         },
         guild: (guildId, code) => {
-          return `/guilds/${guildId}/templates/${code}`
+          return `/guilds/${encode(guildId)}/templates/${encode(code)}`
         },
         all: (guildId) => {
-          return `/guilds/${guildId}/templates`
+          return `/guilds/${encode(guildId)}/templates`
         },
       },
       vanity: (guildId) => {
-        return `/guilds/${guildId}/vanity-url`
+        return `/guilds/${encode(guildId)}/vanity-url`
       },
       regions: (guildId) => {
-        return `/guilds/${guildId}/regions`
+        return `/guilds/${encode(guildId)}/regions`
       },
       webhooks: (guildId) => {
-        return `/guilds/${guildId}/webhooks`
+        return `/guilds/${encode(guildId)}/webhooks`
       },
       welcome: (guildId) => {
-        return `/guilds/${guildId}/welcome-screen`
+        return `/guilds/${encode(guildId)}/welcome-screen`
       },
       widget: (guildId) => {
-        return `/guilds/${guildId}/widget`
+        return `/guilds/${encode(guildId)}/widget`
       },
       widgetJson: (guildId) => {
-        return `/guilds/${guildId}/widget.json`
+        return `/guilds/${encode(guildId)}/widget.json`
       },
       onboarding: (guildId) => {
-        return `/guilds/${guildId}/onboarding`
+        return `/guilds/${encode(guildId)}/onboarding`
       },
       incidentActions: (guildId) => {
-        return `/guilds/${guildId}/incident-actions`
+        return `/guilds/${encode(guildId)}/incident-actions`
       },
     },
 
     sticker: (stickerId) => {
-      return `/stickers/${stickerId}`
+      return `/stickers/${encode(stickerId)}`
     },
 
     regions: () => {
@@ -518,10 +524,10 @@ export function createRoutes(): RestRoutes {
       commands: {
         // Application Endpoints
         commands: (applicationId, withLocalizations) => {
-          let url = `/applications/${applicationId}/commands?`
+          let url = `/applications/${encode(applicationId)}/commands?`
 
           if (withLocalizations !== undefined) {
-            url += `with_localizations=${withLocalizations.toString()}`
+            url += `with_localizations=${encode(withLocalizations)}`
           }
 
           return url
@@ -529,30 +535,30 @@ export function createRoutes(): RestRoutes {
 
         guilds: {
           all(applicationId, guildId, withLocalizations) {
-            let url = `/applications/${applicationId}/guilds/${guildId}/commands?`
+            let url = `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands?`
 
             if (withLocalizations !== undefined) {
-              url += `with_localizations=${withLocalizations.toString()}`
+              url += `with_localizations=${encode(withLocalizations)}`
             }
 
             return url
           },
 
           one(applicationId, guildId, commandId) {
-            return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`
+            return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/${encode(commandId)}`
           },
         },
         permissions: (applicationId, guildId) => {
-          return `/applications/${applicationId}/guilds/${guildId}/commands/permissions`
+          return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/permissions`
         },
         permission: (applicationId, guildId, commandId) => {
-          return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}/permissions`
+          return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/${encode(commandId)}/permissions`
         },
         command: (applicationId, commandId, withLocalizations) => {
-          let url = `/applications/${applicationId}/commands/${commandId}?`
+          let url = `/applications/${encode(applicationId)}/commands/${encode(commandId)}?`
 
           if (withLocalizations !== undefined) {
-            url += `withLocalizations=${withLocalizations.toString()}`
+            url += `withLocalizations=${encode(withLocalizations)}`
           }
 
           return url
@@ -562,13 +568,13 @@ export function createRoutes(): RestRoutes {
       responses: {
         // Interaction Endpoints
         callback: (interactionId, token, options) => {
-          return `/interactions/${interactionId}/${token}/callback?with_response=${!!options?.withResponse}`
+          return `/interactions/${encode(interactionId)}/${encode(token)}/callback?with_response=${encode(!!options?.withResponse)}`
         },
         original: (interactionId, token) => {
-          return `/webhooks/${interactionId}/${token}/messages/@original`
+          return `/webhooks/${encode(interactionId)}/${encode(token)}/messages/@original`
         },
         message: (applicationId, token, messageId) => {
-          return `/webhooks/${applicationId}/${token}/messages/${messageId}`
+          return `/webhooks/${encode(applicationId)}/${encode(token)}/messages/${encode(messageId)}`
         },
       },
     },
@@ -591,49 +597,49 @@ export function createRoutes(): RestRoutes {
         return '/users/@me/connections'
       },
       roleConnections: (applicationId) => {
-        return `/users/@me/applications/${applicationId}/role-connection`
+        return `/users/@me/applications/${encode(applicationId)}/role-connection`
       },
     },
 
     monetization: {
       entitlements: (applicationId, options) => {
-        let url = `/applications/${applicationId}/entitlements?`
+        let url = `/applications/${encode(applicationId)}/entitlements?`
 
         if (options) {
-          if (options.after) url += `after=${options.after}`
-          if (options.before) url += `&before=${options.before}`
-          if (options.excludeEnded) url += `&exclude_ended=${options.excludeEnded}`
-          if (options.guildId) url += `&guild_id=${options.guildId}`
-          if (options.limit) url += `&limit=${options.limit}`
-          if (options.skuIds) url += `&sku_ids=${options.skuIds.join(',')}`
-          if (options.userId) url += `&user_id=${options.userId}`
+          if (options.after) url += `after=${encode(options.after)}`
+          if (options.before) url += `&before=${encode(options.before)}`
+          if (options.excludeEnded) url += `&exclude_ended=${encode(options.excludeEnded)}`
+          if (options.guildId) url += `&guild_id=${encode(options.guildId)}`
+          if (options.limit) url += `&limit=${encode(options.limit)}`
+          if (options.skuIds) url += `&sku_ids=${encode(options.skuIds.join(','))}`
+          if (options.userId) url += `&user_id=${encode(options.userId)}`
         }
 
         return url
       },
       entitlement: (applicationId, entitlementId) => {
-        return `/applications/${applicationId}/entitlements/${entitlementId}`
+        return `/applications/${encode(applicationId)}/entitlements/${encode(entitlementId)}`
       },
       consumeEntitlement: (applicationId, entitlementId) => {
-        return `/applications/${applicationId}/entitlements/${entitlementId}/consume`
+        return `/applications/${encode(applicationId)}/entitlements/${encode(entitlementId)}/consume`
       },
 
       skus: (applicationId) => {
-        return `/applications/${applicationId}/skus`
+        return `/applications/${encode(applicationId)}/skus`
       },
 
       subscription: (skuId, subscriptionId) => {
-        return `/skus/${skuId}/subscriptions/${subscriptionId}`
+        return `/skus/${encode(skuId)}/subscriptions/${encode(subscriptionId)}`
       },
 
       subscriptions: (skuId, options) => {
-        let url = `/skus/${skuId}/subscriptions?`
+        let url = `/skus/${encode(skuId)}/subscriptions?`
 
         if (options) {
-          if (options.after) url += `after=${options.after}`
-          if (options.before) url += `&before=${options.before}`
-          if (options.userId) url += `&user_id=${options.userId}`
-          if (options.limit) url += `&limit=${options.limit}`
+          if (options.after) url += `after=${encode(options.after)}`
+          if (options.before) url += `&before=${encode(options.before)}`
+          if (options.userId) url += `&user_id=${encode(options.userId)}`
+          if (options.limit) url += `&limit=${encode(options.limit)}`
         }
 
         return url
@@ -642,16 +648,16 @@ export function createRoutes(): RestRoutes {
 
     soundboard: {
       sendSound: (channelId) => {
-        return `/channels/${channelId}`
+        return `/channels/${encode(channelId)}`
       },
       listDefault: () => {
         return `/soundboard-default-sounds`
       },
       guildSounds: (guildId) => {
-        return `/guilds/${guildId}/soundboard-sounds`
+        return `/guilds/${encode(guildId)}/soundboard-sounds`
       },
       guildSound: (guildId, soundId) => {
-        return `/guilds/${guildId}/soundboard-sounds/${soundId}`
+        return `/guilds/${encode(guildId)}/soundboard-sounds/${encode(soundId)}`
       },
     },
 
@@ -661,37 +667,37 @@ export function createRoutes(): RestRoutes {
       },
 
       lobby: (lobbyId) => {
-        return `/lobbies/${lobbyId}`
+        return `/lobbies/${encode(lobbyId)}`
       },
 
       member: (lobbyId, userId) => {
-        return `/lobbies/${lobbyId}/members/${userId}`
+        return `/lobbies/${encode(lobbyId)}/members/${encode(userId)}`
       },
 
       leave: (lobbyId) => {
-        return `/lobbies/${lobbyId}/members/@me`
+        return `/lobbies/${encode(lobbyId)}/members/@me`
       },
 
       link: (lobbyId) => {
-        return `/lobbies/${lobbyId}/channel-linking`
+        return `/lobbies/${encode(lobbyId)}/channel-linking`
       },
     },
 
     applicationEmoji(applicationId, emojiId) {
-      return `/applications/${applicationId}/emojis/${emojiId}`
+      return `/applications/${encode(applicationId)}/emojis/${encode(emojiId)}`
     },
 
     applicationEmojis(applicationId) {
-      return `/applications/${applicationId}/emojis`
+      return `/applications/${encode(applicationId)}/emojis`
     },
 
     applicationRoleConnectionMetadata(applicationId) {
-      return `/applications/${applicationId}/role-connections/metadata`
+      return `/applications/${encode(applicationId)}/role-connections/metadata`
     },
 
     // User endpoints
     user(userId) {
-      return `/users/${userId}`
+      return `/users/${encode(userId)}`
     },
 
     application() {
@@ -699,7 +705,7 @@ export function createRoutes(): RestRoutes {
     },
 
     applicationActivityInstance(applicationId, instanceId) {
-      return `/applications/${applicationId}/activity-instances/${instanceId}`
+      return `/applications/${encode(applicationId)}/activity-instances/${encode(instanceId)}`
     },
 
     currentUser() {
@@ -711,7 +717,7 @@ export function createRoutes(): RestRoutes {
     },
 
     stickerPack(stickerPackId) {
-      return `/sticker-packs/${stickerPackId}`
+      return `/sticker-packs/${encode(stickerPackId)}`
     },
 
     stickerPacks() {
