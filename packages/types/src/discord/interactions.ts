@@ -206,7 +206,7 @@ export interface DiscordMessageInteraction {
 export enum InteractionResponseTypes {
   /** ACK a `Ping` */
   Pong = 1,
-  /** Respond to an interaction with a message */
+  /** Reply to an interaction with a message */
   ChannelMessageWithSource = 4,
   /** ACK an interaction and edit a response later, the user sees a loading state */
   DeferredChannelMessageWithSource = 5,
@@ -219,7 +219,7 @@ export enum InteractionResponseTypes {
   /** For Command or Component interactions, send a Modal response */
   Modal = 9,
   /**
-   * Respond to an interaction with an upgrade button, only available for apps with monetization enabled
+   * Reply to an interaction with an upgrade button, only available for apps with monetization enabled
    *
    * @deprecated You should migrate to the premium button components
    */
