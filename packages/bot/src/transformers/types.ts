@@ -358,11 +358,57 @@ export interface AutoModerationRule {
 }
 
 export interface AutoModerationRuleTriggerMetadata {
+  /**
+   * Substrings which will be searched for in content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Can have up to 1000 elements in the array and each string can have up to 60 characters.
+   */
   keywordFilter?: string[]
+  /**
+   * Regular expression patterns which will be matched against content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
+   */
+  regexPatterns?: string[]
+  /**
+   * The Discord pre-defined wordsets which will be searched for in content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+   */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+  /**
+   * The substrings which should not trigger the rule.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
+   * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
+   */
   allowList?: string[]
+  /**
+   * Total number of unique role and user mentions allowed per message.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   *
+   * Maximum of 50
+   */
   mentionTotalLimit?: number
-  regexPatterns: string[]
+  /**
+   * Whether to automatically detect mention raids.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   */
+  mentionRaidProtectionEnabled?: boolean
 }
 
 export interface AvatarDecorationData {
