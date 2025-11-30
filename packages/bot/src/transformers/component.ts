@@ -3,6 +3,8 @@ import {
   type DiscordButtonComponent,
   type DiscordContainerComponent,
   type DiscordFileComponent,
+  type DiscordFileUploadComponent,
+  type DiscordFileUploadInteractionResponse,
   type DiscordLabelComponent,
   type DiscordLabelInteractionResponse,
   type DiscordMediaGalleryComponent,
@@ -69,6 +71,9 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent | 
       break
     case MessageComponentTypes.Label:
       component = transformLabelComponent(bot, payload)
+      break
+    case MessageComponentTypes.FileUpload:
+      component = transformFileUploadComponent(bot, payload)
       break
   }
 
@@ -294,4 +299,24 @@ function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent | Disc
   if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component)
 
   return label
+}
+
+function transformFileUploadComponent(bot: Bot, payload: DiscordFileUploadComponent | DiscordFileUploadInteractionResponse): Component {
+  const props = bot.transformers.desiredProperties.component
+  const fileUpload = {} as Component
+
+  if (props.type && payload.type) fileUpload.type = payload.type
+  if (props.id && payload.id) fileUpload.id = payload.id
+  if (props.customId && payload.custom_id) fileUpload.customId = payload.custom_id
+
+  // Check that this is a response
+  if ('values' in payload) {
+    if (props.values && payload.values) fileUpload.values = payload.values
+  } else {
+    if (props.minValues && payload.min_values) fileUpload.minValues = payload.min_values
+    if (props.maxValues && payload.max_values) fileUpload.maxValues = payload.max_values
+    if (props.required && payload.required) fileUpload.required = payload.required
+  }
+
+  return fileUpload
 }
