@@ -927,23 +927,25 @@ export type AreDependenciesSatisfied<T, TDependencies extends Record<string, str
 }
 
 /** @private This is subject to breaking changes without notices */
-export type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TKey extends keyof TProps // The key has a desired props?
-  ? // Yes, is it true?
-    TProps[TKey] extends true
-    ? // Yes, this is a key to include
-      true
-    : // No, this is a key to exclude
-      DesiredPropertiesError<`This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
-  : // No, it is a props with dependencies?
-    TKey extends keyof TDependencies
-    ? // Yes, has all of its dependencies satisfied?
-      AreDependenciesSatisfied<TDependencies[TKey], TDependencies, TProps> extends true[]
+export type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TProps extends never // If the props are never, all props are allowed
+  ? true
+  : TKey extends keyof TProps // The key has a desired props?
+    ? // Yes, is it true?
+      TProps[TKey] extends true
       ? // Yes, this is a key to include
         true
-      : // No, this is a key to not include
-        DesiredPropertiesError<`This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
-    : // No, we include it but it does not have neither props nor dependencies
-      true
+      : // No, this is a key to exclude
+        DesiredPropertiesError<`This property is not set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
+    : // No, it is a props with dependencies?
+      TKey extends keyof TDependencies
+      ? // Yes, has all of its dependencies satisfied?
+        AreDependenciesSatisfied<TDependencies[TKey], TDependencies, TProps> extends true[]
+        ? // Yes, this is a key to include
+          true
+        : // No, this is a key to not include
+          DesiredPropertiesError<`This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
+      : // No, we include it but it does not have neither props nor dependencies
+        true
 
 /** The behavior it should be used when resolving an undesired property */
 export enum DesiredPropertiesBehavior {
