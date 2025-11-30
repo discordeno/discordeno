@@ -866,8 +866,11 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
 }
 
 /** @private This is subject to breaking changes without notices */
+export type Equals<T1, T2> = Required<T1> extends Required<T2> ? (Required<T2> extends Required<T1> ? true : false) : false
+
+/** @private This is subject to breaking changes without notices */
 export type KeyByValue<TObj, TValue> = {
-  [Key in keyof TObj]: Required<TObj[Key]> extends Required<TValue> ? Key : never
+  [Key in keyof TObj]: Equals<TObj[Key], TValue> extends true ? Key : never
 }[keyof TObj]
 
 /** @private This is subject to breaking changes without notices */
@@ -898,17 +901,12 @@ export type DesiredPropertiesMetadata = {
 }
 
 /** @private This is subject to breaking changes without notices */
-export type DesirableProperties<
-  T extends TransformersObjects[keyof TransformersObjects],
-  TKey extends keyof TransformersObjects = KeyByValue<TransformersObjects, T>,
-> = Exclude<
+export type DesirableProperties<T extends TransformersObjects[keyof TransformersObjects]> = Exclude<
   keyof T,
   // Exclude the props that depend on something else from the desirable properties
-  | keyof TransformersDesiredPropertiesMetadata[TKey]['dependencies']
-  // Check if all the keys are "always presents", if this is the case it means we did not specify any always present key
-  | (keyof T extends TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents'][number]
-      ? never
-      : TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents'][number])
+  | keyof TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies']
+  // Exclude the props that are always present
+  | TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['alwaysPresents'][number]
 >
 
 /** @private This is subject to breaking changes without notices */
@@ -1003,7 +1001,7 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
     ? // Yes, check for nested proprieties
       Collection<U, TransformProperty<UObj, TProps, TBehavior>>
     : // No, is it a Bot?
-      T extends Bot
+      Equals<T, Bot> extends true
       ? // Yes, return a bot with the correct set of props & behavior
         Bot<TProps, TBehavior>
       : // No, is it a transformed object?
@@ -1011,16 +1009,16 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
         ? // Yes, apply the desired props
           SetupDesiredProps<T, TProps, TBehavior>
         : // No, is it an interaction resolved data member? | We need to check this here because the type itself has not way of getting the desired props
-          T extends InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>
+          Equals<T, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
           ? // Yes, apply the desired props
             InteractionResolvedDataMember<TProps, TBehavior>
           : // No, is it an interaction resolved data channel? | We need to check this here because the type itself has not way of getting the desired props
-            T extends InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>
+            Equals<T, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
             ? // Yes, apply the desired props
               InteractionResolvedDataChannel<TProps, TBehavior>
             : // Is it an object?
               IsObject<T> extends true
-              ? // Yes, we need to ensure nested inside there aren't transformed objects
+              ? // Yes, we need to ensure we transform the nested properties as well
                 { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
               : // No, this is a normal value such as string / bigint / number
                 T
