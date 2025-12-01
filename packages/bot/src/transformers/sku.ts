@@ -1,9 +1,10 @@
 import type { DiscordSku } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { Sku } from './types.js'
 
-export function transformSku(bot: Bot, payload: DiscordSku): Sku {
+export function transformSku(bot: Bot, payload: Partial<DiscordSku>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.sku
   const sku = {} as SetupDesiredProps<Sku, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -14,5 +15,7 @@ export function transformSku(bot: Bot, payload: DiscordSku): Sku {
   if (props.slug && payload.slug) sku.slug = payload.slug
   if (props.flags && payload.flags) sku.flags = payload.flags
 
-  return bot.transformers.customizers.sku(bot, payload, sku)
+  return callCustomizer('sku', bot, payload, sku, {
+    partial: extra?.partial ?? false,
+  })
 }

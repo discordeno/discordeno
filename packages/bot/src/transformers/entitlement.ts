@@ -1,9 +1,10 @@
 import type { DiscordEntitlement } from '@discordeno/types'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { Entitlement } from './types.js'
 
-export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Entitlement {
+export function transformEntitlement(bot: Bot, payload: Partial<DiscordEntitlement>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.entitlement
   const entitlement = {} as SetupDesiredProps<Entitlement, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -18,5 +19,7 @@ export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Ent
   if (props.endsAt && payload.ends_at) entitlement.endsAt = Date.parse(payload.ends_at)
   if (props.consumed && payload.consumed !== undefined) entitlement.consumed = payload.consumed
 
-  return bot.transformers.customizers.entitlement(bot, payload, entitlement)
+  return callCustomizer('entitlement', bot, payload, entitlement, {
+    partial: extra?.partial ?? false,
+  })
 }

@@ -2,7 +2,7 @@ import type { BigString, DiscordThreadMember, DiscordThreadMemberGuildCreate } f
 import type { Bot } from '../bot.js'
 import type { ThreadMember, ThreadMemberGuildCreate } from './types.js'
 
-export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, extra?: ThreadMemberTransformerExtra): ThreadMember {
+export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, extra?: ThreadMemberTransformerExtra) {
   const threadMember = {
     id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
@@ -31,7 +31,7 @@ export interface ThreadMemberTransformerExtra {
   guildId?: BigString
 }
 
-export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate): ThreadMemberGuildCreate {
+export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate) {
   const threadMember = {
     joinTimestamp: Date.parse(payload.join_timestamp),
   } as ThreadMemberGuildCreate

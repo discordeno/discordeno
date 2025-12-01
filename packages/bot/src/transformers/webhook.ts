@@ -2,9 +2,10 @@ import type { DiscordWebhook } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
+import { callCustomizer } from '../transformers.js'
 import type { Webhook } from './types.js'
 
-export function transformWebhook(bot: Bot, payload: DiscordWebhook): typeof bot.transformers.$inferredTypes.webhook {
+export function transformWebhook(bot: Bot, payload: Partial<DiscordWebhook>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.webhook
   const webhook = {} as SetupDesiredProps<Webhook, TransformersDesiredProperties, DesiredPropertiesBehavior>
 
@@ -24,9 +25,10 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook): typeof bot.
       icon: payload.source_guild.icon ? iconHashToBigInt(payload.source_guild.icon) : undefined,
     }
   if (props.sourceChannel && payload.source_channel)
-    // @ts-expect-error TODO: Partials
-    webhook.sourceChannel = bot.transformers.channel(bot, payload.source_channel, { guildId: payload.guild_id })
+    webhook.sourceChannel = bot.transformers.channel(bot, payload.source_channel, { guildId: payload.guild_id ?? undefined, partial: true })
   if (props.url && payload.url) webhook.url = payload.url
 
-  return bot.transformers.customizers.webhook(bot, payload, webhook)
+  return callCustomizer('webhook', bot, payload, webhook, {
+    partial: extra?.partial ?? false,
+  })
 }
