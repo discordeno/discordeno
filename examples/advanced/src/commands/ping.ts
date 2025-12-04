@@ -10,6 +10,6 @@ createCommand({
 
     const embeds = createEmbeds().setTitle(`The bot ping is ${ping}ms`)
 
-    await interaction.respond({ embeds })
+    await interaction.reply({ embeds })
   },
 })
