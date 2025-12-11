@@ -215,6 +215,8 @@ export interface RestRoutes {
       all: (guildId: BigString) => string
       /** Route for handling a members roles in a guild. */
       member: (guildId: BigString, memberId: BigString, roleId: BigString) => string
+      /** Route for the role member counts */
+      memberCounts: (guildId: BigString) => string
     }
     /** Route for handling a specific guild sticker. */
     stickers: (guildId: BigString) => string

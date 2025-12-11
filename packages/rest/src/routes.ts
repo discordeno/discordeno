@@ -458,6 +458,9 @@ export function createRoutes(): RestRoutes {
         member: (guildId, memberId, roleId) => {
           return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`
         },
+        memberCounts: (guildId) => {
+          return `/guilds/${guildId}/roles/member-counts`
+        },
       },
       stickers: (guildId) => {
         return `/guilds/${guildId}/stickers`

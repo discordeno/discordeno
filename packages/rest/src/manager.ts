@@ -819,6 +819,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason })
     },
 
+    async getGuildRoleMemberCounts(guildId) {
+      return await rest.get<Record<string, number>>(rest.routes.guilds.roles.memberCounts(guildId))
+    },
+
     async createRole(guildId, body, reason) {
       return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), { body, reason })
     },

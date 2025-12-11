@@ -180,6 +180,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     createInvite: async (channelId, options, reason) => {
       return await bot.rest.createInvite(channelId, options, reason)
     },
+    getGuildRoleMemberCounts: async (guildId) => {
+      return await bot.rest.getGuildRoleMemberCounts(guildId)
+    },
     createRole: async (guildId, options, reason) => {
       return bot.transformers.role(bot, snakelize(await bot.rest.createRole(guildId, options, reason)), { guildId })
     },
@@ -866,6 +869,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   ) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>
   createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>
   createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<Camelize<DiscordInvite>>
+  getGuildRoleMemberCounts: (guildId: BigString) => Promise<Record<string, number>>
   createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>
   createScheduledEvent: (
     guildId: BigString,
