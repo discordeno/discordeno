@@ -24,13 +24,13 @@ jobs:
       - run: yarn install --immutable
       - name: Turbo Cache
         id: turbo-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-test:deno-unit-${{ inputs.package }}-${{ github.sha }}
       - name: Build dist cache
         if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
@@ -51,13 +51,13 @@ jobs:
       - run: yarn install --immutable
       - name: Turbo Cache
         id: turbo-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-test:bun-unit-${{ inputs.package }}-${{ github.sha }}
       - name: Build dist cache
         if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
