@@ -39,8 +39,10 @@ jobs:
       - run: yarn pack
         working-directory: packages/${{ matrix.package }}
 
+      # We use Trusted Publishing, however this requires npm 11.5.1 or higher
+      - name: Update npm
+        run: npm install -g npm@11.7.0
+
       # If the action is running from a release, if prerelease use beta tag else use latest tag, otherwise use the next tag
       - run: npm publish package.tgz --tag ${{ github.event_name == 'release' && github.event.action == 'published' && (github.event.release.prerelease && 'beta' || 'latest') || 'next' }} --access public --provenance
         working-directory: packages/${{ matrix.package }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
