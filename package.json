@@ -3,7 +3,7 @@
   "version": "22.0.0-beta.1",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@4.12.0",
   "workspaces": [
     "packages/*"
   ],
