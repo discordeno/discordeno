@@ -1784,7 +1784,7 @@ export interface User {
   banner?: bigint
   /** data for the user's avatar decoration */
   avatarDecorationData?: AvatarDecorationData
-  /** The user tag in the form of username#discriminator or username for new username system */
+  /** The user tag in the form of `username` or `username#discriminator` for legacy username system */
   tag: string
   /** Whether the user belongs to an OAuth2 application */
   bot: boolean
