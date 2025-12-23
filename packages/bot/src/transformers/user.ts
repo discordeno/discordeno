@@ -11,7 +11,8 @@ export const baseUser: User = {
   ...(undefined as unknown as User),
 
   get tag() {
-    return `${this.username}#${this.discriminator}`
+    const isLegacy = this.discriminator !== '0' && this.discriminator !== '0000'
+    return isLegacy ? `${this.username}#${this.discriminator}` : this.username
   },
   get bot() {
     return !!this.toggles?.has('bot')
