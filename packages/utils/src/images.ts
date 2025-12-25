@@ -30,26 +30,43 @@ export function emojiUrl(emojiId: BigString, animated = false, format: ImageForm
  * Builds a URL to a user's avatar stored in the Discord CDN.
  *
  * @param userId - The ID of the user to get the avatar of.
- * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
+ * @param avatar - The user's avatar hash.
  * @param options - The parameters for the building of the URL.
- * @returns The link to the resource.
+ * @returns The user avatar as a URL.
  */
-export function avatarUrl(
-  userId: BigString,
-  discriminator: string,
-  options?: {
-    avatar: BigString | undefined
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string {
-  return options?.avatar
-    ? formatImageUrl(
-        `https://cdn.discordapp.com/avatars/${userId}/${typeof options.avatar === 'string' ? options.avatar : iconBigintToHash(options.avatar)}`,
-        options?.size ?? 128,
-        options?.format,
-      )
-    : `https://cdn.discordapp.com/embed/avatars/${discriminator === '0' ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5}.png`
+export function avatarUrl(userId: BigString, avatar: BigString, options?: ImageOptions): string {
+  return formatImageUrl(
+    `https://cdn.discordapp.com/avatars/${userId}/${typeof avatar === 'string' ? avatar : iconBigintToHash(avatar)}`,
+    options?.size ?? 128,
+    options?.format,
+  )
+}
+
+/**
+ * Builds a URL to a user's default avatar stored in the Discord CDN.
+ *
+ * @param userId - The ID of the user to get the avatar of.
+ * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
+ * @returns The user default avatar as an URL.
+ */
+export function defaultAvatarUrl(userId: BigString, discriminator: string) {
+  const isLegacy = discriminator === '0' || discriminator === '0000'
+  const index = isLegacy ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5
+
+  return `https://cdn.discordapp.com/embed/avatars/${index}.png`
+}
+
+/**
+ * Builds a URL to a user's display avatar stored in the Discord CDN.
+ *
+ * @param userId - The ID of the user to get the avatar of.
+ * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
+ * @param avatar - The user's avatar hash.
+ * @param options - The parameters for the building of the URL.
+ * @returns The user display avatar as an URL.
+ */
+export function displayAvatarUrl(userId: BigString, discriminator: string, avatar: BigString | undefined, options?: ImageOptions): string {
+  return avatar ? avatarUrl(userId, avatar, options) : defaultAvatarUrl(userId, discriminator)
 }
 
 export function avatarDecorationUrl(avatarDecoration: BigString): string {
