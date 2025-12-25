@@ -1,6 +1,11 @@
 import { type BigString, type GetGuildWidgetImageQuery, type ImageFormat, type ImageSize, StickerFormatTypes } from '@discordeno/types'
 import { iconBigintToHash } from './hash.js'
 
+export interface ImageOptions {
+  size?: ImageSize
+  format?: ImageFormat
+}
+
 /** Help format an image url. */
 export function formatImageUrl(url: string, size: ImageSize = 128, format?: ImageFormat): string {
   return `${url}.${format ?? (url.includes('/a_') ? 'gif' : 'webp')}?size=${size}`
@@ -60,14 +65,7 @@ export function avatarDecorationUrl(avatarDecoration: BigString): string {
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has not been set.
  */
-export function bannerUrl(
-  userId: BigString,
-  options?: {
-    banner?: BigString
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function bannerUrl(userId: BigString, options?: ImageOptions & { banner?: BigString }): string | undefined {
   return options?.banner
     ? formatImageUrl(
         `https://cdn.discordapp.com/banners/${userId}/${typeof options.banner === 'string' ? options.banner : iconBigintToHash(options.banner)}`,
@@ -84,14 +82,7 @@ export function bannerUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
-export function guildBannerUrl(
-  guildId: BigString,
-  options: {
-    banner?: BigString
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function guildBannerUrl(guildId: BigString, options: ImageOptions & { banner?: BigString }): string | undefined {
   return options.banner
     ? formatImageUrl(
         `https://cdn.discordapp.com/banners/${guildId}/${typeof options.banner === 'string' ? options.banner : iconBigintToHash(options.banner)}`,
@@ -109,14 +100,7 @@ export function guildBannerUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
-export function guildIconUrl(
-  guildId: BigString,
-  imageHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function guildIconUrl(guildId: BigString, imageHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return imageHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/icons/${guildId}/${typeof imageHash === 'string' ? imageHash : iconBigintToHash(imageHash)}`,
@@ -134,14 +118,7 @@ export function guildIconUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if the guild does not have a splash image set.
  */
-export function guildSplashUrl(
-  guildId: BigString,
-  imageHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function guildSplashUrl(guildId: BigString, imageHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return imageHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/splashes/${guildId}/${typeof imageHash === 'string' ? imageHash : iconBigintToHash(imageHash)}`,
@@ -159,14 +136,7 @@ export function guildSplashUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if the guild does not have a splash image set.
  */
-export function guildDiscoverySplashUrl(
-  guildId: BigString,
-  imageHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function guildDiscoverySplashUrl(guildId: BigString, imageHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return imageHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/discovery-splashes/${guildId}/${typeof imageHash === 'string' ? imageHash : iconBigintToHash(imageHash)}`,
@@ -183,14 +153,7 @@ export function guildDiscoverySplashUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function guildScheduledEventCoverUrl(
-  eventId: BigString,
-  options: {
-    cover?: BigString
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function guildScheduledEventCoverUrl(eventId: BigString, options: ImageOptions & { cover?: BigString }): string | undefined {
   return options.cover
     ? formatImageUrl(
         `https://cdn.discordapp.com/guild-events/${eventId}/${typeof options.cover === 'string' ? options.cover : iconBigintToHash(options.cover)}`,
@@ -225,15 +188,7 @@ export function getWidgetImageUrl(guildId: BigString, options?: GetGuildWidgetIm
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
-export function memberAvatarUrl(
-  guildId: BigString,
-  userId: BigString,
-  options?: {
-    avatar?: BigString
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function memberAvatarUrl(guildId: BigString, userId: BigString, options?: ImageOptions & { avatar?: BigString }): string | undefined {
   return options?.avatar
     ? formatImageUrl(
         `https://cdn.discordapp.com/guilds/${guildId}/users/${userId}/avatars/${
@@ -253,15 +208,7 @@ export function memberAvatarUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
-export function memberBannerUrl(
-  guildId: BigString,
-  userId: BigString,
-  options?: {
-    banner?: BigString
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function memberBannerUrl(guildId: BigString, userId: BigString, options?: ImageOptions & { banner?: BigString }): string | undefined {
   return options?.banner
     ? formatImageUrl(
         `https://cdn.discordapp.com/guilds/${guildId}/users/${userId}/banners/${
@@ -281,14 +228,7 @@ export function memberBannerUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`
  */
-export function applicationIconUrl(
-  applicationId: BigString,
-  iconHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function applicationIconUrl(applicationId: BigString, iconHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return iconHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/app-icons/${applicationId}/${typeof iconHash === 'string' ? iconHash : iconBigintToHash(iconHash)}`,
@@ -306,14 +246,7 @@ export function applicationIconUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function applicationCoverUrl(
-  applicationId: BigString,
-  coverHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function applicationCoverUrl(applicationId: BigString, coverHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return coverHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/app-icons/${applicationId}/${typeof coverHash === 'string' ? coverHash : iconBigintToHash(coverHash)}`,
@@ -331,14 +264,7 @@ export function applicationCoverUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function applicationAssetUrl(
-  applicationId: BigString,
-  assetId: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function applicationAssetUrl(applicationId: BigString, assetId: BigString | undefined, options?: ImageOptions): string | undefined {
   return assetId
     ? formatImageUrl(
         `https://cdn.discordapp.com/app-icons/${applicationId}/${typeof assetId === 'string' ? assetId : iconBigintToHash(assetId)}`,
@@ -355,13 +281,7 @@ export function applicationAssetUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function stickerPackBannerUrl(
-  bannerAssetId: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function stickerPackBannerUrl(bannerAssetId: BigString | undefined, options?: ImageOptions): string | undefined {
   return bannerAssetId
     ? formatImageUrl(
         `https://cdn.discordapp.com/app-assets/710982414301790216/store/${
@@ -380,14 +300,7 @@ export function stickerPackBannerUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function stickerUrl(
-  stickerId: BigString | number,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-    type?: StickerFormatTypes
-  },
-): string | undefined {
+export function stickerUrl(stickerId: BigString | number, options?: ImageOptions & { type?: StickerFormatTypes }): string | undefined {
   if (!stickerId) return
 
   const url =
@@ -406,14 +319,7 @@ export function stickerUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function teamIconUrl(
-  teamId: BigString,
-  iconHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function teamIconUrl(teamId: BigString, iconHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return iconHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/team-icons/${teamId}/store/${typeof iconHash === 'string' ? iconHash : iconBigintToHash(iconHash)}`,
@@ -431,14 +337,7 @@ export function teamIconUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */
-export function roleIconUrl(
-  roleId: BigString,
-  iconHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function roleIconUrl(roleId: BigString, iconHash: BigString | undefined, options?: ImageOptions): string | undefined {
   return iconHash
     ? formatImageUrl(
         `https://cdn.discordapp.com/role-icons/${roleId}/${typeof iconHash === 'string' ? iconHash : iconBigintToHash(iconHash)}`,
@@ -456,14 +355,7 @@ export function roleIconUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no badge has been set.
  */
-export function guildTagBadgeUrl(
-  guildId: BigString,
-  badgeHash: BigString | undefined,
-  options?: {
-    size?: ImageSize
-    format?: ImageFormat
-  },
-): string | undefined {
+export function guildTagBadgeUrl(guildId: BigString, badgeHash: BigString | undefined, options?: ImageOptions): string | undefined {
   if (badgeHash === undefined) return undefined
 
   return formatImageUrl(`https://cdn.discordapp.com/guild-tag-badges/${guildId}/${badgeHash}`, options?.size ?? 128, options?.format)
