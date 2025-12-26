@@ -71,7 +71,7 @@ import type {
   VideoQualityModes,
   WebhookTypes,
 } from '@discordeno/types'
-import type { Collection } from '@discordeno/utils'
+import type { Collection, ImageOptions } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js'
 import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from '../desiredProperties.js'
@@ -1762,6 +1762,10 @@ export interface User {
   username: string
   /** The user's display name, if it is set. For bots, this is the application name */
   globalName?: string
+  /** The user's display name based on `globalName` and `username` */
+  displayName: string
+  /** Get the timestamp in milliseconds of user's creation date */
+  createdTimestamp: number
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
@@ -1798,6 +1802,20 @@ export interface User {
   collectibles?: Collectibles
   /** The user's primary guild */
   primaryGuild?: UserPrimaryGuild
+  /** Get user's default avatar in formatted url */
+  defaultAvatarUrl: string
+  /**
+   * Get user's avatar in formatted url
+   * @param options Image format options
+   * @returns User's avatar in formatted url
+   */
+  avatarUrl: (options?: ImageOptions) => string | undefined
+  /**
+   * Get user's display avatar in formatted url
+   * @param options Image format options
+   * @returns User's display avatar in formatted url
+   */
+  displayAvatarUrl: (options?: ImageOptions) => string
 }
 
 export interface Collectibles {

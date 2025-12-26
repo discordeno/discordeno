@@ -1,6 +1,16 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { avatarUrl, emojiUrl, formatImageUrl, getWidgetImageUrl, guildBannerUrl, guildIconUrl, guildSplashUrl } from '../src/images.js'
+import {
+  avatarUrl,
+  defaultAvatarUrl,
+  displayAvatarUrl,
+  emojiUrl,
+  formatImageUrl,
+  getWidgetImageUrl,
+  guildBannerUrl,
+  guildIconUrl,
+  guildSplashUrl,
+} from '../src/images.js'
 
 describe('images.ts', () => {
   describe('formatImageUrl function', () => {
@@ -55,27 +65,39 @@ describe('images.ts', () => {
 
   describe('avatarUrl function', () => {
     it('will return the url for given avatar icon hash', () => {
-      expect(
-        avatarUrl('207324334904049664', '9130', {
-          avatar: 'db26a6fb924c985f66b79364cf5797b7',
-        }),
-      ).to.equal('https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128')
+      expect(avatarUrl('207324334904049664', 'db26a6fb924c985f66b79364cf5797b7')).to.equal(
+        'https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128',
+      )
     })
 
     it('will return the url for given avatar icon bigint', () => {
-      expect(
-        avatarUrl('207324334904049664', '9130', {
-          avatar: 4034407661299384404326332419647968090039n,
-        }),
-      ).to.equal('https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128')
+      expect(avatarUrl('207324334904049664', 4034407661299384404326332419647968090039n)).to.equal(
+        'https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128',
+      )
+    })
+  })
+
+  describe('defaultAvatarUrl function', () => {
+    it('will return the url for default avatar', () => {
+      expect(defaultAvatarUrl('207324334904049664', '9130')).to.equal('https://cdn.discordapp.com/embed/avatars/0.png')
+    })
+  })
+
+  describe('displayAvatarUrl function', () => {
+    it('will return the url for given avatar icon hash', () => {
+      expect(displayAvatarUrl('207324334904049664', '9130', 'db26a6fb924c985f66b79364cf5797b7')).to.equal(
+        'https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128',
+      )
+    })
+
+    it('will return the url for given avatar icon bigint', () => {
+      expect(displayAvatarUrl('207324334904049664', '9130', 4034407661299384404326332419647968090039n)).to.equal(
+        'https://cdn.discordapp.com/avatars/207324334904049664/db26a6fb924c985f66b79364cf5797b7.webp?size=128',
+      )
     })
 
     it('will return the url for default avatar', () => {
-      expect(
-        avatarUrl('207324334904049664', '9130', {
-          avatar: undefined,
-        }),
-      ).to.equal('https://cdn.discordapp.com/embed/avatars/0.png')
+      expect(displayAvatarUrl('207324334904049664', '9130', undefined)).to.equal('https://cdn.discordapp.com/embed/avatars/0.png')
     })
   })
 
