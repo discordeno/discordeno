@@ -7,7 +7,7 @@ import { UserToggles } from './toggles/user.js'
 import type { Collectibles, Nameplate, User, UserPrimaryGuild } from './types.js'
 
 export const baseUser: User = {
-  // // This allows typescript to still check for type errors on functions below
+  // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as User),
 
   avatarUrl(options) {
