@@ -213,7 +213,7 @@ export interface TransformersDesiredPropertiesMetadata extends DesiredProperties
       system: ['toggles']
       mfaEnabled: ['toggles']
       verified: ['toggles']
-      avatarUrl: ['avatar']
+      avatarUrl: ['avatar', 'id']
       displayName: ['username', 'globalName']
       defaultAvatarUrl: ['id', 'discriminator']
       displayAvatarUrl: ['avatar', 'id', 'discriminator']
