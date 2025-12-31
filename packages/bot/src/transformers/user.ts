@@ -1,5 +1,5 @@
 import type { DiscordCollectibles, DiscordNameplate, DiscordUser, DiscordUserPrimaryGuild } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
+import { avatarUrl, defaultAvatarUrl, displayAvatarUrl, iconHashToBigInt, snowflakeToTimestamp } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
@@ -10,6 +10,22 @@ export const baseUser: User = {
   // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as User),
 
+  avatarUrl(options) {
+    if (!this.avatar) return
+    return avatarUrl(this.id, this.avatar, options)
+  },
+  displayAvatarUrl(options) {
+    return displayAvatarUrl(this.id, this.discriminator, this.avatar, options)
+  },
+  get defaultAvatarUrl() {
+    return defaultAvatarUrl(this.id, this.discriminator)
+  },
+  get displayName() {
+    return this.globalName ?? this.username
+  },
+  get createdTimestamp() {
+    return snowflakeToTimestamp(this.id)
+  },
   get tag() {
     const isLegacy = this.discriminator !== '0' && this.discriminator !== '0000'
     return isLegacy ? `${this.username}#${this.discriminator}` : this.username
