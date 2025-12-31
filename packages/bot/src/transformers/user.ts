@@ -12,7 +12,7 @@ export const baseUser: User = {
 
   avatarUrl(options) {
     if (!this.avatar) return
-    return avatarUrl(this.id, this.discriminator, options)
+    return avatarUrl(this.id, this.avatar, options)
   },
   displayAvatarUrl(options) {
     return displayAvatarUrl(this.id, this.discriminator, this.avatar, options)
