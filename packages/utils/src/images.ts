@@ -51,7 +51,7 @@ export function avatarUrl(userId: BigString, avatar: BigString, options?: ImageO
  */
 export function defaultAvatarUrl(userId: BigString, discriminator: string) {
   const isLegacy = discriminator === '0' || discriminator === '0000'
-  const index = isLegacy ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5
+  const index = isLegacy ? (BigInt(userId) >> 22n) % 6n : Number(discriminator) % 5
 
   return `https://cdn.discordapp.com/embed/avatars/${index}.png`
 }
