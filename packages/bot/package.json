@@ -17,10 +17,10 @@
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
     "check": "biome check --write",
-    "test:unit": "c8 -r lcov mocha 'tests/unit/**/*.spec.ts'",
+    "test:unit": "c8 -r lcov mocha 'tests/unit/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js bot",
     "test:deno-unit": "deno -A npm:mocha 'tests/unit/**/*.spec.ts'",
     "test:bun-unit": "bun --bun mocha 'tests/unit/**/*.spec.ts'",
-    "test:e2e": "c8 -r lcov mocha -t 30000 'tests/e2e/**/*.spec.ts'",
+    "test:e2e": "c8 -r lcov mocha -t 30000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js bot",
     "test:test-type": "tsc --project tests/tsconfig.json",
     "test:type": "tsc --noEmit"
   },
