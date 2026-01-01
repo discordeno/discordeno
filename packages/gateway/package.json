@@ -17,14 +17,12 @@
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
     "check": "biome check --write",
-    "test:unit-coverage": "c8 mocha --no-warnings 'tests/unit/**/*.spec.ts'",
-    "test:unit": "c8 --r lcov mocha --no-warnings 'tests/unit/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
-    "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
-    "test:deno-unit": "deno -A ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/unit/**/*.spec.ts'",
-    "test:bun-unit": "bun ../../node_modules/mocha/bin/mocha.js --config ../../.mocharc.base.cjs 'tests/unit/**/*.spec.ts'",
-    "test:integration": "c8 --r lcov mocha --no-warnings --t 15000 'tests/integration/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
-    "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tests/tsconfig.json"
+    "test:unit": "c8 -r lcov mocha 'tests/unit/**/*.spec.ts'",
+    "test:deno-unit": "deno -A npm:mocha 'tests/unit/**/*.spec.ts'",
+    "test:bun-unit": "bun --bun mocha 'tests/unit/**/*.spec.ts'",
+    "test:integration": "c8 -r lcov mocha -t 15000 'tests/integration/**/*.spec.ts'",
+    "test:test-type": "tsc --project tests/tsconfig.json",
+    "test:type": "tsc --noEmit"
   },
   "dependencies": {
     "@discordeno/types": "workspace:^",

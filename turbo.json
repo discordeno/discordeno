@@ -2,42 +2,52 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "outputs": ["dist/**/*.js"],
-      "inputs": ["src/**/*.ts"]
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["dist/**/*.js"]
     },
     "build:type": {
       "dependsOn": ["^build:type"],
+      "inputs": ["src/**/*.ts"],
       "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
-    },
-    "test:unit-coverage": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
-    },
-    "test:unit": {
-      "dependsOn": ["^build", "build"],
-      "outputs": ["coverage/**"]
-    },
-    "test:integration": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
-    },
-    "test:test-type": {
-      "dependsOn": ["^build:type"]
-    },
-    "test:deno-unit": {
-      "dependsOn": ["^build", "build"]
-    },
-    "test:bun-unit": {
-      "dependsOn": ["^build", "build"]
-    },
-    "test:e2e": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"],
-      "env": ["DISCORD_TOKEN", "E2E_TEST_GUILD_ID"]
     },
     "check": {
       "dependsOn": ["build:type"],
       "cache": false
+    },
+    "test:unit": {
+      "dependsOn": ["^build", "build"],
+      // We need to exclude e2e and integration test manually since when there aren't e2e or integration we don't have a unit folder
+      "inputs": ["src/**/*.ts", "tests/**/*.spec.ts", "!tests/e2e/**/*.spec.ts", "!tests/integration**/*.spec.ts"],
+      "outputs": ["coverage/**"]
+    },
+    "test:deno-unit": {
+      "dependsOn": ["^build", "build"],
+      // We need to exclude e2e and integration test manually since when there aren't e2e or integration we don't have a unit folder
+      "inputs": ["src/**/*.ts", "tests/**/*.spec.ts", "!tests/e2e/**/*.spec.ts", "!tests/integration**/*.spec.ts"]
+    },
+    "test:bun-unit": {
+      "dependsOn": ["^build", "build"],
+      // We need to exclude e2e and integration test manually since when there aren't e2e or integration we don't have a unit folder
+      "inputs": ["src/**/*.ts", "tests/**/*.spec.ts", "!tests/e2e/**/*.spec.ts", "!tests/integration**/*.spec.ts"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts", "tests/integration**/*.spec.ts"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts", "tests/e2e**/*.spec.ts"],
+      "outputs": ["coverage/**"],
+      "env": ["DISCORD_TOKEN", "E2E_TEST_GUILD_ID"]
+    },
+    "test:test-type": {
+      "dependsOn": ["^build:type"],
+      "inputs": ["src/**/*.ts", "tests/**/*.ts"]
+    },
+    "test:type": {
+      "dependsOn": ["^build:type"],
+      "inputs": ["src/**/*.ts"]
     }
   }
 }
