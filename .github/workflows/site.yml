@@ -37,7 +37,7 @@ jobs:
       - name: Build all pkg
         run: yarn release-build
       - name: Build docs
-        run: yarn build:doc
+        run: yarn turbo build:doc --single-package
       - run: yarn install --immutable
         working-directory: ./website
       - name: Restore bundler cache
@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docusaurus-bundler-
       - name: Build website
-        run: yarn build
+        run: yarn tubo build
         working-directory: ./website
         env:
           TURBO_API: http://localhost:41231
@@ -76,7 +76,7 @@ jobs:
       - name: Build all pkg
         run: yarn release-build
       - name: Build docs
-        run: yarn build:doc
+        run: yarn turbo build:doc --single-package
       - run: yarn install --immutable
         working-directory: ./website
       - run: yarn typecheck
