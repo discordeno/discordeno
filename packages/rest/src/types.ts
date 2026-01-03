@@ -559,6 +559,16 @@ export interface RestManager {
    */
   createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<Camelize<DiscordInvite>>
   /**
+   * Get guild role member counts
+   *
+   * Returns a map of role IDs to the number of members with the role. Does not include the \@everyone role.
+   *
+   * @param guildId - The ID of the guild to get role member counts for.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-role-member-counts}
+   */
+  getGuildRoleMemberCounts: (guildId: BigString) => Promise<Record<string, number>>
+  /**
    * Creates a role in a guild.
    *
    * @param guildId - The ID of the guild to create the role in.
