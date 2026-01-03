@@ -2,11 +2,11 @@ import { ChannelTypes } from '@discordeno/types'
 import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { e2eCache, rest } from './utils.js'
+import { e2eCache, rest, toDispose } from './utils.js'
 
 chaiUse(chaiAsPromised)
 
-describe('Manage Guilds', async () => {
+describe('Manage Guilds', () => {
   it('Get a guild', async () => {
     const exists = await rest.getGuild(e2eCache.guildId)
     expect(exists).to.be.exist
@@ -20,13 +20,9 @@ describe('Manage Guilds', async () => {
       name: 'e2e-afk-channel',
       type: ChannelTypes.GuildVoice,
     })
+    toDispose.add(async () => await rest.deleteChannel(voiceChannel.id))
 
     expect(voiceChannel.id).to.be.exist
-
-    after(async () => {
-      // Clean up the AFK channel created for testing
-      await rest.deleteChannel(voiceChannel.id)
-    })
 
     // Set the AFK channel
     const edited = await rest.editGuild(e2eCache.guild.id, {
@@ -65,7 +61,6 @@ describe('Manage Guilds', async () => {
     expect(fetchedBan).to.be.exist
     expect(fetchedBan.user.id).to.equal('379643682984296448')
 
-    // Assertions
     expect(fetchedBans).to.be.exist
     expect(fetchedBans.length).to.greaterThanOrEqual(2)
 

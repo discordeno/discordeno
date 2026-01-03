@@ -1,5 +1,9 @@
+import { use as chaiUse, expect } from 'chai'
+import chaiAsPromised from 'chai-as-promised'
 import { describe } from 'mocha'
 import { e2eCache, rest } from './utils.js'
+
+chaiUse(chaiAsPromised)
 
 describe('Typings', () => {
   it('Trigger Typing Indication', async () => {
@@ -7,7 +11,6 @@ describe('Typings', () => {
   })
 })
 
-/* TODO: Add this back when bot's name is changed (https://discord.com/channels/785384884197392384/785384884197392387/1142474846811459776)
 describe('Commands', () => {
   it('Upsert global commands', async () => {
     await rest.upsertGlobalApplicationCommands([
@@ -33,7 +36,6 @@ describe('Commands', () => {
 
     await rest.deleteGlobalApplicationCommand(created!.id)
 
-    expect(rest.getGlobalApplicationCommand(created!.id)).to.throw
+    await expect(rest.getGlobalApplicationCommand(created!.id)).to.eventually.be.rejected
   })
 })
-*/

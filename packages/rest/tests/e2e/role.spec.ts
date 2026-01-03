@@ -1,17 +1,13 @@
 import { calculateBits } from '@discordeno/utils'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { e2eCache, rest } from './utils.js'
+import { e2eCache, rest, toDispose } from './utils.js'
 
-describe('Role tests', async () => {
+describe('Role tests', () => {
   // Create a role with a reason
   it('Create a role with a reason', async () => {
     const role = await rest.createRole(e2eCache.guild?.id, { name: `test role ${Date.now()}` }, 'test reason')
-
-    after(async () => {
-      // Clean up the role created for testing
-      await rest.deleteRole(e2eCache.guild.id, role.id)
-    })
+    toDispose.add(async () => await rest.deleteRole(e2eCache.guild.id, role.id))
 
     expect(role.id).to.exist
   })
@@ -21,11 +17,7 @@ describe('Role tests', async () => {
     const role = await rest.createRole(e2eCache.guild.id, {
       name: `test role ${Date.now()}`,
     })
-
-    after(async () => {
-      // Clean up the role created for testing
-      await rest.deleteRole(e2eCache.guild.id, role.id)
-    })
+    toDispose.add(async () => await rest.deleteRole(e2eCache.guild.id, role.id))
 
     expect(role.id).to.exist
   })
@@ -47,11 +39,7 @@ describe('Role tests', async () => {
     const role = await rest.createRole(e2eCache.guild.id, {
       name: `test role ${Date.now()}`,
     })
-
-    after(async () => {
-      // Clean up the role created for testing
-      await rest.deleteRole(e2eCache.guild.id, role.id)
-    })
+    toDispose.add(async () => await rest.deleteRole(e2eCache.guild.id, role.id))
 
     const edited = await rest.editRole(e2eCache.guild.id, role.id, {
       name: 'test role 4',
@@ -82,11 +70,7 @@ describe('Role tests', async () => {
     const role = await rest.createRole(e2eCache.guild.id, {
       name: `test role ${Date.now()}`,
     })
-
-    after(async () => {
-      // Clean up the role created for testing
-      await rest.deleteRole(e2eCache.guild.id, role.id)
-    })
+    toDispose.add(async () => await rest.deleteRole(e2eCache.guild.id, role.id))
 
     // Assign the role to the user
     await rest.addRole(e2eCache.guild.id, rest.applicationId, role.id)

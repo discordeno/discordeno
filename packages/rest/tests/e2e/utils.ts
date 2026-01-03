@@ -3,7 +3,6 @@ import { createRestManager } from '../../src/manager.js'
 import { E2E_TEST_GUILD_ID, token } from './constants.js'
 // For debugging purposes
 // logger.setLevel(LogLevels.Debug)
-// logger.setDepth(LogDepth.Full)
 
 export const rest = createRestManager({
   token,
@@ -29,3 +28,25 @@ export const e2eCache = {
   guild,
   channel,
 }
+
+// Some resources created during tests need to be disposed of afterwards, as they will persist otherwise (e.g., emojis, roles, automod rules)
+export const toDispose = new Set<() => Promise<void>>()
+
+afterEach(async () => {
+  let aggregateError: AggregateError | null = null
+
+  for (const dispose of toDispose) {
+    try {
+      await dispose()
+    } catch (error) {
+      console.error('Error during cleanup:', error)
+
+      aggregateError ??= new AggregateError([], 'Errors occurred during cleanup')
+      aggregateError.errors.push(error)
+    }
+  }
+
+  toDispose.clear()
+
+  if (aggregateError) throw aggregateError
+})

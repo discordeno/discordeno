@@ -2,12 +2,12 @@ import { StickerFormatTypes } from '@discordeno/types'
 import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { e2eCache, rest } from './utils.js'
+import { e2eCache, rest, toDispose } from './utils.js'
 
 chaiUse(chaiAsPromised)
 
 // waiting for channel
-describe('Sticker tests', async () => {
+describe('Sticker tests', () => {
   it('Can get a sticker', async () => {
     const sticker = await rest.getSticker(749054660769218631n)
     expect(sticker.name).to.equal('Wave')
@@ -23,6 +23,10 @@ describe('Sticker tests', async () => {
         name: 'ddlogo.png',
       },
     })
+    const cleanSticker = async () => await rest.deleteGuildSticker(e2eCache.guild.id, sticker.id)
+
+    // We may remove this as we also test sticker deletion at the end of the test, so we need a var to reference the function
+    toDispose.add(cleanSticker)
 
     expect(sticker.name).to.equal('sticker name')
     expect(sticker.description).to.equal('sticker description')
@@ -62,15 +66,15 @@ describe('Sticker tests', async () => {
       },
     })
 
-    after(async () => {
-      // Clean up the sticker created for testing
-      await rest.deleteGuildSticker(e2eCache.guild.id, sticker2.id)
-    })
+    toDispose.add(async () => await rest.deleteGuildSticker(e2eCache.guild.id, sticker2.id))
 
     const stickers = await rest.getGuildStickers(e2eCache.guild.id)
     expect(stickers.length).to.greaterThan(1)
 
     await rest.deleteGuildSticker(e2eCache.guild.id, sticker.id)
+    // Since we have already deleted the sticker, we can remove it from the toDispose set
+    toDispose.delete(cleanSticker)
+
     await expect(rest.getGuildSticker(e2eCache.guild.id, sticker.id)).to.eventually.rejected
   })
 })
