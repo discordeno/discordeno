@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docusaurus-bundler-
       - name: Build website
-        run: yarn tubo build
+        run: yarn turbo build
         working-directory: ./website
         env:
           TURBO_API: http://localhost:41231
