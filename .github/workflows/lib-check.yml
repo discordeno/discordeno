@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'website/**'
   merge_group:
 
 jobs:
@@ -21,14 +19,12 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v5
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: Build Types
-        run: yarn build:type --cache-dir=".turbo"
+        run: yarn build:type
 
   build-dist:
     name: Build Dist
@@ -40,14 +36,12 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v5
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-      - name: Type Test
-        run: yarn build --cache-dir=".turbo"
+          cache-prefix: turbo-cache-
+      - name: Build Dist
+        run: yarn build
 
   format:
     name: Format
@@ -60,13 +54,12 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Build type cache
-        uses: actions/cache@v5
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: Build Types
-        run: yarn build:type --cache-dir=".turbo"
+        run: yarn build:type
       - name: Check Formatting
         run: yarn biome ci --reporter=github
 
@@ -81,20 +74,12 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v5
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-unit-and-integration-test:test-type-${{ github.sha }}
-      - name: Build type cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v5
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: Test Type Test
-        run: yarn test:test-type --cache-dir=".turbo"
+        run: yarn test:test-type
 
   # Not using matrix because test later on cant needs a specific job
   bot-unit-test:

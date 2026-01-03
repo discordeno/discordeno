@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "outputs": ["build/**"],
+      "inputs": ["src/**/*", "static/**/*", "blog/**/*", "docs/**/*", "api_reference/**/*", "docusaurus.config.ts", "sidebars.ts"]
+    }
+  }
+}
