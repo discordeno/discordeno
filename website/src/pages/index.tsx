@@ -5,7 +5,7 @@ import DiscordenoFAQ from '../components/home/faq'
 import DiscordenoFeatures from '../components/home/features'
 import DiscordenoReviews from '../components/home/reviews'
 
-export default function Home(): JSX.Element {
+export default function Home(): React.JSX.Element {
   return (
     <Layout title={`Discordeno Documentation`} description="An in-depth guide to using the Discordeno library for Deno.">
       <DiscordenoHeader />
