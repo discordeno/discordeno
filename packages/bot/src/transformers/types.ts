@@ -71,7 +71,7 @@ import type {
   VideoQualityModes,
   WebhookTypes,
 } from '@discordeno/types'
-import type { Collection } from '@discordeno/utils'
+import type { Collection, ImageOptions } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js'
 import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from '../desiredProperties.js'
@@ -358,11 +358,57 @@ export interface AutoModerationRule {
 }
 
 export interface AutoModerationRuleTriggerMetadata {
+  /**
+   * Substrings which will be searched for in content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Can have up to 1000 elements in the array and each string can have up to 60 characters.
+   */
   keywordFilter?: string[]
+  /**
+   * Regular expression patterns which will be matched against content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
+   */
+  regexPatterns?: string[]
+  /**
+   * The Discord pre-defined wordsets which will be searched for in content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+   */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+  /**
+   * The substrings which should not trigger the rule.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
+   * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
+   */
   allowList?: string[]
+  /**
+   * Total number of unique role and user mentions allowed per message.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   *
+   * Maximum of 50
+   */
   mentionTotalLimit?: number
-  regexPatterns: string[]
+  /**
+   * Whether to automatically detect mention raids.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   */
+  mentionRaidProtectionEnabled?: boolean
 }
 
 export interface AvatarDecorationData {
@@ -1762,6 +1808,10 @@ export interface User {
   username: string
   /** The user's display name, if it is set. For bots, this is the application name */
   globalName?: string
+  /** The user's display name based on `globalName` and `username` */
+  displayName: string
+  /** Get the timestamp in milliseconds of user's creation date */
+  createdTimestamp: number
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
@@ -1784,7 +1834,7 @@ export interface User {
   banner?: bigint
   /** data for the user's avatar decoration */
   avatarDecorationData?: AvatarDecorationData
-  /** The user tag in the form of username#discriminator */
+  /** The user tag in the form of `username` or `username#discriminator` for legacy username system */
   tag: string
   /** Whether the user belongs to an OAuth2 application */
   bot: boolean
@@ -1798,6 +1848,20 @@ export interface User {
   collectibles?: Collectibles
   /** The user's primary guild */
   primaryGuild?: UserPrimaryGuild
+  /** Get user's default avatar in formatted url */
+  defaultAvatarUrl: string
+  /**
+   * Get user's avatar in formatted url
+   * @param options Image format options
+   * @returns User's avatar in formatted url
+   */
+  avatarUrl: (options?: ImageOptions) => string | undefined
+  /**
+   * Get user's display avatar in formatted url
+   * @param options Image format options
+   * @returns User's display avatar in formatted url
+   */
+  displayAvatarUrl: (options?: ImageOptions) => string
 }
 
 export interface Collectibles {

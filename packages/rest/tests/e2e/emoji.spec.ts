@@ -3,7 +3,7 @@ import { urlToBase64 } from '@discordeno/utils'
 import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { e2eCache, rest } from './utils.js'
+import { e2eCache, rest, toDispose } from './utils.js'
 
 chaiUse(chaiAsPromised)
 
@@ -15,9 +15,10 @@ describe('Create and delete emojis', () => {
       roles: [],
     })
 
+    toDispose.add(async () => await rest.deleteEmoji(e2eCache.guild.id, emoji.id!))
+
     // Assertions
-    expect(emoji.id).to.be.exist
-    await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
+    expect(emoji.id).to.exist
   })
 
   // delete an emoji without a reason
@@ -27,11 +28,15 @@ describe('Create and delete emojis', () => {
       image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
       roles: [],
     })
+    const cleanEmoji = async () => await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
+    toDispose.add(cleanEmoji)
 
     // Assertions
-    expect(emoji.id).to.be.exist
+    expect(emoji.id).to.exist
 
     await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
+    // Remove from toDispose since we already deleted it
+    toDispose.delete(cleanEmoji)
 
     await expect(rest.getEmoji(e2eCache.guild.id, emoji.id!)).to.eventually.rejected
   })
@@ -43,11 +48,15 @@ describe('Create and delete emojis', () => {
       image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
       roles: [],
     })
+    const cleanEmoji = async () => await rest.deleteEmoji(e2eCache.guild.id, emoji.id!)
+    toDispose.add(cleanEmoji)
 
     // Assertions
-    expect(emoji.id).to.be.exist
+    expect(emoji.id).to.exist
 
     await rest.deleteEmoji(e2eCache.guild.id, emoji.id!, 'with a reason')
+    // Remove from toDispose since we already deleted it
+    toDispose.delete(cleanEmoji)
 
     await expect(rest.getEmoji(e2eCache.guild.id, emoji.id!)).to.eventually.rejected
   })
@@ -62,10 +71,8 @@ describe('Edit and get emojis', () => {
       image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
       roles: [],
     })) as Camelize<DiscordEmoji> & { id: string }
-  })
 
-  afterEach(async () => {
-    await rest.deleteEmoji(e2eCache.guild.id, emoji.id)
+    toDispose.add(async () => await rest.deleteEmoji(e2eCache.guild.id, emoji.id))
   })
 
   // edit an emoji name
@@ -83,9 +90,8 @@ describe('Edit and get emojis', () => {
     const role = await rest.createRole(e2eCache.guild.id, {
       name: 'dd-test-emoji',
     })
-    after(async () => {
-      await rest.deleteRole(e2eCache.guild.id, role.id)
-    })
+    toDispose.add(async () => await rest.deleteRole(e2eCache.guild.id, role.id))
+
     await rest.editEmoji(e2eCache.guild.id, emoji.id, {
       roles: [role.id],
     })
@@ -108,12 +114,12 @@ describe('Edit and get emojis', () => {
       image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
       roles: [],
     })
+    toDispose.add(async () => await rest.deleteEmoji(e2eCache.guild.id, newEmoji.id!))
 
     const exists = await rest.getEmojis(e2eCache.guild.id)
+
     expect(exists.length).to.greaterThan(1)
     expect(exists.find((x) => x.id === newEmoji.id)).to.exist
     expect(exists.find((x) => x.id === emoji.id)).to.exist
-
-    await rest.deleteEmoji(e2eCache.guild.id, newEmoji.id!)
   })
 })
