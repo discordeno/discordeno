@@ -19,26 +19,12 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v4
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-test:unit-${{ inputs.package }}-${{ github.sha }}
-      - name: Build dist cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-      - name: Build type cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: Unit Test
-        run: yarn test:unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        run: yarn test:unit --filter=./packages/${{ inputs.package }}
         timeout-minutes: 1
       - name: Collect and upload the coverage report
         uses: codecov/codecov-action@v5
