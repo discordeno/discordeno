@@ -48,6 +48,15 @@
     "test:type": {
       "dependsOn": ["^build:type"],
       "inputs": ["src/**/*.ts"]
+    },
+    "check": {
+      "dependsOn": ["build:type"],
+      "cache": false
+    },
+    "build:doc": {
+      // NOTE: This task can only be run with "--singe-package" in the flags to turbo, as it is defined only in the root package.json
+      "inputs": ["packages/**/src/**/*.ts"],
+      "outputs": ["website/api_reference/generated/**/*"]
     }
   }
 }
