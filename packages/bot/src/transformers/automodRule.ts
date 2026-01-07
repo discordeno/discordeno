@@ -20,6 +20,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
           presets: payload.trigger_metadata.presets,
           allowList: payload.trigger_metadata.allow_list,
           mentionTotalLimit: payload.trigger_metadata.mention_total_limit,
+          mentionRaidProtectionEnabled: payload.trigger_metadata.mention_raid_protection_enabled,
         }
       : undefined,
     actions: payload.actions.map((action) => ({

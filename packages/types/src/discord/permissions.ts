@@ -102,6 +102,8 @@ export const BitwisePermissionFlags = {
   USE_EXTERNAL_APPS: 1n << 50n,
   /** Allows pinning and unpinning messages */
   PIN_MESSAGES: 1n << 51n,
+  /** Allows bypassing slowmode restrictions */
+  BYPASS_SLOWMODE: 1n << 52n,
 } as const
 
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
