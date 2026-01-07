@@ -13,7 +13,7 @@ jobs:
     name: Deno Unit Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 20
@@ -22,25 +22,17 @@ jobs:
         with:
           deno-version: 'v2.1.x'
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v4
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-test:deno-unit-${{ inputs.package }}-${{ github.sha }}
-      - name: Build dist cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: Deno Unit Test
-        run: yarn test:deno-unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        run: yarn test:deno-unit --filter=./packages/${{ inputs.package }}
   bun-unit-test:
     name: Bun Unit Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 20
@@ -49,18 +41,10 @@ jobs:
         with:
           bun-version: '1.1.42'
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v4
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-test:bun-unit-${{ inputs.package }}-${{ github.sha }}
-      - name: Build dist cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: Bun Unit Test
-        run: yarn test:bun-unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        run: yarn test:bun-unit --filter=./packages/${{ inputs.package }}
         timeout-minutes: 1

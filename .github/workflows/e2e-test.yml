@@ -16,27 +16,19 @@ jobs:
     name: E2E Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: yarn
       - run: yarn install --immutable
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v4
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.3.5
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-test:e2e-${{ inputs.package }}-${{ github.sha }}
-      - name: Build dist cache
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+          cache-prefix: turbo-cache-
       - name: E2E Test
         if: ${{ inputs.event_name != 'pull_request' }}
-        run: yarn test:e2e --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        run: yarn test:e2e --filter=./packages/${{ inputs.package }}
         timeout-minutes: 5
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
