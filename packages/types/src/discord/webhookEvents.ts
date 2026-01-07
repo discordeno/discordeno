@@ -39,6 +39,8 @@ export interface DiscordEventWebhookEventBody {
     | DiscordEventWebhookApplicationAuthorizedBody
     | DiscordEventWebhookApplicationDeauthorizedBody
     | DiscordEventWebhookEntitlementCreateBody
+    | DiscordEventWebhookEntitlementUpdateBody
+    | DiscordEventWebhookEntitlementDeleteBody
     | DiscordEventWebhookLobbyMessageCreateBody
     | DiscordEventWebhookLobbyMessageUpdateBody
     | DiscordEventWebhookLobbyMessageDeleteBody
@@ -55,6 +57,10 @@ export enum DiscordWebhookEventType {
   ApplicationDeauthorized = 'APPLICATION_DEAUTHORIZED',
   /** Entitlement was created */
   EntitlementCreate = 'ENTITLEMENT_CREATE',
+  /** Entitlement was updated */
+  EntitlementUpdate = 'ENTITLEMENT_UPDATE',
+  /** Entitlement was deleted */
+  EntitlementDelete = 'ENTITLEMENT_DELETE',
   /** User was added to a Quest (currently unavailable) */
   QuestUserEnrollment = 'QUEST_USER_ENROLLMENT',
   /** Sent when a message is created in a lobby */
@@ -91,6 +97,12 @@ export interface DiscordEventWebhookApplicationDeauthorizedBody {
 
 /** https://discord.com/developers/docs/events/webhook-events#entitlement-create-entitlement-create-structure */
 export type DiscordEventWebhookEntitlementCreateBody = DiscordEntitlement
+
+/** https://discord.com/developers/docs/events/webhook-events#entitlement-update-entitlement-update-structure */
+export type DiscordEventWebhookEntitlementUpdateBody = DiscordEntitlement
+
+/** https://discord.com/developers/docs/events/webhook-events#entitlement-delete-entitlement-delete-structure */
+export type DiscordEventWebhookEntitlementDeleteBody = DiscordEntitlement
 
 /** https://discord.com/developers/docs/events/webhook-events#lobby-message-create-lobby-message-create-structure */
 export type DiscordEventWebhookLobbyMessageCreateBody = DiscordSocialSDKLobbyMessage
