@@ -2,10 +2,14 @@ import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/typ
 import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils'
 import type { RestRoutes } from './typings/routes.js'
 
-// The types for encodeURIComponent do not allow for bigint, however it does support it.
-// The specification for this function states that the first step it performs is to convert the input to a string: "1. Let componentString be ? ToString(uriComponent)."
-// https://tc39.es/ecma262/multipage/global-object.html#sec-encodeuricomponent-uricomponent
-const encode = encodeURIComponent as (uriComponent: string | number | bigint | boolean) => string
+const digitRegex = /^\d+$/
+
+const encode = (uriComponent: string | number | bigint | boolean): string => {
+  if (typeof uriComponent !== 'string') return uriComponent.toString()
+  if (digitRegex.test(uriComponent)) return uriComponent
+
+  return encodeURIComponent(uriComponent)
+}
 
 export function createRoutes(): RestRoutes {
   return {
