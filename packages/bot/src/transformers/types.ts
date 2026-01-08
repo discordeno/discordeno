@@ -947,7 +947,7 @@ export interface Interaction {
   /** The type of interaction */
   type: InteractionTypes
   /** Guild that the interaction was sent from */
-  guild: Partial<Guild>
+  guild?: Partial<Guild>
   /** The guild it was sent from */
   guildId?: bigint
   /** The channel it was sent from */
