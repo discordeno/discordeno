@@ -426,7 +426,7 @@ export const influxDB =
     : undefined
 export const Influx = influxDB?.getWriteApi(INFLUX_ORG, INFLUX_BUCKET)
 
-let savingAnalyticsId: NodeJS.Interval | undefined = undefined
+let saveAnalyticsId: NodeJS.Interval | undefined = undefined
 if (!saveAnalyticsId) {
   setInterval(() => {
     console.log(`[Influx - Gateway] Saving events...`)
