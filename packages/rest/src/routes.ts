@@ -2,16 +2,15 @@ import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/typ
 import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils'
 import type { RestRoutes } from './typings/routes.js'
 
-const digitRegex = /^\d+$/
+/**
+ * Creates the available discord API routes
+ *
+ * @param disableURIEncode Don't encode strings, except where required - Danger: disabling URI encoding may lead to path traversal if unsafe strings are used
+ * @returns The available discord API routes
+ */
+export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
+  const encode: typeof encodeComponent = disableURIEncode ? (x) => x.toString() : encodeComponent
 
-const encode = (uriComponent: string | number | bigint | boolean): string => {
-  if (typeof uriComponent !== 'string') return uriComponent.toString()
-  if (digitRegex.test(uriComponent)) return uriComponent
-
-  return encodeURIComponent(uriComponent)
-}
-
-export function createRoutes(): RestRoutes {
   return {
     webhooks: {
       id: (webhookId) => {
@@ -72,16 +71,16 @@ export function createRoutes(): RestRoutes {
       },
       reactions: {
         bot: (channelId, messageId, emoji) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}/@me`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/@me`
         },
         user: (channelId, messageId, emoji, userId) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}/${encode(userId)}`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/${encode(userId)}`
         },
         all: (channelId, messageId) => {
           return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions`
         },
         emoji: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}?`
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`
 
           if (options) {
             if (options.type) url += `type=${encode(options.type)}`
@@ -92,7 +91,7 @@ export function createRoutes(): RestRoutes {
           return url
         },
         message: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encode(emoji)}?`
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`
 
           if (options) {
             if (options.after) url += `after=${encode(options.after)}`
@@ -731,4 +730,11 @@ export function createRoutes(): RestRoutes {
       return '/sticker-packs'
     },
   }
+}
+
+function encodeComponent(uriComponent: string | number | bigint | boolean): string {
+  if (typeof uriComponent !== 'string') return uriComponent.toString()
+  if (/^\d+$/.test(uriComponent)) return uriComponent
+
+  return encodeURIComponent(uriComponent)
 }
