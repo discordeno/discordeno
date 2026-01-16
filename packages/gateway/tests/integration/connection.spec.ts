@@ -1,58 +1,58 @@
-import { GatewayOpcodes, Intents } from '@discordeno/types'
-import { createGatewayManager, type GatewayManager } from '../../src/manager.js'
-import { ShardSocketCloseCodes } from '../../src/types.js'
-import { creatWSServer, heartbeatInterval } from './websocket.js'
+import { GatewayOpcodes, Intents } from '@discordeno/types';
+import { createGatewayManager, type GatewayManager } from '../../src/manager.js';
+import { ShardSocketCloseCodes } from '../../src/types.js';
+import { creatWSServer, heartbeatInterval } from './websocket.js';
 
 describe('Gateway Integration', () => {
   it('Can connect to server', async () => {
-    const { promise: connected, resolve: resolveConnected } = promiseWithResolvers<void>()
+    const { promise: connected, resolve: resolveConnected } = promiseWithResolvers<void>();
 
     const { port, close } = creatWSServer({
       onOpen: resolveConnected,
-    })
+    });
 
-    const gateway = createGatewayManagerWithPort(port)
-    await gateway.spawnShards()
-    await connected
+    const gateway = createGatewayManagerWithPort(port);
+    await gateway.spawnShards();
+    await connected;
 
-    await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished')
+    await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished');
 
     // To avoid needing to wait 1m to get the bucket refil timer to fire we cancel it
-    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId)
+    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId);
 
-    close()
-  })
+    close();
+  });
 
   it('Can heartbeat', async () => {
-    const { promise: connected, resolve: resolveConnected } = promiseWithResolvers<void>()
-    const { promise: heartbeated, resolve: resolveHeartbeat, reject: rejectHeartbeat } = promiseWithResolvers<void>()
+    const { promise: connected, resolve: resolveConnected } = promiseWithResolvers<void>();
+    const { promise: heartbeated, resolve: resolveHeartbeat, reject: rejectHeartbeat } = promiseWithResolvers<void>();
 
     const { port, close } = creatWSServer({
       onOpen: resolveConnected,
       onMessage: (message) => {
         if (message.op === GatewayOpcodes.Heartbeat) {
-          resolveHeartbeat()
+          resolveHeartbeat();
         }
       },
-    })
+    });
 
-    const gateway = createGatewayManagerWithPort(port)
-    await gateway.spawnShards()
-    await connected
+    const gateway = createGatewayManagerWithPort(port);
+    await gateway.spawnShards();
+    await connected;
 
-    const timeout = setTimeout(() => rejectHeartbeat(new Error('Not heartbeat in time')), heartbeatInterval)
-    await heartbeated
+    const timeout = setTimeout(() => rejectHeartbeat(new Error('Not heartbeat in time')), heartbeatInterval);
+    await heartbeated;
 
-    clearTimeout(timeout)
+    clearTimeout(timeout);
 
-    await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished')
+    await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished');
 
     // To avoid needing to wait 1m to get the bucket refil timer to fire we cancel it
-    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId)
+    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId);
 
-    close()
-  })
-})
+    close();
+  });
+});
 
 function createGatewayManagerWithPort(port: number): GatewayManager {
   return createGatewayManager({
@@ -74,22 +74,22 @@ function createGatewayManagerWithPort(port: number): GatewayManager {
       checkInterval: 0,
       shardsFullPercentage: 0,
     },
-  })
+  });
 }
 
 // Polyfill for https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers
 function promiseWithResolvers<T>() {
-  let resolve!: (value: T | PromiseLike<T>) => void
-  let reject!: (reason?: any) => void
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  let reject!: (reason?: any) => void;
 
   const promise = new Promise<T>((_resolve, _reject) => {
-    resolve = _resolve
-    reject = _reject
-  })
+    resolve = _resolve;
+    reject = _reject;
+  });
 
   return {
     promise,
     resolve,
     reject,
-  }
+  };
 }

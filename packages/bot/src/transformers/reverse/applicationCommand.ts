@@ -1,6 +1,6 @@
-import type { DiscordApplicationCommand } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { ApplicationCommand } from '../types.js'
+import type { DiscordApplicationCommand } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { ApplicationCommand } from '../types.js';
 
 export function transformApplicationCommandToDiscordApplicationCommand(bot: Bot, payload: ApplicationCommand): DiscordApplicationCommand {
   return {
@@ -16,5 +16,5 @@ export function transformApplicationCommandToDiscordApplicationCommand(bot: Bot,
     default_member_permissions: payload.defaultMemberPermissions ? bot.transformers.reverse.snowflake(payload.defaultMemberPermissions) : null,
     dm_permission: payload.dmPermission,
     version: payload.version,
-  }
+  };
 }

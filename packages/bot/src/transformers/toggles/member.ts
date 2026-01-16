@@ -1,8 +1,8 @@
-import { type DiscordMember, MemberFlags } from '@discordeno/types'
-import { ToggleBitfield } from './ToggleBitfield.js'
+import { type DiscordMember, MemberFlags } from '@discordeno/types';
+import { ToggleBitfield } from './ToggleBitfield.js';
 
 /** @private This is subject to breaking changes without notices */
-export const memberFlags = ['didRejoin', 'startedOnboarding', 'bypassesVerification', 'completedOnboarding'] as const
+export const memberFlags = ['didRejoin', 'startedOnboarding', 'bypassesVerification', 'completedOnboarding'] as const;
 
 export const MemberToggle = {
   /** Whether the user is deafened in voice channels */
@@ -34,135 +34,135 @@ export const MemberToggle = {
   dmSettingsUpsellAcknowledged: 1 << 11,
   /** Member's guild tag is blocked by AutoMod */
   automodQuarantinedGuildTag: 1 << 12,
-}
+};
 
 export class MemberToggles extends ToggleBitfield {
   constructor(memberOrTogglesInt: Partial<DiscordMember> | number) {
-    super()
+    super();
 
-    if (typeof memberOrTogglesInt === 'number') this.bitfield = memberOrTogglesInt
+    if (typeof memberOrTogglesInt === 'number') this.bitfield = memberOrTogglesInt;
     else {
-      const member = memberOrTogglesInt
+      const member = memberOrTogglesInt;
 
-      if (member.deaf) this.add(MemberToggle.deaf)
-      if (member.mute) this.add(MemberToggle.mute)
-      if (member.pending) this.add(MemberToggle.pending)
+      if (member.deaf) this.add(MemberToggle.deaf);
+      if (member.mute) this.add(MemberToggle.mute);
+      if (member.pending) this.add(MemberToggle.pending);
 
       if (member.flags) {
-        if (member.flags & MemberFlags.DidRejoin) this.add(MemberToggle.didRejoin)
-        if (member.flags & MemberFlags.StartedOnboarding) this.add(MemberToggle.startedOnboarding)
-        if (member.flags & MemberFlags.BypassesVerification) this.add(MemberToggle.bypassesVerification)
-        if (member.flags & MemberFlags.CompletedOnboarding) this.add(MemberToggle.completedOnboarding)
-        if (member.flags & MemberFlags.IsGuest) this.add(MemberToggle.isGuest)
-        if (member.flags & MemberFlags.StartedHomeActions) this.add(MemberToggle.startedHomeActions)
-        if (member.flags & MemberFlags.CompletedHomeActions) this.add(MemberToggle.completedHomeActions)
-        if (member.flags & MemberFlags.AutomodQuarantinedUsername) this.add(MemberToggle.automodQuarantinedUsername)
-        if (member.flags & MemberFlags.DmSettingsUpsellAcknowledged) this.add(MemberToggle.dmSettingsUpsellAcknowledged)
-        if (member.flags & MemberFlags.AutomodQuarantinedGuildTag) this.add(MemberToggle.automodQuarantinedGuildTag)
+        if (member.flags & MemberFlags.DidRejoin) this.add(MemberToggle.didRejoin);
+        if (member.flags & MemberFlags.StartedOnboarding) this.add(MemberToggle.startedOnboarding);
+        if (member.flags & MemberFlags.BypassesVerification) this.add(MemberToggle.bypassesVerification);
+        if (member.flags & MemberFlags.CompletedOnboarding) this.add(MemberToggle.completedOnboarding);
+        if (member.flags & MemberFlags.IsGuest) this.add(MemberToggle.isGuest);
+        if (member.flags & MemberFlags.StartedHomeActions) this.add(MemberToggle.startedHomeActions);
+        if (member.flags & MemberFlags.CompletedHomeActions) this.add(MemberToggle.completedHomeActions);
+        if (member.flags & MemberFlags.AutomodQuarantinedUsername) this.add(MemberToggle.automodQuarantinedUsername);
+        if (member.flags & MemberFlags.DmSettingsUpsellAcknowledged) this.add(MemberToggle.dmSettingsUpsellAcknowledged);
+        if (member.flags & MemberFlags.AutomodQuarantinedGuildTag) this.add(MemberToggle.automodQuarantinedGuildTag);
       }
     }
   }
 
   get flags(): number {
-    let flags = 0
+    let flags = 0;
 
-    if (this.didRejoin) flags |= MemberFlags.DidRejoin
-    if (this.startedOnboarding) flags |= MemberFlags.StartedOnboarding
-    if (this.bypassesVerification) flags |= MemberFlags.BypassesVerification
-    if (this.completedOnboarding) flags |= MemberFlags.CompletedOnboarding
-    if (this.isGuest) flags |= MemberFlags.IsGuest
-    if (this.startedHomeActions) flags |= MemberFlags.StartedHomeActions
-    if (this.completedHomeActions) flags |= MemberFlags.CompletedHomeActions
-    if (this.automodQuarantinedUsername) flags |= MemberFlags.AutomodQuarantinedUsername
-    if (this.dmSettingsUpsellAcknowledged) flags |= MemberFlags.DmSettingsUpsellAcknowledged
-    if (this.automodQuarantinedGuildTag) flags |= MemberFlags.AutomodQuarantinedGuildTag
+    if (this.didRejoin) flags |= MemberFlags.DidRejoin;
+    if (this.startedOnboarding) flags |= MemberFlags.StartedOnboarding;
+    if (this.bypassesVerification) flags |= MemberFlags.BypassesVerification;
+    if (this.completedOnboarding) flags |= MemberFlags.CompletedOnboarding;
+    if (this.isGuest) flags |= MemberFlags.IsGuest;
+    if (this.startedHomeActions) flags |= MemberFlags.StartedHomeActions;
+    if (this.completedHomeActions) flags |= MemberFlags.CompletedHomeActions;
+    if (this.automodQuarantinedUsername) flags |= MemberFlags.AutomodQuarantinedUsername;
+    if (this.dmSettingsUpsellAcknowledged) flags |= MemberFlags.DmSettingsUpsellAcknowledged;
+    if (this.automodQuarantinedGuildTag) flags |= MemberFlags.AutomodQuarantinedGuildTag;
 
-    return flags
+    return flags;
   }
 
   /** Whether the user belongs to an OAuth2 application */
   get deaf(): boolean {
-    return this.has('deaf')
+    return this.has('deaf');
   }
 
   /** Whether the user is muted in voice channels */
   get mute(): boolean {
-    return this.has('mute')
+    return this.has('mute');
   }
 
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   get pending(): boolean {
-    return this.has('pending')
+    return this.has('pending');
   }
 
   /** Member has left and rejoined the guild */
   get didRejoin(): boolean {
-    return this.has('didRejoin')
+    return this.has('didRejoin');
   }
 
   /** Member has completed onboarding */
   get startedOnboarding(): boolean {
-    return this.has('startedOnboarding')
+    return this.has('startedOnboarding');
   }
 
   /** Member is exempt from guild verification requirements */
   get bypassesVerification(): boolean {
-    return this.has('bypassesVerification')
+    return this.has('bypassesVerification');
   }
 
   /** Member has started onboarding */
   get completedOnboarding(): boolean {
-    return this.has('completedOnboarding')
+    return this.has('completedOnboarding');
   }
 
   /** Member is a guest and can only access the voice channel they were invited to */
   get isGuest(): boolean {
-    return this.has('isGuest')
+    return this.has('isGuest');
   }
 
   /** Member has started Server Guide new member actions */
   get startedHomeActions(): boolean {
-    return this.has('startedHomeActions')
+    return this.has('startedHomeActions');
   }
 
   /** Member has completed Server Guide new member actions */
   get completedHomeActions(): boolean {
-    return this.has('completedHomeActions')
+    return this.has('completedHomeActions');
   }
 
   /** Member's username, display name, or nickname is blocked by AutoMod */
   get automodQuarantinedUsername(): boolean {
-    return this.has('automodQuarantinedUsername')
+    return this.has('automodQuarantinedUsername');
   }
 
   /** Member has dismissed the DM settings upsell */
   get dmSettingsUpsellAcknowledged(): boolean {
-    return this.has('dmSettingsUpsellAcknowledged')
+    return this.has('dmSettingsUpsellAcknowledged');
   }
 
   /** Member's guild tag is blocked by AutoMod */
   get automodQuarantinedGuildTag(): boolean {
-    return this.has('automodQuarantinedGuildTag')
+    return this.has('automodQuarantinedGuildTag');
   }
 
   /** Checks whether or not the permissions exist in this */
   has(permissions: MemberToggleKeys | MemberToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) return super.contains(MemberToggle[permissions])
+    if (!Array.isArray(permissions)) return super.contains(MemberToggle[permissions]);
 
-    return super.contains(permissions.reduce((a, b) => (a |= MemberToggle[b]), 0))
+    return super.contains(permissions.reduce((a, b) => (a |= MemberToggle[b]), 0));
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
   list(): Record<MemberToggleKeys, boolean> {
-    const json: Record<string, boolean> = {}
+    const json: Record<string, boolean> = {};
     for (const [key, value] of Object.entries(MemberToggle)) {
-      json[key] = super.contains(value)
+      json[key] = super.contains(value);
     }
 
-    return json as Record<MemberToggleKeys, boolean>
+    return json as Record<MemberToggleKeys, boolean>;
   }
 }
 
-export type MemberToggleKeys = keyof typeof MemberToggle
+export type MemberToggleKeys = keyof typeof MemberToggle;
 
-export type MemberFlagsKeys = (typeof memberFlags)[number]
+export type MemberFlagsKeys = (typeof memberFlags)[number];

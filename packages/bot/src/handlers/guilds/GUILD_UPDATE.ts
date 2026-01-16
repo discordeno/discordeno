@@ -1,10 +1,10 @@
-import type { DiscordGatewayPayload, DiscordGuild } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordGuild } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleGuildUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
-  if (!bot.events.guildUpdate) return
+  if (!bot.events.guildUpdate) return;
 
-  const payload = data.d as DiscordGuild
+  const payload = data.d as DiscordGuild;
 
-  bot.events.guildUpdate(bot.transformers.guild(bot, payload, { shardId }))
+  bot.events.guildUpdate(bot.transformers.guild(bot, payload, { shardId }));
 }

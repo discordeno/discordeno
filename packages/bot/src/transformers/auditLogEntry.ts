@@ -1,7 +1,7 @@
-import type { DiscordAuditLogEntry } from '@discordeno/types'
-import { camelize } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import type { AuditLogEntry } from './types.js'
+import type { DiscordAuditLogEntry } from '@discordeno/types';
+import { camelize } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import type { AuditLogEntry } from './types.js';
 
 export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry): AuditLogEntry {
   const auditLogEntry = {
@@ -27,7 +27,7 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry):
         }
       : undefined,
     reason: payload.reason,
-  } as AuditLogEntry
+  } as AuditLogEntry;
 
-  return bot.transformers.customizers.auditLogEntry(bot, payload, auditLogEntry)
+  return bot.transformers.customizers.auditLogEntry(bot, payload, auditLogEntry);
 }

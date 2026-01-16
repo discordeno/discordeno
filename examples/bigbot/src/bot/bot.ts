@@ -1,7 +1,7 @@
-import { Collection, createBot } from '@discordeno/bot'
-import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
-import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
-import type { Command } from './commands.js'
+import { Collection, createBot } from '@discordeno/bot';
+import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js';
+import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js';
+import type { Command } from './commands.js';
 
 const rawBot = createBot({
   token: DISCORD_TOKEN,
@@ -28,19 +28,19 @@ const rawBot = createBot({
       authorization: REST_AUTHORIZATION,
     },
   },
-})
+});
 
-export const bot = rawBot as CustomBot
+export const bot = rawBot as CustomBot;
 
 // TEMPLATE-SETUP: If you want/need to add any custom properties on the Bot type, you can do it in these lines below and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
 
-bot.commands = new Collection()
+bot.commands = new Collection();
 
-overrideGatewayImplementations(bot)
+overrideGatewayImplementations(bot);
 
 export type CustomBot = typeof rawBot & {
-  commands: Collection<string, Command>
-}
+  commands: Collection<string, Command>;
+};
 
 // Override the default gateway functions to allow the methods on the gateway object to proxy the requests to the gateway proxy
 function overrideGatewayImplementations(bot: CustomBot): void {
@@ -56,8 +56,8 @@ function overrideGatewayImplementations(bot: CustomBot): void {
         'Content-Type': 'application/json',
         Authorization: GATEWAY_AUTHORIZATION,
       },
-    })
-  }
+    });
+  };
 
   bot.gateway.editBotStatus = async (payload) => {
     await fetch(GATEWAY_URL, {
@@ -70,8 +70,8 @@ function overrideGatewayImplementations(bot: CustomBot): void {
         'Content-Type': 'application/json',
         Authorization: GATEWAY_AUTHORIZATION,
       },
-    })
-  }
+    });
+  };
 }
 
 export async function getShardInfoFromGuild(guildId?: bigint): Promise<Omit<ShardInfo, 'nonce'>> {
@@ -85,11 +85,11 @@ export async function getShardInfoFromGuild(guildId?: bigint): Promise<Omit<Shar
       'Content-Type': 'application/json',
       Authorization: GATEWAY_AUTHORIZATION,
     },
-  })
+  });
 
-  const res = await req.json()
+  const res = await req.json();
 
-  if (req.ok) return res
+  if (req.ok) return res;
 
-  throw new Error(`There was an issue getting the shard info: ${res.error}`)
+  throw new Error(`There was an issue getting the shard info: ${res.error}`);
 }

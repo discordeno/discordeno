@@ -1,4 +1,4 @@
-import { bot } from '../bot.js'
-import { updateGuildCommands } from '../utils/helpers.js'
+import { bot } from '../bot.js';
+import { updateGuildCommands } from '../utils/helpers.js';
 
-bot.events.guildCreate = async (guild) => await updateGuildCommands(guild)
+bot.events.guildCreate = async (guild) => await updateGuildCommands(guild);

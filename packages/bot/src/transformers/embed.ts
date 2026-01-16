@@ -1,6 +1,6 @@
-import type { DiscordEmbed } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { Embed } from './types.js'
+import type { DiscordEmbed } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { Embed } from './types.js';
 
 export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
   const embed = {
@@ -51,7 +51,7 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
         }
       : undefined,
     fields: payload.fields,
-  } as Embed
+  } as Embed;
 
-  return bot.transformers.customizers.embed(bot, payload, embed)
+  return bot.transformers.customizers.embed(bot, payload, embed);
 }
