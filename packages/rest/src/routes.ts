@@ -373,6 +373,12 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
         return url
       },
+      inviteTargetUsers(inviteCode) {
+        return `/invites/${encode(inviteCode)}/target-users`
+      },
+      inviteTargetUsersJobStatus(inviteCode) {
+        return `/invites/${encode(inviteCode)}/target-users/job-status`
+      },
       invites: (guildId) => {
         return `/guilds/${encode(guildId)}/invites`
       },

@@ -48,6 +48,7 @@ import type {
   DiscordSticker,
   DiscordStickerPack,
   DiscordSubscription,
+  DiscordTargetUsersJobStatus,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
@@ -653,7 +654,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload)
           },
           resolve: (data) => {
-            resolve(data.status !== 204 ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : undefined)
+            resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!)
           },
           reject: (reason) => {
             let errorText: string
@@ -816,7 +817,23 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createInvite(channelId, body = {}, reason) {
-      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason })
+      if (!body.targetUsersFile) {
+        return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason })
+      }
+
+      // When we have to upload a file, we need to use FormData, and each field has to be appended individually
+      const form = new FormData()
+
+      for (const [key, value] of Object.entries(body)) {
+        if (key !== 'targetUsersFile' && key !== 'roleIds') {
+          form.append(camelToSnakeCase(key), rest.changeToDiscordFormat(value).toString())
+        }
+      }
+
+      form.append('target_users_file', body.targetUsersFile)
+      if (body.roleIds) form.append('role_ids', body.roleIds.map((x) => x.toString()).join(','))
+
+      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason })
     },
 
     async getGuildRoleMemberCounts(guildId) {
@@ -893,6 +910,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteInvite(inviteCode, reason) {
       await rest.delete(rest.routes.guilds.invite(inviteCode), { reason })
+    },
+
+    async getTargetUsers(inviteCode) {
+      return await rest.get<string>(rest.routes.guilds.inviteTargetUsers(inviteCode))
+    },
+
+    async updateTargetUsers(inviteCode, targetUsersFile) {
+      const form = new FormData()
+      form.append('target_users_file', targetUsersFile)
+
+      await rest.put(rest.routes.guilds.inviteTargetUsers(inviteCode), { body: form })
+    },
+
+    async getTargetUsersJobStatus(inviteCode) {
+      return await rest.get<DiscordTargetUsersJobStatus>(rest.routes.guilds.inviteTargetUsersJobStatus(inviteCode))
     },
 
     async deleteMessage(channelId, messageId, reason) {

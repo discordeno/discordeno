@@ -303,6 +303,22 @@ export interface CreateChannelInvite {
   targetUserId?: BigString
   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
   targetApplicationId?: BigString
+  /**
+   * A csv file with a single column of user IDs for all the users able to accept this invite
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Uploading a file with invalid user IDs will result in a 400 with the invalid IDs described.
+   */
+  targetUsersFile?: Blob
+  /**
+   * The role ID(s) for roles in the guild given to the users that accept this invite
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission and cannot assign roles with higher permissions than the sender.
+   */
+  roleIds?: BigString[]
 }
 
 /** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */

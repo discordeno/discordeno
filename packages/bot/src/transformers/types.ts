@@ -1130,6 +1130,10 @@ export interface Invite {
   approximatePresenceCount?: number
   /** Guild invite flags for guild invites. */
   flags?: ToggleBitfield
+  /**
+   * The roles assigned to the user upon accepting the invite
+   */
+  roles?: Role[]
 }
 
 export interface Member {

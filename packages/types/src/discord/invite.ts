@@ -4,6 +4,7 @@ import type { DiscordApplication } from './application.js'
 import type { DiscordChannel } from './channel.js'
 import type { DiscordGuild, DiscordMember } from './guild.js'
 import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
+import type { DiscordRole } from './permissions.js'
 import type { DiscordUser } from './user.js'
 
 /** https://discord.com/developers/docs/resources/invite#invite-object-invite-structure */
@@ -38,6 +39,10 @@ export interface DiscordInvite {
    * @see {@link DiscordGuildInviteFlags}
    */
   flags?: number
+  /**
+   * The roles assigned to the user upon accepting the invite
+   */
+  roles?: DiscordRole[]
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-object-invite-types */
@@ -86,4 +91,31 @@ export interface DiscordInviteStageInstance {
   speaker_count: number
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
+}
+
+/**
+ * https://discord.com/developers/docs/resources/invite#get-target-users-job-status-example-response
+ *
+ * @remarks
+ * Discord does not seem to actually document the type for this response, so this is based on the example provided
+ */
+export interface DiscordTargetUsersJobStatus {
+  status: DiscordGetTargetUsersJobStatusErrorCodes
+  total_users: number
+  processed_users: number
+  created_at: string
+  completed_at: string | null
+  error_message: string | null
+}
+
+/** https://discord.com/developers/docs/resources/invite#get-target-users-job-status-error-codes */
+export enum DiscordGetTargetUsersJobStatusErrorCodes {
+  /** The default value. */
+  Unspecified,
+  /** The job is still being processed. */
+  Processing,
+  /** The job has been completed successfully. */
+  Completed,
+  /** The job has failed, see `error_message` field for more details. */
+  Failed,
 }
