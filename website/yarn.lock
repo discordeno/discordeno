@@ -20869,7 +20869,7 @@ __metadata:
     "@docusaurus/types": "npm:^3.9.2"
     "@easyops-cn/docusaurus-search-local": "npm:^0.52.1"
     "@mdx-js/react": "npm:^3.1.1"
-    "@types/react": "npm:^19.2.7"
+    "@types/react": "npm:^19.2.8"
     "@xyflow/react": "npm:^12.10.0"
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.3"
