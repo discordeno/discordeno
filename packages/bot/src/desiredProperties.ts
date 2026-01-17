@@ -548,6 +548,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       webhookId: defaultValue,
       poll: defaultValue,
       call: defaultValue,
+      resolved: defaultValue,
       ...desiredProperties.message,
     },
     messageSnapshot: {
@@ -1023,12 +1024,16 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
             Equals<T, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
             ? // Yes, apply the desired props
               InteractionResolvedDataChannel<TProps, TBehavior>
-            : // Is it an object?
-              IsObject<T> extends true
-              ? // Yes, we need to ensure we transform the nested properties as well
-                { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
-              : // No, this is a normal value such as string / bigint / number
-                T
+            : // Is it a function?
+              T extends (...args: infer P) => Promise<infer R>
+              ? // Yes, we need to ensure we transform the return type as well
+                (...args: P) => Promise<TransformProperty<R, TProps, TBehavior>>
+              : // Is it an object?
+                IsObject<T> extends true
+                ? // Yes, we need to ensure we transform the nested properties as well
+                  { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
+                : // No, this is a normal value such as string / bigint / number
+                  T
 
 /**
  * Apply desired properties to an object.
