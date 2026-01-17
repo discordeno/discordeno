@@ -1,6 +1,6 @@
-import type { DiscordWelcomeScreen } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { WelcomeScreen } from './types.js'
+import type { DiscordWelcomeScreen } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { WelcomeScreen } from './types.js';
 
 export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen): WelcomeScreen {
   const welcomeScreen = {
@@ -11,7 +11,7 @@ export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen):
       emojiId: channel.emoji_id ? bot.transformers.snowflake(channel.emoji_id) : undefined,
       emojiName: channel.emoji_name ?? undefined,
     })),
-  } as WelcomeScreen
+  } as WelcomeScreen;
 
-  return bot.transformers.customizers.welcomeScreen(bot, payload, welcomeScreen)
+  return bot.transformers.customizers.welcomeScreen(bot, payload, welcomeScreen);
 }

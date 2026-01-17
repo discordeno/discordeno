@@ -1,65 +1,65 @@
-import type { Camelize, Snakelize } from '@discordeno/types'
+import type { Camelize, Snakelize } from '@discordeno/types';
 
 export function camelize<T>(object: T): Camelize<T> {
   if (Array.isArray(object)) {
-    return object.map((element) => camelize(element)) as Camelize<T>
+    return object.map((element) => camelize(element)) as Camelize<T>;
   }
 
   if (typeof object === 'object' && object !== null) {
-    const obj = {} as Camelize<T>
-    ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
+    const obj = {} as Camelize<T>;
+    (Object.keys(object) as Array<keyof T>).forEach((key) => {
       // @ts-expect-error js hack
-      ;(obj[snakeToCamelCase(key)] as Camelize<(T & object)[keyof T]>) = camelize(object[key])
-    })
-    return obj
+      (obj[snakeToCamelCase(key)] as Camelize<(T & object)[keyof T]>) = camelize(object[key]);
+    });
+    return obj;
   }
-  return object as Camelize<T>
+  return object as Camelize<T>;
 }
 
 export function snakelize<T>(object: T): Snakelize<T> {
   if (Array.isArray(object)) {
-    return object.map((element) => snakelize(element)) as Snakelize<T>
+    return object.map((element) => snakelize(element)) as Snakelize<T>;
   }
 
   if (typeof object === 'object' && object !== null) {
-    const obj = {} as Snakelize<T>
-    ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
+    const obj = {} as Snakelize<T>;
+    (Object.keys(object) as Array<keyof T>).forEach((key) => {
       // @ts-expect-error js hack
-      ;(obj[camelToSnakeCase(key)] as Snakelize<(T & object)[keyof T]>) = snakelize(object[key])
-    })
-    return obj
+      (obj[camelToSnakeCase(key)] as Snakelize<(T & object)[keyof T]>) = snakelize(object[key]);
+    });
+    return obj;
   }
-  return object as Snakelize<T>
+  return object as Snakelize<T>;
 }
 
 export function snakeToCamelCase(str: string): string {
-  if (!str.includes('_')) return str
+  if (!str.includes('_')) return str;
 
-  let result = ''
+  let result = '';
   for (let i = 0, len = str.length; i < len; ++i) {
     if (str[i] === '_') {
-      result += str[++i].toUpperCase()
+      result += str[++i].toUpperCase();
 
-      continue
+      continue;
     }
 
-    result += str[i]
+    result += str[i];
   }
 
-  return result
+  return result;
 }
 
 export function camelToSnakeCase(str: string): string {
-  let result = ''
+  let result = '';
   for (let i = 0, len = str.length; i < len; ++i) {
     if (str[i] >= 'A' && str[i] <= 'Z') {
-      result += `_${str[i].toLowerCase()}`
+      result += `_${str[i].toLowerCase()}`;
 
-      continue
+      continue;
     }
 
-    result += str[i]
+    result += str[i];
   }
 
-  return result
+  return result;
 }

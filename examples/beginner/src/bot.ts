@@ -1,6 +1,6 @@
-import { createBot, Intents } from '@discordeno/bot'
-import { createProxyCache } from 'dd-cache-proxy'
-import { configs } from './config.js'
+import { createBot, Intents } from '@discordeno/bot';
+import { createProxyCache } from 'dd-cache-proxy';
+import { configs } from './config.js';
 
 const rawBot = createBot({
   token: configs.token,
@@ -22,7 +22,7 @@ const rawBot = createBot({
       username: true,
     },
   },
-})
+});
 
 export const bot = createProxyCache(rawBot, {
   desiredProps: {
@@ -32,4 +32,4 @@ export const bot = createProxyCache(rawBot, {
     guild: true,
     default: false,
   },
-})
+});

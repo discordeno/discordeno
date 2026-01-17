@@ -1,6 +1,6 @@
-import type { DiscordUpdatePresence, ShardSocketRequest } from '@discordeno/bot'
+import type { DiscordUpdatePresence, ShardSocketRequest } from '@discordeno/bot';
 
-export type ManagerMessage = ManagerRequestIdentify | ManagerShardIdentified | ManagerShardPrepared | ManagerShardInfo
+export type ManagerMessage = ManagerRequestIdentify | ManagerShardIdentified | ManagerShardPrepared | ManagerShardInfo;
 export type WorkerMessage =
   | WorkerIdentifyShard
   | WorkerPrepareShard
@@ -8,93 +8,93 @@ export type WorkerMessage =
   | WorkerAllowIdentify
   | WorkerShardPayload
   | WorkerPresencesUpdate
-  | WorkerShardInfo
+  | WorkerShardInfo;
 
 export interface WorkerIdentifyShard {
-  type: 'IdentifyShard'
-  shardId: number
+  type: 'IdentifyShard';
+  shardId: number;
 }
 
 export interface WorkerPrepareShard {
-  type: 'PrepareShard'
-  shardId: number
-  totalShards: number
+  type: 'PrepareShard';
+  shardId: number;
+  totalShards: number;
 }
 
 export interface WorkerSwitchShards {
-  type: 'SwitchShards'
+  type: 'SwitchShards';
 }
 
 export interface WorkerAllowIdentify {
-  type: 'AllowIdentify'
-  shardId: number
+  type: 'AllowIdentify';
+  shardId: number;
 }
 
 export interface ManagerRequestIdentify {
-  type: 'RequestIdentify'
-  shardId: number
+  type: 'RequestIdentify';
+  shardId: number;
 }
 
 export interface WorkerShardPayload {
-  type: 'ShardPayload'
-  shardId: number
-  payload: ShardSocketRequest
+  type: 'ShardPayload';
+  shardId: number;
+  payload: ShardSocketRequest;
 }
 
 export interface WorkerPresencesUpdate {
-  type: 'EditShardsPresence'
-  payload: DiscordUpdatePresence
+  type: 'EditShardsPresence';
+  payload: DiscordUpdatePresence;
 }
 
 export interface WorkerShardInfo {
-  type: 'GetShardInfo'
-  shardId: number
-  nonce: string
+  type: 'GetShardInfo';
+  shardId: number;
+  nonce: string;
 }
 
 export interface WorkerCreateData {
   connectionData: {
-    intents: number
-    token: string
-    url: string
-    version: number
-    totalShards: number
-  }
+    intents: number;
+    token: string;
+    url: string;
+    version: number;
+    totalShards: number;
+  };
   eventHandler: {
-    urls: string[]
-    authentication: string
-  }
-  workerId: number
+    urls: string[];
+    authentication: string;
+  };
+  workerId: number;
   messageQueue: {
-    enabled: boolean
-    username?: string
-    password?: string
-    url?: string
-  }
+    enabled: boolean;
+    username?: string;
+    password?: string;
+    url?: string;
+  };
 }
 
 export interface ShardInfo {
-  shardId: number
-  rtt: number
+  shardId: number;
+  rtt: number;
   // the nonce is to bind to the request
-  nonce: string
+  nonce: string;
 }
 
 export interface ManagerShardInfo extends ShardInfo {
-  type: 'ShardInfo'
+  type: 'ShardInfo';
 }
 
 export interface ManagerGetShardInfoFromGuildId {
-  type: 'ShardInfoFromGuild'
-  guildId: string | undefined
+  type: 'ShardInfoFromGuild';
+  guildId: string | undefined;
 }
 
 export interface ManagerShardIdentified {
-  type: 'ShardIdentified'
-  shardId: number
+  type: 'ShardIdentified';
+  shardId: number;
 }
 
 export interface ManagerShardPrepared {
-  type: 'ShardPrepared'
-  shardId: number
+  type: 'ShardPrepared';
+  shardId: number;
 }

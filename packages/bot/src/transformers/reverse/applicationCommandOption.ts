@@ -1,6 +1,6 @@
-import type { DiscordApplicationCommandOption } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { ApplicationCommandOption } from '../types.js'
+import type { DiscordApplicationCommandOption } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { ApplicationCommandOption } from '../types.js';
 
 export function transformApplicationCommandOptionToDiscordApplicationCommandOption(
   bot: Bot,
@@ -21,5 +21,5 @@ export function transformApplicationCommandOptionToDiscordApplicationCommandOpti
     min_length: payload.minLength,
     max_length: payload.maxLength,
     autocomplete: payload.autocomplete,
-  }
+  };
 }

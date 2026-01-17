@@ -70,291 +70,291 @@ import type {
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
-} from '@discordeno/types'
-import type { Collection, ImageOptions } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js'
-import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from '../desiredProperties.js'
-import type { ChannelToggles } from './toggles/channel.js'
-import type { EmojiToggles } from './toggles/emoji.js'
-import type { GuildFeatureKeys, GuildToggles } from './toggles/guild.js'
-import type { MemberToggles } from './toggles/member.js'
-import type { Permissions } from './toggles/Permissions.js'
-import type { RoleToggles } from './toggles/role.js'
-import type { ToggleBitfield } from './toggles/ToggleBitfield.js'
-import type { UserToggles } from './toggles/user.js'
-import type { VoiceStateToggles } from './toggles/voice.js'
+} from '@discordeno/types';
+import type { Collection, ImageOptions } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from '../commandOptionsParser.js';
+import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from '../desiredProperties.js';
+import type { ChannelToggles } from './toggles/channel.js';
+import type { EmojiToggles } from './toggles/emoji.js';
+import type { GuildFeatureKeys, GuildToggles } from './toggles/guild.js';
+import type { MemberToggles } from './toggles/member.js';
+import type { Permissions } from './toggles/Permissions.js';
+import type { RoleToggles } from './toggles/role.js';
+import type { ToggleBitfield } from './toggles/ToggleBitfield.js';
+import type { UserToggles } from './toggles/user.js';
+import type { VoiceStateToggles } from './toggles/voice.js';
 
 export interface Activity {
-  join?: string
-  flags?: number
-  applicationId?: bigint
-  spectate?: string
-  url?: string
-  startedAt?: number
-  endedAt?: number
-  details?: string
-  state?: string
-  emoji?: ActivityEmoji
-  partyId?: string
-  partyCurrentSize?: number
-  partyMaxSize?: number
-  largeImage?: string
-  largeText?: string
-  smallImage?: string
-  smallText?: string
-  inviteCoverImage?: string
-  match?: string
-  instance?: boolean
-  buttons?: ActivityButton[]
-  name: string
-  type: ActivityTypes
-  createdAt: number
+  join?: string;
+  flags?: number;
+  applicationId?: bigint;
+  spectate?: string;
+  url?: string;
+  startedAt?: number;
+  endedAt?: number;
+  details?: string;
+  state?: string;
+  emoji?: ActivityEmoji;
+  partyId?: string;
+  partyCurrentSize?: number;
+  partyMaxSize?: number;
+  largeImage?: string;
+  largeText?: string;
+  smallImage?: string;
+  smallText?: string;
+  inviteCoverImage?: string;
+  match?: string;
+  instance?: boolean;
+  buttons?: ActivityButton[];
+  name: string;
+  type: ActivityTypes;
+  createdAt: number;
 }
 
 export interface ActivityEmoji {
-  id?: bigint
-  animated?: boolean
-  name: string
+  id?: bigint;
+  animated?: boolean;
+  name: string;
 }
 
 export interface ActivityButton {
-  url: string
-  label: string
+  url: string;
+  label: string;
 }
 
 export interface ActivityInstance {
   /** Application ID */
-  applicationId: bigint
+  applicationId: bigint;
   /** Activity Instance ID */
-  instanceId: string
+  instanceId: string;
   /** Unique identifier for the launch */
-  launchId: bigint
+  launchId: bigint;
   /** The Location the instance is running in */
-  location: ActivityLocation
+  location: ActivityLocation;
   /** The IDs of the Users currently connected to the instance */
-  users: bigint[]
+  users: bigint[];
 }
 
 export interface ActivityLocation {
   /** The unique identifier for the location */
-  id: string
+  id: string;
   /** Enum describing kind of location */
-  kind: DiscordActivityLocationKind
+  kind: DiscordActivityLocationKind;
   /** The id of the Channel */
-  channelId: bigint
+  channelId: bigint;
   /** The id of the Guild */
-  guildId?: bigint
+  guildId?: bigint;
 }
 
 export interface Application {
-  flags?: ApplicationFlags
-  icon?: bigint
-  rpcOrigins?: string[]
-  termsOfServiceUrl?: string
-  privacyPolicyUrl?: string
-  primarySkuId?: string
-  slug?: string
-  coverImage?: bigint
-  owner?: User
-  team?: Team
-  guildId?: bigint
-  guild?: Guild
-  id: bigint
-  name: string
-  description: string
-  botPublic: boolean
-  botRequireCodeGrant: boolean
-  verifyKey: string
-  customInstallUrl?: string
-  approximateGuildCount?: number
-  approximateUserInstallCount?: number
-  approximateUserAuthorizationCount?: number
-  installParams?: ApplicationInstallParams
-  bot?: User
-  redirectUris?: string[]
-  interactionsEndpointUrl?: string
-  integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>
-  roleConnectionsVerificationUrl: string
-  tags: string[]
-  eventWebhooksUrl?: string
-  eventWebhooksStatus: DiscordApplicationEventWebhookStatus
-  eventWebhooksTypes?: DiscordWebhookEventType[]
+  flags?: ApplicationFlags;
+  icon?: bigint;
+  rpcOrigins?: string[];
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
+  primarySkuId?: string;
+  slug?: string;
+  coverImage?: bigint;
+  owner?: User;
+  team?: Team;
+  guildId?: bigint;
+  guild?: Guild;
+  id: bigint;
+  name: string;
+  description: string;
+  botPublic: boolean;
+  botRequireCodeGrant: boolean;
+  verifyKey: string;
+  customInstallUrl?: string;
+  approximateGuildCount?: number;
+  approximateUserInstallCount?: number;
+  approximateUserAuthorizationCount?: number;
+  installParams?: ApplicationInstallParams;
+  bot?: User;
+  redirectUris?: string[];
+  interactionsEndpointUrl?: string;
+  integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>;
+  roleConnectionsVerificationUrl: string;
+  tags: string[];
+  eventWebhooksUrl?: string;
+  eventWebhooksStatus: DiscordApplicationEventWebhookStatus;
+  eventWebhooksTypes?: DiscordWebhookEventType[];
 }
 
 export interface ApplicationIntegrationTypeConfiguration {
   /** Install params for each installation context's default in-app authorization link */
-  oauth2InstallParams?: ApplicationInstallParams
+  oauth2InstallParams?: ApplicationInstallParams;
 }
 
 export interface ApplicationInstallParams {
   /** Scopes to add the application to the server with */
-  scopes: OAuth2Scope[]
+  scopes: OAuth2Scope[];
   /** Permissions to request for the bot role */
-  permissions: bigint
+  permissions: bigint;
 }
 
 export interface ApplicationCommand {
-  options?: ApplicationCommandOption[]
-  description: string
-  guildId?: bigint
-  nameLocalizations?: Localization
-  descriptionLocalizations?: Localization
-  defaultMemberPermissions?: bigint
-  type?: ApplicationCommandTypes
-  version: string
-  id: bigint
-  name: string
-  applicationId: bigint
-  dmPermission: boolean
+  options?: ApplicationCommandOption[];
+  description: string;
+  guildId?: bigint;
+  nameLocalizations?: Localization;
+  descriptionLocalizations?: Localization;
+  defaultMemberPermissions?: bigint;
+  type?: ApplicationCommandTypes;
+  version: string;
+  id: bigint;
+  name: string;
+  applicationId: bigint;
+  dmPermission: boolean;
 }
 
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
-  type: ApplicationCommandOptionTypes
+  type: ApplicationCommandOptionTypes;
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string
+  name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  nameLocalizations?: Localization
+  nameLocalizations?: Localization;
   /** 1-100 character description */
-  description: string
+  description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  descriptionLocalizations?: Localization
+  descriptionLocalizations?: Localization;
   /** If the parameter is required or optional--default `false` */
-  required?: boolean
+  required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[]
+  choices?: ApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[]
+  options?: ApplicationCommandOption[];
   /** If the option is a channel type, the channels shown will be restricted to these types */
-  channelTypes?: ChannelTypes[]
+  channelTypes?: ChannelTypes[];
   /** Minimum number desired. */
-  minValue?: number
+  minValue?: number;
   /** Maximum number desired. */
-  maxValue?: number
+  maxValue?: number;
   /** Minimum length desired. */
-  minLength?: number
+  minLength?: number;
   /** Maximum length desired. */
-  maxLength?: number
+  maxLength?: number;
   /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-  autocomplete?: boolean
+  autocomplete?: boolean;
 }
 
 export interface ApplicationCommandOptionChoice {
-  nameLocalizations?: Localization
-  name: string
-  value: string | number
+  nameLocalizations?: Localization;
+  name: string;
+  value: string | number;
 }
 
 export interface GuildApplicationCommandPermissions {
-  id: bigint
-  guildId: bigint
-  applicationId: bigint
-  permissions: ApplicationCommandPermissions[]
+  id: bigint;
+  guildId: bigint;
+  applicationId: bigint;
+  permissions: ApplicationCommandPermissions[];
 }
 
 export interface ApplicationCommandPermissions {
   /** The id of the role or user */
-  id: bigint
+  id: bigint;
   /** Role or User */
-  type: ApplicationCommandPermissionTypes
+  type: ApplicationCommandPermissionTypes;
   /** `true` to allow, `false`, to disallow */
-  permission: boolean
+  permission: boolean;
 }
 
 export interface Attachment {
   /** Name of file attached */
-  filename: string
+  filename: string;
   /** The title of the file */
-  title?: string
+  title?: string;
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
-  contentType?: string
+  contentType?: string;
   /** Size of file in bytes */
-  size: number
+  size: number;
   /** Source url of file */
-  url: string
+  url: string;
   /** A proxied url of file */
-  proxyUrl: string
+  proxyUrl: string;
   /** Attachment id */
-  id: bigint
+  id: bigint;
   /** description for the file (max 1024 characters) */
-  description?: string
+  description?: string;
   /** Height of file (if image) */
-  height?: number
+  height?: number;
   /** Width of file (if image) */
-  width?: number
+  width?: number;
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
-  ephemeral?: boolean
+  ephemeral?: boolean;
   /** The duration of the audio file for a voice message */
-  duration_secs?: number
+  duration_secs?: number;
   /** A base64 encoded bytearray representing a sampled waveform for a voice message */
-  waveform?: string
+  waveform?: string;
   /** Attachment flags combined as a bitfield */
-  flags?: AttachmentFlags
+  flags?: AttachmentFlags;
 }
 
 export interface AuditLogEntry {
-  id: bigint
-  userId?: bigint
-  reason?: string
-  changes?: Camelize<DiscordAuditLogChange>[]
-  targetId?: bigint
-  actionType: AuditLogEvents
-  options?: OptionalAuditEntryInfo
+  id: bigint;
+  userId?: bigint;
+  reason?: string;
+  changes?: Camelize<DiscordAuditLogChange>[];
+  targetId?: bigint;
+  actionType: AuditLogEvents;
+  options?: OptionalAuditEntryInfo;
 }
 
 export interface OptionalAuditEntryInfo {
-  applicationId?: bigint
-  autoModerationRuleName?: string
-  autoModerationRuleTriggerType?: string
-  channelId?: bigint
-  count?: number
-  deleteMemberDays?: number
-  id?: bigint
-  membersRemoved?: number
-  messageId?: bigint
-  roleName?: string
-  type?: number
-  integrationType?: string
+  applicationId?: bigint;
+  autoModerationRuleName?: string;
+  autoModerationRuleTriggerType?: string;
+  channelId?: bigint;
+  count?: number;
+  deleteMemberDays?: number;
+  id?: bigint;
+  membersRemoved?: number;
+  messageId?: bigint;
+  roleName?: string;
+  type?: number;
+  integrationType?: string;
 }
 
 export interface AutoModerationActionExecution {
-  channelId?: bigint
-  messageId?: bigint
-  alertSystemMessageId?: bigint
-  guildId: bigint
-  userId: bigint
-  content: string
-  action: AutoModerationAction
-  ruleTriggerType: AutoModerationTriggerTypes
-  ruleId: bigint
-  matchedKeyword: string
-  matchedContent: string
+  channelId?: bigint;
+  messageId?: bigint;
+  alertSystemMessageId?: bigint;
+  guildId: bigint;
+  userId: bigint;
+  content: string;
+  action: AutoModerationAction;
+  ruleTriggerType: AutoModerationTriggerTypes;
+  ruleId: bigint;
+  matchedKeyword: string;
+  matchedContent: string;
 }
 
 export interface AutoModerationAction {
-  type: AutoModerationActionType
-  metadata?: AutoModerationActionMetadata
+  type: AutoModerationActionType;
+  metadata?: AutoModerationActionMetadata;
 }
 
 export interface AutoModerationActionMetadata {
-  customMessage?: string
-  durationSeconds?: number
-  channelId?: bigint
+  customMessage?: string;
+  durationSeconds?: number;
+  channelId?: bigint;
 }
 
 export interface AutoModerationRule {
-  triggerMetadata?: AutoModerationRuleTriggerMetadata
-  id: bigint
-  name: string
-  guildId: bigint
-  eventType: AutoModerationEventTypes
-  triggerType: AutoModerationTriggerTypes
-  enabled: boolean
-  creatorId: bigint
-  exemptRoles: bigint[]
-  exemptChannels: bigint[]
-  actions: AutoModerationAction[]
+  triggerMetadata?: AutoModerationRuleTriggerMetadata;
+  id: bigint;
+  name: string;
+  guildId: bigint;
+  eventType: AutoModerationEventTypes;
+  triggerType: AutoModerationTriggerTypes;
+  enabled: boolean;
+  creatorId: bigint;
+  exemptRoles: bigint[];
+  exemptChannels: bigint[];
+  actions: AutoModerationAction[];
 }
 
 export interface AutoModerationRuleTriggerMetadata {
@@ -366,7 +366,7 @@ export interface AutoModerationRuleTriggerMetadata {
    *
    * Can have up to 1000 elements in the array and each string can have up to 60 characters.
    */
-  keywordFilter?: string[]
+  keywordFilter?: string[];
   /**
    * Regular expression patterns which will be matched against content.
    *
@@ -375,14 +375,14 @@ export interface AutoModerationRuleTriggerMetadata {
    *
    * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
    */
-  regexPatterns?: string[]
+  regexPatterns?: string[];
   /**
    * The Discord pre-defined wordsets which will be searched for in content.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
    */
-  presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+  presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   /**
    * The substrings which should not trigger the rule.
    *
@@ -392,7 +392,7 @@ export interface AutoModerationRuleTriggerMetadata {
    * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
    * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
    */
-  allowList?: string[]
+  allowList?: string[];
   /**
    * Total number of unique role and user mentions allowed per message.
    *
@@ -401,129 +401,129 @@ export interface AutoModerationRuleTriggerMetadata {
    *
    * Maximum of 50
    */
-  mentionTotalLimit?: number
+  mentionTotalLimit?: number;
   /**
    * Whether to automatically detect mention raids.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
    */
-  mentionRaidProtectionEnabled?: boolean
+  mentionRaidProtectionEnabled?: boolean;
 }
 
 export interface AvatarDecorationData {
   /** the avatar decoration hash */
-  asset: bigint
+  asset: bigint;
   /** id of the avatar decoration's SKU */
-  skuId: bigint
+  skuId: bigint;
 }
 
 export interface Channel {
   /** The id of the channel */
-  id: bigint
+  id: bigint;
   /** The compressed form of all the boolean values on this channel. */
-  toggles: ChannelToggles
+  toggles: ChannelToggles;
   /** The type of channel */
-  type: ChannelTypes
+  type: ChannelTypes;
   /** The id of the guild */
-  guildId?: bigint
+  guildId?: bigint;
   /** Sorting position of the channel */
-  position?: number
+  position?: number;
   /** The name of the channel (1-100 characters) */
-  name?: string
+  name?: string;
   /** The channel topic (0-4096 characters for GUILD_FORUM channels, 0-1024 characters for all others) */
-  topic?: string
+  topic?: string;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
-  lastMessageId?: bigint
+  lastMessageId?: bigint;
   /** The bitrate (in bits) of the voice or stage channel */
-  bitrate?: number
+  bitrate?: number;
   /** The user limit of the voice or stage channel */
-  userLimit?: number
+  userLimit?: number;
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number
+  rateLimitPerUser?: number;
   /** Id of the creator of the thread */
-  ownerId?: bigint
+  ownerId?: bigint;
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
-  parentId?: bigint
+  parentId?: bigint;
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
-  lastPinTimestamp?: number
+  lastPinTimestamp?: number;
   /** Voice region id for the voice or stage channel, automatic when set to null */
-  rtcRegion?: string
+  rtcRegion?: string;
   /** The camera video quality mode of the voice channel, 1 when not present */
-  videoQualityMode?: VideoQualityModes
+  videoQualityMode?: VideoQualityModes;
   /** An approximate count of messages in a thread, stops counting at 50 */
-  messageCount?: number
+  messageCount?: number;
   /** An approximate count of users in a thread, stops counting at 50 */
-  memberCount?: number
+  memberCount?: number;
   /**
    * Thread-specific fields not needed by other channels.
    *
    * @private
    * This field is an internal field, subject to breaking changes.
    */
-  internalThreadMetadata?: InternalChannelThreadMetadata
-  member?: ThreadMember
+  internalThreadMetadata?: InternalChannelThreadMetadata;
+  member?: ThreadMember;
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  defaultAutoArchiveDuration?: number
+  defaultAutoArchiveDuration?: number;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately. */
-  permissions?: Permissions
+  permissions?: Permissions;
   /** The flags of the channel */
-  flags?: number
+  flags?: number;
   /**
    * Explicit permission overwrites for members and roles
    *
    * @private
    * Use channel.permissionOverwrites. This is for internal use only, and prone to breaking changes.
    */
-  internalOverwrites?: bigint[]
+  internalOverwrites?: bigint[];
   /** The recipients of a group dm */
-  recipients?: User[]
+  recipients?: User[];
   /** Icon hash of the group dm */
-  icon?: bigint
+  icon?: bigint;
   /** Application id of the group DM creator if it is bot-created */
-  applicationId?: bigint
+  applicationId?: bigint;
   /** Number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted */
-  totalMessageSent?: number
+  totalMessageSent?: number;
   /** The set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
-  availableTags?: ForumTag[]
+  availableTags?: ForumTag[];
   /** The IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
-  appliedTags?: bigint[]
+  appliedTags?: bigint[];
   /** The emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
-  defaultReactionEmoji?: DefaultReactionEmoji
+  defaultReactionEmoji?: DefaultReactionEmoji;
   /** the initial `rateLimitPerUser` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
-  defaultThreadRateLimitPerUser?: number
+  defaultThreadRateLimitPerUser?: number;
   /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
-  defaultSortOrder?: SortOrderTypes | null
-  defaultForumLayout?: ForumLayout
+  defaultSortOrder?: SortOrderTypes | null;
+  defaultForumLayout?: ForumLayout;
   /** Whether the channel is nsfw */
-  nsfw: boolean
+  nsfw: boolean;
   /** Thread-specific fields not needed by other channels */
-  threadMetadata?: ChannelThreadMetadata
+  threadMetadata?: ChannelThreadMetadata;
   /** When a thread is created this will be true on that channel payload for the thread. */
-  newlyCreated: boolean
+  newlyCreated: boolean;
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked: boolean
+  locked: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable: boolean
+  invitable: boolean;
   /** Whether the thread is archived */
-  archived: boolean
+  archived: boolean;
   /** for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope */
-  managed: boolean
+  managed: boolean;
   /** Explicit permission overwrites for members and roles. */
-  permissionOverwrites: Overwrite[]
+  permissionOverwrites: Overwrite[];
 }
 
 export interface ForumTag {
   /** The id of the tag */
-  id: bigint
+  id: bigint;
   /** The name of the tag (0-20 characters) */
-  name: string
+  name: string;
   /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-  moderated: boolean
+  moderated: boolean;
   /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
-  emojiId: bigint
+  emojiId: bigint;
   /** The unicode character of the emoji */
-  emojiName: string | null
+  emojiName: string | null;
 }
 
 /**
@@ -532,458 +532,458 @@ export interface ForumTag {
  */
 export interface InternalChannelThreadMetadata {
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
-  archiveTimestamp: number
+  archiveTimestamp: number;
   /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
-  createTimestamp?: number
+  createTimestamp?: number;
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
 }
 
 export interface ChannelThreadMetadata {
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
-  archiveTimestamp?: number
+  archiveTimestamp?: number;
   /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
-  createTimestamp?: number
+  createTimestamp?: number;
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked: boolean
+  locked: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable: boolean
+  invitable: boolean;
   /** Whether the thread is archived */
-  archived: boolean
+  archived: boolean;
 }
 
 export interface Component {
   /** component type */
-  type: MessageComponentTypes
+  type: MessageComponentTypes;
   /** a developer-defined identifier for the component, max 100 characters */
-  customId?: string
+  customId?: string;
   /** whether this component is required to be filled, default true */
-  required?: boolean
+  required?: boolean;
   /** whether the component is disabled, default false */
-  disabled?: boolean
+  disabled?: boolean;
   /** For different styles/colors of the buttons */
-  style?: ButtonStyles | TextStyles
+  style?: ButtonStyles | TextStyles;
   /** text that appears on the button (max 80 characters) */
-  label?: string
+  label?: string;
   /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
-  value?: string
+  value?: string;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
-  emoji?: Pick<Partial<Emoji>, 'id' | 'name' | 'animated'>
+  emoji?: Pick<Partial<Emoji>, 'id' | 'name' | 'animated'>;
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
-  url?: string
+  url?: string;
   /** List of channel types to include in a channel select menu options list */
-  channelTypes?: ChannelTypes[]
+  channelTypes?: ChannelTypes[];
   /** The choices! Maximum of 25 items. */
-  options?: SelectOption[]
+  options?: SelectOption[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
+  placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
-  minValues?: number
+  minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
-  maxValues?: number
+  maxValues?: number;
   /** The minimum input length for a text input. Between 0-4000. */
-  minLength?: number
+  minLength?: number;
   /** The maximum input length for a text input. Between 1-4000. */
-  maxLength?: number
+  maxLength?: number;
   /** a list of child components */
-  components?: Component[]
+  components?: Component[];
   /** List of default values for auto-populated select menu components; number of default values must be in the range defined by min_values and max_values */
-  defaultValues?: DiscordComponentDefaultValue[]
+  defaultValues?: DiscordComponentDefaultValue[];
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
-  skuId?: bigint
+  skuId?: bigint;
   /** Optional identifier for component */
-  id?: number
+  id?: number;
   /** A thumbnail or a button component, with a future possibility of adding more compatible components */
-  accessory?: Component
+  accessory?: Component;
   /** Text that will be displayed similar to a message */
-  content?: string
+  content?: string;
   /** Alt text for the media */
-  description?: string
+  description?: string;
   /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
-  spoiler?: boolean
+  spoiler?: boolean;
   /** 1 to 10 media gallery items */
-  items?: MediaGalleryItem[]
+  items?: MediaGalleryItem[];
   /** Whether a visual divider should be displayed in the component. Defaults to `true` */
-  divider?: boolean
+  divider?: boolean;
   /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
-  spacing?: SeparatorSpacingSize
+  spacing?: SeparatorSpacingSize;
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
-  file?: UnfurledMediaItem
+  file?: UnfurledMediaItem;
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
-  media?: UnfurledMediaItem
+  media?: UnfurledMediaItem;
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
-  accentColor?: number
+  accentColor?: number;
   /** The name of the file. This field is ignored and provided by the API as part of the response */
-  name?: string
+  name?: string;
   /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
-  size?: number
+  size?: number;
   /** The component within the label */
-  component?: Component
+  component?: Component;
   /** The text of the selected options */
-  values?: string[]
+  values?: string[];
 }
 
 export interface UnfurledMediaItem {
   /** Supports arbitrary urls and attachment://<filename> references */
-  url: string
+  url: string;
   /** The proxied url of the media item. This field is ignored and provided by the API as part of the response */
-  proxyUrl?: string
+  proxyUrl?: string;
   /** The height of the media item. This field is ignored and provided by the API as part of the response */
-  height?: number | null
+  height?: number | null;
   /** The width of the media item. This field is ignored and provided by the API as part of the response */
-  width?: number | null
+  width?: number | null;
   /** The media type of the content. This field is ignored and provided by the API as part of the response */
-  contentType?: string
+  contentType?: string;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
-  attachmentId?: bigint
+  attachmentId?: bigint;
 }
 
 export interface MediaGalleryItem {
   /** A url or attachment */
-  media: UnfurledMediaItem
+  media: UnfurledMediaItem;
   /** Alt text for the media */
-  description?: string
+  description?: string;
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
-  spoiler?: boolean
+  spoiler?: boolean;
 }
 
 export interface DiscordComponentDefaultValue {
   /** ID of a user, role, or channel */
-  id: bigint
+  id: bigint;
   /** Type of value that id represents. */
-  type: 'user' | 'role' | 'channel'
+  type: 'user' | 'role' | 'channel';
 }
 
 export interface Embed {
-  description?: string
-  type?: EmbedTypes
-  url?: string
-  image?: EmbedImage
-  video?: EmbedVideo
-  title?: string
-  timestamp?: number
-  color?: number
-  footer?: EmbedFooter
-  thumbnail?: EmbedThumbnail
-  provider?: EmbedProvider
-  author?: EmbedAuthor
-  fields?: EmbedField[]
+  description?: string;
+  type?: EmbedTypes;
+  url?: string;
+  image?: EmbedImage;
+  video?: EmbedVideo;
+  title?: string;
+  timestamp?: number;
+  color?: number;
+  footer?: EmbedFooter;
+  thumbnail?: EmbedThumbnail;
+  provider?: EmbedProvider;
+  author?: EmbedAuthor;
+  fields?: EmbedField[];
 }
 
 export interface EmbedImage {
-  proxyUrl?: string
-  height?: number
-  width?: number
-  url: string
+  proxyUrl?: string;
+  height?: number;
+  width?: number;
+  url: string;
 }
 
 export interface EmbedVideo {
-  url?: string
-  proxyUrl?: string
-  height?: number
-  width?: number
+  url?: string;
+  proxyUrl?: string;
+  height?: number;
+  width?: number;
 }
 
 export interface EmbedFooter {
-  iconUrl?: string
-  proxyIconUrl?: string
-  text: string
+  iconUrl?: string;
+  proxyIconUrl?: string;
+  text: string;
 }
 
 export interface EmbedThumbnail {
-  proxyUrl?: string
-  height?: number
-  width?: number
-  url: string
+  proxyUrl?: string;
+  height?: number;
+  width?: number;
+  url: string;
 }
 
 export interface EmbedProvider {
-  name?: string
-  url?: string
+  name?: string;
+  url?: string;
 }
 
 export interface EmbedAuthor {
-  url?: string
-  iconUrl?: string
-  proxyIconUrl?: string
-  name: string
+  url?: string;
+  iconUrl?: string;
+  proxyIconUrl?: string;
+  name: string;
 }
 
 export interface EmbedField {
-  inline?: boolean
-  name: string
-  value: string
+  inline?: boolean;
+  name: string;
+  value: string;
 }
 
 export interface Emoji {
   /** Emoji name (can only be null in reaction emoji objects) */
-  name?: string
+  name?: string;
   /** Emoji id */
-  id?: bigint
+  id?: bigint;
   /** Roles allowed to use this emoji */
-  roles?: bigint[]
+  roles?: bigint[];
   /** User that created this emoji */
-  user?: User
+  user?: User;
   /** Whether this emoji must be wrapped in colons */
-  requireColons?: boolean
+  requireColons?: boolean;
   /** Whether this emoji is managed */
-  managed?: boolean
+  managed?: boolean;
   /** Whether this emoji is animated */
-  animated?: boolean
+  animated?: boolean;
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
-  available?: boolean
-  toggles: EmojiToggles
+  available?: boolean;
+  toggles: EmojiToggles;
 }
 
 export interface DefaultReactionEmoji {
   /** The id of a guild's custom emoji */
-  emojiId: bigint
+  emojiId: bigint;
   /** The unicode character of the emoji */
-  emojiName?: string
+  emojiName?: string;
 }
 
 export interface Entitlement {
   /** ID of the entitlement */
-  id: bigint
+  id: bigint;
   /** ID of the SKU */
-  skuId: bigint
+  skuId: bigint;
   /** ID of the user that is granted access to the entitlement's sku */
-  userId?: bigint
+  userId?: bigint;
   /** ID of the guild that is granted access to the entitlement's sku */
-  guildId?: bigint
+  guildId?: bigint;
   /** ID of the parent application */
-  applicationId: bigint
+  applicationId: bigint;
   /** Type of entitlement */
-  type: DiscordEntitlementType
+  type: DiscordEntitlementType;
   /** Entitlement was deleted */
-  deleted: boolean
+  deleted: boolean;
   /** Start date at which the entitlement is valid. */
-  startsAt?: number
+  startsAt?: number;
   /** Date at which the entitlement is no longer valid. */
-  endsAt?: number
+  endsAt?: number;
   /** For consumable items, whether or not the entitlement has been consumed */
-  consumed?: boolean
+  consumed?: boolean;
 }
 
 export interface GetGatewayBot {
-  url: string
-  shards: number
-  sessionStartLimit: SessionStartLimit
+  url: string;
+  shards: number;
+  sessionStartLimit: SessionStartLimit;
 }
 
 export interface SessionStartLimit {
-  total: number
-  remaining: number
-  resetAfter: number
-  maxConcurrency: number
+  total: number;
+  remaining: number;
+  resetAfter: number;
+  maxConcurrency: number;
 }
 
 export interface Guild {
   /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
-  name: string
+  name: string;
   /** True if the user is the owner of the guild */
-  owner?: boolean
+  owner?: boolean;
   /** Afk timeout in seconds */
-  afkTimeout: number
+  afkTimeout: number;
   /** True if the server widget is enabled */
-  widgetEnabled?: boolean
+  widgetEnabled?: boolean;
   /** Verification level required for the guild */
-  verificationLevel: VerificationLevels
+  verificationLevel: VerificationLevels;
   /** Default message notifications level */
-  defaultMessageNotifications: DefaultMessageNotificationLevels
+  defaultMessageNotifications: DefaultMessageNotificationLevels;
   /** Explicit content filter level */
-  explicitContentFilter: ExplicitContentFilterLevels
+  explicitContentFilter: ExplicitContentFilterLevels;
   /** Enabled guild features */
-  features: GuildFeatureKeys[]
+  features: GuildFeatureKeys[];
   /** Required MFA level for the guild */
-  mfaLevel: MfaLevels
+  mfaLevel: MfaLevels;
   /** System channel flags */
-  systemChannelFlags: SystemChannelFlags
+  systemChannelFlags: SystemChannelFlags;
   /** True if this is considered a large guild */
-  large?: boolean
+  large?: boolean;
   /** True if this guild is unavailable due to an outage */
-  unavailable?: boolean
+  unavailable?: boolean;
   /** Total number of members in this guild */
-  memberCount: number
+  memberCount: number;
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
-  maxPresences?: number
+  maxPresences?: number;
   /** The maximum number of members for the guild */
-  maxMembers?: number
+  maxMembers?: number;
   /** The vanity url code for the guild */
-  vanityUrlCode?: string
+  vanityUrlCode?: string;
   /** The description of a guild */
-  description?: string
-  toggles: GuildToggles
-  shardId: number
+  description?: string;
+  toggles: GuildToggles;
+  shardId: number;
   /** Premium tier (Server Boost level) */
-  premiumTier: PremiumTiers
+  premiumTier: PremiumTiers;
   /** The number of boosts this guild currently has */
-  premiumSubscriptionCount?: number
+  premiumSubscriptionCount?: number;
   /** The maximum amount of users in a video channel */
-  maxVideoChannelUsers?: number
+  maxVideoChannelUsers?: number;
   /** Maximum amount of users in a stage video channel */
-  maxStageVideoChannelUsers?: number
+  maxStageVideoChannelUsers?: number;
   /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
-  approximateMemberCount?: number
+  approximateMemberCount?: number;
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
-  approximatePresenceCount?: number
+  approximatePresenceCount?: number;
   /** Guild NSFW level */
-  nsfwLevel: GuildNsfwLevel
+  nsfwLevel: GuildNsfwLevel;
   /** Whether the guild has the boost progress bar enabled */
-  premiumProgressBarEnabled: boolean
+  premiumProgressBarEnabled: boolean;
   /** Guild id */
-  id: bigint
+  id: bigint;
   /** Icon hash */
-  icon?: bigint
+  icon?: bigint;
   /** Icon hash, returned when in the template object */
-  iconHash?: bigint
+  iconHash?: bigint;
   /** Splash hash */
-  splash?: bigint
+  splash?: bigint;
   /** Discovery splash hash; only present for guilds with the "DISCOVERABLE" feature */
-  discoverySplash?: bigint
+  discoverySplash?: bigint;
   /** Id of the owner */
-  ownerId: bigint
+  ownerId: bigint;
   /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
-  permissions: bigint
+  permissions: bigint;
   /** Id of afk channel */
-  afkChannelId?: bigint
+  afkChannelId?: bigint;
   /** The channel id that the widget will generate an invite to, or null if set to no invite */
-  widgetChannelId?: bigint
+  widgetChannelId?: bigint;
   /** Roles in the guild */
-  roles: Collection<bigint, Role>
+  roles: Collection<bigint, Role>;
   /** Custom guild emojis */
-  emojis: Collection<bigint, Emoji>
+  emojis: Collection<bigint, Emoji>;
   /** Application id of the guild creator if it is bot-created */
-  applicationId?: bigint
+  applicationId?: bigint;
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: bigint
+  systemChannelId?: bigint;
   /** The id of the channel where community guilds can display rules and/or guidelines */
-  rulesChannelId?: bigint
+  rulesChannelId?: bigint;
   /** When this guild was joined at */
-  joinedAt?: number
+  joinedAt?: number;
   /** States of members currently in voice channels; lacks the guild_id key */
-  voiceStates: Collection<bigint, VoiceState>
+  voiceStates: Collection<bigint, VoiceState>;
   /** Users in the guild */
-  members: Collection<bigint, Member>
+  members: Collection<bigint, Member>;
   /** Channels in the guild */
-  channels: Collection<bigint, Channel>
+  channels: Collection<bigint, Channel>;
   /** All active threads in the guild that the current user has permission to view */
-  threads: Collection<bigint, Channel>
+  threads: Collection<bigint, Channel>;
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: PresenceUpdate[]
+  presences?: PresenceUpdate[];
   /** Banner hash */
-  banner?: bigint
+  banner?: bigint;
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredLocale: string
+  preferredLocale: string;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicUpdatesChannelId?: bigint
+  publicUpdatesChannelId?: bigint;
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
-  welcomeScreen?: WelcomeScreen
+  welcomeScreen?: WelcomeScreen;
   /** Stage instances in the guild */
-  stageInstances?: StageInstance[]
+  stageInstances?: StageInstance[];
   /** Custom guild stickers */
-  stickers?: Collection<bigint, Sticker>
+  stickers?: Collection<bigint, Sticker>;
   /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
-  safetyAlertsChannelId?: bigint
+  safetyAlertsChannelId?: bigint;
   /** The incidents data for this guild */
-  incidentsData: IncidentsData
+  incidentsData: IncidentsData;
 }
 
 export interface IncidentsData {
   /** When invites get enabled again */
-  invitesDisabledUntil?: number
+  invitesDisabledUntil?: number;
   /** When direct messages get enabled again */
-  dmsDisabledUntil?: number
+  dmsDisabledUntil?: number;
   /** When the dm spam was detected */
-  dmSpamDetectedAt?: number
+  dmSpamDetectedAt?: number;
   /** When the raid was detected */
-  raidDetectedAt?: number
+  raidDetectedAt?: number;
 }
 
 export interface Integration {
-  user?: User
-  enabled?: boolean
-  syncing?: boolean
-  roleId?: bigint
-  enableEmoticons?: boolean
-  expireBehavior?: IntegrationExpireBehaviors
-  expireGracePeriod?: number
-  syncedAt?: number
-  subscriberCount?: number
-  revoked?: boolean
-  application?: IntegrationApplication
-  id: bigint
-  name: string
-  guildId: bigint
-  type: 'twitch' | 'youtube' | 'discord'
-  account: IntegrationAccount
-  scopes: OAuth2Scope[]
+  user?: User;
+  enabled?: boolean;
+  syncing?: boolean;
+  roleId?: bigint;
+  enableEmoticons?: boolean;
+  expireBehavior?: IntegrationExpireBehaviors;
+  expireGracePeriod?: number;
+  syncedAt?: number;
+  subscriberCount?: number;
+  revoked?: boolean;
+  application?: IntegrationApplication;
+  id: bigint;
+  name: string;
+  guildId: bigint;
+  type: 'twitch' | 'youtube' | 'discord';
+  account: IntegrationAccount;
+  scopes: OAuth2Scope[];
 }
 
 export interface IntegrationApplication {
-  bot?: User
-  icon?: bigint
-  id: bigint
-  name: string
-  description: string
+  bot?: User;
+  icon?: bigint;
+  id: bigint;
+  name: string;
+  description: string;
 }
 
 export interface IntegrationAccount {
-  id: bigint
-  name: string
+  id: bigint;
+  name: string;
 }
 
 export interface Interaction {
   /** The bot object */
-  bot: Bot
+  bot: Bot;
   /** Whether or not this interaction has been responded to. */
-  acknowledged: boolean
+  acknowledged: boolean;
   /** Id of the interaction */
-  id: bigint
+  id: bigint;
   /** Id of the application this interaction is for */
-  applicationId: bigint
+  applicationId: bigint;
   /** The type of interaction */
-  type: InteractionTypes
+  type: InteractionTypes;
   /** Guild that the interaction was sent from */
-  guild?: Partial<Guild>
+  guild?: Partial<Guild>;
   /** The guild it was sent from */
-  guildId?: bigint
+  guildId?: bigint;
   /** The channel it was sent from */
-  channel: Partial<Channel>
+  channel: Partial<Channel>;
   /**
    * The ID of channel it was sent from
    *
    * @remarks
    * It is recommended that you begin using this channel field to identify the source channel of the interaction as they may deprecate the existing channel_id field in the future.
    */
-  channelId?: bigint
+  channelId?: bigint;
   /** Guild member data for the invoking user, including permissions */
-  member?: Member
+  member?: Member;
   /** User object for the invoking user, if invoked in a DM */
-  user: User
+  user: User;
   /** A continuation token for responding to the interaction */
-  token: string
+  token: string;
   /** Read-only property, always `1` */
-  version: 1
+  version: 1;
   /** For components or modals triggered by components, the message they were attached to */
-  message?: Message
+  message?: Message;
   /** the command data payload */
-  data?: InteractionData
-  locale?: string
+  data?: InteractionData;
+  locale?: string;
   /** The guild's preferred locale, if invoked in a guild */
-  guildLocale?: string
+  guildLocale?: string;
   /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
-  entitlements: Entitlement[]
+  entitlements: Entitlement[];
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
-  appPermissions: bigint
+  appPermissions: bigint;
   /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
-  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
+  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>;
   /** Context where the interaction was triggered from */
-  context?: DiscordInteractionContextType
+  context?: DiscordInteractionContextType;
   /** Attachment size limit in bytes */
-  attachmentSizeLimit: number
+  attachmentSizeLimit: number;
   /**
    * Sends a response to an interaction.
    *
@@ -995,7 +995,7 @@ export interface Interaction {
   respond: (
     response: string | InteractionCallbackData,
     options?: { isPrivate?: boolean; withResponse?: boolean },
-  ) => Promise<Message | InteractionCallbackResponse | void>
+  ) => Promise<Message | InteractionCallbackResponse | void>;
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
@@ -1006,281 +1006,281 @@ export interface Interaction {
     response: string | InteractionCallbackData,
     messageId?: BigString,
     options?: InteractionCallbackOptions,
-  ) => Promise<Message | InteractionCallbackResponse | void>
+  ) => Promise<Message | InteractionCallbackResponse | void>;
   /**
    * Defer the interaction for updating the referenced message at a later time with {@link edit}.
    *
    * @remarks
    * This will send a DeferredUpdateMessage response.
    */
-  deferEdit: (options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>
+  deferEdit: (options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>;
   /**
    * Defer the interaction for updating the response at a later time with {@link edit}.
    *
    * @remarks
    * This will send a DeferredChannelMessageWithSource response.
    */
-  defer: (isPrivate?: boolean, options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>
+  defer: (isPrivate?: boolean, options?: InteractionCallbackOptions) => Promise<InteractionCallbackResponse | void>;
   /** Delete the original interaction response or a followup if the message id is provided. */
-  delete: (messageId?: BigString) => Promise<void>
+  delete: (messageId?: BigString) => Promise<void>;
 }
 
 export interface InteractionCallbackResponse {
   /** The interaction object associated with the interaction response */
-  interaction: InteractionCallback
+  interaction: InteractionCallback;
   /** The resource that was created by the interaction response. */
-  resource?: InteractionResource
+  resource?: InteractionResource;
 }
 
 export interface InteractionCallback {
-  id: bigint
-  type: InteractionTypes
+  id: bigint;
+  type: InteractionTypes;
   /** Instance ID of the Activity if one was launched or joined */
-  activityInstanceId?: string
+  activityInstanceId?: string;
   /** ID of the message that was created by the interaction */
-  responseMessageId?: bigint
+  responseMessageId?: bigint;
   /** Whether or not the message is in a loading state */
-  responseMessageLoading?: boolean
+  responseMessageLoading?: boolean;
   /** Whether or not the response message was ephemeral */
-  responseMessageEphemeral?: boolean
+  responseMessageEphemeral?: boolean;
 }
 
 export interface InteractionResource {
-  type: InteractionResponseTypes
+  type: InteractionResponseTypes;
   /**
    * Represents the Activity launched by this interaction.
    *
    * @remarks
    * Only present if type is `LAUNCH_ACTIVITY`.
    */
-  activityInstance?: DiscordActivityInstanceResource
+  activityInstance?: DiscordActivityInstanceResource;
   /**
    * Message created by the interaction.
    *
    * @remarks
    * Only present if type is either `CHANNEL_MESSAGE_WITH_SOURCE` or `UPDATE_MESSAGE`.
    */
-  message?: Message
+  message?: Message;
 }
 
 export interface InteractionData {
-  type?: ApplicationCommandTypes
-  componentType?: MessageComponentTypes
-  customId?: string
-  components?: Component[]
-  values?: string[]
-  name: string
-  resolved?: InteractionDataResolved
-  options?: InteractionDataOption[]
-  id?: bigint
-  targetId?: bigint
+  type?: ApplicationCommandTypes;
+  componentType?: MessageComponentTypes;
+  customId?: string;
+  components?: Component[];
+  values?: string[];
+  name: string;
+  resolved?: InteractionDataResolved;
+  options?: InteractionDataOption[];
+  id?: bigint;
+  targetId?: bigint;
 }
 
 export interface InteractionDataResolved {
-  messages?: Collection<bigint, Message>
-  users?: Collection<bigint, User>
-  members?: Collection<bigint, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>>
-  roles?: Collection<bigint, Role>
-  channels?: Collection<bigint, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>>
-  attachments?: Collection<bigint, Attachment>
+  messages?: Collection<bigint, Message>;
+  users?: Collection<bigint, User>;
+  members?: Collection<bigint, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>>;
+  roles?: Collection<bigint, Role>;
+  channels?: Collection<bigint, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>>;
+  attachments?: Collection<bigint, Attachment>;
 }
 
 export interface InteractionDataOption {
-  name: string
-  type: ApplicationCommandOptionTypes
-  value?: string | number | boolean
-  options?: InteractionDataOption[]
-  focused?: boolean
+  name: string;
+  type: ApplicationCommandOptionTypes;
+  value?: string | number | boolean;
+  options?: InteractionDataOption[];
+  focused?: boolean;
 }
 
 export interface Invite {
   /** The type of invite */
-  type: DiscordInviteType
+  type: DiscordInviteType;
   /** The channel the invite is for */
-  channelId: bigint
+  channelId: bigint;
   /** The unique invite code */
-  code: string
+  code: string;
   /** The time at which the invite was created */
-  createdAt: number
+  createdAt: number;
   /** The guild of the invite */
-  guildId?: bigint
+  guildId?: bigint;
   /** The user that created the invite */
-  inviter?: User
+  inviter?: User;
   /** How long the invite is valid for (in seconds) */
-  maxAge: number
+  maxAge: number;
   /** The maximum number of times the invite can be used */
-  maxUses: number
+  maxUses: number;
   /** The type of target for this voice channel invite */
-  targetType: number
+  targetType: number;
   /** The target user for this invite */
-  targetUser: User
+  targetUser: User;
   /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Application
+  targetApplication?: Application;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
-  temporary: boolean
+  temporary: boolean;
   /** How many times the invite has been used (always will be 0) */
-  uses: number
+  uses: number;
   /** Approximate count of online members (only present when target_user is set) */
-  approximateMemberCount: number
+  approximateMemberCount: number;
   /** The expiration date of this invite, returned from the GET /invites/code endpoint when with_expiration is true */
-  expiresAt?: number
+  expiresAt?: number;
   /** guild scheduled event data */
-  guildScheduledEvent?: ScheduledEvent
+  guildScheduledEvent?: ScheduledEvent;
   /** Approximate count of online members (only present when target_user is set) */
-  approximatePresenceCount?: number
+  approximatePresenceCount?: number;
   /** Guild invite flags for guild invites. */
-  flags?: ToggleBitfield
+  flags?: ToggleBitfield;
 }
 
 export interface Member {
   /** The user id of the member. */
-  id: bigint
+  id: bigint;
   /** The compressed form of all the boolean values on this user. */
-  toggles?: MemberToggles
+  toggles?: MemberToggles;
   /**
    * The guild id where this member is.
    *
    * @remarks
    * This will always be present unless the member object is from thread member object.
    * */
-  guildId?: bigint
+  guildId?: bigint;
   /** The user this guild member represents */
-  user?: User
+  user?: User;
   /** This user's guild nickname */
-  nick?: string
+  nick?: string;
   /** The member's custom avatar for this server. */
-  avatar?: bigint
+  avatar?: bigint;
   /** The member's custom banner for this server. */
-  banner?: bigint
+  banner?: bigint;
   /** Array of role object ids */
-  roles: bigint[]
+  roles: bigint[];
   /** When the user joined the guild */
-  joinedAt?: number
+  joinedAt?: number;
   /** When the user started boosting the guild */
-  premiumSince?: number
+  premiumSince?: number;
   /** The permissions this member has in the guild. Only present on interaction events. */
-  permissions?: Permissions
+  permissions?: Permissions;
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number
+  communicationDisabledUntil?: number;
   /** data for the member's guild avatar decoration */
-  avatarDecorationData: AvatarDecorationData
+  avatarDecorationData: AvatarDecorationData;
   /** Whether the user is deafened in voice channels */
-  deaf?: boolean
+  deaf?: boolean;
   /** Whether the user is muted in voice channels */
-  mute?: boolean
+  mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean
+  pending?: boolean;
   /** Member has left and rejoined the guild */
-  didRejoin?: boolean
+  didRejoin?: boolean;
   /** Member has completed onboarding */
-  startedOnboarding?: boolean
+  startedOnboarding?: boolean;
   /** Member is exempt from guild verification requirements */
-  bypassesVerification?: boolean
+  bypassesVerification?: boolean;
   /** Member has started onboarding */
-  completedOnboarding?: boolean
+  completedOnboarding?: boolean;
   /** Guild member flags */
-  flags: number
+  flags: number;
 }
 
 export interface Message {
   /** Sent with Rich Presence-related chat embeds */
-  activity?: MessageActivity
+  activity?: MessageActivity;
   /** Sent with Rich Presence-related chat embeds */
-  application?: Partial<Application>
+  application?: Partial<Application>;
   /** If the message is an Interaction or application-owned webhook, this is the id of the application */
-  applicationId?: bigint
+  applicationId?: bigint;
   /** Any attached files on this message. */
-  attachments?: Attachment[]
+  attachments?: Attachment[];
   /** The author of this message (not guaranteed to be a valid user) Note: The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the webhook_id on the message object. */
-  author: User
+  author: User;
   /** id of the channel the message was sent in */
-  channelId: bigint
+  channelId: bigint;
   /** The components related to this message */
-  components: Component[]
+  components: Component[];
   /** Contents of the message */
-  content: string
+  content: string;
   /** The timestamp in milliseconds when this message was edited last. */
-  editedTimestamp?: number
+  editedTimestamp?: number;
   /** Any embedded content */
-  embeds?: Embed[]
+  embeds?: Embed[];
   /** id of the guild the message was sent in Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages. */
-  guildId?: bigint
+  guildId?: bigint;
   /** id of the message */
-  id: bigint
+  id: bigint;
   /** sent if the message is sent as a result of an interaction */
-  interactionMetadata?: MessageInteractionMetadata
+  interactionMetadata?: MessageInteractionMetadata;
   /**
    * Sent if the message is a response to an Interaction
    *
    * @deprecated
    * Deprecated in favor of {@link interactionMetadata}
    */
-  interaction?: MessageInteraction
-  member?: Member
+  interaction?: MessageInteraction;
+  member?: Member;
   /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
-  mentions?: User[]
+  mentions?: User[];
   /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
-  mentionedChannelIds?: bigint[]
+  mentionedChannelIds?: bigint[];
   /** Roles specifically mentioned in this message */
-  mentionedRoleIds?: bigint[]
+  mentionedRoleIds?: bigint[];
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
-  messageReference?: MessageReference
+  messageReference?: MessageReference;
   /**
    * The message associated with the `message_reference`
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
    */
-  referencedMessage?: Message
+  referencedMessage?: Message;
   /** The message associated with the `message_reference`. This is a minimal subset of fields in a message (e.g. `author` is excluded.)  */
-  messageSnapshots?: MessageSnapshot[]
-  nonce?: string | number
+  messageSnapshots?: MessageSnapshot[];
+  nonce?: string | number;
   /** Reactions on this message. */
-  reactions?: Reaction[]
+  reactions?: Reaction[];
   /** Sent if the message contains stickers */
-  stickerItems?: Pick<Sticker, 'id' | 'name' | 'formatType'>[]
+  stickerItems?: Pick<Sticker, 'id' | 'name' | 'formatType'>[];
   /** Type of message */
-  type: MessageTypes
+  type: MessageTypes;
   /** The thread that was started from this message, includes thread member object */
-  thread?: Channel
+  thread?: Channel;
   /** If the message is generated by a webhook, this is the webhook's id */
-  webhookId?: bigint
+  webhookId?: bigint;
   /** A poll! */
-  poll?: Poll
+  poll?: Poll;
   /** The call associated with the message */
-  call?: MessageCall
+  call?: MessageCall;
   /** Holds all the boolean values on this message. */
-  bitfield?: ToggleBitfield
+  bitfield?: ToggleBitfield;
   /** Whether this message has been published to subscribed channels (via Channel Following) */
-  crossposted: boolean
+  crossposted: boolean;
   /** Whether this message is only visible to the user who invoked the Interaction */
-  ephemeral: boolean
+  ephemeral: boolean;
   /** Whether this message failed to mention some roles and add their members to the thread */
-  failedToMentionSomeRolesInThread: boolean
+  failedToMentionSomeRolesInThread: boolean;
   /** Message flags combined as a bitfield */
-  flags?: ToggleBitfield
+  flags?: ToggleBitfield;
   /** Whether this message has an associated thread, with the same id as the message */
-  hasThread: boolean
+  hasThread: boolean;
   /** Whether this message originated from a message in another channel (via Channel Following) */
-  isCrosspost: boolean
+  isCrosspost: boolean;
   /** Whether this message is an Interaction Response and the bot is "thinking" */
-  loading: boolean
+  loading: boolean;
   /** The ids of the users who were mentioned in this message. */
-  mentionedUserIds: bigint[]
+  mentionedUserIds: bigint[];
   /** Whether this message mentions everyone */
-  mentionEveryone: boolean
+  mentionEveryone: boolean;
   /** Whether this message is pinned */
-  pinned: boolean
+  pinned: boolean;
   /** Whether the source message for this crosspost has been deleted (via Channel Following) */
-  sourceMessageDeleted: boolean
+  sourceMessageDeleted: boolean;
   /** Whether do not include any embeds when serializing this message */
-  suppressEmbeds: boolean
+  suppressEmbeds: boolean;
   /** Whether this message will not trigger push and desktop notifications */
-  suppressNotifications: boolean
+  suppressNotifications: boolean;
   /** The timestamp in milliseconds when this message was created */
-  timestamp: number
+  timestamp: number;
   /** Whether this was a TTS message. */
-  tts: boolean
+  tts: boolean;
   /** Whether this message came from the urgent message system */
-  urgent: boolean
+  urgent: boolean;
   // TODO: Adding this causes errors in the interaction functions due to how `InteractionResolvedDataMember` and `InteractionResolvedDataChannel` are treated by `TransformProperty`, since they get their desired props changed
   // and fixing this requires a few changes in `SetupDesiredProps` and `TransformProperty` so this is going to be done in another pr
   // /** data for users, members, channels, and roles referenced in this message */
@@ -1289,31 +1289,31 @@ export interface Message {
 
 export interface MessageActivity {
   /** Type of message activity */
-  type: MessageActivityTypes
+  type: MessageActivityTypes;
   /** party_id from a Rich Presence event */
-  partyId?: string
+  partyId?: string;
 }
 
 export interface MessageInteraction {
   /** Id of the interaction */
-  id: bigint
+  id: bigint;
   /** The member who invoked the interaction in the guild */
-  member?: Member
+  member?: Member;
   /** The name of the ApplicationCommand including the name of the subcommand/subcommand group */
-  name: string
+  name: string;
   /** The type of interaction */
-  type: InteractionTypes
+  type: InteractionTypes;
   /** The user who invoked the interaction */
-  user: User
+  user: User;
 }
 
 export interface MessageReference {
   /** id of the originating message's channel Note: channel_id is optional when creating a reply, but will always be present when receiving an event/response that includes this data model. */
-  channelId?: bigint
+  channelId?: bigint;
   /** id of the originating message's guild */
-  guildId?: bigint
+  guildId?: bigint;
   /** id of the originating message */
-  messageId?: bigint
+  messageId?: bigint;
 }
 
 export interface MessageSnapshot {
@@ -1331,146 +1331,146 @@ export interface MessageSnapshot {
     | 'mentionedRoleIds'
     | 'stickerItems'
     | 'components'
-  >
+  >;
 }
 
 export interface MessageInteractionMetadata {
   /** Id of the interaction */
-  id: bigint
+  id: bigint;
   /** The type of interaction */
-  type: InteractionTypes
+  type: InteractionTypes;
   /** User who triggered the interaction */
-  user: User
+  user: User;
   /** IDs for installation context(s) related to an interaction */
-  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
+  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>;
   /** ID of the original response message, present only on follow-up messages */
-  originalResponseMessageId?: bigint
+  originalResponseMessageId?: bigint;
   /**
    * The user the command was run on, present only on user command interactions
    *
    * @remarks
    * Only present when the interaction metadata is about an application command
    */
-  targetUser?: User
+  targetUser?: User;
   /**
    * The ID of the message the command was run on, present only on message command interactions. The original response message will also have message_reference and referenced_message pointing to this message.
    *
    * @remarks
    * Only present when the interaction metadata is about an application command
    */
-  targetMessageId?: bigint
+  targetMessageId?: bigint;
   /**
    * ID of the message that contained interactive component, present only on messages created from component interactions
    *
    * @remarks
    * Only present when the interaction metadata is about a message component
    */
-  interactedMessageId?: bigint
+  interactedMessageId?: bigint;
   /**
    * Metadata for the interaction that was used to open the modal, present only on modal submit interactions
    *
    * @remarks
    * Only present when the interaction metadata is about a modal submit
    */
-  triggeringInteractionMetadata?: MessageInteractionMetadata
+  triggeringInteractionMetadata?: MessageInteractionMetadata;
 }
 
 export interface MessageCall {
   /** Array of user object ids that participated in the call */
-  participants: bigint[]
+  participants: bigint[];
   /** Time when call ended */
-  endedTimestamp: number
+  endedTimestamp: number;
 }
 
 export interface MessagePin {
   /** the time the message was pinned */
-  pinnedAt: number
+  pinnedAt: number;
   /** the pinned message */
-  message: Message
+  message: Message;
 }
 
 export interface Reaction {
   /** Whether the current user reacted using this emoji */
-  me: boolean
+  me: boolean;
   /** Whether the current user super-reacted using this emoji */
-  meBurst: boolean
+  meBurst: boolean;
   /** Times this emoji has been used to react */
-  count: number
+  count: number;
   /** Reaction count details object */
-  countDetails: ReactionCountDetails
-  emoji: Partial<Emoji>
+  countDetails: ReactionCountDetails;
+  emoji: Partial<Emoji>;
   /** HEX colors used for super reaction */
-  burstColors: string[]
+  burstColors: string[];
 }
 
 export interface ReactionCountDetails {
   /** Count of super reactions */
-  burst: number
+  burst: number;
   /** Count of normal reactions */
-  normal: number
+  normal: number;
 }
 
 export interface GuildOnboarding {
   /** ID of the guild this onboarding is part of */
-  guildId: bigint
+  guildId: bigint;
   /** Prompts shown during onboarding and in customize community */
-  prompts: GuildOnboardingPrompt[]
+  prompts: GuildOnboardingPrompt[];
   /** Channel IDs that members get opted into automatically */
-  defaultChannelIds: bigint[]
+  defaultChannelIds: bigint[];
   /** Whether onboarding is enabled in the guild */
-  enabled: boolean
+  enabled: boolean;
   /** Current mode of onboarding */
-  mode: DiscordGuildOnboardingMode
+  mode: DiscordGuildOnboardingMode;
 }
 
 export interface GuildOnboardingPrompt {
   /** ID of the prompt */
-  id: bigint
+  id: bigint;
   /** Type of prompt */
-  type: DiscordGuildOnboardingPromptType
+  type: DiscordGuildOnboardingPromptType;
   /** Options available within the prompt */
-  options: GuildOnboardingPromptOption[]
+  options: GuildOnboardingPromptOption[];
   /** Title of the prompt */
-  title: string
+  title: string;
   /** Indicates whether users are limited to selecting one option for the prompt */
-  singleSelect: boolean
+  singleSelect: boolean;
   /** Indicates whether the prompt is required before a user completes the onboarding flow */
-  required: boolean
+  required: boolean;
   /** Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab */
-  inOnboarding: boolean
+  inOnboarding: boolean;
 }
 
 export interface GuildOnboardingPromptOption {
   /** ID of the prompt option */
-  id: bigint
+  id: bigint;
   /** IDs for channels a member is added to when the option is selected */
-  channelIds: bigint[]
+  channelIds: bigint[];
   /** IDs for roles assigned to a member when the option is selected */
-  roleIds: bigint[]
+  roleIds: bigint[];
   /** Emoji of the option */
-  emoji: Emoji
+  emoji: Emoji;
   /** Title of the option */
-  title: string
+  title: string;
   /** Description of the option */
-  description?: string
+  description?: string;
 }
 
 export interface Poll {
   /** The question of the poll. Only `text` is supported. */
-  question: PollMedia
+  question: PollMedia;
   /** Each of the answers available in the poll. There is a maximum of 10 answers per poll. */
-  answers: PollAnswer[]
+  answers: PollAnswer[];
   /**
    * The time when the poll ends.
    *
    * @remarks
    * `expiry` is marked as nullable to support non-expiring polls in the future, but all polls have an expiry currently.
    */
-  expiry: number | null
+  expiry: number | null;
   /** Whether a user can select multiple answers */
-  allowMultiselect: boolean
+  allowMultiselect: boolean;
   /** The layout type of the poll */
-  layoutType: DiscordPollLayoutType
+  layoutType: DiscordPollLayoutType;
   /**
    * The results of the poll
    *
@@ -1478,7 +1478,7 @@ export interface Poll {
    * This value will not be sent by discord under specific conditions where they don't fetch them on their backend. When this value is missing it should be interpreted as "Unknown results" and not as "No results"
    * The results may not be totally accurate while the poll has not ended. When it ends discord will re-calculate all the results and set is_finalized to true
    */
-  results?: PollResult
+  results?: PollResult;
 }
 
 export interface PollMedia {
@@ -1489,14 +1489,14 @@ export interface PollMedia {
    * `text` should always be non-null for both questions and answers, but this is subject to changes.
    * The maximum length of `text` is 300 for the question, and 55 for any answer.
    */
-  text?: string
+  text?: string;
   /**
    * The emoji of the field
    *
    * @remarks
    * When creating a poll answer with an emoji, one only needs to send either the `id` (custom emoji) or `name` (default emoji) as the only field.
    */
-  emoji?: Partial<Emoji>
+  emoji?: Partial<Emoji>;
 }
 
 export interface PollAnswer {
@@ -1506,82 +1506,82 @@ export interface PollAnswer {
    * @remarks
    * This id labels each answer. It starts at 1 and goes up sequentially. Discord recommend against depending on this sequence as it is an implementation detail.
    */
-  answerId: number
+  answerId: number;
   /** The data of the answer */
-  pollMedia: PollMedia
+  pollMedia: PollMedia;
 }
 
 export interface PollResult {
   /** Whether the votes have been precisely counted */
-  isFinalized: boolean
+  isFinalized: boolean;
   /** The counts for each answer */
-  answerCounts: PollAnswerCount[]
+  answerCounts: PollAnswerCount[];
 }
 
 export interface PollAnswerCount {
   /** The {@link PollAnswer.answerId | answerId} */
-  id: number
+  id: number;
   /** The number of votes for this answer */
-  count: number
+  count: number;
   /** Whether the current user voted for this answer */
-  meVoted: boolean
+  meVoted: boolean;
 }
 
 export interface PresenceUpdate {
-  desktop?: string
-  mobile?: string
-  web?: string
-  user: User
-  guildId: bigint
-  status: PresenceStatus
-  activities: Activity[]
+  desktop?: string;
+  mobile?: string;
+  web?: string;
+  user: User;
+  guildId: bigint;
+  status: PresenceStatus;
+  activities: Activity[];
 }
 
 export interface Role {
   /** Role id */
-  id: bigint
+  id: bigint;
   /** The guild id where this role is located. */
-  guildId: bigint
+  guildId: bigint;
   /** The compressed version of the boolean values on this role. */
-  toggles?: RoleToggles
+  toggles?: RoleToggles;
   /** If this role is showed separately in the user listing */
-  hoist: boolean
+  hoist: boolean;
   /** Permission bit set */
-  permissions: Permissions
+  permissions: Permissions;
   /** Whether this role is managed by an integration */
-  managed: boolean
+  managed: boolean;
   /** Whether this role is mentionable */
-  mentionable: boolean
+  mentionable: boolean;
   /**
    * Role tags
    *
    * @private
    * Use role.tags. This is for internal use only, and prone to breaking changes.
    */
-  internalTags?: InternalRoleTags
-  icon?: bigint
+  internalTags?: InternalRoleTags;
+  icon?: bigint;
   /** Role name */
-  name: string
+  name: string;
   /**
    * Integer representation of hexadecimal color code
    * @deprecated the {@link colors} field is recommended for use instead of this field
    */
-  color: number
+  color: number;
   /** The role's color */
-  colors: RoleColors
+  colors: RoleColors;
   /** Position of this role */
-  position: number
+  position: number;
   /** role unicode emoji */
-  unicodeEmoji?: string
+  unicodeEmoji?: string;
   /** Role flags combined as a bitfield */
-  flags: RoleFlags
+  flags: RoleFlags;
   /** The tags this role has */
-  tags?: RoleTags
-  premiumSubscriber: boolean
+  tags?: RoleTags;
+  premiumSubscriber: boolean;
   /** Whether this role is available for purchase. */
-  availableForPurchase: boolean
+  availableForPurchase: boolean;
   /** Whether this is a guild's linked role. */
-  guildConnections: boolean
+  guildConnections: boolean;
 }
 
 /**
@@ -1590,299 +1590,299 @@ export interface Role {
  */
 export interface InternalRoleTags {
   /** The id of the bot this role belongs to */
-  botId?: bigint
+  botId?: bigint;
   /** The id of the integration this role belongs to */
-  integrationId?: bigint
+  integrationId?: bigint;
   /** Id of this role's subscription sku and listing. */
-  subscriptionListingId?: bigint
+  subscriptionListingId?: bigint;
 }
 
 export interface RoleTags {
   /** The id of the bot this role belongs to */
-  botId?: bigint
+  botId?: bigint;
   /** The id of the integration this role belongs to */
-  integrationId?: bigint
+  integrationId?: bigint;
   /** Id of this role's subscription sku and listing. */
-  subscriptionListingId?: bigint
+  subscriptionListingId?: bigint;
   /** Whether this role is available for purchase. */
-  availableForPurchase?: boolean
+  availableForPurchase?: boolean;
   /** Whether this is a guild's linked role */
-  guildConnections?: boolean
+  guildConnections?: boolean;
   /** Whether this is the guild's premium subscriber role */
-  premiumSubscriber?: boolean
+  premiumSubscriber?: boolean;
 }
 
 export interface RoleColors {
   /** The primary color for the role */
-  primaryColor: number
+  primaryColor: number;
   /** The secondary color for the role, this will make the role a gradient between the other provided colors */
-  secondaryColor?: number
+  secondaryColor?: number;
   /** The tertiary color for the role, this will turn the gradient into a holographic style */
-  tertiaryColor?: number
+  tertiaryColor?: number;
 }
 
 export interface ScheduledEvent {
   /** the id of the scheduled event */
-  id: bigint
+  id: bigint;
   /** the guild id which the scheduled event belongs to */
-  guildId: bigint
+  guildId: bigint;
   /** the channel id in which the scheduled event will be hosted if specified */
-  channelId?: bigint
+  channelId?: bigint;
   /** the id of the user that created the scheduled event */
-  creatorId?: bigint
+  creatorId?: bigint;
   /** the name of the scheduled event */
-  name: string
+  name: string;
   /** the description of the scheduled event */
-  description?: string
+  description?: string;
   /** the time the scheduled event will start */
-  scheduledStartTime: number
+  scheduledStartTime: number;
   /** the time the scheduled event will end if it does end. */
-  scheduledEndTime?: number
+  scheduledEndTime?: number;
   /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel
+  privacyLevel: ScheduledEventPrivacyLevel;
   /** the status of the scheduled event */
-  status: ScheduledEventStatus
+  status: ScheduledEventStatus;
   /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType
+  entityType: ScheduledEventEntityType;
   /** any additional id of the hosting entity associated with event */
-  entityId?: bigint
+  entityId?: bigint;
   /** the location for the scheduled event */
-  location?: string
+  location?: string;
   /** the user that created the scheduled event */
-  creator?: User
+  creator?: User;
   /** the number of users subscribed to the scheduled event */
-  userCount?: number
+  userCount?: number;
   /** the cover image hash of the scheduled event */
-  image?: bigint
+  image?: bigint;
   /** the definition for how often this event should recur */
-  recurrenceRule?: ScheduledEventRecurrenceRule
+  recurrenceRule?: ScheduledEventRecurrenceRule;
 }
 
 export interface ScheduledEventRecurrenceRule {
   /** Starting time of the recurrence interval */
-  start: number
+  start: number;
   /** Ending time of the recurrence interval */
-  end: number | null
+  end: number | null;
   /** How often the event occurs */
-  frequency: DiscordScheduledEventRecurrenceRuleFrequency
+  frequency: DiscordScheduledEventRecurrenceRuleFrequency;
   /** The spacing between the events, defined by `frequency`. For example, `frequency` of `Weekly` and an `interval` of `2` would be "every-other week" */
-  interval: number
+  interval: number;
   /** Set of specific days within a week for the event to recur on */
-  byWeekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null
+  byWeekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null;
   /** List of specific days within a specific week (1-5) to recur on */
-  byNWeekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null
+  byNWeekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null;
   /** Set of specific months to recur on */
-  byMonth: DiscordScheduledEventRecurrenceRuleMonth[] | null
+  byMonth: DiscordScheduledEventRecurrenceRuleMonth[] | null;
   /** Set of specific dates within a month to recur on */
-  byMonthDay: number[] | null
+  byMonthDay: number[] | null;
   /** Set of days within a year to recur on (1-364) */
-  byYearDay: number[] | null
+  byYearDay: number[] | null;
   /** The total amount of times that the event is allowed to recur before stopping */
-  count: number | null
+  count: number | null;
 }
 
 export interface Sku {
   /** ID of SKU */
-  id: bigint
+  id: bigint;
   /** Type of SKU */
-  type: DiscordSkuType
+  type: DiscordSkuType;
   /** ID of the parent application */
-  applicationId: bigint
+  applicationId: bigint;
   /** Customer-facing name of your premium offering */
-  name: string
+  name: string;
   /** System-generated URL slug based on the SKU's name */
-  slug: string
+  slug: string;
   /** SKU flags combined as a bitfield */
-  flags: SkuFlags
+  flags: SkuFlags;
 }
 
 export interface StageInstance {
   /** The topic of the Stage instance (1-120 characters) */
-  topic: string
+  topic: string;
   /** The id of this Stage instance */
-  id: bigint
+  id: bigint;
   /** The guild id of the associated Stage channel */
-  guildId: bigint
+  guildId: bigint;
   /** The id of the associated Stage channel */
-  channelId: bigint
+  channelId: bigint;
   /** The id of the scheduled event for this Stage instance */
-  guildScheduledEventId?: bigint
+  guildScheduledEventId?: bigint;
 }
 
 export interface InviteStageInstance {
   /** The members speaking in the Stage */
-  members: Partial<Member>[]
+  members: Partial<Member>[];
   /** The number of users in the Stage */
-  participantCount: number
+  participantCount: number;
   /** The number of users speaking in the Stage */
-  speakerCount: number
+  speakerCount: number;
   /** The topic of the Stage instance (1-120 characters) */
-  topic: string
+  topic: string;
 }
 
 export interface Sticker {
   /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
-  id: bigint
+  id: bigint;
   /** Id of the pack the sticker is from */
-  packId?: bigint
+  packId?: bigint;
   /** Name of the sticker */
-  name: string
+  name: string;
   /** Description of the sticker */
-  description: string
+  description: string;
   /** a unicode emoji representing the sticker's expression */
-  tags: string
+  tags: string;
   /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
-  type: StickerTypes
+  type: StickerTypes;
   /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
-  formatType: StickerFormatTypes
+  formatType: StickerFormatTypes;
   /** Whether or not the sticker is available */
-  available?: boolean
+  available?: boolean;
   /** Id of the guild that owns this sticker */
-  guildId?: bigint
+  guildId?: bigint;
   /** The user that uploaded the sticker */
-  user?: User
+  user?: User;
   /** A sticker's sort order within a pack */
-  sortValue?: number
+  sortValue?: number;
 }
 
 export interface StickerPack {
-  coverStickerId?: bigint
-  bannerAssetId?: bigint
-  id: bigint
-  name: string
-  description: string
-  stickers: Sticker[]
-  skuId: bigint
+  coverStickerId?: bigint;
+  bannerAssetId?: bigint;
+  id: bigint;
+  name: string;
+  description: string;
+  stickers: Sticker[];
+  skuId: bigint;
 }
 
 export interface Team {
-  icon?: bigint
-  id: bigint
-  name: string
-  ownerUserId: bigint
-  members: TeamMember[]
+  icon?: bigint;
+  id: bigint;
+  name: string;
+  ownerUserId: bigint;
+  members: TeamMember[];
 }
 
 export interface TeamMember {
-  membershipState: TeamMembershipStates
-  teamId: bigint
-  user: User
-  role: DiscordTeamMemberRole
+  membershipState: TeamMembershipStates;
+  teamId: bigint;
+  user: User;
+  role: DiscordTeamMemberRole;
 }
 
 export interface Template {
-  description?: string | null
-  isDirty?: boolean
-  name: string
-  creatorId: bigint
-  createdAt: number
-  code: string
-  usageCount: number
-  creator: User
-  updatedAt: number
-  sourceGuildId: bigint
-  serializedSourceGuild: DiscordTemplateSerializedSourceGuild
+  description?: string | null;
+  isDirty?: boolean;
+  name: string;
+  creatorId: bigint;
+  createdAt: number;
+  code: string;
+  usageCount: number;
+  creator: User;
+  updatedAt: number;
+  sourceGuildId: bigint;
+  serializedSourceGuild: DiscordTemplateSerializedSourceGuild;
 }
 
 export interface ThreadMember {
   /** Any user-thread settings, currently only used for notifications */
-  flags: number
+  flags: number;
   /** The id of the thread */
-  id?: bigint
+  id?: bigint;
   /** The id of the user */
-  userId?: bigint
+  userId?: bigint;
   /** The time the current user last joined the thread */
-  joinTimestamp: number
+  joinTimestamp: number;
   /** The member object of the user */
-  member?: Member
+  member?: Member;
 }
 
 export interface ThreadMemberGuildCreate {
-  joinTimestamp: number
+  joinTimestamp: number;
 }
 
 export interface User {
   /** Compressed version of all the booleans on a user. */
-  toggles?: UserToggles
+  toggles?: UserToggles;
   /** The user's username, not unique across the platform */
-  username: string
+  username: string;
   /** The user's display name, if it is set. For bots, this is the application name */
-  globalName?: string
+  globalName?: string;
   /** The user's display name based on `globalName` and `username` */
-  displayName: string
+  displayName: string;
   /** Get the timestamp in milliseconds of user's creation date */
-  createdTimestamp: number
+  createdTimestamp: number;
   /** The user's chosen language option */
-  locale?: string
+  locale?: string;
   /** The flags on a user's account */
-  flags?: ToggleBitfield
+  flags?: ToggleBitfield;
   /** The type of Nitro subscription on a user's account */
-  premiumType?: PremiumTypes
+  premiumType?: PremiumTypes;
   /** The public flags on a user's account */
-  publicFlags?: ToggleBitfield
+  publicFlags?: ToggleBitfield;
   /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accentColor?: number
+  accentColor?: number;
   /** The user's id */
-  id: bigint
+  id: bigint;
   /** The user's discord-tag */
-  discriminator: string
+  discriminator: string;
   /** The user's avatar hash */
-  avatar?: bigint
+  avatar?: bigint;
   /** The user's email */
-  email?: string
+  email?: string;
   /** the user's banner, or null if unset */
-  banner?: bigint
+  banner?: bigint;
   /** data for the user's avatar decoration */
-  avatarDecorationData?: AvatarDecorationData
+  avatarDecorationData?: AvatarDecorationData;
   /** The user tag in the form of `username` or `username#discriminator` for legacy username system */
-  tag: string
+  tag: string;
   /** Whether the user belongs to an OAuth2 application */
-  bot: boolean
+  bot: boolean;
   /** Whether the user is an Official Discord System user (part of the urgent message system) */
-  system: boolean
+  system: boolean;
   /** Whether the user has two factor enabled on their account */
-  mfaEnabled: boolean
+  mfaEnabled: boolean;
   /** Whether the email on this account has been verified */
-  verified: boolean
+  verified: boolean;
   /** data for the user's collectibles */
-  collectibles?: Collectibles
+  collectibles?: Collectibles;
   /** The user's primary guild */
-  primaryGuild?: UserPrimaryGuild
+  primaryGuild?: UserPrimaryGuild;
   /** Get user's default avatar in formatted url */
-  defaultAvatarUrl: string
+  defaultAvatarUrl: string;
   /**
    * Get user's avatar in formatted url
    * @param options Image format options
    * @returns User's avatar in formatted url
    */
-  avatarUrl: (options?: ImageOptions) => string | undefined
+  avatarUrl: (options?: ImageOptions) => string | undefined;
   /**
    * Get user's display avatar in formatted url
    * @param options Image format options
    * @returns User's display avatar in formatted url
    */
-  displayAvatarUrl: (options?: ImageOptions) => string
+  displayAvatarUrl: (options?: ImageOptions) => string;
 }
 
 export interface Collectibles {
   /** object mapping of nameplate data */
-  nameplate?: Nameplate
+  nameplate?: Nameplate;
 }
 
 export interface Nameplate {
   /** the nameplate's id */
-  skuId: bigint
+  skuId: bigint;
   /** path to the nameplate asset */
-  asset: string
+  asset: string;
   /** the label of this nameplate. Currently unused */
-  label: string
+  label: string;
   /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
-  palette: string
+  palette: string;
 }
 
 export interface UserPrimaryGuild {
   /** The id of the primary guild */
-  identityGuildId?: bigint
+  identityGuildId?: bigint;
   /**
    * Whether the user is displaying the primary guild's server tag.
    *
@@ -1890,146 +1890,146 @@ export interface UserPrimaryGuild {
    * This can be `undefined` if the system clears the identity, e.g. because the server no longer supports tags.
    * This will be `false` if the user manually removes their tag.
    */
-  identityEnabled?: boolean
+  identityEnabled?: boolean;
   /** The text of the user's server tag. Limited to 4 characters */
-  tag?: string
+  tag?: string;
   /** The server tag badge hash */
-  badge?: bigint
+  badge?: bigint;
 }
 
 export interface VoiceRegion {
-  id: string
-  name: string
-  custom: boolean
-  optimal: boolean
-  deprecated: boolean
+  id: string;
+  name: string;
+  custom: boolean;
+  optimal: boolean;
+  deprecated: boolean;
 }
 
 export interface VoiceState {
-  requestToSpeakTimestamp?: number
-  channelId?: bigint
-  guildId: bigint
-  toggles: VoiceStateToggles
-  sessionId: string
-  userId: bigint
+  requestToSpeakTimestamp?: number;
+  channelId?: bigint;
+  guildId: bigint;
+  toggles: VoiceStateToggles;
+  sessionId: string;
+  userId: bigint;
 }
 
 export interface Webhook {
   /** The type of the webhook */
-  type: WebhookTypes
+  type: WebhookTypes;
   /** The secure token of the webhook (returned for Incoming Webhooks) */
-  token?: string
+  token?: string;
   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-  url?: string
+  url?: string;
   /** The id of the webhook */
-  id: bigint
+  id: bigint;
   /** The guild id this webhook is for */
-  guildId?: bigint
+  guildId?: bigint;
   /** The channel id this webhook is for */
-  channelId?: bigint
+  channelId?: bigint;
   /** The user this webhook was created by (not returned when getting a webhook with its token) */
-  user?: User
+  user?: User;
   /** The default name of the webhook */
-  name?: string
+  name?: string;
   /** The default user avatar hash of the webhook */
-  avatar?: bigint
+  avatar?: bigint;
   /** The bot/OAuth2 application that created this webhook */
-  applicationId?: bigint
+  applicationId?: bigint;
   /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceGuild?: Partial<Guild>
+  sourceGuild?: Partial<Guild>;
   /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceChannel?: Partial<Channel>
+  sourceChannel?: Partial<Channel>;
 }
 
 export interface WelcomeScreen {
-  description?: string
-  welcomeChannels: WelcomeScreenChannel[]
+  description?: string;
+  welcomeChannels: WelcomeScreenChannel[];
 }
 
 export interface WelcomeScreenChannel {
-  channelId: bigint
-  description: string
-  emojiId?: bigint
-  emojiName?: string
+  channelId: bigint;
+  description: string;
+  emojiId?: bigint;
+  emojiName?: string;
 }
 
 export interface GuildWidget {
-  id: bigint
-  name: string
-  members: Partial<User>[]
-  channels: Partial<Channel>[]
-  instantInvite?: string
-  presenceCount: number
+  id: bigint;
+  name: string;
+  members: Partial<User>[];
+  channels: Partial<Channel>[];
+  instantInvite?: string;
+  presenceCount: number;
 }
 
 export interface GuildWidgetSettings {
-  channelId?: string
-  enabled: boolean
+  channelId?: string;
+  enabled: boolean;
 }
 
 export interface Subscription {
   /** ID of the subscription */
-  id: bigint
+  id: bigint;
   /** ID of the user who is subscribed */
-  userId: bigint
+  userId: bigint;
   /** List of SKUs subscribed to */
-  skuIds: bigint[]
+  skuIds: bigint[];
   /** List of entitlements granted for this subscription */
-  entitlementIds: bigint[]
+  entitlementIds: bigint[];
   /** List of SKUs that this user will be subscribed to at renewal */
-  renewalSkuIds?: bigint[]
+  renewalSkuIds?: bigint[];
   /** Start of the current subscription period */
-  currentPeriodStart: number
+  currentPeriodStart: number;
   /** End of the current subscription period */
-  currentPeriodEnd: number
+  currentPeriodEnd: number;
   /** Current status of the subscription */
-  status: DiscordSubscriptionStatus
+  status: DiscordSubscriptionStatus;
   /** When the subscription was canceled */
-  canceledAt: number
+  canceledAt: number;
   /** ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope. */
-  country?: string
+  country?: string;
 }
 
 /** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
 export interface SoundboardSound {
   /** The name of this sound */
-  name: string
+  name: string;
   /** The id of this sound */
-  soundId: bigint
+  soundId: bigint;
   /** The volume of this sound, from 0 to 1 */
-  volume: number
+  volume: number;
   /** The id of this sound's custom emoji */
-  emojiId?: bigint
+  emojiId?: bigint;
   /** The unicode character of this sound's standard emoji */
-  emojiName?: string
+  emojiName?: string;
   /** The id of the guild this sound is in */
-  guildId?: bigint
+  guildId?: bigint;
   /** Whether this sound can be used, may be false due to loss of Server Boosts */
-  available: boolean
+  available: boolean;
   /** The user who created this sound */
-  user?: User
+  user?: User;
 }
 
 /** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
 export interface Lobby {
   /** The id of this channel */
-  id: bigint
+  id: bigint;
   /** application that created the lobby */
-  applicationId: bigint
+  applicationId: bigint;
   /** dictionary of string key/value pairs. The max total length is 1000. */
-  metadata?: Record<string, string>
+  metadata?: Record<string, string>;
   /** members of the lobby */
-  members: LobbyMember[]
+  members: LobbyMember[];
   /** the guild channel linked to the lobby */
-  linkedChannel?: Channel
+  linkedChannel?: Channel;
 }
 
 /** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
 export interface LobbyMember {
   /** The id of the user */
-  id: bigint
+  id: bigint;
   /** dictionary of string key/value pairs. The max total length is 1000. */
-  metadata?: Record<string, string>
+  metadata?: Record<string, string>;
   /** lobby member flags combined as as bitfield */
-  flags?: ToggleBitfield
+  flags?: ToggleBitfield;
 }

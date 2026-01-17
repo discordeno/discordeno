@@ -5,21 +5,21 @@ import type {
   DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordInstallParams,
-} from '../discord/application.js'
-import type { DiscordWebhookEventType } from '../discord/webhookEvents.js'
+} from '../discord/application.js';
+import type { DiscordWebhookEventType } from '../discord/webhookEvents.js';
 
 /** https://discord.com/developers/docs/resources/application#edit-current-application-json-params */
 export interface EditApplication {
   /** Default custom authorization URL for the app, if enabled */
-  customInstallUrl?: string
+  customInstallUrl?: string;
   /** Description of the app */
-  description?: string
+  description?: string;
   /** Role connection verification URL for the app */
-  roleConnectionsVerificationUrl?: string
+  roleConnectionsVerificationUrl?: string;
   /** Settings for the app's default in-app authorization link, if enabled */
-  installParams?: DiscordInstallParams
+  installParams?: DiscordInstallParams;
   /** Default scopes and permissions for each supported installation context. */
-  integrationTypesConfig?: DiscordApplicationIntegrationType
+  integrationTypesConfig?: DiscordApplicationIntegrationType;
   /**
    * App's public flags
    *
@@ -28,29 +28,29 @@ export interface EditApplication {
    *
    * @see {@link ApplicationFlags}
    */
-  flags?: number
+  flags?: number;
   /** Icon for the app */
-  icon?: string | null
+  icon?: string | null;
   /** Default rich presence invite cover image for the app */
-  coverImage?: string | null
+  coverImage?: string | null;
   /**
    * Interactions endpoint URL for the app
    *
    * @remarks
    * To update an Interactions endpoint URL via the API, the URL must be valid
    */
-  interactionEndpointUrl?: string
+  interactionEndpointUrl?: string;
   /**
    * List of tags describing the content and functionality of the app (max of 20 characters per tag)
    *
    * @remarks
    * There can only be a max of 5 tags
    */
-  tags?: string[]
+  tags?: string[];
   /** Event webhook URL for the app to receive webhook events */
-  eventWebhooksUrl?: string
+  eventWebhooksUrl?: string;
   /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
-  eventWebhooksStatus?: DiscordApplicationEventWebhookStatus
+  eventWebhooksStatus?: DiscordApplicationEventWebhookStatus;
   /** List of Webhook event types the app subscribes to */
-  eventWebhooksTypes?: DiscordWebhookEventType[]
+  eventWebhooksTypes?: DiscordWebhookEventType[];
 }

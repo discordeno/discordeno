@@ -1,5 +1,5 @@
-import { DiscordLibraries, type IReview } from '@site/src/types'
-import style from './index.module.css'
+import { DiscordLibraries, type IReview } from '@site/src/types';
+import style from './index.module.css';
 
 const reviewList: IReview[] = [
   {
@@ -82,7 +82,7 @@ const reviewList: IReview[] = [
       guild_count: 211000,
     },
   },
-]
+];
 
 export default function DiscordenoReviews() {
   return (
@@ -94,7 +94,7 @@ export default function DiscordenoReviews() {
         <div className={style.reviewsElementWrapper}>
           {reviewList
             .sort((a, b) => {
-              return b.bot.guild_count - a.bot.guild_count
+              return b.bot.guild_count - a.bot.guild_count;
             })
             .map((review) => (
               <div className={style.reviewsElement} key={review.bot.username}>
@@ -202,5 +202,5 @@ export default function DiscordenoReviews() {
         </div>
       </div>
     </div>
-  )
+  );
 }
