@@ -5,7 +5,7 @@ import { e2eCache, rest } from './utils.js'
 
 chaiUse(chaiAsPromised)
 
-describe('Webhook helpers', async () => {
+describe('Webhook helpers', () => {
   it('Manage webhooks', async () => {
     const webhook = await rest.createWebhook(e2eCache.channel.id, {
       name: 'idk',

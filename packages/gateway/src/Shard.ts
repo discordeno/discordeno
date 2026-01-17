@@ -730,7 +730,6 @@ export class DiscordenoShard {
         break
       case 'READY': {
         const payload = packet.d as DiscordReady
-        this.events.ready?.(this)
 
         // Important for future resumes.
         this.resumeGatewayUrl = payload.resume_gateway_url
@@ -739,6 +738,7 @@ export class DiscordenoShard {
         this.state = ShardState.Connected
 
         this.logger.debug(`[Shard] Shard #${this.id} received READY`)
+        this.events.ready?.(this)
 
         // Continue the requests which have been queued since the shard went offline.
         // Important when this is a re-identify
