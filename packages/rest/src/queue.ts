@@ -134,10 +134,10 @@ export class Queue {
         // Check if this request is able to be made globally
         await this.rest.invalidBucket.waitUntilRequestAvailable()
 
-        await this.rest
-          .sendRequest(request)
-          // Should be handled in sendRequest, this catch just prevents bots from dying
-          .catch(() => null)
+        await this.rest.sendRequest(request).catch((e) => {
+          this.rest.logger.debug(`Queue ${this.queueType} ${this.url} encountered an error when sending a request.`, e)
+          request.reject({ ok: false, status: 999, error: 'The queue encontered an unexpected error sending a request.', errorObject: e })
+        })
       }
     }
 
