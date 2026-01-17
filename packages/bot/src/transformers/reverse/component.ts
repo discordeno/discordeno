@@ -2,22 +2,30 @@ import {
   type ButtonStyles,
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordChannelSelectComponent,
+  type DiscordChannelSelectInteractionResponseFromModal,
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordFileUploadComponent,
   type DiscordLabelComponent,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
+  type DiscordMentionableSelectComponent,
+  type DiscordMentionableSelectInteractionResponseFromModal,
   type DiscordMessageComponent,
   type DiscordMessageComponentFromModalInteractionResponse,
+  type DiscordRoleSelectComponent,
+  type DiscordRoleSelectInteractionResponseFromModal,
   type DiscordSectionComponent,
-  type DiscordSelectMenuComponent,
+  type DiscordStringSelectComponent,
   type DiscordStringSelectInteractionResponseFromModal,
   type DiscordTextDisplayComponent,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
   type DiscordThumbnailComponent,
   type DiscordUnfurledMediaItem,
+  type DiscordUserSelectComponent,
+  type DiscordUserSelectInteractionResponseFromModal,
   MessageComponentTypes,
   type TextStyles,
 } from '@discordeno/types'
@@ -39,11 +47,15 @@ export function transformComponentToDiscordComponent(
     case MessageComponentTypes.TextInput:
       return transformInputTextComponent(bot, payload)
     case MessageComponentTypes.StringSelect:
-    case MessageComponentTypes.ChannelSelect:
-    case MessageComponentTypes.RoleSelect:
+      return transformStringSelectMenuComponent(bot, payload)
     case MessageComponentTypes.UserSelect:
+      return transformUserSelectMenuComponent(bot, payload)
+    case MessageComponentTypes.RoleSelect:
+      return transformRoleSelectMenuComponent(bot, payload)
     case MessageComponentTypes.MentionableSelect:
-      return transformSelectMenuComponent(bot, payload)
+      return transformMentionableSelectMenuComponent(bot, payload)
+    case MessageComponentTypes.ChannelSelect:
+      return transformChannelSelectMenuComponent(bot, payload)
     case MessageComponentTypes.Section:
       return transformSectionComponent(bot, payload)
     case MessageComponentTypes.File:
@@ -139,25 +151,23 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
   }
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent | DiscordStringSelectInteractionResponseFromModal {
+function transformStringSelectMenuComponent(
+  bot: Bot,
+  payload: Component,
+): DiscordStringSelectComponent | DiscordStringSelectInteractionResponseFromModal {
   if (payload.values) {
     return {
       type: MessageComponentTypes.StringSelect,
       values: payload.values,
       custom_id: payload.customId!,
       id: payload.id!,
-    }
+    } satisfies DiscordStringSelectInteractionResponseFromModal
   }
 
   return {
-    type: payload.type as DiscordSelectMenuComponent['type'],
+    type: MessageComponentTypes.StringSelect,
     id: payload.id,
     custom_id: payload.customId!,
-    channel_types: payload.channelTypes,
-    default_values: payload.defaultValues?.map((defaultValue) => ({
-      id: bot.transformers.reverse.snowflake(defaultValue.id),
-      type: defaultValue.type,
-    })),
     disabled: payload.disabled,
     max_values: payload.maxValues,
     min_values: payload.minValues,
@@ -173,10 +183,117 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
           }
         : undefined,
       default: option.default,
-    })),
+    }))!,
     placeholder: payload.placeholder,
     required: payload.required,
+  } satisfies DiscordStringSelectComponent
+}
+
+function transformUserSelectMenuComponent(bot: Bot, payload: Component): DiscordUserSelectComponent | DiscordUserSelectInteractionResponseFromModal {
+  if (payload.values) {
+    return {
+      type: MessageComponentTypes.UserSelect,
+      values: payload.values,
+      custom_id: payload.customId!,
+      id: payload.id!,
+      // TODO: Add resolved reverse transformer
+      resolved: {},
+    } satisfies DiscordUserSelectInteractionResponseFromModal
   }
+
+  return {
+    type: MessageComponentTypes.UserSelect,
+    id: payload.id,
+    custom_id: payload.customId!,
+    disabled: payload.disabled,
+    max_values: payload.maxValues,
+    min_values: payload.minValues,
+    placeholder: payload.placeholder,
+    default_values: payload.defaultValues?.map((value) => ({ id: bot.transformers.reverse.snowflake(value.id), type: value.type })),
+    required: payload.required,
+  } satisfies DiscordUserSelectComponent
+}
+
+function transformRoleSelectMenuComponent(bot: Bot, payload: Component): DiscordRoleSelectComponent | DiscordRoleSelectInteractionResponseFromModal {
+  if (payload.values) {
+    return {
+      type: MessageComponentTypes.RoleSelect,
+      values: payload.values,
+      custom_id: payload.customId!,
+      id: payload.id!,
+      // TODO: Add resolved reverse transformer
+      resolved: {},
+    } satisfies DiscordRoleSelectInteractionResponseFromModal
+  }
+
+  return {
+    type: MessageComponentTypes.RoleSelect,
+    id: payload.id,
+    custom_id: payload.customId!,
+    disabled: payload.disabled,
+    max_values: payload.maxValues,
+    min_values: payload.minValues,
+    placeholder: payload.placeholder,
+    default_values: payload.defaultValues?.map((value) => ({ id: bot.transformers.reverse.snowflake(value.id), type: value.type })),
+    required: payload.required,
+  } satisfies DiscordRoleSelectComponent
+}
+
+function transformMentionableSelectMenuComponent(
+  bot: Bot,
+  payload: Component,
+): DiscordMentionableSelectComponent | DiscordMentionableSelectInteractionResponseFromModal {
+  if (payload.values) {
+    return {
+      type: MessageComponentTypes.MentionableSelect,
+      values: payload.values,
+      custom_id: payload.customId!,
+      id: payload.id!,
+      // TODO: Add resolved reverse transformer
+      resolved: {},
+    } satisfies DiscordMentionableSelectInteractionResponseFromModal
+  }
+
+  return {
+    type: MessageComponentTypes.MentionableSelect,
+    id: payload.id,
+    custom_id: payload.customId!,
+    disabled: payload.disabled,
+    max_values: payload.maxValues,
+    min_values: payload.minValues,
+    placeholder: payload.placeholder,
+    default_values: payload.defaultValues?.map((value) => ({ id: bot.transformers.reverse.snowflake(value.id), type: value.type })),
+    required: payload.required,
+  } satisfies DiscordMentionableSelectComponent
+}
+
+function transformChannelSelectMenuComponent(
+  bot: Bot,
+  payload: Component,
+): DiscordChannelSelectComponent | DiscordChannelSelectInteractionResponseFromModal {
+  if (payload.values) {
+    return {
+      type: MessageComponentTypes.ChannelSelect,
+      values: payload.values,
+      custom_id: payload.customId!,
+      id: payload.id!,
+      // TODO: Add resolved reverse transformer
+      resolved: {},
+    } satisfies DiscordChannelSelectInteractionResponseFromModal
+  }
+
+  return {
+    type: MessageComponentTypes.ChannelSelect,
+    id: payload.id,
+    custom_id: payload.customId!,
+    disabled: payload.disabled,
+    max_values: payload.maxValues,
+    min_values: payload.minValues,
+    default_values: payload.defaultValues?.map((value) => ({ id: bot.transformers.reverse.snowflake(value.id), type: value.type })),
+    placeholder: payload.placeholder,
+    required: payload.required,
+    channel_types: payload.channelTypes,
+  } satisfies DiscordChannelSelectComponent
 }
 
 function transformSectionComponent(bot: Bot, payload: Component): DiscordSectionComponent {

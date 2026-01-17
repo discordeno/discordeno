@@ -171,7 +171,7 @@ export interface DiscordInteractionDataResolved {
   /** The Ids and Message objects */
   messages?: Record<string, Partial<DiscordMessage>>
   /** The ids and attachment objects */
-  attachments: Record<string, DiscordAttachment>
+  attachments?: Record<string, DiscordAttachment>
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-interaction-data-option-structure */

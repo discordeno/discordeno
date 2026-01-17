@@ -46,7 +46,11 @@ export enum MessageComponentTypes {
 export type DiscordMessageComponents = DiscordMessageComponent[]
 export type DiscordMessageComponent =
   | DiscordActionRow
-  | DiscordSelectMenuComponent
+  | DiscordStringSelectComponent
+  | DiscordUserSelectComponent
+  | DiscordRoleSelectComponent
+  | DiscordMentionableSelectComponent
+  | DiscordChannelSelectComponent
   | DiscordButtonComponent
   | DiscordTextInputComponent
   | DiscordSectionComponent
@@ -63,6 +67,11 @@ export type DiscordMessageComponentFromModalInteractionResponse =
   | DiscordTextInputInteractionResponse
   | DiscordTextDisplayInteractionResponse
   | DiscordLabelInteractionResponse
+  | DiscordRoleSelectInteractionResponseFromModal
+  | DiscordUserSelectInteractionResponseFromModal
+  | DiscordStringSelectInteractionResponseFromModal
+  | DiscordChannelSelectInteractionResponseFromModal
+  | DiscordMentionableSelectInteractionResponseFromModal
 
 export type DiscordMessageComponentFromMessageComponentInteractionResponse =
   | DiscordRoleSelectInteractionResponseFromMessageComponent
@@ -92,7 +101,15 @@ export interface DiscordActionRow extends DiscordBaseComponent {
    * Using a {@link DiscordTextInputComponent} inside the Action Row is deprecated,
    * use a {@link DiscordLabelComponent} for modals
    */
-  components: (DiscordButtonComponent | DiscordSelectMenuComponent | DiscordTextInputComponent)[]
+  components: (
+    | DiscordButtonComponent
+    | DiscordStringSelectComponent
+    | DiscordUserSelectComponent
+    | DiscordRoleSelectComponent
+    | DiscordMentionableSelectComponent
+    | DiscordChannelSelectComponent
+    | DiscordTextInputComponent
+  )[]
 }
 
 /** https://discord.com/developers/docs/components/reference#button-button-structure */
@@ -159,25 +176,14 @@ export enum ButtonStyles {
   Premium,
 }
 
-/**
- * https://discord.com/developers/docs/components/reference#string-select
- * https://discord.com/developers/docs/components/reference#user-select
- * https://discord.com/developers/docs/components/reference#role-select
- * https://discord.com/developers/docs/components/reference#mentionable-select
- * https://discord.com/developers/docs/components/reference#channel-select
- */
-export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
-  type:
-    | MessageComponentTypes.StringSelect
-    | MessageComponentTypes.UserSelect
-    | MessageComponentTypes.RoleSelect
-    | MessageComponentTypes.MentionableSelect
-    | MessageComponentTypes.ChannelSelect
+/** https://discord.com/developers/docs/components/reference#string-select-string-select-structure */
+export interface DiscordStringSelectComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.StringSelect
 
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string
-  /** Specified choices in a select menu; Maximum of 25 items. */
-  options?: DiscordSelectOption[]
+  /** The choices! Maximum of 25 items. */
+  options: DiscordSelectOption[]
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
   /** The minimum number of items that must be selected. Default 1. Between 0-25. */
@@ -188,7 +194,7 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
    * Whether this component is required to be filled
    *
    * @remarks
-   * This value is only valid for select menus in modals
+   * This value is only valid for string select menus in modals
    *
    * @default true
    */
@@ -202,15 +208,6 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
    * @default false
    */
   disabled?: boolean
-  /**
-   * List of default values for auto-populated select menu components
-   *
-   * @remarks
-   * The number of default values must be in the range defined by min_values and max_values
-   */
-  default_values?: DiscordSelectMenuDefaultValue[]
-  /** List of channel types to include in a channel select menu options list */
-  channel_types?: ChannelTypes[]
 }
 
 /** https://discord.com/developers/docs/components/reference#string-select-select-option-structure */
@@ -303,6 +300,43 @@ export interface DiscordTextInputInteractionResponse {
   value: string
 }
 
+/** https://discord.com/developers/docs/components/reference#user-select-user-select-structure */
+export interface DiscordUserSelectComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.UserSelect
+
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  default_values?: DiscordSelectMenuDefaultValue[]
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  max_values?: number
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
+  disabled?: boolean
+}
+
 /** https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure */
 export interface DiscordSelectMenuDefaultValue {
   /** ID of a user, role, or channel */
@@ -338,6 +372,43 @@ export type DiscordUserSelectInteractionResponseFromModal = Require<Omit<Discord
 /** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
 export type DiscordUserSelectInteractionResponseFromMessageComponent = Require<Omit<DiscordUserSelectInteractionResponse, 'type'>, 'component_type'>
 
+/** https://discord.com/developers/docs/components/reference#role-select-role-select-structure */
+export interface DiscordRoleSelectComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.RoleSelect
+
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  default_values?: DiscordSelectMenuDefaultValue[]
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  max_values?: number
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
+  disabled?: boolean
+}
+
 /** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
 export interface DiscordRoleSelectInteractionResponse {
   /**
@@ -364,6 +435,43 @@ export interface DiscordRoleSelectInteractionResponse {
 export type DiscordRoleSelectInteractionResponseFromModal = Require<Omit<DiscordRoleSelectInteractionResponse, 'component_type'>, 'type'>
 /** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
 export type DiscordRoleSelectInteractionResponseFromMessageComponent = Require<Omit<DiscordRoleSelectInteractionResponse, 'type'>, 'component_type'>
+
+/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-structure */
+export interface DiscordMentionableSelectComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.MentionableSelect
+
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  default_values?: DiscordSelectMenuDefaultValue[]
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  max_values?: number
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
+  disabled?: boolean
+}
 
 /** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
 export interface DiscordMentionableSelectInteractionResponse {
@@ -397,6 +505,45 @@ export type DiscordMentionableSelectInteractionResponseFromMessageComponent = Re
   Omit<DiscordMentionableSelectInteractionResponse, 'type'>,
   'component_type'
 >
+
+/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-structure */
+export interface DiscordChannelSelectComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.ChannelSelect
+
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string
+  /** List of channel types to include in the options list */
+  channel_types?: ChannelTypes[]
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  default_values?: DiscordSelectMenuDefaultValue[]
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number
+  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  max_values?: number
+  /**
+   * Whether this component is required to be filled
+   *
+   * @remarks
+   * This value is only valid for string select menus in modals
+   *
+   * @default true
+   */
+  required?: boolean
+  /**
+   * Whether select menu is disabled
+   *
+   * @remarks
+   * This value cannot be set for select menus in modals
+   *
+   * @default false
+   */
+  disabled?: boolean
+}
 
 /** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
 export interface DiscordChannelSelectInteractionResponse {
@@ -550,7 +697,14 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
    */
   description?: string
   /** The component within the label */
-  component: DiscordTextInputComponent | DiscordSelectMenuComponent | DiscordFileUploadComponent
+  component:
+    | DiscordTextInputComponent
+    | DiscordStringSelectComponent
+    | DiscordUserSelectComponent
+    | DiscordRoleSelectComponent
+    | DiscordMentionableSelectComponent
+    | DiscordChannelSelectComponent
+    | DiscordFileUploadComponent
 }
 
 /** https://discord.com/developers/docs/components/reference#label-label-interaction-response-structure */
