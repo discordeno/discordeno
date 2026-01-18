@@ -994,7 +994,7 @@ export interface Interaction {
    */
   respond: (
     response: string | InteractionCallbackData,
-    options?: { isPrivate?: boolean; withResponse?: boolean },
+    options?: { isPrivate?: boolean; withResponse?: boolean; type?: InteractionResponseTypes },
   ) => Promise<Message | InteractionCallbackResponse | void>;
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
