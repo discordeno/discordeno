@@ -3,7 +3,6 @@
 import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js';
 import type { TargetTypes } from '../discord/invite.js';
 import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js';
-import type { PermissionStrings } from '../discord/permissions.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { MessageComponents } from './components.js';
 import type { AllowedMentions } from './message.js';
@@ -17,12 +16,11 @@ export interface Overwrite {
   type: OverwriteTypes;
 
   // NOTE:
-  // - We allow PermissionStrings[] because in the rest manager we convert these value to the actual string discord wants
   // - Discord says that these are always present, we keep them as optional (and allow for null) because when it is sent it can be null / not present, https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params, specificly the **
   /** Permission bit set */
-  allow?: PermissionStrings[] | string | null;
+  allow?: string | null;
   /** Permission bit set */
-  deny?: PermissionStrings[] | string | null;
+  deny?: string | null;
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
@@ -280,11 +278,10 @@ export interface EditChannelPermissionOverridesOptions {
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes;
 
-  // We allow PermissionStrings[] because in the rest manager we convert these value to the actual string discord wants
   /** The bitwise value of all allowed permissions */
-  allow?: PermissionStrings[] | string | null;
+  allow?: string | null;
   /** The bitwise value of all disallowed permissions */
-  deny?: PermissionStrings[] | string | null;
+  deny?: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params */

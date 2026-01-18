@@ -59,7 +59,6 @@ import type {
   ModifyGuildTemplate,
 } from '@discordeno/types';
 import {
-  calculateBits,
   camelize,
   camelToSnakeCase,
   DISCORDENO_VERSION,
@@ -236,17 +235,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             continue;
           }
 
-          // Some falsy values should be allowed like null or 0
           if (value !== undefined) {
             switch (key) {
-              case 'permissions':
-              case 'allow':
-              case 'deny':
-                newObj[key] = typeof value === 'string' ? value : calculateBits(value);
-                continue;
-              case 'defaultMemberPermissions':
-                newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value);
-                continue;
               case 'nameLocalizations':
                 newObj.name_localizations = value;
                 continue;

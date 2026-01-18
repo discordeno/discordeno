@@ -14,7 +14,6 @@ import type {
   InteractionResponseTypes,
 } from '../discord/interactions.js';
 import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js';
-import type { PermissionStrings } from '../discord/permissions.js';
 import type { Localization } from '../discord/reference.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { MessageComponents } from './components.js';
@@ -128,7 +127,7 @@ export interface CreateApplicationCommand {
    */
   options?: Camelize<DiscordApplicationCommandOption[]>;
   /** Set of permissions represented as a bit set */
-  defaultMemberPermissions?: PermissionStrings[] | string | null;
+  defaultMemberPermissions?: string | null;
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
    *
