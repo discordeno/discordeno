@@ -42,9 +42,18 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
     // If user provides a string, change it to a response object
     if (typeof response === 'string') response = { content: response };
 
-    // If user provides an object, determine if it should be an autocomplete or a modal response
-    if (response.title) type = InteractionResponseTypes.Modal;
-    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult;
+    // If user provides a type, use it
+    if (options?.type) type = options.type;
+    // Otherwise, determine if it should be an autocomplete or a modal response
+    else {
+      if (response.title) type = InteractionResponseTypes.Modal;
+      if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult;
+    }
+
+    // Modals cannot be chained
+    if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
+      throw new Error('Cannot respond to a modal interaction with another modal.');
+
     if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) {
       response.flags ??= 0;
       response.flags |= MessageFlags.Ephemeral;
@@ -52,10 +61,6 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response);
-
-    // Modals cannot be chained
-    if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
-      throw new Error('Cannot respond to a modal interaction with another modal.');
 
     const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
