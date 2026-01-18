@@ -77,35 +77,35 @@ import type {
   DiscordWebhook,
   DiscordWelcomeScreen,
   RecursivePartial,
-} from '@discordeno/types'
-import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils'
-import type { Bot } from './bot.js'
+} from '@discordeno/types';
+import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils';
+import type { Bot } from './bot.js';
 import {
   createDesiredPropertiesObject,
   type DesiredPropertiesBehavior,
   type SetupDesiredProps,
   type TransformersDesiredProperties,
-} from './desiredProperties.js'
-import { transformActivity, transformActivityInstance, transformActivityLocation } from './transformers/activity.js'
-import { transformApplication } from './transformers/application.js'
-import { transformApplicationCommand } from './transformers/applicationCommand.js'
-import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
-import { transformApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
-import { transformAttachment } from './transformers/attachment.js'
-import { transformAuditLogEntry } from './transformers/auditLogEntry.js'
-import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js'
-import { transformAutoModerationRule } from './transformers/automodRule.js'
-import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js'
-import { transformChannel, transformForumTag } from './transformers/channel.js'
-import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js'
-import { transformEmbed } from './transformers/embed.js'
-import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js'
-import { transformEntitlement } from './transformers/entitlement.js'
-import { transformGatewayBot } from './transformers/gatewayBot.js'
-import { transformGuild } from './transformers/guild.js'
-import { transformIncidentsData } from './transformers/incidentsData.js'
-import { transformIntegration } from './transformers/integration.js'
+} from './desiredProperties.js';
+import { transformActivity, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
+import { transformApplication } from './transformers/application.js';
+import { transformApplicationCommand } from './transformers/applicationCommand.js';
+import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js';
+import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js';
+import { transformApplicationCommandPermission } from './transformers/applicationCommandPermission.js';
+import { transformAttachment } from './transformers/attachment.js';
+import { transformAuditLogEntry } from './transformers/auditLogEntry.js';
+import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
+import { transformAutoModerationRule } from './transformers/automodRule.js';
+import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
+import { transformChannel, transformForumTag } from './transformers/channel.js';
+import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
+import { transformEmbed } from './transformers/embed.js';
+import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
+import { transformEntitlement } from './transformers/entitlement.js';
+import { transformGatewayBot } from './transformers/gatewayBot.js';
+import { transformGuild } from './transformers/guild.js';
+import { transformIncidentsData } from './transformers/incidentsData.js';
+import { transformIntegration } from './transformers/integration.js';
 import {
   transformInteraction,
   transformInteractionCallback,
@@ -113,46 +113,46 @@ import {
   transformInteractionDataOption,
   transformInteractionDataResolved,
   transformInteractionResource,
-} from './transformers/interaction.js'
-import { transformInvite } from './transformers/invite.js'
-import { transformLobby, transformLobbyMember } from './transformers/lobby.js'
-import { transformMember } from './transformers/member.js'
+} from './transformers/interaction.js';
+import { transformInvite } from './transformers/invite.js';
+import { transformLobby, transformLobbyMember } from './transformers/lobby.js';
+import { transformMember } from './transformers/member.js';
 import {
   transformMessage,
   transformMessageCall,
   transformMessageInteractionMetadata,
   transformMessagePin,
   transformMessageSnapshot,
-} from './transformers/message.js'
-import { transformGuildOnboarding, transformGuildOnboardingPrompt, transformGuildOnboardingPromptOption } from './transformers/onboarding.js'
-import { transformPoll, transformPollMedia } from './transformers/poll.js'
-import { transformPresence } from './transformers/presence.js'
-import { transformActivityToDiscordActivity } from './transformers/reverse/activity.js'
-import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
-import { transformApplicationToDiscordApplication } from './transformers/reverse/application.js'
-import { transformApplicationCommandToDiscordApplicationCommand } from './transformers/reverse/applicationCommand.js'
-import { transformApplicationCommandOptionToDiscordApplicationCommandOption } from './transformers/reverse/applicationCommandOption.js'
-import { transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice } from './transformers/reverse/applicationCommandOptionChoice.js'
-import { transformAttachmentToDiscordAttachment } from './transformers/reverse/attachment.js'
+} from './transformers/message.js';
+import { transformGuildOnboarding, transformGuildOnboardingPrompt, transformGuildOnboardingPromptOption } from './transformers/onboarding.js';
+import { transformPoll, transformPollMedia } from './transformers/poll.js';
+import { transformPresence } from './transformers/presence.js';
+import { transformActivityToDiscordActivity } from './transformers/reverse/activity.js';
+import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js';
+import { transformApplicationToDiscordApplication } from './transformers/reverse/application.js';
+import { transformApplicationCommandToDiscordApplicationCommand } from './transformers/reverse/applicationCommand.js';
+import { transformApplicationCommandOptionToDiscordApplicationCommandOption } from './transformers/reverse/applicationCommandOption.js';
+import { transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice } from './transformers/reverse/applicationCommandOptionChoice.js';
+import { transformAttachmentToDiscordAttachment } from './transformers/reverse/attachment.js';
 import {
   transformComponentToDiscordComponent,
   transformMediaGalleryItemToDiscordMediaGalleryItem,
   transformUnfurledMediaItemToDiscordUnfurledMediaItem,
-} from './transformers/reverse/component.js'
-import { transformEmbedToDiscordEmbed } from './transformers/reverse/embed.js'
-import { transformMemberToDiscordMember, transformUserToDiscordUser } from './transformers/reverse/member.js'
-import { transformTeamToDiscordTeam } from './transformers/reverse/team.js'
-import { transformRole, transformRoleColors } from './transformers/role.js'
-import { transformScheduledEvent, transformScheduledEventRecurrenceRule } from './transformers/scheduledEvent.js'
-import { transformSku } from './transformers/sku.js'
-import { transformSoundboardSound } from './transformers/soundboardSound.js'
-import { transformStageInstance } from './transformers/stageInstance.js'
-import { transformInviteStageInstance } from './transformers/stageInviteInstance.js'
-import { transformSticker, transformStickerPack } from './transformers/sticker.js'
-import { transformSubscription } from './transformers/subscription.js'
-import { transformTeam } from './transformers/team.js'
-import { transformTemplate } from './transformers/template.js'
-import { type ThreadMemberTransformerExtra, transformThreadMember, transformThreadMemberGuildCreate } from './transformers/threadMember.js'
+} from './transformers/reverse/component.js';
+import { transformEmbedToDiscordEmbed } from './transformers/reverse/embed.js';
+import { transformMemberToDiscordMember, transformUserToDiscordUser } from './transformers/reverse/member.js';
+import { transformTeamToDiscordTeam } from './transformers/reverse/team.js';
+import { transformRole, transformRoleColors } from './transformers/role.js';
+import { transformScheduledEvent, transformScheduledEventRecurrenceRule } from './transformers/scheduledEvent.js';
+import { transformSku } from './transformers/sku.js';
+import { transformSoundboardSound } from './transformers/soundboardSound.js';
+import { transformStageInstance } from './transformers/stageInstance.js';
+import { transformInviteStageInstance } from './transformers/stageInviteInstance.js';
+import { transformSticker, transformStickerPack } from './transformers/sticker.js';
+import { transformSubscription } from './transformers/subscription.js';
+import { transformTeam } from './transformers/team.js';
+import { transformTemplate } from './transformers/template.js';
+import { type ThreadMemberTransformerExtra, transformThreadMember, transformThreadMemberGuildCreate } from './transformers/threadMember.js';
 import type {
   Activity,
   ActivityInstance,
@@ -226,134 +226,134 @@ import type {
   VoiceState,
   Webhook,
   WelcomeScreen,
-} from './transformers/types.js'
-import { transformCollectibles, transformNameplate, transformUser, transformUserPrimaryGuild } from './transformers/user.js'
-import { transformVoiceRegion } from './transformers/voiceRegion.js'
-import { transformVoiceState } from './transformers/voiceState.js'
-import { transformWebhook } from './transformers/webhook.js'
-import { transformWelcomeScreen } from './transformers/welcomeScreen.js'
-import { transformWidget } from './transformers/widget.js'
-import { transformWidgetSettings } from './transformers/widgetSettings.js'
+} from './transformers/types.js';
+import { transformCollectibles, transformNameplate, transformUser, transformUserPrimaryGuild } from './transformers/user.js';
+import { transformVoiceRegion } from './transformers/voiceRegion.js';
+import { transformVoiceState } from './transformers/voiceState.js';
+import { transformWebhook } from './transformers/webhook.js';
+import { transformWelcomeScreen } from './transformers/welcomeScreen.js';
+import { transformWidget } from './transformers/widget.js';
+import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerFunctions<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
-  activity: TransformerFunction<TProps, TBehavior, DiscordActivity, Activity>
-  activityInstance: TransformerFunction<TProps, TBehavior, DiscordActivityInstance, ActivityInstance>
-  activityLocation: TransformerFunction<TProps, TBehavior, DiscordActivityLocation, ActivityLocation>
-  application: TransformerFunction<TProps, TBehavior, DiscordApplication, Application, { shardId?: number }>
-  applicationCommand: TransformerFunction<TProps, TBehavior, DiscordApplicationCommand, ApplicationCommand>
-  applicationCommandOption: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOption, ApplicationCommandOption>
-  applicationCommandOptionChoice: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice>
-  applicationCommandPermission: TransformerFunction<TProps, TBehavior, DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions>
-  attachment: TransformerFunction<TProps, TBehavior, DiscordAttachment, Attachment>
-  auditLogEntry: TransformerFunction<TProps, TBehavior, DiscordAuditLogEntry, AuditLogEntry>
-  automodActionExecution: TransformerFunction<TProps, TBehavior, DiscordAutoModerationActionExecution, AutoModerationActionExecution>
-  automodRule: TransformerFunction<TProps, TBehavior, DiscordAutoModerationRule, AutoModerationRule>
-  avatarDecorationData: TransformerFunction<TProps, TBehavior, DiscordAvatarDecorationData, AvatarDecorationData>
-  channel: TransformerFunction<TProps, TBehavior, DiscordChannel, Channel, { guildId?: BigString }>
-  collectibles: TransformerFunction<TProps, TBehavior, DiscordCollectibles, Collectibles>
-  component: TransformerFunction<TProps, TBehavior, DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>
-  defaultReactionEmoji: TransformerFunction<TProps, TBehavior, DiscordDefaultReactionEmoji, DefaultReactionEmoji>
-  embed: TransformerFunction<TProps, TBehavior, DiscordEmbed, Embed>
-  emoji: TransformerFunction<TProps, TBehavior, DiscordEmoji, Emoji>
-  entitlement: TransformerFunction<TProps, TBehavior, DiscordEntitlement, Entitlement>
-  forumTag: TransformerFunction<TProps, TBehavior, DiscordForumTag, ForumTag>
-  gatewayBot: TransformerFunction<TProps, TBehavior, DiscordGetGatewayBot, GetGatewayBot>
-  guild: TransformerFunction<TProps, TBehavior, DiscordGuild, Guild, { shardId?: number }>
-  guildOnboarding: TransformerFunction<TProps, TBehavior, DiscordGuildOnboarding, GuildOnboarding>
-  guildOnboardingPrompt: TransformerFunction<TProps, TBehavior, DiscordGuildOnboardingPrompt, GuildOnboardingPrompt>
-  guildOnboardingPromptOption: TransformerFunction<TProps, TBehavior, DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption>
-  incidentsData: TransformerFunction<TProps, TBehavior, DiscordIncidentsData, IncidentsData>
-  integration: TransformerFunction<TProps, TBehavior, DiscordIntegrationCreateUpdate, Integration>
-  interaction: TransformerFunction<TProps, TBehavior, DiscordInteraction, Interaction, { shardId?: number }>
-  interactionCallback: TransformerFunction<TProps, TBehavior, DiscordInteractionCallback, InteractionCallback>
+  activity: TransformerFunction<TProps, TBehavior, DiscordActivity, Activity>;
+  activityInstance: TransformerFunction<TProps, TBehavior, DiscordActivityInstance, ActivityInstance>;
+  activityLocation: TransformerFunction<TProps, TBehavior, DiscordActivityLocation, ActivityLocation>;
+  application: TransformerFunction<TProps, TBehavior, DiscordApplication, Application, { shardId?: number }>;
+  applicationCommand: TransformerFunction<TProps, TBehavior, DiscordApplicationCommand, ApplicationCommand>;
+  applicationCommandOption: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOption, ApplicationCommandOption>;
+  applicationCommandOptionChoice: TransformerFunction<TProps, TBehavior, DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice>;
+  applicationCommandPermission: TransformerFunction<TProps, TBehavior, DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions>;
+  attachment: TransformerFunction<TProps, TBehavior, DiscordAttachment, Attachment>;
+  auditLogEntry: TransformerFunction<TProps, TBehavior, DiscordAuditLogEntry, AuditLogEntry>;
+  automodActionExecution: TransformerFunction<TProps, TBehavior, DiscordAutoModerationActionExecution, AutoModerationActionExecution>;
+  automodRule: TransformerFunction<TProps, TBehavior, DiscordAutoModerationRule, AutoModerationRule>;
+  avatarDecorationData: TransformerFunction<TProps, TBehavior, DiscordAvatarDecorationData, AvatarDecorationData>;
+  channel: TransformerFunction<TProps, TBehavior, DiscordChannel, Channel, { guildId?: BigString }>;
+  collectibles: TransformerFunction<TProps, TBehavior, DiscordCollectibles, Collectibles>;
+  component: TransformerFunction<TProps, TBehavior, DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>;
+  defaultReactionEmoji: TransformerFunction<TProps, TBehavior, DiscordDefaultReactionEmoji, DefaultReactionEmoji>;
+  embed: TransformerFunction<TProps, TBehavior, DiscordEmbed, Embed>;
+  emoji: TransformerFunction<TProps, TBehavior, DiscordEmoji, Emoji>;
+  entitlement: TransformerFunction<TProps, TBehavior, DiscordEntitlement, Entitlement>;
+  forumTag: TransformerFunction<TProps, TBehavior, DiscordForumTag, ForumTag>;
+  gatewayBot: TransformerFunction<TProps, TBehavior, DiscordGetGatewayBot, GetGatewayBot>;
+  guild: TransformerFunction<TProps, TBehavior, DiscordGuild, Guild, { shardId?: number }>;
+  guildOnboarding: TransformerFunction<TProps, TBehavior, DiscordGuildOnboarding, GuildOnboarding>;
+  guildOnboardingPrompt: TransformerFunction<TProps, TBehavior, DiscordGuildOnboardingPrompt, GuildOnboardingPrompt>;
+  guildOnboardingPromptOption: TransformerFunction<TProps, TBehavior, DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption>;
+  incidentsData: TransformerFunction<TProps, TBehavior, DiscordIncidentsData, IncidentsData>;
+  integration: TransformerFunction<TProps, TBehavior, DiscordIntegrationCreateUpdate, Integration>;
+  interaction: TransformerFunction<TProps, TBehavior, DiscordInteraction, Interaction, { shardId?: number }>;
+  interactionCallback: TransformerFunction<TProps, TBehavior, DiscordInteractionCallback, InteractionCallback>;
   interactionCallbackResponse: TransformerFunction<
     TProps,
     TBehavior,
     DiscordInteractionCallbackResponse,
     InteractionCallbackResponse,
     { shardId?: number }
-  >
-  interactionDataOptions: TransformerFunction<TProps, TBehavior, DiscordInteractionDataOption, InteractionDataOption>
+  >;
+  interactionDataOptions: TransformerFunction<TProps, TBehavior, DiscordInteractionDataOption, InteractionDataOption>;
   interactionDataResolved: TransformerFunction<
     TProps,
     TBehavior,
     DiscordInteractionDataResolved,
     InteractionDataResolved,
     { shardId?: number; guildId?: BigString }
-  >
-  interactionResource: TransformerFunction<TProps, TBehavior, DiscordInteractionResource, InteractionResource, { shardId?: number }>
-  invite: TransformerFunction<TProps, TBehavior, DiscordInviteCreate | DiscordInviteMetadata, Invite, { shardId?: number }>
-  inviteStageInstance: TransformerFunction<TProps, TBehavior, DiscordInviteStageInstance, InviteStageInstance, { guildId?: BigString }>
-  lobby: TransformerFunction<TProps, TBehavior, DiscordLobby, Lobby>
-  lobbyMember: TransformerFunction<TProps, TBehavior, DiscordLobbyMember, LobbyMember>
-  mediaGalleryItem: TransformerFunction<TProps, TBehavior, DiscordMediaGalleryItem, MediaGalleryItem>
-  member: TransformerFunction<TProps, TBehavior, DiscordMember, Member, { guildId?: BigString; userId?: BigString }>
-  message: TransformerFunction<TProps, TBehavior, DiscordMessage, Message, { shardId?: number }>
-  messageCall: TransformerFunction<TProps, TBehavior, DiscordMessageCall, MessageCall>
-  messageInteractionMetadata: TransformerFunction<TProps, TBehavior, DiscordMessageInteractionMetadata, MessageInteractionMetadata>
-  messagePin: TransformerFunction<TProps, TBehavior, DiscordMessagePin, MessagePin, { shardId?: number }>
-  messageSnapshot: TransformerFunction<TProps, TBehavior, DiscordMessageSnapshot, MessageSnapshot, { shardId?: number }>
-  nameplate: TransformerFunction<TProps, TBehavior, DiscordNameplate, Nameplate>
-  poll: TransformerFunction<TProps, TBehavior, DiscordPoll, Poll>
-  pollMedia: TransformerFunction<TProps, TBehavior, DiscordPollMedia, PollMedia>
-  presence: TransformerFunction<TProps, TBehavior, DiscordPresenceUpdate, PresenceUpdate>
-  role: TransformerFunction<TProps, TBehavior, DiscordRole, Role, { guildId?: BigString }>
-  roleColors: TransformerFunction<TProps, TBehavior, DiscordRoleColors, RoleColors>
-  scheduledEvent: TransformerFunction<TProps, TBehavior, DiscordScheduledEvent, ScheduledEvent>
-  scheduledEventRecurrenceRule: TransformerFunction<TProps, TBehavior, DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule>
-  sku: TransformerFunction<TProps, TBehavior, DiscordSku, Sku>
-  soundboardSound: TransformerFunction<TProps, TBehavior, DiscordSoundboardSound, SoundboardSound>
-  stageInstance: TransformerFunction<TProps, TBehavior, DiscordStageInstance, StageInstance>
-  sticker: TransformerFunction<TProps, TBehavior, DiscordSticker, Sticker>
-  stickerPack: TransformerFunction<TProps, TBehavior, DiscordStickerPack, StickerPack>
-  subscription: TransformerFunction<TProps, TBehavior, DiscordSubscription, Subscription>
-  team: TransformerFunction<TProps, TBehavior, DiscordTeam, Team>
-  template: TransformerFunction<TProps, TBehavior, DiscordTemplate, Template>
-  threadMember: TransformerFunction<TProps, TBehavior, DiscordThreadMember, ThreadMember, ThreadMemberTransformerExtra>
-  threadMemberGuildCreate: TransformerFunction<TProps, TBehavior, DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate>
-  unfurledMediaItem: TransformerFunction<TProps, TBehavior, DiscordUnfurledMediaItem, UnfurledMediaItem>
-  user: TransformerFunction<TProps, TBehavior, DiscordUser, User>
-  userPrimaryGuild: TransformerFunction<TProps, TBehavior, DiscordUserPrimaryGuild, UserPrimaryGuild>
-  voiceRegion: TransformerFunction<TProps, TBehavior, DiscordVoiceRegion, VoiceRegion>
-  voiceState: TransformerFunction<TProps, TBehavior, DiscordVoiceState, VoiceState, { guildId?: BigString }>
-  webhook: TransformerFunction<TProps, TBehavior, DiscordWebhook, Webhook>
-  welcomeScreen: TransformerFunction<TProps, TBehavior, DiscordWelcomeScreen, WelcomeScreen>
-  widget: TransformerFunction<TProps, TBehavior, DiscordGuildWidget, GuildWidget>
-  widgetSettings: TransformerFunction<TProps, TBehavior, DiscordGuildWidgetSettings, GuildWidgetSettings>
-}
+  >;
+  interactionResource: TransformerFunction<TProps, TBehavior, DiscordInteractionResource, InteractionResource, { shardId?: number }>;
+  invite: TransformerFunction<TProps, TBehavior, DiscordInviteCreate | DiscordInviteMetadata, Invite, { shardId?: number }>;
+  inviteStageInstance: TransformerFunction<TProps, TBehavior, DiscordInviteStageInstance, InviteStageInstance, { guildId?: BigString }>;
+  lobby: TransformerFunction<TProps, TBehavior, DiscordLobby, Lobby>;
+  lobbyMember: TransformerFunction<TProps, TBehavior, DiscordLobbyMember, LobbyMember>;
+  mediaGalleryItem: TransformerFunction<TProps, TBehavior, DiscordMediaGalleryItem, MediaGalleryItem>;
+  member: TransformerFunction<TProps, TBehavior, DiscordMember, Member, { guildId?: BigString; userId?: BigString }>;
+  message: TransformerFunction<TProps, TBehavior, DiscordMessage, Message, { shardId?: number }>;
+  messageCall: TransformerFunction<TProps, TBehavior, DiscordMessageCall, MessageCall>;
+  messageInteractionMetadata: TransformerFunction<TProps, TBehavior, DiscordMessageInteractionMetadata, MessageInteractionMetadata>;
+  messagePin: TransformerFunction<TProps, TBehavior, DiscordMessagePin, MessagePin, { shardId?: number }>;
+  messageSnapshot: TransformerFunction<TProps, TBehavior, DiscordMessageSnapshot, MessageSnapshot, { shardId?: number }>;
+  nameplate: TransformerFunction<TProps, TBehavior, DiscordNameplate, Nameplate>;
+  poll: TransformerFunction<TProps, TBehavior, DiscordPoll, Poll>;
+  pollMedia: TransformerFunction<TProps, TBehavior, DiscordPollMedia, PollMedia>;
+  presence: TransformerFunction<TProps, TBehavior, DiscordPresenceUpdate, PresenceUpdate>;
+  role: TransformerFunction<TProps, TBehavior, DiscordRole, Role, { guildId?: BigString }>;
+  roleColors: TransformerFunction<TProps, TBehavior, DiscordRoleColors, RoleColors>;
+  scheduledEvent: TransformerFunction<TProps, TBehavior, DiscordScheduledEvent, ScheduledEvent>;
+  scheduledEventRecurrenceRule: TransformerFunction<TProps, TBehavior, DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule>;
+  sku: TransformerFunction<TProps, TBehavior, DiscordSku, Sku>;
+  soundboardSound: TransformerFunction<TProps, TBehavior, DiscordSoundboardSound, SoundboardSound>;
+  stageInstance: TransformerFunction<TProps, TBehavior, DiscordStageInstance, StageInstance>;
+  sticker: TransformerFunction<TProps, TBehavior, DiscordSticker, Sticker>;
+  stickerPack: TransformerFunction<TProps, TBehavior, DiscordStickerPack, StickerPack>;
+  subscription: TransformerFunction<TProps, TBehavior, DiscordSubscription, Subscription>;
+  team: TransformerFunction<TProps, TBehavior, DiscordTeam, Team>;
+  template: TransformerFunction<TProps, TBehavior, DiscordTemplate, Template>;
+  threadMember: TransformerFunction<TProps, TBehavior, DiscordThreadMember, ThreadMember, ThreadMemberTransformerExtra>;
+  threadMemberGuildCreate: TransformerFunction<TProps, TBehavior, DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate>;
+  unfurledMediaItem: TransformerFunction<TProps, TBehavior, DiscordUnfurledMediaItem, UnfurledMediaItem>;
+  user: TransformerFunction<TProps, TBehavior, DiscordUser, User>;
+  userPrimaryGuild: TransformerFunction<TProps, TBehavior, DiscordUserPrimaryGuild, UserPrimaryGuild>;
+  voiceRegion: TransformerFunction<TProps, TBehavior, DiscordVoiceRegion, VoiceRegion>;
+  voiceState: TransformerFunction<TProps, TBehavior, DiscordVoiceState, VoiceState, { guildId?: BigString }>;
+  webhook: TransformerFunction<TProps, TBehavior, DiscordWebhook, Webhook>;
+  welcomeScreen: TransformerFunction<TProps, TBehavior, DiscordWelcomeScreen, WelcomeScreen>;
+  widget: TransformerFunction<TProps, TBehavior, DiscordGuildWidget, GuildWidget>;
+  widgetSettings: TransformerFunction<TProps, TBehavior, DiscordGuildWidgetSettings, GuildWidgetSettings>;
+};
 
 export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = TransformerFunctions<
   TProps,
   TBehavior
 > & {
-  customizers: TransformerCustomizers<TProps, TBehavior>
-  desiredProperties: TProps
+  customizers: TransformerCustomizers<TProps, TBehavior>;
+  desiredProperties: TProps;
   reverse: {
-    activity: (bot: Bot<TProps, TBehavior>, payload: Activity) => DiscordActivity
-    allowedMentions: (bot: Bot<TProps, TBehavior>, payload: AllowedMentions) => DiscordAllowedMentions
-    application: (bot: Bot<TProps, TBehavior>, payload: Application) => DiscordApplication
-    applicationCommand: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommand) => DiscordApplicationCommand
-    applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
-    applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice
-    attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment
-    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse
-    embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed
-    mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem
-    member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember
-    snowflake: (snowflake: BigString) => string
-    team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam
-    unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: UnfurledMediaItem) => DiscordUnfurledMediaItem
-    user: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<User, TProps, TBehavior>) => DiscordUser
-  }
-  snowflake: (snowflake: BigString) => bigint
-}
+    activity: (bot: Bot<TProps, TBehavior>, payload: Activity) => DiscordActivity;
+    allowedMentions: (bot: Bot<TProps, TBehavior>, payload: AllowedMentions) => DiscordAllowedMentions;
+    application: (bot: Bot<TProps, TBehavior>, payload: Application) => DiscordApplication;
+    applicationCommand: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommand) => DiscordApplicationCommand;
+    applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
+    applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice;
+    attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment;
+    component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse;
+    embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed;
+    mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem;
+    member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember;
+    snowflake: (snowflake: BigString) => string;
+    team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam;
+    unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: UnfurledMediaItem) => DiscordUnfurledMediaItem;
+    user: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<User, TProps, TBehavior>) => DiscordUser;
+  };
+  snowflake: (snowflake: BigString) => bigint;
+};
 
-const defaultCustomizer = (_bot: unknown, _payload: unknown, structure: unknown) => structure
+const defaultCustomizer = (_bot: unknown, _payload: unknown, structure: unknown) => structure;
 
 export function createTransformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   options: RecursivePartial<Transformers<TProps, TBehavior>>,
 ): Transformers<TProps, TBehavior> {
-  const _options = options as RecursivePartial<Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>>
+  const _options = options as RecursivePartial<Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>>;
 
   return {
     customizers: {
@@ -522,7 +522,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     welcomeScreen: _options.welcomeScreen ?? transformWelcomeScreen,
     widget: _options.widget ?? transformWidget,
     widgetSettings: _options.widgetSettings ?? transformWidgetSettings,
-  } satisfies Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as Transformers<TProps, TBehavior>
+  } satisfies Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as Transformers<TProps, TBehavior>;
 }
 
 export type TransformerFunction<
@@ -531,7 +531,7 @@ export type TransformerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-> = (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra) => SetupDesiredProps<TTransformed, TProps, TBehavior>
+> = (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra) => SetupDesiredProps<TTransformed, TProps, TBehavior>;
 
 export type TransformerCustomizerFunction<
   TProps extends TransformersDesiredProperties,
@@ -539,7 +539,7 @@ export type TransformerCustomizerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-> = (bot: Bot<TProps, TBehavior>, payload: TPayload, transformed: TTransformed, extra?: TExtra) => any
+> = (bot: Bot<TProps, TBehavior>, payload: TPayload, transformed: TTransformed, extra?: TExtra) => any;
 
 export type TransformerCustomizers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   [K in keyof TransformerFunctions<TProps, TBehavior>]: TransformerFunctions<TProps, TBehavior>[K] extends TransformerFunction<
@@ -550,9 +550,9 @@ export type TransformerCustomizers<TProps extends TransformersDesiredProperties,
     infer TExtra
   >
     ? TransformerCustomizerFunction<TProps, TBehavior, TPayload, SetupDesiredProps<TTransformed, TProps, TBehavior>, BigStringsToBigints<TExtra>>
-    : 'ERROR: Invalid transformer found'
-}
+    : 'ERROR: Invalid transformer found';
+};
 
 export type BigStringsToBigints<T> = {
-  [K in keyof T]: BigString extends T[K] ? bigint : T[K]
-}
+  [K in keyof T]: BigString extends T[K] ? bigint : T[K];
+};

@@ -1,13 +1,13 @@
-import type { DiscordGatewayPayload, DiscordTypingStart } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordTypingStart } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleTypingStart(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (!bot.events.typingStart) return
+  if (!bot.events.typingStart) return;
 
-  const payload = data.d as DiscordTypingStart
+  const payload = data.d as DiscordTypingStart;
 
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const userId = bot.transformers.snowflake(payload.user_id)
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+  const userId = bot.transformers.snowflake(payload.user_id);
 
   bot.events.typingStart({
     guildId,
@@ -15,5 +15,5 @@ export async function handleTypingStart(bot: Bot, data: DiscordGatewayPayload): 
     userId,
     timestamp: payload.timestamp,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, { guildId, userId }) : undefined,
-  })
+  });
 }

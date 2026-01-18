@@ -1,6 +1,6 @@
-import { type Edge, type Node, Position } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
-import BaseFlowChart, { defaultGroupOptions, defaultNodeOptions, multiplier } from './BaseFlowChart'
+import { type Edge, type Node, Position } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import BaseFlowChart, { defaultGroupOptions, defaultNodeOptions, multiplier } from './BaseFlowChart';
 
 const initialNodes: Node[] = [
   {
@@ -164,7 +164,7 @@ const initialNodes: Node[] = [
     data: { label: 'Bot' },
     ...defaultNodeOptions,
   },
-]
+];
 
 const initialEdges: Edge[] = [
   { id: 'd-g', source: 'discordGateway', target: 'gateway' },
@@ -296,8 +296,8 @@ const initialEdges: Edge[] = [
     target: 'shard-n',
     zIndex: 100,
   },
-]
+];
 
 export default function FlowChart2() {
-  return <BaseFlowChart initialNodes={initialNodes} initialEdges={initialEdges} />
+  return <BaseFlowChart initialNodes={initialNodes} initialEdges={initialEdges} />;
 }

@@ -1,5 +1,5 @@
-import { bot } from './bot.js'
+import { bot } from './bot.js';
 
-await bot.start()
+await bot.start();
 
-process.on('unhandledRejection', bot.logger.error)
+process.on('unhandledRejection', bot.logger.error);

@@ -1,52 +1,52 @@
 /** Types for: https://discord.com/developers/docs/resources/channel */
 
-import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js'
-import type { TargetTypes } from '../discord/invite.js'
-import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js'
-import type { PermissionStrings } from '../discord/permissions.js'
-import type { BigString, Camelize } from '../shared.js'
-import type { MessageComponents } from './components.js'
-import type { AllowedMentions } from './message.js'
-import type { FileContent } from './reference.js'
+import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js';
+import type { TargetTypes } from '../discord/invite.js';
+import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js';
+import type { PermissionStrings } from '../discord/permissions.js';
+import type { BigString, Camelize } from '../shared.js';
+import type { MessageComponents } from './components.js';
+import type { AllowedMentions } from './message.js';
+import type { FileContent } from './reference.js';
 
 /** https://discord.com/developers/docs/resources/channel#overwrite-object-overwrite-structure */
 export interface Overwrite {
   /** Role or user id */
-  id: BigString
+  id: BigString;
   /** Either 0 (role) or 1 (member) */
-  type: OverwriteTypes
+  type: OverwriteTypes;
 
   // NOTE:
   // - We allow PermissionStrings[] because in the rest manager we convert these value to the actual string discord wants
   // - Discord says that these are always present, we keep them as optional (and allow for null) because when it is sent it can be null / not present, https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params, specificly the **
   /** Permission bit set */
-  allow?: PermissionStrings[] | string | null
+  allow?: PermissionStrings[] | string | null;
   /** Permission bit set */
-  deny?: PermissionStrings[] | string | null
+  deny?: PermissionStrings[] | string | null;
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
 /** https://discord.com/developers/docs/resources/channel#default-reaction-object-default-reaction-structure */
 export interface DiscordenoDefaultReactionEmoji {
   /** The id of a guild's custom emoji */
-  emoji_id: BigString | null
+  emoji_id: BigString | null;
   /** The unicode character of the emoji */
-  emoji_name: string | null
+  emoji_name: string | null;
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
 /** https://discord.com/developers/docs/resources/channel#forum-tag-object-forum-tag-structure */
 export interface DiscordenoForumTag {
   /** The id of the tag */
-  id: string
+  id: string;
   /** The name of the tag (0-20 characters) */
-  name: string
+  name: string;
   /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-  moderated: boolean
+  moderated: boolean;
   /** The id of a guild's custom emoji. At most one of emoji_id and emoji_name may be set. */
-  emoji_id: BigString | null
+  emoji_id: BigString | null;
   /** The unicode character of the emoji. At most one of emoji_id and emoji_name may be set. */
-  emoji_name: string | null
+  emoji_name: string | null;
 }
 
 // Since this is a merge of 3 types, the properties appear in order of their first appearance in the 3 types
@@ -63,14 +63,14 @@ export interface ModifyChannel {
    * @remarks
    * This is valid only when editing group dms, any guild channel type, or a thread
    */
-  name?: string
+  name?: string;
   /**
    * Base64 encoded icon
    *
    * @remarks
    * This is valid only when editing group dms
    */
-  icon?: string
+  icon?: string;
 
   // Guild Channel
   /**
@@ -81,14 +81,14 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText} or {@link ChannelTypes.GuildAnnouncement}.
    */
-  type?: ChannelTypes
+  type?: ChannelTypes;
   /**
    * The position of the channel in the left-hand listing (channels with the same position are sorted by id)
    *
    * @remarks
    * This is only valid when editing a guild channel of any type
    */
-  position?: number | null
+  position?: number | null;
   /**
    * Channel topic
    *
@@ -97,14 +97,14 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  topic?: string | null
+  topic?: string | null;
   /**
    * Whether the channel is nsfw
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  nsfw?: boolean | null
+  nsfw?: boolean | null;
   /**
    * Amount of seconds a user has to wait before sending another message in seconds (0-21600)
    *
@@ -113,7 +113,7 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
    */
-  rateLimitPerUser?: number | null
+  rateLimitPerUser?: number | null;
   /**
    * The bitrate (in bits) of the voice or stage channel
    *
@@ -130,7 +130,7 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
    */
-  bitrate?: number | null
+  bitrate?: number | null;
   /**
    * The user limit of the voice or stage channel (0 refers to no limit)
    *
@@ -140,42 +140,42 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
    */
-  userLimit?: number | null
+  userLimit?: number | null;
   /**
    * Channel or category-specific permissions
    *
    * @remarks
    * This is valid when editing a guild channel of any type
    */
-  permissionOverwrites?: Overwrite[] | null
+  permissionOverwrites?: Overwrite[] | null;
   /**
    * Id of the new parent category for a channel
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  parentId?: BigString | null
+  parentId?: BigString | null;
   /**
    * Voice region id for the voice channel, automatic when set to null
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
    */
-  rtcRegion?: string | null
+  rtcRegion?: string | null;
   /**
    * The camera video quality mode of the voice channel
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
    */
-  videoQualityMode?: VideoQualityModes | null
+  videoQualityMode?: VideoQualityModes | null;
   /**
    * The default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  defaultAutoArchiveDuration?: 60 | 1440 | 4320 | 10080 | null
+  defaultAutoArchiveDuration?: 60 | 1440 | 4320 | 10080 | null;
   /**
    * Channel flags combined as a bitfield.
    *
@@ -188,7 +188,7 @@ export interface ModifyChannel {
    *
    * @see {@link ChannelFlags}
    */
-  flags?: number
+  flags?: number;
   /**
    * The set of tags that can be used in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
    *
@@ -197,14 +197,14 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  availableTags?: DiscordenoForumTag[]
+  availableTags?: DiscordenoForumTag[];
   /**
    * The emoji to show in the add reaction button on a thread in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  defaultReactionEmoji?: DiscordenoDefaultReactionEmoji | null
+  defaultReactionEmoji?: DiscordenoDefaultReactionEmoji | null;
   /**
    * The initial `rate_limit_per_user` to set on newly created threads in a channel.
    *
@@ -213,21 +213,21 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  defaultThreadRateLimitPerUser?: number
+  defaultThreadRateLimitPerUser?: number;
   /**
    * The default sort order type used to order posts in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
    */
-  defaultSortOrder?: SortOrderTypes | null
+  defaultSortOrder?: SortOrderTypes | null;
   /**
    * The default forum layout type used to display posts in {@link ChannelTypes.GuildForum} channels
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum}.
    */
-  defaultForumLayout?: ForumLayout
+  defaultForumLayout?: ForumLayout;
 
   // Thread
   /**
@@ -236,21 +236,21 @@ export interface ModifyChannel {
    * @remarks
    * This is only valid when editing a thread
    */
-  archived?: boolean
+  archived?: boolean;
   /**
    * The thread will stop showing in the channel list after `auto_archive_duration` minutes of inactivity
    *
    * @remarks
    * This is only valid when editing a thread
    */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
   /**
    * Whether the thread is locked. When a thread is locked, only users with `MANAGE_THREADS` can unarchive it
    *
    * @remarks
    * This is only valid when editing a thread
    */
-  locked?: boolean
+  locked?: boolean;
   /**
    * Whether non-moderators can add other non-moderators to a thread
    *
@@ -259,7 +259,7 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a thread
    */
-  invitable?: boolean
+  invitable?: boolean;
   /**
    * The IDs of the set of tags that have been applied to a thread in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
    *
@@ -268,127 +268,127 @@ export interface ModifyChannel {
    *
    * This is only valid when editing a thread
    */
-  appliedTags?: BigString[]
+  appliedTags?: BigString[];
 }
 
 /** https://discord.com/developers/docs/resources/channel#edit-channel-permissions-json-params */
 export interface EditChannelPermissionOverridesOptions {
   // This is included in here however it is a route parameter
   /** Role or user id */
-  id: BigString
+  id: BigString;
 
   /** Either 0 (role) or 1 (member) */
-  type: OverwriteTypes
+  type: OverwriteTypes;
 
   // We allow PermissionStrings[] because in the rest manager we convert these value to the actual string discord wants
   /** The bitwise value of all allowed permissions */
-  allow?: PermissionStrings[] | string | null
+  allow?: PermissionStrings[] | string | null;
   /** The bitwise value of all disallowed permissions */
-  deny?: PermissionStrings[] | string | null
+  deny?: PermissionStrings[] | string | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params */
 export interface CreateChannelInvite {
   /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
-  maxAge?: number
+  maxAge?: number;
   /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
-  maxUses?: number
+  maxUses?: number;
   /** Whether this invite only grants temporary membership. Default: false */
-  temporary?: boolean
+  temporary?: boolean;
   /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
-  unique?: boolean
+  unique?: boolean;
   /** The type of target for this voice channel invite */
-  targetType?: TargetTypes
+  targetType?: TargetTypes;
   /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
-  targetUserId?: BigString
+  targetUserId?: BigString;
   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
-  targetApplicationId?: BigString
+  targetApplicationId?: BigString;
 }
 
 /** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */
 export interface AddDmRecipientOptions {
   /** access token of a user that has granted your app the `gdm.join` scope */
-  accessToken: string
+  accessToken: string;
   /** nickname of the user being added */
-  nick: string
+  nick: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#start-thread-from-message-json-params */
 export interface StartThreadWithMessage {
   /** 1-100 character thread name */
-  name: string
+  name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-  rateLimitPerUser?: number | null
+  rateLimitPerUser?: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params */
 export interface StartThreadWithoutMessage {
   /** 1-100 character thread name */
-  name: string
+  name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
   /** The type of thread to create. Defaults to PrivateThread */
-  type?: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread
+  type?: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread;
   /** Whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
-  invitable?: boolean
+  invitable?: boolean;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-  rateLimitPerUser?: number | null
+  rateLimitPerUser?: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-jsonform-params*/
 export interface CreateForumPostWithMessage {
   /** 1-100 character thread name */
-  name: string
+  name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-  rateLimitPerUser?: number | null
+  rateLimitPerUser?: number | null;
   /** contents of the first message in the forum/media thread */
-  message: ForumAndMediaThreadMessage
+  message: ForumAndMediaThreadMessage;
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
-  appliedTags?: BigString[]
+  appliedTags?: BigString[];
   /** The contents of the files being sent */
-  files?: FileContent[]
+  files?: FileContent[];
 }
 
 /** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object */
 export interface ForumAndMediaThreadMessage {
   /** The message contents (up to 2000 characters) */
-  content?: string
+  content?: string;
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Camelize<DiscordEmbed>[]
+  embeds?: Camelize<DiscordEmbed>[];
   /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions
+  allowedMentions?: AllowedMentions;
   /** The components you would like to have sent in this message */
-  components?: MessageComponents
+  components?: MessageComponents;
   /** IDs of up to 3 stickers in the server to send in the message */
-  stickerIds?: BigString[]
+  stickerIds?: BigString[];
   /** Attachment objects with `filename` and `description` */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[]
+  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
   /**
    * Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set
    *
    * @see {@link MessageFlags}
    */
-  flags?: number
+  flags?: number;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-thread-member-query-string-params */
 export interface GetThreadMember {
   /** Whether to include a guild member object for the thread member */
-  withMember?: boolean
+  withMember?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/channel#list-thread-members-query-string-params */
 export interface ListThreadMembers {
   /** Whether to include a guild member object for the thread member */
-  withMember?: boolean
+  withMember?: boolean;
   /** Get thread members after this user ID */
-  after?: BigString
+  after?: BigString;
   /** Max number of thread members to return (1-100). Defaults to 100. */
-  limit?: BigString
+  limit?: BigString;
 }
 
 /**
@@ -398,7 +398,7 @@ export interface ListThreadMembers {
  */
 export interface ListArchivedThreads {
   /** Returns threads before this timestamp */
-  before?: number
+  before?: number;
   /** Optional maximum number of threads to return */
-  limit?: number
+  limit?: number;
 }

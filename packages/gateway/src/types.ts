@@ -1,5 +1,5 @@
-import type { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types'
-import type Shard from './Shard.js'
+import type { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types';
+import type Shard from './Shard.js';
 
 export enum ShardState {
   /** Shard is fully connected to the gateway and receiving events from Discord. */
@@ -52,7 +52,7 @@ export interface ShardGatewayConfig {
    *
    * @see https://discord.com/developers/docs/topics/gateway#payload-compression
    */
-  compress: boolean
+  compress: boolean;
   /**
    * What Transport Compression should be use
    *
@@ -60,96 +60,96 @@ export interface ShardGatewayConfig {
    *
    * @see https://discord.com/developers/docs/topics/gateway#transport-compression
    */
-  transportCompression: TransportCompression | null
+  transportCompression: TransportCompression | null;
   /** The calculated intent value of the events which the shard should receive.
    *
    * @default 0
    */
-  intents: number
+  intents: number;
   /** Identify properties to use */
   properties: {
     /** Operating system the shard runs on.
      *
      * @default "darwin" | "linux" | "windows"
      */
-    os: string
+    os: string;
     /** The "browser" where this shard is running on.
      *
      * @default "Discordeno"
      */
-    browser: string
+    browser: string;
     /** The device on which the shard is running.
      *
      * @default "Discordeno"
      */
-    device: string
-  }
+    device: string;
+  };
   /** Bot token which is used to connect to Discord */
-  token: string
+  token: string;
   /** The URL of the gateway which should be connected to.
    *
    * @default "wss://gateway.discord.gg"
    */
-  url: string
+  url: string;
   /** The gateway version which should be used.
    *
    * @default 10
    */
-  version: number
+  version: number;
   /**
    * The total number of shards to connect to across the entire bot.
    * @default 1
    */
-  totalShards: number
+  totalShards: number;
 }
 
 export interface ShardHeart {
   /** Whether or not the heartbeat was acknowledged by Discord in time. */
-  acknowledged: boolean
+  acknowledged: boolean;
   /** Interval between heartbeats requested by Discord. */
-  interval: number
+  interval: number;
   /** Id of the interval, which is used for sending the heartbeats. */
-  intervalId?: NodeJS.Timeout
+  intervalId?: NodeJS.Timeout;
   /** Unix (in milliseconds) timestamp when the last heartbeat ACK was received from Discord. */
-  lastAck?: number
+  lastAck?: number;
   /** Unix timestamp (in milliseconds) when the last heartbeat was sent. */
-  lastBeat?: number
+  lastBeat?: number;
   /** Round trip time (in milliseconds) from Shard to Discord and back.
    * Calculated using the heartbeat system.
    * Note: this value is undefined until the first heartbeat to Discord has happened.
    */
-  rtt?: number
+  rtt?: number;
   /** Id of the timeout which is used for sending the first heartbeat to Discord since it's "special". */
-  timeoutId?: NodeJS.Timeout
+  timeoutId?: NodeJS.Timeout;
 }
 
 export interface ShardEvents {
   /** A heartbeat has been send. */
-  heartbeat?: (shard: Shard) => unknown
+  heartbeat?: (shard: Shard) => unknown;
   /** A heartbeat ACK was received. */
-  heartbeatAck?: (shard: Shard) => unknown
+  heartbeatAck?: (shard: Shard) => unknown;
   /** Shard has received a Hello payload. */
-  hello?: (shard: Shard) => unknown
+  hello?: (shard: Shard) => unknown;
   /** The Shards session has been invalidated. */
-  invalidSession?: (shard: Shard, resumable: boolean) => unknown
+  invalidSession?: (shard: Shard, resumable: boolean) => unknown;
   /** The shard has started a resume action. */
-  resuming?: (shard: Shard) => unknown
+  resuming?: (shard: Shard) => unknown;
   /** The shard has successfully resumed an old session. */
-  resumed?: (shard: Shard) => unknown
+  resumed?: (shard: Shard) => unknown;
   /** Discord has requested the Shard to reconnect. */
-  requestedReconnect?: (shard: Shard) => unknown
+  requestedReconnect?: (shard: Shard) => unknown;
   /** The shard started to connect to Discord's gateway. */
-  connecting?: (shard: Shard) => unknown
+  connecting?: (shard: Shard) => unknown;
   /** The shard is connected with Discord's gateway. */
-  connected?: (shard: Shard) => unknown
+  connected?: (shard: Shard) => unknown;
   /** The shard has been disconnected from Discord's gateway. */
-  disconnected?: (shard: Shard) => unknown
+  disconnected?: (shard: Shard) => unknown;
   /** The shard has started to identify itself to Discord. */
-  identifying?: (shard: Shard) => unknown
+  identifying?: (shard: Shard) => unknown;
   /** The shard has successfully been identified itself with Discord. */
-  ready?: (shard: Shard) => unknown
+  ready?: (shard: Shard) => unknown;
   /** The shard has received a message from Discord. */
-  message?: (shard: Shard, payload: DiscordGatewayPayload) => unknown
+  message?: (shard: Shard, payload: DiscordGatewayPayload) => unknown;
 }
 
 export enum ShardSocketCloseCodes {
@@ -172,19 +172,19 @@ export enum ShardSocketCloseCodes {
 
 export interface ShardSocketRequest {
   /** The OP-Code for the payload to send. */
-  op: GatewayOpcodes
+  op: GatewayOpcodes;
   /** Payload data. */
-  d: unknown
+  d: unknown;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#update-voice-state */
 export interface UpdateVoiceState {
   /** id of the guild */
-  guildId: string
+  guildId: string;
   /** id of the voice channel client wants to join (null if disconnecting) */
-  channelId: string | null
+  channelId: string | null;
   /** Is the client muted */
-  selfMute: boolean
+  selfMute: boolean;
   /** Is the client deafened */
-  selfDeaf: boolean
+  selfDeaf: boolean;
 }

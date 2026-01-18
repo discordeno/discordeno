@@ -3,27 +3,27 @@
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-auto-moderation-rule-structure */
 export interface DiscordAutoModerationRule {
   /** The id of this rule */
-  id: string
+  id: string;
   /** The guild id of the rule */
-  guild_id: string
+  guild_id: string;
   /** The name of the rule */
-  name: string
+  name: string;
   /** The id of the user who created this rule. */
-  creator_id: string
+  creator_id: string;
   /** Indicates in what event context a rule should be checked. */
-  event_type: AutoModerationEventTypes
+  event_type: AutoModerationEventTypes;
   /** The type of trigger for this rule */
-  trigger_type: AutoModerationTriggerTypes
+  trigger_type: AutoModerationTriggerTypes;
   /** The metadata used to determine whether a rule should be triggered. */
-  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
+  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata;
   /** Actions which will execute whenever a rule is triggered. */
-  actions: DiscordAutoModerationAction[]
+  actions: DiscordAutoModerationAction[];
   /** Whether the rule is enabled. */
-  enabled: boolean
+  enabled: boolean;
   /** The role ids that are whitelisted. Max 20. */
-  exempt_roles: string[]
+  exempt_roles: string[];
   /** The channel ids that are whitelisted. Max 50. */
-  exempt_channels: string[]
+  exempt_channels: string[];
 }
 
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-types */
@@ -50,7 +50,7 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    *
    * Can have up to 1000 elements in the array and each string can have up to 60 characters.
    */
-  keyword_filter?: string[]
+  keyword_filter?: string[];
   /**
    * Regular expression patterns which will be matched against content.
    *
@@ -59,14 +59,14 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    *
    * Only Rust flavored regex is currently supported. Can have up to 10 elements in the array and each string can have up to 260 characters.
    */
-  regex_patterns?: string[]
+  regex_patterns?: string[];
   /**
    * The Discord pre-defined wordsets which will be searched for in content.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
    */
-  presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+  presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   /**
    * The substrings which should not trigger the rule.
    *
@@ -76,7 +76,7 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}, there can be up to 100 elements in the array and each string can have up to 60 characters.
    * When used with {@link AutoModerationTriggerTypes.KeywordPreset}, there can be up to 1000 elements in the array and each string can have up to 60 characters.
    */
-  allow_list?: string[]
+  allow_list?: string[];
   /**
    * Total number of unique role and user mentions allowed per message.
    *
@@ -85,14 +85,14 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    *
    * Maximum of 50
    */
-  mention_total_limit?: number
+  mention_total_limit?: number;
   /**
    * Whether to automatically detect mention raids.
    *
    * @remarks
    * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
    */
-  mention_raid_protection_enabled?: boolean
+  mention_raid_protection_enabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-keyword-preset-types */
@@ -116,9 +116,9 @@ export enum AutoModerationEventTypes {
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-auto-moderation-action-structure */
 export interface DiscordAutoModerationAction {
   /** The type of action to take when a rule is triggered */
-  type: AutoModerationActionType
+  type: AutoModerationActionType;
   /** additional metadata needed during execution for this specific action type */
-  metadata?: DiscordAutoModerationActionMetadata
+  metadata?: DiscordAutoModerationActionMetadata;
 }
 
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-types */
@@ -148,7 +148,7 @@ export interface DiscordAutoModerationActionMetadata {
    * @remarks
    * Only for actions of type {@link AutoModerationActionType.SendAlertMessage}.
    */
-  channel_id?: string
+  channel_id?: string;
   /**
    * Timeout duration in seconds.
    *
@@ -157,7 +157,7 @@ export interface DiscordAutoModerationActionMetadata {
    *
    * Maximum of 2419200 seconds (4 weeks).
    */
-  duration_seconds?: number
+  duration_seconds?: number;
   /**
    * Additional explanation that will be shown to members whenever their message is blocked.
    *
@@ -168,5 +168,5 @@ export interface DiscordAutoModerationActionMetadata {
    *
    * Maximum of 150 characters.
    */
-  custom_message?: string
+  custom_message?: string;
 }
