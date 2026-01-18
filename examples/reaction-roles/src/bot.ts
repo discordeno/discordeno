@@ -1,12 +1,12 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
-import { createBot } from '@discordeno/bot'
-import events from './events/index.js'
+import { createBot } from '@discordeno/bot';
+import events from './events/index.js';
 
-const token = process.env.TOKEN
+const token = process.env.TOKEN;
 
 // Ensure the existence of the TOKEN env
-if (!token) throw new Error('The TOKEN environment variable needs to be defined.')
+if (!token) throw new Error('The TOKEN environment variable needs to be defined.');
 
 export const bot = createBot({
   token,
@@ -41,6 +41,6 @@ export const bot = createBot({
       id: true,
     },
   },
-})
+});
 
-bot.events = events
+bot.events = events;

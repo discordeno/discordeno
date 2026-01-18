@@ -1,11 +1,11 @@
-const token = process.env.TOKEN
+const token = process.env.TOKEN;
 
-if (!token) throw new Error('Missing TOKEN environment variable')
+if (!token) throw new Error('Missing TOKEN environment variable');
 
 export const configs: Config = {
   token,
-}
+};
 
 export interface Config {
-  token: string
+  token: string;
 }

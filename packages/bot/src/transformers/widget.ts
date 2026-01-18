@@ -1,6 +1,6 @@
-import type { DiscordGuildWidget } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { GuildWidget } from './types.js'
+import type { DiscordGuildWidget } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { GuildWidget } from './types.js';
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWidget {
   const widget = {
@@ -12,7 +12,7 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWid
     // @ts-expect-error TODO: Deal with partials
     members: payload.members.map((user) => bot.transformers.user(bot, user)),
     presenceCount: payload.presence_count,
-  } as GuildWidget
+  } as GuildWidget;
 
-  return bot.transformers.customizers.widget(bot, payload, widget)
+  return bot.transformers.customizers.widget(bot, payload, widget);
 }

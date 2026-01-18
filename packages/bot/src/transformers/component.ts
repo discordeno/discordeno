@@ -30,175 +30,177 @@ import {
   type DiscordUserSelectComponent,
   type DiscordUserSelectInteractionResponseFromModal,
   MessageComponentTypes,
-} from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
-import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js'
+} from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js';
 
 export function transformComponent(bot: Bot, payload: DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse): Component {
-  let component: SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  let component: SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
   switch (payload.type) {
     case MessageComponentTypes.ActionRow:
-      component = transformActionRow(bot, payload)
-      break
+      component = transformActionRow(bot, payload);
+      break;
     case MessageComponentTypes.Button:
-      component = transformButtonComponent(bot, payload)
-      break
+      component = transformButtonComponent(bot, payload);
+      break;
     case MessageComponentTypes.Container:
-      component = transformContainerComponent(bot, payload)
-      break
+      component = transformContainerComponent(bot, payload);
+      break;
     case MessageComponentTypes.TextInput:
-      component = transformInputTextComponent(bot, payload)
-      break
+      component = transformInputTextComponent(bot, payload);
+      break;
     case MessageComponentTypes.StringSelect:
-      component = transformStringSelectMenuComponent(bot, payload)
-      break
+      component = transformStringSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.UserSelect:
-      component = transformUserSelectMenuComponent(bot, payload)
-      break
+      component = transformUserSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.RoleSelect:
-      component = transformRoleSelectMenuComponent(bot, payload)
-      break
+      component = transformRoleSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.MentionableSelect:
-      component = transformMentionableSelectMenuComponent(bot, payload)
-      break
+      component = transformMentionableSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.ChannelSelect:
-      component = transformChannelSelectMenuComponent(bot, payload)
-      break
+      component = transformChannelSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.Section:
-      component = transformSectionComponent(bot, payload)
-      break
+      component = transformSectionComponent(bot, payload);
+      break;
     case MessageComponentTypes.Thumbnail:
-      component = transformThumbnailComponent(bot, payload)
-      break
+      component = transformThumbnailComponent(bot, payload);
+      break;
     case MessageComponentTypes.MediaGallery:
-      component = transformMediaGalleryComponent(bot, payload)
-      break
+      component = transformMediaGalleryComponent(bot, payload);
+      break;
     case MessageComponentTypes.File:
-      component = transformFileComponent(bot, payload)
-      break
+      component = transformFileComponent(bot, payload);
+      break;
     case MessageComponentTypes.Separator:
-      component = transformSeparatorComponent(bot, payload)
-      break
+      component = transformSeparatorComponent(bot, payload);
+      break;
     case MessageComponentTypes.TextDisplay:
-      component = transformTextDisplayComponent(bot, payload)
-      break
+      component = transformTextDisplayComponent(bot, payload);
+      break;
     case MessageComponentTypes.Label:
-      component = transformLabelComponent(bot, payload)
-      break
+      component = transformLabelComponent(bot, payload);
+      break;
     case MessageComponentTypes.FileUpload:
-      component = transformFileUploadComponent(bot, payload)
-      break
+      component = transformFileUploadComponent(bot, payload);
+      break;
   }
 
-  return bot.transformers.customizers.component(bot, payload, component)
+  return bot.transformers.customizers.component(bot, payload, component);
 }
 
 export function transformUnfurledMediaItem(bot: Bot, payload: DiscordUnfurledMediaItem): UnfurledMediaItem {
-  const props = bot.transformers.desiredProperties.unfurledMediaItem
-  const mediaItem = {} as SetupDesiredProps<UnfurledMediaItem, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.unfurledMediaItem;
+  const mediaItem = {} as SetupDesiredProps<UnfurledMediaItem, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.url && payload.url) mediaItem.url = payload.url
-  if (props.proxyUrl && payload.proxy_url) mediaItem.proxyUrl = payload.proxy_url
-  if (props.height && payload.height) mediaItem.height = payload.height
-  if (props.width && payload.width) mediaItem.width = payload.width
-  if (props.contentType && payload.content_type) mediaItem.contentType = payload.content_type
-  if (props.attachmentId && payload.attachment_id) mediaItem.attachmentId = bot.transformers.snowflake(payload.attachment_id)
+  if (props.url && payload.url) mediaItem.url = payload.url;
+  if (props.proxyUrl && payload.proxy_url) mediaItem.proxyUrl = payload.proxy_url;
+  if (props.height && payload.height) mediaItem.height = payload.height;
+  if (props.width && payload.width) mediaItem.width = payload.width;
+  if (props.contentType && payload.content_type) mediaItem.contentType = payload.content_type;
+  if (props.attachmentId && payload.attachment_id) mediaItem.attachmentId = bot.transformers.snowflake(payload.attachment_id);
 
-  return bot.transformers.customizers.unfurledMediaItem(bot, payload, mediaItem)
+  return bot.transformers.customizers.unfurledMediaItem(bot, payload, mediaItem);
 }
 
 export function transformMediaGalleryItem(bot: Bot, payload: DiscordMediaGalleryItem): MediaGalleryItem {
-  const props = bot.transformers.desiredProperties.mediaGalleryItem
-  const galleryItem = {} as SetupDesiredProps<MediaGalleryItem, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.mediaGalleryItem;
+  const galleryItem = {} as SetupDesiredProps<MediaGalleryItem, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.media && payload.media) galleryItem.media = bot.transformers.unfurledMediaItem(bot, payload.media)
-  if (props.description && payload.description) galleryItem.description = payload.description
-  if (props.spoiler && payload.spoiler) galleryItem.spoiler = payload.spoiler
+  if (props.media && payload.media) galleryItem.media = bot.transformers.unfurledMediaItem(bot, payload.media);
+  if (props.description && payload.description) galleryItem.description = payload.description;
+  if (props.spoiler && payload.spoiler) galleryItem.spoiler = payload.spoiler;
 
-  return bot.transformers.customizers.mediaGalleryItem(bot, payload, galleryItem)
+  return bot.transformers.customizers.mediaGalleryItem(bot, payload, galleryItem);
 }
 
 function transformActionRow(bot: Bot, payload: DiscordActionRow) {
-  const props = bot.transformers.desiredProperties.component
-  const actionRow = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const actionRow = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) actionRow.type = payload.type
-  if (props.id && payload.id) actionRow.id = payload.id
-  if (props.components && payload.components) actionRow.components = payload.components.map((component) => bot.transformers.component(bot, component))
+  if (props.type && payload.type) actionRow.type = payload.type;
+  if (props.id && payload.id) actionRow.id = payload.id;
+  if (props.components && payload.components)
+    actionRow.components = payload.components.map((component) => bot.transformers.component(bot, component));
 
-  return actionRow
+  return actionRow;
 }
 
 function transformContainerComponent(bot: Bot, payload: DiscordContainerComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const container = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const container = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) container.type = payload.type
-  if (props.id && payload.id) container.id = payload.id
-  if (props.accentColor && payload.accent_color) container.accentColor = payload.accent_color
-  if (props.spoiler && payload.spoiler) container.spoiler = payload.spoiler
-  if (props.components && payload.components) container.components = payload.components.map((component) => bot.transformers.component(bot, component))
+  if (props.type && payload.type) container.type = payload.type;
+  if (props.id && payload.id) container.id = payload.id;
+  if (props.accentColor && payload.accent_color) container.accentColor = payload.accent_color;
+  if (props.spoiler && payload.spoiler) container.spoiler = payload.spoiler;
+  if (props.components && payload.components)
+    container.components = payload.components.map((component) => bot.transformers.component(bot, component));
 
-  return container
+  return container;
 }
 
 function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const button = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const button = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) button.type = payload.type
-  if (props.id && payload.id) button.id = payload.id
-  if (props.label && payload.label) button.label = payload.label
-  if (props.customId && payload.custom_id) button.customId = payload.custom_id
-  if (props.style && payload.style) button.style = payload.style
-  if (props.emoji && payload.emoji) button.emoji = bot.transformers.emoji(bot, payload.emoji)
-  if (props.url && payload.url) button.url = payload.url
-  if (props.disabled && payload.disabled) button.disabled = payload.disabled
-  if (props.skuId && payload.sku_id) button.skuId = bot.transformers.snowflake(payload.sku_id)
+  if (props.type && payload.type) button.type = payload.type;
+  if (props.id && payload.id) button.id = payload.id;
+  if (props.label && payload.label) button.label = payload.label;
+  if (props.customId && payload.custom_id) button.customId = payload.custom_id;
+  if (props.style && payload.style) button.style = payload.style;
+  if (props.emoji && payload.emoji) button.emoji = bot.transformers.emoji(bot, payload.emoji);
+  if (props.url && payload.url) button.url = payload.url;
+  if (props.disabled && payload.disabled) button.disabled = payload.disabled;
+  if (props.skuId && payload.sku_id) button.skuId = bot.transformers.snowflake(payload.sku_id);
 
-  return button
+  return button;
 }
 
 function transformInputTextComponent(bot: Bot, payload: DiscordTextInputComponent | DiscordTextInputInteractionResponse) {
-  const props = bot.transformers.desiredProperties.component
-  const input = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const input = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) input.type = payload.type
-  if (props.id && payload.id) input.id = payload.id
-  if (props.value && payload.value) input.value = payload.value
-  if (props.customId && payload.custom_id) input.customId = payload.custom_id
+  if (props.type && payload.type) input.type = payload.type;
+  if (props.id && payload.id) input.id = payload.id;
+  if (props.value && payload.value) input.value = payload.value;
+  if (props.customId && payload.custom_id) input.customId = payload.custom_id;
 
   // Check if it is the component or the response
   if ('style' in payload) {
-    if (props.style && payload.style) input.style = payload.style
-    if (props.required && payload.required) input.required = payload.required
-    if (props.label && payload.label) input.label = payload.label
-    if (props.placeholder && payload.placeholder) input.placeholder = payload.placeholder
-    if (props.minLength && payload.min_length) input.minLength = payload.min_length
-    if (props.maxLength && payload.max_length) input.maxLength = payload.max_length
+    if (props.style && payload.style) input.style = payload.style;
+    if (props.required && payload.required) input.required = payload.required;
+    if (props.label && payload.label) input.label = payload.label;
+    if (props.placeholder && payload.placeholder) input.placeholder = payload.placeholder;
+    if (props.minLength && payload.min_length) input.minLength = payload.min_length;
+    if (props.maxLength && payload.max_length) input.maxLength = payload.max_length;
   }
 
-  return input
+  return input;
 }
 
 function transformStringSelectMenuComponent(bot: Bot, payload: DiscordStringSelectComponent | DiscordStringSelectInteractionResponseFromModal) {
-  const props = bot.transformers.desiredProperties.component
-  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) select.type = payload.type
-  if (props.id && payload.id) select.id = payload.id
-  if (props.customId && payload.custom_id) select.customId = payload.custom_id
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
   // Check if this is the string select response
   if ('values' in payload) {
-    if (props.values && payload.values) select.values = payload.values
+    if (props.values && payload.values) select.values = payload.values;
   } else {
-    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
-    if (props.minValues && payload.min_values) select.minValues = payload.min_values
-    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
+    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder;
+    if (props.minValues && payload.min_values) select.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values;
     if (props.options && payload.options)
       select.options = payload.options.map((option) => ({
         label: option.label,
@@ -212,233 +214,233 @@ function transformStringSelectMenuComponent(bot: Bot, payload: DiscordStringSele
             }
           : undefined,
         default: option.default,
-      }))
-    if (props.disabled && payload.disabled) select.disabled = payload.disabled
+      }));
+    if (props.disabled && payload.disabled) select.disabled = payload.disabled;
   }
 
-  return select
+  return select;
 }
 
 function transformUserSelectMenuComponent(bot: Bot, payload: DiscordUserSelectComponent | DiscordUserSelectInteractionResponseFromModal) {
-  const props = bot.transformers.desiredProperties.component
-  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) select.type = payload.type
-  if (props.id && payload.id) select.id = payload.id
-  if (props.customId && payload.custom_id) select.customId = payload.custom_id
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
   // Check if this is the user select response
   if ('values' in payload) {
-    if (props.values && payload.values) select.values = payload.values
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved)
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
   } else {
-    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
-    if (props.minValues && payload.min_values) select.minValues = payload.min_values
-    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
+    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder;
+    if (props.minValues && payload.min_values) select.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values;
     if (props.defaultValues && payload.default_values)
       select.defaultValues = payload.default_values.map((defaultValue) => ({
         id: bot.transformers.snowflake(defaultValue.id),
         type: defaultValue.type,
-      }))
-    if (props.disabled && payload.disabled) select.disabled = payload.disabled
+      }));
+    if (props.disabled && payload.disabled) select.disabled = payload.disabled;
   }
 
-  return select
+  return select;
 }
 
 function transformRoleSelectMenuComponent(bot: Bot, payload: DiscordRoleSelectComponent | DiscordRoleSelectInteractionResponseFromModal) {
-  const props = bot.transformers.desiredProperties.component
-  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) select.type = payload.type
-  if (props.id && payload.id) select.id = payload.id
-  if (props.customId && payload.custom_id) select.customId = payload.custom_id
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
   // Check if this is the role select response
   if ('values' in payload) {
-    if (props.values && payload.values) select.values = payload.values
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved)
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
   } else {
-    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
-    if (props.minValues && payload.min_values) select.minValues = payload.min_values
-    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
+    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder;
+    if (props.minValues && payload.min_values) select.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values;
     if (props.defaultValues && payload.default_values)
       select.defaultValues = payload.default_values.map((defaultValue) => ({
         id: bot.transformers.snowflake(defaultValue.id),
         type: defaultValue.type,
-      }))
-    if (props.disabled && payload.disabled) select.disabled = payload.disabled
+      }));
+    if (props.disabled && payload.disabled) select.disabled = payload.disabled;
   }
 
-  return select
+  return select;
 }
 
 function transformMentionableSelectMenuComponent(
   bot: Bot,
   payload: DiscordMentionableSelectComponent | DiscordMentionableSelectInteractionResponseFromModal,
 ) {
-  const props = bot.transformers.desiredProperties.component
-  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) select.type = payload.type
-  if (props.id && payload.id) select.id = payload.id
-  if (props.customId && payload.custom_id) select.customId = payload.custom_id
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
   // Check if this is the mentionable select response
   if ('values' in payload) {
-    if (props.values && payload.values) select.values = payload.values
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved)
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
   } else {
-    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
-    if (props.minValues && payload.min_values) select.minValues = payload.min_values
-    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
+    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder;
+    if (props.minValues && payload.min_values) select.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values;
     if (props.defaultValues && payload.default_values)
       select.defaultValues = payload.default_values.map((defaultValue) => ({
         id: bot.transformers.snowflake(defaultValue.id),
         type: defaultValue.type,
-      }))
-    if (props.disabled && payload.disabled) select.disabled = payload.disabled
+      }));
+    if (props.disabled && payload.disabled) select.disabled = payload.disabled;
   }
 
-  return select
+  return select;
 }
 
 function transformChannelSelectMenuComponent(bot: Bot, payload: DiscordChannelSelectComponent | DiscordChannelSelectInteractionResponseFromModal) {
-  const props = bot.transformers.desiredProperties.component
-  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) select.type = payload.type
-  if (props.id && payload.id) select.id = payload.id
-  if (props.customId && payload.custom_id) select.customId = payload.custom_id
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
   // Check if this is the mentionable select response
   if ('values' in payload) {
-    if (props.values && payload.values) select.values = payload.values
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved)
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
   } else {
-    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder
-    if (props.minValues && payload.min_values) select.minValues = payload.min_values
-    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values
+    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder;
+    if (props.minValues && payload.min_values) select.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values;
     if (props.defaultValues && payload.default_values)
       select.defaultValues = payload.default_values.map((defaultValue) => ({
         id: bot.transformers.snowflake(defaultValue.id),
         type: defaultValue.type,
-      }))
-    if (props.channelTypes && payload.channel_types) select.channelTypes = payload.channel_types
-    if (props.disabled && payload.disabled) select.disabled = payload.disabled
+      }));
+    if (props.channelTypes && payload.channel_types) select.channelTypes = payload.channel_types;
+    if (props.disabled && payload.disabled) select.disabled = payload.disabled;
   }
 
-  return select
+  return select;
 }
 
 function transformSectionComponent(bot: Bot, payload: DiscordSectionComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const section = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const section = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) section.type = payload.type
-  if (props.id && payload.id) section.id = payload.id
-  if (props.components && payload.components) section.components = payload.components.map((component) => bot.transformers.component(bot, component))
-  if (props.accessory && payload.accessory) section.accessory = bot.transformers.component(bot, payload.accessory)
+  if (props.type && payload.type) section.type = payload.type;
+  if (props.id && payload.id) section.id = payload.id;
+  if (props.components && payload.components) section.components = payload.components.map((component) => bot.transformers.component(bot, component));
+  if (props.accessory && payload.accessory) section.accessory = bot.transformers.component(bot, payload.accessory);
 
-  return section
+  return section;
 }
 
 function transformThumbnailComponent(bot: Bot, payload: DiscordThumbnailComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const thumbnail = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const thumbnail = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) thumbnail.type = payload.type
-  if (props.id && payload.id) thumbnail.id = payload.id
-  if (props.media && payload.media) thumbnail.media = bot.transformers.unfurledMediaItem(bot, payload.media)
-  if (props.description && payload.description) thumbnail.description = payload.description
-  if (props.spoiler && payload.spoiler) thumbnail.spoiler = payload.spoiler
+  if (props.type && payload.type) thumbnail.type = payload.type;
+  if (props.id && payload.id) thumbnail.id = payload.id;
+  if (props.media && payload.media) thumbnail.media = bot.transformers.unfurledMediaItem(bot, payload.media);
+  if (props.description && payload.description) thumbnail.description = payload.description;
+  if (props.spoiler && payload.spoiler) thumbnail.spoiler = payload.spoiler;
 
-  return thumbnail
+  return thumbnail;
 }
 
 function transformMediaGalleryComponent(bot: Bot, payload: DiscordMediaGalleryComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const mediaGallery = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const mediaGallery = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) mediaGallery.type = payload.type
-  if (props.id && payload.id) mediaGallery.id = payload.id
-  if (props.items && payload.items) mediaGallery.items = payload.items.map((item) => bot.transformers.mediaGalleryItem(bot, item))
+  if (props.type && payload.type) mediaGallery.type = payload.type;
+  if (props.id && payload.id) mediaGallery.id = payload.id;
+  if (props.items && payload.items) mediaGallery.items = payload.items.map((item) => bot.transformers.mediaGalleryItem(bot, item));
 
-  return mediaGallery
+  return mediaGallery;
 }
 
 function transformFileComponent(bot: Bot, payload: DiscordFileComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const file = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const file = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) file.type = payload.type
-  if (props.id && payload.id) file.id = payload.id
-  if (props.file && payload.file) file.file = bot.transformers.unfurledMediaItem(bot, payload.file)
-  if (props.spoiler && payload.spoiler) file.spoiler = payload.spoiler
-  if (props.name && payload.name) file.name = payload.name
-  if (props.size && payload.size) file.size = payload.size
+  if (props.type && payload.type) file.type = payload.type;
+  if (props.id && payload.id) file.id = payload.id;
+  if (props.file && payload.file) file.file = bot.transformers.unfurledMediaItem(bot, payload.file);
+  if (props.spoiler && payload.spoiler) file.spoiler = payload.spoiler;
+  if (props.name && payload.name) file.name = payload.name;
+  if (props.size && payload.size) file.size = payload.size;
 
-  return file
+  return file;
 }
 
 function transformTextDisplayComponent(bot: Bot, payload: DiscordTextDisplayComponent | DiscordTextDisplayInteractionResponse) {
-  const props = bot.transformers.desiredProperties.component
-  const textDisplay = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const textDisplay = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) textDisplay.type = payload.type
-  if (props.id && payload.id) textDisplay.id = payload.id
+  if (props.type && payload.type) textDisplay.type = payload.type;
+  if (props.id && payload.id) textDisplay.id = payload.id;
   // That that this isn't a response
   if ('content' in payload) {
-    if (props.content && payload.content) textDisplay.content = payload.content
+    if (props.content && payload.content) textDisplay.content = payload.content;
   }
 
-  return textDisplay
+  return textDisplay;
 }
 
 function transformSeparatorComponent(bot: Bot, payload: DiscordSeparatorComponent) {
-  const props = bot.transformers.desiredProperties.component
-  const separator = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const separator = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) separator.type = payload.type
-  if (props.id && payload.id) separator.id = payload.id
-  if (props.divider && payload.divider) separator.divider = payload.divider
-  if (props.spacing && payload.spacing) separator.spacing = payload.spacing
+  if (props.type && payload.type) separator.type = payload.type;
+  if (props.id && payload.id) separator.id = payload.id;
+  if (props.divider && payload.divider) separator.divider = payload.divider;
+  if (props.spacing && payload.spacing) separator.spacing = payload.spacing;
 
-  return separator
+  return separator;
 }
 
 function transformLabelComponent(bot: Bot, payload: DiscordLabelComponent | DiscordLabelInteractionResponse) {
-  const props = bot.transformers.desiredProperties.component
-  const label = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const label = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) label.type = payload.type
-  if (props.id && payload.id) label.id = payload.id
+  if (props.type && payload.type) label.type = payload.type;
+  if (props.id && payload.id) label.id = payload.id;
   // Check that this isn't a response
   if ('label' in payload) {
-    if (props.label && payload.label) label.label = payload.label
-    if (props.description && payload.description) label.description = payload.description
+    if (props.label && payload.label) label.label = payload.label;
+    if (props.description && payload.description) label.description = payload.description;
   }
-  if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component)
+  if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component);
 
-  return label
+  return label;
 }
 
 function transformFileUploadComponent(bot: Bot, payload: DiscordFileUploadComponent | DiscordFileUploadInteractionResponse) {
-  const props = bot.transformers.desiredProperties.component
-  const fileUpload = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.component;
+  const fileUpload = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) fileUpload.type = payload.type
-  if (props.id && payload.id) fileUpload.id = payload.id
-  if (props.customId && payload.custom_id) fileUpload.customId = payload.custom_id
+  if (props.type && payload.type) fileUpload.type = payload.type;
+  if (props.id && payload.id) fileUpload.id = payload.id;
+  if (props.customId && payload.custom_id) fileUpload.customId = payload.custom_id;
 
   // Check that this is a response
   if ('values' in payload) {
-    if (props.values && payload.values) fileUpload.values = payload.values
+    if (props.values && payload.values) fileUpload.values = payload.values;
   } else {
-    if (props.minValues && payload.min_values) fileUpload.minValues = payload.min_values
-    if (props.maxValues && payload.max_values) fileUpload.maxValues = payload.max_values
-    if (props.required && payload.required) fileUpload.required = payload.required
+    if (props.minValues && payload.min_values) fileUpload.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values) fileUpload.maxValues = payload.max_values;
+    if (props.required && payload.required) fileUpload.required = payload.required;
   }
 
-  return fileUpload
+  return fileUpload;
 }

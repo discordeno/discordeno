@@ -1,6 +1,6 @@
-import { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes } from '@discordeno/types'
-import { expect } from 'chai'
-import { e2eCache, rest, toDispose } from './utils.js'
+import { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes } from '@discordeno/types';
+import { expect } from 'chai';
+import { e2eCache, rest, toDispose } from './utils.js';
 
 describe('Automod tests', () => {
   it('Create a MessageSend rule for Keyword with BlockMessage action.', async () => {
@@ -16,22 +16,22 @@ describe('Automod tests', () => {
           type: AutoModerationActionType.BlockMessage,
         },
       ],
-    })
-    toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id))
+    });
+    toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id));
 
-    const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id)
+    const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id);
 
-    expect(rule.id).to.be.exist
-    expect(fetchedRule.id).to.be.exist
-    expect(fetchedRule.id).to.equal(rule.id)
-    expect(fetchedRule.name).to.equal(rule.name)
-    expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend)
-    expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword)
-    expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf')
-    expect(fetchedRule.actions).to.be.exist
-    expect(fetchedRule.actions[0]).to.be.exist
-    expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage)
-  })
+    expect(rule.id).to.be.exist;
+    expect(fetchedRule.id).to.be.exist;
+    expect(fetchedRule.id).to.equal(rule.id);
+    expect(fetchedRule.name).to.equal(rule.name);
+    expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend);
+    expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword);
+    expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf');
+    expect(fetchedRule.actions).to.be.exist;
+    expect(fetchedRule.actions[0]).to.be.exist;
+    expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage);
+  });
 
   it('Create a MessageSend rule for Keyword with Timeout action.', async () => {
     const rule = await rest.createAutomodRule(e2eCache.guild.id, {
@@ -49,23 +49,23 @@ describe('Automod tests', () => {
           },
         },
       ],
-    })
-    toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id))
+    });
+    toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id));
 
-    const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id)
+    const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id);
 
-    expect(rule.id).to.be.exist
-    expect(fetchedRule.id).to.be.exist
-    expect(fetchedRule.id).to.equal(rule.id)
-    expect(fetchedRule.name).to.equal(rule.name)
-    expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend)
-    expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword)
-    expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf')
-    expect(fetchedRule.actions).to.be.exist
-    expect(fetchedRule.actions[0]).to.be.exist
-    expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.Timeout)
-    expect(fetchedRule.actions[0].metadata?.durationSeconds).to.equal(10)
-  })
+    expect(rule.id).to.be.exist;
+    expect(fetchedRule.id).to.be.exist;
+    expect(fetchedRule.id).to.equal(rule.id);
+    expect(fetchedRule.name).to.equal(rule.name);
+    expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend);
+    expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword);
+    expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf');
+    expect(fetchedRule.actions).to.be.exist;
+    expect(fetchedRule.actions[0]).to.be.exist;
+    expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.Timeout);
+    expect(fetchedRule.actions[0].metadata?.durationSeconds).to.equal(10);
+  });
 
   it('Create a MessageSend rule for Keyword with BlockMessage & Timeout action.', async () => {
     const rule = await rest.createAutomodRule(e2eCache.guild.id, {
@@ -86,23 +86,23 @@ describe('Automod tests', () => {
           },
         },
       ],
-    })
-    toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id))
+    });
+    toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id));
 
-    const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id)
+    const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id);
 
-    expect(rule.id).to.be.exist
-    expect(fetchedRule.id).to.be.exist
-    expect(fetchedRule.id).to.equal(rule.id)
-    expect(fetchedRule.name).to.equal(rule.name)
-    expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend)
-    expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword)
-    expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf')
-    expect(fetchedRule.actions).to.have.length(2)
-    expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage)
-    expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.Timeout)
-    expect(fetchedRule.actions[1].metadata?.durationSeconds).to.equal(10)
-  })
+    expect(rule.id).to.be.exist;
+    expect(fetchedRule.id).to.be.exist;
+    expect(fetchedRule.id).to.equal(rule.id);
+    expect(fetchedRule.name).to.equal(rule.name);
+    expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend);
+    expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword);
+    expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf');
+    expect(fetchedRule.actions).to.have.length(2);
+    expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage);
+    expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.Timeout);
+    expect(fetchedRule.actions[1].metadata?.durationSeconds).to.equal(10);
+  });
 
   describe('with a channel', () => {
     it('Create a MessageSend rule for Keyword with SendAlertMessage action.', async () => {
@@ -121,23 +121,23 @@ describe('Automod tests', () => {
             },
           },
         ],
-      })
-      toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id))
+      });
+      toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id));
 
-      const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id)
+      const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id);
 
-      expect(rule.id).to.be.exist
-      expect(fetchedRule.id).to.be.exist
-      expect(fetchedRule.id).to.equal(rule.id)
-      expect(fetchedRule.name).to.equal(rule.name)
-      expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend)
-      expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword)
-      expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf')
-      expect(fetchedRule.actions).to.be.exist
-      expect(fetchedRule.actions[0]).to.be.exist
-      expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.SendAlertMessage)
-      expect(fetchedRule.actions[0].metadata?.channelId).to.equal(e2eCache.channel.id)
-    })
+      expect(rule.id).to.be.exist;
+      expect(fetchedRule.id).to.be.exist;
+      expect(fetchedRule.id).to.equal(rule.id);
+      expect(fetchedRule.name).to.equal(rule.name);
+      expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend);
+      expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword);
+      expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf');
+      expect(fetchedRule.actions).to.be.exist;
+      expect(fetchedRule.actions[0]).to.be.exist;
+      expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.SendAlertMessage);
+      expect(fetchedRule.actions[0].metadata?.channelId).to.equal(e2eCache.channel.id);
+    });
 
     it('Create a MessageSend rule for Keyword with SendAlertMessage & Timeout action.', async () => {
       const rule = await rest.createAutomodRule(e2eCache.guild.id, {
@@ -161,25 +161,25 @@ describe('Automod tests', () => {
             },
           },
         ],
-      })
-      toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id))
+      });
+      toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id));
 
-      const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id)
+      const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id);
 
-      expect(rule.id).to.be.exist
-      expect(fetchedRule.id).to.be.exist
-      expect(fetchedRule.id).to.equal(rule.id)
-      expect(fetchedRule.name).to.equal(rule.name)
-      expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend)
-      expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword)
-      expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf')
-      expect(fetchedRule.actions).to.have.length(2)
-      expect(fetchedRule.actions[0]).to.be.exist
-      expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.SendAlertMessage)
-      expect(fetchedRule.actions[0].metadata?.channelId).to.equal(e2eCache.channel.id)
-      expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.Timeout)
-      expect(fetchedRule.actions[1].metadata?.durationSeconds).to.equal(10)
-    })
+      expect(rule.id).to.be.exist;
+      expect(fetchedRule.id).to.be.exist;
+      expect(fetchedRule.id).to.equal(rule.id);
+      expect(fetchedRule.name).to.equal(rule.name);
+      expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend);
+      expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword);
+      expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf');
+      expect(fetchedRule.actions).to.have.length(2);
+      expect(fetchedRule.actions[0]).to.be.exist;
+      expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.SendAlertMessage);
+      expect(fetchedRule.actions[0].metadata?.channelId).to.equal(e2eCache.channel.id);
+      expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.Timeout);
+      expect(fetchedRule.actions[1].metadata?.durationSeconds).to.equal(10);
+    });
 
     it('Create a MessageSend rule for Keyword with BlockMessage & SendAlertMessage & Timeout action.', async () => {
       const rule = await rest.createAutomodRule(e2eCache.guild.id, {
@@ -206,28 +206,28 @@ describe('Automod tests', () => {
             },
           },
         ],
-      })
-      toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id))
+      });
+      toDispose.add(async () => await rest.deleteAutomodRule(e2eCache.guild.id, rule.id));
 
       // Get the rule again to make sure it was created correctly
-      const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id)
+      const fetchedRule = await rest.getAutomodRule(e2eCache.guild.id, rule.id);
 
-      expect(rule.id).to.be.exist
-      expect(fetchedRule.id).to.be.exist
-      expect(fetchedRule.id).to.equal(rule.id)
-      expect(fetchedRule.name).to.equal(rule.name)
-      expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend)
-      expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword)
-      expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf')
-      expect(fetchedRule.actions).to.be.exist
-      expect(fetchedRule.actions[0]).to.be.exist
-      expect(fetchedRule.actions[1].metadata).to.be.exist
-      expect(fetchedRule.actions[2].metadata).to.be.exist
-      expect(fetchedRule.actions[1].metadata?.channelId).to.equal(e2eCache.channel.id)
-      expect(fetchedRule.actions[2].metadata?.durationSeconds).to.equal(10)
-      expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage)
-      expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.SendAlertMessage)
-      expect(fetchedRule.actions[2].type).to.equal(AutoModerationActionType.Timeout)
-    })
-  })
-})
+      expect(rule.id).to.be.exist;
+      expect(fetchedRule.id).to.be.exist;
+      expect(fetchedRule.id).to.equal(rule.id);
+      expect(fetchedRule.name).to.equal(rule.name);
+      expect(fetchedRule.eventType).to.equal(AutoModerationEventTypes.MessageSend);
+      expect(fetchedRule.triggerType).to.equal(AutoModerationTriggerTypes.Keyword);
+      expect(fetchedRule.triggerMetadata?.keywordFilter?.[0]).to.equal('iblamewolf');
+      expect(fetchedRule.actions).to.be.exist;
+      expect(fetchedRule.actions[0]).to.be.exist;
+      expect(fetchedRule.actions[1].metadata).to.be.exist;
+      expect(fetchedRule.actions[2].metadata).to.be.exist;
+      expect(fetchedRule.actions[1].metadata?.channelId).to.equal(e2eCache.channel.id);
+      expect(fetchedRule.actions[2].metadata?.durationSeconds).to.equal(10);
+      expect(fetchedRule.actions[0].type).to.equal(AutoModerationActionType.BlockMessage);
+      expect(fetchedRule.actions[1].type).to.equal(AutoModerationActionType.SendAlertMessage);
+      expect(fetchedRule.actions[2].type).to.equal(AutoModerationActionType.Timeout);
+    });
+  });
+});

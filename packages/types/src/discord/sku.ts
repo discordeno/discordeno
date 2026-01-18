@@ -3,17 +3,17 @@
 /** https://discord.com/developers/docs/resources/sku#sku-object-sku-structure */
 export interface DiscordSku {
   /** ID of SKU */
-  id: string
+  id: string;
   /** Type of SKU */
-  type: DiscordSkuType
+  type: DiscordSkuType;
   /** ID of the parent application */
-  application_id: string
+  application_id: string;
   /** Customer-facing name of your premium offering */
-  name: string
+  name: string;
   /** System-generated URL slug based on the SKU's name */
-  slug: string
+  slug: string;
   /** SKU flags combined as a bitfield */
-  flags: SkuFlags
+  flags: SkuFlags;
 }
 
 /** https://discord.com/developers/docs/resources/sku#sku-object-sku-types */
