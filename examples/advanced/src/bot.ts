@@ -1,6 +1,6 @@
-import { createBot, type logger as discordenoLogger, Intents, LogDepth } from '@discordeno/bot'
-import { createProxyCache } from 'dd-cache-proxy'
-import { configs } from './config.js'
+import { createBot, type logger as discordenoLogger, Intents, LogDepth } from '@discordeno/bot';
+import { createProxyCache } from 'dd-cache-proxy';
+import { configs } from './config.js';
 
 const rawBot = createBot({
   token: configs.token,
@@ -38,7 +38,7 @@ const rawBot = createBot({
       discriminator: true,
     },
   },
-})
+});
 
 export const bot = createProxyCache(rawBot, {
   desiredProps: {
@@ -50,7 +50,7 @@ export const bot = createProxyCache(rawBot, {
     role: true,
     default: false,
   },
-})
+});
 
 // By default, bot.logger will use an instance of the logger from @discordeno/bot, this logger supports depth and we need to change it, so we need to say to TS that we know what we are doing with as
-;(bot.logger as typeof discordenoLogger).setDepth(LogDepth.Full)
+(bot.logger as typeof discordenoLogger).setDepth(LogDepth.Full);

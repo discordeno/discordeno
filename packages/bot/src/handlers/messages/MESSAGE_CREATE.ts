@@ -1,10 +1,10 @@
-import type { DiscordGatewayPayload, DiscordMessage } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordMessage } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleMessageCreate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
-  if (!bot.events.messageCreate) return
+  if (!bot.events.messageCreate) return;
 
-  const payload = data.d as DiscordMessage
+  const payload = data.d as DiscordMessage;
 
-  bot.events.messageCreate(bot.transformers.message(bot, payload, { shardId }))
+  bot.events.messageCreate(bot.transformers.message(bot, payload, { shardId }));
 }

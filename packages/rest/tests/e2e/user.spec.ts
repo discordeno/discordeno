@@ -1,37 +1,37 @@
-import { use as chaiUse, expect } from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-import { describe, it } from 'mocha'
-import { rest } from './utils.js'
+import { use as chaiUse, expect } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import { describe, it } from 'mocha';
+import { rest } from './utils.js';
 
-chaiUse(chaiAsPromised)
+chaiUse(chaiAsPromised);
 
 describe('Get a user from the api', () => {
   it('With a valid user id', async () => {
-    const user = await rest.getUser('130136895395987456')
+    const user = await rest.getUser('130136895395987456');
 
     describe('User has correct shape and form', () => {
       it('Has correct id', () => {
-        expect(user.id).to.be.equal('130136895395987456')
-      })
+        expect(user.id).to.be.equal('130136895395987456');
+      });
 
       it('Has a valid username', () => {
-        expect(user.username.length).to.be.greaterThanOrEqual(1)
-      })
+        expect(user.username.length).to.be.greaterThanOrEqual(1);
+      });
 
       it('Has a valid discriminator', () => {
-        expect(user.discriminator.length).to.be.oneOf([1, 4])
-      })
+        expect(user.discriminator.length).to.be.oneOf([1, 4]);
+      });
 
       it('Has been camelized', () => {
-        const keys = Object.keys(user)
+        const keys = Object.keys(user);
 
-        expect(keys.includes('public_flags')).to.be.false
-        expect(keys.includes('publicFlags')).to.be.true
-      })
-    })
-  })
+        expect(keys.includes('public_flags')).to.be.false;
+        expect(keys.includes('publicFlags')).to.be.true;
+      });
+    });
+  });
 
   it('With an invalid user id', async () => {
-    await expect(rest.getUser('123')).eventually.rejected
-  })
-})
+    await expect(rest.getUser('123')).eventually.rejected;
+  });
+});

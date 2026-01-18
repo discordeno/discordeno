@@ -1,9 +1,9 @@
-import type { DiscordAttachment } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { Attachment } from '../types.js'
+import type { DiscordAttachment } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { Attachment } from '../types.js';
 
 export function transformAttachmentToDiscordAttachment(bot: Bot, payload: typeof bot.transformers.$inferredTypes.attachment): DiscordAttachment {
-  const _payload = payload as Partial<Attachment>
+  const _payload = payload as Partial<Attachment>;
 
   return {
     id: _payload.id ? bot.transformers.reverse.snowflake(_payload.id) : undefined!,
@@ -19,5 +19,5 @@ export function transformAttachmentToDiscordAttachment(bot: Bot, payload: typeof
     duration_secs: _payload.duration_secs,
     waveform: _payload.waveform,
     flags: _payload.flags,
-  }
+  };
 }

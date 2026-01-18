@@ -1,5 +1,5 @@
-import { bot } from '../bot.js'
-import { configs } from '../config.js'
+import { bot } from '../bot.js';
+import { configs } from '../config.js';
 
 export async function updateApplicationCommands(): Promise<void> {
   await bot.helpers.upsertGlobalApplicationCommands(
@@ -7,7 +7,7 @@ export async function updateApplicationCommands(): Promise<void> {
       // ONLY GLOBAL COMMANDS
       .filter((command) => !command.devOnly)
       .array(),
-  )
+  );
 
   await bot.helpers.upsertGuildApplicationCommands(
     configs.devGuildId,
@@ -15,5 +15,5 @@ export async function updateApplicationCommands(): Promise<void> {
       // ONLY GLOBAL COMMANDS
       .filter((command) => !!command.devOnly)
       .array(),
-  )
+  );
 }

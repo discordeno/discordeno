@@ -1,5 +1,5 @@
-import type { DiscordGetGatewayBot } from '@discordeno/types'
-import type { GetGatewayBot } from '../types.js'
+import type { DiscordGetGatewayBot } from '@discordeno/types';
+import type { GetGatewayBot } from '../types.js';
 
 export function transformGatewayBotToDiscordGatewayBot(payload: GetGatewayBot): DiscordGetGatewayBot {
   return {
@@ -11,5 +11,5 @@ export function transformGatewayBotToDiscordGatewayBot(payload: GetGatewayBot): 
       reset_after: payload.sessionStartLimit.resetAfter,
       max_concurrency: payload.sessionStartLimit.maxConcurrency,
     },
-  }
+  };
 }

@@ -1,10 +1,10 @@
-import type { DiscordGatewayPayload, DiscordMessageReactionRemove } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordMessageReactionRemove } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleMessageReactionRemove(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (!bot.events.reactionRemove) return
+  if (!bot.events.reactionRemove) return;
 
-  const payload = data.d as DiscordMessageReactionRemove
+  const payload = data.d as DiscordMessageReactionRemove;
 
   bot.events.reactionRemove({
     userId: bot.transformers.snowflake(payload.user_id),
@@ -14,5 +14,5 @@ export async function handleMessageReactionRemove(bot: Bot, data: DiscordGateway
     // @ts-expect-error TODO: Deal with partials
     emoji: bot.transformers.emoji(bot, payload.emoji),
     burst: payload.burst,
-  })
+  });
 }

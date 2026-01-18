@@ -1,47 +1,47 @@
 /** Types for: https://discord.com/developers/docs/resources/user */
 
-import type { DiscordIntegration } from './guild.js'
+import type { DiscordIntegration } from './guild.js';
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-structure */
 export interface DiscordUser {
   /** The user's id */
-  id: string
+  id: string;
   /** The user's username, not unique across the platform */
-  username: string
+  username: string;
   /** The user's discord-tag */
-  discriminator: string
+  discriminator: string;
   /** The user's display name, if it is set. For bots, this is the application name */
-  global_name: string | null
+  global_name: string | null;
   /** The user's avatar hash */
-  avatar: string | null
+  avatar: string | null;
   /** Whether the user belongs to an OAuth2 application */
-  bot?: boolean
+  bot?: boolean;
   /** Whether the user is an Official Discord System user (part of the urgent message system) */
-  system?: boolean
+  system?: boolean;
   /** Whether the user has two factor enabled on their account */
-  mfa_enabled?: boolean
+  mfa_enabled?: boolean;
   /** the user's banner, or null if unset */
-  banner?: string | null
+  banner?: string | null;
   /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accent_color?: number | null
+  accent_color?: number | null;
   /** The user's chosen language option */
-  locale?: string
+  locale?: string;
   /** Whether the email on this account has been verified */
-  verified?: boolean
+  verified?: boolean;
   /** The user's email */
-  email?: string | null
+  email?: string | null;
   /** The flags on a user's account */
-  flags?: number
+  flags?: number;
   /** The type of Nitro subscription on a user's account */
-  premium_type?: PremiumTypes
+  premium_type?: PremiumTypes;
   /** The public flags on a user's account */
-  public_flags?: number
+  public_flags?: number;
   /** data for the user's avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData | null
+  avatar_decoration_data?: DiscordAvatarDecorationData | null;
   /** data for the user's collectibles */
-  collectibles?: DiscordCollectibles | null
+  collectibles?: DiscordCollectibles | null;
   /** The user's primary guild */
-  primary_guild?: DiscordUserPrimaryGuild | null
+  primary_guild?: DiscordUserPrimaryGuild | null;
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
@@ -74,7 +74,7 @@ export enum PremiumTypes {
 /** https://discord.com/developers/docs/resources/user#user-object-user-primary-guild */
 export interface DiscordUserPrimaryGuild {
   /** The id of the primary guild */
-  identity_guild_id: string | null
+  identity_guild_id: string | null;
   /**
    * Whether the user is displaying the primary guild's server tag.
    *
@@ -82,61 +82,61 @@ export interface DiscordUserPrimaryGuild {
    * This can be `null` if the system clears the identity, e.g. because the server no longer supports tags.
    * This will be `false` if the user manually removes their tag.
    */
-  identity_enabled: boolean | null
+  identity_enabled: boolean | null;
   /** The text of the user's server tag. Limited to 4 characters */
-  tag: string | null
+  tag: string | null;
   /** The server tag badge hash */
-  badge: string | null
+  badge: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object-avatar-decoration-data-structure */
 export interface DiscordAvatarDecorationData {
   /** the avatar decoration hash */
-  asset: string
+  asset: string;
   /** id of the avatar decoration's SKU */
-  sku_id: string
+  sku_id: string;
 }
 
 /** https://discord.com/developers/docs/resources/user#collectibles-collectible-structure */
 export interface DiscordCollectibles {
   /** object mapping of nameplate data */
-  nameplate?: DiscordNameplate
+  nameplate?: DiscordNameplate;
 }
 
 /** https://discord.com/developers/docs/resources/user#nameplate-nameplate-structure */
 export interface DiscordNameplate {
   /** the nameplate's id */
-  sku_id: string
+  sku_id: string;
   /** path to the nameplate asset */
-  asset: string
+  asset: string;
   /** the label of this nameplate. Currently unused */
-  label: string
+  label: string;
   /** background color of the nameplate, one of: `crimson`, `berry`, `sky`, `teal`, `forest`, `bubble_gum`, `violet`, `cobalt`, `clover`, `lemon`, `white` */
-  palette: string
+  palette: string;
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */
 export interface DiscordConnection {
   /** id of the connection account */
-  id: string
+  id: string;
   /** the username of the connection account */
-  name: string
+  name: string;
   /** the service of this connection */
-  type: DiscordConnectionServiceType
+  type: DiscordConnectionServiceType;
   /** whether the connection is revoked */
-  revoked?: boolean
+  revoked?: boolean;
   /** an array of partial server integrations */
-  integrations?: Partial<DiscordIntegration>[]
+  integrations?: Partial<DiscordIntegration>[];
   /** whether the connection is verified */
-  verified: boolean
+  verified: boolean;
   /** whether friend sync is enabled for this connection */
-  friend_sync: boolean
+  friend_sync: boolean;
   /** whether activities related to this connection will be shown in presence updates */
-  show_activity: boolean
+  show_activity: boolean;
   /** whether this connection has a corresponding third party OAuth2 token */
-  two_way_link: boolean
+  two_way_link: boolean;
   /** visibility of this connection */
-  visibility: DiscordConnectionVisibility
+  visibility: DiscordConnectionVisibility;
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
@@ -180,9 +180,9 @@ export enum DiscordConnectionVisibility {
 /** https://discord.com/developers/docs/resources/user#application-role-connection-object-application-role-connection-structure */
 export interface DiscordApplicationRoleConnection {
   /** the vanity name of the platform a bot has connected (max 50 characters) */
-  platform_name: string | null
+  platform_name: string | null;
   /** the username on the platform a bot has connected (max 100 characters) */
-  platform_username: string | null
+  platform_username: string | null;
   /** object mapping application role connection metadata keys to their stringified value (max 100 characters) for the user on the platform a bot has connected */
-  metadata: Record<string, string>
+  metadata: Record<string, string>;
 }

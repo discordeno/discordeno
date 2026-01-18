@@ -1,15 +1,15 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
-import { bot } from './bot.js'
-import importDirectory from './utils/loader.js'
-import logger from './utils/logger.js'
+import { bot } from './bot.js';
+import importDirectory from './utils/loader.js';
+import logger from './utils/logger.js';
 
-logger.info('Starting bot...')
+logger.info('Starting bot...');
 
-logger.info('Loading commands...')
-await importDirectory('./dist/commands')
+logger.info('Loading commands...');
+await importDirectory('./dist/commands');
 
-logger.info('Loading events...')
-await importDirectory('./dist/events')
+logger.info('Loading events...');
+await importDirectory('./dist/events');
 
-await bot.start()
+await bot.start();
