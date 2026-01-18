@@ -1,6 +1,6 @@
-import type { DiscordApplicationCommandOption } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { ApplicationCommandOption } from './types.js'
+import type { DiscordApplicationCommandOption } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { ApplicationCommandOption } from './types.js';
 
 export function transformApplicationCommandOption(bot: Bot, payload: DiscordApplicationCommandOption) {
   const applicationCommandOption = {
@@ -18,7 +18,7 @@ export function transformApplicationCommandOption(bot: Bot, payload: DiscordAppl
     minLength: payload.min_length,
     maxLength: payload.max_length,
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
-  } as ApplicationCommandOption
+  } as ApplicationCommandOption;
 
-  return bot.transformers.customizers.applicationCommandOption(bot, payload, applicationCommandOption)
+  return bot.transformers.customizers.applicationCommandOption(bot, payload, applicationCommandOption);
 }

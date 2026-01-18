@@ -4,6 +4,7 @@ import {
   type DiscordButtonComponent,
   type DiscordContainerComponent,
   type DiscordFileComponent,
+  type DiscordFileUploadComponent,
   type DiscordLabelComponent,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
@@ -19,9 +20,9 @@ import {
   type DiscordUnfurledMediaItem,
   MessageComponentTypes,
   type TextStyles,
-} from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { Component, MediaGalleryItem, UnfurledMediaItem } from '../types.js'
+} from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { Component, MediaGalleryItem, UnfurledMediaItem } from '../types.js';
 
 export function transformComponentToDiscordComponent(
   bot: Bot,
@@ -30,33 +31,35 @@ export function transformComponentToDiscordComponent(
   // This switch should include all cases
   switch (payload.type) {
     case MessageComponentTypes.ActionRow:
-      return transformActionRow(bot, payload)
+      return transformActionRow(bot, payload);
     case MessageComponentTypes.Button:
-      return transformButtonComponent(bot, payload)
+      return transformButtonComponent(bot, payload);
     case MessageComponentTypes.Container:
-      return transformContainerComponent(bot, payload)
+      return transformContainerComponent(bot, payload);
     case MessageComponentTypes.TextInput:
-      return transformInputTextComponent(bot, payload)
+      return transformInputTextComponent(bot, payload);
     case MessageComponentTypes.StringSelect:
     case MessageComponentTypes.ChannelSelect:
     case MessageComponentTypes.RoleSelect:
     case MessageComponentTypes.UserSelect:
     case MessageComponentTypes.MentionableSelect:
-      return transformSelectMenuComponent(bot, payload)
+      return transformSelectMenuComponent(bot, payload);
     case MessageComponentTypes.Section:
-      return transformSectionComponent(bot, payload)
+      return transformSectionComponent(bot, payload);
     case MessageComponentTypes.File:
-      return transformFileComponent(bot, payload)
+      return transformFileComponent(bot, payload);
     case MessageComponentTypes.MediaGallery:
-      return transformMediaGalleryComponent(bot, payload)
+      return transformMediaGalleryComponent(bot, payload);
     case MessageComponentTypes.Thumbnail:
-      return transformThumbnailComponent(bot, payload)
+      return transformThumbnailComponent(bot, payload);
     case MessageComponentTypes.Label:
-      return transformLabelComponent(bot, payload)
+      return transformLabelComponent(bot, payload);
+    case MessageComponentTypes.FileUpload:
+      return transformFileUploadComponent(bot, payload);
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
       // As of now they are compatible
-      return payload as DiscordMessageComponent
+      return payload as DiscordMessageComponent;
   }
 }
 
@@ -68,7 +71,7 @@ export function transformUnfurledMediaItemToDiscordUnfurledMediaItem(bot: Bot, p
     width: payload.width,
     content_type: payload.contentType,
     attachment_id: payload.attachmentId ? bot.transformers.reverse.snowflake(payload.attachmentId) : undefined,
-  }
+  };
 }
 
 export function transformMediaGalleryItemToDiscordMediaGalleryItem(bot: Bot, payload: MediaGalleryItem): DiscordMediaGalleryItem {
@@ -76,7 +79,7 @@ export function transformMediaGalleryItemToDiscordMediaGalleryItem(bot: Bot, pay
     media: bot.transformers.reverse.unfurledMediaItem(bot, payload.media),
     description: payload.description,
     spoiler: payload.spoiler,
-  }
+  };
 }
 
 function transformActionRow(bot: Bot, payload: Component): DiscordActionRow {
@@ -85,7 +88,7 @@ function transformActionRow(bot: Bot, payload: Component): DiscordActionRow {
     id: payload.id,
     // The actionRow.components type is kinda annoying, so we need a cast for this
     components: (payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) ?? []) as DiscordActionRow['components'],
-  }
+  };
 }
 
 function transformContainerComponent(bot: Bot, payload: Component): DiscordContainerComponent {
@@ -96,7 +99,7 @@ function transformContainerComponent(bot: Bot, payload: Component): DiscordConta
     spoiler: payload.spoiler,
     components: (payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) ??
       []) as DiscordContainerComponent['components'],
-  }
+  };
 }
 
 function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonComponent {
@@ -117,7 +120,7 @@ function transformButtonComponent(bot: Bot, payload: Component): DiscordButtonCo
     label: payload.label,
     url: payload.url,
     sku_id: payload.skuId ? bot.transformers.reverse.snowflake(payload.skuId) : undefined,
-  }
+  };
 }
 
 function transformInputTextComponent(_bot: Bot, payload: Component): DiscordTextInputComponent | DiscordTextInputInteractionResponse {
@@ -133,7 +136,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
     min_length: payload.minLength,
     placeholder: payload.placeholder,
     required: payload.required,
-  }
+  };
 }
 
 function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSelectMenuComponent | DiscordStringSelectInteractionResponseFromModal {
@@ -143,7 +146,7 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
       values: payload.values,
       custom_id: payload.customId!,
       id: payload.id!,
-    }
+    };
   }
 
   return {
@@ -173,7 +176,7 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
     })),
     placeholder: payload.placeholder,
     required: payload.required,
-  }
+  };
 }
 
 function transformSectionComponent(bot: Bot, payload: Component): DiscordSectionComponent {
@@ -182,7 +185,7 @@ function transformSectionComponent(bot: Bot, payload: Component): DiscordSection
     id: payload.id,
     components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component)) as DiscordTextDisplayComponent[],
     accessory: (payload.accessory ? bot.transformers.reverse.component(bot, payload.accessory) : undefined) as DiscordSectionComponent['accessory'],
-  }
+  };
 }
 
 function transformFileComponent(bot: Bot, payload: Component): DiscordFileComponent {
@@ -193,7 +196,7 @@ function transformFileComponent(bot: Bot, payload: Component): DiscordFileCompon
     spoiler: payload.spoiler,
     name: payload.name!,
     size: payload.size!,
-  }
+  };
 }
 
 function transformMediaGalleryComponent(bot: Bot, payload: Component): DiscordMediaGalleryComponent {
@@ -201,7 +204,7 @@ function transformMediaGalleryComponent(bot: Bot, payload: Component): DiscordMe
     type: MessageComponentTypes.MediaGallery,
     id: payload.id,
     items: payload.items?.map((item) => bot.transformers.reverse.mediaGalleryItem(bot, item)) ?? [],
-  }
+  };
 }
 
 function transformThumbnailComponent(bot: Bot, payload: Component): DiscordThumbnailComponent {
@@ -211,7 +214,7 @@ function transformThumbnailComponent(bot: Bot, payload: Component): DiscordThumb
     media: bot.transformers.reverse.unfurledMediaItem(bot, payload.media!),
     description: payload.description,
     spoiler: payload.spoiler,
-  }
+  };
 }
 
 function transformLabelComponent(bot: Bot, payload: Component): DiscordLabelComponent {
@@ -221,5 +224,16 @@ function transformLabelComponent(bot: Bot, payload: Component): DiscordLabelComp
     label: payload.label!,
     description: payload.description,
     component: bot.transformers.reverse.component(bot, payload.component!) as DiscordLabelComponent['component'],
-  }
+  };
+}
+
+function transformFileUploadComponent(bot: Bot, payload: Component): DiscordFileUploadComponent {
+  return {
+    type: MessageComponentTypes.FileUpload,
+    id: payload.id,
+    custom_id: payload.customId!,
+    max_values: payload.maxValues,
+    min_values: payload.minValues,
+    required: payload.required,
+  };
 }

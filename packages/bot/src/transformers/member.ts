@@ -1,65 +1,65 @@
-import type { BigString, DiscordMember } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
-import { callCustomizer } from '../transformers.js'
-import { MemberToggles } from './toggles/member.js'
-import { Permissions } from './toggles/Permissions.js'
-import type { Member } from './types.js'
+import type { BigString, DiscordMember } from '@discordeno/types';
+import { iconHashToBigInt } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
+import { MemberToggles } from './toggles/member.js';
+import { Permissions } from './toggles/Permissions.js';
+import type { Member } from './types.js';
 
 export const baseMember: Member = {
   // This allows typescript to still check for type errors on functions below
   ...(undefined as unknown as Member),
 
   get deaf() {
-    return !!this.toggles?.has('deaf')
+    return !!this.toggles?.has('deaf');
   },
   get mute() {
-    return !!this.toggles?.has('mute')
+    return !!this.toggles?.has('mute');
   },
   get pending() {
-    return !!this.toggles?.has('pending')
+    return !!this.toggles?.has('pending');
   },
   get flags() {
-    return this.toggles?.flags ?? 0
+    return this.toggles?.flags ?? 0;
   },
   get didRejoin() {
-    return !!this.toggles?.didRejoin
+    return !!this.toggles?.didRejoin;
   },
   get startedOnboarding() {
-    return !!this.toggles?.startedOnboarding
+    return !!this.toggles?.startedOnboarding;
   },
   get bypassesVerification() {
-    return !!this.toggles?.bypassesVerification
+    return !!this.toggles?.bypassesVerification;
   },
   get completedOnboarding() {
-    return !!this.toggles?.completedOnboarding
+    return !!this.toggles?.completedOnboarding;
   },
-}
+};
 
 export function transformMember(bot: Bot, payload: Partial<DiscordMember>, extra?: { guildId?: BigString; userId?: BigString; partial?: boolean }) {
-  const member: SetupDesiredProps<Member, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseMember)
-  const props = bot.transformers.desiredProperties.member
+  const member: SetupDesiredProps<Member, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseMember);
+  const props = bot.transformers.desiredProperties.member;
 
-  if (props.id && extra?.userId) member.id = typeof extra.userId === 'string' ? bot.transformers.snowflake(extra.userId) : extra.userId
-  if (props.guildId && extra?.guildId) member.guildId = typeof extra.guildId === 'string' ? bot.transformers.snowflake(extra.guildId) : extra.guildId
-  if (props.user && payload.user) member.user = bot.transformers.user(bot, payload.user)
-  if (props.nick && payload.nick) member.nick = payload.nick
-  if (props.roles && payload.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
-  if (props.joinedAt && payload.joined_at) member.joinedAt = Date.parse(payload.joined_at)
-  if (props.premiumSince && payload.premium_since) member.premiumSince = Date.parse(payload.premium_since)
+  if (props.id && extra?.userId) member.id = typeof extra.userId === 'string' ? bot.transformers.snowflake(extra.userId) : extra.userId;
+  if (props.guildId && extra?.guildId) member.guildId = typeof extra.guildId === 'string' ? bot.transformers.snowflake(extra.guildId) : extra.guildId;
+  if (props.user && payload.user) member.user = bot.transformers.user(bot, payload.user);
+  if (props.nick && payload.nick) member.nick = payload.nick;
+  if (props.roles && payload.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id));
+  if (props.joinedAt && payload.joined_at) member.joinedAt = Date.parse(payload.joined_at);
+  if (props.premiumSince && payload.premium_since) member.premiumSince = Date.parse(payload.premium_since);
   if (props.communicationDisabledUntil && payload.communication_disabled_until)
-    member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
-  if (props.avatar && payload.avatar) member.avatar = iconHashToBigInt(payload.avatar)
-  if (props.banner && payload.banner) member.banner = iconHashToBigInt(payload.banner)
-  if (props.permissions && payload.permissions) member.permissions = new Permissions(payload.permissions)
-  if (props.toggles) member.toggles = new MemberToggles(payload)
+    member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until);
+  if (props.avatar && payload.avatar) member.avatar = iconHashToBigInt(payload.avatar);
+  if (props.banner && payload.banner) member.banner = iconHashToBigInt(payload.banner);
+  if (props.permissions && payload.permissions) member.permissions = new Permissions(payload.permissions);
+  if (props.toggles) member.toggles = new MemberToggles(payload);
   if (props.avatarDecorationData && payload.avatar_decoration_data)
-    member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
+    member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data);
 
   return callCustomizer('member', bot, payload, member, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
     userId: extra?.userId ? bot.transformers.snowflake(extra.userId) : undefined,
     partial: extra?.partial ?? false,
-  })
+  });
 }

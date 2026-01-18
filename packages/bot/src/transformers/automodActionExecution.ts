@@ -1,6 +1,6 @@
-import type { DiscordAutoModerationActionExecution } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { AutoModerationActionExecution } from './types.js'
+import type { DiscordAutoModerationActionExecution } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { AutoModerationActionExecution } from './types.js';
 
 export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution) {
   const rule = {
@@ -24,7 +24,7 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
           }
         : undefined,
     },
-  } as AutoModerationActionExecution
+  } as AutoModerationActionExecution;
 
-  return bot.transformers.customizers.automodActionExecution(bot, payload, rule)
+  return bot.transformers.customizers.automodActionExecution(bot, payload, rule);
 }

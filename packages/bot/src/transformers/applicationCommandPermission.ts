@@ -1,6 +1,6 @@
-import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { GuildApplicationCommandPermissions } from './types.js'
+import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { GuildApplicationCommandPermissions } from './types.js';
 
 export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions) {
   const applicationCommandPermission = {
@@ -12,7 +12,7 @@ export function transformApplicationCommandPermission(bot: Bot, payload: Discord
       type: perm.type,
       permission: perm.permission,
     })),
-  } as GuildApplicationCommandPermissions
+  } as GuildApplicationCommandPermissions;
 
-  return bot.transformers.customizers.applicationCommandPermission(bot, payload, applicationCommandPermission)
+  return bot.transformers.customizers.applicationCommandPermission(bot, payload, applicationCommandPermission);
 }

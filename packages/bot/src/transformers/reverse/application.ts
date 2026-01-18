@@ -1,7 +1,7 @@
-import type { DiscordApplication } from '@discordeno/types'
-import { iconBigintToHash } from '@discordeno/utils'
-import type { Bot } from '../../bot.js'
-import type { Application } from '../types.js'
+import type { DiscordApplication } from '@discordeno/types';
+import { iconBigintToHash } from '@discordeno/utils';
+import type { Bot } from '../../bot.js';
+import type { Application } from '../types.js';
 
 export function transformApplicationToDiscordApplication(bot: Bot, payload: Application): DiscordApplication {
   return {
@@ -27,5 +27,5 @@ export function transformApplicationToDiscordApplication(bot: Bot, payload: Appl
     event_webhooks_url: payload.eventWebhooksUrl,
     event_webhooks_status: payload.eventWebhooksStatus,
     event_webhooks_types: payload.eventWebhooksTypes,
-  }
+  };
 }

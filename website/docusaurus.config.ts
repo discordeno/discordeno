@@ -1,8 +1,8 @@
-import type { Options as ClientRedirectOptions } from '@docusaurus/plugin-client-redirects'
-import type { Options as PluginContentDocs } from '@docusaurus/plugin-content-docs'
-import type { Options as PresetClassicOptions, ThemeConfig } from '@docusaurus/preset-classic'
-import type { Config } from '@docusaurus/types'
-import { themes } from 'prism-react-renderer'
+import type { Options as ClientRedirectOptions } from '@docusaurus/plugin-client-redirects';
+import type { Options as PluginContentDocs } from '@docusaurus/plugin-content-docs';
+import type { Options as PresetClassicOptions, ThemeConfig } from '@docusaurus/preset-classic';
+import type { Config } from '@docusaurus/types';
+import { themes } from 'prism-react-renderer';
 
 const config: Config = {
   title: 'Discordeno',
@@ -235,6 +235,6 @@ const config: Config = {
       } satisfies ClientRedirectOptions,
     ],
   ],
-}
+};
 
-export default config
+export default config;

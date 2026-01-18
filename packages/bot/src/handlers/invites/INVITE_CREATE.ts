@@ -1,10 +1,10 @@
-import type { DiscordGatewayPayload, DiscordInviteCreate } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordInviteCreate } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
-  if (!bot.events.inviteCreate) return
+  if (!bot.events.inviteCreate) return;
 
-  const payload = data.d as DiscordInviteCreate
+  const payload = data.d as DiscordInviteCreate;
 
   bot.events.inviteCreate({
     channelId: bot.transformers.snowflake(payload.channel_id),
@@ -22,5 +22,5 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, 
     temporary: payload.temporary,
     uses: payload.uses,
     expiresAt: Date.parse(payload.expires_at),
-  })
+  });
 }

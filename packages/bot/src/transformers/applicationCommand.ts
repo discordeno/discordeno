@@ -1,6 +1,6 @@
-import type { DiscordApplicationCommand } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { ApplicationCommand } from './types.js'
+import type { DiscordApplicationCommand } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { ApplicationCommand } from './types.js';
 
 export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand) {
   const applicationCommand = {
@@ -17,7 +17,7 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
     version: payload.version,
 
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
-  } as ApplicationCommand
+  } as ApplicationCommand;
 
-  return bot.transformers.customizers.applicationCommand(bot, payload, applicationCommand)
+  return bot.transformers.customizers.applicationCommand(bot, payload, applicationCommand);
 }

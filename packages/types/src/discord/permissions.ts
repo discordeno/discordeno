@@ -102,68 +102,70 @@ export const BitwisePermissionFlags = {
   USE_EXTERNAL_APPS: 1n << 50n,
   /** Allows pinning and unpinning messages */
   PIN_MESSAGES: 1n << 51n,
-} as const
+  /** Allows bypassing slowmode restrictions */
+  BYPASS_SLOWMODE: 1n << 52n,
+} as const;
 
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
-export type PermissionStrings = keyof typeof BitwisePermissionFlags
+export type PermissionStrings = keyof typeof BitwisePermissionFlags;
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface DiscordRole {
   /** Role id */
-  id: string
+  id: string;
   /** Role name */
-  name: string
+  name: string;
   /**
    * RGB color value, default: 0
    * @deprecated the {@link colors} field is recommended for use instead of this field
    */
-  color: number
+  color: number;
   /** The role's color */
-  colors: DiscordRoleColors
+  colors: DiscordRoleColors;
   /** If this role is showed separately in the user listing */
-  hoist: boolean
+  hoist: boolean;
   /** the role emoji hash */
-  icon?: string
+  icon?: string;
   /** role unicode emoji */
-  unicode_emoji?: string
+  unicode_emoji?: string;
   /** Position of this role (roles with the same position are sorted by id) */
-  position: number
+  position: number;
   /** Permission bit set */
-  permissions: string
+  permissions: string;
   /** Whether this role is managed by an integration */
-  managed: boolean
+  managed: boolean;
   /** Whether this role is mentionable */
-  mentionable: boolean
+  mentionable: boolean;
   /** The tags this role has */
-  tags?: DiscordRoleTags
+  tags?: DiscordRoleTags;
   /** Role flags combined as a bitfield */
-  flags: RoleFlags
+  flags: RoleFlags;
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
 export interface DiscordRoleTags {
   /** The id of the bot this role belongs to */
-  bot_id?: string
+  bot_id?: string;
   /** The id of the integration this role belongs to */
-  integration_id?: string
+  integration_id?: string;
   /** Whether this is the guild's premium subscriber role */
-  premium_subscriber?: null
+  premium_subscriber?: null;
   /** Id of this role's subscription sku and listing. */
-  subscription_listing_id?: string
+  subscription_listing_id?: string;
   /** Whether this role is available for purchase. */
-  available_for_purchase?: null
+  available_for_purchase?: null;
   /** Whether this is a guild's linked role */
-  guild_connections?: null
+  guild_connections?: null;
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
 export interface DiscordRoleColors {
   /** The primary color for the role */
-  primary_color: number
+  primary_color: number;
   /** The secondary color for the role, this will make the role a gradient between the other provided colors */
-  secondary_color: number | null
+  secondary_color: number | null;
   /** The tertiary color for the role, this will turn the gradient into a holographic style */
-  tertiary_color: number | null
+  tertiary_color: number | null;
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */

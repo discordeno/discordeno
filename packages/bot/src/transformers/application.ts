@@ -1,8 +1,8 @@
-import { type DiscordApplication, DiscordApplicationIntegrationType } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import { callCustomizer } from '../transformers.js'
-import type { Application } from './types.js'
+import { type DiscordApplication, DiscordApplicationIntegrationType } from '@discordeno/types';
+import { iconHashToBigInt } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import { callCustomizer } from '../transformers.js';
+import type { Application } from './types.js';
 
 export function transformApplication(bot: Bot, payload: Partial<DiscordApplication>, extra?: { shardId?: number; partial?: boolean }) {
   const application = {
@@ -63,10 +63,10 @@ export function transformApplication(bot: Bot, payload: Partial<DiscordApplicati
     eventWebhooksUrl: payload.event_webhooks_url,
     eventWebhooksStatus: payload.event_webhooks_status,
     eventWebhooksTypes: payload.event_webhooks_types,
-  } as Application
+  } as Application;
 
   return callCustomizer('application', bot, payload, application, {
     shardId: extra?.shardId,
     partial: extra?.partial ?? false,
-  })
+  });
 }

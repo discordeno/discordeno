@@ -1,44 +1,44 @@
 /** Types for: https://discord.com/developers/docs/resources/guild-scheduled-event */
 
-import type { DiscordMember } from './guild.js'
-import type { DiscordUser } from './user.js'
+import type { DiscordMember } from './guild.js';
+import type { DiscordUser } from './user.js';
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-structure */
 export interface DiscordScheduledEvent {
   /** the id of the scheduled event */
-  id: string
+  id: string;
   /** the guild id which the scheduled event belongs to */
-  guild_id: string
+  guild_id: string;
   /** the channel id in which the scheduled event will be hosted if specified */
-  channel_id: string | null
+  channel_id: string | null;
   /** the id of the user that created the scheduled event */
-  creator_id?: string | null
+  creator_id?: string | null;
   /** the name of the scheduled event */
-  name: string
+  name: string;
   /** the description of the scheduled event */
-  description?: string | null
+  description?: string | null;
   /** the time the scheduled event will start */
-  scheduled_start_time: string
+  scheduled_start_time: string;
   /** the time the scheduled event will end if it does end. */
-  scheduled_end_time: string | null
+  scheduled_end_time: string | null;
   /** the privacy level of the scheduled event */
-  privacy_level: ScheduledEventPrivacyLevel
+  privacy_level: ScheduledEventPrivacyLevel;
   /** the status of the scheduled event */
-  status: ScheduledEventStatus
+  status: ScheduledEventStatus;
   /** the type of hosting entity associated with a scheduled event */
-  entity_type: ScheduledEventEntityType
+  entity_type: ScheduledEventEntityType;
   /** any additional id of the hosting entity associated with event */
-  entity_id: string | null
+  entity_id: string | null;
   /** the entity metadata for the scheduled event */
-  entity_metadata: DiscordScheduledEventEntityMetadata | null
+  entity_metadata: DiscordScheduledEventEntityMetadata | null;
   /** the user that created the scheduled event */
-  creator?: DiscordUser
+  creator?: DiscordUser;
   /** the number of users subscribed to the scheduled event */
-  user_count?: number
+  user_count?: number;
   /** the cover image hash of the scheduled event */
-  image?: string | null
+  image?: string | null;
   /** the definition for how often this event should recur */
-  recurrence_rule: DiscordScheduledEventRecurrenceRule | null
+  recurrence_rule: DiscordScheduledEventRecurrenceRule | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level */
@@ -65,41 +65,41 @@ export enum ScheduledEventStatus {
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-metadata */
 export interface DiscordScheduledEventEntityMetadata {
   /** location of the event */
-  location?: string
+  location?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object-guild-scheduled-event-user-structure */
 export interface DiscordScheduledEventUser {
   /** The scheduled event id which the user subscribed to */
-  guild_scheduled_event_id: string
+  guild_scheduled_event_id: string;
   /** User which subscribed to an event */
-  user: DiscordUser
+  user: DiscordUser;
   /** Guild member data for this user for the guild which this event belongs to, if any */
-  member?: DiscordMember
+  member?: DiscordMember;
 }
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-recurrence-rule-object-guild-scheduled-event-recurrence-rule-structure */
 export interface DiscordScheduledEventRecurrenceRule {
   /** Starting time of the recurrence interval */
-  start: string
+  start: string;
   /** Ending time of the recurrence interval */
-  end: string | null
+  end: string | null;
   /** How often the event occurs */
-  frequency: DiscordScheduledEventRecurrenceRuleFrequency
+  frequency: DiscordScheduledEventRecurrenceRuleFrequency;
   /** The spacing between the events, defined by `frequency`. For example, `frequency` of `Weekly` and an `interval` of `2` would be "every-other week" */
-  interval: number
+  interval: number;
   /** Set of specific days within a week for the event to recur on */
-  by_weekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null
+  by_weekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null;
   /** List of specific days within a specific week (1-5) to recur on */
-  by_n_weekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null
+  by_n_weekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null;
   /** Set of specific months to recur on */
-  by_month: DiscordScheduledEventRecurrenceRuleMonth[] | null
+  by_month: DiscordScheduledEventRecurrenceRuleMonth[] | null;
   /** Set of specific dates within a month to recur on */
-  by_month_day: number[] | null
+  by_month_day: number[] | null;
   /** Set of days within a year to recur on (1-364) */
-  by_year_day: number[] | null
+  by_year_day: number[] | null;
   /** The total amount of times that the event is allowed to recur before stopping */
-  count: number | null
+  count: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-recurrence-rule-object-guild-scheduled-event-recurrence-rule-frequency */
@@ -124,9 +124,9 @@ export enum DiscordScheduledEventRecurrenceRuleWeekday {
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-recurrence-rule-object-guild-scheduled-event-recurrence-rule-nweekday-structure */
 export interface DiscordScheduledEventRecurrenceRuleNWeekday {
   /** The week to reoccur on. 1 - 5 */
-  n: number
+  n: number;
   /** The day within the week to reoccur on */
-  day: DiscordScheduledEventRecurrenceRuleWeekday
+  day: DiscordScheduledEventRecurrenceRuleWeekday;
 }
 
 /** https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-recurrence-rule-object-guild-scheduled-event-recurrence-rule-month */

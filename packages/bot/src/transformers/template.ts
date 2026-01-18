@@ -1,6 +1,6 @@
-import type { DiscordTemplate } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { Template } from './types.js'
+import type { DiscordTemplate } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { Template } from './types.js';
 export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
   const template = {
     code: payload.code,
@@ -14,7 +14,7 @@ export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
     sourceGuildId: bot.transformers.snowflake(payload.source_guild_id),
     serializedSourceGuild: payload.serialized_source_guild,
     isDirty: payload.is_dirty ?? undefined,
-  } as Template
+  } as Template;
 
-  return bot.transformers.customizers.template(bot, payload, template)
+  return bot.transformers.customizers.template(bot, payload, template);
 }

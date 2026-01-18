@@ -1,6 +1,6 @@
 /** Types for: https://discord.com/developers/docs/components/reference */
 
-import type { ChannelTypes } from '../discord/channel.js'
+import type { ChannelTypes } from '../discord/channel.js';
 import type {
   ButtonStyles,
   DiscordMediaGalleryItem,
@@ -8,10 +8,10 @@ import type {
   MessageComponentTypes,
   SeparatorSpacingSize,
   TextStyles,
-} from '../discord/components.js'
-import type { BigString } from '../shared.js'
+} from '../discord/components.js';
+import type { BigString } from '../shared.js';
 
-export type MessageComponents = MessageComponent[]
+export type MessageComponents = MessageComponent[];
 export type MessageComponent =
   | ActionRow
   | ButtonComponent
@@ -29,18 +29,19 @@ export type MessageComponent =
   | ContainerComponent
   | FileComponent
   | LabelComponent
+  | FileUploadComponent;
 
 /** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
 export interface BaseComponent {
   /** The type of the component */
-  type: MessageComponentTypes
+  type: MessageComponentTypes;
   /** 32 bit integer used as an optional identifier for component */
-  id?: number
+  id?: number;
 }
 
 /** https://discord.com/developers/docs/components/reference#action-row-action-row-structure */
 export interface ActionRow extends BaseComponent {
-  type: MessageComponentTypes.ActionRow
+  type: MessageComponentTypes.ActionRow;
 
   /**
    * The components in this row
@@ -59,30 +60,30 @@ export interface ActionRow extends BaseComponent {
     | MentionableSelectComponent
     | ChannelSelectComponent
     | TextInputComponent
-  )[]
+  )[];
 }
 
 /** https://discord.com/developers/docs/components/reference#button-button-structure */
 export interface ButtonComponent extends BaseComponent {
-  type: MessageComponentTypes.Button
+  type: MessageComponentTypes.Button;
 
   /** For different styles/colors of the buttons */
-  style: ButtonStyles
+  style: ButtonStyles;
   /** for what the button says (max 80 characters) */
-  label?: string
+  label?: string;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: {
     /** Emoji id */
-    id?: BigString
+    id?: BigString;
     /** Emoji name */
-    name?: string
+    name?: string;
     /** Whether this emoji is animated */
-    animated?: boolean
-  }
+    animated?: boolean;
+  };
   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
-  customId?: string
+  customId?: string;
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
-  skuId?: BigString
+  skuId?: BigString;
   /**
    * optional url for link-style buttons that can navigate a user to the web.
    *
@@ -91,25 +92,25 @@ export interface ButtonComponent extends BaseComponent {
    *
    * Maximum 512 characters.
    */
-  url?: string
+  url?: string;
   /** Whether or not this button is disabled */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#string-select-string-select-structure */
 export interface StringSelectComponent extends BaseComponent {
-  type: MessageComponentTypes.StringSelect
+  type: MessageComponentTypes.StringSelect;
 
   /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string
+  customId: string;
   /** The choices! Maximum of 25 items. */
-  options: SelectOption[]
+  options: SelectOption[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
+  placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 0-25. */
-  minValues?: number
+  minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Max 25. */
-  maxValues?: number
+  maxValues?: number;
   /**
    * Whether this component is required to be filled
    *
@@ -118,7 +119,7 @@ export interface StringSelectComponent extends BaseComponent {
    *
    * @default true
    */
-  required?: boolean
+  required?: boolean;
   /**
    * Whether select menu is disabled
    *
@@ -127,39 +128,39 @@ export interface StringSelectComponent extends BaseComponent {
    *
    * @default false
    */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#string-select-select-option-structure */
 export interface SelectOption {
   /** The user-facing name of the option. Maximum 25 characters. */
-  label: string
+  label: string;
   /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string
+  value: string;
   /** An additional description of the option. Maximum 50 characters. */
-  description?: string
+  description?: string;
   // TODO: Make an alias for this type since it is used a few times
   /** The id, name, and animated properties of an emoji. */
   emoji?: {
     /** Emoji id */
-    id?: BigString
+    id?: BigString;
     /** Emoji name */
-    name?: string
+    name?: string;
     /** Whether this emoji is animated */
-    animated?: boolean
-  }
+    animated?: boolean;
+  };
   /** Will render this option as already-selected by default. */
-  default?: boolean
+  default?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
 export interface TextInputComponent extends BaseComponent {
-  type: MessageComponentTypes.TextInput
+  type: MessageComponentTypes.TextInput;
 
   /** The customId of the InputText */
-  customId: string
+  customId: string;
   /** The style of the InputText */
-  style: TextStyles
+  style: TextStyles;
   /**
    * The label of the InputText.
    *
@@ -168,36 +169,36 @@ export interface TextInputComponent extends BaseComponent {
    *
    * @deprecated Use the `label` and `description` from the {@link LabelComponent}
    */
-  label?: string
+  label?: string;
   /** The minimum length of the text the user has to provide */
-  minLength?: number
+  minLength?: number;
   /** The maximum length of the text the user has to provide */
-  maxLength?: number
+  maxLength?: number;
   /** Whether or not this input is required. */
-  required?: boolean
+  required?: boolean;
   /** Pre-filled value for input text. */
-  value?: string
+  value?: string;
   /** The placeholder of the InputText */
-  placeholder?: string
+  placeholder?: string;
 }
 
 /** https://discord.com/developers/docs/components/reference#user-select-user-select-structure */
 export interface UserSelectComponent extends BaseComponent {
-  type: MessageComponentTypes.UserSelect
+  type: MessageComponentTypes.UserSelect;
 
   /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string
+  customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
+  placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
    * The number of default values must be in the range defined by minValues and maxValues
    */
-  defaultValues?: SelectMenuDefaultValue[]
+  defaultValues?: SelectMenuDefaultValue[];
   /** The minimum number of items that must be selected. Default 1. Between 0-25. */
-  minValues?: number
+  minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Max 25. */
-  maxValues?: number
+  maxValues?: number;
   /**
    * Whether this component is required to be filled
    *
@@ -206,7 +207,7 @@ export interface UserSelectComponent extends BaseComponent {
    *
    * @default true
    */
-  required?: boolean
+  required?: boolean;
   /**
    * Whether select menu is disabled
    *
@@ -215,34 +216,34 @@ export interface UserSelectComponent extends BaseComponent {
    *
    * @default false
    */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure */
 export interface SelectMenuDefaultValue {
   /** ID of a user, role, or channel */
-  id: BigString
+  id: BigString;
   /** Type of value that id represents. */
-  type: 'user' | 'role' | 'channel'
+  type: 'user' | 'role' | 'channel';
 }
 
 /** https://discord.com/developers/docs/components/reference#role-select-role-select-structure */
 export interface RoleSelectComponent extends BaseComponent {
-  type: MessageComponentTypes.RoleSelect
+  type: MessageComponentTypes.RoleSelect;
 
   /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string
+  customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
+  placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
    * The number of default values must be in the range defined by minValues and maxValues
    */
-  defaultValues?: SelectMenuDefaultValue[]
+  defaultValues?: SelectMenuDefaultValue[];
   /** The minimum number of items that must be selected. Default 1. Between 0-25. */
-  minValues?: number
+  minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Max 25. */
-  maxValues?: number
+  maxValues?: number;
   /**
    * Whether this component is required to be filled
    *
@@ -251,7 +252,7 @@ export interface RoleSelectComponent extends BaseComponent {
    *
    * @default true
    */
-  required?: boolean
+  required?: boolean;
   /**
    * Whether select menu is disabled
    *
@@ -260,26 +261,26 @@ export interface RoleSelectComponent extends BaseComponent {
    *
    * @default false
    */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-structure */
 export interface MentionableSelectComponent extends BaseComponent {
-  type: MessageComponentTypes.MentionableSelect
+  type: MessageComponentTypes.MentionableSelect;
 
   /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string
+  customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
+  placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
    * The number of default values must be in the range defined by minValues and maxValues
    */
-  defaultValues?: SelectMenuDefaultValue[]
+  defaultValues?: SelectMenuDefaultValue[];
   /** The minimum number of items that must be selected. Default 1. Between 0-25. */
-  minValues?: number
+  minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Max 25. */
-  maxValues?: number
+  maxValues?: number;
   /**
    * Whether this component is required to be filled
    *
@@ -288,7 +289,7 @@ export interface MentionableSelectComponent extends BaseComponent {
    *
    * @default true
    */
-  required?: boolean
+  required?: boolean;
   /**
    * Whether select menu is disabled
    *
@@ -297,28 +298,28 @@ export interface MentionableSelectComponent extends BaseComponent {
    *
    * @default false
    */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#channel-select-channel-select-structure */
 export interface ChannelSelectComponent extends BaseComponent {
-  type: MessageComponentTypes.ChannelSelect
+  type: MessageComponentTypes.ChannelSelect;
 
   /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string
+  customId: string;
   /** List of channel types to include in the options list */
-  channelTypes?: ChannelTypes[]
+  channelTypes?: ChannelTypes[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string
+  placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
    * The number of default values must be in the range defined by minValues and maxValues
    */
-  defaultValues?: SelectMenuDefaultValue[]
+  defaultValues?: SelectMenuDefaultValue[];
   /** The minimum number of items that must be selected. Default 1. Between 0-25. */
-  minValues?: number
+  minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Max 25. */
-  maxValues?: number
+  maxValues?: number;
   /**
    * Whether this component is required to be filled
    *
@@ -327,7 +328,7 @@ export interface ChannelSelectComponent extends BaseComponent {
    *
    * @default true
    */
-  required?: boolean
+  required?: boolean;
   /**
    * Whether select menu is disabled
    *
@@ -336,86 +337,86 @@ export interface ChannelSelectComponent extends BaseComponent {
    *
    * @default false
    */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#section-section-structure */
 export interface SectionComponent extends BaseComponent {
-  type: MessageComponentTypes.Section
+  type: MessageComponentTypes.Section;
 
   /** One to three text components */
-  components: TextDisplayComponent[]
+  components: TextDisplayComponent[];
   /** A thumbnail or a button component, with a future possibility of adding more compatible components */
-  accessory: ButtonComponent | ThumbnailComponent
+  accessory: ButtonComponent | ThumbnailComponent;
 }
 
 /** https://discord.com/developers/docs/components/reference#text-display */
 export interface TextDisplayComponent extends BaseComponent {
-  type: MessageComponentTypes.TextDisplay
+  type: MessageComponentTypes.TextDisplay;
 
   /** Text that will be displayed similar to a message */
-  content: string
+  content: string;
 }
 
 /** https://discord.com/developers/docs/components/reference#thumbnail */
 export interface ThumbnailComponent extends BaseComponent {
-  type: MessageComponentTypes.Thumbnail
+  type: MessageComponentTypes.Thumbnail;
 
   /** A url or attachment */
-  media: DiscordUnfurledMediaItem
+  media: DiscordUnfurledMediaItem;
   /** Alt text for the media */
-  description?: string
+  description?: string;
   /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
-  spoiler?: boolean
+  spoiler?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#media-gallery */
 export interface MediaGalleryComponent extends BaseComponent {
-  type: MessageComponentTypes.MediaGallery
+  type: MessageComponentTypes.MediaGallery;
 
   /** 1 to 10 media gallery items */
-  items: DiscordMediaGalleryItem[]
+  items: DiscordMediaGalleryItem[];
 }
 
 /** https://discord.com/developers/docs/components/reference#file */
 export interface FileComponent extends BaseComponent {
-  type: MessageComponentTypes.File
+  type: MessageComponentTypes.File;
 
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
-  file: DiscordUnfurledMediaItem
+  file: DiscordUnfurledMediaItem;
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
-  spoiler?: boolean
+  spoiler?: boolean;
   /** The name of the file. This field is ignored and provided by the API as part of the response */
-  name: string
+  name: string;
   /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
-  size: number
+  size: number;
 }
 
 /** https://discord.com/developers/docs/components/reference#separator */
 export interface SeparatorComponent extends BaseComponent {
-  type: MessageComponentTypes.Separator
+  type: MessageComponentTypes.Separator;
 
   /** Whether a visual divider should be displayed in the component. Defaults to `true` */
-  divider?: boolean
+  divider?: boolean;
   /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
-  spacing?: SeparatorSpacingSize
+  spacing?: SeparatorSpacingSize;
 }
 
 /** https://discord.com/developers/docs/components/reference#container */
 export interface ContainerComponent extends BaseComponent {
-  type: MessageComponentTypes.Container
+  type: MessageComponentTypes.Container;
 
   /** Components of the type action row, text display, section, media gallery, separator, or file */
-  components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>
+  components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>;
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
-  accentColor?: number | null
+  accentColor?: number | null;
   /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
-  spoiler?: boolean
+  spoiler?: boolean;
 }
 
 /** https://discord.com/developers/docs/components/reference#label-label-structure */
 export interface LabelComponent extends BaseComponent {
-  type: MessageComponentTypes.Label
+  type: MessageComponentTypes.Label;
 
   /**
    * The label text
@@ -423,14 +424,14 @@ export interface LabelComponent extends BaseComponent {
    * @remarks
    * Max 45 characters.
    */
-  label: string
+  label: string;
   /**
    * An optional description text for the label
    *
    * @remarks
    * Max 100 characters.
    */
-  description?: string
+  description?: string;
   /** The component within the label */
   component:
     | TextInputComponent
@@ -439,4 +440,32 @@ export interface LabelComponent extends BaseComponent {
     | RoleSelectComponent
     | MentionableSelectComponent
     | ChannelSelectComponent
+    | FileUploadComponent;
+}
+
+/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
+export interface FileUploadComponent extends BaseComponent {
+  type: MessageComponentTypes.FileUpload;
+
+  /** The custom id for the file upload */
+  customId: string;
+  /**
+   * The minimum number of files that must be uploaded
+   *
+   * @remarks
+   * Between 0-10
+   */
+  minValues?: number;
+  /** The maximum number of files that can be uploaded
+   *
+   * @remarks
+   * Between 1-10
+   */
+  maxValues?: number;
+  /**
+   * Whether this component is required to be filled
+   *
+   * @default true
+   */
+  required?: boolean;
 }

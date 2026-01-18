@@ -1,6 +1,6 @@
-import type { FeatureItem } from '@site/src/types'
-import Feature from './feature'
-import styles from './index.module.css'
+import type { FeatureItem } from '@site/src/types';
+import Feature from './feature';
+import styles from './index.module.css';
 
 const FeatureList: FeatureItem[] = [
   {
@@ -107,7 +107,7 @@ const FeatureList: FeatureItem[] = [
       </>
     ),
   },
-]
+];
 
 export default function DiscordenoFeatures() {
   return (
@@ -126,5 +126,5 @@ export default function DiscordenoFeatures() {
         </div>
       </div>
     </section>
-  )
+  );
 }

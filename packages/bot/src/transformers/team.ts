@@ -1,10 +1,10 @@
-import type { DiscordTeam } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import type { Team } from './types.js'
+import type { DiscordTeam } from '@discordeno/types';
+import { iconHashToBigInt } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import type { Team } from './types.js';
 
 export function transformTeam(bot: Bot, payload: DiscordTeam) {
-  const id = bot.transformers.snowflake(payload.id)
+  const id = bot.transformers.snowflake(payload.id);
 
   const team = {
     name: payload.name,
@@ -17,7 +17,7 @@ export function transformTeam(bot: Bot, payload: DiscordTeam) {
       user: bot.transformers.user(bot, member.user),
       role: member.role,
     })),
-  } as Team
+  } as Team;
 
-  return bot.transformers.customizers.team(bot, payload, team)
+  return bot.transformers.customizers.team(bot, payload, team);
 }

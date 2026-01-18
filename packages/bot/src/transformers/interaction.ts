@@ -10,12 +10,12 @@ import {
   InteractionResponseTypes,
   InteractionTypes,
   MessageFlags,
-} from '@discordeno/types'
-import { Collection } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import type { InteractionResolvedDataChannel } from '../commandOptionsParser.js'
-import type { CompleteDesiredProperties, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js'
-import { callCustomizer } from '../transformers.js'
+} from '@discordeno/types';
+import { Collection } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import type { InteractionResolvedDataChannel } from '../commandOptionsParser.js';
+import type { CompleteDesiredProperties, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import type {
   Interaction,
   InteractionCallback,
@@ -24,7 +24,7 @@ import type {
   InteractionDataResolved,
   InteractionResource,
   Message,
-} from './types.js'
+} from './types.js';
 
 // Assume we have all desired properties for this or else typescript will get very confused for the return types of these functions.
 // This is used as a prototype, so the actual type with the user desired properties will be set later.
@@ -33,79 +33,84 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
   ...(undefined as unknown as SetupDesiredProps<Interaction, CompleteDesiredProperties<{}, true>, DesiredPropertiesBehavior.RemoveKey>),
 
   async respond(response, options) {
-    let type = InteractionResponseTypes.ChannelMessageWithSource
+    let type = InteractionResponseTypes.ChannelMessageWithSource;
 
     // If user provides a string, change it to a response object
-    if (typeof response === 'string') response = { content: response }
+    if (typeof response === 'string') response = { content: response };
 
-    // If user provides an object, determine if it should be an autocomplete or a modal response
-    if (response.title) type = InteractionResponseTypes.Modal
-    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
-    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) {
-      response.flags ??= 0
-      response.flags |= MessageFlags.Ephemeral
+    // If user provides a type, use it
+    if (options?.type) type = options.type;
+    // Otherwise, determine if it should be an autocomplete or a modal response
+    else {
+      if (response.title) type = InteractionResponseTypes.Modal;
+      if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult;
     }
-
-    // Since this has already been given a response, any further responses must be followups.
-    if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response)
 
     // Modals cannot be chained
     if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
-      throw new Error('Cannot respond to a modal interaction with another modal.')
+      throw new Error('Cannot respond to a modal interaction with another modal.');
+
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) {
+      response.flags ??= 0;
+      response.flags |= MessageFlags.Ephemeral;
+    }
+
+    // Since this has already been given a response, any further responses must be followups.
+    if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response);
 
     const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
       this.token,
       { type, data: response },
       { withResponse: options?.withResponse },
-    )
-    this.acknowledged = true
-    return result
+    );
+    this.acknowledged = true;
+    return result;
   },
   async edit(response, messageId, options) {
-    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.');
 
     // If user provides a string, change it to a response object
-    if (typeof response === 'string') response = { content: response }
+    if (typeof response === 'string') response = { content: response };
 
     if (messageId) {
-      return await this.bot?.helpers.editFollowupMessage(this.token, messageId, response)
+      return await this.bot?.helpers.editFollowupMessage(this.token, messageId, response);
     }
 
     if (!this.acknowledged) {
       if (this.type !== InteractionTypes.MessageComponent && this.type !== InteractionTypes.ModalSubmit)
-        throw new Error("This interaction has not been responded to yet and this isn't a MessageComponent or ModalSubmit interaction.")
+        throw new Error("This interaction has not been responded to yet and this isn't a MessageComponent or ModalSubmit interaction.");
 
       const result = await this.bot.helpers.sendInteractionResponse(
         this.id,
         this.token,
         { type: InteractionResponseTypes.UpdateMessage, data: response },
         options,
-      )
-      this.acknowledged = true
-      return result
+      );
+      this.acknowledged = true;
+      return result;
     }
 
-    return await this.bot.helpers.editOriginalInteractionResponse(this.token, response)
+    return await this.bot.helpers.editOriginalInteractionResponse(this.token, response);
   },
   async deferEdit(options) {
-    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
-    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.');
+    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.');
 
     if (this.type !== InteractionTypes.MessageComponent && this.type !== InteractionTypes.ModalSubmit)
-      throw new Error("Cannot defer to then edit an interaction that isn't a MessageComponent or ModalSubmit interaction.")
+      throw new Error("Cannot defer to then edit an interaction that isn't a MessageComponent or ModalSubmit interaction.");
 
     const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
       this.token,
       { type: InteractionResponseTypes.DeferredUpdateMessage },
       options,
-    )
-    this.acknowledged = true
-    return result
+    );
+    this.acknowledged = true;
+    return result;
   },
   async defer(isPrivate, options) {
-    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
+    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.');
 
     const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
@@ -117,63 +122,63 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
         },
       },
       options,
-    )
-    this.acknowledged = true
-    return result
+    );
+    this.acknowledged = true;
+    return result;
   },
   async delete(messageId) {
-    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction');
 
-    if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token, messageId)
-    else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token)
+    if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token, messageId);
+    else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token);
   },
-}
+};
 
 export function transformInteraction(bot: Bot, payload: Partial<DiscordInteraction>, extra?: { shardId?: number; partial?: boolean }) {
-  const props = bot.transformers.desiredProperties.interaction
-  const interaction: SetupDesiredProps<Interaction, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseInteraction)
+  const props = bot.transformers.desiredProperties.interaction;
+  const interaction: SetupDesiredProps<Interaction, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseInteraction);
 
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  interaction.bot = bot
-  interaction.acknowledged = false
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+  interaction.bot = bot;
+  interaction.acknowledged = false;
 
-  if (props.id && payload.id) interaction.id = bot.transformers.snowflake(payload.id)
-  if (props.applicationId && payload.application_id) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (props.type && payload.type) interaction.type = payload.type
-  if (props.token && payload.token) interaction.token = payload.token
-  if (props.version && payload.version) interaction.version = payload.version
-  if (props.locale && payload.locale) interaction.locale = payload.locale
-  if (props.guildLocale && payload.guild_locale) interaction.guildLocale = payload.guild_locale
-  if (props.guild && payload.guild) interaction.guild = bot.transformers.guild(bot, payload.guild, { shardId: extra?.shardId, partial: true })
-  if (props.guildId && guildId) interaction.guildId = guildId
+  if (props.id && payload.id) interaction.id = bot.transformers.snowflake(payload.id);
+  if (props.applicationId && payload.application_id) interaction.applicationId = bot.transformers.snowflake(payload.application_id);
+  if (props.type && payload.type) interaction.type = payload.type;
+  if (props.token && payload.token) interaction.token = payload.token;
+  if (props.version && payload.version) interaction.version = payload.version;
+  if (props.locale && payload.locale) interaction.locale = payload.locale;
+  if (props.guildLocale && payload.guild_locale) interaction.guildLocale = payload.guild_locale;
+  if (props.guild && payload.guild) interaction.guild = bot.transformers.guild(bot, payload.guild, { shardId: extra?.shardId, partial: true });
+  if (props.guildId && guildId) interaction.guildId = guildId;
   if (props.user) {
-    if (payload.member?.user) interaction.user = bot.transformers.user(bot, payload.member?.user)
-    else if (payload.user) interaction.user = bot.transformers.user(bot, payload.user)
+    if (payload.member?.user) interaction.user = bot.transformers.user(bot, payload.member?.user);
+    else if (payload.user) interaction.user = bot.transformers.user(bot, payload.user);
   }
-  if (props.appPermissions && payload.app_permissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
-  if (props.message && payload.message) interaction.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId })
-  if (props.channel && payload.channel) interaction.channel = bot.transformers.channel(bot, payload.channel, { guildId, partial: true })
-  if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.appPermissions && payload.app_permissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions);
+  if (props.message && payload.message) interaction.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId });
+  if (props.channel && payload.channel) interaction.channel = bot.transformers.channel(bot, payload.channel, { guildId, partial: true });
+  if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id);
   if (props.member && guildId && payload.member)
     interaction.member = bot.transformers.member(bot, payload.member, {
       guildId,
       userId: payload.member?.user.id ?? payload.user?.id,
-    })
-  if (props.entitlements && payload.entitlements) interaction.entitlements = payload.entitlements.map((e) => bot.transformers.entitlement(bot, e))
+    });
+  if (props.entitlements && payload.entitlements) interaction.entitlements = payload.entitlements.map((e) => bot.transformers.entitlement(bot, e));
   if (props.authorizingIntegrationOwners && payload.authorizing_integration_owners) {
-    interaction.authorizingIntegrationOwners = {}
+    interaction.authorizingIntegrationOwners = {};
 
     if (payload.authorizing_integration_owners['0'])
       interaction.authorizingIntegrationOwners[DiscordApplicationIntegrationType.GuildInstall] = bot.transformers.snowflake(
         payload.authorizing_integration_owners['0'],
-      )
+      );
     if (payload.authorizing_integration_owners['1'])
       interaction.authorizingIntegrationOwners[DiscordApplicationIntegrationType.UserInstall] = bot.transformers.snowflake(
         payload.authorizing_integration_owners['1'],
-      )
+      );
   }
-  if (props.context && payload.context) interaction.context = payload.context
-  if (props.attachmentSizeLimit && payload.attachment_size_limit) interaction.attachmentSizeLimit = payload.attachment_size_limit
+  if (props.context && payload.context) interaction.context = payload.context;
+  if (props.attachmentSizeLimit && payload.attachment_size_limit) interaction.attachmentSizeLimit = payload.attachment_size_limit;
   if (props.data && payload.data) {
     interaction.data = {
       type: payload.data.type,
@@ -188,13 +193,13 @@ export function transformInteraction(bot: Bot, payload: Partial<DiscordInteracti
         : undefined,
       options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
       targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-    }
+    };
   }
 
   return callCustomizer('interaction', bot, payload, interaction, {
     shardId: extra?.shardId,
     partial: extra?.partial ?? false,
-  })
+  });
 }
 
 export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
@@ -204,9 +209,9 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
     value: option.value,
     options: option.options,
     focused: option.focused,
-  } as InteractionDataOption
+  } as InteractionDataOption;
 
-  return bot.transformers.customizers.interactionDataOptions(bot, option, opt)
+  return bot.transformers.customizers.interactionDataOptions(bot, option, opt);
 }
 
 export function transformInteractionDataResolved(
@@ -214,7 +219,7 @@ export function transformInteractionDataResolved(
   payload: Partial<DiscordInteractionDataResolved>,
   extra?: { shardId?: number; guildId?: BigString; partial?: boolean },
 ) {
-  const transformed: SetupDesiredProps<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> = {}
+  const transformed: SetupDesiredProps<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> = {};
 
   if (payload.messages) {
     transformed.messages = new Collection(
@@ -223,23 +228,23 @@ export function transformInteractionDataResolved(
           Message,
           TransformersDesiredProperties,
           DesiredPropertiesBehavior.RemoveKey
-        >
-        const id = bot.transformers.snowflake(key)
+        >;
+        const id = bot.transformers.snowflake(key);
 
-        return [id, message]
+        return [id, message];
       }),
-    )
+    );
   }
 
   if (payload.users) {
     transformed.users = new Collection(
       Object.entries(payload.users).map(([key, value]) => {
-        const user = bot.transformers.user(bot, value)
-        const id = bot.transformers.snowflake(key)
+        const user = bot.transformers.user(bot, value);
+        const id = bot.transformers.snowflake(key);
 
-        return [id, user]
+        return [id, user];
       }),
-    )
+    );
   }
 
   if (extra?.guildId && payload.members) {
@@ -249,23 +254,23 @@ export function transformInteractionDataResolved(
           guildId: extra.guildId,
           userId: bot.transformers.snowflake(key),
           partial: true,
-        })
-        const id = bot.transformers.snowflake(key)
+        });
+        const id = bot.transformers.snowflake(key);
 
-        return [id, member]
+        return [id, member];
       }),
-    )
+    );
   }
 
   if (extra?.guildId && payload.roles) {
     transformed.roles = new Collection(
       Object.entries(payload.roles).map(([key, value]) => {
-        const role = bot.transformers.role(bot, value, { guildId: extra.guildId })
-        const id = bot.transformers.snowflake(key)
+        const role = bot.transformers.role(bot, value, { guildId: extra.guildId });
+        const id = bot.transformers.snowflake(key);
 
-        return [id, role]
+        return [id, role];
       }),
-    )
+    );
   }
 
   if (payload.channels) {
@@ -274,30 +279,30 @@ export function transformInteractionDataResolved(
         const channel = bot.transformers.channel(bot, value) as InteractionResolvedDataChannel<
           TransformersDesiredProperties,
           DesiredPropertiesBehavior.RemoveKey
-        >
-        const id = bot.transformers.snowflake(key)
+        >;
+        const id = bot.transformers.snowflake(key);
 
-        return [id, channel]
+        return [id, channel];
       }),
-    )
+    );
   }
 
   if (payload.attachments) {
     transformed.attachments = new Collection(
       Object.entries(payload.attachments).map(([key, value]) => {
-        const id = bot.transformers.snowflake(key)
-        const attachment = bot.transformers.attachment(bot, value)
+        const id = bot.transformers.snowflake(key);
+        const attachment = bot.transformers.attachment(bot, value);
 
-        return [id, attachment]
+        return [id, attachment];
       }),
-    )
+    );
   }
 
   return callCustomizer('interactionDataResolved', bot, payload, transformed, {
     shardId: extra?.shardId,
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
     partial: extra?.partial ?? false,
-  })
+  });
 }
 
 export function transformInteractionCallbackResponse(
@@ -305,32 +310,33 @@ export function transformInteractionCallbackResponse(
   payload: Partial<DiscordInteractionCallbackResponse>,
   extra?: { shardId?: number; partial?: boolean },
 ) {
-  const props = bot.transformers.desiredProperties.interactionCallbackResponse
-  const response = {} as SetupDesiredProps<InteractionCallbackResponse, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.interactionCallbackResponse;
+  const response = {} as SetupDesiredProps<InteractionCallbackResponse, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.interaction && payload.interaction) response.interaction = bot.transformers.interactionCallback(bot, payload.interaction)
-  if (props.resource && payload.resource) response.resource = bot.transformers.interactionResource(bot, payload.resource, { shardId: extra?.shardId })
+  if (props.interaction && payload.interaction) response.interaction = bot.transformers.interactionCallback(bot, payload.interaction);
+  if (props.resource && payload.resource)
+    response.resource = bot.transformers.interactionResource(bot, payload.resource, { shardId: extra?.shardId });
 
   return callCustomizer('interactionCallbackResponse', bot, payload, response, {
     shardId: extra?.shardId,
     partial: extra?.partial ?? false,
-  })
+  });
 }
 
 export function transformInteractionCallback(bot: Bot, payload: Partial<DiscordInteractionCallback>, extra?: { partial?: boolean }) {
-  const props = bot.transformers.desiredProperties.interactionCallback
-  const callback = {} as SetupDesiredProps<InteractionCallback, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.interactionCallback;
+  const callback = {} as SetupDesiredProps<InteractionCallback, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.id && payload.id) callback.id = bot.transformers.snowflake(payload.id)
-  if (props.type && payload.type) callback.type = payload.type
-  if (props.activityInstanceId && payload.activity_instance_id) callback.activityInstanceId = payload.activity_instance_id
-  if (props.responseMessageId && payload.response_message_id) callback.responseMessageId = bot.transformers.snowflake(payload.response_message_id)
-  if (props.responseMessageEphemeral && payload.response_message_ephemeral) callback.responseMessageEphemeral = payload.response_message_ephemeral
-  if (props.responseMessageLoading && payload.response_message_loading) callback.responseMessageLoading = payload.response_message_loading
+  if (props.id && payload.id) callback.id = bot.transformers.snowflake(payload.id);
+  if (props.type && payload.type) callback.type = payload.type;
+  if (props.activityInstanceId && payload.activity_instance_id) callback.activityInstanceId = payload.activity_instance_id;
+  if (props.responseMessageId && payload.response_message_id) callback.responseMessageId = bot.transformers.snowflake(payload.response_message_id);
+  if (props.responseMessageEphemeral && payload.response_message_ephemeral) callback.responseMessageEphemeral = payload.response_message_ephemeral;
+  if (props.responseMessageLoading && payload.response_message_loading) callback.responseMessageLoading = payload.response_message_loading;
 
   return callCustomizer('interactionCallback', bot, payload, callback, {
     partial: extra?.partial ?? false,
-  })
+  });
 }
 
 export function transformInteractionResource(
@@ -338,15 +344,15 @@ export function transformInteractionResource(
   payload: Partial<DiscordInteractionResource>,
   extra?: { shardId?: number; partial?: boolean },
 ) {
-  const props = bot.transformers.desiredProperties.interactionResource
-  const resource = {} as SetupDesiredProps<InteractionResource, TransformersDesiredProperties, DesiredPropertiesBehavior>
+  const props = bot.transformers.desiredProperties.interactionResource;
+  const resource = {} as SetupDesiredProps<InteractionResource, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.type && payload.type) resource.type = payload.type
-  if (props.activityInstance && payload.activity_instance) resource.activityInstance = payload.activity_instance
-  if (props.message && payload.message) resource.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId })
+  if (props.type && payload.type) resource.type = payload.type;
+  if (props.activityInstance && payload.activity_instance) resource.activityInstance = payload.activity_instance;
+  if (props.message && payload.message) resource.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId });
 
   return callCustomizer('interactionResource', bot, payload, resource, {
     shardId: extra?.shardId,
     partial: extra?.partial ?? false,
-  })
+  });
 }
