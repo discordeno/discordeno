@@ -1,6 +1,6 @@
-import type { DiscordEmoji } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { Emoji } from '../types.js'
+import type { DiscordEmoji } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { Emoji } from '../types.js';
 
 export function transformEmojiToDiscordEmoji(bot: Bot, payload: Emoji): DiscordEmoji {
   return {
@@ -12,5 +12,5 @@ export function transformEmojiToDiscordEmoji(bot: Bot, payload: Emoji): DiscordE
     managed: payload.toggles.managed,
     animated: payload.toggles.animated,
     available: payload.toggles.available,
-  }
+  };
 }

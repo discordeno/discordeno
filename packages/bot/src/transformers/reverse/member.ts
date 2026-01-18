@@ -1,10 +1,10 @@
-import type { DiscordMember, DiscordUser } from '@discordeno/types'
-import { iconBigintToHash } from '@discordeno/utils'
-import type { Bot } from '../../bot.js'
-import type { Member, User } from '../types.js'
+import type { DiscordMember, DiscordUser } from '@discordeno/types';
+import { iconBigintToHash } from '@discordeno/utils';
+import type { Bot } from '../../bot.js';
+import type { Member, User } from '../types.js';
 
 export function transformUserToDiscordUser(bot: Bot, payload: typeof bot.transformers.$inferredTypes.user): DiscordUser {
-  const _payload = payload as Partial<User>
+  const _payload = payload as Partial<User>;
 
   return {
     id: _payload.id!.toString(),
@@ -21,11 +21,11 @@ export function transformUserToDiscordUser(bot: Bot, payload: typeof bot.transfo
     system: _payload.toggles?.system,
     mfa_enabled: _payload.toggles?.mfaEnabled,
     verified: _payload.toggles?.verified,
-  }
+  };
 }
 
 export function transformMemberToDiscordMember(bot: Bot, payload: typeof bot.transformers.$inferredTypes.member): DiscordMember {
-  const _payload = payload as Partial<Member>
+  const _payload = payload as Partial<Member>;
 
   return {
     nick: _payload.nick ?? undefined,
@@ -46,5 +46,5 @@ export function transformMemberToDiscordMember(bot: Bot, payload: typeof bot.tra
         }
       : undefined,
     user: _payload.user ? bot.transformers.reverse.user(bot, _payload.user) : undefined,
-  }
+  };
 }

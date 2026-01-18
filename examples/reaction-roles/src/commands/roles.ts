@@ -1,4 +1,4 @@
-import assert from 'node:assert'
+import assert from 'node:assert';
 import {
   type ActionRow,
   type ButtonComponent,
@@ -6,12 +6,12 @@ import {
   MessageComponentTypes,
   type SelectMenuComponent,
   TextStyles,
-} from '@discordeno/bot'
-import { ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types'
-import { bot } from '../bot.js'
-import ItemCollector from '../collector.js'
-import { collectors } from '../events/interactionCreate.js'
-import type { Command } from './index.js'
+} from '@discordeno/bot';
+import { ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types';
+import { bot } from '../bot.js';
+import ItemCollector from '../collector.js';
+import { collectors } from '../events/interactionCreate.js';
+import type { Command } from './index.js';
 
 const command: Command = {
   name: 'roles',
@@ -73,22 +73,22 @@ const command: Command = {
     if (args.reactions?.create) {
       // Ensure that there is a channelId
       if (!interaction.channelId) {
-        await interaction.respond('Could not get the current channel.', { isPrivate: true })
-        return
+        await interaction.respond('Could not get the current channel.', { isPrivate: true });
+        return;
       }
 
       // This array is used to store all the roles for this reaction roles
-      let roles = [args.reactions.create]
+      let roles = [args.reactions.create];
 
       // Send the message that uses will use to get the role
       const roleMessage = await bot.helpers.sendMessage(interaction.channelId, {
         content: 'Pick your roles',
         components: getRoleButtons(roles),
-      })
+      });
 
       // Create a copy of the actionRow for the main message
       // NOTE: we use a copy so when we edit this actionRow the edits don't get applied to all the command executions, only this one, for example we do disable some buttons in some conditional cases
-      const messageActionRow = structuredClone(messageActionRowTemplate)
+      const messageActionRow = structuredClone(messageActionRowTemplate);
 
       const message = await interaction.respond(
         {
@@ -96,230 +96,230 @@ const command: Command = {
           components: [messageActionRow],
         },
         { isPrivate: true, withResponse: true },
-      )
+      );
 
       if (!message) {
-        await interaction.respond('❌ Unable to send the message correctly. Cancelling', { isPrivate: true })
-        return
+        await interaction.respond('❌ Unable to send the message correctly. Cancelling', { isPrivate: true });
+        return;
       }
 
-      assert('resource' in message && message.resource?.message)
+      assert('resource' in message && message.resource?.message);
 
       // Create the collector for the menu
-      const itemCollector = new ItemCollector<typeof bot.transformers.$inferredTypes.interaction>()
-      collectors.add(itemCollector)
+      const itemCollector = new ItemCollector<typeof bot.transformers.$inferredTypes.interaction>();
+      collectors.add(itemCollector);
 
       // For the new reaction role, we need to keep track of what the user gave us
-      let partialRoleInfo: Partial<(typeof roles)[number]> | undefined
+      let partialRoleInfo: Partial<(typeof roles)[number]> | undefined;
 
       itemCollector.onItem(async (i) => {
         // We need to verify the interaction is for us.
         if (i.message?.id !== message.resource?.message?.id) {
-          return
+          return;
         }
 
         // Save button
         if (i.data?.customId === 'reactionRoles-save') {
           // Remove this item collector from the list of collectors (we aren't correcting anymore)
-          collectors.delete(itemCollector)
+          collectors.delete(itemCollector);
 
           // Delete the edit message
-          await i.deferEdit()
-          await i.delete()
+          await i.deferEdit();
+          await i.delete();
 
-          return
+          return;
         }
 
         // New button
         if (i.data?.customId === 'reactionRoles-add') {
-          partialRoleInfo = {}
+          partialRoleInfo = {};
 
           // Ask the user for the role
-          await i.edit({ content: 'Pick a role for the new reaction role', components: [selectRoleActionRow] })
-          return
+          await i.edit({ content: 'Pick a role for the new reaction role', components: [selectRoleActionRow] });
+          return;
         }
 
         // New button - role select menu
         if (partialRoleInfo && i.data?.customId === 'reactionRoles-add-role') {
-          const roleToAdd = i.data?.resolved?.roles?.first()
+          const roleToAdd = i.data?.resolved?.roles?.first();
 
           // Verify that we could get the role from discord
           if (!roleToAdd) {
-            throw new Error('Unable to get the information for the role to add')
+            throw new Error('Unable to get the information for the role to add');
           }
 
           // Save it to our partial role information
-          partialRoleInfo.role = roleToAdd
+          partialRoleInfo.role = roleToAdd;
 
           // Ask the user for the color of the button
           await i.edit({
             content: 'Pick a color for the reaction role',
             components: [selectColorActionRow],
-          })
+          });
 
-          return
+          return;
         }
 
         // New button - color select menu
         if (partialRoleInfo && i.data?.customId === 'reactionRoles-add-color') {
-          const color = parseInt(i.data?.values?.[0] ?? 'NaN')
+          const color = parseInt(i.data?.values?.[0] ?? 'NaN');
 
           // Verify that we could get the color information
           if (isNaN(color)) {
-            throw new Error('Unable to get the information for the role to add')
+            throw new Error('Unable to get the information for the role to add');
           }
 
           // Save the color to our partial
-          partialRoleInfo.color = color
+          partialRoleInfo.color = color;
 
           // Ask the user to input the emoji and optionally a label for the button
           await i.respond({
             title: 'Pick an emoji and label for the reaction role',
             components: [selectEmojiActionRow, selectLabelActionRow],
             customId: 'reactionRoles-add-modal',
-          })
+          });
 
-          return
+          return;
         }
 
         // New button - emoji & label modal
         if (partialRoleInfo && i.data?.customId === 'reactionRoles-add-modal') {
           // Ensure that we can get the channelId from the interaction
           if (!interaction.channelId) {
-            throw new Error('Unable to get current channel')
+            throw new Error('Unable to get current channel');
           }
 
           // Get the data from discord
-          const emoji = i.data.components?.[0]?.components?.[0].value
-          const label = i.data.components?.[1]?.components?.[0].value
+          const emoji = i.data.components?.[0]?.components?.[0].value;
+          const label = i.data.components?.[1]?.components?.[0].value;
 
           // Verify that the emoji was given
           if (!emoji) {
-            throw new Error('Unable to get the information for the role to add')
+            throw new Error('Unable to get the information for the role to add');
           }
 
           // Save them to our partial
-          partialRoleInfo.emoji = emoji
-          partialRoleInfo.label = label
+          partialRoleInfo.emoji = emoji;
+          partialRoleInfo.label = label;
 
           // Save role and display the new message editing the old one
 
           // We are sure that in this place the entire object has been assembled
-          roles.push(partialRoleInfo as (typeof roles)[number])
+          roles.push(partialRoleInfo as (typeof roles)[number]);
 
           await bot.helpers.editMessage(interaction.channelId, roleMessage.id, {
             components: getRoleButtons(roles),
-          })
+          });
 
           // Clear our partial roleInfo, we are done with it
-          partialRoleInfo = undefined
+          partialRoleInfo = undefined;
           // In case the delete button was disabled (all the roles were deleted) re-enable it
-          messageActionRow.components[1]!.disabled = false
+          messageActionRow.components[1]!.disabled = false;
 
           // Discord imposes a limit of 5 action rows and 5 buttons for actionRow = 25 buttons max
           // more than 25 will give an error, so we disable the new button
           if (roles.length === 25) {
-            const button = messageActionRow.components[0] as ButtonComponent
-            button.disabled = true
+            const button = messageActionRow.components[0] as ButtonComponent;
+            button.disabled = true;
           }
 
           // Show again the main edit menu
           await interaction.edit({
             content: 'Use the buttons in this message to edit the message below.',
             components: [messageActionRow],
-          })
+          });
 
           // Respond to the modal. A modal submit (type 5) interaction can't edit the original response
-          await i.respond('Reaction role created successfully. You can use the message above to add/remove a role', { isPrivate: true })
+          await i.respond('Reaction role created successfully. You can use the message above to add/remove a role', { isPrivate: true });
 
-          return
+          return;
         }
 
         // Remove button
         if (i.data?.customId === 'reactionRoles-remove') {
           // Clone the actionRow for the remove select menu, this is to prevent unwanted data to appear to other users
-          const removeActionRow = structuredClone(removeActionRowTemplate)
-          const selectMenu = removeActionRow.components[0] as SelectMenuComponent
+          const removeActionRow = structuredClone(removeActionRowTemplate);
+          const selectMenu = removeActionRow.components[0] as SelectMenuComponent;
 
           // Add the possible values for this select menu
           for (const roleInfo of roles) {
             selectMenu.options.push({
               label: `${roleInfo.emoji} ${roleInfo.label ?? ''}`,
               value: roleInfo.role.id.toString(),
-            })
+            });
           }
 
           // Ask the user for what reaction role they want to remove
           await i.edit({
             content: 'Select what reaction role to remove',
             components: [removeActionRow],
-          })
+          });
 
-          return
+          return;
         }
 
         // Remove button - role select menu
         if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
           // Ensure that we can get the channelId from the interaction
           if (!interaction.channelId) {
-            throw new Error('Unable to get current channel')
+            throw new Error('Unable to get current channel');
           }
 
           // Get the role to delete from discord
-          const roleToRemove = i.data?.values?.[0]
+          const roleToRemove = i.data?.values?.[0];
 
           // Ensure we got it
           if (!roleToRemove) {
-            throw new Error('Unable to get the role to remove')
+            throw new Error('Unable to get the role to remove');
           }
 
-          await i.deferEdit()
+          await i.deferEdit();
 
           // Remove the role from the list
-          roles = roles.filter((roleInfo) => roleInfo.role.id.toString() !== roleToRemove)
+          roles = roles.filter((roleInfo) => roleInfo.role.id.toString() !== roleToRemove);
 
           // Edit the main button
           await bot.helpers.editMessage(interaction.channelId, roleMessage.id, {
             components: getRoleButtons(roles),
-          })
+          });
 
           // If the new button was disabled (we were at 25 buttons) we re-enable it
-          const button = messageActionRow.components[0] as ButtonComponent
-          button.disabled = false
+          const button = messageActionRow.components[0] as ButtonComponent;
+          button.disabled = false;
 
           // If we are at 0 roles, and the user tried to delete a role they will get locked in the menu, so we disable it
           if (roles.length === 0) {
-            messageActionRow.components[1]!.disabled = true
+            messageActionRow.components[1]!.disabled = true;
           }
 
           // Show the main edit ui (new, remove, save)
           await i.edit({
             content: 'Use the buttons in this message to edit the message below.',
             components: [messageActionRow],
-          })
+          });
 
-          return
+          return;
         }
 
         // We don't know what code to run for this interaction
-        throw new Error('Unknown button')
-      })
+        throw new Error('Unknown button');
+      });
     }
   },
-}
+};
 
-export default command
+export default command;
 
 // Interface to type the arguments that we receive from discord
 interface CommandArgs {
   reactions?: {
     create?: {
-      role: typeof bot.transformers.$inferredTypes.role
-      emoji: string
-      color: ButtonStyles
-      label?: string
-    }
-  }
+      role: typeof bot.transformers.$inferredTypes.role;
+      emoji: string;
+      color: ButtonStyles;
+      label?: string;
+    };
+  };
 }
 
 // Templates/ActionRows for the command to then be referenced in the various part of the code
@@ -357,7 +357,7 @@ const messageActionRowTemplate: ActionRow = {
       label: 'Save',
     },
   ],
-} as const
+} as const;
 
 const removeActionRowTemplate: ActionRow = {
   type: MessageComponentTypes.ActionRow,
@@ -371,7 +371,7 @@ const removeActionRowTemplate: ActionRow = {
       options: [],
     },
   ],
-} as const
+} as const;
 
 const selectRoleActionRow: ActionRow = {
   type: MessageComponentTypes.ActionRow,
@@ -384,7 +384,7 @@ const selectRoleActionRow: ActionRow = {
       placeholder: 'Select a role',
     },
   ],
-} as const
+} as const;
 
 const selectColorActionRow: ActionRow = {
   type: MessageComponentTypes.ActionRow,
@@ -400,7 +400,7 @@ const selectColorActionRow: ActionRow = {
       ],
     },
   ],
-} as const
+} as const;
 
 const selectEmojiActionRow: ActionRow = {
   type: MessageComponentTypes.ActionRow,
@@ -413,7 +413,7 @@ const selectEmojiActionRow: ActionRow = {
       required: true,
     },
   ],
-} as const
+} as const;
 
 const selectLabelActionRow: ActionRow = {
   type: MessageComponentTypes.ActionRow,
@@ -427,37 +427,37 @@ const selectLabelActionRow: ActionRow = {
       maxLength: 80,
     },
   ],
-} as const
+} as const;
 
 // Function to get all the actionRows with buttons for the reaction roles message
 function getRoleButtons(
   roles: Array<{
-    role: typeof bot.transformers.$inferredTypes.role
-    emoji: string
-    color: ButtonStyles
-    label?: string | undefined
+    role: typeof bot.transformers.$inferredTypes.role;
+    emoji: string;
+    color: ButtonStyles;
+    label?: string | undefined;
   }>,
 ): ActionRow[] {
-  const actionRows: ActionRow[] = []
+  const actionRows: ActionRow[] = [];
 
   // If there aren't any roles, we don't need any buttons
-  if (roles.length === 0) return actionRows
+  if (roles.length === 0) return actionRows;
 
   // We add the components later, so we need to make typescript know that we are sure that it will be a compatibile components array
-  actionRows.push({ type: MessageComponentTypes.ActionRow, components: [] as unknown as ActionRow['components'] })
+  actionRows.push({ type: MessageComponentTypes.ActionRow, components: [] as unknown as ActionRow['components'] });
 
   for (const roleInfo of roles) {
-    let actionRow = actionRows.at(-1)
+    let actionRow = actionRows.at(-1);
 
     // Ensure that we were able to get the actionRow
     if (!actionRow) {
-      throw new Error('Unable to get actionRow')
+      throw new Error('Unable to get actionRow');
     }
 
     // If the actionRow is full (has 5 buttons) add a new one
     if (actionRow.components.length === 5) {
-      actionRow = { type: MessageComponentTypes.ActionRow, components: [] as unknown as ActionRow['components'] }
-      actionRows.push(actionRow)
+      actionRow = { type: MessageComponentTypes.ActionRow, components: [] as unknown as ActionRow['components'] };
+      actionRows.push(actionRow);
     }
 
     // Add the new button to this actionRow
@@ -469,8 +469,8 @@ function getRoleButtons(
       },
       label: roleInfo.label,
       customId: `reactionRoles-role-${roleInfo.role.id}`,
-    })
+    });
   }
 
-  return actionRows
+  return actionRows;
 }

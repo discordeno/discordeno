@@ -1,12 +1,12 @@
-import { Background, Controls, type Edge, type Node, Position, ReactFlow } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+import { Background, Controls, type Edge, type Node, Position, ReactFlow } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 export const defaultNodeOptions = {
   targetPosition: Position.Top,
   sourcePosition: Position.Bottom,
   draggable: false,
   style: { width: '70px', height: '50px', padding: '10px 0' },
-}
+};
 
 const genServer = (x: number, id: number) => {
   const server: Node<any, string>[] = [
@@ -15,7 +15,7 @@ const genServer = (x: number, id: number) => {
       data: { label: `Server ${id + 1}` },
       position: { x: x - 42.5, y: 100 },
     },
-  ]
+  ];
 
   for (let i = 0; i < 4; i++) {
     if (i === 2) {
@@ -36,8 +36,8 @@ const genServer = (x: number, id: number) => {
             label: '.....',
           },
         },
-      )
-      continue
+      );
+      continue;
     }
     server.push(
       ...[
@@ -65,11 +65,11 @@ const genServer = (x: number, id: number) => {
           },
         },
       ],
-    )
+    );
   }
 
-  return server
-}
+  return server;
+};
 
 const nodes = [
   {
@@ -89,7 +89,7 @@ const nodes = [
       label: '...............',
     },
   },
-]
+];
 
 const edges: Edge<any>[] = [
   { id: 'gwm-s1', source: 'gwm', target: 's1', type: 'step' },
@@ -113,10 +113,10 @@ const edges: Edge<any>[] = [
   { id: 'w451-w451s', source: 'w451', target: 'w451s', type: 'step' },
   { id: 'w452-w452s', source: 'w452', target: 'w452s', type: 'step' },
   { id: 'w500-w500s', source: 'w500', target: 'w500s', type: 'step' },
-]
+];
 
 function Flow() {
-  const colorMode = document.documentElement.dataset['theme'] || 'light'
+  const colorMode = document.documentElement.dataset['theme'] || 'light';
 
   return (
     <div style={{ height: '40vh' }}>
@@ -142,7 +142,7 @@ function Flow() {
         <Controls />
       </ReactFlow>
     </div>
-  )
+  );
 }
 
-export default Flow
+export default Flow;

@@ -1,6 +1,6 @@
-import { expect } from 'chai'
-import { describe, it } from 'mocha'
-import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '../src/typeguards.js'
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '../src/typeguards.js';
 
 describe('typeguard.ts', () => {
   describe('isGetMessagesAfter function', () => {
@@ -9,13 +9,13 @@ describe('typeguard.ts', () => {
         isGetMessagesAfter({
           after: '684146387468463',
         }),
-      ).equal(true)
-    })
+      ).equal(true);
+    });
 
     it("will return false if don't has after", () => {
-      expect(isGetMessagesAfter({})).equal(false)
-    })
-  })
+      expect(isGetMessagesAfter({})).equal(false);
+    });
+  });
 
   describe('isGetMessagesBefore function', () => {
     it('will return true if has after', () => {
@@ -23,13 +23,13 @@ describe('typeguard.ts', () => {
         isGetMessagesBefore({
           before: '684146387468463',
         }),
-      ).equal(true)
-    })
+      ).equal(true);
+    });
 
     it("will return false if don't has after", () => {
-      expect(isGetMessagesBefore({})).equal(false)
-    })
-  })
+      expect(isGetMessagesBefore({})).equal(false);
+    });
+  });
 
   describe('isGetMessagesAround function', () => {
     it('will return true if has after', () => {
@@ -37,13 +37,13 @@ describe('typeguard.ts', () => {
         isGetMessagesAround({
           around: '684146387468463',
         }),
-      ).equal(true)
-    })
+      ).equal(true);
+    });
 
     it("will return false if don't has after", () => {
-      expect(isGetMessagesAround({})).equal(false)
-    })
-  })
+      expect(isGetMessagesAround({})).equal(false);
+    });
+  });
 
   describe('isGetMessagesAfter function', () => {
     it('will return true if has after', () => {
@@ -51,11 +51,11 @@ describe('typeguard.ts', () => {
         isGetMessagesLimit({
           limit: 54,
         }),
-      ).equal(true)
-    })
+      ).equal(true);
+    });
 
     it("will return false if don't has after", () => {
-      expect(isGetMessagesLimit({})).equal(false)
-    })
-  })
-})
+      expect(isGetMessagesLimit({})).equal(false);
+    });
+  });
+});

@@ -3,25 +3,25 @@
 /** https://discord.com/developers/docs/resources/entitlement#entitlement-object-entitlement-structure */
 export interface DiscordEntitlement {
   /** ID of the entitlement */
-  id: string
+  id: string;
   /** ID of the SKU */
-  sku_id: string
+  sku_id: string;
   /** ID of the parent application */
-  application_id: string
+  application_id: string;
   /** ID of the user that is granted access to the entitlement's sku */
-  user_id?: string
+  user_id?: string;
   /** Type of entitlement */
-  type: DiscordEntitlementType
+  type: DiscordEntitlementType;
   /** Entitlement was deleted */
-  deleted: boolean
+  deleted: boolean;
   /** Start date at which the entitlement is valid. */
-  starts_at: string | null
+  starts_at: string | null;
   /** Date at which the entitlement is no longer valid. */
-  ends_at: string | null
+  ends_at: string | null;
   /** ID of the guild that is granted access to the entitlement's sku */
-  guild_id?: string
+  guild_id?: string;
   /** For consumable items, whether or not the entitlement has been consumed */
-  consumed?: boolean
+  consumed?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/entitlement#entitlement-object-entitlement-types */

@@ -1,10 +1,10 @@
-import fastifyEnv from '@fastify/env'
-import fastifyHelmet from '@fastify/helmet'
-import fastifyMultipart from '@fastify/multipart'
-import fastify, { type FastifyInstance } from 'fastify'
+import fastifyEnv from '@fastify/env';
+import fastifyHelmet from '@fastify/helmet';
+import fastifyMultipart from '@fastify/multipart';
+import fastify, { type FastifyInstance } from 'fastify';
 
 export const buildFastifyApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
+  const app = await fastify();
 
   await app.register(fastifyEnv, {
     schema: {
@@ -25,28 +25,28 @@ export const buildFastifyApp = async (): Promise<FastifyInstance> => {
       },
       required: ['DISCORD_TOKEN', 'AUTHORIZATION_TOKEN'],
     },
-  })
+  });
 
-  await app.register(fastifyHelmet)
-  app.register(fastifyMultipart, { attachFieldsToBody: true })
+  await app.register(fastifyHelmet);
+  app.register(fastifyMultipart, { attachFieldsToBody: true });
 
   app.addHook('onRequest', async (request, reply) => {
     if (request.headers.authorization !== request.server.config.AUTHORIZATION_TOKEN) {
       reply.status(401).send({
         message: 'Credentials not valid.',
-      })
+      });
     }
-  })
+  });
 
-  return app
-}
+  return app;
+};
 
 declare module 'fastify' {
   interface FastifyInstance {
     config: {
-      HOST: string
-      DISCORD_TOKEN: string
-      AUTHORIZATION_TOKEN: string
-    }
+      HOST: string;
+      DISCORD_TOKEN: string;
+      AUTHORIZATION_TOKEN: string;
+    };
   }
 }
