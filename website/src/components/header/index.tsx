@@ -1,5 +1,5 @@
-import Link from '@docusaurus/Link'
-import style from './index.module.css'
+import Link from '@docusaurus/Link';
+import style from './index.module.css';
 
 export default function DiscordenoHeader() {
   return (
@@ -16,5 +16,5 @@ export default function DiscordenoHeader() {
         </div>
       </div>
     </>
-  )
+  );
 }

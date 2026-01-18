@@ -1,7 +1,7 @@
-import type { RecursivePartial } from '@discordeno/types'
-import type { Collection } from '@discordeno/utils'
-import type { Bot } from './bot.js'
-import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from './commandOptionsParser.js'
+import type { RecursivePartial } from '@discordeno/types';
+import type { Collection } from '@discordeno/utils';
+import type { Bot } from './bot.js';
+import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from './commandOptionsParser.js';
 import type {
   ActivityInstance,
   ActivityLocation,
@@ -56,7 +56,7 @@ import type {
   UserPrimaryGuild,
   VoiceState,
   Webhook,
-} from './transformers/types.js'
+} from './transformers/types.js';
 
 /**
  * All the objects that support desired properties
@@ -64,59 +64,59 @@ import type {
  * @private This is subject to breaking changes at any time
  */
 export interface TransformersObjects {
-  activityInstance: ActivityInstance
-  activityLocation: ActivityLocation
-  attachment: Attachment
-  avatarDecorationData: AvatarDecorationData
-  channel: Channel
-  collectibles: Collectibles
-  component: Component
-  defaultReactionEmoji: DefaultReactionEmoji
-  emoji: Emoji
-  entitlement: Entitlement
-  forumTag: ForumTag
-  guild: Guild
-  guildOnboarding: GuildOnboarding
-  guildOnboardingPrompt: GuildOnboardingPrompt
-  guildOnboardingPromptOption: GuildOnboardingPromptOption
-  incidentsData: IncidentsData
-  interaction: Interaction
-  interactionCallback: InteractionCallback
-  interactionCallbackResponse: InteractionCallbackResponse
-  interactionResource: InteractionResource
-  invite: Invite
-  inviteStageInstance: InviteStageInstance
-  lobby: Lobby
-  lobbyMember: LobbyMember
-  mediaGalleryItem: MediaGalleryItem
-  member: Member
-  message: Message
-  messageCall: MessageCall
-  messageInteraction: MessageInteraction
-  messageInteractionMetadata: MessageInteractionMetadata
-  messagePin: MessagePin
-  messageReference: MessageReference
-  messageSnapshot: MessageSnapshot
-  nameplate: Nameplate
-  poll: Poll
-  pollAnswer: PollAnswer
-  pollAnswerCount: PollAnswerCount
-  pollMedia: PollMedia
-  pollResult: PollResult
-  role: Role
-  roleColors: RoleColors
-  scheduledEvent: ScheduledEvent
-  scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule
-  sku: Sku
-  soundboardSound: SoundboardSound
-  stageInstance: StageInstance
-  sticker: Sticker
-  subscription: Subscription
-  unfurledMediaItem: UnfurledMediaItem
-  user: User
-  userPrimaryGuild: UserPrimaryGuild
-  voiceState: VoiceState
-  webhook: Webhook
+  activityInstance: ActivityInstance;
+  activityLocation: ActivityLocation;
+  attachment: Attachment;
+  avatarDecorationData: AvatarDecorationData;
+  channel: Channel;
+  collectibles: Collectibles;
+  component: Component;
+  defaultReactionEmoji: DefaultReactionEmoji;
+  emoji: Emoji;
+  entitlement: Entitlement;
+  forumTag: ForumTag;
+  guild: Guild;
+  guildOnboarding: GuildOnboarding;
+  guildOnboardingPrompt: GuildOnboardingPrompt;
+  guildOnboardingPromptOption: GuildOnboardingPromptOption;
+  incidentsData: IncidentsData;
+  interaction: Interaction;
+  interactionCallback: InteractionCallback;
+  interactionCallbackResponse: InteractionCallbackResponse;
+  interactionResource: InteractionResource;
+  invite: Invite;
+  inviteStageInstance: InviteStageInstance;
+  lobby: Lobby;
+  lobbyMember: LobbyMember;
+  mediaGalleryItem: MediaGalleryItem;
+  member: Member;
+  message: Message;
+  messageCall: MessageCall;
+  messageInteraction: MessageInteraction;
+  messageInteractionMetadata: MessageInteractionMetadata;
+  messagePin: MessagePin;
+  messageReference: MessageReference;
+  messageSnapshot: MessageSnapshot;
+  nameplate: Nameplate;
+  poll: Poll;
+  pollAnswer: PollAnswer;
+  pollAnswerCount: PollAnswerCount;
+  pollMedia: PollMedia;
+  pollResult: PollResult;
+  role: Role;
+  roleColors: RoleColors;
+  scheduledEvent: ScheduledEvent;
+  scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule;
+  sku: Sku;
+  soundboardSound: SoundboardSound;
+  stageInstance: StageInstance;
+  sticker: Sticker;
+  subscription: Subscription;
+  unfurledMediaItem: UnfurledMediaItem;
+  user: User;
+  userPrimaryGuild: UserPrimaryGuild;
+  voiceState: VoiceState;
+  webhook: Webhook;
 }
 
 // NOTE: the top-level objects need both the dependencies and alwaysPresents even if empty when the key is specified, this is due the extends & nullability on DesiredPropertiesMetadata
@@ -130,102 +130,107 @@ export interface TransformersObjects {
 export interface TransformersDesiredPropertiesMetadata extends DesiredPropertiesMetadata {
   channel: {
     dependencies: {
-      archived: ['toggles']
-      invitable: ['toggles']
-      locked: ['toggles']
-      nsfw: ['toggles']
-      newlyCreated: ['toggles']
-      managed: ['toggles']
-    }
-    alwaysPresents: ['toggles', 'internalOverwrites', 'internalThreadMetadata']
-  }
+      archived: ['toggles'];
+      invitable: ['toggles'];
+      locked: ['toggles'];
+      nsfw: ['toggles'];
+      newlyCreated: ['toggles'];
+      managed: ['toggles'];
+    };
+    alwaysPresents: ['toggles', 'internalOverwrites', 'internalThreadMetadata'];
+  };
 
   guild: {
     dependencies: {
-      threads: ['channels']
-      features: ['toggles']
-    }
-    alwaysPresents: []
-  }
+      threads: ['channels'];
+      features: ['toggles'];
+    };
+    alwaysPresents: [];
+  };
 
   interaction: {
     dependencies: {
-      respond: ['type', 'token', 'id']
-      edit: ['type', 'token', 'id']
-      deferEdit: ['type', 'token', 'id']
-      defer: ['type', 'token', 'id']
-      delete: ['type', 'token']
-    }
-    alwaysPresents: ['bot', 'acknowledged']
-  }
+      respond: ['type', 'token', 'id'];
+      edit: ['type', 'token', 'id'];
+      deferEdit: ['type', 'token', 'id'];
+      defer: ['type', 'token', 'id'];
+      delete: ['type', 'token'];
+    };
+    alwaysPresents: ['bot', 'acknowledged'];
+  };
 
   member: {
     dependencies: {
-      deaf: ['toggles']
-      mute: ['toggles']
-      pending: ['toggles']
-      flags: ['toggles']
-      didRejoin: ['toggles']
-      startedOnboarding: ['toggles']
-      bypassesVerification: ['toggles']
-      completedOnboarding: ['toggles']
-    }
-    alwaysPresents: []
-  }
+      deaf: ['toggles'];
+      mute: ['toggles'];
+      pending: ['toggles'];
+      flags: ['toggles'];
+      didRejoin: ['toggles'];
+      startedOnboarding: ['toggles'];
+      bypassesVerification: ['toggles'];
+      completedOnboarding: ['toggles'];
+    };
+    alwaysPresents: [];
+  };
 
   message: {
     dependencies: {
-      crossposted: ['flags']
-      ephemeral: ['flags']
-      failedToMentionSomeRolesInThread: ['flags']
-      hasThread: ['flags']
-      isCrosspost: ['flags']
-      loading: ['flags']
-      mentionedUserIds: ['mentions']
-      mentionEveryone: ['bitfield']
-      pinned: ['bitfield']
-      sourceMessageDeleted: ['flags']
-      suppressEmbeds: ['flags']
-      suppressNotifications: ['flags']
-      timestamp: ['id']
-      tts: ['bitfield']
-      urgent: ['flags']
-    }
-    alwaysPresents: ['bitfield', 'flags']
-  }
+      crossposted: ['flags'];
+      ephemeral: ['flags'];
+      failedToMentionSomeRolesInThread: ['flags'];
+      hasThread: ['flags'];
+      isCrosspost: ['flags'];
+      loading: ['flags'];
+      mentionedUserIds: ['mentions'];
+      mentionEveryone: ['bitfield'];
+      pinned: ['bitfield'];
+      sourceMessageDeleted: ['flags'];
+      suppressEmbeds: ['flags'];
+      suppressNotifications: ['flags'];
+      timestamp: ['id'];
+      tts: ['bitfield'];
+      urgent: ['flags'];
+    };
+    alwaysPresents: ['bitfield', 'flags'];
+  };
 
   role: {
     dependencies: {
-      hoist: ['toggles']
-      managed: ['toggles']
-      mentionable: ['toggles']
-      premiumSubscriber: ['toggles']
-      availableForPurchase: ['toggles']
-      guildConnections: ['toggles']
-    }
-    alwaysPresents: ['internalTags']
-  }
+      hoist: ['toggles'];
+      managed: ['toggles'];
+      mentionable: ['toggles'];
+      premiumSubscriber: ['toggles'];
+      availableForPurchase: ['toggles'];
+      guildConnections: ['toggles'];
+    };
+    alwaysPresents: ['internalTags'];
+  };
 
   user: {
     dependencies: {
-      tag: ['username', 'discriminator']
-      bot: ['toggles']
-      system: ['toggles']
-      mfaEnabled: ['toggles']
-      verified: ['toggles']
-    }
-    alwaysPresents: []
-  }
+      tag: ['username', 'discriminator'];
+      bot: ['toggles'];
+      system: ['toggles'];
+      mfaEnabled: ['toggles'];
+      verified: ['toggles'];
+      avatarUrl: ['avatar', 'id'];
+      displayName: ['username', 'globalName'];
+      defaultAvatarUrl: ['id', 'discriminator'];
+      displayAvatarUrl: ['avatar', 'id', 'discriminator'];
+      createdTimestamp: ['id'];
+    };
+    alwaysPresents: [];
+  };
 
   emoji: {
     dependencies: {
-      animated: ['toggles']
-      available: ['toggles']
-      managed: ['toggles']
-      requireColons: ['toggles']
-    }
-    alwaysPresents: ['toggles']
-  }
+      animated: ['toggles'];
+      available: ['toggles'];
+      managed: ['toggles'];
+      requireColons: ['toggles'];
+    };
+    alwaysPresents: ['toggles'];
+  };
 }
 
 export function createDesiredPropertiesObject<T extends RecursivePartial<TransformersDesiredProperties>, TDefault extends boolean = false>(
@@ -854,35 +859,35 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       flags: defaultValue,
       ...desiredProperties.lobbyMember,
     },
-  } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>
+  } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>;
 }
 
 /** @private This is subject to breaking changes without notices */
 export type KeyByValue<TObj, TValue> = {
-  [Key in keyof TObj]: TObj[Key] extends TValue ? Key : never
-}[keyof TObj]
+  [Key in keyof TObj]: TObj[Key] extends TValue ? Key : never;
+}[keyof TObj];
 
 /** @private This is subject to breaking changes without notices */
 export type Complete<TObj, TDefault> = {
-  [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>
-}
+  [K in keyof TObj]-?: undefined extends TObj[K] ? TDefault : Exclude<TObj[K], undefined>;
+};
 
 /** @private This is subject to breaking changes without notices */
 export type JoinTuple<T extends string[], TDelimiter extends string> = T extends readonly [infer F extends string, ...infer R extends string[]]
   ? R['length'] extends 0
     ? F
     : `${F}${TDelimiter}${JoinTuple<R, TDelimiter>}`
-  : ''
+  : '';
 
 /** @private This is subject to breaking changes without notices */
 export type DesiredPropertiesMetadata = {
   [K in keyof TransformersObjects]: {
     dependencies?: {
-      [Key in keyof TransformersObjects[K]]?: (keyof TransformersObjects[K])[]
-    }
-    alwaysPresents?: (keyof TransformersObjects[K])[]
-  }
-}
+      [Key in keyof TransformersObjects[K]]?: (keyof TransformersObjects[K])[];
+    };
+    alwaysPresents?: (keyof TransformersObjects[K])[];
+  };
+};
 
 /** @private This is subject to breaking changes without notices */
 export type DesirableProperties<
@@ -896,24 +901,24 @@ export type DesirableProperties<
   | (keyof T extends NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number]
       ? never
       : NonNullable<TransformersDesiredPropertiesMetadata[TKey]['alwaysPresents']>[number])
->
+>;
 
 /** @private This is subject to breaking changes without notices */
 export type DesiredPropertiesMapper<T extends TransformersObjects[keyof TransformersObjects]> = {
-  [Key in DesirableProperties<T>]: boolean
-}
+  [Key in DesirableProperties<T>]: boolean;
+};
 
-declare const TypeErrorSymbol: unique symbol
+declare const TypeErrorSymbol: unique symbol;
 
 /** @private This is subject to breaking changes without notices */
 export interface DesiredPropertiesError<T extends string> {
-  [TypeErrorSymbol]: T
+  [TypeErrorSymbol]: T;
 }
 
 /** @private This is subject to breaking changes without notices */
 export type AreDependenciesSatisfied<T, TDependencies extends Record<string, string[]> | undefined, TProps> = {
-  [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : false
-}
+  [K in keyof T]: IsKeyDesired<T[K], TDependencies, TProps> extends true ? true : false;
+};
 
 /** @private This is subject to breaking changes without notices */
 export type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | undefined, TProps> = TKey extends keyof TProps // The key has a desired props?
@@ -932,7 +937,7 @@ export type IsKeyDesired<TKey, TDependencies extends Record<string, string[]> | 
       : // No, this is a key to not include
         DesiredPropertiesError<`This property depends on the following properties: ${JoinTuple<NonNullable<TDependencies>[TKey], ', '>}. Not all of these props are set as desired in desiredProperties option in createBot(), so you can't use it. More info here: https://discordeno.js.org/desired-props`>
     : // No, we include it but it does not have neither props nor dependencies
-      true
+      true;
 
 /** The behavior it should be used when resolving an undesired property */
 export enum DesiredPropertiesBehavior {
@@ -949,7 +954,7 @@ export type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredPrope
   TProps[KeyByValue<TransformersObjects, T>]
 > extends true
   ? Key
-  : never
+  : never;
 
 /** @private This is subject to breaking changes without notices */
 export type GetErrorWhenUndesired<
@@ -963,10 +968,10 @@ export type GetErrorWhenUndesired<
     TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
     TProps[KeyByValue<TransformersObjects, T>]
   >,
-> = TIsDesired extends true ? TransformProperty<T[Key], TProps, TBehavior> : TIsDesired
+> = TIsDesired extends true ? TransformProperty<T[Key], TProps, TBehavior> : TIsDesired;
 
 /** @private This is subject to breaking changes without notices */
-export type IsObject<T> = T extends object ? (T extends Function ? false : true) : false
+export type IsObject<T> = T extends object ? (T extends Function ? false : true) : false;
 
 // If the object is a transformed object, a collection of transformed object or an array of transformed objects we need to apply the desired props to them as well
 // NOTE: changing the order of these ternaries can cause bugs, for this reason we check in this order:
@@ -1010,7 +1015,7 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
               ? // Yes, we need to ensure nested inside there aren't transformed objects
                 { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
               : // No, this is a normal value such as string / bigint / number
-                T
+                T;
 
 /**
  * Apply desired properties to a transformer object.
@@ -1026,17 +1031,17 @@ export type SetupDesiredProps<
     : Key]: // When the behavior is to change the type we use the GetErrorWhenUndesired type helper else apply the desired props to the key and return
   TBehavior extends DesiredPropertiesBehavior.ChangeType
     ? GetErrorWhenUndesired<Key, T, TProps, TBehavior>
-    : TransformProperty<T[Key], TProps, TBehavior>
-}
+    : TransformProperty<T[Key], TProps, TBehavior>;
+};
 
 /**
  * The desired properties for each transformer object.
  */
 export type TransformersDesiredProperties = {
-  [Key in keyof TransformersObjects]: DesiredPropertiesMapper<TransformersObjects[Key]>
-}
+  [Key in keyof TransformersObjects]: DesiredPropertiesMapper<TransformersObjects[Key]>;
+};
 
 /** @private This is subject to breaking changes without notices */
 export type CompleteDesiredProperties<T extends RecursivePartial<TransformersDesiredProperties>, TTDefault extends boolean = false> = {
-  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TTDefault>
-}
+  [K in keyof TransformersDesiredProperties]: Complete<Partial<TransformersDesiredProperties[K]> & T[K], TTDefault>;
+};

@@ -1,6 +1,6 @@
-import { Collection, createBot, Intents } from '@discordeno/bot'
-import { configs } from './config.js'
-import type { Command } from './types/commands.js'
+import { Collection, createBot, Intents } from '@discordeno/bot';
+import { configs } from './config.js';
+import type { Command } from './types/commands.js';
 
 const rawBot = createBot({
   token: configs.token,
@@ -13,11 +13,11 @@ const rawBot = createBot({
       token: true,
     },
   },
-})
+});
 
-export const bot = rawBot as BotWithCommands
+export const bot = rawBot as BotWithCommands;
 
 // Create the command collection
-bot.commands = new Collection()
+bot.commands = new Collection();
 
-export type BotWithCommands = typeof rawBot & { commands: Collection<string, Command> }
+export type BotWithCommands = typeof rawBot & { commands: Collection<string, Command> };

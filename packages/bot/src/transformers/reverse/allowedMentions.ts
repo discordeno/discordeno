@@ -1,5 +1,5 @@
-import type { AllowedMentions, DiscordAllowedMentions } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { AllowedMentions, DiscordAllowedMentions } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export function transformAllowedMentionsToDiscordAllowedMentions(_bot: Bot, mentions: AllowedMentions): DiscordAllowedMentions {
   return {
@@ -7,5 +7,5 @@ export function transformAllowedMentionsToDiscordAllowedMentions(_bot: Bot, ment
     replied_user: mentions.repliedUser,
     users: mentions.users?.map((id) => id.toString()),
     roles: mentions.roles?.map((id) => id.toString()),
-  }
+  };
 }

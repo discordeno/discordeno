@@ -1,6 +1,6 @@
-import type { DiscordAutoModerationRule } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { AutoModerationRule } from './types.js'
+import type { DiscordAutoModerationRule } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { AutoModerationRule } from './types.js';
 
 export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule): AutoModerationRule {
   const rule = {
@@ -20,6 +20,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
           presets: payload.trigger_metadata.presets,
           allowList: payload.trigger_metadata.allow_list,
           mentionTotalLimit: payload.trigger_metadata.mention_total_limit,
+          mentionRaidProtectionEnabled: payload.trigger_metadata.mention_raid_protection_enabled,
         }
       : undefined,
     actions: payload.actions.map((action) => ({
@@ -32,7 +33,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
           }
         : undefined,
     })),
-  } as AutoModerationRule
+  } as AutoModerationRule;
 
-  return bot.transformers.customizers.automodRule(bot, payload, rule)
+  return bot.transformers.customizers.automodRule(bot, payload, rule);
 }

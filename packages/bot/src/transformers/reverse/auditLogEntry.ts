@@ -1,7 +1,7 @@
-import type { DiscordAuditLogEntry } from '@discordeno/types'
-import { snakelize } from '@discordeno/utils'
-import type { Bot } from '../../bot.js'
-import type { AuditLogEntry } from '../types.js'
+import type { DiscordAuditLogEntry } from '@discordeno/types';
+import { snakelize } from '@discordeno/utils';
+import type { Bot } from '../../bot.js';
+import type { AuditLogEntry } from '../types.js';
 
 export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
   return {
@@ -29,5 +29,5 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
         }
       : undefined,
     reason: payload.reason,
-  }
+  };
 }
