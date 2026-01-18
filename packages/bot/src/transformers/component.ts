@@ -198,19 +198,19 @@ function transformSelectMenuComponent(bot: Bot, payload: Partial<DiscordSelectMe
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
   } else {
-    payload = payload as Partial<DiscordSelectMenuComponent>;
+    const _payload = payload as Partial<DiscordSelectMenuComponent>;
 
-    if (props.placeholder && payload.placeholder) select.placeholder = payload.placeholder;
-    if (props.minValues && payload.min_values) select.minValues = payload.min_values;
-    if (props.maxValues && payload.max_values) select.maxValues = payload.max_values;
-    if (props.defaultValues && payload.default_values)
-      select.defaultValues = payload.default_values.map((defaultValue) => ({
+    if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
+    if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
+    if (props.maxValues && _payload.max_values) select.maxValues = _payload.max_values;
+    if (props.defaultValues && _payload.default_values)
+      select.defaultValues = _payload.default_values.map((defaultValue) => ({
         id: bot.transformers.snowflake(defaultValue.id),
         type: defaultValue.type,
       }));
-    if (props.channelTypes && payload.channel_types) select.channelTypes = payload.channel_types;
-    if (props.options && payload.options)
-      select.options = payload.options.map((option) => ({
+    if (props.channelTypes && _payload.channel_types) select.channelTypes = _payload.channel_types;
+    if (props.options && _payload.options)
+      select.options = _payload.options.map((option) => ({
         label: option.label,
         value: option.value,
         description: option.description,
@@ -223,7 +223,7 @@ function transformSelectMenuComponent(bot: Bot, payload: Partial<DiscordSelectMe
           : undefined,
         default: option.default,
       }));
-    if (props.disabled && payload.disabled) select.disabled = payload.disabled;
+    if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
   }
 
   return select;
@@ -279,7 +279,7 @@ function transformFileComponent(bot: Bot, payload: Partial<DiscordFileComponent>
   return file;
 }
 
-function transformTextDisplayComponent(bot: Bot, payload: Partial<DiscordTextDisplayComponent> | Partial<DiscordTextDisplayInteractionResponse>) {
+function transformTextDisplayComponent(bot: Bot, payload: Partial<DiscordTextDisplayComponent | DiscordTextDisplayInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component;
   const textDisplay = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -305,7 +305,7 @@ function transformSeparatorComponent(bot: Bot, payload: Partial<DiscordSeparator
   return separator;
 }
 
-function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponent> | Partial<DiscordLabelInteractionResponse>) {
+function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponent | DiscordLabelInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component;
   const label = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -321,9 +321,9 @@ function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponen
   return label;
 }
 
-function transformFileUploadComponent(bot: Bot, payload: DiscordFileUploadComponent | DiscordFileUploadInteractionResponse): Component {
+function transformFileUploadComponent(bot: Bot, payload: Partial<DiscordFileUploadComponent | DiscordFileUploadInteractionResponse>) {
   const props = bot.transformers.desiredProperties.component;
-  const fileUpload = {} as Component;
+  const fileUpload = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.type && payload.type) fileUpload.type = payload.type;
   if (props.id && payload.id) fileUpload.id = payload.id;
@@ -333,9 +333,11 @@ function transformFileUploadComponent(bot: Bot, payload: DiscordFileUploadCompon
   if ('values' in payload) {
     if (props.values && payload.values) fileUpload.values = payload.values;
   } else {
-    if (props.minValues && payload.min_values) fileUpload.minValues = payload.min_values;
-    if (props.maxValues && payload.max_values) fileUpload.maxValues = payload.max_values;
-    if (props.required && payload.required) fileUpload.required = payload.required;
+    const _payload = payload as Partial<DiscordFileUploadComponent>;
+
+    if (props.minValues && _payload.min_values) fileUpload.minValues = _payload.min_values;
+    if (props.maxValues && _payload.max_values) fileUpload.maxValues = _payload.max_values;
+    if (props.required && _payload.required) fileUpload.required = _payload.required;
   }
 
   return fileUpload;

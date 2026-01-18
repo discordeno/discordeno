@@ -1,5 +1,5 @@
 import type { DiscordCollectibles, DiscordNameplate, DiscordUser, DiscordUserPrimaryGuild } from '@discordeno/types';
-import { iconHashToBigInt } from '@discordeno/utils';
+import { avatarUrl, defaultAvatarUrl, displayAvatarUrl, iconHashToBigInt, snowflakeToTimestamp } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
