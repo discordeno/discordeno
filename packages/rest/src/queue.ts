@@ -1,3 +1,4 @@
+import { setTimeout } from 'node:timers';
 import { delay } from '@discordeno/utils';
 import type { RestManager, SendRequestOptions } from './types.js';
 
@@ -126,7 +127,7 @@ export class Queue {
           this.timeoutId ??= setTimeout(() => {
             this.remaining = this.max;
             this.timeoutId = undefined;
-          }, this.interval);
+          }, this.interval).unref();
         }
 
         // Remove from queue, we are executing it.
@@ -162,7 +163,7 @@ export class Queue {
       this.timeoutId ??= setTimeout(() => {
         this.remaining = this.max;
         this.timeoutId = undefined;
-      }, headers.interval);
+      }, headers.interval).unref();
     }
   }
 
@@ -201,7 +202,7 @@ export class Queue {
         `[Queue] ${this.queueType} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
         [...this.rest.queues.values()].map((queue) => `${queue.queueType}${queue.url}`),
       );
-    }, this.deleteQueueDelay);
+    }, this.deleteQueueDelay).unref();
   }
 
   /** Simply checks if the queue is able to be cleared or it has requests pending. */
