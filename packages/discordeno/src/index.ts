@@ -1,1 +1,1 @@
-export * from '@discordeno/bot'
+export * from '@discordeno/bot';

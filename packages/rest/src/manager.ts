@@ -1,5 +1,5 @@
-import { Buffer } from 'node:buffer'
-import { type InspectOptions, inspect } from 'node:util'
+import { Buffer } from 'node:buffer';
+import { type InspectOptions, inspect } from 'node:util';
 import type {
   BigString,
   Camelize,
@@ -58,7 +58,7 @@ import type {
   DiscordWebhook,
   DiscordWelcomeScreen,
   ModifyGuildTemplate,
-} from '@discordeno/types'
+} from '@discordeno/types';
 import {
   calculateBits,
   camelize,
@@ -71,27 +71,27 @@ import {
   processReactionString,
   snowflakeToTimestamp,
   urlToBase64,
-} from '@discordeno/utils'
-import { createInvalidRequestBucket } from './invalidBucket.js'
-import { Queue } from './queue.js'
-import { createRoutes } from './routes.js'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
+} from '@discordeno/utils';
+import { createInvalidRequestBucket } from './invalidBucket.js';
+import { Queue } from './queue.js';
+import { createRoutes } from './routes.js';
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js';
 
-export const DISCORD_API_VERSION = 10
-export const DISCORD_API_URL = 'https://discord.com/api'
+export const DISCORD_API_VERSION = 10;
+export const DISCORD_API_URL = 'https://discord.com/api';
 
-export const AUDIT_LOG_REASON_HEADER = 'x-audit-log-reason'
-export const RATE_LIMIT_REMAINING_HEADER = 'x-ratelimit-remaining'
-export const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after'
-export const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global'
-export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket'
-export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
-export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
+export const AUDIT_LOG_REASON_HEADER = 'x-audit-log-reason';
+export const RATE_LIMIT_REMAINING_HEADER = 'x-ratelimit-remaining';
+export const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after';
+export const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global';
+export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
+export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
+export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
-  const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token)
+  const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
-  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
+  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL;
   // Discord error can get nested a lot, so we use a custom inspect to change the depth to Infinity
   const baseErrorPrototype = {
     [inspect.custom](_depth: number, options: InspectOptions, _inspect: typeof inspect) {
@@ -100,9 +100,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         depth: Infinity,
         // Since we call inspect on ourself, we need to disable the calls to the inspect.custom symbol or else it will cause an infinite loop.
         customInspect: false,
-      })
+      });
     },
-  }
+  };
 
   const rest: RestManager = {
     applicationId,
@@ -133,24 +133,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     createBaseHeaders() {
       return {
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`,
-      }
+      };
     },
 
     checkRateLimits(url, identifier) {
-      const ratelimited = rest.rateLimitedPaths.get(`${identifier}${url}`)
+      const ratelimited = rest.rateLimitedPaths.get(`${identifier}${url}`);
 
-      const global = rest.rateLimitedPaths.get('global')
-      const now = Date.now()
+      const global = rest.rateLimitedPaths.get('global');
+      const now = Date.now();
 
       if (ratelimited && now < ratelimited.resetTimestamp) {
-        return ratelimited.resetTimestamp - now
+        return ratelimited.resetTimestamp - now;
       }
 
       if (global && now < global.resetTimestamp) {
-        return global.resetTimestamp - now
+        return global.resetTimestamp - now;
       }
 
-      return false
+      return false;
     },
 
     async updateTokenQueues(oldToken, newToken) {
@@ -158,15 +158,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         if (!rest.updateBearerTokenEndpoint) {
           throw new Error(
             "The 'proxy.updateBearerTokenEndpoint' option needs to be set when using a rest proxy and needed to call 'updateTokenQueues'",
-          )
+          );
         }
 
         const headers = {
           'content-type': 'application/json',
-        } as Record<string, string>
+        } as Record<string, string>;
 
         if (rest.authorization !== undefined) {
-          headers[rest.authorizationHeader] = rest.authorization
+          headers[rest.authorizationHeader] = rest.authorization;
         }
 
         await fetch(`${rest.baseUrl}/${rest.updateBearerTokenEndpoint}`, {
@@ -176,65 +176,65 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             newToken,
           }),
           headers,
-        })
+        });
 
-        return
+        return;
       }
 
-      const newIdentifier = `Bearer ${newToken}`
+      const newIdentifier = `Bearer ${newToken}`;
 
       // Update all the queues
       for (const [key, queue] of rest.queues.entries()) {
-        if (!key.startsWith(`Bearer ${oldToken}`)) continue
+        if (!key.startsWith(`Bearer ${oldToken}`)) continue;
 
-        rest.queues.delete(key)
-        queue.identifier = newIdentifier
+        rest.queues.delete(key);
+        queue.identifier = newIdentifier;
 
-        const newKey = `${newIdentifier}${queue.url}`
-        const newQueue = rest.queues.get(newKey)
+        const newKey = `${newIdentifier}${queue.url}`;
+        const newQueue = rest.queues.get(newKey);
 
         // Merge the queues
         if (newQueue) {
-          newQueue.waiting.unshift(...queue.waiting)
-          newQueue.pending.unshift(...queue.pending)
+          newQueue.waiting.unshift(...queue.waiting);
+          newQueue.pending.unshift(...queue.pending);
 
-          queue.waiting = []
-          queue.pending = []
+          queue.waiting = [];
+          queue.pending = [];
 
-          queue.cleanup()
+          queue.cleanup();
         } else {
-          rest.queues.set(newKey, queue)
+          rest.queues.set(newKey, queue);
         }
       }
 
       for (const [key, ratelimitPath] of rest.rateLimitedPaths.entries()) {
-        if (!key.startsWith(`Bearer ${oldToken}`)) continue
+        if (!key.startsWith(`Bearer ${oldToken}`)) continue;
 
-        rest.rateLimitedPaths.set(`${newIdentifier}${ratelimitPath.url}`, ratelimitPath)
+        rest.rateLimitedPaths.set(`${newIdentifier}${ratelimitPath.url}`, ratelimitPath);
 
         if (ratelimitPath.bucketId) {
-          rest.rateLimitedPaths.set(`${newIdentifier}${ratelimitPath.bucketId}`, ratelimitPath)
+          rest.rateLimitedPaths.set(`${newIdentifier}${ratelimitPath.bucketId}`, ratelimitPath);
         }
       }
     },
 
     changeToDiscordFormat(obj: any): any {
-      if (obj === null) return null
+      if (obj === null) return null;
 
       if (typeof obj === 'object') {
         if (Array.isArray(obj)) {
-          return obj.map((item) => rest.changeToDiscordFormat(item))
+          return obj.map((item) => rest.changeToDiscordFormat(item));
         }
 
-        const newObj: any = {}
+        const newObj: any = {};
 
         for (const key of Object.keys(obj)) {
-          const value = obj[key]
+          const value = obj[key];
 
           // If the key is already in snake_case we can assume it is already in the discord format.
           if (key.includes('_')) {
-            newObj[key] = value
-            continue
+            newObj[key] = value;
+            continue;
           }
 
           // Some falsy values should be allowed like null or 0
@@ -243,90 +243,90 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               case 'permissions':
               case 'allow':
               case 'deny':
-                newObj[key] = typeof value === 'string' ? value : calculateBits(value)
-                continue
+                newObj[key] = typeof value === 'string' ? value : calculateBits(value);
+                continue;
               case 'defaultMemberPermissions':
-                newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value)
-                continue
+                newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value);
+                continue;
               case 'nameLocalizations':
-                newObj.name_localizations = value
-                continue
+                newObj.name_localizations = value;
+                continue;
               case 'descriptionLocalizations':
-                newObj.description_localizations = value
-                continue
+                newObj.description_localizations = value;
+                continue;
             }
           }
 
-          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(value)
+          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(value);
         }
 
-        return newObj
+        return newObj;
       }
 
-      if (typeof obj === 'bigint') return obj.toString()
+      if (typeof obj === 'bigint') return obj.toString();
 
-      return obj
+      return obj;
     },
 
     createRequestBody(method, options) {
-      const headers = this.createBaseHeaders()
+      const headers = this.createBaseHeaders();
 
-      if (options?.unauthorized !== true) headers.authorization = `Bot ${rest.token}`
+      if (options?.unauthorized !== true) headers.authorization = `Bot ${rest.token}`;
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options?.reason !== undefined) {
-        headers[AUDIT_LOG_REASON_HEADER] = encodeURIComponent(options?.reason)
+        headers[AUDIT_LOG_REASON_HEADER] = encodeURIComponent(options?.reason);
       }
 
-      let body: string | FormData | undefined
+      let body: string | FormData | undefined;
 
       // Have to check for attachments first, since body then has to be send in a different way.
       if (options?.files !== undefined) {
-        const form = new FormData()
+        const form = new FormData();
         for (let i = 0; i < options.files.length; ++i) {
-          form.append(`files[${i}]`, options.files[i].blob, options.files[i].name)
+          form.append(`files[${i}]`, options.files[i].blob, options.files[i].name);
         }
 
         // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
-        form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...options.body, files: undefined })))
+        form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...options.body, files: undefined })));
 
         // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
-        body = form
+        body = form;
       } else if (options?.body && options.headers && options.headers['content-type'] === 'application/x-www-form-urlencoded') {
         // OAuth2 body handling
-        const formBody: string[] = []
+        const formBody: string[] = [];
 
-        const discordBody = rest.changeToDiscordFormat(options.body)
+        const discordBody = rest.changeToDiscordFormat(options.body);
 
         for (const prop in discordBody) {
-          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(discordBody[prop])}`)
+          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(discordBody[prop])}`);
         }
 
-        body = formBody.join('&')
+        body = formBody.join('&');
       } else if (options?.body !== undefined) {
         if (options.body instanceof FormData) {
-          body = options.body
+          body = options.body;
           // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
         } else {
-          body = JSON.stringify(rest.changeToDiscordFormat(options.body))
-          headers['content-type'] = `application/json`
+          body = JSON.stringify(rest.changeToDiscordFormat(options.body));
+          headers['content-type'] = `application/json`;
         }
       }
 
       // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
       if (options?.headers) {
-        Object.assign(headers, options.headers)
+        Object.assign(headers, options.headers);
       }
 
       return {
         body,
         headers,
         method,
-      }
+      };
     },
 
     processRateLimitedPaths() {
-      const now = Date.now()
+      const now = Date.now();
 
       for (const [key, value] of rest.rateLimitedPaths.entries()) {
         //   rest.debug(
@@ -335,59 +335,59 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // }`
         //   )
         // If the time has not reached cancel
-        if (value.resetTimestamp > now) continue
+        if (value.resetTimestamp > now) continue;
 
         // Rate limit is over, delete the rate limiter
-        rest.rateLimitedPaths.delete(key)
+        rest.rateLimitedPaths.delete(key);
         // If it was global, also mark the global value as false
-        if (key === 'global') rest.globallyRateLimited = false
+        if (key === 'global') rest.globallyRateLimited = false;
       }
 
       // ALL PATHS ARE CLEARED CAN CANCEL OUT!
       if (rest.rateLimitedPaths.size === 0) {
-        rest.processingRateLimitedPaths = false
+        rest.processingRateLimitedPaths = false;
       } else {
-        rest.processingRateLimitedPaths = true
+        rest.processingRateLimitedPaths = true;
         // RECHECK IN 1 SECOND
         setTimeout(() => {
           // rest.debug('[REST - processRateLimitedPaths] Running setTimeout.')
-          rest.processRateLimitedPaths()
-        }, 1000)
+          rest.processRateLimitedPaths();
+        }, 1000);
       }
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
     processHeaders(url, headers, identifier) {
-      let rateLimited = false
+      let rateLimited = false;
 
       // GET ALL NECESSARY HEADERS
-      const remaining = headers.get(RATE_LIMIT_REMAINING_HEADER)
-      const retryAfter = headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
-      const reset = Date.now() + Number(retryAfter) * 1000
-      const global = headers.get(RATE_LIMIT_GLOBAL_HEADER)
+      const remaining = headers.get(RATE_LIMIT_REMAINING_HEADER);
+      const retryAfter = headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
+      const reset = Date.now() + Number(retryAfter) * 1000;
+      const global = headers.get(RATE_LIMIT_GLOBAL_HEADER);
       // undefined override null needed for typings
-      const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
-      const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
+      const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined;
+      const limit = headers.get(RATE_LIMIT_LIMIT_HEADER);
 
       // If we didn't received the identifier, fallback to the bot token
-      identifier ??= `Bot ${rest.token}`
+      identifier ??= `Bot ${rest.token}`;
 
       rest.queues.get(`${identifier}${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
-      })
+      });
 
       // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
       if (remaining === '0') {
-        rateLimited = true
+        rateLimited = true;
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
         rest.rateLimitedPaths.set(`${identifier}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
-        })
+        });
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
@@ -395,135 +395,135 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             url,
             resetTimestamp: reset,
             bucketId,
-          })
+          });
         }
       }
 
       // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
       if (global) {
-        const retryAfter = Number(headers.get('retry-after')) * 1000
-        const globalReset = Date.now() + retryAfter
+        const retryAfter = Number(headers.get('retry-after')) * 1000;
+        const globalReset = Date.now() + retryAfter;
         //   rest.debug(
         // `[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`
         //   )
-        rest.globallyRateLimited = true
-        rateLimited = true
+        rest.globallyRateLimited = true;
+        rateLimited = true;
 
         setTimeout(() => {
-          rest.globallyRateLimited = false
-        }, retryAfter)
+          rest.globallyRateLimited = false;
+        }, retryAfter);
 
         rest.rateLimitedPaths.set('global', {
           url: 'global',
           resetTimestamp: globalReset,
           bucketId,
-        })
+        });
 
         if (bucketId) {
           rest.rateLimitedPaths.set(identifier, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
-          })
+          });
         }
       }
 
       if (rateLimited && !rest.processingRateLimitedPaths) {
-        rest.processRateLimitedPaths()
+        rest.processRateLimitedPaths();
       }
-      return rateLimited ? bucketId : undefined
+      return rateLimited ? bucketId : undefined;
     },
 
     async sendRequest(options) {
-      const url = `${rest.baseUrl}/v${rest.version}${options.route}`
-      const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
+      const url = `${rest.baseUrl}/v${rest.version}${options.route}`;
+      const payload = rest.createRequestBody(options.method, options.requestBodyOptions);
 
-      const loggingHeaders = { ...payload.headers }
+      const loggingHeaders = { ...payload.headers };
 
       if (payload.headers.authorization) {
-        const authorizationScheme = payload.headers.authorization?.split(' ')[0]
-        loggingHeaders.authorization = `${authorizationScheme} tokenhere`
+        const authorizationScheme = payload.headers.authorization?.split(' ')[0];
+        loggingHeaders.authorization = `${authorizationScheme} tokenhere`;
       }
 
-      const request = new Request(url, payload)
+      const request = new Request(url, payload);
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
-      })
+      });
 
-      rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
+      rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
       const response = await fetch(request).catch(async (error) => {
-        rest.logger.error(error)
-        rest.events.requestError(request, error, { body: options.requestBodyOptions?.body })
+        rest.logger.error(error);
+        rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
-        rest.invalidBucket.handleCompletedRequest(999, false)
+        rest.invalidBucket.handleCompletedRequest(999, false);
         options.reject({
           ok: false,
           status: 999,
           error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
-        })
-        throw error
-      })
-      rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
+        });
+        throw error;
+      });
+      rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`);
 
       // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-      const body = await (response.headers.get('Content-Type')?.startsWith('application/json') ? response.json() : response.text()).catch(() => null)
+      const body = await (response.headers.get('Content-Type')?.startsWith('application/json') ? response.json() : response.text()).catch(() => null);
 
       rest.events.response(request, response, {
         requestBody: options.requestBodyOptions?.body,
         responseBody: body,
-      })
+      });
 
       // Mark request as completed
-      rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
+      rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared');
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers, payload.headers.authorization)
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers, payload.headers.authorization);
 
-      if (bucketId) options.bucketId = bucketId
+      if (bucketId) options.bucketId = bucketId;
 
       if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
-        rest.logger.debug(`Request to ${url} failed.`)
+        rest.logger.debug(`Request to ${url} failed.`);
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
-          options.reject({ ok: false, status: response.status, statusText: response.statusText, body })
-          return
+          options.reject({ ok: false, status: response.status, statusText: response.statusText, body });
+          return;
         }
 
-        rest.logger.debug(`Request to ${url} was ratelimited.`)
+        rest.logger.debug(`Request to ${url} was ratelimited.`);
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
-          rest.logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
+          rest.logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload);
           // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
           options.reject({
             ok: false,
             status: response.status,
             statusText: response.statusText,
             error: 'The request was rate limited and it maxed out the retries limit.',
-          })
+          });
 
-          return
+          return;
         }
 
-        options.retryCount += 1
+        options.retryCount += 1;
 
-        const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
-        if (resetAfter) await delay(Number(resetAfter) * 1000)
+        const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
+        if (resetAfter) await delay(Number(resetAfter) * 1000);
 
-        return await options.retryRequest?.(options)
+        return await options.retryRequest?.(options);
       }
 
       // Discord sometimes sends a response with no content
-      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : body })
+      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : body });
     },
 
     simplifyUrl(url, method) {
-      const routeInformationKey: string[] = [method]
+      const routeInformationKey: string[] = [method];
 
-      const queryParamIndex = url.indexOf('?')
-      const route = queryParamIndex !== -1 ? url.slice(0, queryParamIndex) : url
+      const queryParamIndex = url.indexOf('?');
+      const route = queryParamIndex !== -1 ? url.slice(0, queryParamIndex) : url;
 
       // Since the urls start with / the first part will always be empty
-      const splittedRoute = route.split('/')
+      const splittedRoute = route.split('/');
 
       // 1) Strip the minor params
       //    The only majors are channels, guilds, webhooks and webhooks with their token
@@ -531,25 +531,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const strippedRoute = splittedRoute
         .map((part, index, array) => {
           // While parseInt will truncate the snowflake id, it will still tell us if it is a number
-          const isNumber = Number.isFinite(parseInt(part, 10))
+          const isNumber = Number.isFinite(parseInt(part, 10));
 
           if (!isNumber) {
             // Reactions emoji need to be stripped as it is a minor parameter
-            if (index >= 1 && array[index - 1] === 'reactions') return 'x'
+            if (index >= 1 && array[index - 1] === 'reactions') return 'x';
             // If we are on a webhook or if it is part of the route, keep it as it is a major parameter
-            return part
+            return part;
           }
 
           // Check if we are on a channel id, a guild id or a webhook id
-          const isMajor = index >= 1 && (array[index - 1] === 'channels' || array[index - 1] === 'guilds' || array[index - 1] === 'webhooks')
+          const isMajor = index >= 1 && (array[index - 1] === 'channels' || array[index - 1] === 'guilds' || array[index - 1] === 'webhooks');
 
-          if (isMajor) return part
+          if (isMajor) return part;
 
-          return 'x'
+          return 'x';
         })
-        .join('/')
+        .join('/');
 
-      routeInformationKey.push(strippedRoute)
+      routeInformationKey.push(strippedRoute);
 
       // 2) Account for exceptions
       //    - https://github.com/discord/discord-api-docs/issues/1092
@@ -557,91 +557,91 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // The 2 exceptions are for message delete, so we need to check if we are in that route
       if (method === 'DELETE' && splittedRoute.length === 5 && splittedRoute[1] === 'channels' && strippedRoute.endsWith('/messages/x')) {
-        const messageId = splittedRoute[4]
-        const timestamp = snowflakeToTimestamp(messageId)
-        const now = Date.now()
+        const messageId = splittedRoute[4];
+        const timestamp = snowflakeToTimestamp(messageId);
+        const now = Date.now();
 
         // https://github.com/discord/discord-api-docs/issues/1092
         if (now - timestamp < 10_000) {
-          routeInformationKey.push('message-delete-10s')
+          routeInformationKey.push('message-delete-10s');
         }
 
         // https://github.com/discord/discord-api-docs/issues/1295
         // 2 weeks = 2 * 7 * 24 * 60 * 60 * 1000 = 1209600000
         if (now - timestamp > 1209600000) {
-          routeInformationKey.push('message-delete-2w')
+          routeInformationKey.push('message-delete-2w');
         }
       }
 
-      return routeInformationKey.join(':')
+      return routeInformationKey.join(':');
     },
 
     async processRequest(request: SendRequestOptions) {
-      const url = rest.simplifyUrl(request.route, request.method)
+      const url = rest.simplifyUrl(request.route, request.method);
 
       if (request.runThroughQueue === false) {
-        await rest.sendRequest(request)
+        await rest.sendRequest(request);
 
-        return
+        return;
       }
 
       // If we the request has a token, use it
       // Else fallback to prefix with the bot token
-      const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
+      const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`;
 
-      const queue = rest.queues.get(`${queueIdentifier}${url}`)
+      const queue = rest.queues.get(`${queueIdentifier}${url}`);
 
       if (queue !== undefined) {
-        queue.makeRequest(request)
+        queue.makeRequest(request);
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, identifier: queueIdentifier })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, identifier: queueIdentifier });
 
         // Save queue
-        rest.queues.set(`${queueIdentifier}${url}`, bucketQueue)
+        rest.queues.set(`${queueIdentifier}${url}`, bucketQueue);
 
         // Add request to queue
-        bucketQueue.makeRequest(request)
+        bucketQueue.makeRequest(request);
       }
     },
 
     async makeRequest(method, route, options) {
       // This error needs to be created here because of how stack traces get calculated
-      const error = new Error()
+      const error = new Error();
 
       if (rest.isProxied) {
         if (rest.authorization) {
-          options ??= {}
-          options.headers ??= {}
-          options.headers[rest.authorizationHeader] = rest.authorization
+          options ??= {};
+          options.headers ??= {};
+          options.headers[rest.authorizationHeader] = rest.authorization;
         }
 
-        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
+        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options));
         rest.events.request(request, {
           body: options?.body,
-        })
+        });
 
-        const result = await fetch(request)
+        const result = await fetch(request);
 
         // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null)
+        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
 
         rest.events.response(request, result, {
           requestBody: options?.body,
           responseBody: body,
-        })
+        });
 
         if (!result.ok) {
           error.cause = Object.assign(Object.create(baseErrorPrototype), {
             ok: false,
             status: result.status,
             body,
-          })
+          });
 
-          throw error
+          throw error;
         }
 
-        return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined
+        return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
       }
 
       return await new Promise(async (resolve, reject) => {
@@ -651,205 +651,205 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           requestBodyOptions: options,
           retryCount: 0,
           retryRequest: async (payload: SendRequestOptions) => {
-            await rest.processRequest(payload)
+            await rest.processRequest(payload);
           },
           resolve: (data) => {
-            resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!)
+            resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!);
           },
           reject: (reason) => {
-            let errorText: string
+            let errorText: string;
 
             switch (reason.status) {
               case 400:
-                errorText = "The options was improperly formatted, or the server couldn't understand it."
-                break
+                errorText = "The options was improperly formatted, or the server couldn't understand it.";
+                break;
               case 401:
-                errorText = 'The Authorization header was missing or invalid.'
-                break
+                errorText = 'The Authorization header was missing or invalid.';
+                break;
               case 403:
-                errorText = 'The Authorization token you passed did not have permission to the resource.'
-                break
+                errorText = 'The Authorization token you passed did not have permission to the resource.';
+                break;
               case 404:
-                errorText = "The resource at the location specified doesn't exist."
-                break
+                errorText = "The resource at the location specified doesn't exist.";
+                break;
               case 405:
-                errorText = 'The HTTP method used is not valid for the location specified.'
-                break
+                errorText = 'The HTTP method used is not valid for the location specified.';
+                break;
               case 429:
-                errorText = "You're being ratelimited."
-                break
+                errorText = "You're being ratelimited.";
+                break;
               case 502:
-                errorText = 'There was not a gateway available to process your options. Wait a bit and retry.'
-                break
+                errorText = 'There was not a gateway available to process your options. Wait a bit and retry.';
+                break;
               default:
-                errorText = reason.statusText ?? 'Unknown error'
+                errorText = reason.statusText ?? 'Unknown error';
             }
 
-            error.message = `[${reason.status}] ${errorText}`
+            error.message = `[${reason.status}] ${errorText}`;
 
             // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
             // https://discord.com/developers/docs/reference#error-messages
             if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
-              error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`
+              error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
             }
 
-            error.cause = Object.assign(Object.create(baseErrorPrototype), reason)
-            reject(error)
+            error.cause = Object.assign(Object.create(baseErrorPrototype), reason);
+            reject(error);
           },
           runThroughQueue: options?.runThroughQueue,
-        }
+        };
 
-        await rest.processRequest(payload)
-      })
+        await rest.processRequest(payload);
+      });
     },
 
     async get<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('GET', url, options)) as Camelize<T>
+      return camelize(await rest.makeRequest('GET', url, options)) as Camelize<T>;
     },
 
     async post<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('POST', url, options)) as Camelize<T>
+      return camelize(await rest.makeRequest('POST', url, options)) as Camelize<T>;
     },
 
     async delete(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      camelize(await rest.makeRequest('DELETE', url, options))
+      camelize(await rest.makeRequest('DELETE', url, options));
     },
 
     async patch<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PATCH', url, options)) as Camelize<T>
+      return camelize(await rest.makeRequest('PATCH', url, options)) as Camelize<T>;
     },
 
     async put<T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PUT', url, options)) as Camelize<T>
+      return camelize(await rest.makeRequest('PUT', url, options)) as Camelize<T>;
     },
 
     async addReaction(channelId, messageId, reaction) {
-      reaction = processReactionString(reaction)
+      reaction = processReactionString(reaction);
 
-      await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
+      await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction));
     },
 
     async addReactions(channelId, messageId, reactions, ordered = false) {
       if (!ordered) {
         await Promise.all(
           reactions.map(async (reaction) => {
-            await rest.addReaction(channelId, messageId, reaction)
+            await rest.addReaction(channelId, messageId, reaction);
           }),
-        )
-        return
+        );
+        return;
       }
 
       for (const reaction of reactions) {
-        await rest.addReaction(channelId, messageId, reaction)
+        await rest.addReaction(channelId, messageId, reaction);
       }
     },
 
     async addRole(guildId, userId, roleId, reason) {
-      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason });
     },
 
     async addThreadMember(channelId, userId) {
-      await rest.put(rest.routes.channels.threads.user(channelId, userId))
+      await rest.put(rest.routes.channels.threads.user(channelId, userId));
     },
 
     async addDmRecipient(channelId, userId, body) {
-      await rest.put(rest.routes.channels.dmRecipient(channelId, userId), { body })
+      await rest.put(rest.routes.channels.dmRecipient(channelId, userId), { body });
     },
 
     async createAutomodRule(guildId, body, reason) {
-      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body, reason })
+      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body, reason });
     },
 
     async createChannel(guildId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body, reason })
+      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body, reason });
     },
 
     async createEmoji(guildId, body, reason) {
-      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason })
+      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason });
     },
 
     async createApplicationEmoji(body) {
-      return await rest.post<DiscordEmoji>(rest.routes.applicationEmojis(rest.applicationId), { body })
+      return await rest.post<DiscordEmoji>(rest.routes.applicationEmojis(rest.applicationId), { body });
     },
 
     async createGlobalApplicationCommand(body, options) {
-      const restOptions: MakeRequestOptions = { body }
+      const restOptions: MakeRequestOptions = { body };
 
       if (options?.bearerToken) {
-        restOptions.unauthorized = true
+        restOptions.unauthorized = true;
         restOptions.headers = {
           authorization: `Bearer ${options.bearerToken}`,
-        }
+        };
       }
 
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions);
     },
 
     async createGuildApplicationCommand(body, guildId, options) {
-      const restOptions: MakeRequestOptions = { body }
+      const restOptions: MakeRequestOptions = { body };
 
       if (options?.bearerToken) {
-        restOptions.unauthorized = true
+        restOptions.unauthorized = true;
         restOptions.headers = {
           authorization: `Bearer ${options.bearerToken}`,
-        }
+        };
       }
 
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions);
     },
 
     async createGuildSticker(guildId, options, reason) {
-      const form = new FormData()
-      form.append('file', options.file.blob, options.file.name)
-      form.append('name', options.name)
-      form.append('description', options.description)
-      form.append('tags', options.tags)
+      const form = new FormData();
+      form.append('file', options.file.blob, options.file.name);
+      form.append('name', options.name);
+      form.append('description', options.description);
+      form.append('tags', options.tags);
 
-      return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), { body: form, reason })
+      return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), { body: form, reason });
     },
 
     async createGuildTemplate(guildId, body) {
-      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), { body })
+      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), { body });
     },
 
     async createForumThread(channelId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body, files: body.files, reason })
+      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body, files: body.files, reason });
     },
 
     async createInvite(channelId, body = {}, reason) {
       if (!body.targetUsersFile) {
-        return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason })
+        return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason });
       }
 
       // When we have to upload a file, we need to use FormData, and each field has to be appended individually
-      const form = new FormData()
+      const form = new FormData();
 
       for (const [key, value] of Object.entries(body)) {
         if (key !== 'targetUsersFile' && key !== 'roleIds') {
-          form.append(camelToSnakeCase(key), rest.changeToDiscordFormat(value).toString())
+          form.append(camelToSnakeCase(key), rest.changeToDiscordFormat(value).toString());
         }
       }
 
-      form.append('target_users_file', body.targetUsersFile)
-      if (body.roleIds) form.append('role_ids', body.roleIds.map((x) => x.toString()).join(','))
+      form.append('target_users_file', body.targetUsersFile);
+      if (body.roleIds) form.append('role_ids', body.roleIds.map((x) => x.toString()).join(','));
 
-      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason })
+      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason });
     },
 
     async getGuildRoleMemberCounts(guildId) {
-      return await rest.get<Record<string, number>>(rest.routes.guilds.roles.memberCounts(guildId))
+      return await rest.get<Record<string, number>>(rest.routes.guilds.roles.memberCounts(guildId));
     },
 
     async createRole(guildId, body, reason) {
-      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), { body, reason })
+      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), { body, reason });
     },
 
     async createScheduledEvent(guildId, body, reason) {
-      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), { body, reason })
+      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), { body, reason });
     },
 
     async createStageInstance(body, reason) {
-      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), { body, reason })
+      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), { body, reason });
     },
 
     async createWebhook(channelId, options, reason) {
@@ -859,76 +859,76 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
         },
         reason,
-      })
+      });
     },
 
     async deleteAutomodRule(guildId, ruleId, reason) {
-      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
+      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason });
     },
 
     async deleteChannel(channelId, reason) {
       await rest.delete(rest.routes.channels.channel(channelId), {
         reason,
-      })
+      });
     },
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
-      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), { reason })
+      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), { reason });
     },
 
     async deleteEmoji(guildId, id, reason) {
-      await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
+      await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason });
     },
 
     async deleteApplicationEmoji(id) {
-      await rest.delete(rest.routes.applicationEmoji(rest.applicationId, id))
+      await rest.delete(rest.routes.applicationEmoji(rest.applicationId, id));
     },
 
     async deleteFollowupMessage(token, messageId) {
-      await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true })
+      await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true });
     },
 
     async deleteGlobalApplicationCommand(commandId) {
-      await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
+      await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId));
     },
 
     async deleteGuildApplicationCommand(commandId, guildId) {
-      await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
+      await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId));
     },
 
     async deleteGuildSticker(guildId, stickerId, reason) {
-      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), { reason })
+      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), { reason });
     },
 
     async deleteGuildTemplate(guildId, templateCode) {
-      await rest.delete(rest.routes.guilds.templates.guild(guildId, templateCode))
+      await rest.delete(rest.routes.guilds.templates.guild(guildId, templateCode));
     },
 
     async deleteIntegration(guildId, integrationId, reason) {
-      await rest.delete(rest.routes.guilds.integration(guildId, integrationId), { reason })
+      await rest.delete(rest.routes.guilds.integration(guildId, integrationId), { reason });
     },
 
     async deleteInvite(inviteCode, reason) {
-      await rest.delete(rest.routes.guilds.invite(inviteCode), { reason })
+      await rest.delete(rest.routes.guilds.invite(inviteCode), { reason });
     },
 
     async getTargetUsers(inviteCode) {
-      return await rest.get<string>(rest.routes.guilds.inviteTargetUsers(inviteCode))
+      return await rest.get<string>(rest.routes.guilds.inviteTargetUsers(inviteCode));
     },
 
     async updateTargetUsers(inviteCode, targetUsersFile) {
-      const form = new FormData()
-      form.append('target_users_file', targetUsersFile)
+      const form = new FormData();
+      form.append('target_users_file', targetUsersFile);
 
-      await rest.put(rest.routes.guilds.inviteTargetUsers(inviteCode), { body: form })
+      await rest.put(rest.routes.guilds.inviteTargetUsers(inviteCode), { body: form });
     },
 
     async getTargetUsersJobStatus(inviteCode) {
-      return await rest.get<DiscordTargetUsersJobStatus>(rest.routes.guilds.inviteTargetUsersJobStatus(inviteCode))
+      return await rest.get<DiscordTargetUsersJobStatus>(rest.routes.guilds.inviteTargetUsersJobStatus(inviteCode));
     },
 
     async deleteMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
+      await rest.delete(rest.routes.channels.message(channelId, messageId), { reason });
     },
 
     async deleteMessages(channelId, messageIds, reason) {
@@ -937,59 +937,59 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           messages: messageIds.slice(0, 100).map((id) => id.toString()),
         },
         reason,
-      })
+      });
     },
 
     async deleteOriginalInteractionResponse(token) {
-      await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true })
+      await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true });
     },
 
     async deleteOwnReaction(channelId, messageId, reaction) {
-      reaction = processReactionString(reaction)
+      reaction = processReactionString(reaction);
 
-      await rest.delete(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
+      await rest.delete(rest.routes.channels.reactions.bot(channelId, messageId, reaction));
     },
 
     async deleteReactionsAll(channelId, messageId) {
-      await rest.delete(rest.routes.channels.reactions.all(channelId, messageId))
+      await rest.delete(rest.routes.channels.reactions.all(channelId, messageId));
     },
 
     async deleteReactionsEmoji(channelId, messageId, reaction) {
-      reaction = processReactionString(reaction)
+      reaction = processReactionString(reaction);
 
-      await rest.delete(rest.routes.channels.reactions.emoji(channelId, messageId, reaction))
+      await rest.delete(rest.routes.channels.reactions.emoji(channelId, messageId, reaction));
     },
 
     async deleteRole(guildId, roleId, reason) {
-      await rest.delete(rest.routes.guilds.roles.one(guildId, roleId), { reason })
+      await rest.delete(rest.routes.guilds.roles.one(guildId, roleId), { reason });
     },
 
     async deleteScheduledEvent(guildId, eventId) {
-      await rest.delete(rest.routes.guilds.events.event(guildId, eventId))
+      await rest.delete(rest.routes.guilds.events.event(guildId, eventId));
     },
 
     async deleteStageInstance(channelId, reason) {
-      await rest.delete(rest.routes.channels.stage(channelId), { reason })
+      await rest.delete(rest.routes.channels.stage(channelId), { reason });
     },
 
     async deleteUserReaction(channelId, messageId, userId, reaction) {
-      reaction = processReactionString(reaction)
+      reaction = processReactionString(reaction);
 
-      await rest.delete(rest.routes.channels.reactions.user(channelId, messageId, reaction, userId))
+      await rest.delete(rest.routes.channels.reactions.user(channelId, messageId, reaction, userId));
     },
 
     async deleteWebhook(webhookId, reason) {
-      await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
+      await rest.delete(rest.routes.webhooks.id(webhookId), { reason });
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true })
+      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true });
     },
 
     async deleteWebhookWithToken(webhookId, token) {
       await rest.delete(rest.routes.webhooks.webhook(webhookId, token), {
         unauthorized: true,
-      })
+      });
     },
 
     async editApplicationCommandPermissions(guildId, commandId, bearerToken, permissions) {
@@ -1001,16 +1001,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
           headers: { authorization: `Bearer ${bearerToken}` },
         },
-      )
+      );
     },
 
     async editAutomodRule(guildId, ruleId, body, reason) {
-      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), { body, reason })
+      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), { body, reason });
     },
 
     async editBotProfile(options) {
-      const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
-      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL
+      const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
+      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL;
 
       return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
         body: {
@@ -1018,27 +1018,27 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           avatar,
           banner,
         },
-      })
+      });
     },
 
     async editChannel(channelId, body, reason) {
-      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), { body, reason })
+      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), { body, reason });
     },
 
     async editChannelPermissionOverrides(channelId, body, reason) {
-      await rest.put(rest.routes.channels.overwrite(channelId, body.id), { body, reason })
+      await rest.put(rest.routes.channels.overwrite(channelId, body.id), { body, reason });
     },
 
     async editChannelPositions(guildId, body) {
-      await rest.patch(rest.routes.guilds.channels(guildId), { body })
+      await rest.patch(rest.routes.guilds.channels(guildId), { body });
     },
 
     async editEmoji(guildId, id, body, reason) {
-      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body, reason })
+      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body, reason });
     },
 
     async editApplicationEmoji(id, body) {
-      return await rest.patch<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, id), { body })
+      return await rest.patch<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, id), { body });
     },
 
     async editFollowupMessage(token, messageId, body) {
@@ -1046,33 +1046,33 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body,
         files: body.files,
         unauthorized: true,
-      })
+      });
     },
 
     async editGlobalApplicationCommand(commandId, body) {
-      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), { body })
+      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), { body });
     },
 
     async editGuild(guildId, body, reason) {
-      return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), { body, reason })
+      return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), { body, reason });
     },
 
     async editGuildApplicationCommand(commandId, guildId, body) {
       return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId), {
         body,
-      })
+      });
     },
 
     async editGuildSticker(guildId, stickerId, body, reason) {
-      return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), { body, reason })
+      return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), { body, reason });
     },
 
     async editGuildTemplate(guildId, templateCode: string, body: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
-      return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), { body })
+      return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), { body });
     },
 
     async editMessage(channelId, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body, files: body.files })
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body, files: body.files });
     },
 
     async editOriginalInteractionResponse(token, body) {
@@ -1080,7 +1080,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body,
         files: body.files,
         unauthorized: true,
-      })
+      });
     },
 
     async editOwnVoiceState(guildId, options) {
@@ -1091,31 +1091,31 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             ? new Date(options.requestToSpeakTimestamp).toISOString()
             : options.requestToSpeakTimestamp,
         },
-      })
+      });
     },
 
     async editScheduledEvent(guildId, eventId, body, reason) {
-      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), { body, reason })
+      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), { body, reason });
     },
 
     async editRole(guildId, roleId, body, reason) {
-      return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), { body, reason })
+      return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), { body, reason });
     },
 
     async editRolePositions(guildId, body, reason) {
-      return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), { body, reason })
+      return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), { body, reason });
     },
 
     async editStageInstance(channelId, topic, reason?: string) {
-      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { body: { topic }, reason })
+      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { body: { topic }, reason });
     },
 
     async editUserVoiceState(guildId, options) {
-      await rest.patch(rest.routes.guilds.voice(guildId, options.userId), { body: options })
+      await rest.patch(rest.routes.guilds.voice(guildId, options.userId), { body: options });
     },
 
     async editWebhook(webhookId, body, reason) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body, reason })
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body, reason });
     },
 
     async editWebhookMessage(webhookId, token, messageId, options) {
@@ -1123,29 +1123,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body: options,
         files: options.files,
         unauthorized: true,
-      })
+      });
     },
 
     async editWebhookWithToken(webhookId, token, body) {
       return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
         body,
         unauthorized: true,
-      })
+      });
     },
 
     async editWelcomeScreen(guildId, body, reason) {
-      return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), { body, reason })
+      return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), { body, reason });
     },
 
     async editWidgetSettings(guildId, body, reason) {
-      return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), { body, reason })
+      return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), { body, reason });
     },
 
     async executeWebhook(webhookId, token, options) {
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
         body: options,
         unauthorized: true,
-      })
+      });
     },
 
     async followAnnouncement(sourceChannelId, targetChannelId, reason) {
@@ -1154,53 +1154,53 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           webhookChannelId: targetChannelId,
         },
         reason,
-      })
+      });
     },
 
     async getActiveThreads(guildId) {
-      return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId))
+      return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId));
     },
 
     async getApplicationCommandPermission(guildId, commandId, options) {
-      const restOptions: Omit<MakeRequestOptions, 'body'> = {}
+      const restOptions: Omit<MakeRequestOptions, 'body'> = {};
 
       if (options?.accessToken) {
-        restOptions.unauthorized = true
+        restOptions.unauthorized = true;
         restOptions.headers = {
           authorization: `Bearer ${options.accessToken}`,
-        }
+        };
       }
 
       return await rest.get<DiscordGuildApplicationCommandPermissions>(
         rest.routes.interactions.commands.permission(options?.applicationId ?? rest.applicationId, guildId, commandId),
         restOptions,
-      )
+      );
     },
 
     async getApplicationCommandPermissions(guildId, options) {
-      const restOptions: Omit<MakeRequestOptions, 'body'> = {}
+      const restOptions: Omit<MakeRequestOptions, 'body'> = {};
 
       if (options?.accessToken) {
-        restOptions.unauthorized = true
+        restOptions.unauthorized = true;
         restOptions.headers = {
           authorization: `Bearer ${options.accessToken}`,
-        }
+        };
       }
 
       return await rest.get<DiscordGuildApplicationCommandPermissions[]>(
         rest.routes.interactions.commands.permissions(options?.applicationId ?? rest.applicationId, guildId),
         restOptions,
-      )
+      );
     },
 
     async getApplicationInfo() {
-      return await rest.get<DiscordApplication>(rest.routes.oauth2.application())
+      return await rest.get<DiscordApplication>(rest.routes.oauth2.application());
     },
 
     async editApplicationInfo(body) {
       return await rest.patch<DiscordApplication>(rest.routes.application(), {
         body,
-      })
+      });
     },
 
     async getCurrentAuthenticationInfo(token) {
@@ -1209,11 +1209,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${token}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async exchangeToken(clientId, clientSecret, body) {
-      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`)
+      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`);
 
       const restOptions: MakeRequestOptions = {
         body,
@@ -1223,17 +1223,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         runThroughQueue: false,
         unauthorized: true,
-      }
+      };
 
       if (body.grantType === 'client_credentials') {
-        restOptions.body.scope = body.scope.join(' ')
+        restOptions.body.scope = body.scope.join(' ');
       }
 
-      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions)
+      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions);
     },
 
     async revokeToken(clientId, clientSecret, body) {
-      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`)
+      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`);
 
       await rest.post(rest.routes.oauth2.tokenRevoke(), {
         body,
@@ -1242,95 +1242,95 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Basic ${basicCredentials.toString('base64')}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async getAuditLog(guildId, options) {
-      return await rest.get<DiscordAuditLog>(rest.routes.guilds.auditlogs(guildId, options))
+      return await rest.get<DiscordAuditLog>(rest.routes.guilds.auditlogs(guildId, options));
     },
 
     async getAutomodRule(guildId, ruleId) {
-      return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId))
+      return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId));
     },
 
     async getAutomodRules(guildId) {
-      return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId))
+      return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId));
     },
 
     async getAvailableVoiceRegions() {
-      return await rest.get<DiscordVoiceRegion[]>(rest.routes.regions())
+      return await rest.get<DiscordVoiceRegion[]>(rest.routes.regions());
     },
 
     async getBan(guildId, userId) {
-      return await rest.get<DiscordBan>(rest.routes.guilds.members.ban(guildId, userId))
+      return await rest.get<DiscordBan>(rest.routes.guilds.members.ban(guildId, userId));
     },
 
     async getBans(guildId, options) {
-      return await rest.get<DiscordBan[]>(rest.routes.guilds.members.bans(guildId, options))
+      return await rest.get<DiscordBan[]>(rest.routes.guilds.members.bans(guildId, options));
     },
 
     async getChannel(id) {
-      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id))
+      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id));
     },
 
     async getChannelInvites(channelId) {
-      return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId))
+      return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId));
     },
 
     async getChannels(guildId) {
-      return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId))
+      return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId));
     },
 
     async getChannelWebhooks(channelId) {
-      return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId))
+      return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId));
     },
 
     async getDmChannel(userId) {
       return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
         body: { recipientId: userId },
-      })
+      });
     },
 
     async getGroupDmChannel(body) {
       return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
         body,
-      })
+      });
     },
 
     async getEmoji(guildId, emojiId) {
-      return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId))
+      return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId));
     },
 
     async getApplicationEmoji(emojiId) {
-      return await rest.get<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, emojiId))
+      return await rest.get<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, emojiId));
     },
 
     async getEmojis(guildId) {
-      return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
+      return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId));
     },
 
     async getApplicationEmojis() {
-      return await rest.get<{ items: DiscordEmoji[] }>(rest.routes.applicationEmojis(rest.applicationId))
+      return await rest.get<{ items: DiscordEmoji[] }>(rest.routes.applicationEmojis(rest.applicationId));
     },
 
     async getFollowupMessage(token, messageId) {
-      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true })
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true });
     },
 
     async getGatewayBot() {
-      return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot())
+      return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot());
     },
 
     async getGlobalApplicationCommand(commandId) {
-      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId))
+      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId));
     },
 
     async getGlobalApplicationCommands(options) {
-      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId, options?.withLocalizations))
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId, options?.withLocalizations));
     },
 
     async getGuild(guildId, options = { counts: true }) {
-      return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
+      return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts));
     },
 
     async getGuilds(token, options) {
@@ -1341,155 +1341,155 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             },
             unauthorized: true,
           }
-        : undefined
+        : undefined;
 
-      return await rest.get<Partial<DiscordGuild>[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions)
+      return await rest.get<Partial<DiscordGuild>[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions);
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
-      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
+      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId));
     },
 
     async getGuildApplicationCommands(guildId, options) {
       return await rest.get<DiscordApplicationCommand[]>(
         rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId, options?.withLocalizations),
-      )
+      );
     },
 
     async getGuildPreview(guildId) {
-      return await rest.get<DiscordGuildPreview>(rest.routes.guilds.preview(guildId))
+      return await rest.get<DiscordGuildPreview>(rest.routes.guilds.preview(guildId));
     },
 
     async getGuildTemplate(templateCode) {
-      return await rest.get<DiscordTemplate>(rest.routes.guilds.templates.code(templateCode))
+      return await rest.get<DiscordTemplate>(rest.routes.guilds.templates.code(templateCode));
     },
 
     async getGuildTemplates(guildId) {
-      return await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates.all(guildId))
+      return await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates.all(guildId));
     },
 
     async getGuildWebhooks(guildId) {
-      return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId))
+      return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId));
     },
 
     async getIntegrations(guildId) {
-      return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId))
+      return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId));
     },
 
     async getInvite(inviteCode, options) {
-      return await rest.get<DiscordInviteMetadata>(rest.routes.guilds.invite(inviteCode, options))
+      return await rest.get<DiscordInviteMetadata>(rest.routes.guilds.invite(inviteCode, options));
     },
 
     async getInvites(guildId) {
-      return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId))
+      return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId));
     },
 
     async getMessage(channelId, messageId) {
-      return await rest.get<DiscordMessage>(rest.routes.channels.message(channelId, messageId))
+      return await rest.get<DiscordMessage>(rest.routes.channels.message(channelId, messageId));
     },
 
     async getMessages(channelId, options) {
-      return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options))
+      return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options));
     },
 
     async getStickerPack(stickerPackId) {
-      return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId))
+      return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId));
     },
 
     async getStickerPacks() {
-      return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks())
+      return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks());
     },
 
     async getOriginalInteractionResponse(token) {
-      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true })
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true });
     },
 
     async getChannelPins(channelId, options) {
-      return await rest.get(rest.routes.channels.messagePins(channelId, options))
+      return await rest.get(rest.routes.channels.messagePins(channelId, options));
     },
 
     async getPinnedMessages(channelId) {
-      return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId))
+      return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId));
     },
 
     async getPrivateArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options))
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options));
     },
 
     async getPrivateJoinedArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options))
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options));
     },
 
     async getPruneCount(guildId, options) {
-      return await rest.get<DiscordPrunedCount>(rest.routes.guilds.prune(guildId, options))
+      return await rest.get<DiscordPrunedCount>(rest.routes.guilds.prune(guildId, options));
     },
 
     async getPublicArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options))
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options));
     },
 
     async getRoles(guildId) {
-      return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId))
+      return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId));
     },
 
     async getRole(guildId, roleId) {
-      return await rest.get<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId))
+      return await rest.get<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId));
     },
 
     async getScheduledEvent(guildId, eventId, options) {
-      return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount))
+      return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount));
     },
 
     async getScheduledEvents(guildId, options) {
-      return await rest.get<DiscordScheduledEvent[]>(rest.routes.guilds.events.events(guildId, options?.withUserCount))
+      return await rest.get<DiscordScheduledEvent[]>(rest.routes.guilds.events.events(guildId, options?.withUserCount));
     },
 
     async getScheduledEventUsers(guildId, eventId, options) {
-      return await rest.get<Array<{ user: DiscordUser; member?: DiscordMember }>>(rest.routes.guilds.events.users(guildId, eventId, options))
+      return await rest.get<Array<{ user: DiscordUser; member?: DiscordMember }>>(rest.routes.guilds.events.users(guildId, eventId, options));
     },
 
     async getSessionInfo() {
-      return await rest.getGatewayBot()
+      return await rest.getGatewayBot();
     },
 
     async getStageInstance(channelId) {
-      return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId))
+      return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId));
     },
 
     async getOwnVoiceState(guildId) {
-      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId))
+      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId));
     },
 
     async getUserVoiceState(guildId, userId) {
-      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId, userId))
+      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId, userId));
     },
 
     async getSticker(stickerId: BigString) {
-      return await rest.get<DiscordSticker>(rest.routes.sticker(stickerId))
+      return await rest.get<DiscordSticker>(rest.routes.sticker(stickerId));
     },
 
     async getGuildSticker(guildId, stickerId) {
-      return await rest.get<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId))
+      return await rest.get<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId));
     },
 
     async getGuildStickers(guildId) {
-      return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId))
+      return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId));
     },
 
     async getThreadMember(channelId, userId, options) {
-      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.getUser(channelId, userId, options))
+      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.getUser(channelId, userId, options));
     },
 
     async getThreadMembers(channelId, options) {
-      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId, options))
+      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId, options));
     },
 
     async getReactions(channelId, messageId, reaction, options) {
-      return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options))
+      return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options));
     },
 
     async getUser(id) {
-      return await rest.get<DiscordUser>(rest.routes.user(id))
+      return await rest.get<DiscordUser>(rest.routes.user(id));
     },
 
     async getCurrentUser(token) {
@@ -1498,7 +1498,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${token}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async getUserConnections(token) {
@@ -1507,7 +1507,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${token}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async getUserApplicationRoleConnection(token, applicationId) {
@@ -1516,71 +1516,71 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${token}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async getVanityUrl(guildId) {
-      return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId))
+      return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId));
     },
 
     async getVoiceRegions(guildId) {
-      return await rest.get<DiscordVoiceRegion[]>(rest.routes.guilds.regions(guildId))
+      return await rest.get<DiscordVoiceRegion[]>(rest.routes.guilds.regions(guildId));
     },
 
     async getWebhook(webhookId) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId))
+      return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId));
     },
 
     async getWebhookMessage(webhookId, token, messageId, options) {
       return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
         unauthorized: true,
-      })
+      });
     },
 
     async getWebhookWithToken(webhookId, token) {
       return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
         unauthorized: true,
-      })
+      });
     },
 
     async getWelcomeScreen(guildId) {
-      return await rest.get<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId))
+      return await rest.get<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId));
     },
 
     async getWidget(guildId) {
-      return await rest.get<DiscordGuildWidget>(rest.routes.guilds.widgetJson(guildId))
+      return await rest.get<DiscordGuildWidget>(rest.routes.guilds.widgetJson(guildId));
     },
 
     async getWidgetSettings(guildId) {
-      return await rest.get<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId))
+      return await rest.get<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId));
     },
 
     async joinThread(channelId) {
-      await rest.put(rest.routes.channels.threads.me(channelId))
+      await rest.put(rest.routes.channels.threads.me(channelId));
     },
 
     async leaveGuild(guildId) {
-      await rest.delete(rest.routes.guilds.leave(guildId))
+      await rest.delete(rest.routes.guilds.leave(guildId));
     },
 
     async leaveThread(channelId) {
-      await rest.delete(rest.routes.channels.threads.me(channelId))
+      await rest.delete(rest.routes.channels.threads.me(channelId));
     },
 
     async publishMessage(channelId, messageId) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId))
+      return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId));
     },
 
     async removeRole(guildId, userId, roleId, reason) {
-      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason });
     },
 
     async removeThreadMember(channelId, userId) {
-      await rest.delete(rest.routes.channels.threads.user(channelId, userId))
+      await rest.delete(rest.routes.channels.threads.user(channelId, userId));
     },
 
     async removeDmRecipient(channelId, userId) {
-      await rest.delete(rest.routes.channels.dmRecipient(channelId, userId))
+      await rest.delete(rest.routes.channels.dmRecipient(channelId, userId));
     },
 
     async sendFollowupMessage(token, options) {
@@ -1588,7 +1588,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body: options,
         files: options.files,
         unauthorized: true,
-      })
+      });
     },
 
     async sendInteractionResponse(interactionId, token, options, params) {
@@ -1597,51 +1597,51 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         files: options.data?.files,
         runThroughQueue: false,
         unauthorized: true,
-      })
+      });
     },
 
     async sendMessage(channelId, body) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body, files: body.files })
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body, files: body.files });
     },
 
     async startThreadWithMessage(channelId, messageId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), { body, reason })
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), { body, reason });
     },
 
     async startThreadWithoutMessage(channelId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body, reason })
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body, reason });
     },
 
     async getPollAnswerVoters(channelId, messageId, answerId, options) {
-      return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options))
+      return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options));
     },
 
     async endPoll(channelId, messageId) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId))
+      return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId));
     },
 
     async syncGuildTemplate(guildId) {
-      return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId))
+      return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId));
     },
 
     async banMember(guildId, userId, body, reason) {
-      await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason })
+      await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason });
     },
 
     async bulkBanMembers(guildId, options, reason) {
-      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason })
+      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason });
     },
 
     async editBotMember(guildId, body, reason) {
-      return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body, reason })
+      return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body, reason });
     },
 
     async editMember(guildId, userId, body, reason) {
-      return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body, reason })
+      return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body, reason });
     },
 
     async getMember(guildId, userId) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId))
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getCurrentMember(guildId, token) {
@@ -1650,86 +1650,86 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${token}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async getMembers(guildId, options) {
-      return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options))
+      return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options));
     },
 
     async getApplicationActivityInstance(applicationId, instanceId) {
-      return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId))
+      return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId));
     },
 
     async kickMember(guildId, userId, reason) {
       await rest.delete(rest.routes.guilds.members.member(guildId, userId), {
         reason,
-      })
+      });
     },
 
     async pinMessage(channelId, messageId, reason) {
-      await rest.put(rest.routes.channels.messagePin(channelId, messageId), { reason })
+      await rest.put(rest.routes.channels.messagePin(channelId, messageId), { reason });
     },
 
     async pruneMembers(guildId, body, reason) {
-      return await rest.post<{ pruned: number | null }>(rest.routes.guilds.members.prune(guildId), { body, reason })
+      return await rest.post<{ pruned: number | null }>(rest.routes.guilds.members.prune(guildId), { body, reason });
     },
 
     async searchMembers(guildId, query, options) {
-      return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.search(guildId, query, options))
+      return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.search(guildId, query, options));
     },
 
     async getGuildOnboarding(guildId) {
-      return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId))
+      return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId));
     },
 
     async editGuildOnboarding(guildId, options, reason) {
       return await rest.put<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId), {
         body: options,
         reason,
-      })
+      });
     },
 
     async modifyGuildIncidentActions(guildId, options) {
-      return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options })
+      return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options });
     },
 
     async unbanMember(guildId, userId, reason) {
-      await rest.delete(rest.routes.guilds.members.ban(guildId, userId), { reason })
+      await rest.delete(rest.routes.guilds.members.ban(guildId, userId), { reason });
     },
 
     async unpinMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.messagePin(channelId, messageId), { reason })
+      await rest.delete(rest.routes.channels.messagePin(channelId, messageId), { reason });
     },
 
     async triggerTypingIndicator(channelId) {
-      await rest.post(rest.routes.channels.typing(channelId))
+      await rest.post(rest.routes.channels.typing(channelId));
     },
 
     async upsertGlobalApplicationCommands(body, options) {
-      const restOptions: MakeRequestOptions = { body }
+      const restOptions: MakeRequestOptions = { body };
 
       if (options?.bearerToken) {
-        restOptions.unauthorized = true
+        restOptions.unauthorized = true;
         restOptions.headers = {
           authorization: `Bearer ${options.bearerToken}`,
-        }
+        };
       }
 
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions);
     },
 
     async upsertGuildApplicationCommands(guildId, body, options) {
-      const restOptions: MakeRequestOptions = { body }
+      const restOptions: MakeRequestOptions = { body };
 
       if (options?.bearerToken) {
-        restOptions.unauthorized = true
+        restOptions.unauthorized = true;
         restOptions.headers = {
           authorization: `Bearer ${options.bearerToken}`,
-        }
+        };
       }
 
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions);
     },
 
     async editUserApplicationRoleConnection(token, applicationId, body) {
@@ -1739,125 +1739,125 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${token}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async addGuildMember(guildId, userId, body) {
       return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
         body,
-      })
+      });
     },
 
     async createTestEntitlement(applicationId, body) {
       return await rest.post<DiscordEntitlement>(rest.routes.monetization.entitlements(applicationId), {
         body,
-      })
+      });
     },
 
     async listEntitlements(applicationId, options) {
-      return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options))
+      return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options));
     },
 
     async getEntitlement(applicationId, entitlementId) {
-      return await rest.get<DiscordEntitlement>(rest.routes.monetization.entitlement(applicationId, entitlementId))
+      return await rest.get<DiscordEntitlement>(rest.routes.monetization.entitlement(applicationId, entitlementId));
     },
 
     async deleteTestEntitlement(applicationId, entitlementId) {
-      await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId))
+      await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId));
     },
 
     async consumeEntitlement(applicationId, entitlementId) {
-      await rest.post(rest.routes.monetization.consumeEntitlement(applicationId, entitlementId))
+      await rest.post(rest.routes.monetization.consumeEntitlement(applicationId, entitlementId));
     },
 
     async listSkus(applicationId) {
-      return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId))
+      return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId));
     },
 
     async listSubscriptions(skuId, options) {
-      return await rest.get<DiscordSubscription[]>(rest.routes.monetization.subscriptions(skuId, options))
+      return await rest.get<DiscordSubscription[]>(rest.routes.monetization.subscriptions(skuId, options));
     },
 
     async getSubscription(skuId, subscriptionId) {
-      return await rest.get<DiscordSubscription>(rest.routes.monetization.subscription(skuId, subscriptionId))
+      return await rest.get<DiscordSubscription>(rest.routes.monetization.subscription(skuId, subscriptionId));
     },
 
     async sendSoundboardSound(channelId, options) {
       await rest.post(rest.routes.soundboard.sendSound(channelId), {
         body: options,
-      })
+      });
     },
 
     async listDefaultSoundboardSounds() {
-      return await rest.get<DiscordSoundboardSound[]>(rest.routes.soundboard.listDefault())
+      return await rest.get<DiscordSoundboardSound[]>(rest.routes.soundboard.listDefault());
     },
 
     async listGuildSoundboardSounds(guildId) {
-      return await rest.get<{ items: DiscordSoundboardSound[] }>(rest.routes.soundboard.guildSounds(guildId))
+      return await rest.get<{ items: DiscordSoundboardSound[] }>(rest.routes.soundboard.guildSounds(guildId));
     },
 
     async getGuildSoundboardSound(guildId, soundId) {
-      return await rest.get<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId))
+      return await rest.get<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId));
     },
 
     async createGuildSoundboardSound(guildId, options, reason) {
       return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSounds(guildId), {
         body: options,
         reason,
-      })
+      });
     },
 
     async modifyGuildSoundboardSound(guildId, soundId, options, reason) {
       return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
         body: options,
         reason,
-      })
+      });
     },
 
     async deleteGuildSoundboardSound(guildId, soundId, reason) {
       return await rest.delete(rest.routes.soundboard.guildSound(guildId, soundId), {
         reason,
-      })
+      });
     },
 
     async listApplicationRoleConnectionsMetadataRecords(applicationId) {
-      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId))
+      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId));
     },
 
     async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
       return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
         body: options,
-      })
+      });
     },
 
     async createLobby(options) {
       return await rest.post<DiscordLobby>(rest.routes.lobby.create(), {
         body: options,
-      })
+      });
     },
 
     async getLobby(lobbyId) {
-      return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId))
+      return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId));
     },
 
     async modifyLobby(lobbyId, options) {
       return await rest.patch<DiscordLobby>(rest.routes.lobby.lobby(lobbyId), {
         body: options,
-      })
+      });
     },
 
     async deleteLobby(lobbyId) {
-      return await rest.delete(rest.routes.lobby.lobby(lobbyId))
+      return await rest.delete(rest.routes.lobby.lobby(lobbyId));
     },
 
     async addMemberToLobby(lobbyId, userId, options) {
       return await rest.put<DiscordLobbyMember>(rest.routes.lobby.member(lobbyId, userId), {
         body: options,
-      })
+      });
     },
 
     async removeMemberFromLobby(lobbyId, userId) {
-      return await rest.delete(rest.routes.lobby.member(lobbyId, userId))
+      return await rest.delete(rest.routes.lobby.member(lobbyId, userId));
     },
 
     async leaveLobby(lobbyId, bearerToken) {
@@ -1866,7 +1866,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${bearerToken}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async linkChannelToLobby(lobbyId, bearerToken, options) {
@@ -1876,7 +1876,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${bearerToken}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     async unlinkChannelToLobby(lobbyId, bearerToken) {
@@ -1885,37 +1885,37 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${bearerToken}`,
         },
         unauthorized: true,
-      })
+      });
     },
 
     preferSnakeCase(enabled: boolean) {
-      const camelizer = enabled ? (x: any) => x : camelize
+      const camelizer = enabled ? (x: any) => x : camelize;
 
       rest.get = async (url, options) => {
-        return camelizer(await rest.makeRequest('GET', url, options))
-      }
+        return camelizer(await rest.makeRequest('GET', url, options));
+      };
 
       rest.post = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('POST', url, options))
-      }
+        return camelizer(await rest.makeRequest('POST', url, options));
+      };
 
       rest.delete = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        camelizer(await rest.makeRequest('DELETE', url, options))
-      }
+        camelizer(await rest.makeRequest('DELETE', url, options));
+      };
 
       rest.patch = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('PATCH', url, options))
-      }
+        return camelizer(await rest.makeRequest('PATCH', url, options));
+      };
 
       rest.put = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('PUT', url, options))
-      }
+        return camelizer(await rest.makeRequest('PUT', url, options));
+      };
 
-      return rest
+      return rest;
     },
-  }
+  };
 
-  return rest
+  return rest;
 }
 
 enum HttpResponseCode {

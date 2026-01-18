@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import style from './index.module.css'
+import { useState } from 'react';
+import style from './index.module.css';
 
 const Faq = ({ question, answer, defaultExpanded }: { question: string; answer: string; defaultExpanded?: boolean }) => {
-  const [visible, setVisible] = useState(defaultExpanded ?? false)
+  const [visible, setVisible] = useState(defaultExpanded ?? false);
 
   const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   return (
     <div className={style.faqContainer}>
@@ -28,8 +28,8 @@ const Faq = ({ question, answer, defaultExpanded }: { question: string; answer: 
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const questions = [
   {
@@ -53,7 +53,7 @@ const questions = [
     answer:
       "Yes! While Discordeno itself does not use classes, you can still use classes in your own code by using one of the many libraries or frameworks that provide class-based abstractions on top of Discordeno. Some examples of such libraries include the Discordeno.js which provides a very similar framework and API to Discord.js, or the Sinf library that provides a similar API to Eris library. These libraries provide classes and other abstractions that can help simplify the development of your bot, while still leveraging the power and flexibility of Discordeno's underlying object-based API. Make sure to check the documentation of these libraries for more information on how to use them in your bot.",
   },
-]
+];
 
 export default function DiscordenoFAQ() {
   return (
@@ -67,5 +67,5 @@ export default function DiscordenoFAQ() {
         </div>
       </div>
     </>
-  )
+  );
 }

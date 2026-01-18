@@ -1,10 +1,10 @@
-import type { DiscordGatewayPayload, DiscordInviteDelete } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordInviteDelete } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleInviteDelete(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (!bot.events.inviteDelete) return
+  if (!bot.events.inviteDelete) return;
 
-  const payload = data.d as DiscordInviteDelete
+  const payload = data.d as DiscordInviteDelete;
 
   bot.events.inviteDelete({
     /** The channel of the invite */
@@ -13,5 +13,5 @@ export async function handleInviteDelete(bot: Bot, data: DiscordGatewayPayload):
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
     /** The unique invite code */
     code: payload.code,
-  })
+  });
 }

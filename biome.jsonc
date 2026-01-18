@@ -38,7 +38,6 @@
   "javascript": {
     "formatter": {
       "trailingCommas": "all",
-      "semicolons": "asNeeded",
       "quoteStyle": "single"
     }
   },

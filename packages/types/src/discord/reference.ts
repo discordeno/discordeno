@@ -6,10 +6,10 @@
  * @remarks
  * json is only for stickers
  */
-export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'avif' | 'json'
+export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'avif' | 'json';
 
 /** https://discord.com/developers/docs/reference#image-formatting */
-export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
+export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
 
 /** https://discord.com/developers/docs/reference#locales */
 export enum Locales {
@@ -47,4 +47,4 @@ export enum Locales {
   Korean = 'ko',
 }
 
-export type Localization = Partial<Record<Locales, string>>
+export type Localization = Partial<Record<Locales, string>>;

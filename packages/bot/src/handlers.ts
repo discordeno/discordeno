@@ -1,12 +1,12 @@
-import type { DiscordGatewayPayload, GatewayDispatchEventNames } from '@discordeno/types'
-import type { Bot } from './bot.js'
-import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js'
-import * as handlers from './handlers/index.js'
+import type { DiscordGatewayPayload, GatewayDispatchEventNames } from '@discordeno/types';
+import type { Bot } from './bot.js';
+import type { DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js';
+import * as handlers from './handlers/index.js';
 
 export function createBotGatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior>(
   options: Partial<GatewayHandlers<TProps, TBehavior>>,
 ): GatewayHandlers<TProps, TBehavior> {
-  const _options = options as Partial<GatewayHandlers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>>
+  const _options = options as Partial<GatewayHandlers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>>;
 
   return {
     APPLICATION_COMMAND_PERMISSIONS_UPDATE: _options.APPLICATION_COMMAND_PERMISSIONS_UPDATE ?? handlers.handleApplicationCommandPermissionsUpdate,
@@ -85,16 +85,16 @@ export function createBotGatewayHandlers<TProps extends TransformersDesiredPrope
     GUILD_SOUNDBOARD_SOUND_UPDATE: _options.GUILD_SOUNDBOARD_SOUND_UPDATE ?? handlers.handleGuildSoundboardSoundUpdate,
     GUILD_SOUNDBOARD_SOUNDS_UPDATE: _options.GUILD_SOUNDBOARD_SOUNDS_UPDATE ?? handlers.handleGuildSoundboardSoundsUpdate,
     SOUNDBOARD_SOUNDS: _options.SOUNDBOARD_SOUNDS ?? handlers.handleSoundboardSounds,
-  } satisfies GatewayHandlers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as GatewayHandlers<TProps, TBehavior>
+  } satisfies GatewayHandlers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as GatewayHandlers<TProps, TBehavior>;
 }
 
 export type GatewayHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Record<
   GatewayDispatchEventNames,
   BotGatewayHandler<TProps, TBehavior>
->
+>;
 
 export type BotGatewayHandler<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = (
   bot: Bot<TProps, TBehavior>,
   data: DiscordGatewayPayload,
   shardId: number,
-) => unknown
+) => unknown;

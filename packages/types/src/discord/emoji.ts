@@ -1,28 +1,28 @@
 /** Types for: https://discord.com/developers/docs/resources/emoji */
 
-import type { DiscordUser } from './user.js'
+import type { DiscordUser } from './user.js';
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface DiscordEmoji {
   /** Emoji id */
-  id: string | null
+  id: string | null;
   /**
    * Emoji name
    *
    * @remarks
    * Can be null only in reaction emoji objects
    */
-  name: string | null
+  name: string | null;
   /** Roles allowed to use this emoji */
-  roles?: string[]
+  roles?: string[];
   /** User that created this emoji */
-  user?: DiscordUser
+  user?: DiscordUser;
   /** Whether this emoji must be wrapped in colons */
-  require_colons?: boolean
+  require_colons?: boolean;
   /** Whether this emoji is managed */
-  managed?: boolean
+  managed?: boolean;
   /** Whether this emoji is animated */
-  animated?: boolean
+  animated?: boolean;
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
-  available?: boolean
+  available?: boolean;
 }
