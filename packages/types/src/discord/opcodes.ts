@@ -159,6 +159,10 @@ export enum HTTPJsonErrorCodes {
   UnknownTag = 10087,
   /** Unknown sound */
   UnknownSound = 10097,
+  /** Unknown invite target users job (invite exists but has no target users) */
+  UnknownInviteTargetUsersJob = 10124,
+  /** Unknown invite target users (invite exists but has no target users) */
+  UnknownInviteTargetUsers = 10129,
 
   /** Bots cannot use this endpoint */
   BotsCannotUseThis = 20001,
