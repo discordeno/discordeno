@@ -24,10 +24,8 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook): typeof bot.
       icon: payload.source_guild.icon ? iconHashToBigInt(payload.source_guild.icon) : undefined,
     };
   if (props.sourceChannel && payload.source_channel)
-    webhook.sourceChannel = {
-      id: bot.transformers.snowflake(payload.source_channel.id!),
-      name: payload.source_channel.name ?? '',
-    };
+    // @ts-expect-error TODO: Partials
+    webhook.sourceChannel = bot.transformers.channel(bot, payload.source_channel, { guildId: payload.guild_id });
   if (props.url && payload.url) webhook.url = payload.url;
 
   return bot.transformers.customizers.webhook(bot, payload, webhook);
