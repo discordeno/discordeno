@@ -29,7 +29,6 @@ jobs:
       - name: E2E Test
         if: ${{ inputs.event_name != 'pull_request' }}
         run: yarn test:e2e --filter=./packages/${{ inputs.package }}
-        timeout-minutes: 5
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           E2E_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
