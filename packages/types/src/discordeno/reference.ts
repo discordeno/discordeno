@@ -12,7 +12,7 @@
  */
 export interface FileContent {
   /** The file blob */
-  blob: Blob
+  blob: Blob;
   /** The name of the file */
-  name: string
+  name: string;
 }

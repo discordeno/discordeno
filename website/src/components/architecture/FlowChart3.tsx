@@ -1,15 +1,15 @@
-import { useColorMode } from '@docusaurus/theme-common'
-import { Background, Controls, type Edge, Handle, type Node, Position, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
-import type React from 'react'
-import { useEffect, useState } from 'react'
-import '@xyflow/react/dist/style.css'
-import { defaultNodeOptions, height, multiplier } from './BaseFlowChart'
+import { useColorMode } from '@docusaurus/theme-common';
+import { Background, Controls, type Edge, Handle, type Node, Position, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import '@xyflow/react/dist/style.css';
+import { defaultNodeOptions, height, multiplier } from './BaseFlowChart';
 
 const handlers: Record<
   string,
   {
-    transformers: string[]
-    event: string
+    transformers: string[];
+    event: string;
   }
 > = {
   handleChannelCreate: {
@@ -28,11 +28,11 @@ const handlers: Record<
     transformers: ['transformers.channel'],
     event: 'events.channelUpdate',
   },
-}
+};
 
 export default function FlowChart() {
-  const transformers = []
-  const events = []
+  const transformers = [];
+  const events = [];
   const initialNodes: Node[] = [
     {
       id: 'baseNode-gateway',
@@ -96,7 +96,7 @@ export default function FlowChart() {
       data: { label: 'Handle discord payload' },
       ...defaultNodeOptions,
     },
-  ]
+  ];
 
   const initialEdges: Edge[] = [
     {
@@ -122,9 +122,9 @@ export default function FlowChart() {
       target: 'baseLineNode-4',
       style: { stroke: 'blue', strokeDasharray: 20 },
     },
-  ]
+  ];
 
-  const handlerKeys = Object.keys(handlers)
+  const handlerKeys = Object.keys(handlers);
 
   for (const [index, handler] of handlerKeys.entries()) {
     initialNodes.push({
@@ -135,35 +135,35 @@ export default function FlowChart() {
       },
       data: { label: handler },
       ...defaultNodeOptions,
-    })
+    });
     initialEdges.push({
       id: `handleDiscordPayload-${handler}`,
       source: 'baseNode-handleDiscordPayload',
       target: handler,
-    })
+    });
     if (!events.find((e) => e === handlers[handler].event) && handlers[handler].event) {
-      events.push(handlers[handler].event)
+      events.push(handlers[handler].event);
       initialEdges.push({
         id: `${handlers[handler].event}-yourCode`,
         source: handlers[handler].event,
         target: 'baseNode-yourCode',
-      })
+      });
     }
     for (const transformer of handlers[handler].transformers) {
-      if (!transformers.find((t) => t === transformer) && transformer) transformers.push(transformer)
+      if (!transformers.find((t) => t === transformer) && transformer) transformers.push(transformer);
       if (!initialEdges.find((edge) => edge.id === `${handler}-${transformer}`) && transformer) {
         initialEdges.push({
           id: `${handler}-${transformer}`,
           source: handler,
           target: transformer,
-        })
+        });
       }
       if (!initialEdges.find((edge) => edge.id === `${transformer}-${handlers[handler].event}`) && handlers[handler].event) {
         initialEdges.push({
           id: `${transformer}-${handlers[handler].event}`,
           source: transformer,
           target: handlers[handler].event,
-        })
+        });
       }
     }
   }
@@ -177,7 +177,7 @@ export default function FlowChart() {
       },
       data: { label: transformer.slice(13) },
       ...defaultNodeOptions,
-    })
+    });
   }
 
   for (const [index, event] of events.entries()) {
@@ -189,7 +189,7 @@ export default function FlowChart() {
       },
       data: { label: event.slice(7) },
       ...defaultNodeOptions,
-    })
+    });
   }
 
   initialNodes.unshift(
@@ -268,137 +268,137 @@ export default function FlowChart() {
       data: { label: 'Event' },
       draggable: false,
     },
-  )
+  );
 
-  const [nodes] = useNodesState(initialNodes)
-  const [edges, setEdges] = useEdgesState(initialEdges)
-  const [userClick, setUserClick] = useState(false)
+  const [nodes] = useNodesState(initialNodes);
+  const [edges, setEdges] = useEdgesState(initialEdges);
+  const [userClick, setUserClick] = useState(false);
 
   const nodeMouseHandler = (_: React.MouseEvent, node: Node, userTrigger = true) => {
-    if (userTrigger) setUserClick(true)
+    if (userTrigger) setUserClick(true);
     if (node.id.split('-')[0] === 'baseNode') {
       edges.forEach((e) => {
-        if (e.id.startsWith('baseLine')) return
-        e.animated = true
-        e.style = { stroke: 'blue' }
-      })
-      setEdges([...edges])
-      return
+        if (e.id.startsWith('baseLine')) return;
+        e.animated = true;
+        e.style = { stroke: 'blue' };
+      });
+      setEdges([...edges]);
+      return;
     }
     if (handlerKeys.find((h) => handlers[h].event === node.id)) {
-      const handlerName = handlerKeys.find((h) => handlers[h].event === node.id)
-      const handler = handlers[handlerName]
+      const handlerName = handlerKeys.find((h) => handlers[h].event === node.id);
+      const handler = handlers[handlerName];
       edges.forEach((e) => {
-        if (e.id.startsWith('baseLine')) return
+        if (e.id.startsWith('baseLine')) return;
         if (e.id.split('-')[0] === 'baseEdge') {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === 'handleDiscordPayload' && e.id.split('-')[1] === handlerName) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === handlerName && handler.transformers.includes(e.id.split('-')[1])) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (handler.transformers.includes(e.id.split('-')[0]) && e.id.split('-')[1] === handler.event) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === handler.event && e.id.split('-')[1] === 'yourCode') {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
-        e.animated = false
-        e.style = { opacity: 0.3 }
-      })
-      setEdges([...edges])
-      return
+        e.animated = false;
+        e.style = { opacity: 0.3 };
+      });
+      setEdges([...edges]);
+      return;
     }
     if (handlerKeys.find((h) => handlers[h].transformers.includes(node.id))) {
       edges.forEach((e) => {
-        if (e.id.startsWith('baseLine')) return
+        if (e.id.startsWith('baseLine')) return;
         if (e.id.split('-')[0] === 'baseEdge') {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (
           e.id.split('-')[0] === 'handleDiscordPayload' &&
           handlerKeys.filter((h) => handlers[h].transformers.includes(node.id)).includes(e.id.split('-')[1])
         ) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (handlerKeys.filter((h) => handlers[h].transformers.includes(node.id)).includes(e.id.split('-')[0]) && e.id.split('-')[1] === node.id) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === node.id) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
-        e.animated = false
-        e.style = { opacity: 0.3 }
-      })
-      setEdges([...edges])
-      return
+        e.animated = false;
+        e.style = { opacity: 0.3 };
+      });
+      setEdges([...edges]);
+      return;
     }
     if (handlers[node.id]) {
-      const handler = handlers[node.id]
+      const handler = handlers[node.id];
       edges.forEach((e) => {
-        if (e.id.startsWith('baseLine')) return
+        if (e.id.startsWith('baseLine')) return;
         if (e.id.split('-')[0] === 'baseEdge') {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === 'handleDiscordPayload' && e.id.split('-')[1] === node.id) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === node.id && handler.transformers.includes(e.id.split('-')[1])) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (handler.transformers.includes(e.id.split('-')[0]) && e.id.split('-')[1] === handler.event) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
         if (e.id.split('-')[0] === handler.event) {
-          e.animated = true
-          e.style = { stroke: 'blue' }
-          return
+          e.animated = true;
+          e.style = { stroke: 'blue' };
+          return;
         }
-        e.animated = false
-        e.style = { opacity: 0.3 }
-      })
-      setEdges([...edges])
-      return
+        e.animated = false;
+        e.style = { opacity: 0.3 };
+      });
+      setEdges([...edges]);
+      return;
     }
     edges.forEach((e) => {
-      if (e.id.startsWith('baseLine')) return
-      e.animated = false
-      e.style = {}
-    })
-    setEdges([...edges])
-  }
+      if (e.id.startsWith('baseLine')) return;
+      e.animated = false;
+      e.style = {};
+    });
+    setEdges([...edges]);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const randomIndex = Math.round((handlerKeys.length - 1) * Math.random())
+      const randomIndex = Math.round((handlerKeys.length - 1) * Math.random());
       if (!userClick) {
         nodeMouseHandler(
           undefined,
@@ -408,26 +408,26 @@ export default function FlowChart() {
             position: undefined,
           },
           false,
-        )
+        );
       }
-    }, 1000)
+    }, 1000);
     return () => {
-      clearInterval(interval)
-    }
-  }, [userClick])
+      clearInterval(interval);
+    };
+  }, [userClick]);
 
   useEffect(() => {
     if (userClick) {
       const timeout = setTimeout(() => {
-        setUserClick(false)
-      }, 10000)
+        setUserClick(false);
+      }, 10000);
       return () => {
-        clearTimeout(timeout)
-      }
+        clearTimeout(timeout);
+      };
     }
-  }, [userClick])
+  }, [userClick]);
 
-  const color = useColorMode()
+  const color = useColorMode();
 
   return (
     <>
@@ -444,14 +444,14 @@ export default function FlowChart() {
           onNodeDoubleClick={nodeMouseHandler}
           onNodeClick={nodeMouseHandler}
           onClick={(e) => {
-            const target = e.target as HTMLDivElement
+            const target = e.target as HTMLDivElement;
 
             if (target.className === 'react-flow__pane') {
               nodeMouseHandler(e, {
                 id: ' - ',
                 data: { label: ' - ' },
                 position: undefined,
-              })
+              });
             }
           }}
           nodeTypes={{
@@ -493,5 +493,5 @@ export default function FlowChart() {
         </ReactFlow>
       </div>
     </>
-  )
+  );
 }

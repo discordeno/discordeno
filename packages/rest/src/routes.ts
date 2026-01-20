@@ -1,6 +1,6 @@
-import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/types'
-import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils'
-import type { RestRoutes } from './typings/routes.js'
+import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/types';
+import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils';
+import type { RestRoutes } from './typings/routes.js';
 
 /**
  * Creates the available discord API routes
@@ -9,257 +9,257 @@ import type { RestRoutes } from './typings/routes.js'
  * @returns The available discord API routes
  */
 export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
-  const encode: typeof encodeComponent = disableURIEncode ? (x) => x.toString() : encodeComponent
+  const encode: typeof encodeComponent = disableURIEncode ? (x) => x.toString() : encodeComponent;
 
   return {
     webhooks: {
       id: (webhookId) => {
-        return `/webhooks/${encode(webhookId)}`
+        return `/webhooks/${encode(webhookId)}`;
       },
       message: (webhookId, token, messageId, options) => {
-        let url = `/webhooks/${encode(webhookId)}/${encode(token)}/messages/${encode(messageId)}?`
+        let url = `/webhooks/${encode(webhookId)}/${encode(token)}/messages/${encode(messageId)}?`;
 
         if (options) {
-          if (options.threadId) url += `thread_id=${encode(options.threadId)}`
-          if (options.withComponents) url += `&with_components=${encode(options.withComponents)}`
+          if (options.threadId) url += `thread_id=${encode(options.threadId)}`;
+          if (options.withComponents) url += `&with_components=${encode(options.withComponents)}`;
         }
 
-        return url
+        return url;
       },
       webhook: (webhookId, token, options) => {
-        let url = `/webhooks/${encode(webhookId)}/${encode(token)}?`
+        let url = `/webhooks/${encode(webhookId)}/${encode(token)}?`;
 
         if (options) {
-          if (options?.wait !== undefined) url += `wait=${encode(options.wait)}`
-          if (options.threadId) url += `&thread_id=${encode(options.threadId)}`
-          if (options.withComponents) url += `&with_components=${encode(options.withComponents)}`
+          if (options?.wait !== undefined) url += `wait=${encode(options.wait)}`;
+          if (options.threadId) url += `&thread_id=${encode(options.threadId)}`;
+          if (options.withComponents) url += `&with_components=${encode(options.withComponents)}`;
         }
 
-        return url
+        return url;
       },
     },
 
     // Channel Endpoints
     channels: {
       bulk: (channelId) => {
-        return `/channels/${encode(channelId)}/messages/bulk-delete`
+        return `/channels/${encode(channelId)}/messages/bulk-delete`;
       },
       dm: () => {
-        return '/users/@me/channels'
+        return '/users/@me/channels';
       },
       dmRecipient: (channelId, userId) => {
-        return `/channels/${encode(channelId)}/recipients/${encode(userId)}`
+        return `/channels/${encode(channelId)}/recipients/${encode(userId)}`;
       },
       pin: (channelId, messageId) => {
-        return `/channels/${encode(channelId)}/pins/${encode(messageId)}`
+        return `/channels/${encode(channelId)}/pins/${encode(messageId)}`;
       },
       pins: (channelId) => {
-        return `/channels/${encode(channelId)}/pins`
+        return `/channels/${encode(channelId)}/pins`;
       },
       messagePins: (channelId, options) => {
-        let url = `/channels/${encode(channelId)}/messages/pins?`
+        let url = `/channels/${encode(channelId)}/messages/pins?`;
 
         if (options) {
-          if (options.before) url += `before=${encode(options.before)}`
-          if (options.limit) url += `&limit=${encode(options.limit)}`
+          if (options.before) url += `before=${encode(options.before)}`;
+          if (options.limit) url += `&limit=${encode(options.limit)}`;
         }
 
-        return url
+        return url;
       },
       messagePin: (channelId, messageId) => {
-        return `/channels/${encode(channelId)}/messages/pins/${encode(messageId)}`
+        return `/channels/${encode(channelId)}/messages/pins/${encode(messageId)}`;
       },
       reactions: {
         bot: (channelId, messageId, emoji) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/@me`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/@me`;
         },
         user: (channelId, messageId, emoji, userId) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/${encode(userId)}`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/${encode(userId)}`;
         },
         all: (channelId, messageId) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions`;
         },
         emoji: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`;
 
           if (options) {
-            if (options.type) url += `type=${encode(options.type)}`
-            if (options.after) url += `&after=${encode(options.after)}`
-            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.type) url += `type=${encode(options.type)}`;
+            if (options.after) url += `&after=${encode(options.after)}`;
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
         message: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`;
 
           if (options) {
-            if (options.after) url += `after=${encode(options.after)}`
-            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.after) url += `after=${encode(options.after)}`;
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
       },
       webhooks: (channelId) => {
-        return `/channels/${encode(channelId)}/webhooks`
+        return `/channels/${encode(channelId)}/webhooks`;
       },
 
       channel: (channelId) => {
-        return `/channels/${encode(channelId)}`
+        return `/channels/${encode(channelId)}`;
       },
 
       follow: (channelId) => {
-        return `/channels/${encode(channelId)}/followers`
+        return `/channels/${encode(channelId)}/followers`;
       },
 
       forum: (channelId) => {
-        return `/channels/${encode(channelId)}/threads`
+        return `/channels/${encode(channelId)}/threads`;
       },
 
       invites: (channelId) => {
-        return `/channels/${encode(channelId)}/invites`
+        return `/channels/${encode(channelId)}/invites`;
       },
 
       message: (channelId, messageId) => {
-        return `/channels/${encode(channelId)}/messages/${encode(messageId)}`
+        return `/channels/${encode(channelId)}/messages/${encode(messageId)}`;
       },
 
       messages: (channelId, options?: GetMessagesOptions) => {
-        let url = `/channels/${encode(channelId)}/messages?`
+        let url = `/channels/${encode(channelId)}/messages?`;
 
         if (options) {
           if (isGetMessagesAfter(options) && options.after) {
-            url += `after=${encode(options.after)}`
+            url += `after=${encode(options.after)}`;
           }
           if (isGetMessagesBefore(options) && options.before) {
-            url += `&before=${encode(options.before)}`
+            url += `&before=${encode(options.before)}`;
           }
           if (isGetMessagesAround(options) && options.around) {
-            url += `&around=${encode(options.around)}`
+            url += `&around=${encode(options.around)}`;
           }
           if (isGetMessagesLimit(options) && options.limit) {
-            url += `&limit=${encode(options.limit)}`
+            url += `&limit=${encode(options.limit)}`;
           }
         }
 
-        return url
+        return url;
       },
 
       overwrite: (channelId, overwriteId) => {
-        return `/channels/${encode(channelId)}/permissions/${encode(overwriteId)}`
+        return `/channels/${encode(channelId)}/permissions/${encode(overwriteId)}`;
       },
 
       crosspost: (channelId, messageId) => {
-        return `/channels/${encode(channelId)}/messages/${encode(messageId)}/crosspost`
+        return `/channels/${encode(channelId)}/messages/${encode(messageId)}/crosspost`;
       },
 
       stages: () => {
-        return '/stage-instances'
+        return '/stage-instances';
       },
 
       stage: (channelId) => {
-        return `/stage-instances/${encode(channelId)}`
+        return `/stage-instances/${encode(channelId)}`;
       },
 
       // Thread Endpoints
       threads: {
         message: (channelId, messageId) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/threads`
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/threads`;
         },
         all: (channelId) => {
-          return `/channels/${encode(channelId)}/threads`
+          return `/channels/${encode(channelId)}/threads`;
         },
         active: (guildId) => {
-          return `/guilds/${encode(guildId)}/threads/active`
+          return `/guilds/${encode(guildId)}/threads/active`;
         },
         members: (channelId, options) => {
-          let url = `/channels/${encode(channelId)}/thread-members?`
+          let url = `/channels/${encode(channelId)}/thread-members?`;
 
           if (options) {
-            if (options.withMember) url += `with_member=${encode(options.withMember)}`
-            if (options.limit) url += `&limit=${encode(options.limit)}`
-            if (options.after) url += `&after=${encode(options.after)}`
+            if (options.withMember) url += `with_member=${encode(options.withMember)}`;
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
+            if (options.after) url += `&after=${encode(options.after)}`;
           }
 
-          return url
+          return url;
         },
         me: (channelId) => {
-          return `/channels/${encode(channelId)}/thread-members/@me`
+          return `/channels/${encode(channelId)}/thread-members/@me`;
         },
         getUser(channelId, userId, options) {
-          let url = `/channels/${encode(channelId)}/thread-members/${encode(userId)}?`
+          let url = `/channels/${encode(channelId)}/thread-members/${encode(userId)}?`;
 
           if (options) {
-            if (options.withMember) url += `with_member=${encode(options.withMember)}`
+            if (options.withMember) url += `with_member=${encode(options.withMember)}`;
           }
 
-          return url
+          return url;
         },
         user: (channelId, userId) => {
-          return `/channels/${encode(channelId)}/thread-members/${encode(userId)}`
+          return `/channels/${encode(channelId)}/thread-members/${encode(userId)}`;
         },
         archived: (channelId) => {
-          return `/channels/${encode(channelId)}/threads/archived`
+          return `/channels/${encode(channelId)}/threads/archived`;
         },
         public: (channelId, options) => {
-          let url = `/channels/${encode(channelId)}/threads/archived/public?`
+          let url = `/channels/${encode(channelId)}/threads/archived/public?`;
 
           if (options) {
             if (options.before) {
-              const iso = new Date(options.before).toISOString()
-              url += `before=${encode(iso)}`
+              const iso = new Date(options.before).toISOString();
+              url += `before=${encode(iso)}`;
             }
-            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
         private: (channelId, options) => {
-          let url = `/channels/${encode(channelId)}/threads/archived/private?`
+          let url = `/channels/${encode(channelId)}/threads/archived/private?`;
 
           if (options) {
             if (options.before) {
-              const iso = new Date(options.before).toISOString()
-              url += `before=${encode(iso)}`
+              const iso = new Date(options.before).toISOString();
+              url += `before=${encode(iso)}`;
             }
-            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
         joined: (channelId, options) => {
-          let url = `/channels/${encode(channelId)}/users/@me/threads/archived/private?`
+          let url = `/channels/${encode(channelId)}/users/@me/threads/archived/private?`;
 
           if (options) {
             if (options.before) {
-              const iso = new Date(options.before).toISOString()
-              url += `before=${encode(iso)}`
+              const iso = new Date(options.before).toISOString();
+              url += `before=${encode(iso)}`;
             }
-            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
       },
 
       typing: (channelId) => {
-        return `/channels/${encode(channelId)}/typing`
+        return `/channels/${encode(channelId)}/typing`;
       },
 
       polls: {
         votes: (channelId, messageId, answerId, options) => {
-          let url = `/channels/${encode(channelId)}/polls/${encode(messageId)}/answers/${encode(answerId)}?`
+          let url = `/channels/${encode(channelId)}/polls/${encode(messageId)}/answers/${encode(answerId)}?`;
 
           if (options) {
-            if (options.after) url += `after=${encode(options.after)}`
-            if (options.limit) url += `&limit=${encode(options.limit)}`
+            if (options.after) url += `after=${encode(options.after)}`;
+            if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
         expire: (channelId, messageId) => {
-          return `/channels/${encode(channelId)}/polls/${encode(messageId)}/expire`
+          return `/channels/${encode(channelId)}/polls/${encode(messageId)}/expire`;
         },
       },
     },
@@ -267,262 +267,262 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
     // Guild Endpoints
     guilds: {
       all: () => {
-        return '/guilds'
+        return '/guilds';
       },
       userGuilds: (options) => {
-        let url = '/users/@me/guilds?'
+        let url = '/users/@me/guilds?';
 
         if (options) {
-          if (options.after) url += `after=${encode(options.after)}`
-          if (options.before) url += `&before=${encode(options.before)}`
-          if (options.limit) url += `&limit=${encode(options.limit)}`
-          if (options.withCounts) url += `&with_counts=${encode(options.withCounts)}`
+          if (options.after) url += `after=${encode(options.after)}`;
+          if (options.before) url += `&before=${encode(options.before)}`;
+          if (options.limit) url += `&limit=${encode(options.limit)}`;
+          if (options.withCounts) url += `&with_counts=${encode(options.withCounts)}`;
         }
 
-        return url
+        return url;
       },
       auditlogs: (guildId, options) => {
-        let url = `/guilds/${encode(guildId)}/audit-logs?`
+        let url = `/guilds/${encode(guildId)}/audit-logs?`;
 
         if (options) {
-          if (options.actionType) url += `action_type=${encode(options.actionType)}`
-          if (options.before) url += `&before=${encode(options.before)}`
-          if (options.after) url += `&after=${encode(options.after)}`
-          if (options.limit) url += `&limit=${encode(options.limit)}`
-          if (options.userId) url += `&user_id=${encode(options.userId)}`
+          if (options.actionType) url += `action_type=${encode(options.actionType)}`;
+          if (options.before) url += `&before=${encode(options.before)}`;
+          if (options.after) url += `&after=${encode(options.after)}`;
+          if (options.limit) url += `&limit=${encode(options.limit)}`;
+          if (options.userId) url += `&user_id=${encode(options.userId)}`;
         }
 
-        return url
+        return url;
       },
       automod: {
         rule: (guildId, ruleId) => {
-          return `/guilds/${encode(guildId)}/auto-moderation/rules/${encode(ruleId)}`
+          return `/guilds/${encode(guildId)}/auto-moderation/rules/${encode(ruleId)}`;
         },
         rules: (guildId) => {
-          return `/guilds/${encode(guildId)}/auto-moderation/rules`
+          return `/guilds/${encode(guildId)}/auto-moderation/rules`;
         },
       },
       channels: (guildId) => {
-        return `/guilds/${encode(guildId)}/channels`
+        return `/guilds/${encode(guildId)}/channels`;
       },
       emoji: (guildId, emojiId) => {
-        return `/guilds/${encode(guildId)}/emojis/${encode(emojiId)}`
+        return `/guilds/${encode(guildId)}/emojis/${encode(emojiId)}`;
       },
       emojis: (guildId) => {
-        return `/guilds/${encode(guildId)}/emojis`
+        return `/guilds/${encode(guildId)}/emojis`;
       },
       events: {
         events: (guildId, withUserCount?: boolean) => {
-          let url = `/guilds/${encode(guildId)}/scheduled-events?`
+          let url = `/guilds/${encode(guildId)}/scheduled-events?`;
 
           if (withUserCount !== undefined) {
-            url += `with_user_count=${encode(withUserCount)}`
+            url += `with_user_count=${encode(withUserCount)}`;
           }
-          return url
+          return url;
         },
         event: (guildId, eventId, withUserCount?: boolean) => {
-          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}`
+          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}`;
 
           if (withUserCount !== undefined) {
-            url += `with_user_count=${encode(withUserCount)}`
+            url += `with_user_count=${encode(withUserCount)}`;
           }
 
-          return url
+          return url;
         },
         users: (guildId, eventId, options?: GetScheduledEventUsers) => {
-          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}/users?`
+          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}/users?`;
 
           if (options) {
-            if (options.limit !== undefined) url += `limit=${encode(options.limit)}`
+            if (options.limit !== undefined) url += `limit=${encode(options.limit)}`;
             if (options.withMember !== undefined) {
-              url += `&with_member=${encode(options.withMember)}`
+              url += `&with_member=${encode(options.withMember)}`;
             }
-            if (options.after !== undefined) url += `&after=${encode(options.after)}`
-            if (options.before !== undefined) url += `&before=${encode(options.before)}`
+            if (options.after !== undefined) url += `&after=${encode(options.after)}`;
+            if (options.before !== undefined) url += `&before=${encode(options.before)}`;
           }
 
-          return url
+          return url;
         },
       },
       guild(guildId, withCounts) {
-        let url = `/guilds/${encode(guildId)}?`
+        let url = `/guilds/${encode(guildId)}?`;
 
         if (withCounts !== undefined) {
-          url += `with_counts=${encode(withCounts)}`
+          url += `with_counts=${encode(withCounts)}`;
         }
 
-        return url
+        return url;
       },
       integration(guildId, integrationId) {
-        return `/guilds/${encode(guildId)}/integrations/${encode(integrationId)}`
+        return `/guilds/${encode(guildId)}/integrations/${encode(integrationId)}`;
       },
       integrations: (guildId) => {
-        return `/guilds/${encode(guildId)}/integrations?include_applications=true`
+        return `/guilds/${encode(guildId)}/integrations?include_applications=true`;
       },
       invite(inviteCode, options) {
-        let url = `/invites/${encode(inviteCode)}?`
+        let url = `/invites/${encode(inviteCode)}?`;
 
         if (options) {
           if (options.withCounts !== undefined) {
-            url += `with_counts=${encode(options.withCounts)}`
+            url += `with_counts=${encode(options.withCounts)}`;
           }
           if (options.scheduledEventId) {
-            url += `&guild_scheduled_event_id=${encode(options.scheduledEventId)}`
+            url += `&guild_scheduled_event_id=${encode(options.scheduledEventId)}`;
           }
         }
 
-        return url
+        return url;
       },
       invites: (guildId) => {
-        return `/guilds/${encode(guildId)}/invites`
+        return `/guilds/${encode(guildId)}/invites`;
       },
       leave: (guildId) => {
-        return `/users/@me/guilds/${encode(guildId)}`
+        return `/users/@me/guilds/${encode(guildId)}`;
       },
       members: {
         ban: (guildId, userId) => {
-          return `/guilds/${encode(guildId)}/bans/${encode(userId)}`
+          return `/guilds/${encode(guildId)}/bans/${encode(userId)}`;
         },
         bans: (guildId, options) => {
-          let url = `/guilds/${encode(guildId)}/bans?`
+          let url = `/guilds/${encode(guildId)}/bans?`;
 
           if (options) {
-            if (options.limit) url += `limit=${encode(options.limit)}`
-            if (options.after) url += `&after=${encode(options.after)}`
-            if (options.before) url += `&before=${encode(options.before)}`
+            if (options.limit) url += `limit=${encode(options.limit)}`;
+            if (options.after) url += `&after=${encode(options.after)}`;
+            if (options.before) url += `&before=${encode(options.before)}`;
           }
 
-          return url
+          return url;
         },
         bulkBan: (guildId) => {
-          return `/guilds/${encode(guildId)}/bulk-ban`
+          return `/guilds/${encode(guildId)}/bulk-ban`;
         },
         bot: (guildId) => {
-          return `/guilds/${encode(guildId)}/members/@me`
+          return `/guilds/${encode(guildId)}/members/@me`;
         },
         member: (guildId, userId) => {
-          return `/guilds/${encode(guildId)}/members/${encode(userId)}`
+          return `/guilds/${encode(guildId)}/members/${encode(userId)}`;
         },
         currentMember: (guildId) => {
-          return `/users/@me/guilds/${encode(guildId)}/member`
+          return `/users/@me/guilds/${encode(guildId)}/member`;
         },
         members: (guildId, options) => {
-          let url = `/guilds/${encode(guildId)}/members?`
+          let url = `/guilds/${encode(guildId)}/members?`;
 
           if (options !== undefined) {
-            if (options.limit) url += `limit=${encode(options.limit)}`
-            if (options.after) url += `&after=${encode(options.after)}`
+            if (options.limit) url += `limit=${encode(options.limit)}`;
+            if (options.after) url += `&after=${encode(options.after)}`;
           }
 
-          return url
+          return url;
         },
         search: (guildId, query, options) => {
-          let url = `/guilds/${encode(guildId)}/members/search?query=${encode(query)}`
+          let url = `/guilds/${encode(guildId)}/members/search?query=${encode(query)}`;
 
           if (options) {
-            if (options.limit !== undefined) url += `&limit=${encode(options.limit)}`
+            if (options.limit !== undefined) url += `&limit=${encode(options.limit)}`;
           }
 
-          return url
+          return url;
         },
         prune: (guildId, options) => {
-          let url = `/guilds/${encode(guildId)}/prune?`
+          let url = `/guilds/${encode(guildId)}/prune?`;
 
           if (options) {
-            if (options.days) url += `days=${encode(options.days)}`
+            if (options.days) url += `days=${encode(options.days)}`;
             if (Array.isArray(options.includeRoles)) {
-              url += `&include_roles=${encode(options.includeRoles.join(','))}`
+              url += `&include_roles=${encode(options.includeRoles.join(','))}`;
             } else if (options.includeRoles) {
-              url += `&include_roles=${encode(options.includeRoles)}`
+              url += `&include_roles=${encode(options.includeRoles)}`;
             }
           }
 
-          return url
+          return url;
         },
       },
       preview: (guildId) => {
-        return `/guilds/${encode(guildId)}/preview`
+        return `/guilds/${encode(guildId)}/preview`;
       },
       prune: (guildId, options) => {
-        let url = `/guilds/${encode(guildId)}/prune?`
+        let url = `/guilds/${encode(guildId)}/prune?`;
 
         if (options) {
-          if (options.days) url += `days=${encode(options.days)}`
+          if (options.days) url += `days=${encode(options.days)}`;
           if (Array.isArray(options.includeRoles)) {
-            url += `&include_roles=${encode(options.includeRoles.join(','))}`
+            url += `&include_roles=${encode(options.includeRoles.join(','))}`;
           } else if (options.includeRoles) {
-            url += `&include_roles=${encode(options.includeRoles)}`
+            url += `&include_roles=${encode(options.includeRoles)}`;
           }
         }
 
-        return url
+        return url;
       },
       roles: {
         one: (guildId, roleId) => {
-          return `/guilds/${encode(guildId)}/roles/${encode(roleId)}`
+          return `/guilds/${encode(guildId)}/roles/${encode(roleId)}`;
         },
         all: (guildId) => {
-          return `/guilds/${encode(guildId)}/roles`
+          return `/guilds/${encode(guildId)}/roles`;
         },
         member: (guildId, memberId, roleId) => {
-          return `/guilds/${encode(guildId)}/members/${encode(memberId)}/roles/${encode(roleId)}`
+          return `/guilds/${encode(guildId)}/members/${encode(memberId)}/roles/${encode(roleId)}`;
         },
         memberCounts: (guildId) => {
-          return `/guilds/${guildId}/roles/member-counts`
+          return `/guilds/${guildId}/roles/member-counts`;
         },
       },
       stickers: (guildId) => {
-        return `/guilds/${encode(guildId)}/stickers`
+        return `/guilds/${encode(guildId)}/stickers`;
       },
       sticker: (guildId, stickerId) => {
-        return `/guilds/${encode(guildId)}/stickers/${encode(stickerId)}`
+        return `/guilds/${encode(guildId)}/stickers/${encode(stickerId)}`;
       },
       voice: (guildId, userId) => {
-        return `/guilds/${encode(guildId)}/voice-states/${encode(userId ?? '@me')}`
+        return `/guilds/${encode(guildId)}/voice-states/${encode(userId ?? '@me')}`;
       },
       templates: {
         code: (code) => {
-          return `/guilds/templates/${encode(code)}`
+          return `/guilds/templates/${encode(code)}`;
         },
         guild: (guildId, code) => {
-          return `/guilds/${encode(guildId)}/templates/${encode(code)}`
+          return `/guilds/${encode(guildId)}/templates/${encode(code)}`;
         },
         all: (guildId) => {
-          return `/guilds/${encode(guildId)}/templates`
+          return `/guilds/${encode(guildId)}/templates`;
         },
       },
       vanity: (guildId) => {
-        return `/guilds/${encode(guildId)}/vanity-url`
+        return `/guilds/${encode(guildId)}/vanity-url`;
       },
       regions: (guildId) => {
-        return `/guilds/${encode(guildId)}/regions`
+        return `/guilds/${encode(guildId)}/regions`;
       },
       webhooks: (guildId) => {
-        return `/guilds/${encode(guildId)}/webhooks`
+        return `/guilds/${encode(guildId)}/webhooks`;
       },
       welcome: (guildId) => {
-        return `/guilds/${encode(guildId)}/welcome-screen`
+        return `/guilds/${encode(guildId)}/welcome-screen`;
       },
       widget: (guildId) => {
-        return `/guilds/${encode(guildId)}/widget`
+        return `/guilds/${encode(guildId)}/widget`;
       },
       widgetJson: (guildId) => {
-        return `/guilds/${encode(guildId)}/widget.json`
+        return `/guilds/${encode(guildId)}/widget.json`;
       },
       onboarding: (guildId) => {
-        return `/guilds/${encode(guildId)}/onboarding`
+        return `/guilds/${encode(guildId)}/onboarding`;
       },
       incidentActions: (guildId) => {
-        return `/guilds/${encode(guildId)}/incident-actions`
+        return `/guilds/${encode(guildId)}/incident-actions`;
       },
     },
 
     sticker: (stickerId) => {
-      return `/stickers/${encode(stickerId)}`
+      return `/stickers/${encode(stickerId)}`;
     },
 
     regions: () => {
-      return '/voice/regions'
+      return '/voice/regions';
     },
 
     // Interaction Endpoints
@@ -530,57 +530,57 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       commands: {
         // Application Endpoints
         commands: (applicationId, withLocalizations) => {
-          let url = `/applications/${encode(applicationId)}/commands?`
+          let url = `/applications/${encode(applicationId)}/commands?`;
 
           if (withLocalizations !== undefined) {
-            url += `with_localizations=${encode(withLocalizations)}`
+            url += `with_localizations=${encode(withLocalizations)}`;
           }
 
-          return url
+          return url;
         },
 
         guilds: {
           all(applicationId, guildId, withLocalizations) {
-            let url = `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands?`
+            let url = `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands?`;
 
             if (withLocalizations !== undefined) {
-              url += `with_localizations=${encode(withLocalizations)}`
+              url += `with_localizations=${encode(withLocalizations)}`;
             }
 
-            return url
+            return url;
           },
 
           one(applicationId, guildId, commandId) {
-            return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/${encode(commandId)}`
+            return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/${encode(commandId)}`;
           },
         },
         permissions: (applicationId, guildId) => {
-          return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/permissions`
+          return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/permissions`;
         },
         permission: (applicationId, guildId, commandId) => {
-          return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/${encode(commandId)}/permissions`
+          return `/applications/${encode(applicationId)}/guilds/${encode(guildId)}/commands/${encode(commandId)}/permissions`;
         },
         command: (applicationId, commandId, withLocalizations) => {
-          let url = `/applications/${encode(applicationId)}/commands/${encode(commandId)}?`
+          let url = `/applications/${encode(applicationId)}/commands/${encode(commandId)}?`;
 
           if (withLocalizations !== undefined) {
-            url += `withLocalizations=${encode(withLocalizations)}`
+            url += `withLocalizations=${encode(withLocalizations)}`;
           }
 
-          return url
+          return url;
         },
       },
 
       responses: {
         // Interaction Endpoints
         callback: (interactionId, token, options) => {
-          return `/interactions/${encode(interactionId)}/${encode(token)}/callback?with_response=${encode(!!options?.withResponse)}`
+          return `/interactions/${encode(interactionId)}/${encode(token)}/callback?with_response=${encode(!!options?.withResponse)}`;
         },
         original: (interactionId, token) => {
-          return `/webhooks/${encode(interactionId)}/${encode(token)}/messages/@original`
+          return `/webhooks/${encode(interactionId)}/${encode(token)}/messages/@original`;
         },
         message: (applicationId, token, messageId) => {
-          return `/webhooks/${encode(applicationId)}/${encode(token)}/messages/${encode(messageId)}`
+          return `/webhooks/${encode(applicationId)}/${encode(token)}/messages/${encode(messageId)}`;
         },
       },
     },
@@ -588,153 +588,153 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
     // OAuth2 endpoints
     oauth2: {
       tokenExchange: () => {
-        return '/oauth2/token'
+        return '/oauth2/token';
       },
       tokenRevoke: () => {
-        return '/oauth2/token/revoke'
+        return '/oauth2/token/revoke';
       },
       currentAuthorization: () => {
-        return '/oauth2/@me'
+        return '/oauth2/@me';
       },
       application: () => {
-        return '/oauth2/applications/@me'
+        return '/oauth2/applications/@me';
       },
       connections: () => {
-        return '/users/@me/connections'
+        return '/users/@me/connections';
       },
       roleConnections: (applicationId) => {
-        return `/users/@me/applications/${encode(applicationId)}/role-connection`
+        return `/users/@me/applications/${encode(applicationId)}/role-connection`;
       },
     },
 
     monetization: {
       entitlements: (applicationId, options) => {
-        let url = `/applications/${encode(applicationId)}/entitlements?`
+        let url = `/applications/${encode(applicationId)}/entitlements?`;
 
         if (options) {
-          if (options.after) url += `after=${encode(options.after)}`
-          if (options.before) url += `&before=${encode(options.before)}`
-          if (options.excludeEnded) url += `&exclude_ended=${encode(options.excludeEnded)}`
-          if (options.guildId) url += `&guild_id=${encode(options.guildId)}`
-          if (options.limit) url += `&limit=${encode(options.limit)}`
-          if (options.skuIds) url += `&sku_ids=${encode(options.skuIds.join(','))}`
-          if (options.userId) url += `&user_id=${encode(options.userId)}`
+          if (options.after) url += `after=${encode(options.after)}`;
+          if (options.before) url += `&before=${encode(options.before)}`;
+          if (options.excludeEnded) url += `&exclude_ended=${encode(options.excludeEnded)}`;
+          if (options.guildId) url += `&guild_id=${encode(options.guildId)}`;
+          if (options.limit) url += `&limit=${encode(options.limit)}`;
+          if (options.skuIds) url += `&sku_ids=${encode(options.skuIds.join(','))}`;
+          if (options.userId) url += `&user_id=${encode(options.userId)}`;
         }
 
-        return url
+        return url;
       },
       entitlement: (applicationId, entitlementId) => {
-        return `/applications/${encode(applicationId)}/entitlements/${encode(entitlementId)}`
+        return `/applications/${encode(applicationId)}/entitlements/${encode(entitlementId)}`;
       },
       consumeEntitlement: (applicationId, entitlementId) => {
-        return `/applications/${encode(applicationId)}/entitlements/${encode(entitlementId)}/consume`
+        return `/applications/${encode(applicationId)}/entitlements/${encode(entitlementId)}/consume`;
       },
 
       skus: (applicationId) => {
-        return `/applications/${encode(applicationId)}/skus`
+        return `/applications/${encode(applicationId)}/skus`;
       },
 
       subscription: (skuId, subscriptionId) => {
-        return `/skus/${encode(skuId)}/subscriptions/${encode(subscriptionId)}`
+        return `/skus/${encode(skuId)}/subscriptions/${encode(subscriptionId)}`;
       },
 
       subscriptions: (skuId, options) => {
-        let url = `/skus/${encode(skuId)}/subscriptions?`
+        let url = `/skus/${encode(skuId)}/subscriptions?`;
 
         if (options) {
-          if (options.after) url += `after=${encode(options.after)}`
-          if (options.before) url += `&before=${encode(options.before)}`
-          if (options.userId) url += `&user_id=${encode(options.userId)}`
-          if (options.limit) url += `&limit=${encode(options.limit)}`
+          if (options.after) url += `after=${encode(options.after)}`;
+          if (options.before) url += `&before=${encode(options.before)}`;
+          if (options.userId) url += `&user_id=${encode(options.userId)}`;
+          if (options.limit) url += `&limit=${encode(options.limit)}`;
         }
 
-        return url
+        return url;
       },
     },
 
     soundboard: {
       sendSound: (channelId) => {
-        return `/channels/${encode(channelId)}`
+        return `/channels/${encode(channelId)}`;
       },
       listDefault: () => {
-        return `/soundboard-default-sounds`
+        return `/soundboard-default-sounds`;
       },
       guildSounds: (guildId) => {
-        return `/guilds/${encode(guildId)}/soundboard-sounds`
+        return `/guilds/${encode(guildId)}/soundboard-sounds`;
       },
       guildSound: (guildId, soundId) => {
-        return `/guilds/${encode(guildId)}/soundboard-sounds/${encode(soundId)}`
+        return `/guilds/${encode(guildId)}/soundboard-sounds/${encode(soundId)}`;
       },
     },
 
     lobby: {
       create: () => {
-        return '/lobbies'
+        return '/lobbies';
       },
 
       lobby: (lobbyId) => {
-        return `/lobbies/${encode(lobbyId)}`
+        return `/lobbies/${encode(lobbyId)}`;
       },
 
       member: (lobbyId, userId) => {
-        return `/lobbies/${encode(lobbyId)}/members/${encode(userId)}`
+        return `/lobbies/${encode(lobbyId)}/members/${encode(userId)}`;
       },
 
       leave: (lobbyId) => {
-        return `/lobbies/${encode(lobbyId)}/members/@me`
+        return `/lobbies/${encode(lobbyId)}/members/@me`;
       },
 
       link: (lobbyId) => {
-        return `/lobbies/${encode(lobbyId)}/channel-linking`
+        return `/lobbies/${encode(lobbyId)}/channel-linking`;
       },
     },
 
     applicationEmoji(applicationId, emojiId) {
-      return `/applications/${encode(applicationId)}/emojis/${encode(emojiId)}`
+      return `/applications/${encode(applicationId)}/emojis/${encode(emojiId)}`;
     },
 
     applicationEmojis(applicationId) {
-      return `/applications/${encode(applicationId)}/emojis`
+      return `/applications/${encode(applicationId)}/emojis`;
     },
 
     applicationRoleConnectionMetadata(applicationId) {
-      return `/applications/${encode(applicationId)}/role-connections/metadata`
+      return `/applications/${encode(applicationId)}/role-connections/metadata`;
     },
 
     // User endpoints
     user(userId) {
-      return `/users/${encode(userId)}`
+      return `/users/${encode(userId)}`;
     },
 
     application() {
-      return '/applications/@me'
+      return '/applications/@me';
     },
 
     applicationActivityInstance(applicationId, instanceId) {
-      return `/applications/${encode(applicationId)}/activity-instances/${encode(instanceId)}`
+      return `/applications/${encode(applicationId)}/activity-instances/${encode(instanceId)}`;
     },
 
     currentUser() {
-      return '/users/@me'
+      return '/users/@me';
     },
 
     gatewayBot() {
-      return '/gateway/bot'
+      return '/gateway/bot';
     },
 
     stickerPack(stickerPackId) {
-      return `/sticker-packs/${encode(stickerPackId)}`
+      return `/sticker-packs/${encode(stickerPackId)}`;
     },
 
     stickerPacks() {
-      return '/sticker-packs'
+      return '/sticker-packs';
     },
-  }
+  };
 }
 
 function encodeComponent(uriComponent: string | number | bigint | boolean): string {
-  if (typeof uriComponent !== 'string') return uriComponent.toString()
-  if (/^\d+$/.test(uriComponent)) return uriComponent
+  if (typeof uriComponent !== 'string') return uriComponent.toString();
+  if (/^\d+$/.test(uriComponent)) return uriComponent;
 
-  return encodeURIComponent(uriComponent)
+  return encodeURIComponent(uriComponent);
 }

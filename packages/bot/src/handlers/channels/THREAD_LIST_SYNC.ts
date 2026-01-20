@@ -1,12 +1,12 @@
-import type { DiscordGatewayPayload, DiscordThreadListSync } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordThreadListSync } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload): Promise<any> {
-  if (!bot.events.threadListSync) return
+  if (!bot.events.threadListSync) return;
 
-  const payload = data.d as DiscordThreadListSync
+  const payload = data.d as DiscordThreadListSync;
 
-  const guildId = bot.transformers.snowflake(payload.guild_id)
+  const guildId = bot.transformers.snowflake(payload.guild_id);
 
   bot.events.threadListSync({
     guildId,
@@ -18,5 +18,5 @@ export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload
       joinTimestamp: Date.parse(member.join_timestamp),
       flags: member.flags,
     })),
-  })
+  });
 }

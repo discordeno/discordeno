@@ -1,9 +1,9 @@
 /** Types for: https://discord.com/developers/docs/topics/oauth2 */
 
-import type { DiscordApplication } from './application.js'
-import type { DiscordGuild } from './guild.js'
-import type { DiscordUser } from './user.js'
-import type { DiscordWebhook } from './webhook.js'
+import type { DiscordApplication } from './application.js';
+import type { DiscordGuild } from './guild.js';
+import type { DiscordUser } from './user.js';
+import type { DiscordWebhook } from './webhook.js';
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
 export enum OAuth2Scope {
@@ -136,73 +136,73 @@ export enum OAuth2Scope {
 
 /** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-redirect-url-example */
 export interface DiscordTokenExchangeAuthorizationCode {
-  grant_type: 'authorization_code'
+  grant_type: 'authorization_code';
   /** The code for the token exchange */
-  code: string
+  code: string;
   /** The redirect_uri associated with this authorization */
-  redirect_uri: string
+  redirect_uri: string;
   /** The code verifier for the token exchange if one was sent during the authorization request */
-  code_verifier?: string
+  code_verifier?: string;
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-access-token-response */
 export interface DiscordAccessTokenResponse {
   /** The access token of the user */
-  access_token: string
+  access_token: string;
   /** The type of token */
-  token_type: string
+  token_type: string;
   /** The number of seconds after that the access token is expired */
-  expires_in: number
+  expires_in: number;
   /**
    * The refresh token to refresh the access token
    *
    * @remarks
    * When the token exchange is a client credentials type grant this value is not defined.
    */
-  refresh_token: string
+  refresh_token: string;
   /** The scopes for the access token */
-  scope: string
+  scope: string;
   /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
-  webhook?: DiscordWebhook
+  webhook?: DiscordWebhook;
   /** The guild the bot has been added. Requires the `bot` scope */
-  guild?: DiscordGuild
+  guild?: DiscordGuild;
 }
 
 /**
  * https://discord.com/developers/docs/topics/oauth2#authorization-code-grant
  * https://discord.com/developers/docs/topics/oauth2#client-credentials-grant
  */
-export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
+export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials;
 
 /** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-refresh-token-exchange-example */
 export interface DiscordTokenExchangeRefreshToken {
-  grant_type: 'refresh_token'
+  grant_type: 'refresh_token';
   /** the user's refresh token */
-  refresh_token: string
+  refresh_token: string;
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-token-revocation-example */
 export interface DiscordTokenRevocation {
   /** The access token to revoke */
-  token: string
+  token: string;
   /** Optional, the type of token you are using for the revocation */
-  token_type_hint?: 'access_token' | 'refresh_token'
+  token_type_hint?: 'access_token' | 'refresh_token';
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeClientCredentials {
-  grant_type: 'client_credentials'
+  grant_type: 'client_credentials';
   /** The scope(s) for the access token */
-  scope: OAuth2Scope[]
+  scope: OAuth2Scope[];
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
 export interface DiscordCurrentAuthorization {
-  application: DiscordApplication
+  application: DiscordApplication;
   /** the scopes the user has authorized the application for */
-  scopes: OAuth2Scope[]
+  scopes: OAuth2Scope[];
   /** when the access token expires */
-  expires: string
+  expires: string;
   /** the user who has authorized, if the user has authorized with the `identify` scope */
-  user?: DiscordUser
+  user?: DiscordUser;
 }

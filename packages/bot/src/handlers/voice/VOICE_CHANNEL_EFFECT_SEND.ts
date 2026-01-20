@@ -1,10 +1,10 @@
-import type { DiscordGatewayPayload, DiscordVoiceChannelEffectSend } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordVoiceChannelEffectSend } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handleVoiceChannelEffectSend(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (!bot.events.voiceChannelEffectSend) return
+  if (!bot.events.voiceChannelEffectSend) return;
 
-  const payload = data.d as DiscordVoiceChannelEffectSend
+  const payload = data.d as DiscordVoiceChannelEffectSend;
 
   bot.events.voiceChannelEffectSend({
     guildId: bot.transformers.snowflake(payload.guild_id),
@@ -15,5 +15,5 @@ export async function handleVoiceChannelEffectSend(bot: Bot, data: DiscordGatewa
     emoji: payload.emoji ? bot.transformers.emoji(bot, payload.emoji) : undefined,
     soundId: typeof payload.sound_id === 'string' ? bot.transformers.snowflake(payload.sound_id) : payload.sound_id,
     soundVolume: payload.sound_volume,
-  })
+  });
 }

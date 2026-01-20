@@ -1,6 +1,6 @@
-import type { DiscordAutoModerationRule } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { AutoModerationRule } from './types.js'
+import type { DiscordAutoModerationRule } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { AutoModerationRule } from './types.js';
 
 export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule): AutoModerationRule {
   const rule = {
@@ -33,7 +33,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
           }
         : undefined,
     })),
-  } as AutoModerationRule
+  } as AutoModerationRule;
 
-  return bot.transformers.customizers.automodRule(bot, payload, rule)
+  return bot.transformers.customizers.automodRule(bot, payload, rule);
 }

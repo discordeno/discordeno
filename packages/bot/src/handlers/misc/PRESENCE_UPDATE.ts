@@ -1,8 +1,8 @@
-import type { DiscordGatewayPayload, DiscordPresenceUpdate } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
+import type { DiscordGatewayPayload, DiscordPresenceUpdate } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
 
 export async function handlePresenceUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (!bot.events.presenceUpdate) return
+  if (!bot.events.presenceUpdate) return;
 
-  bot.events.presenceUpdate(bot.transformers.presence(bot, data.d as DiscordPresenceUpdate))
+  bot.events.presenceUpdate(bot.transformers.presence(bot, data.d as DiscordPresenceUpdate));
 }

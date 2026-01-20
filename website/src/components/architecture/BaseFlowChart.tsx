@@ -1,26 +1,26 @@
-import { useColorMode } from '@docusaurus/theme-common'
-import { Background, Controls, type Edge, Handle, type Node, Position, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+import { useColorMode } from '@docusaurus/theme-common';
+import { Background, Controls, type Edge, Handle, type Node, Position, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
-export const multiplier = 225
-export const height = 40
+export const multiplier = 225;
+export const height = 40;
 
 export const defaultNodeOptions = {
   targetPosition: Position.Left,
   sourcePosition: Position.Right,
   draggable: false,
   style: { width: `${multiplier * 0.75}px`, height: `${height}px` },
-}
+};
 
 export const defaultGroupOptions = {
   draggable: false,
-}
+};
 
 export default function BaseFlowChart({ initialNodes = [], initialEdges = [] }: { initialNodes: Node[]; initialEdges: Edge[] }) {
-  const [nodes] = useNodesState(initialNodes)
-  const [edges] = useEdgesState(initialEdges)
+  const [nodes] = useNodesState(initialNodes);
+  const [edges] = useEdgesState(initialEdges);
 
-  const color = useColorMode()
+  const color = useColorMode();
 
   return (
     <>
@@ -73,5 +73,5 @@ export default function BaseFlowChart({ initialNodes = [], initialEdges = [] }: 
         </ReactFlow>
       </div>
     </>
-  )
+  );
 }

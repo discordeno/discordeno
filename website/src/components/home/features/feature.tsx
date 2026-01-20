@@ -1,4 +1,4 @@
-import type { FeatureList } from '@site/src/types'
+import type { FeatureList } from '@site/src/types';
 
 export default function Feature({ data }: FeatureList) {
   return (
@@ -10,5 +10,5 @@ export default function Feature({ data }: FeatureList) {
         {data.feature.description}
       </div>
     </div>
-  )
+  );
 }

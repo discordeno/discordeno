@@ -1,14 +1,14 @@
 export interface FeatureList {
   data: {
-    feature: FeatureItem
-    featureList: FeatureItem[]
-  }
+    feature: FeatureItem;
+    featureList: FeatureItem[];
+  };
 }
 
 export interface FeatureItem {
-  title: string
-  Svg: React.JSX.Element
-  description: React.JSX.Element
+  title: string;
+  Svg: React.JSX.Element;
+  description: React.JSX.Element;
 }
 
 export enum DiscordLibraries {
@@ -36,22 +36,22 @@ export enum DiscordLibraries {
 }
 
 export interface IReview {
-  review: string // the review
+  review: string; // the review
   bot: {
-    username: string // Clyde
-    discriminator: string // 0000
-    avatar: string // https://cdn.discordapp.com/avatars/123456789012345678/abcdefg1234567890.png
-    invite_url: string // https://discord.com/api/oauth2/authorize?client_id=123456789012345678&permissions=8&scope=bot
-    guild_count: number // 123456 => frontend converts to 123,456...
-  }
+    username: string; // Clyde
+    discriminator: string; // 0000
+    avatar: string; // https://cdn.discordapp.com/avatars/123456789012345678/abcdefg1234567890.png
+    invite_url: string; // https://discord.com/api/oauth2/authorize?client_id=123456789012345678&permissions=8&scope=bot
+    guild_count: number; // 123456 => frontend converts to 123,456...
+  };
   developer: {
-    usernames: string[] // ["Peter_"]
-  }
-  stars: 4 | 5 // 4 or 5, discordeno can't have lower because it's the best :D
-  previous_library?: keyof typeof DiscordLibraries // previous library used by the bot (if any)
+    usernames: string[]; // ["Peter_"]
+  };
+  stars: 4 | 5; // 4 or 5, discordeno can't have lower because it's the best :D
+  previous_library?: keyof typeof DiscordLibraries; // previous library used by the bot (if any)
   memory_improvement?: {
-    from: number // 100 => frontend converts to 100MB
-    to: number // 50 => frontend converts to 50MB
-    guild_count: number // 123456 => frontend convers to 123K. this is the amount of guilds the bot is in at the time of the review
-  }
+    from: number; // 100 => frontend converts to 100MB
+    to: number; // 50 => frontend converts to 50MB
+    guild_count: number; // 123456 => frontend convers to 123K. this is the amount of guilds the bot is in at the time of the review
+  };
 }

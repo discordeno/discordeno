@@ -1,29 +1,29 @@
 /** Types for: https://discord.com/developers/docs/resources/lobby */
 
-import type { DiscordChannel } from './channel.js'
+import type { DiscordChannel } from './channel.js';
 
 /** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
 export interface DiscordLobby {
   /** The id of this channel */
-  id: string
+  id: string;
   /** application that created the lobby */
-  application_id: string
+  application_id: string;
   /** dictionary of string key/value pairs. The max total length is 1000. */
-  metadata: Record<string, string> | null
+  metadata: Record<string, string> | null;
   /** members of the lobby */
-  members: DiscordLobbyMember[]
+  members: DiscordLobbyMember[];
   /** the guild channel linked to the lobby */
-  linked_channel?: DiscordChannel
+  linked_channel?: DiscordChannel;
 }
 
 /** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
 export interface DiscordLobbyMember {
   /** The id of the user */
-  id: string
+  id: string;
   /** dictionary of string key/value pairs. The max total length is 1000. */
-  metadata?: Record<string, string> | null
+  metadata?: Record<string, string> | null;
   /** lobby member flags combined as as bitfield */
-  flags?: number
+  flags?: number;
 }
 
 /** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-flags */

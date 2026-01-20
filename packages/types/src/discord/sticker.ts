@@ -1,36 +1,36 @@
 /** Types for: https://discord.com/developers/docs/resources/sticker */
 
-import type { DiscordUser } from './user.js'
+import type { DiscordUser } from './user.js';
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface DiscordSticker {
   /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
-  id: string
+  id: string;
   /** Id of the pack the sticker is from */
-  pack_id?: string
+  pack_id?: string;
   /** Name of the sticker */
-  name: string
+  name: string;
   /** Description of the sticker */
-  description: string | null
+  description: string | null;
   /**
    * Autocomplete/suggestion tags for the sticker
    * @remarks
    * Max 200 characters
    * A comma separated list of keywords is the format used in this field by standard stickers, but this is just a convention. Incidentally the client will always use a name generated from an emoji as the value of this field when creating or modifying a guild sticker.
    */
-  tags: string
+  tags: string;
   /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
-  type: StickerTypes
+  type: StickerTypes;
   /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
-  format_type: StickerFormatTypes
+  format_type: StickerFormatTypes;
   /**  Whether or not the sticker is available */
-  available?: boolean
+  available?: boolean;
   /** Id of the guild that owns this sticker */
-  guild_id?: string
+  guild_id?: string;
   /** The user that uploaded the sticker */
-  user?: DiscordUser
+  user?: DiscordUser;
   /** A sticker's sort order within a pack */
-  sort_value?: number
+  sort_value?: number;
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
@@ -52,27 +52,27 @@ export enum StickerFormatTypes {
 /** https://discord.com/developers/docs/resources/sticker#sticker-item-object-sticker-item-structure */
 export interface DiscordStickerItem {
   /** Id of the sticker */
-  id: string
+  id: string;
   /** Name of the sticker */
-  name: string
+  name: string;
   /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
-  format_type: StickerFormatTypes
+  format_type: StickerFormatTypes;
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-pack-object-sticker-pack-structure */
 export interface DiscordStickerPack {
   /** id of the sticker pack */
-  id: string
+  id: string;
   /** the stickers in the pack */
-  stickers: DiscordSticker[]
+  stickers: DiscordSticker[];
   /** name of the sticker pack */
-  name: string
+  name: string;
   /** id of the pack's SKU */
-  sku_id: string
+  sku_id: string;
   /** id of a sticker in the pack which is shown as the pack's icon */
-  cover_sticker_id?: string
+  cover_sticker_id?: string;
   /** description of the sticker pack */
-  description: string
+  description: string;
   /** id of the sticker pack's [banner image](https://discord.com/developers/docs/reference#image-formatting) */
-  banner_asset_id?: string
+  banner_asset_id?: string;
 }

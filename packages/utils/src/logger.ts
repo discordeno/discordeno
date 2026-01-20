@@ -1,4 +1,4 @@
-import { bgBrightMagenta, black, bold, cyan, gray, italic, red, yellow } from './colors.js'
+import { bgBrightMagenta, black, bold, cyan, gray, italic, red, yellow } from './colors.js';
 
 export enum LogLevels {
   Debug,
@@ -14,70 +14,70 @@ const prefixes = new Map<LogLevels, string>([
   [LogLevels.Warn, 'WARN'],
   [LogLevels.Error, 'ERROR'],
   [LogLevels.Fatal, 'FATAL'],
-])
+]);
 
-const noColor: (str: string) => string = (msg) => msg
+const noColor: (str: string) => string = (msg) => msg;
 const colorFunctions = new Map<LogLevels, (str: string) => string>([
   [LogLevels.Debug, gray],
   [LogLevels.Info, cyan],
   [LogLevels.Warn, yellow],
   [LogLevels.Error, (str: string) => red(str)],
   [LogLevels.Fatal, (str: string) => red(bold(italic(str)))],
-])
+]);
 
 export function createLogger({ logLevel = LogLevels.Info, name }: { logLevel?: LogLevels; name?: string } = {}) {
   function log(level: LogLevels, ...args: any[]) {
-    if (level < logLevel) return
+    if (level < logLevel) return;
 
-    let color = colorFunctions.get(level)
-    if (!color) color = noColor
+    let color = colorFunctions.get(level);
+    if (!color) color = noColor;
 
-    const date = new Date()
+    const date = new Date();
     const log = [
       bgBrightMagenta(black(`[${date.toLocaleDateString()} ${date.toLocaleTimeString()}]`)),
       color(prefixes.get(level) ?? 'DEBUG'),
       name ? `${name} >` : '>',
       ...args,
-    ]
+    ];
 
     switch (level) {
       case LogLevels.Debug:
-        return console.debug(...log)
+        return console.debug(...log);
       case LogLevels.Info:
-        return console.info(...log)
+        return console.info(...log);
       case LogLevels.Warn:
-        return console.warn(...log)
+        return console.warn(...log);
       case LogLevels.Error:
-        return console.error(...log)
+        return console.error(...log);
       case LogLevels.Fatal:
-        return console.error(...log)
+        return console.error(...log);
       default:
-        return console.log(...log)
+        return console.log(...log);
     }
   }
 
   function setLevel(level: LogLevels) {
-    logLevel = level
+    logLevel = level;
   }
 
   function debug(...args: any[]) {
-    log(LogLevels.Debug, ...args)
+    log(LogLevels.Debug, ...args);
   }
 
   function info(...args: any[]) {
-    log(LogLevels.Info, ...args)
+    log(LogLevels.Info, ...args);
   }
 
   function warn(...args: any[]) {
-    log(LogLevels.Warn, ...args)
+    log(LogLevels.Warn, ...args);
   }
 
   function error(...args: any[]) {
-    log(LogLevels.Error, ...args)
+    log(LogLevels.Error, ...args);
   }
 
   function fatal(...args: any[]) {
-    log(LogLevels.Fatal, ...args)
+    log(LogLevels.Fatal, ...args);
   }
 
   return {
@@ -88,8 +88,8 @@ export function createLogger({ logLevel = LogLevels.Info, name }: { logLevel?: L
     warn,
     error,
     fatal,
-  }
+  };
 }
 
-export const logger = createLogger({ name: 'Discordeno' })
-export default logger
+export const logger = createLogger({ name: 'Discordeno' });
+export default logger;

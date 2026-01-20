@@ -1,7 +1,7 @@
-import type { DiscordIntegrationCreateUpdate } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
-import type { Bot } from '../bot.js'
-import type { Integration } from './types.js'
+import type { DiscordIntegrationCreateUpdate } from '@discordeno/types';
+import { iconHashToBigInt } from '@discordeno/utils';
+import type { Bot } from '../bot.js';
+import type { Integration } from './types.js';
 
 export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate): Integration {
   const integration = {
@@ -33,7 +33,7 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
         }
       : undefined,
     scopes: payload.scopes,
-  } as Integration
+  } as Integration;
 
-  return bot.transformers.customizers.integration(bot, payload, integration)
+  return bot.transformers.customizers.integration(bot, payload, integration);
 }

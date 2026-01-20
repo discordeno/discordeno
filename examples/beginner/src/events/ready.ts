@@ -1,11 +1,11 @@
-import { ActivityTypes } from '@discordeno/bot'
-import { bot } from '../bot.js'
-import { createLogger } from '../utils/logger.js'
+import { ActivityTypes } from '@discordeno/bot';
+import { bot } from '../bot.js';
+import { createLogger } from '../utils/logger.js';
 
-const logger = createLogger({ name: 'Event: Ready' })
+const logger = createLogger({ name: 'Event: Ready' });
 
 bot.events.ready = async ({ shardId }) => {
-  logger.info('Bot Ready')
+  logger.info('Bot Ready');
 
   await bot.gateway.editShardStatus(shardId, {
     status: 'online',
@@ -18,5 +18,5 @@ bot.events.ready = async ({ shardId }) => {
         },
       },
     ],
-  })
-}
+  });
+};

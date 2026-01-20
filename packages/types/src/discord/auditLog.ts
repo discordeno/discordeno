@@ -1,60 +1,60 @@
 /** Types for: https://discord.com/developers/docs/resources/audit-log */
 
-import type { DiscordAutoModerationRule } from './autoModeration.js'
-import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channel.js'
-import type { DiscordEmoji } from './emoji.js'
-import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guild.js'
-import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
-import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js'
-import type { DiscordInvite, DiscordInviteMetadata } from './invite.js'
-import type { DiscordRole } from './permissions.js'
-import type { DiscordSoundboardSound } from './soundboard.js'
-import type { DiscordStageInstance } from './stageInstance.js'
-import type { DiscordSticker } from './sticker.js'
-import type { DiscordUser } from './user.js'
-import type { DiscordWebhook } from './webhook.js'
+import type { DiscordAutoModerationRule } from './autoModeration.js';
+import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channel.js';
+import type { DiscordEmoji } from './emoji.js';
+import type { DiscordGuild, DiscordGuildOnboarding, DiscordGuildOnboardingPrompt, DiscordIntegration, DiscordMember } from './guild.js';
+import type { DiscordScheduledEvent } from './guildScheduledEvent.js';
+import type { DiscordApplicationCommand, DiscordApplicationCommandPermissions } from './interactions.js';
+import type { DiscordInvite, DiscordInviteMetadata } from './invite.js';
+import type { DiscordRole } from './permissions.js';
+import type { DiscordSoundboardSound } from './soundboard.js';
+import type { DiscordStageInstance } from './stageInstance.js';
+import type { DiscordSticker } from './sticker.js';
+import type { DiscordUser } from './user.js';
+import type { DiscordWebhook } from './webhook.js';
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */
 export interface DiscordAuditLog {
   /** List of application commands referenced in the audit log */
-  application_commands: DiscordApplicationCommand[]
+  application_commands: DiscordApplicationCommand[];
   /** List of audit log entries, sorted from most to least recent */
-  audit_log_entries: DiscordAuditLogEntry[]
+  audit_log_entries: DiscordAuditLogEntry[];
   /** List of auto moderation rules referenced in the audit log */
-  auto_moderation_rules: DiscordAutoModerationRule[]
+  auto_moderation_rules: DiscordAutoModerationRule[];
   /** List of guild scheduled events found in the audit log */
-  guild_scheduled_events: DiscordScheduledEvent[]
+  guild_scheduled_events: DiscordScheduledEvent[];
   /** List of partial integration objects */
-  integrations: Partial<DiscordIntegration>[]
+  integrations: Partial<DiscordIntegration>[];
   /**
    * List of threads found in the audit log.
    *
    * @remarks
    * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
    */
-  threads: DiscordChannel[]
+  threads: DiscordChannel[];
   /** List of users found in the audit log */
-  users: DiscordUser[]
+  users: DiscordUser[];
   /** List of webhooks found in the audit log */
-  webhooks: DiscordWebhook[]
+  webhooks: DiscordWebhook[];
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
 export interface DiscordAuditLogEntry {
   /** ID of the affected entity (webhook, user, role, etc.) */
-  target_id: string | null
+  target_id: string | null;
   /** Changes made to the `target_id` */
-  changes?: DiscordAuditLogChange[]
+  changes?: DiscordAuditLogChange[];
   /** User or app that made the changes */
-  user_id: string | null
+  user_id: string | null;
   /** ID of the entry */
-  id: string
+  id: string;
   /** Type of action that occurred */
-  action_type: AuditLogEvents
+  action_type: AuditLogEvents;
   /** Additional info for certain event types */
-  options?: DiscordOptionalAuditEntryInfo
+  options?: DiscordOptionalAuditEntryInfo;
   /** Reason for the change (1-512 characters) */
-  reason?: string
+  reason?: string;
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
@@ -216,7 +216,7 @@ export type DiscordAuditLogChange =
   | DiscordAuditLogChangeObject<DiscordSoundboardSound>
   | DiscordAuditLogChangeObject<DiscordAutoModerationRule>
   | DiscordAuditLogChangeObject<DiscordGuildOnboardingPrompt>
-  | DiscordAuditLogChangeObject<DiscordGuildOnboarding>
+  | DiscordAuditLogChangeObject<DiscordGuildOnboarding>;
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
@@ -226,100 +226,100 @@ export interface DiscordOptionalAuditEntryInfo {
    * @remarks
    * Oly present on event of type: `APPLICATION_COMMAND_PERMISSION_UPDATE`
    */
-  application_id?: string
+  application_id?: string;
   /**
    * Name of the Auto Moderation rule that was triggered.
    *
    * @remarks
    * Only present on event of types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
    */
-  auto_moderation_rule_name?: string
+  auto_moderation_rule_name?: string;
   /**
    * Trigger type of the Auto Moderation rule that was triggered.
    *
    * @remarks
    * Only present on event of types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
    */
-  auto_moderation_rule_trigger_type?: string
+  auto_moderation_rule_trigger_type?: string;
   /**
    * Channel in which the entities were targeted.
    *
    * @remarks
    * Only present on event of types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`, `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
    */
-  channel_id?: string
+  channel_id?: string;
   /**
    * Number of entities that were targeted.
    *
    * @remarks
    * Only present on event of types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
    */
-  count?: string
+  count?: string;
   /**
    * Number of days after which inactive members were kicked.
    *
    * @remarks
    * Only present on event of type: `MEMBER_PRUNE`
    */
-  delete_member_days?: string
+  delete_member_days?: string;
   /**
    * ID of the overwritten entity.
    *
    * @remarks
    * Only present on event of types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  id?: string
+  id?: string;
   /**
    * Number of members removed by the prune.
    *
    * @remarks
    * Only present on event of types: `MEMBER_PRUNE`
    */
-  members_removed?: string
+  members_removed?: string;
   /**
    * ID of the message that was targeted.
    *
    * @remarks
    * Only present on event of types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
-  message_id?: string
+  message_id?: string;
   /**
    * Name of the role if type is "0" (not present if type is "1").
    *
    * @remarks
    * Only present on event of types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  role_name?: string
+  role_name?: string;
   /**
    * Type of overwritten entity - "0", for "role", or "1" for "member".
    *
    * @remarks
    * Only present on event of types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  type?: string
+  type?: string;
   /**
    * The type of integration which performed the action
    *
    * @remarks
    * Only present on event of types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
    */
-  integration_type?: string
+  integration_type?: string;
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export type DiscordAuditLogChangeObject<T> = NonNullable<
   {
     [K in keyof T]: {
-      new_value?: T[K]
-      old_value?: T[K]
-      key: K
-    }
+      new_value?: T[K];
+      old_value?: T[K];
+      key: K;
+    };
   }[keyof T]
->
+>;
 
 // Done manually as it is clearer in this way
 /** Partial role audit log entry change exception */
-export type DiscordAuditLogChangePartialRole = { new_value: { id: string; name: string }[]; key: '$add' | '$remove' }
+export type DiscordAuditLogChangePartialRole = { new_value: { id: string; name: string }[]; key: '$add' | '$remove' };
 
 /**
  * Invite audit log entry change exception
@@ -327,7 +327,7 @@ export type DiscordAuditLogChangePartialRole = { new_value: { id: string; name: 
  * @remarks
  * While the docs say that 'channel.id' will never exist, we keep it as it is very complex to remove, the user should not use it and use the provided 'channel_id' value instead
  */
-export type DiscordAuditLogChangeInvite = DiscordAuditLogChangeObject<DiscordInvite> | DiscordAuditLogChangeObject<{ channel_id: string }>
+export type DiscordAuditLogChangeInvite = DiscordAuditLogChangeObject<DiscordInvite> | DiscordAuditLogChangeObject<{ channel_id: string }>;
 
 /**
  * Invite Metadata audit log entry change exception
@@ -337,17 +337,17 @@ export type DiscordAuditLogChangeInvite = DiscordAuditLogChangeObject<DiscordInv
  */
 export type DiscordAuditLogChangeInviteMetadata =
   | DiscordAuditLogChangeObject<DiscordInviteMetadata>
-  | DiscordAuditLogChangeObject<{ channel_id: string }>
+  | DiscordAuditLogChangeObject<{ channel_id: string }>;
 
 /** Webhook audit log entry change exception */
 export type DiscordAuditLogChangeWebhook =
   | DiscordAuditLogChangeObject<Omit<DiscordWebhook, 'avatar'>>
-  | DiscordAuditLogChangeObject<{ avatar_hash: DiscordWebhook['avatar'] }>
+  | DiscordAuditLogChangeObject<{ avatar_hash: DiscordWebhook['avatar'] }>;
 
 // Done manually as it is clearer in this way
 /** Command Permission audit log entry change exception */
 export type DiscordAuditLogChangeApplicationCommandPermissions = {
-  new_value?: DiscordApplicationCommandPermissions
-  old_value?: DiscordApplicationCommandPermissions
-  key: `${number}`
-}
+  new_value?: DiscordApplicationCommandPermissions;
+  old_value?: DiscordApplicationCommandPermissions;
+  key: `${number}`;
+};
