@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
-    "@swc/cli": "^0.7.9",
+    "@swc/cli": "^0.7.10",
     "@swc/core": "^1.15.8",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
