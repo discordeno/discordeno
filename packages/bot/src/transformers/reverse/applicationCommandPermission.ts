@@ -1,6 +1,6 @@
-import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { GuildApplicationCommandPermissions } from '../types.js'
+import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { GuildApplicationCommandPermissions } from '../types.js';
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission(
   bot: Bot,
@@ -15,5 +15,5 @@ export function transformApplicationCommandPermissionToDiscordApplicationCommand
       type: perm.type,
       permission: perm.permission,
     })),
-  }
+  };
 }

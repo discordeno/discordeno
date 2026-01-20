@@ -1,6 +1,6 @@
-import type { BigString, DiscordThreadMember, DiscordThreadMemberGuildCreate } from '@discordeno/types'
-import type { Bot } from '../bot.js'
-import type { ThreadMember, ThreadMemberGuildCreate } from './types.js'
+import type { BigString, DiscordThreadMember, DiscordThreadMemberGuildCreate } from '@discordeno/types';
+import type { Bot } from '../bot.js';
+import type { ThreadMember, ThreadMemberGuildCreate } from './types.js';
 
 export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, extra?: ThreadMemberTransformerExtra): ThreadMember {
   const threadMember = {
@@ -14,11 +14,11 @@ export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, ex
           userId: payload.user_id,
         })
       : undefined,
-  } as ThreadMember
+  } as ThreadMember;
 
   return bot.transformers.customizers.threadMember(bot, payload, threadMember, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra?.guildId) : undefined,
-  })
+  });
 }
 
 export interface ThreadMemberTransformerExtra {
@@ -28,13 +28,13 @@ export interface ThreadMemberTransformerExtra {
    *
    * This allows you to cache member objects in the member customizer.
    */
-  guildId?: BigString
+  guildId?: BigString;
 }
 
 export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate): ThreadMemberGuildCreate {
   const threadMember = {
     joinTimestamp: Date.parse(payload.join_timestamp),
-  } as ThreadMemberGuildCreate
+  } as ThreadMemberGuildCreate;
 
-  return bot.transformers.customizers.threadMemberGuildCreate(bot, payload, threadMember)
+  return bot.transformers.customizers.threadMemberGuildCreate(bot, payload, threadMember);
 }

@@ -1,35 +1,35 @@
 /** Types for: https://discord.com/developers/docs/resources/entitlement */
 
-import type { BigString } from '../shared.js'
+import type { BigString } from '../shared.js';
 
 /** https://discord.com/developers/docs/resources/entitlement#list-entitlements-query-string-params */
 export interface GetEntitlements {
   /** User ID to look up entitlements for */
-  userId?: BigString
+  userId?: BigString;
   /** Optional list of SKU IDs to check entitlements for */
-  skuIds?: BigString[]
+  skuIds?: BigString[];
   /** Retrieve entitlements before this entitlement ID */
-  before?: BigString
+  before?: BigString;
   /** Retrieve entitlements after this entitlement ID */
-  after?: BigString
+  after?: BigString;
   /** Number of entitlements to return, 1-100, default 100 */
-  limit?: number
+  limit?: number;
   /** Guild ID to look up entitlements for */
-  guildId?: BigString
+  guildId?: BigString;
   /** Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default. */
-  excludeEnded?: boolean
+  excludeEnded?: boolean;
   /** Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default. */
-  excludeDeleted?: boolean
+  excludeDeleted?: boolean;
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params */
 export interface CreateTestEntitlement {
   /** ID of the SKU to grant the entitlement to */
-  skuId: BigString
+  skuId: BigString;
   /** ID of the guild or user to grant the entitlement to */
-  ownerId: BigString
+  ownerId: BigString;
   /** The type of entitlement, guild subscription or user subscription */
-  ownerType: CreateEntitlementOwnerType
+  ownerType: CreateEntitlementOwnerType;
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params - Description of ownerType */

@@ -1,14 +1,14 @@
-import { type BigString, type GetGuildWidgetImageQuery, type ImageFormat, type ImageSize, StickerFormatTypes } from '@discordeno/types'
-import { iconBigintToHash } from './hash.js'
+import { type BigString, type GetGuildWidgetImageQuery, type ImageFormat, type ImageSize, StickerFormatTypes } from '@discordeno/types';
+import { iconBigintToHash } from './hash.js';
 
 export interface ImageOptions {
-  size?: ImageSize
-  format?: ImageFormat
+  size?: ImageSize;
+  format?: ImageFormat;
 }
 
 /** Help format an image url. */
 export function formatImageUrl(url: string, size: ImageSize = 128, format?: ImageFormat): string {
-  return `${url}.${format ?? (url.includes('/a_') ? 'gif' : 'webp')}?size=${size}`
+  return `${url}.${format ?? (url.includes('/a_') ? 'gif' : 'webp')}?size=${size}`;
 }
 
 /**
@@ -23,7 +23,7 @@ export function formatImageUrl(url: string, size: ImageSize = 128, format?: Imag
  * The animated parameter is used to specify the animated query parameter valid for webp images or to force the gif if the format is not set to webp.
  */
 export function emojiUrl(emojiId: BigString, animated = false, format: ImageFormat = 'png'): string {
-  return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? (format === 'webp' ? 'webp' : 'gif') : format}${animated && format === 'webp' ? '?animated=true' : ''}`
+  return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? (format === 'webp' ? 'webp' : 'gif') : format}${animated && format === 'webp' ? '?animated=true' : ''}`;
 }
 
 /**
@@ -39,7 +39,7 @@ export function avatarUrl(userId: BigString, avatar: BigString, options?: ImageO
     `https://cdn.discordapp.com/avatars/${userId}/${typeof avatar === 'string' ? avatar : iconBigintToHash(avatar)}`,
     options?.size ?? 128,
     options?.format,
-  )
+  );
 }
 
 /**
@@ -50,10 +50,10 @@ export function avatarUrl(userId: BigString, avatar: BigString, options?: ImageO
  * @returns The user default avatar as an URL.
  */
 export function defaultAvatarUrl(userId: BigString, discriminator: string) {
-  const isLegacy = discriminator === '0' || discriminator === '0000'
-  const index = isLegacy ? (BigInt(userId) >> 22n) % 6n : Number(discriminator) % 5
+  const isLegacy = discriminator === '0' || discriminator === '0000';
+  const index = isLegacy ? (BigInt(userId) >> 22n) % 6n : Number(discriminator) % 5;
 
-  return `https://cdn.discordapp.com/embed/avatars/${index}.png`
+  return `https://cdn.discordapp.com/embed/avatars/${index}.png`;
 }
 
 /**
@@ -66,13 +66,13 @@ export function defaultAvatarUrl(userId: BigString, discriminator: string) {
  * @returns The user display avatar as an URL.
  */
 export function displayAvatarUrl(userId: BigString, discriminator: string, avatar: BigString | undefined, options?: ImageOptions): string {
-  return avatar ? avatarUrl(userId, avatar, options) : defaultAvatarUrl(userId, discriminator)
+  return avatar ? avatarUrl(userId, avatar, options) : defaultAvatarUrl(userId, discriminator);
 }
 
 export function avatarDecorationUrl(avatarDecoration: BigString): string {
   return `https://cdn.discordapp.com/avatar-decoration-presets/${
     typeof avatarDecoration === 'string' ? avatarDecoration : iconBigintToHash(avatarDecoration)
-  }.png`
+  }.png`;
 }
 
 /**
@@ -89,7 +89,7 @@ export function bannerUrl(userId: BigString, options?: ImageOptions & { banner?:
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -106,7 +106,7 @@ export function guildBannerUrl(guildId: BigString, options: ImageOptions & { ban
         options.size ?? 128,
         options.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -124,7 +124,7 @@ export function guildIconUrl(guildId: BigString, imageHash: BigString | undefine
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -142,7 +142,7 @@ export function guildSplashUrl(guildId: BigString, imageHash: BigString | undefi
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -160,7 +160,7 @@ export function guildDiscoverySplashUrl(guildId: BigString, imageHash: BigString
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -177,7 +177,7 @@ export function guildScheduledEventCoverUrl(eventId: BigString, options: ImageOp
         options.size ?? 128,
         options.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -188,13 +188,13 @@ export function guildScheduledEventCoverUrl(eventId: BigString, options: ImageOp
  * @returns The link to the resource.
  */
 export function getWidgetImageUrl(guildId: BigString, options?: GetGuildWidgetImageQuery): string {
-  let url = `https://discordapp.com/api/guilds/${guildId}/widget.png`
+  let url = `https://discordapp.com/api/guilds/${guildId}/widget.png`;
 
   if (options?.style) {
-    url += `?style=${options.style}`
+    url += `?style=${options.style}`;
   }
 
-  return url
+  return url;
 }
 
 /**
@@ -214,7 +214,7 @@ export function memberAvatarUrl(guildId: BigString, userId: BigString, options?:
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -234,7 +234,7 @@ export function memberBannerUrl(guildId: BigString, userId: BigString, options?:
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -252,7 +252,7 @@ export function applicationIconUrl(applicationId: BigString, iconHash: BigString
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -270,7 +270,7 @@ export function applicationCoverUrl(applicationId: BigString, coverHash: BigStri
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -288,7 +288,7 @@ export function applicationAssetUrl(applicationId: BigString, assetId: BigString
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -307,7 +307,7 @@ export function stickerPackBannerUrl(bannerAssetId: BigString | undefined, optio
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -318,14 +318,14 @@ export function stickerPackBannerUrl(bannerAssetId: BigString | undefined, optio
  * @returns The link to the resource or `undefined`.
  */
 export function stickerUrl(stickerId: BigString | number, options?: ImageOptions & { type?: StickerFormatTypes }): string | undefined {
-  if (!stickerId) return
+  if (!stickerId) return;
 
   const url =
     options?.type === StickerFormatTypes.Gif
       ? `https://media.discordapp.net/stickers/${stickerId}`
-      : `https://cdn.discordapp.com/stickers/${stickerId}`
+      : `https://cdn.discordapp.com/stickers/${stickerId}`;
 
-  return formatImageUrl(url, options?.size ?? 128, options?.format)
+  return formatImageUrl(url, options?.size ?? 128, options?.format);
 }
 
 /**
@@ -343,7 +343,7 @@ export function teamIconUrl(teamId: BigString, iconHash: BigString | undefined, 
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -361,7 +361,7 @@ export function roleIconUrl(roleId: BigString, iconHash: BigString | undefined, 
         options?.size ?? 128,
         options?.format,
       )
-    : undefined
+    : undefined;
 }
 
 /**
@@ -373,7 +373,7 @@ export function roleIconUrl(roleId: BigString, iconHash: BigString | undefined, 
  * @returns The link to the resource or `undefined` if no badge has been set.
  */
 export function guildTagBadgeUrl(guildId: BigString, badgeHash: BigString | undefined, options?: ImageOptions): string | undefined {
-  if (badgeHash === undefined) return undefined
+  if (badgeHash === undefined) return undefined;
 
-  return formatImageUrl(`https://cdn.discordapp.com/guild-tag-badges/${guildId}/${badgeHash}`, options?.size ?? 128, options?.format)
+  return formatImageUrl(`https://cdn.discordapp.com/guild-tag-badges/${guildId}/${badgeHash}`, options?.size ?? 128, options?.format);
 }

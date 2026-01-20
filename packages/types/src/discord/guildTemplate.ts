@@ -1,34 +1,34 @@
 /** Types for: https://discord.com/developers/docs/resources/guild-template */
 
-import type { PickPartial } from '../shared.js'
-import type { DiscordChannel, DiscordOverwrite } from './channel.js'
-import type { DiscordGuild } from './guild.js'
-import type { DiscordRole } from './permissions.js'
-import type { DiscordUser } from './user.js'
+import type { PickPartial } from '../shared.js';
+import type { DiscordChannel, DiscordOverwrite } from './channel.js';
+import type { DiscordGuild } from './guild.js';
+import type { DiscordRole } from './permissions.js';
+import type { DiscordUser } from './user.js';
 
 /** https://discord.com/developers/docs/resources/guild-template#guild-template-object-guild-template-structure */
 export interface DiscordTemplate {
   /** The template code (unique Id) */
-  code: string
+  code: string;
   /** Template name */
-  name: string
+  name: string;
   /** The description for the template */
-  description: string | null
+  description: string | null;
   /** Number of times this template has been used */
-  usage_count: number
+  usage_count: number;
   /** The Id of the user who created the template */
-  creator_id: string
+  creator_id: string;
   /** The user who created the template */
-  creator: DiscordUser
+  creator: DiscordUser;
   /** When this template was created */
-  created_at: string
+  created_at: string;
   /** When this template was last synced to the source guild */
-  updated_at: string
+  updated_at: string;
   /** The Id of the guild this template is based on */
-  source_guild_id: string
+  source_guild_id: string;
   /** The guild snapshot this template contains */
-  serialized_source_guild: DiscordTemplateSerializedSourceGuild
-  is_dirty: boolean | null
+  serialized_source_guild: DiscordTemplateSerializedSourceGuild;
+  is_dirty: boolean | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild-template#guild-template-object-guild-template-structure specificly the serialized_source_guild property */
@@ -46,13 +46,13 @@ export type DiscordTemplateSerializedSourceGuild = Omit<
   >,
   'roles' | 'channels' | 'afk_channel_id' | 'system_channel_id'
 > & {
-  afk_channel_id: number | null
-  system_channel_id: number | null
+  afk_channel_id: number | null;
+  system_channel_id: number | null;
   roles: Array<
     Omit<PickPartial<DiscordRole, 'name' | 'color' | 'hoist' | 'mentionable' | 'permissions' | 'icon' | 'unicode_emoji'>, 'id'> & {
-      id: number
+      id: number;
     }
-  >
+  >;
   channels: Array<
     Omit<
       PickPartial<
@@ -74,9 +74,9 @@ export type DiscordTemplateSerializedSourceGuild = Omit<
       >,
       'id' | 'permission_overwrites' | 'parent_id'
     > & {
-      id: number
-      permission_overwrites: DiscordOverwrite & { id: number }
-      parent_id: number | null
+      id: number;
+      permission_overwrites: DiscordOverwrite & { id: number };
+      parent_id: number | null;
     }
-  >
-}
+  >;
+};

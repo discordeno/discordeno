@@ -1,13 +1,13 @@
-import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
-import type { Bot } from '../../bot.js'
-import type { PresenceUpdate } from '../types.js'
+import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types';
+import type { Bot } from '../../bot.js';
+import type { PresenceUpdate } from '../types.js';
 
 export const reverseStatusTypes = Object.freeze({
   0: 'online',
   1: 'dnd',
   2: 'idle',
   4: 'offline',
-} as const)
+} as const);
 
 export function transformPresenceToDiscordPresence(bot: Bot, payload: PresenceUpdate): DiscordPresenceUpdate {
   return {
@@ -21,5 +21,5 @@ export function transformPresenceToDiscordPresence(bot: Bot, payload: PresenceUp
       mobile: payload.mobile,
       web: payload.web,
     },
-  }
+  };
 }

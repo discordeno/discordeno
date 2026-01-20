@@ -1,58 +1,58 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import fs from 'fs'
+import fs from 'fs';
 
 // TODO: replace with fetch of live spec
-const DISCORD_SPEC = {}
+const DISCORD_SPEC = {};
 
 function schemaRefToName(ref) {
-  if (!ref) return ''
-  return `Discord${ref?.substring(ref.lastIndexOf('/') + 1)}`
+  if (!ref) return '';
+  return `Discord${ref?.substring(ref.lastIndexOf('/') + 1)}`;
 }
 
 function snakeToPascalCase(str) {
-  if (!str.includes('_')) return str
+  if (!str.includes('_')) return str;
 
-  let result = ''
+  let result = '';
   for (let i = 0, len = str.length; i < len; ++i) {
     if (str[i] === '_') {
-      result += str[++i].toUpperCase()
+      result += str[++i].toUpperCase();
 
-      continue
+      continue;
     }
 
-    result += str[i]
+    result += str[i];
   }
 
-  return result
+  return result;
 }
 
 function generateFromSpec() {
-  const finalTypings = []
+  const finalTypings = [];
 
   for (const [key, schema] of Object.entries(DISCORD_SPEC.components.schemas)) {
-    const interfacey = [`export interface Discord${key} {`]
+    const interfacey = [`export interface Discord${key} {`];
 
     if (schema.properties) {
       for (const [name, property] of Object.entries(schema.properties)) {
-        const type = Array.isArray(property.type) ? property.type : property.type ? [property.type] : undefined
-        let ref = property.$ref && schemaRefToName(property.$ref)
-        let allOf = property.allOf?.find((a) => a.$ref)
+        const type = Array.isArray(property.type) ? property.type : property.type ? [property.type] : undefined;
+        let ref = property.$ref && schemaRefToName(property.$ref);
+        let allOf = property.allOf?.find((a) => a.$ref);
         if (allOf) {
-          allOf = schemaRefToName(allOf.$ref)
+          allOf = schemaRefToName(allOf.$ref);
         }
 
-        const isArray = property.type === 'array'
+        const isArray = property.type === 'array';
         if (isArray) {
-          if (property.items.$ref) ref = schemaRefToName(property.items.$ref)
+          if (property.items.$ref) ref = schemaRefToName(property.items.$ref);
           else if (Array.isArray(property.oneOf)) {
-            ref = property.oneOf.map((o) => schemaRefToName(o.$ref)).join(' | ')
+            ref = property.oneOf.map((o) => schemaRefToName(o.$ref)).join(' | ');
           }
         }
 
         if (property.description) {
-          interfacey.push(`    /** ${property.description} */`)
+          interfacey.push(`    /** ${property.description} */`);
         }
 
         let cleanType =
@@ -83,17 +83,17 @@ function generateFromSpec() {
                   : undefined) ?? schemaRefToName(o.$ref),
             )
             .join(' | ') ??
-          'unknown'
+          'unknown';
 
-        if (cleanType.startsWith('null | ')) cleanType = cleanType.substring(cleanType.indexOf('|') + 2) + ' | null'
-        interfacey.push(`    ${name}${schema.required?.includes(name) ? ':' : '?:'} ${cleanType}`)
+        if (cleanType.startsWith('null | ')) cleanType = cleanType.substring(cleanType.indexOf('|') + 2) + ' | null';
+        interfacey.push(`    ${name}${schema.required?.includes(name) ? ':' : '?:'} ${cleanType}`);
       }
     } else {
       // No properties so is enum
       if (['integer', 'string'].includes(schema.type) && Array.isArray(schema.oneOf)) {
-        const enumm = [`export enum Discord${key} {`]
+        const enumm = [`export enum Discord${key} {`];
         for (const possible of schema.oneOf) {
-          if (possible.description) enumm.push(`    /** ${possible.description} */`)
+          if (possible.description) enumm.push(`    /** ${possible.description} */`);
           // TODO: camel case the title
           enumm.push(
             `    ${possible.title.includes('-') ? '"' : ''}${snakeToPascalCase(
@@ -101,26 +101,26 @@ function generateFromSpec() {
             )}${possible.title.includes('-') ? '"' : ''} = ${schema.type === 'string' ? '"' : ''}${possible.const}${
               schema.type === 'string' ? '"' : ''
             },`,
-          )
+          );
         }
-        enumm.push('}')
+        enumm.push('}');
 
-        finalTypings.push(enumm.join('\n'))
-        continue
+        finalTypings.push(enumm.join('\n'));
+        continue;
       }
 
-      console.log('NO PROPERTIES', key, schema)
-      continue
+      console.log('NO PROPERTIES', key, schema);
+      continue;
     }
 
-    interfacey.push('}')
+    interfacey.push('}');
 
-    finalTypings.push(interfacey.join('\n'))
+    finalTypings.push(interfacey.join('\n'));
   }
 
   fs.writeFileSync('./packages/types/src/discord.ts', finalTypings.join('\n\n'), function (err, _result) {
-    if (err) throw err
-  })
+    if (err) throw err;
+  });
 }
 
-generateFromSpec()
+generateFromSpec();

@@ -1,10 +1,10 @@
-import type { DiscordTeam } from '@discordeno/types'
-import { iconBigintToHash } from '@discordeno/utils'
-import type { Bot } from '../../bot.js'
-import type { Team } from '../types.js'
+import type { DiscordTeam } from '@discordeno/types';
+import { iconBigintToHash } from '@discordeno/utils';
+import type { Bot } from '../../bot.js';
+import type { Team } from '../types.js';
 
 export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam {
-  const id = payload.id.toString()
+  const id = payload.id.toString();
 
   return {
     name: payload.name,
@@ -18,5 +18,5 @@ export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam
       user: bot.transformers.reverse.user(bot, member.user),
       role: member.role,
     })),
-  }
+  };
 }

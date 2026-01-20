@@ -1,5 +1,5 @@
-import type { DiscordVoiceState } from '@discordeno/types'
-import { ToggleBitfield } from './ToggleBitfield.js'
+import type { DiscordVoiceState } from '@discordeno/types';
+import { ToggleBitfield } from './ToggleBitfield.js';
 
 export const VoiceStateToggle = {
   /** Whether this user is deafened by the server */
@@ -16,77 +16,77 @@ export const VoiceStateToggle = {
   selfVideo: 1 << 5,
   /** Whether this user is muted by the current user */
   suppress: 1 << 6,
-}
+};
 
 export class VoiceStateToggles extends ToggleBitfield {
   constructor(voiceOrTogglesInt: DiscordVoiceState | number) {
-    super()
+    super();
 
-    if (typeof voiceOrTogglesInt === 'number') this.bitfield = voiceOrTogglesInt
+    if (typeof voiceOrTogglesInt === 'number') this.bitfield = voiceOrTogglesInt;
     else {
-      const voice = voiceOrTogglesInt
+      const voice = voiceOrTogglesInt;
 
-      if (voice.deaf) this.add(VoiceStateToggle.deaf)
-      if (voice.mute) this.add(VoiceStateToggle.mute)
-      if (voice.self_deaf) this.add(VoiceStateToggle.selfDeaf)
-      if (voice.self_mute) this.add(VoiceStateToggle.selfMute)
-      if (voice.self_stream) this.add(VoiceStateToggle.selfStream)
-      if (voice.self_video) this.add(VoiceStateToggle.selfVideo)
-      if (voice.suppress) this.add(VoiceStateToggle.suppress)
+      if (voice.deaf) this.add(VoiceStateToggle.deaf);
+      if (voice.mute) this.add(VoiceStateToggle.mute);
+      if (voice.self_deaf) this.add(VoiceStateToggle.selfDeaf);
+      if (voice.self_mute) this.add(VoiceStateToggle.selfMute);
+      if (voice.self_stream) this.add(VoiceStateToggle.selfStream);
+      if (voice.self_video) this.add(VoiceStateToggle.selfVideo);
+      if (voice.suppress) this.add(VoiceStateToggle.suppress);
     }
   }
 
   /** Whether this user is deafened by the server */
   get deaf(): boolean {
-    return this.has('deaf')
+    return this.has('deaf');
   }
 
   /** Whether this user is muted by the server */
   get mute(): boolean {
-    return this.has('mute')
+    return this.has('mute');
   }
 
   /** Whether this user is locally deafened */
   get selfDeaf(): boolean {
-    return this.has('selfDeaf')
+    return this.has('selfDeaf');
   }
 
   /** Whether this user is locally muted */
   get selfMute(): boolean {
-    return this.has('selfMute')
+    return this.has('selfMute');
   }
 
   /** Whether this user is streaming using "Go Live" */
   get selfStream(): boolean {
-    return this.has('selfStream')
+    return this.has('selfStream');
   }
 
   /** Whether this user's camera is enabled */
   get selfVideo(): boolean {
-    return this.has('selfVideo')
+    return this.has('selfVideo');
   }
 
   /** Whether this user is muted by the current user */
   get suppress(): boolean {
-    return this.has('suppress')
+    return this.has('suppress');
   }
 
   /** Checks whether or not the permissions exist in this */
   has(permissions: VoiceStateToggleKeys | VoiceStateToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) return super.contains(VoiceStateToggle[permissions])
+    if (!Array.isArray(permissions)) return super.contains(VoiceStateToggle[permissions]);
 
-    return super.contains(permissions.reduce((a, b) => (a |= VoiceStateToggle[b]), 0))
+    return super.contains(permissions.reduce((a, b) => (a |= VoiceStateToggle[b]), 0));
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
   list(): Record<VoiceStateToggleKeys, boolean> {
-    const json: Record<string, boolean> = {}
+    const json: Record<string, boolean> = {};
     for (const [key, value] of Object.entries(VoiceStateToggle)) {
-      json[key] = super.contains(value)
+      json[key] = super.contains(value);
     }
 
-    return json as Record<VoiceStateToggleKeys, boolean>
+    return json as Record<VoiceStateToggleKeys, boolean>;
   }
 }
 
-export type VoiceStateToggleKeys = keyof typeof VoiceStateToggle
+export type VoiceStateToggleKeys = keyof typeof VoiceStateToggle;

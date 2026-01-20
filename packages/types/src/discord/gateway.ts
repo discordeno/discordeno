@@ -4,21 +4,21 @@
  *  - https://discord.com/developers/docs/events/gateway-events
  */
 
-import type { DiscordApplication } from './application.js'
-import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js'
-import type { DiscordChannel, DiscordThreadMember } from './channel.js'
-import type { DiscordEmoji } from './emoji.js'
-import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guild.js'
-import type { DiscordScheduledEvent } from './guildScheduledEvent.js'
-import type { TargetTypes } from './invite.js'
-import type { DiscordReactionType } from './message.js'
-import type { GatewayOpcodes } from './opcodes.js'
-import type { DiscordRole } from './permissions.js'
-import type { DiscordSoundboardSound } from './soundboard.js'
-import type { DiscordStageInstance } from './stageInstance.js'
-import type { DiscordSticker } from './sticker.js'
-import type { DiscordAvatarDecorationData, DiscordUser } from './user.js'
-import type { DiscordVoiceState } from './voice.js'
+import type { DiscordApplication } from './application.js';
+import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js';
+import type { DiscordChannel, DiscordThreadMember } from './channel.js';
+import type { DiscordEmoji } from './emoji.js';
+import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guild.js';
+import type { DiscordScheduledEvent } from './guildScheduledEvent.js';
+import type { TargetTypes } from './invite.js';
+import type { DiscordReactionType } from './message.js';
+import type { GatewayOpcodes } from './opcodes.js';
+import type { DiscordRole } from './permissions.js';
+import type { DiscordSoundboardSound } from './soundboard.js';
+import type { DiscordStageInstance } from './stageInstance.js';
+import type { DiscordSticker } from './sticker.js';
+import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
+import type { DiscordVoiceState } from './voice.js';
 
 /** https://discord.com/developers/docs/events/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -170,30 +170,30 @@ export enum GatewayIntents {
   DirectMessagePolls = 1 << 25,
 }
 
-export { GatewayIntents as Intents }
+export { GatewayIntents as Intents };
 
 // TODO: Add TransportCompression: https://discord.com/developers/docs/events/gateway#transport-compression
 
 /** https://discord.com/developers/docs/events/gateway#get-gateway-bot */
 export interface DiscordGetGatewayBot {
   /** The WSS URL that can be used for connecting to the gateway */
-  url: string
+  url: string;
   /** The recommended number of shards to use when connecting */
-  shards: number
+  shards: number;
   /** Information on the current session start limit */
-  session_start_limit: DiscordSessionStartLimit
+  session_start_limit: DiscordSessionStartLimit;
 }
 
 /** https://discord.com/developers/docs/events/gateway#session-start-limit-object */
 export interface DiscordSessionStartLimit {
   /** The total number of session starts the current user is allowed */
-  total: number
+  total: number;
   /** The remaining number of session starts the current user is allowed */
-  remaining: number
+  remaining: number;
   /** The number of milliseconds after which the limit resets */
-  reset_after: number
+  reset_after: number;
   /** The number of identify requests allowed per 5 seconds */
-  max_concurrency: number
+  max_concurrency: number;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#receive-events */
@@ -273,21 +273,21 @@ export type GatewayDispatchEventNames =
   | 'SUBSCRIPTION_UPDATE'
   | 'SUBSCRIPTION_DELETE'
   | 'MESSAGE_POLL_VOTE_ADD'
-  | 'MESSAGE_POLL_VOTE_REMOVE'
+  | 'MESSAGE_POLL_VOTE_REMOVE';
 
 /** https://discord.com/developers/docs/events/gateway-events#receive-events */
-export type GatewayEventNames = GatewayDispatchEventNames
+export type GatewayEventNames = GatewayDispatchEventNames;
 
 /** https://discord.com/developers/docs/events/gateway-events#payload-structure */
 export interface DiscordGatewayPayload {
   /** opcode for the payload */
-  op: number
+  op: number;
   /** Event data */
-  d: unknown | null
+  d: unknown | null;
   /** Sequence number, used for resuming sessions and heartbeats */
-  s: number | null
+  s: number | null;
   /** The event name for this payload */
-  t: GatewayEventNames | null
+  t: GatewayEventNames | null;
 }
 
 // TODO: Add Identify: https://discord.com/developers/docs/events/gateway-events#identify-identify-structure
@@ -300,13 +300,13 @@ export interface DiscordGatewayPayload {
 /** https://discord.com/developers/docs/events/gateway-events#update-presence-gateway-presence-update-structure */
 export interface DiscordUpdatePresence {
   /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
-  since: number | null
+  since: number | null;
   /** The user's activities */
-  activities: DiscordBotActivity[]
+  activities: DiscordBotActivity[];
   /** The user's new status */
-  status: Exclude<keyof typeof PresenceStatus, 'offline'>
+  status: Exclude<keyof typeof PresenceStatus, 'offline'>;
   /** Whether or not the client is afk */
-  afk: boolean
+  afk: boolean;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#update-presence-status-types */
@@ -321,51 +321,51 @@ export enum PresenceStatus {
 /** https://discord.com/developers/docs/events/gateway-events#hello-hello-structure */
 export interface DiscordHello {
   /** The interval (in milliseconds) the client should heartbeat with */
-  heartbeat_interval: number
+  heartbeat_interval: number;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#ready-ready-event-fields */
 export interface DiscordReady {
   /** Gateway version */
-  v: number
+  v: number;
   /** Information about the user including email */
-  user: DiscordUser
+  user: DiscordUser;
   /** The guilds the user is in */
-  guilds: DiscordUnavailableGuild[]
+  guilds: DiscordUnavailableGuild[];
   /** Used for resuming connections */
-  session_id: string
+  session_id: string;
   /** Gateway url for resuming connections */
-  resume_gateway_url: string
+  resume_gateway_url: string;
   /** The shard information associated with this session, if sent when identifying */
-  shard?: [number, number]
+  shard?: [number, number];
   /** Contains id and flags */
-  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags'>
+  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags'>;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#auto-moderation-action-execution-auto-moderation-action-execution-event-fields */
 export interface DiscordAutoModerationActionExecution {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Action which was executed */
-  action: DiscordAutoModerationAction
+  action: DiscordAutoModerationAction;
   /** The id of the rule that was executed */
-  rule_id: string
+  rule_id: string;
   /** The trigger type of the rule that was executed. */
-  rule_trigger_type: AutoModerationTriggerTypes
+  rule_trigger_type: AutoModerationTriggerTypes;
   /** The id of the user which generated the content which triggered the rule */
-  user_id: string
+  user_id: string;
   /** The id of the channel in which user content was posted */
-  channel_id?: string
+  channel_id?: string;
   /** The id of the message. Will not exist if message was blocked by automod or content was not part of any message */
-  message_id?: string
+  message_id?: string;
   /** The id of any system auto moderation messages posted as a result of this action */
-  alert_system_message_id?: string
+  alert_system_message_id?: string;
   /** The content from the user */
-  content: string
+  content: string;
   /** The word or phrase that triggerred the rule. */
-  matched_keyword: string | null
+  matched_keyword: string | null;
   /** The substring in content that triggered the rule */
-  matched_content: string | null
+  matched_content: string | null;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-create */
@@ -376,25 +376,25 @@ export interface DiscordThreadCreateExtra {
    * @remarks
    * The Thread Create event may fire for a few reasons, however this fields only exists when it is fired because a thread was created.
    */
-  newly_created?: boolean
+  newly_created?: boolean;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-list-sync-thread-list-sync-event-fields */
 export interface DiscordThreadListSync {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** The parent channel ids whose threads are being synced. If omitted, then threads were synced for the entire guild. This array may contain channelIds that have no active threads as well, so you know to clear that data */
-  channel_ids?: string[]
+  channel_ids?: string[];
   /** All active threads in the given channels that the current user can access */
-  threads: DiscordChannel[]
+  threads: DiscordChannel[];
   /** All thread member objects from the synced threads for the current user, indicating which threads the current user has been added to */
-  members: DiscordThreadMember[]
+  members: DiscordThreadMember[];
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
 export interface DiscordThreadMemberUpdateExtra {
   /** Id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
@@ -403,85 +403,85 @@ export interface DiscordThreadMemberUpdate extends DiscordThreadMember, DiscordT
 /** https://discord.com/developers/docs/events/gateway-events#thread-members-update-thread-members-update-event-fields */
 export interface DiscordThreadMembersUpdate {
   /** The id of the thread */
-  id: string
+  id: string;
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** the approximate number of members in the thread, capped at 50 */
-  member_count: number
+  member_count: number;
   /** The users who were added to the thread */
-  added_members?: DiscordThreadMember[]
+  added_members?: DiscordThreadMember[];
   /** The id of the users who were removed from the thread */
-  removed_member_ids?: string[]
+  removed_member_ids?: string[];
 }
 
 /** https://discord.com/developers/docs/events/gateway#channel-pins-update */
 export interface DiscordChannelPinsUpdate {
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The time at which the most recent pinned message was pinned */
-  last_pin_timestamp?: string | null
+  last_pin_timestamp?: string | null;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-create-guild-create-extra-fields */
 export interface DiscordGuildCreateExtra {
   /** When this guild was joined at */
-  joined_at: string
+  joined_at: string;
   /** If this is considered a large guild */
-  large: boolean
+  large: boolean;
   /** If the guild is unavailable due to an outage */
-  unavailable?: boolean
+  unavailable?: boolean;
   /** Total number of member in this guild */
-  member_count: number
+  member_count: number;
   /**
    * States of members currently in voice channels
    *
    * @remarks
    * Lacks the `guild_id` key
    */
-  voice_states: Omit<DiscordVoiceState, 'guild_id'>[]
+  voice_states: Omit<DiscordVoiceState, 'guild_id'>[];
   /** Users in the guild */
-  members: DiscordMemberWithUser[]
+  members: DiscordMemberWithUser[];
   /** Channels in the guild */
-  channels: DiscordChannel[]
+  channels: DiscordChannel[];
   /** All active threads in the guild that the current user has permission to view */
-  threads: DiscordChannel[]
+  threads: DiscordChannel[];
   /**
    * Presences of the members in the guild
    *
    * @remarks
    * Will only include non-offline members if the size is greater than the large threshold.
    */
-  presences: Partial<DiscordPresenceUpdate>[]
+  presences: Partial<DiscordPresenceUpdate>[];
   /** Stage instances in the guild */
-  stage_instances: DiscordStageInstance[]
+  stage_instances: DiscordStageInstance[];
   /** Scheduled events in the guild */
-  guild_scheduled_events: DiscordScheduledEvent[]
+  guild_scheduled_events: DiscordScheduledEvent[];
   /** Soundboard sounds in the guild */
-  soundboard_sounds: DiscordSoundboardSound[]
+  soundboard_sounds: DiscordSoundboardSound[];
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-audit-log-entry-create-guild-audit-log-entry-create-event-extra-fields */
 export interface DiscordGuildAuditLogEntryCreateExtra {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields */
 export interface DiscordGuildBanAdd {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** The banned user */
-  user: DiscordUser
+  user: DiscordUser;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields */
 export interface DiscordGuildBanRemove {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** The banned user */
-  user: DiscordUser
+  user: DiscordUser;
 }
 
 /**
@@ -496,29 +496,29 @@ export interface DiscordGuildBanAddRemove extends DiscordGuildBanAdd {}
 /** https://discord.com/developers/docs/events/gateway-events#guild-emojis-update-guild-emojis-update-event-fields */
 export interface DiscordGuildEmojisUpdate {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Array of emojis */
-  emojis: DiscordEmoji[]
+  emojis: DiscordEmoji[];
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-stickers-update-guild-stickers-update-event-fields */
 export interface DiscordGuildStickersUpdate {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Array of sticker */
-  stickers: DiscordSticker[]
+  stickers: DiscordSticker[];
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-integrations-update-guild-integrations-update-event-fields */
 export interface DiscordGuildIntegrationsUpdate {
   /** id of the guild whose integrations were updated */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
 export interface DiscordGuildMemberAddExtra {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
@@ -527,139 +527,139 @@ export interface DiscordGuildMemberAdd extends DiscordMemberWithUser, DiscordGui
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-remove-guild-member-remove-event-fields */
 export interface DiscordGuildMemberRemove {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** The user who was removed */
-  user: DiscordUser
+  user: DiscordUser;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-member-update-guild-member-update-event-fields */
 export interface DiscordGuildMemberUpdate {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** User role ids */
-  roles: string[]
+  roles: string[];
   /** The user */
-  user: DiscordUser
+  user: DiscordUser;
   /** Nickname of the user in the guild */
-  nick?: string | null
+  nick?: string | null;
   /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */
-  avatar: string | null
+  avatar: string | null;
   /** the member's guild banner hash */
-  banner: string | null
+  banner: string | null;
   /** When the user joined the guild */
-  joined_at: string | null
+  joined_at: string | null;
   /** When the user starting boosting the guild */
-  premium_since?: string | null
+  premium_since?: string | null;
   /** whether the user is deafened in voice channels */
-  deaf?: boolean
+  deaf?: boolean;
   /** whether the user is muted in voice channels */
-  mute?: boolean
+  mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean
+  pending?: boolean;
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
-  communication_disabled_until?: string | null
+  communication_disabled_until?: string | null;
   /** Guild member flags */
-  flags?: number
+  flags?: number;
   /** Data for the member's guild avatar decoration */
-  avatar_decoration_data?: DiscordAvatarDecorationData | null
+  avatar_decoration_data?: DiscordAvatarDecorationData | null;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-members-chunk-guild-members-chunk-event-fields */
 export interface DiscordGuildMembersChunk {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Set of guild members */
-  members: DiscordMemberWithUser[]
+  members: DiscordMemberWithUser[];
   /** The chunk index in the expected chunks for this response (0 <= chunk_index < chunk_count) */
-  chunk_index: number
+  chunk_index: number;
   /** The total number of expected chunks for this response */
-  chunk_count: number
+  chunk_count: number;
   /** If passing an invalid id to `REQUEST_GUILD_MEMBERS`, it will be returned here */
-  not_found?: string[]
+  not_found?: string[];
   /** If passing true to `REQUEST_GUILD_MEMBERS`, presences of the returned members will be here */
-  presences?: DiscordPresenceUpdate[]
+  presences?: DiscordPresenceUpdate[];
   /** The nonce used in the Guild Members Request */
-  nonce?: string
+  nonce?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-role-create-guild-role-create-event-fields */
 export interface DiscordGuildRoleCreate {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** The role created */
-  role: DiscordRole
+  role: DiscordRole;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-role-update-guild-role-update-event-fields */
 export interface DiscordGuildRoleUpdate {
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** The role updated */
-  role: DiscordRole
+  role: DiscordRole;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-role-delete-guild-role-delete-event-fields */
 export interface DiscordGuildRoleDelete {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** id of the role */
-  role_id: string
+  role_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-scheduled-event-user-add-guild-scheduled-event-user-add-event-fields */
 export interface DiscordScheduledEventUserAdd {
   /** id of the guild scheduled event */
-  guild_scheduled_event_id: string
+  guild_scheduled_event_id: string;
   /** id of the user */
-  user_id: string
+  user_id: string;
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#guild-scheduled-event-user-remove-guild-scheduled-event-user-remove-event-fields */
 export interface DiscordScheduledEventUserRemove {
   /** id of the guild scheduled event */
-  guild_scheduled_event_id: string
+  guild_scheduled_event_id: string;
   /** id of the user */
-  user_id: string
+  user_id: string;
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-delete-guild-soundboard-sound-delete-event-fields */
 export interface DiscordSoundboardSoundDelete {
   /** ID of the sound that was deleted */
-  sound_id: string
+  sound_id: string;
   /** ID of the guild the sound was in */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
 export interface DiscordSoundboardSoundsUpdate {
   /** The guild's soundboard sounds */
-  soundboard_sounds: DiscordSoundboardSound[]
+  soundboard_sounds: DiscordSoundboardSound[];
   /** ID of the guild the sound was in */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#soundboard-sounds-soundboard-sounds-event-fields */
 export interface DiscordSoundboardSounds {
   /** The guild's soundboard sounds */
-  soundboard_sounds: DiscordSoundboardSound[]
+  soundboard_sounds: DiscordSoundboardSound[];
   /** ID of the guild the sound was in */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#integration-create-integration-create-event-additional-fields */
 export interface DiscordIntegrationCreateExtra {
   /** Id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#integration-update-integration-update-event-additional-fields */
 export interface DiscordIntegrationUpdateExtra {
   /** Id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /**
@@ -668,222 +668,222 @@ export interface DiscordIntegrationUpdateExtra {
  */
 export interface DiscordIntegrationCreateUpdate extends DiscordIntegration {
   /** Id of the guild */
-  guild_id: string
+  guild_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#integration-delete-integration-delete-event-fields */
 export interface DiscordIntegrationDelete {
   /** Integration id */
-  id: string
+  id: string;
   /** Id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Id of the bot/OAuth2 application for this discord integration */
-  application_id?: string
+  application_id?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#invite-create-invite-create-event-fields */
 export interface DiscordInviteCreate {
   /** The channel the invite is for */
-  channel_id: string
+  channel_id: string;
   /** The unique invite code */
-  code: string
+  code: string;
   /** The time at which the invite was created */
-  created_at: string
+  created_at: string;
   /** The guild of the invite */
-  guild_id?: string
+  guild_id?: string;
   /** The user that created the invite */
-  inviter?: DiscordUser
+  inviter?: DiscordUser;
   /** How long the invite is valid for (in seconds) */
-  max_age: number
+  max_age: number;
   /** The maximum number of times the invite can be used */
-  max_uses: number
+  max_uses: number;
   /** The type of target for this voice channel invite */
-  target_type: TargetTypes
+  target_type: TargetTypes;
   /** The target user for this invite */
-  target_user?: DiscordUser
+  target_user?: DiscordUser;
   /** The embedded application to open for this voice channel embedded application invite */
-  target_application?: Partial<DiscordApplication>
+  target_application?: Partial<DiscordApplication>;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
-  temporary: boolean
+  temporary: boolean;
   /** How many times the invite has been used (always will be 0) */
-  uses: number
+  uses: number;
   /** The expiration date of this invite. */
-  expires_at: string
+  expires_at: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#invite-delete-invite-delete-event-fields */
 export interface DiscordInviteDelete {
   /** The channel of the invite */
-  channel_id: string
+  channel_id: string;
   /** The guild of the invite */
-  guild_id?: string
+  guild_id?: string;
   /** The unique invite code */
-  code: string
+  code: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-create-message-create-extra-fields */
 export interface DiscordMessageCreateExtra {
   /** ID of the guild the message was sent in - unless it is an ephemeral message */
-  guild_id?: string
+  guild_id?: string;
   /** Member properties for this message's author. Missing for ephemeral messages and messages from webhooks */
-  member?: Partial<DiscordMemberWithUser>
+  member?: Partial<DiscordMemberWithUser>;
   /** Users specifically mentioned in the message */
-  mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>
+  mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-update */
-export type DiscordMessageUpdateExtra = DiscordMessageCreateExtra
+export type DiscordMessageUpdateExtra = DiscordMessageCreateExtra;
 
 /** https://discord.com/developers/docs/events/gateway-events#message-delete-message-delete-event-fields */
 export interface DiscordMessageDelete {
   /** The id of the message */
-  id: string
+  id: string;
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-delete-bulk-message-delete-bulk-event-fields */
 export interface DiscordMessageDeleteBulk {
   /** The ids of the messages */
-  ids: string[]
+  ids: string[];
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-add-message-reaction-add-event-fields */
 export interface DiscordMessageReactionAdd {
   /** The id of the user */
-  user_id: string
+  user_id: string;
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the message */
-  message_id: string
+  message_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
   /** The member who reacted if this happened in a guild */
-  member?: DiscordMemberWithUser
+  member?: DiscordMemberWithUser;
   /** The emoji used to react */
-  emoji: Partial<DiscordEmoji>
+  emoji: Partial<DiscordEmoji>;
   /** The id of the author of this message */
-  message_author_id?: string
+  message_author_id?: string;
   /** true if this is a super-reaction */
-  burst: boolean
+  burst: boolean;
   /** Colors used for super-reaction animation in "#rrggbb" format */
-  burst_colors?: string[]
+  burst_colors?: string[];
   /** The type of reaction */
-  type: DiscordReactionType
+  type: DiscordReactionType;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-message-reaction-remove-event-fields */
 export interface DiscordMessageReactionRemove {
   /** The id of the user */
-  user_id: string
+  user_id: string;
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the message */
-  message_id: string
+  message_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
   /** The emoji used to react */
-  emoji: Partial<DiscordEmoji>
+  emoji: Partial<DiscordEmoji>;
   /** true if this is a super-reaction */
-  burst: boolean
+  burst: boolean;
   /** The type of reaction */
-  type: DiscordReactionType
+  type: DiscordReactionType;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-all-message-reaction-remove-all-event-fields */
 export interface DiscordMessageReactionRemoveAll {
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the message */
-  message_id: string
+  message_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-emoji-message-reaction-remove-emoji-event-fields */
 export interface DiscordMessageReactionRemoveEmoji {
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
   /** The id of the message */
-  message_id: string
+  message_id: string;
   /** The emoji used to react */
-  emoji: Partial<DiscordEmoji>
+  emoji: Partial<DiscordEmoji>;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#presence-update-presence-update-event-fields */
 export interface DiscordPresenceUpdate {
   /** The user presence is being updated for */
-  user: DiscordUser
+  user: DiscordUser;
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Either "idle", "dnd", "online", or "offline" */
-  status: 'idle' | 'dnd' | 'online' | 'offline'
+  status: 'idle' | 'dnd' | 'online' | 'offline';
   /** User's current activities */
-  activities: DiscordActivity[]
+  activities: DiscordActivity[];
   /** User's platform-dependent status */
-  client_status: DiscordClientStatus
+  client_status: DiscordClientStatus;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#client-status-object */
 export interface DiscordClientStatus {
   /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
-  desktop?: string
+  desktop?: string;
   /** The user's status set for an active mobile (iOS, Android) application session */
-  mobile?: string
+  mobile?: string;
   /** The user's status set for an active web (browser, bot account) application session */
-  web?: string
+  web?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object */
 export interface DiscordActivity {
   /** The activity's name */
-  name: string
+  name: string;
   /** Activity type */
-  type: ActivityTypes
+  type: ActivityTypes;
   /** Stream url, is validated when type is 1 */
-  url?: string | null
+  url?: string | null;
   /** Unix timestamp of when the activity was added to the user's session */
-  created_at: number
+  created_at: number;
   /** Unix timestamps for start and/or end of the game */
-  timestamps?: DiscordActivityTimestamps
+  timestamps?: DiscordActivityTimestamps;
   /** Application id for the game */
-  application_id?: string
+  application_id?: string;
   /** Controls which field is displayed in the user's status text in the member list */
-  status_display_type?: DiscordStatusDisplayType | null
+  status_display_type?: DiscordStatusDisplayType | null;
   /** What the player is currently doing */
-  details?: string | null
+  details?: string | null;
   /** URL that is linked when clicking on the details text */
-  details_url?: string | null
+  details_url?: string | null;
   /** The user's current party status */
-  state?: string | null
+  state?: string | null;
   /** URL that is linked when clicking on the state text */
-  state_url?: string | null
+  state_url?: string | null;
   /** The emoji used for a custom status */
-  emoji?: DiscordActivityEmoji | null
+  emoji?: DiscordActivityEmoji | null;
   /** Information for the current party of the player */
-  party?: DiscordActivityParty
+  party?: DiscordActivityParty;
   /** Images for the presence and their hover texts */
-  assets?: DiscordActivityAssets
+  assets?: DiscordActivityAssets;
   /** Secrets for Rich Presence joining and spectating */
-  secrets?: DiscordActivitySecrets
+  secrets?: DiscordActivitySecrets;
   /** Whether or not the activity is an instanced game session */
-  instance?: boolean
+  instance?: boolean;
   /** Activity flags `OR`d together, describes what the payload includes */
-  flags?: number
+  flags?: number;
   /** The custom buttons shown in the Rich Presence (max 2) */
-  buttons?: DiscordActivityButton[]
+  buttons?: DiscordActivityButton[];
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object - Note at the bottom */
-export type DiscordBotActivity = Pick<DiscordActivity, 'name' | 'state' | 'type' | 'url'>
+export type DiscordBotActivity = Pick<DiscordActivity, 'name' | 'state' | 'type' | 'url'>;
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
@@ -908,55 +908,55 @@ export enum DiscordStatusDisplayType {
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-timestamps */
 export interface DiscordActivityTimestamps {
   /** Unix time (in milliseconds) of when the activity started */
-  start?: number
+  start?: number;
   /** Unix time (in milliseconds) of when the activity ends */
-  end?: number
+  end?: number;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-emoji */
 export interface DiscordActivityEmoji {
   /** The name of the emoji */
-  name: string
+  name: string;
   /** Whether this emoji is animated */
-  animated?: boolean
+  animated?: boolean;
   /** The id of the emoji */
-  id?: string
+  id?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-party */
 export interface DiscordActivityParty {
   /** Used to show the party's current and maximum size */
-  size?: [currentSize: number, maxSize: number]
+  size?: [currentSize: number, maxSize: number];
   /** The id of the party */
-  id?: string
+  id?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-assets */
 export interface DiscordActivityAssets {
   /** The id for a large asset of the activity, usually a snowflake */
-  large_image?: string
+  large_image?: string;
   /** Text displayed when hovering over the large image of the activity */
-  large_text?: string
+  large_text?: string;
   /** URL that is opened when clicking on the large image */
-  large_url?: string
+  large_url?: string;
   /** The id for a small asset of the activity, usually a snowflake */
-  small_image?: string
+  small_image?: string;
   /** Text displayed when hovering over the small image of the activity */
-  small_text?: string
+  small_text?: string;
   /** URL that is opened when clicking on the small image */
-  small_url?: string
+  small_url?: string;
   /** See Activity Asset Image. Displayed as a banner on a Game Invite. */
-  invite_cover_image?: string
+  invite_cover_image?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-secrets */
 export interface DiscordActivitySecrets {
   /** The secret for joining a party */
-  join?: string
+  join?: string;
   /** The secret for spectating a game */
-  spectate?: string
+  spectate?: string;
   /** The secret for a specific instanced match */
-  match?: string
+  match?: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-flags */
@@ -975,43 +975,43 @@ export enum ActivityFlags {
 /** https://discord.com/developers/docs/events/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
-  label: string
+  label: string;
   /** The url opened when clicking the button (1-512 characters) */
-  url: string
+  url: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#typing-start-typing-start-event-fields */
 export interface DiscordTypingStart {
   /** id of the channel */
-  channel_id: string
+  channel_id: string;
   /** id of the guild */
-  guild_id?: string
+  guild_id?: string;
   /** id of the user */
-  user_id: string
+  user_id: string;
   /** Unix time (in seconds) of when the user started typing */
-  timestamp: number
+  timestamp: number;
   /** The member who started typing if this happened in a guild */
-  member?: DiscordMember
+  member?: DiscordMember;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#voice-channel-effect-send-voice-channel-effect-send-event-fields */
 export interface DiscordVoiceChannelEffectSend {
   /** ID of the channel the effect was sent in */
-  channel_id: string
+  channel_id: string;
   /** ID of the guild the effect was sent in */
-  guild_id: string
+  guild_id: string;
   /** ID of the user who sent the effect */
-  user_id: string
+  user_id: string;
   /** The emoji sent, for emoji reaction and soundboard effects */
-  emoji?: DiscordEmoji | null
+  emoji?: DiscordEmoji | null;
   /** The type of emoji animation, for emoji reaction and soundboard effects */
-  animation_type?: DiscordVoiceChannelEffectAnimationType | null
+  animation_type?: DiscordVoiceChannelEffectAnimationType | null;
   /** The ID of the emoji animation, for emoji reaction and soundboard effects */
-  animation_id?: number
+  animation_id?: number;
   /** The ID of the soundboard sound, for soundboard effects */
-  sound_id?: string | number
+  sound_id?: string | number;
   /** The volume of the soundboard sound, from 0 to 1, for soundboard effects */
-  sound_volume?: number
+  sound_volume?: number;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#voice-channel-effect-send-animation-types */
@@ -1025,68 +1025,68 @@ export enum DiscordVoiceChannelEffectAnimationType {
 /** https://discord.com/developers/docs/events/gateway-events#voice-server-update-voice-server-update-event-fields */
 export interface DiscordVoiceServerUpdate {
   /** Voice connection token */
-  token: string
+  token: string;
   /** The guild this voice server update is for */
-  guild_id: string
+  guild_id: string;
   /** The voice server host */
-  endpoint: string | null
+  endpoint: string | null;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#webhooks-update-webhooks-update-event-fields */
 export interface DiscordWebhookUpdate {
   /** id of the guild */
-  guild_id: string
+  guild_id: string;
   /** id of the channel */
-  channel_id: string
+  channel_id: string;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-poll-vote-add-message-poll-vote-add-fields */
 export interface DiscordPollVoteAdd {
   /** ID of the user. Usually a snowflake */
-  user_id: string
+  user_id: string;
   /** ID of the channel. Usually a snowflake */
-  channel_id: string
+  channel_id: string;
   /** ID of the message. Usually a snowflake */
-  message_id: string
+  message_id: string;
   /** ID of the guild. Usually a snowflake */
-  guild_id?: string
+  guild_id?: string;
   /** ID of the answer. */
-  answer_id: number
+  answer_id: number;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#message-poll-vote-remove-message-poll-vote-remove-fields */
 export interface DiscordPollVoteRemove {
   /** ID of the user. Usually a snowflake */
-  user_id: string
+  user_id: string;
   /** ID of the channel. Usually a snowflake */
-  channel_id: string
+  channel_id: string;
   /** ID of the message. Usually a snowflake */
-  message_id: string
+  message_id: string;
   /** ID of the guild. Usually a snowflake */
-  guild_id?: string
+  guild_id?: string;
   /** ID of the answer. */
-  answer_id: number
+  answer_id: number;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#rate-limited-rate-limited-fields */
 export interface DiscordRateLimited {
   /** Gateway opcode of the event that was rate limited */
-  opcode: GatewayOpcodes
+  opcode: GatewayOpcodes;
   /** The number of seconds to wait before submitting another request */
-  retry_after: number
+  retry_after: number;
   /**
    * Metadata for the event that was rate limited
    *
    * @remarks
    * This is dependent on the {@link opcode} field in this object
    */
-  meta: DiscordRequestGuildMemberRateLimitMetadata
+  meta: DiscordRequestGuildMemberRateLimitMetadata;
 }
 
 /** https://discord.com/developers/docs/events/gateway-events#rate-limited-request-guild-member-rate-limit-metadata-structure */
 export interface DiscordRequestGuildMemberRateLimitMetadata {
   /** ID of the guild to get members for */
-  guild_id: string
+  guild_id: string;
   /** nonce to identify the Guild Members Chunk response */
-  nonce?: string
+  nonce?: string;
 }
