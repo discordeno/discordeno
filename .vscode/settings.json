@@ -7,7 +7,7 @@
     "*.ts": "typescript",
     "*.js": "javascript"
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome",
     "editor.quickSuggestions": {
