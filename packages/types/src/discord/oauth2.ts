@@ -80,10 +80,11 @@ export enum OAuth2Scope {
    */
   MessagesRead = 'messages.read',
   /**
-   * Allows your app to know a user's friends and implicit relationships
+   * Allows your app to access a user's Discord Friends list, their pending requests, and blocked users.
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope is part of the Social SDK.
+   * You need to submit for access in the dev portal to use this scope.
    */
   RelationshipsRead = 'relationships.read',
   /** Allows your app to update a user's connection and metadata for the app */
