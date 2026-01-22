@@ -997,7 +997,7 @@ export interface Interaction {
     options?: { isPrivate?: boolean; withResponse?: boolean; type?: InteractionResponseTypes },
   ) => Promise<Message | InteractionCallbackResponse | void>;
   /** Sends a followup message to an interaction. */
-  sendFollowupMessage: (response: string | InteractionCallbackData) => Promise<Message | InteractionCallbackResponse | void>;
+  sendFollowupMessage: (response: string | InteractionCallbackData) => Promise<Message>;
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
