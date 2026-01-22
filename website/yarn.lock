@@ -8854,11 +8854,11 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:^19.2.7":
-  version: 19.2.7
-  resolution: "@types/react@npm:19.2.7"
+  version: 19.2.8
+  resolution: "@types/react@npm:19.2.8"
   dependencies:
     csstype: "npm:^3.2.2"
-  checksum: 10c0/a7b75f1f9fcb34badd6f84098be5e35a0aeca614bc91f93d2698664c0b2ba5ad128422bd470ada598238cebe4f9e604a752aead7dc6f5a92261d0c7f9b27cfd1
+  checksum: 10c0/832834998c4ee971fca72ecf1eb95dc924ad3931a2112c687a4dae498aabd115c5fa4db09186853e34a646226b0223808c8f867df03d17601168f9cf119448de
   languageName: node
   linkType: hard
 
@@ -14669,9 +14669,9 @@ __metadata:
   linkType: hard
 
 "lodash@npm:^4.17.20, lodash@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash@npm:4.17.21"
-  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  version: 4.17.23
+  resolution: "lodash@npm:4.17.23"
+  checksum: 10c0/1264a90469f5bb95d4739c43eb6277d15b6d9e186df4ac68c3620443160fc669e2f14c11e7d8b2ccf078b81d06147c01a8ccced9aab9f9f63d50dcf8cace6bf6
   languageName: node
   linkType: hard
 
@@ -19935,58 +19935,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-darwin-64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-darwin-64@npm:2.7.4"
+"turbo-darwin-64@npm:2.7.5":
+  version: 2.7.5
+  resolution: "turbo-darwin-64@npm:2.7.5"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-darwin-arm64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-darwin-arm64@npm:2.7.4"
+"turbo-darwin-arm64@npm:2.7.5":
+  version: 2.7.5
+  resolution: "turbo-darwin-arm64@npm:2.7.5"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-linux-64@npm:2.7.4"
+"turbo-linux-64@npm:2.7.5":
+  version: 2.7.5
+  resolution: "turbo-linux-64@npm:2.7.5"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-linux-arm64@npm:2.7.4"
+"turbo-linux-arm64@npm:2.7.5":
+  version: 2.7.5
+  resolution: "turbo-linux-arm64@npm:2.7.5"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-windows-64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-windows-64@npm:2.7.4"
+"turbo-windows-64@npm:2.7.5":
+  version: 2.7.5
+  resolution: "turbo-windows-64@npm:2.7.5"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-windows-arm64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-windows-arm64@npm:2.7.4"
+"turbo-windows-arm64@npm:2.7.5":
+  version: 2.7.5
+  resolution: "turbo-windows-arm64@npm:2.7.5"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo@npm:^2.7.4":
-  version: 2.7.4
-  resolution: "turbo@npm:2.7.4"
+"turbo@npm:^2.7.5":
+  version: 2.7.5
+  resolution: "turbo@npm:2.7.5"
   dependencies:
-    turbo-darwin-64: "npm:2.7.4"
-    turbo-darwin-arm64: "npm:2.7.4"
-    turbo-linux-64: "npm:2.7.4"
-    turbo-linux-arm64: "npm:2.7.4"
-    turbo-windows-64: "npm:2.7.4"
-    turbo-windows-arm64: "npm:2.7.4"
+    turbo-darwin-64: "npm:2.7.5"
+    turbo-darwin-arm64: "npm:2.7.5"
+    turbo-linux-64: "npm:2.7.5"
+    turbo-linux-arm64: "npm:2.7.5"
+    turbo-windows-64: "npm:2.7.5"
+    turbo-windows-arm64: "npm:2.7.5"
   dependenciesMeta:
     turbo-darwin-64:
       optional: true
@@ -20002,7 +20002,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 10c0/506a59df8d898833efb7d41b552a3a448a26fb2ebd5d545d37bf1e4854bdab0a0b847d8d82f962f499ba5340b7dc123abb5d4ceb9dae12b32ec6c46d1f5fe6fc
+  checksum: 10c0/fdaec7f15c04685fd2a61fd6899b08adbcc8fa0fb1001b54626c585c1159c3f410a3ad20067ebe8093da2d3796c4dbb930136d68d09dbb59c7ff51a39516f2a8
   languageName: node
   linkType: hard
 
@@ -20874,7 +20874,7 @@ __metadata:
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.3"
     react-dom: "npm:^19.2.3"
-    turbo: "npm:^2.7.4"
+    turbo: "npm:^2.7.5"
     typescript: "npm:5.9.3"
     webpack: "npm:5.104.1"
   languageName: unknown
