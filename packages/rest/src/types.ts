@@ -3287,6 +3287,7 @@ export interface RestRequestRejection {
   /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
   body?: string | object;
   error?: string;
+  errorObject?: Error;
 }
 
 export interface RestManagerEvents {

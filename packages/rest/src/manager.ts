@@ -451,7 +451,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
       const response = await fetch(request).catch(async (error) => {
-        rest.logger.error(error);
+        rest.logger.debug(`request fetch to ${url} failed.`, error);
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
@@ -459,9 +459,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           ok: false,
           status: 999,
           error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
+          errorObject: error,
         });
-        throw error;
       });
+
+      // If response is undefined, the error has been handled in the catch block above
+      if (!response) return;
+
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`);
 
       // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
