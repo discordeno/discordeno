@@ -157,6 +157,10 @@ export interface RestRoutes {
     integrations: (guildId: BigString) => string;
     /** Route for handling a specific guild invite. */
     invite: (inviteCode: string, options?: GetInvite) => string;
+    /** Route for a specific invite's target users  */
+    inviteTargetUsers: (inviteCode: string) => string;
+    /** Route for a specific invite's target users  */
+    inviteTargetUsersJobStatus: (inviteCode: string) => string;
     /** Route for handling non-specific invites in a guild. */
     invites: (guildId: BigString) => string;
     /** Route for handling a bot leaving a guild. */
