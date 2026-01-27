@@ -50,7 +50,8 @@ import type {
   MessageTypes,
   MfaLevels,
   OAuth2Scope,
-  Overwrite,
+  OverwriteTypes,
+  PermissionStrings,
   PremiumTiers,
   PremiumTypes,
   PresenceStatus,
@@ -510,7 +511,16 @@ export interface Channel {
   /** for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope */
   managed: boolean;
   /** Explicit permission overwrites for members and roles. */
-  permissionOverwrites: Overwrite[];
+  permissionOverwrites: {
+    /** Role or user id */
+    id: bigint;
+    /** Either 0 (role) or 1 (member) */
+    type: OverwriteTypes;
+    /** Permission bit set */
+    allow: PermissionStrings[];
+    /** Permission bit set */
+    deny: PermissionStrings[];
+  }[];
 }
 
 export interface ForumTag {
@@ -988,7 +998,7 @@ export interface Interaction {
    * Sends a response to an interaction.
    *
    * @remarks
-   * This will send a ChannelMessageWithSource, ApplicationCommandAutocompleteResult or Modal response based on the type of the interaction you are responding to.
+   * If you did not provide a response type, this will send a ChannelMessageWithSource, ApplicationCommandAutocompleteResult or Modal response based on the type of the interaction you are responding to.
    *
    * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
    */
@@ -996,6 +1006,8 @@ export interface Interaction {
     response: string | InteractionCallbackData,
     options?: { isPrivate?: boolean; withResponse?: boolean; type?: InteractionResponseTypes },
   ) => Promise<Message | InteractionCallbackResponse | void>;
+  /** Sends a followup message to an interaction. */
+  sendFollowupMessage: (response: string | InteractionCallbackData) => Promise<Message>;
   /**
    * Edit the original response of an interaction or a followup if the message id is provided.
    *
