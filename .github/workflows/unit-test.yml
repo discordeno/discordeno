@@ -20,7 +20,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.3.5
+        uses: rharkor/caching-for-turbo@v2.3.11
         with:
           cache-prefix: turbo-cache-
       - name: Unit Test
