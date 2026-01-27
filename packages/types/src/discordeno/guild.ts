@@ -12,7 +12,6 @@ import type {
   SystemChannelFlags,
   VerificationLevels,
 } from '../discord/guild.js';
-import type { PermissionStrings } from '../discord/permissions.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { DiscordenoDefaultReactionEmoji, DiscordenoForumTag, Overwrite } from './channel.js';
 import type { GuildRoleColors } from './permissions.js';
@@ -216,7 +215,7 @@ export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string;
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-  permissions?: PermissionStrings[] | string;
+  permissions?: string;
   /**
    * RGB color value, default: 0
    * @deprecated the {@link colors} field is recommended for use instead of this field
@@ -247,7 +246,7 @@ export interface EditGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string | null;
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-  permissions?: PermissionStrings[] | string | null;
+  permissions?: string | null;
   /**
    * RGB color value, default: 0
    * @deprecated the {@link colors} field is recommended for use instead of this field
