@@ -11,6 +11,7 @@ import { snowflakeToTimestamp } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import { CHANNEL_MENTION_REGEX } from '../constants.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
 import type { Message, MessageCall, MessageInteraction, MessageInteractionMetadata, MessagePin, MessageSnapshot } from './types.js';
 
@@ -132,7 +133,7 @@ export const baseMessage: Message = {
   },
 };
 
-export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { shardId?: number }): Message {
+export function transformMessage(bot: Bot, payload: Partial<DiscordMessage>, extra?: { shardId?: number; partial?: boolean }) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
   const userId = payload.author?.id ? bot.transformers.snowflake(payload.author.id) : undefined;
 
@@ -144,8 +145,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { sh
 
   if (props.author && payload.author) message.author = bot.transformers.user(bot, payload.author);
   if (props.application && payload.application)
-    // @ts-expect-error TODO: Partials
-    message.application = bot.transformers.application(bot, payload.application, { shardId: extra?.shardId });
+    message.application = bot.transformers.application(bot, payload.application, { shardId: extra?.shardId, partial: true });
   if (props.applicationId && payload.application_id) message.applicationId = bot.transformers.snowflake(payload.application_id);
   if (props.attachments && payload.attachments?.length)
     message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment));
@@ -166,8 +166,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { sh
       interaction.id = bot.transformers.snowflake(payload.interaction.id);
     }
     if (messageInteractionProps.member && payload.interaction.member) {
-      // @ts-expect-error TODO: partial - check why this is partial and handle as needed
-      interaction.member = bot.transformers.member(bot, payload.interaction.member, { guildId, userId: payload.interaction.user.id });
+      interaction.member = bot.transformers.member(bot, payload.interaction.member, { guildId, userId: payload.interaction.user.id, partial: true });
     }
     if (messageInteractionProps.name) {
       interaction.name = payload.interaction.name;
@@ -182,8 +181,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { sh
     message.interaction = interaction;
   }
   if (props.member && guildId && userId && payload.member)
-    // @ts-expect-error TODO: partial
-    message.member = bot.transformers.member(bot, payload.member, { guildId, userId });
+    message.member = bot.transformers.member(bot, payload.member, { guildId, userId, partial: true });
   if (payload.mention_everyone) message.mentionEveryone = true;
   if (props.mentionedChannelIds && payload.mention_channels?.length) {
     message.mentionedChannelIds = [
@@ -230,8 +228,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { sh
         burst: reaction.count_details.burst,
         normal: reaction.count_details.normal,
       },
-      // @ts-expect-error TODO: Deal with partials
-      emoji: bot.transformers.emoji(bot, reaction.emoji),
+      emoji: bot.transformers.emoji(bot, reaction.emoji, { partial: true }),
       burstColors: reaction.burst_colors,
     }));
   }
@@ -243,41 +240,49 @@ export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { sh
     }));
   if (payload.tts) message.tts = true;
   if (props.thread && payload.thread) message.thread = bot.transformers.channel(bot, payload.thread, { guildId });
-  if (props.type) message.type = payload.type;
+  if (props.type && payload.type !== undefined) message.type = payload.type;
   if (props.webhookId && payload.webhook_id) message.webhookId = bot.transformers.snowflake(payload.webhook_id);
   if (props.poll && payload.poll) message.poll = bot.transformers.poll(bot, payload.poll);
   if (props.call && payload.call) message.call = bot.transformers.messageCall(bot, payload.call);
 
-  return bot.transformers.customizers.message(bot, payload, message, extra);
+  return callCustomizer('message', bot, payload, message, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformMessagePin(bot: Bot, payload: DiscordMessagePin, extra?: { shardId?: number }): MessagePin {
+export function transformMessagePin(bot: Bot, payload: Partial<DiscordMessagePin>, extra?: { shardId?: number; partial?: boolean }) {
   const props = bot.transformers.desiredProperties.messagePin;
   const messagePin = {} as SetupDesiredProps<MessagePin, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.pinnedAt && payload.pinned_at) messagePin.pinnedAt = Date.parse(payload.pinned_at);
   if (props.message && payload.message) messagePin.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId });
 
-  return bot.transformers.customizers.messagePin(bot, payload, messagePin, extra);
+  return callCustomizer('messagePin', bot, payload, messagePin, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformMessageSnapshot(bot: Bot, payload: DiscordMessageSnapshot, extra?: { shardId?: number }): MessageSnapshot {
+export function transformMessageSnapshot(bot: Bot, payload: Partial<DiscordMessageSnapshot>, extra?: { shardId?: number; partial?: boolean }) {
   const props = bot.transformers.desiredProperties.messageSnapshot;
   const messageSnapshot = {} as SetupDesiredProps<MessageSnapshot, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.message && payload.message)
-    // @ts-expect-error TODO: Partials
-    messageSnapshot.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId }) as Message;
+    messageSnapshot.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId, partial: true }) as Message;
 
-  return bot.transformers.customizers.messageSnapshot(bot, payload, messageSnapshot, extra);
+  return callCustomizer('messageSnapshot', bot, payload, messageSnapshot, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {
+export function transformMessageInteractionMetadata(bot: Bot, payload: Partial<DiscordMessageInteractionMetadata>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.messageInteractionMetadata;
   const metadata = {} as SetupDesiredProps<MessageInteractionMetadata, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (props.id) metadata.id = bot.transformers.snowflake(payload.id);
-  if (props.authorizingIntegrationOwners) {
+  if (props.id && payload.id !== undefined) metadata.id = bot.transformers.snowflake(payload.id);
+  if (props.authorizingIntegrationOwners && payload.authorizing_integration_owners) {
     metadata.authorizingIntegrationOwners = {};
     if (payload.authorizing_integration_owners['0'])
       metadata.authorizingIntegrationOwners[DiscordApplicationIntegrationType.GuildInstall] = bot.transformers.snowflake(
@@ -290,7 +295,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
   }
   if (props.originalResponseMessageId && payload.original_response_message_id)
     metadata.originalResponseMessageId = bot.transformers.snowflake(payload.original_response_message_id);
-  if (props.type) metadata.type = payload.type;
+  if (props.type && payload.type !== undefined) metadata.type = payload.type;
   if (props.user && payload.user) metadata.user = bot.transformers.user(bot, payload.user);
   // Application command metadata
   if ('target_user' in payload) {
@@ -308,15 +313,19 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
       metadata.triggeringInteractionMetadata = bot.transformers.messageInteractionMetadata(bot, payload.triggering_interaction_metadata);
   }
 
-  return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata);
+  return callCustomizer('messageInteractionMetadata', bot, payload, metadata, {
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): MessageCall {
+export function transformMessageCall(bot: Bot, payload: Partial<DiscordMessageCall>, extra?: { partial?: boolean }) {
   const call = {} as SetupDesiredProps<MessageCall, TransformersDesiredProperties, DesiredPropertiesBehavior>;
   const props = bot.transformers.desiredProperties.messageCall;
 
   if (props.participants && payload.participants) call.participants = payload.participants.map((x) => bot.transformers.snowflake(x));
   if (props.endedTimestamp && payload.ended_timestamp) call.endedTimestamp = Date.parse(payload.ended_timestamp);
 
-  return bot.transformers.customizers.messageCall(bot, payload, call);
+  return callCustomizer('messageCall', bot, payload, call, {
+    partial: extra?.partial ?? false,
+  });
 }
