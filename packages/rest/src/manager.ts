@@ -48,6 +48,7 @@ import type {
   DiscordSticker,
   DiscordStickerPack,
   DiscordSubscription,
+  DiscordTargetUsersJobStatus,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
@@ -59,7 +60,6 @@ import type {
   ModifyGuildTemplate,
 } from '@discordeno/types';
 import {
-  calculateBits,
   camelize,
   camelToSnakeCase,
   DISCORDENO_VERSION,
@@ -236,17 +236,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             continue;
           }
 
-          // Some falsy values should be allowed like null or 0
           if (value !== undefined) {
             switch (key) {
-              case 'permissions':
-              case 'allow':
-              case 'deny':
-                newObj[key] = typeof value === 'string' ? value : calculateBits(value);
-                continue;
-              case 'defaultMemberPermissions':
-                newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value);
-                continue;
               case 'nameLocalizations':
                 newObj.name_localizations = value;
                 continue;
@@ -451,7 +442,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
       const response = await fetch(request).catch(async (error) => {
-        rest.logger.error(error);
+        rest.logger.debug(`request fetch to ${url} failed.`, error);
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
@@ -459,9 +450,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           ok: false,
           status: 999,
           error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
+          errorObject: error,
         });
-        throw error;
       });
+
+      // If response is undefined, the error has been handled in the catch block above
+      if (!response) return;
+
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`);
 
       // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
@@ -653,7 +648,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload);
           },
           resolve: (data) => {
-            resolve(data.status !== 204 ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : undefined);
+            resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!);
           },
           reject: (reason) => {
             let errorText: string;
@@ -816,7 +811,23 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createInvite(channelId, body = {}, reason) {
-      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason });
+      if (!body.targetUsersFile) {
+        return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason });
+      }
+
+      // When we have to upload a file, we need to use FormData, and each field has to be appended individually
+      const form = new FormData();
+
+      for (const [key, value] of Object.entries(body)) {
+        if (key !== 'targetUsersFile' && key !== 'roleIds') {
+          form.append(camelToSnakeCase(key), rest.changeToDiscordFormat(value).toString());
+        }
+      }
+
+      form.append('target_users_file', body.targetUsersFile);
+      if (body.roleIds) form.append('role_ids', body.roleIds.map((x) => x.toString()).join(','));
+
+      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason });
     },
 
     async getGuildRoleMemberCounts(guildId) {
@@ -893,6 +904,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteInvite(inviteCode, reason) {
       await rest.delete(rest.routes.guilds.invite(inviteCode), { reason });
+    },
+
+    async getTargetUsers(inviteCode) {
+      return await rest.get<string>(rest.routes.guilds.inviteTargetUsers(inviteCode));
+    },
+
+    async updateTargetUsers(inviteCode, targetUsersFile) {
+      const form = new FormData();
+      form.append('target_users_file', targetUsersFile);
+
+      await rest.put(rest.routes.guilds.inviteTargetUsers(inviteCode), { body: form });
+    },
+
+    async getTargetUsersJobStatus(inviteCode) {
+      return await rest.get<DiscordTargetUsersJobStatus>(rest.routes.guilds.inviteTargetUsersJobStatus(inviteCode));
     },
 
     async deleteMessage(channelId, messageId, reason) {
