@@ -26,11 +26,11 @@ jobs:
       - name: yarn install (root)
         run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.3.5
+        uses: rharkor/caching-for-turbo@v2.3.11
         with:
           cache-prefix: turbo-cache-
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.3.5
+        uses: rharkor/caching-for-turbo@v2.3.11
         with:
           cache-prefix: turbo-cache-website-
           server-port: 41231 # The default is 41230, but we use a different cache key so we need a different port
@@ -70,7 +70,7 @@ jobs:
       - name: yarn install (root)
         run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.3.5
+        uses: rharkor/caching-for-turbo@v2.3.11
         with:
           cache-prefix: turbo-cache-
       - name: Build all pkg

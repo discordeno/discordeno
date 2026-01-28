@@ -79,6 +79,7 @@ import type {
   DiscordSticker,
   DiscordStickerPack,
   DiscordSubscription,
+  DiscordTargetUsersJobStatus,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordTokenExchange,
@@ -809,6 +810,44 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
    */
   deleteInvite: (inviteCode: string, reason?: string) => Promise<void>;
+  /**
+   * Gets the users allowed to see and accept this invite.
+   *
+   * @param inviteCode - The invite code of the invite to update.
+   * @returns CSV file with a single column `Users` containing the user IDs.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/invite#get-target-users}
+   */
+  getTargetUsers: (inviteCode: string) => Promise<string>;
+  /**
+   * Updates the users allowed to see and accept this invite.
+   *
+   * @param inviteCode - The invite code of the invite to update.
+   * @param targetUsersFile - A CSV file with a single column of user IDs for all the users able to accept this invite
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Uploading a file with invalid user IDs will result in a 400 with the invalid IDs described.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/invite#update-target-users}
+   */
+  updateTargetUsers: (inviteCode: string, targetUsersFile: Blob) => Promise<void>;
+  /**
+   * Processing target users from a CSV when creating or updating an invite is done asynchronously. This endpoint allows you to check the status of that job.
+   *
+   * @param inviteCode - The invite code of the invite to check the target users job status for.
+   * @returns An object containing the status of the target users job.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/invite#get-target-users-job-status}
+   */
+  getTargetUsersJobStatus: (inviteCode: string) => Promise<Camelize<DiscordTargetUsersJobStatus>>;
   /**
    * Deletes a message from a channel.
    *
@@ -3287,6 +3326,7 @@ export interface RestRequestRejection {
   /** The returned body parsed if it was JSON, otherwise it will be the raw body as a string */
   body?: string | object;
   error?: string;
+  errorObject?: Error;
 }
 
 export interface RestManagerEvents {
