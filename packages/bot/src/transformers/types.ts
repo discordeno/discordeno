@@ -1297,10 +1297,8 @@ export interface Message {
   tts: boolean;
   /** Whether this message came from the urgent message system */
   urgent: boolean;
-  // TODO: Adding this causes errors in the interaction functions due to how `InteractionResolvedDataMember` and `InteractionResolvedDataChannel` are treated by `TransformProperty`, since they get their desired props changed
-  // and fixing this requires a few changes in `SetupDesiredProps` and `TransformProperty` so this is going to be done in another pr
-  // /** data for users, members, channels, and roles referenced in this message */
-  // resolved?: InteractionDataResolved
+  /** data for users, members, channels, and roles referenced in this message */
+  resolved?: InteractionDataResolved;
 }
 
 export interface MessageActivity {
