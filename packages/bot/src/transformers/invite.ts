@@ -21,7 +21,6 @@ export function transformInvite(bot: Bot, payload: Partial<DiscordInviteMetadata
     invite.targetApplication = bot.transformers.application(bot, payload.target_application, { shardId: extra?.shardId, partial: true });
   if (props.temporary && payload.temporary) invite.temporary = payload.temporary;
   if (props.uses && payload.uses) invite.uses = payload.uses;
-
   if (props.channelId && payload.channel?.id) invite.channelId = bot.transformers.snowflake(payload.channel.id);
   if (props.guildId && payload.guild?.id) invite.guildId = bot.transformers.snowflake(payload.guild.id);
   if (props.approximateMemberCount && payload.approximate_member_count) invite.approximateMemberCount = payload.approximate_member_count;
@@ -31,6 +30,7 @@ export function transformInvite(bot: Bot, payload: Partial<DiscordInviteMetadata
     invite.guildScheduledEvent = bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event);
   if (props.expiresAt && payload.expires_at) invite.expiresAt = Date.parse(payload.expires_at);
   if (props.flags && payload.flags) invite.flags = new ToggleBitfield(payload.flags);
+  if (props.roles && payload.roles) invite.roles = payload.roles.map((role) => bot.transformers.role(bot, role));
 
   return callCustomizer('invite', bot, payload, invite, {
     shardId: extra?.shardId,

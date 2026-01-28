@@ -148,6 +148,7 @@ export const transformersDesiredPropertiesMetadata = {
   interaction: {
     dependencies: {
       respond: ['type', 'token', 'id'],
+      sendFollowupMessage: ['token'],
       edit: ['type', 'token', 'id'],
       deferEdit: ['type', 'token', 'id'],
       defer: ['type', 'token', 'id'],
@@ -500,6 +501,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       guildScheduledEvent: defaultValue,
       expiresAt: defaultValue,
       flags: defaultValue,
+      roles: defaultValue,
       ...desiredProperties.invite,
     },
     member: {

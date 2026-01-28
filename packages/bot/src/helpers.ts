@@ -44,6 +44,7 @@ import type {
   DiscordInvite,
   DiscordListArchivedThreads,
   DiscordPrunedCount,
+  DiscordTargetUsersJobStatus,
   DiscordTokenExchange,
   DiscordTokenRevocation,
   DiscordVanityUrl,
@@ -621,6 +622,15 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     unlinkChannelToLobby: async (lobbyId, bearerToken) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.unlinkChannelToLobby(lobbyId, bearerToken)));
     },
+    getTargetUsers: async (inviteCode) => {
+      return await bot.rest.getTargetUsers(inviteCode);
+    },
+    updateTargetUsers: async (inviteCode, targetUsersFile) => {
+      await bot.rest.updateTargetUsers(inviteCode, targetUsersFile);
+    },
+    getTargetUsersJobStatus: async (inviteCode) => {
+      return await bot.rest.getTargetUsersJobStatus(inviteCode);
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction);
@@ -1148,6 +1158,9 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>>;
   linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
+  getTargetUsers: (inviteCode: string) => Promise<string>;
+  updateTargetUsers: (inviteCode: string, targetUsersFile: Blob) => Promise<void>;
+  getTargetUsersJobStatus: (inviteCode: string) => Promise<Camelize<DiscordTargetUsersJobStatus>>;
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>;
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>;

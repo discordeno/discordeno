@@ -56,7 +56,7 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
     }
 
     // Since this has already been given a response, any further responses must be followups.
-    if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response);
+    if (this.acknowledged) return await this.sendFollowupMessage(response);
 
     const result = await this.bot.helpers.sendInteractionResponse(
       this.id,
@@ -66,6 +66,12 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
     );
     this.acknowledged = true;
     return result;
+  },
+  async sendFollowupMessage(response) {
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response };
+
+    return await this.bot.helpers.sendFollowupMessage(this.token, response);
   },
   async edit(response, messageId, options) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.');
