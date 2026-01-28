@@ -1,9 +1,10 @@
 import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types';
 import type { Bot } from '../bot.js';
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import type { PresenceUpdate, User } from './types.js';
 
 export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
-  const presence = {} as PresenceUpdate;
+  const presence = {} as SetupDesiredProps<PresenceUpdate, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (payload.user) presence.user = bot.transformers.user(bot, payload.user) as User;
   if (payload.guild_id) presence.guildId = bot.transformers.snowflake(payload.guild_id);

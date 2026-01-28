@@ -27,22 +27,27 @@ import type {
 } from './transformers/types.js';
 
 export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
-  applicationCommandPermissionsUpdate: (command: GuildApplicationCommandPermissions) => unknown;
-  guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown;
-  automodRuleCreate: (rule: AutoModerationRule) => unknown;
-  automodRuleUpdate: (rule: AutoModerationRule) => unknown;
-  automodRuleDelete: (rule: AutoModerationRule) => unknown;
-  automodActionExecution: (payload: AutoModerationActionExecution) => unknown;
+  applicationCommandPermissionsUpdate: (command: SetupDesiredProps<GuildApplicationCommandPermissions, TProps, TBehavior>) => unknown;
+  guildAuditLogEntryCreate: (log: SetupDesiredProps<AuditLogEntry, TProps, TBehavior>, guildId: bigint) => unknown;
+  automodRuleCreate: (rule: SetupDesiredProps<AutoModerationRule, TProps, TBehavior>) => unknown;
+  automodRuleUpdate: (rule: SetupDesiredProps<AutoModerationRule, TProps, TBehavior>) => unknown;
+  automodRuleDelete: (rule: SetupDesiredProps<AutoModerationRule, TProps, TBehavior>) => unknown;
+  automodActionExecution: (payload: SetupDesiredProps<AutoModerationActionExecution, TProps, TBehavior>) => unknown;
   threadCreate: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown;
   threadDelete: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown;
   threadListSync: (payload: {
     guildId: bigint;
     channelIds?: bigint[];
     threads: SetupDesiredProps<Channel, TProps, TBehavior>[];
-    members: ThreadMember[];
+    members: SetupDesiredProps<ThreadMember, TProps, TBehavior>[];
   }) => unknown;
   threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedTimestamp: number; flags: number }) => unknown;
-  threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown;
+  threadMembersUpdate: (payload: {
+    id: bigint;
+    guildId: bigint;
+    addedMembers?: SetupDesiredProps<ThreadMember, TProps, TBehavior>[];
+    removedMemberIds?: bigint[];
+  }) => unknown;
   threadUpdate: (thread: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown;
   scheduledEventCreate: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown;
   scheduledEventUpdate: (event: SetupDesiredProps<ScheduledEvent, TProps, TBehavior>) => unknown;
@@ -64,7 +69,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   resumed: (shardId: number) => unknown;
   rateLimited: (data: DiscordRateLimited, shardId: number) => unknown;
   interactionCreate: (interaction: SetupDesiredProps<Interaction, TProps, TBehavior>) => unknown;
-  integrationCreate: (integration: Integration) => unknown;
+  integrationCreate: (integration: SetupDesiredProps<Integration, TProps, TBehavior>) => unknown;
   integrationDelete: (payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => unknown;
   integrationUpdate: (payload: { guildId: bigint }) => unknown;
   inviteCreate: (invite: SetupDesiredProps<Invite, TProps, TBehavior>) => unknown;
@@ -104,7 +109,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     emoji: SetupDesiredProps<Emoji, TProps, TBehavior>;
   }) => unknown;
   reactionRemoveAll: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint }) => unknown;
-  presenceUpdate: (presence: PresenceUpdate) => unknown;
+  presenceUpdate: (presence: SetupDesiredProps<PresenceUpdate, TProps, TBehavior>) => unknown;
   voiceChannelEffectSend: (payload: {
     channelId: bigint;
     guildId: bigint;

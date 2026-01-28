@@ -39,18 +39,15 @@ import type {
   DiscordConnection,
   DiscordCurrentAuthorization,
   DiscordFollowedChannel,
-  DiscordGetGatewayBot,
   DiscordGuildPreview,
   DiscordGuildWidgetSettings,
   DiscordInvite,
-  DiscordInviteMetadata,
   DiscordListArchivedThreads,
   DiscordPrunedCount,
   DiscordTargetUsersJobStatus,
   DiscordTokenExchange,
   DiscordTokenRevocation,
   DiscordVanityUrl,
-  DiscordVoiceRegion,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -118,6 +115,7 @@ import type {
   Channel,
   Emoji,
   Entitlement,
+  GetGatewayBot,
   Guild,
   GuildApplicationCommandPermissions,
   GuildOnboarding,
@@ -142,6 +140,7 @@ import type {
   Template,
   ThreadMember,
   User,
+  VoiceRegion,
   VoiceState,
   Webhook,
   WelcomeScreen,
@@ -332,8 +331,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.channel(bot, snakelize(await bot.rest.getChannel(channelId)));
     },
     getChannelInvites: async (channelId) => {
-      return await bot.rest.getChannelInvites(channelId);
-      // return (await bot.rest.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return (await bot.rest.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, snakelize(res)));
     },
     getChannels: async (guildId) => {
       return (await bot.rest.getChannels(guildId)).map((res) => bot.transformers.channel(bot, snakelize(res), { guildId }));
@@ -859,7 +857,11 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 }
 
 export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
-  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions, reason?: string) => Promise<AutoModerationRule>;
+  createAutomodRule: (
+    guildId: BigString,
+    options: CreateAutoModerationRuleOptions,
+    reason?: string,
+  ) => Promise<SetupDesiredProps<AutoModerationRule, TProps, TBehavior>>;
   createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>;
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>;
   createApplicationEmoji: (options: CreateApplicationEmoji) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>>;
@@ -868,18 +870,21 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: CreateForumPostWithMessage,
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>;
-  createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>;
+  createGlobalApplicationCommand: (
+    command: CreateApplicationCommand,
+    options?: CreateGlobalApplicationCommandOptions,
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>>;
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
-  ) => Promise<ApplicationCommand>;
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>>;
   createGuildSticker: (
     guildId: BigString,
     options: CreateGuildStickerOptions,
     reason?: string,
   ) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>;
-  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>;
+  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
   createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<Camelize<DiscordInvite>>;
   getGuildRoleMemberCounts: (guildId: BigString) => Promise<Record<string, number>>;
   createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>;
@@ -895,13 +900,13 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     commandId: BigString,
     bearerToken: string,
     options: Camelize<DiscordApplicationCommandPermissions>[],
-  ) => Promise<GuildApplicationCommandPermissions>;
+  ) => Promise<SetupDesiredProps<GuildApplicationCommandPermissions, TProps, TBehavior>>;
   editAutomodRule: (
     guildId: BigString,
     ruleId: BigString,
     options: Partial<EditAutoModerationRuleOptions>,
     reason?: string,
-  ) => Promise<AutoModerationRule>;
+  ) => Promise<SetupDesiredProps<AutoModerationRule, TProps, TBehavior>>;
   editBotProfile: (options: {
     username?: string;
     botAvatarURL?: string | null;
@@ -915,16 +920,27 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     messageId: BigString,
     options: InteractionCallbackData,
   ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
-  editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<ApplicationCommand>;
+  editGlobalApplicationCommand: (
+    commandId: BigString,
+    options: CreateApplicationCommand,
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>>;
   editGuild: (guildId: BigString, options: ModifyGuild, reason?: string) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>;
-  editGuildApplicationCommand: (commandId: BigString, guildId: BigString, options: CreateApplicationCommand) => Promise<ApplicationCommand>;
+  editGuildApplicationCommand: (
+    commandId: BigString,
+    guildId: BigString,
+    options: CreateApplicationCommand,
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>>;
   editGuildSticker: (
     guildId: BigString,
     stickerId: BigString,
     options: AtLeastOne<EditGuildStickerOptions>,
     reason?: string,
   ) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>;
-  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>;
+  editGuildTemplate: (
+    guildId: BigString,
+    templateCode: string,
+    options: ModifyGuildTemplate,
+  ) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
   editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string) => Promise<SetupDesiredProps<Role, TProps, TBehavior>>;
@@ -948,8 +964,16 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     token: string,
     options: Omit<ModifyWebhook, 'channelId'>,
   ) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>>;
-  editWelcomeScreen: (guildId: BigString, options: ModifyGuildWelcomeScreen, reason?: string) => Promise<WelcomeScreen>;
-  editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>, reason?: string) => Promise<GuildWidgetSettings>;
+  editWelcomeScreen: (
+    guildId: BigString,
+    options: ModifyGuildWelcomeScreen,
+    reason?: string,
+  ) => Promise<SetupDesiredProps<WelcomeScreen, TProps, TBehavior>>;
+  editWidgetSettings: (
+    guildId: BigString,
+    options: Camelize<DiscordGuildWidgetSettings>,
+    reason?: string,
+  ) => Promise<SetupDesiredProps<GuildWidgetSettings, TProps, TBehavior>>;
   editUserApplicationRoleConnection: (
     bearerToken: string,
     applicationId: BigString,
@@ -961,9 +985,11 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: ExecuteWebhook,
   ) => Promise<SetupDesiredProps<Message, TProps, TBehavior> | undefined>;
   followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>;
-  getActiveThreads: (guildId: BigString) => Promise<{ threads: SetupDesiredProps<Channel, TProps, TBehavior>[]; members: ThreadMember[] }>;
-  getApplicationInfo: () => Promise<Application>;
-  editApplicationInfo: (body: EditApplication) => Promise<Application>;
+  getActiveThreads: (
+    guildId: BigString,
+  ) => Promise<{ threads: SetupDesiredProps<Channel, TProps, TBehavior>[]; members: SetupDesiredProps<ThreadMember, TProps, TBehavior>[] }>;
+  getApplicationInfo: () => Promise<SetupDesiredProps<Application, TProps, TBehavior>>;
+  editApplicationInfo: (body: EditApplication) => Promise<SetupDesiredProps<Application, TProps, TBehavior>>;
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<Camelize<DiscordCurrentAuthorization>>;
   exchangeToken: (
     clientId: BigString,
@@ -975,19 +1001,19 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     guildId: BigString,
     commandId: BigString,
     options?: GetApplicationCommandPermissionOptions,
-  ) => Promise<GuildApplicationCommandPermissions>;
+  ) => Promise<SetupDesiredProps<GuildApplicationCommandPermissions, TProps, TBehavior>>;
   getApplicationCommandPermissions: (
     guildId: BigString,
     options?: GetApplicationCommandPermissionOptions,
-  ) => Promise<GuildApplicationCommandPermissions[]>;
+  ) => Promise<SetupDesiredProps<GuildApplicationCommandPermissions, TProps, TBehavior>[]>;
   getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<Camelize<DiscordAuditLog>>;
-  getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<AutoModerationRule>;
-  getAutomodRules: (guildId: BigString) => Promise<AutoModerationRule[]>;
-  getAvailableVoiceRegions: () => Promise<Camelize<DiscordVoiceRegion>[]>;
+  getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<SetupDesiredProps<AutoModerationRule, TProps, TBehavior>>;
+  getAutomodRules: (guildId: BigString) => Promise<SetupDesiredProps<AutoModerationRule, TProps, TBehavior>[]>;
+  getAvailableVoiceRegions: () => Promise<SetupDesiredProps<VoiceRegion, TProps, TBehavior>[]>;
   getBan: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordBan>>;
   getBans: (guildId: BigString, options?: GetBans) => Promise<Camelize<DiscordBan>[]>;
   getChannel: (channelId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>;
-  getChannelInvites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata>[]>;
+  getChannelInvites: (channelId: BigString) => Promise<SetupDesiredProps<Invite, TProps, TBehavior>[]>;
   getChannels: (guildId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>[]>;
   getChannelWebhooks: (channelId: BigString) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>[]>;
   getDmChannel: (userId: BigString) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>;
@@ -997,26 +1023,31 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getEmojis: (guildId: BigString) => Promise<SetupDesiredProps<Emoji, TProps, TBehavior>[]>;
   getApplicationEmojis: () => Promise<{ items: SetupDesiredProps<Emoji, TProps, TBehavior>[] }>;
   getFollowupMessage: (token: string, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
-  getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>;
-  getGlobalApplicationCommand: (commandId: BigString) => Promise<ApplicationCommand>;
-  getGlobalApplicationCommands: (options?: GetGlobalApplicationCommandsOptions) => Promise<ApplicationCommand[]>;
+  getGatewayBot: () => Promise<SetupDesiredProps<GetGatewayBot, TProps, TBehavior>>;
+  getGlobalApplicationCommand: (commandId: BigString) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>>;
+  getGlobalApplicationCommands: (
+    options?: GetGlobalApplicationCommandsOptions,
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>[]>;
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<SetupDesiredProps<Guild, TProps, TBehavior>>;
   getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<Partial<SetupDesiredProps<Guild, TProps, TBehavior>>[]>;
-  getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>;
-  getGuildApplicationCommands: (guildId: BigString, options?: GetGuildApplicationCommandsOptions) => Promise<ApplicationCommand[]>;
+  getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>>;
+  getGuildApplicationCommands: (
+    guildId: BigString,
+    options?: GetGuildApplicationCommandsOptions,
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>[]>;
   getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>;
   getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>>;
   getGuildStickers: (guildId: BigString) => Promise<SetupDesiredProps<Sticker, TProps, TBehavior>[]>;
-  getGuildTemplate: (templateCode: string) => Promise<Template>;
-  getGuildTemplates: (guildId: BigString) => Promise<Template[]>;
+  getGuildTemplate: (templateCode: string) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
+  getGuildTemplates: (guildId: BigString) => Promise<SetupDesiredProps<Template, TProps, TBehavior>[]>;
   getGuildWebhooks: (guildId: BigString) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>[]>;
-  getIntegrations: (guildId: BigString) => Promise<Integration[]>;
+  getIntegrations: (guildId: BigString) => Promise<SetupDesiredProps<Integration, TProps, TBehavior>[]>;
   getInvite: (inviteCode: string, options?: GetInvite) => Promise<SetupDesiredProps<Invite, TProps, TBehavior>>;
   getInvites: (guildId: BigString) => Promise<SetupDesiredProps<Invite, TProps, TBehavior>[]>;
   getMessage: (channelId: BigString, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>;
-  getStickerPack: (stickerPackId: BigString) => Promise<StickerPack>;
-  getStickerPacks: () => Promise<StickerPack[]>;
+  getStickerPack: (stickerPackId: BigString) => Promise<SetupDesiredProps<StickerPack, TProps, TBehavior>>;
+  getStickerPacks: () => Promise<SetupDesiredProps<StickerPack, TProps, TBehavior>[]>;
   getOriginalInteractionResponse: (token: string) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   getChannelPins: (
     channelId: BigString,
@@ -1041,7 +1072,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     eventId: BigString,
     options?: GetScheduledEventUsers,
   ) => Promise<Array<{ user: SetupDesiredProps<User, TProps, TBehavior>; member?: SetupDesiredProps<Member, TProps, TBehavior> }>>;
-  getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>;
+  getSessionInfo: () => Promise<SetupDesiredProps<GetGatewayBot, TProps, TBehavior>>;
   getStageInstance: (channelId: BigString) => Promise<SetupDesiredProps<StageInstance, TProps, TBehavior>>;
   getOwnVoiceState: (guildId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>;
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<VoiceState, TProps, TBehavior>>;
@@ -1051,8 +1082,12 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     userId: BigString,
     options?: GetThreadMember,
     extra?: ThreadMemberTransformerExtra,
-  ) => Promise<ThreadMember>;
-  getThreadMembers: (channelId: BigString, options?: ListThreadMembers, extra?: ThreadMemberTransformerExtra) => Promise<ThreadMember[]>;
+  ) => Promise<SetupDesiredProps<ThreadMember, TProps, TBehavior>>;
+  getThreadMembers: (
+    channelId: BigString,
+    options?: ListThreadMembers,
+    extra?: ThreadMemberTransformerExtra,
+  ) => Promise<SetupDesiredProps<ThreadMember, TProps, TBehavior>[]>;
   getReactions: (
     channelId: BigString,
     messageId: BigString,
@@ -1064,7 +1099,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getUserConnections: (bearerToken: string) => Promise<Camelize<DiscordConnection>[]>;
   getUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<Camelize<DiscordApplicationRoleConnection>>;
   getVanityUrl: (guildId: BigString) => Promise<Camelize<DiscordVanityUrl>>;
-  getVoiceRegions: (guildId: BigString) => Promise<Camelize<DiscordVoiceRegion>[]>;
+  getVoiceRegions: (guildId: BigString) => Promise<SetupDesiredProps<VoiceRegion, TProps, TBehavior>[]>;
   getWebhook: (webhookId: BigString) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>>;
   getWebhookMessage: (
     webhookId: BigString,
@@ -1073,9 +1108,9 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options?: GetWebhookMessageOptions,
   ) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   getWebhookWithToken: (webhookId: BigString, token: string) => Promise<SetupDesiredProps<Webhook, TProps, TBehavior>>;
-  getWelcomeScreen: (guildId: BigString) => Promise<WelcomeScreen>;
-  getWidget: (guildId: BigString) => Promise<GuildWidget>;
-  getWidgetSettings: (guildId: BigString) => Promise<GuildWidgetSettings>;
+  getWelcomeScreen: (guildId: BigString) => Promise<SetupDesiredProps<WelcomeScreen, TProps, TBehavior>>;
+  getWidget: (guildId: BigString) => Promise<SetupDesiredProps<GuildWidget, TProps, TBehavior>>;
+  getWidgetSettings: (guildId: BigString) => Promise<SetupDesiredProps<GuildWidgetSettings, TProps, TBehavior>>;
   publishMessage: (channelId: BigString, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   sendFollowupMessage: (token: string, options: InteractionCallbackData) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
@@ -1090,16 +1125,16 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: StartThreadWithoutMessage,
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>;
-  syncGuildTemplate: (guildId: BigString) => Promise<Template>;
+  syncGuildTemplate: (guildId: BigString) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
   upsertGlobalApplicationCommands: (
     commands: CreateApplicationCommand[],
     options?: UpsertGlobalApplicationCommandOptions,
-  ) => Promise<ApplicationCommand[]>;
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>[]>;
   upsertGuildApplicationCommands: (
     guildId: BigString,
     commands: CreateApplicationCommand[],
     options?: UpsertGuildApplicationCommandOptions,
-  ) => Promise<ApplicationCommand[]>;
+  ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>[]>;
   editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
   editMember: (
     guildId: BigString,

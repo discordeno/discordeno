@@ -4,17 +4,11 @@ import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest';
 import { createRestManager } from '@discordeno/rest';
 import type { BigString, GatewayDispatchEventNames, GatewayIntents, RecursivePartial } from '@discordeno/types';
 import { createLogger, getBotIdFromToken, type logger } from '@discordeno/utils';
-import type {
-  CompleteDesiredProperties,
-  DesiredPropertiesBehavior,
-  SetupDesiredProps,
-  TransformersDesiredProperties,
-  TransformersObjects,
-} from './desiredProperties.js';
+import type { CompleteDesiredProperties, DesiredPropertiesBehavior, TransformersDesiredProperties } from './desiredProperties.js';
 import type { EventHandlers } from './events.js';
 import { type BotGatewayHandler, createBotGatewayHandlers, type GatewayHandlers } from './handlers.js';
 import { type BotHelpers, createBotHelpers } from './helpers.js';
-import { createTransformers, type Transformers } from './transformers.js';
+import { createTransformers, type TransformerFunctions, type Transformers } from './transformers.js';
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -166,7 +160,7 @@ export interface Bot<
   /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers: Transformers<TProps, TBehavior> & {
     $inferredTypes: {
-      [K in keyof TransformersObjects]: SetupDesiredProps<TransformersObjects[K], TProps, TBehavior>;
+      [K in keyof TransformerFunctions<TProps, TBehavior>]: ReturnType<TransformerFunctions<TProps, TBehavior>[K]>;
     };
   };
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
