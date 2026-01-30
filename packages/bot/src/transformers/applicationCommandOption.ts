@@ -2,7 +2,7 @@ import type { DiscordApplicationCommandOption } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { ApplicationCommandOption } from './types.js';
 
-export function transformApplicationCommandOption(bot: Bot, payload: DiscordApplicationCommandOption): ApplicationCommandOption {
+export function transformApplicationCommandOption(bot: Bot, payload: DiscordApplicationCommandOption) {
   const applicationCommandOption = {
     type: payload.type,
     name: payload.name,
