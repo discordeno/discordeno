@@ -304,8 +304,6 @@ export interface CreateChannelInvite {
    * A csv file with a single column of user IDs for all the users able to accept this invite
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` permission.
-   *
    * Uploading a file with invalid user IDs will result in a 400 with the invalid IDs described.
    */
   targetUsersFile?: Blob;
