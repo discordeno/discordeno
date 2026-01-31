@@ -814,10 +814,10 @@ export interface RestManager {
    * Gets the users allowed to see and accept this invite.
    *
    * @param inviteCode - The invite code of the invite to update.
-   * @returns CSV file with a single column `Users` containing the user IDs.
+   * @returns CSV file containing the user IDs in the same format file that was uploaded on invite create
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` permission.
+   * Requires called to be the inviter, or have `MANAGE_GUILD` permission, or have `VIEW_AUDIT_LOG` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-target-users}
    */
@@ -829,7 +829,7 @@ export interface RestManager {
    * @param targetUsersFile - A CSV file with a single column of user IDs for all the users able to accept this invite
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` permission.
+   * Requires the caller to be the inviter or have the `MANAGE_GUILD` permission.
    *
    * Uploading a file with invalid user IDs will result in a 400 with the invalid IDs described.
    *
@@ -843,7 +843,7 @@ export interface RestManager {
    * @returns An object containing the status of the target users job.
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` permission.
+   * Requires the caller to be the inviter, or have `MANAGE_GUILD` permission, or have `VIEW_AUDIT_LOG` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-target-users-job-status}
    */
