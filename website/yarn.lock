@@ -18269,10 +18269,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^19.2.3":
-  version: 19.2.3
-  resolution: "react@npm:19.2.3"
-  checksum: 10c0/094220b3ba3a76c1b668f972ace1dd15509b157aead1b40391d1c8e657e720c201d9719537375eff08f5e0514748c0319063392a6f000e31303aafc4471f1436
+"react@npm:^19.2.4":
+  version: 19.2.4
+  resolution: "react@npm:19.2.4"
+  checksum: 10c0/cd2c9ff67a720799cc3b38a516009986f7fc4cb8d3e15716c6211cf098d1357ee3e348ab05ad0600042bbb0fd888530ba92e329198c92eafa0994f5213396596
   languageName: node
   linkType: hard
 
@@ -20869,10 +20869,10 @@ __metadata:
     "@docusaurus/types": "npm:^3.9.2"
     "@easyops-cn/docusaurus-search-local": "npm:^0.52.1"
     "@mdx-js/react": "npm:^3.1.1"
-    "@types/react": "npm:^19.2.9"
+    "@types/react": "npm:^19.2.11"
     "@xyflow/react": "npm:^12.10.0"
     prism-react-renderer: "npm:^2.4.1"
-    react: "npm:^19.2.3"
+    react: "npm:^19.2.4"
     react-dom: "npm:^19.2.4"
     turbo: "npm:^2.8.1"
     typescript: "npm:5.9.3"
