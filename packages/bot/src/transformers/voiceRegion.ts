@@ -2,7 +2,7 @@ import type { DiscordVoiceRegion } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { VoiceRegion } from './types.js';
 
-export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion): VoiceRegion {
+export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
   const voiceRegion = {
     id: payload.id,
     name: payload.name,
