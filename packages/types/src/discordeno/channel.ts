@@ -18,9 +18,9 @@ export interface Overwrite {
   // NOTE:
   // - Discord says that these are always present, we keep them as optional (and allow for null) because when it is sent it can be null / not present, https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params, specificly the **
   /** Permission bit set */
-  allow?: string | null;
+  allow?: BigString | null;
   /** Permission bit set */
-  deny?: string | null;
+  deny?: BigString | null;
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.

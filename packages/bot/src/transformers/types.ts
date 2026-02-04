@@ -51,7 +51,6 @@ import type {
   MfaLevels,
   OAuth2Scope,
   OverwriteTypes,
-  PermissionStrings,
   PremiumTiers,
   PremiumTypes,
   PresenceStatus,
@@ -517,9 +516,9 @@ export interface Channel {
     /** Either 0 (role) or 1 (member) */
     type: OverwriteTypes;
     /** Permission bit set */
-    allow: PermissionStrings[];
+    allow: bigint;
     /** Permission bit set */
-    deny: PermissionStrings[];
+    deny: bigint;
   }[];
 }
 
