@@ -500,7 +500,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         options.retryCount += 1;
 
-        const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
+        const resetAfter = response.headers.get('retry-after');
         if (resetAfter) await delay(Number(resetAfter) * 1000);
 
         return await options.retryRequest?.(options);
