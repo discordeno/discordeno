@@ -352,7 +352,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // GET ALL NECESSARY HEADERS
       const remaining = headers.get(RATE_LIMIT_REMAINING_HEADER);
-      const retryAfter = headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
+      const retryAfter = headers.get('Retry-After') ?? headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
       const reset = Date.now() + Number(retryAfter) * 1000;
       const global = headers.get(RATE_LIMIT_GLOBAL_HEADER);
       // undefined override null needed for typings
@@ -579,7 +579,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return;
       }
 
-      // If we the request has a token, use it
+      // If the request has a token, use it
       // Else fallback to prefix with the bot token
       const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`;
 
