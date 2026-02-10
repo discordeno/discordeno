@@ -121,7 +121,7 @@ __metadata:
     "@discordeno/rest": "workspace:^"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.10"
+    "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.11"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -144,7 +144,7 @@ __metadata:
     "@biomejs/biome": "npm:2.3.13"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.10"
+    "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.11"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -173,7 +173,7 @@ __metadata:
     "@biomejs/biome": "npm:2.3.13"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.10"
+    "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.11"
     "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
@@ -197,7 +197,7 @@ __metadata:
   resolution: "@discordeno/types@workspace:packages/types"
   dependencies:
     "@biomejs/biome": "npm:2.3.13"
-    "@swc/cli": "npm:^0.7.10"
+    "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.11"
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^25.2.0"
@@ -215,7 +215,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:2.3.13"
     "@discordeno/types": "workspace:^"
-    "@swc/cli": "npm:^0.7.10"
+    "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.11"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -562,9 +562,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/cli@npm:^0.7.10":
-  version: 0.7.10
-  resolution: "@swc/cli@npm:0.7.10"
+"@swc/cli@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "@swc/cli@npm:0.8.0"
   dependencies:
     "@swc/counter": "npm:^0.1.3"
     "@xhmikosr/bin-wrapper": "npm:^13.0.5"
@@ -577,7 +577,7 @@ __metadata:
     tinyglobby: "npm:^0.2.13"
   peerDependencies:
     "@swc/core": ^1.2.66
-    chokidar: ^4.0.1
+    chokidar: ^5.0.0
   peerDependenciesMeta:
     chokidar:
       optional: true
@@ -585,7 +585,7 @@ __metadata:
     spack: bin/spack.js
     swc: bin/swc.js
     swcx: bin/swcx.js
-  checksum: 10c0/9e4d348538d35c44b5503b34c061b221a9ae17af12f78fdb4c0e0b8f5fe2992854dcdf2fa7f21ee709ecb959b5c92ca048a0a8b7d0c4d599e9502d021ea9bf32
+  checksum: 10c0/641fab4fcb063ec0ca6cc77072626d46757fa909fc7093634b4d7343752adeca5ff2e304a37daf72eb3f1a9490cbbd57d37116fe946469cee075f432c51a2b4d
   languageName: node
   linkType: hard
 
@@ -1447,7 +1447,7 @@ __metadata:
     lint-staged: "npm:^16.2.7"
     turbo: "npm:^2.8.1"
     typedoc: "npm:^0.28.16"
-    typedoc-plugin-markdown: "npm:^4.9.0"
+    typedoc-plugin-markdown: "npm:^4.10.0"
     typescript: "npm:^5.9.3"
   languageName: unknown
   linkType: soft
@@ -1462,7 +1462,7 @@ __metadata:
     "@discordeno/rest": "workspace:^"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
-    "@swc/cli": "npm:^0.7.10"
+    "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.11"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
@@ -3002,12 +3002,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc-plugin-markdown@npm:^4.9.0":
-  version: 4.9.0
-  resolution: "typedoc-plugin-markdown@npm:4.9.0"
+"typedoc-plugin-markdown@npm:^4.10.0":
+  version: 4.10.0
+  resolution: "typedoc-plugin-markdown@npm:4.10.0"
   peerDependencies:
     typedoc: 0.28.x
-  checksum: 10c0/12040bbff7bc7e4f777d06710e39421f8ebaaf706f4b8075536453f35bc86726c5ce743de0cc9c39ee1bdfc8611b2878a4cf4c83a493e0678fc640dd71fe97fc
+  checksum: 10c0/20c7bc8ef68bd90053649ce223d02d4aceefed675c09efb1740c7791fbc37c10a1e25d14647605484a198f0695312eb21119015616d91c73fe1d63df5e4fb061
   languageName: node
   linkType: hard
 
