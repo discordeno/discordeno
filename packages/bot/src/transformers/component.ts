@@ -1,6 +1,11 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordCheckboxComponent,
+  type DiscordCheckboxGroupComponent,
+  type DiscordCheckboxGroupInteractionResponse,
+  type DiscordCheckboxGroupOption,
+  type DiscordCheckboxInteractionResponse,
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordFileUploadComponent,
@@ -11,6 +16,9 @@ import {
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
   type DiscordMessageComponentFromModalInteractionResponse,
+  type DiscordRadioGroupComponent,
+  type DiscordRadioGroupInteractionResponse,
+  type DiscordRadioGroupOption,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
@@ -74,6 +82,15 @@ export function transformComponent(bot: Bot, payload: DiscordMessageComponent | 
       break;
     case MessageComponentTypes.FileUpload:
       component = transformFileUploadComponent(bot, payload);
+      break;
+    case MessageComponentTypes.RadioGroup:
+      component = transformRadioGroupComponent(bot, payload);
+      break;
+    case MessageComponentTypes.CheckboxGroup:
+      component = transformCheckboxGroupComponent(bot, payload);
+      break;
+    case MessageComponentTypes.Checkbox:
+      component = transformCheckboxComponent(bot, payload);
       break;
   }
 
@@ -321,4 +338,78 @@ function transformFileUploadComponent(bot: Bot, payload: DiscordFileUploadCompon
   }
 
   return fileUpload;
+}
+
+function transformRadioGroupComponent(bot: Bot, payload: DiscordRadioGroupComponent | DiscordRadioGroupInteractionResponse) {
+  const props = bot.transformers.desiredProperties.component;
+  const radioGroup = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) radioGroup.type = payload.type;
+  if (props.id && payload.id) radioGroup.id = payload.id;
+  if (props.customId && payload.custom_id) radioGroup.customId = payload.custom_id;
+
+  // Check if this is the component (has options) or the interaction response (modal submit, has value)
+  if ('options' in payload) {
+    if (props.options && payload.options)
+      radioGroup.options = payload.options.map((option: DiscordRadioGroupOption) => ({
+        label: option.label,
+        value: option.value,
+        description: option.description,
+        default: option.default,
+      }));
+    if (props.required && payload.required !== undefined) radioGroup.required = payload.required;
+  } else {
+    if (props.value) radioGroup.value = payload.value ?? undefined;
+  }
+
+  return radioGroup;
+}
+
+function transformCheckboxGroupComponent(bot: Bot, payload: DiscordCheckboxGroupComponent | DiscordCheckboxGroupInteractionResponse) {
+  const props = bot.transformers.desiredProperties.component;
+  const checkboxGroup = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) checkboxGroup.type = payload.type;
+  if (props.id && payload.id) checkboxGroup.id = payload.id;
+  if (props.customId && payload.custom_id) checkboxGroup.customId = payload.custom_id;
+
+  // Check if this is the component (has options) or the interaction response (modal submit, has values)
+  if ('options' in payload) {
+    if (props.options && payload.options)
+      checkboxGroup.options = payload.options.map((option: DiscordCheckboxGroupOption) => ({
+        label: option.label,
+        value: option.value,
+        description: option.description,
+        default: option.default,
+      }));
+    if (props.minValues && payload.min_values !== undefined) checkboxGroup.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values !== undefined) checkboxGroup.maxValues = payload.max_values;
+    if (props.required && payload.required !== undefined) checkboxGroup.required = payload.required;
+  } else {
+    if (props.values && payload.values) checkboxGroup.values = payload.values;
+  }
+
+  return checkboxGroup;
+}
+
+function transformCheckboxComponent(bot: Bot, payload: DiscordCheckboxComponent | DiscordCheckboxInteractionResponse) {
+  const props = bot.transformers.desiredProperties.component;
+  const checkbox = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  // Always set type when present so the component can be reused (e.g. in modal responses) without losing type
+  if (payload.type !== undefined) (checkbox as { type?: number }).type = payload.type;
+  if (props.id && payload.id) checkbox.id = payload.id;
+  if (props.customId && payload.custom_id) checkbox.customId = payload.custom_id;
+
+  // Check if this is the component (has default) or the interaction response (modal submit, has value boolean)
+  if ('value' in payload && typeof (payload as DiscordCheckboxInteractionResponse).value === 'boolean') {
+    if (props.value) checkbox.value = (payload as DiscordCheckboxInteractionResponse).value;
+  } else {
+    const wantDefault = (props as { default?: unknown }).default;
+    if (wantDefault && 'default' in payload && payload.default !== undefined) {
+      (checkbox as { default?: boolean }).default = payload.default;
+    }
+  }
+
+  return checkbox;
 }

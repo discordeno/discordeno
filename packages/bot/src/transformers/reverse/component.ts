@@ -2,6 +2,8 @@ import {
   type ButtonStyles,
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordCheckboxComponent,
+  type DiscordCheckboxGroupComponent,
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordFileUploadComponent,
@@ -10,6 +12,7 @@ import {
   type DiscordMediaGalleryItem,
   type DiscordMessageComponent,
   type DiscordMessageComponentFromModalInteractionResponse,
+  type DiscordRadioGroupComponent,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordStringSelectInteractionResponseFromModal,
@@ -56,6 +59,12 @@ export function transformComponentToDiscordComponent(
       return transformLabelComponent(bot, payload);
     case MessageComponentTypes.FileUpload:
       return transformFileUploadComponent(bot, payload);
+    case MessageComponentTypes.RadioGroup:
+      return transformRadioGroupComponent(bot, payload);
+    case MessageComponentTypes.CheckboxGroup:
+      return transformCheckboxGroupComponent(bot, payload);
+    case MessageComponentTypes.Checkbox:
+      return transformCheckboxComponent(bot, payload);
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
       // As of now they are compatible
@@ -131,7 +140,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
     style: payload.style as TextStyles,
     custom_id: payload.customId!,
     label: payload.label!,
-    value: payload.value,
+    value: typeof payload.value === 'string' ? payload.value : undefined,
     max_length: payload.maxLength,
     min_length: payload.minLength,
     placeholder: payload.placeholder,
@@ -235,5 +244,47 @@ function transformFileUploadComponent(bot: Bot, payload: Component): DiscordFile
     max_values: payload.maxValues,
     min_values: payload.minValues,
     required: payload.required,
+  };
+}
+
+function transformRadioGroupComponent(bot: Bot, payload: Component): DiscordRadioGroupComponent {
+  return {
+    type: MessageComponentTypes.RadioGroup,
+    id: payload.id,
+    custom_id: payload.customId!,
+    options: (payload.options ?? []).map((option) => ({
+      value: option.value,
+      label: option.label,
+      description: option.description,
+      default: option.default,
+    })),
+    required: payload.required,
+  };
+}
+
+function transformCheckboxGroupComponent(bot: Bot, payload: Component): DiscordCheckboxGroupComponent {
+  return {
+    type: MessageComponentTypes.CheckboxGroup,
+    id: payload.id,
+    custom_id: payload.customId!,
+    options: (payload.options ?? []).map((option) => ({
+      value: option.value,
+      label: option.label,
+      description: option.description,
+      default: option.default,
+    })),
+    min_values: payload.minValues,
+    max_values: payload.maxValues,
+    required: payload.required,
+  };
+}
+
+function transformCheckboxComponent(bot: Bot, payload: Component): DiscordCheckboxComponent {
+  const checkboxPayload = payload as Component & { default?: boolean };
+  return {
+    type: MessageComponentTypes.Checkbox,
+    id: payload.id,
+    custom_id: payload.customId!,
+    default: checkboxPayload.default,
   };
 }
