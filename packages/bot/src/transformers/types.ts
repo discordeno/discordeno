@@ -576,8 +576,8 @@ export interface Component {
   style?: ButtonStyles | TextStyles;
   /** text that appears on the button (max 80 characters) */
   label?: string;
-  /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
-  value?: string;
+  /** the dev-define value of the option, max 100 characters for select or 4000 for input; or boolean for checkbox response. */
+  value?: string | boolean;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: Pick<Partial<Emoji>, 'id' | 'name' | 'animated'>;
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */

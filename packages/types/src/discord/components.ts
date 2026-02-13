@@ -41,6 +41,12 @@ export enum MessageComponentTypes {
   Label,
   /** Component for uploading files */
   FileUpload,
+  /** An interactive component for selecting exactly one option from a defined list */
+  RadioGroup = 21,
+  /** An interactive component for selecting one or many options via checkboxes */
+  CheckboxGroup = 22,
+  /** A single interactive component for yes/no style questions */
+  Checkbox = 23,
 }
 
 export type DiscordMessageComponents = DiscordMessageComponent[];
@@ -57,12 +63,18 @@ export type DiscordMessageComponent =
   | DiscordContainerComponent
   | DiscordFileComponent
   | DiscordLabelComponent
-  | DiscordFileUploadComponent;
+  | DiscordFileUploadComponent
+  | DiscordRadioGroupComponent
+  | DiscordCheckboxGroupComponent
+  | DiscordCheckboxComponent;
 
 export type DiscordMessageComponentFromModalInteractionResponse =
   | DiscordTextInputInteractionResponse
   | DiscordTextDisplayInteractionResponse
-  | DiscordLabelInteractionResponse;
+  | DiscordLabelInteractionResponse
+  | DiscordRadioGroupInteractionResponse
+  | DiscordCheckboxGroupInteractionResponse
+  | DiscordCheckboxInteractionResponse;
 
 export type DiscordMessageComponentFromMessageComponentInteractionResponse =
   | DiscordRoleSelectInteractionResponseFromMessageComponent
@@ -531,6 +543,101 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   spoiler?: boolean;
 }
 
+/** https://docs.discord.com/developers/components/reference#radio-group-structure */
+export interface DiscordRadioGroupOption {
+  /** The dev-defined value of the option. Maximum 100 characters. */
+  value: string;
+  /** The user-facing label of the option. Maximum 100 characters. */
+  label: string;
+  /** An optional description for the option. Maximum 100 characters. */
+  description?: string;
+  /** Will render this option as already-selected by default. */
+  default?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#radio-group-structure */
+export interface DiscordRadioGroupComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.RadioGroup;
+
+  /** A dev-defined unique string for the component; 1-100 characters. */
+  custom_id: string;
+  /** List of options to show; min 2, max 10. */
+  options: DiscordRadioGroupOption[];
+  /** Whether a selection is required to submit the modal. Defaults to `true`. */
+  required?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#radio-group-interaction-response-structure */
+export interface DiscordRadioGroupInteractionResponse {
+  type: MessageComponentTypes.RadioGroup;
+  /** 32 bit integer used as an optional identifier for component */
+  id: number;
+  /** The custom id for the radio group */
+  custom_id: string;
+  /** The value of the selected option, or null if no option is selected */
+  value?: string | null;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-group-option-structure */
+export interface DiscordCheckboxGroupOption {
+  /** The dev-defined value of the option. Maximum 100 characters. */
+  value: string;
+  /** The user-facing label of the option. Maximum 100 characters. */
+  label: string;
+  /** An optional description for the option. Maximum 100 characters. */
+  description?: string;
+  /** Will render this option as already-selected by default. */
+  default?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-group-structure */
+export interface DiscordCheckboxGroupComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.CheckboxGroup;
+
+  /** A dev-defined unique string for the component; 1-100 characters. */
+  custom_id: string;
+  /** List of options to show; min 1, max 10. */
+  options: DiscordCheckboxGroupOption[];
+  /** Minimum number of items that must be chosen; min 0, max 10. Defaults to 1; if set to 0 required must be false. */
+  min_values?: number;
+  /** Maximum number of items that can be chosen; min 1, max 10. Defaults to the number of options. */
+  max_values?: number;
+  /** Whether selecting within the group is required. Defaults to `true`. */
+  required?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-group-interaction-response-structure */
+export interface DiscordCheckboxGroupInteractionResponse {
+  type: MessageComponentTypes.CheckboxGroup;
+  /** 32 bit integer used as an optional identifier for component */
+  id: number;
+  /** The custom id for the checkbox group */
+  custom_id: string;
+  /** The values of the selected options, or an empty array if no options are selected */
+  values: string[];
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-structure */
+export interface DiscordCheckboxComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.Checkbox;
+
+  /** A dev-defined unique string for the component; 1-100 characters. */
+  custom_id: string;
+  /** Whether the checkbox is selected by default. */
+  default?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-interaction-response-structure */
+export interface DiscordCheckboxInteractionResponse {
+  type: MessageComponentTypes.Checkbox;
+  /** 32 bit integer used as an optional identifier for component */
+  id: number;
+  /** The custom id for the checkbox */
+  custom_id: string;
+  /** The state of the checkbox (true if checked, false if unchecked) */
+  value: boolean;
+}
+
 /** https://discord.com/developers/docs/components/reference#label-label-structure */
 export interface DiscordLabelComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Label;
@@ -550,7 +657,13 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
    */
   description?: string;
   /** The component within the label */
-  component: DiscordTextInputComponent | DiscordSelectMenuComponent | DiscordFileUploadComponent;
+  component:
+    | DiscordTextInputComponent
+    | DiscordSelectMenuComponent
+    | DiscordFileUploadComponent
+    | DiscordRadioGroupComponent
+    | DiscordCheckboxGroupComponent
+    | DiscordCheckboxComponent;
 }
 
 /** https://discord.com/developers/docs/components/reference#label-label-interaction-response-structure */
@@ -566,7 +679,10 @@ export interface DiscordLabelInteractionResponse {
     | DiscordRoleSelectInteractionResponseFromModal
     | DiscordMentionableSelectInteractionResponseFromModal
     | DiscordChannelSelectInteractionResponseFromModal
-    | DiscordFileUploadInteractionResponse;
+    | DiscordFileUploadInteractionResponse
+    | DiscordRadioGroupInteractionResponse
+    | DiscordCheckboxGroupInteractionResponse
+    | DiscordCheckboxInteractionResponse;
 }
 
 /** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
