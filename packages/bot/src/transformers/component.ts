@@ -370,13 +370,7 @@ function transformCheckboxGroupComponent(bot: Bot, payload: DiscordCheckboxGroup
 
   // Check if this is the component (has options) or the interaction response (modal submit, has values)
   if ('options' in payload) {
-    if (props.options && payload.options)
-      checkboxGroup.options = payload.options.map((option: DiscordCheckboxGroupOption) => ({
-        label: option.label,
-        value: option.value,
-        description: option.description,
-        default: option.default,
-      }));
+    if (props.options && payload.options) checkboxGroup.options = payload.options;
     if (props.minValues && payload.min_values !== undefined) checkboxGroup.minValues = payload.min_values;
     if (props.maxValues && payload.max_values !== undefined) checkboxGroup.maxValues = payload.max_values;
     if (props.required && payload.required !== undefined) checkboxGroup.required = payload.required;
