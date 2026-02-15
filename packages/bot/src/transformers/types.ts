@@ -632,6 +632,8 @@ export interface Component {
   component?: Component;
   /** The text of the selected options */
   values?: string[];
+  /** Whether the checkbox is selected by default (Checkbox component). */
+  default?: boolean;
 }
 
 export interface UnfurledMediaItem {

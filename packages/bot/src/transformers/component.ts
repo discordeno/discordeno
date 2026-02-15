@@ -396,19 +396,15 @@ function transformCheckboxComponent(bot: Bot, payload: DiscordCheckboxComponent 
   const props = bot.transformers.desiredProperties.component;
   const checkbox = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  // Always set type when present so the component can be reused (e.g. in modal responses) without losing type
-  if (payload.type !== undefined) (checkbox as { type?: number }).type = payload.type;
+  if (props.type && payload.type) checkbox.type = payload.type;
   if (props.id && payload.id) checkbox.id = payload.id;
   if (props.customId && payload.custom_id) checkbox.customId = payload.custom_id;
 
-  // Check if this is the component (has default) or the interaction response (modal submit, has value boolean)
-  if ('value' in payload && typeof (payload as DiscordCheckboxInteractionResponse).value === 'boolean') {
-    if (props.value) checkbox.value = (payload as DiscordCheckboxInteractionResponse).value;
-  } else {
-    const wantDefault = (props as { default?: unknown }).default;
-    if (wantDefault && 'default' in payload && payload.default !== undefined) {
-      (checkbox as { default?: boolean }).default = payload.default;
-    }
+  if (props.value && 'value' in payload && payload.value !== undefined) {
+    checkbox.value = payload.value;
+  }
+  if (props.default && 'default' in payload && payload.default !== undefined) {
+    checkbox.default = payload.default;
   }
 
   return checkbox;

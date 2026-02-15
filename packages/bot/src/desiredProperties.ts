@@ -327,6 +327,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       style: defaultValue,
       label: defaultValue,
       value: defaultValue,
+      default: defaultValue,
       emoji: defaultValue,
       url: defaultValue,
       channelTypes: defaultValue,
