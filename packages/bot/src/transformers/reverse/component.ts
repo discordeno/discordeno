@@ -267,12 +267,7 @@ function transformCheckboxGroupComponent(bot: Bot, payload: Component): DiscordC
     type: MessageComponentTypes.CheckboxGroup,
     id: payload.id,
     custom_id: payload.customId!,
-    options: (payload.options ?? []).map((option) => ({
-      value: option.value,
-      label: option.label,
-      description: option.description,
-      default: option.default,
-    })),
+    options: payload.options ?? [],
     min_values: payload.minValues,
     max_values: payload.maxValues,
     required: payload.required,
