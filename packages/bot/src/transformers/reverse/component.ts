@@ -280,11 +280,10 @@ function transformCheckboxGroupComponent(bot: Bot, payload: Component): DiscordC
 }
 
 function transformCheckboxComponent(bot: Bot, payload: Component): DiscordCheckboxComponent {
-  const checkboxPayload = payload as Component & { default?: boolean };
   return {
     type: MessageComponentTypes.Checkbox,
     id: payload.id,
     custom_id: payload.customId!,
-    default: checkboxPayload.default,
+    default: payload.default,
   };
 }
