@@ -779,7 +779,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * Fires a _Voice State Update_ gateway event.
    *
-   * @see {@link https://docs.discord.com/developers/topics/gateway#update-voice-state}
+   * @see {@link https://docs.discord.com/developers/events/gateway-events#update-voice-state}
    */
   joinVoiceChannel: (
     guildId: BigString,
@@ -822,7 +822,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
    *
-   * @see {@link https://docs.discord.com/developers/topics/gateway#request-guild-members}
+   * @see {@link https://docs.discord.com/developers/events/gateway-events#request-guild-members}
    */
   requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMemberWithUser[]>>;
   /**
@@ -835,7 +835,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @remarks
    * Fires a _Voice State Update_ gateway event.
    *
-   * @see {@link https://docs.discord.com/developers/topics/gateway#update-voice-state}
+   * @see {@link https://docs.discord.com/developers/events/gateway-events#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>;
   /**
@@ -855,7 +855,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * To avoid this Discordeno will automatically try to group the ids based on what shard they will need to be sent, but this involves sending multiple messages in multiple shards
    *
-   * @see {@link https://docs.discord.com/developers/topics/gateway-events#request-soundboard-sounds}
+   * @see {@link https://docs.discord.com/developers/events/gateway-events#request-soundboard-sounds}
    */
   requestSoundboardSounds: (guildIds: BigString[]) => Promise<void>;
   /** This managers cache related settings. */

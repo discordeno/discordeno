@@ -2882,7 +2882,7 @@ export interface RestManager {
    * per minute per shard. For more information, read {@link https://docs.discord.com/developers/topics/rate-limits#rate-limits}.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#list-guild-members}
-   * @see {@link https://docs.discord.com/developers/topics/gateway#request-guild-members}
+   * @see {@link https://docs.discord.com/developers/events/gateway-events#request-guild-members}
    * @see {@link https://docs.discord.com/developers/topics/rate-limits#rate-limits}
    */
   getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<Camelize<DiscordMemberWithUser>[]>;

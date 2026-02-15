@@ -626,7 +626,7 @@ export interface DiscordScheduledEventUserRemove {
   guild_id: string;
 }
 
-/** https://docs.discord.com/developers/topics/gateway-events#guild-soundboard-sound-delete-guild-soundboard-sound-delete-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-soundboard-sound-delete-guild-soundboard-sound-delete-event-fields */
 export interface DiscordSoundboardSoundDelete {
   /** ID of the sound that was deleted */
   sound_id: string;
@@ -634,7 +634,7 @@ export interface DiscordSoundboardSoundDelete {
   guild_id: string;
 }
 
-/** https://docs.discord.com/developers/topics/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
 export interface DiscordSoundboardSoundsUpdate {
   /** The guild's soundboard sounds */
   soundboard_sounds: DiscordSoundboardSound[];
