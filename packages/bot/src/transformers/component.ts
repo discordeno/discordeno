@@ -4,7 +4,6 @@ import {
   type DiscordCheckboxComponent,
   type DiscordCheckboxGroupComponent,
   type DiscordCheckboxGroupInteractionResponse,
-  type DiscordCheckboxGroupOption,
   type DiscordCheckboxInteractionResponse,
   type DiscordContainerComponent,
   type DiscordFileComponent,
@@ -18,7 +17,6 @@ import {
   type DiscordMessageComponentFromModalInteractionResponse,
   type DiscordRadioGroupComponent,
   type DiscordRadioGroupInteractionResponse,
-  type DiscordRadioGroupOption,
   type DiscordSectionComponent,
   type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
@@ -350,8 +348,7 @@ function transformRadioGroupComponent(bot: Bot, payload: DiscordRadioGroupCompon
 
   // Check if this is the component (has options) or the interaction response (modal submit, has value)
   if ('options' in payload) {
-    if (props.options && payload.options)
-      radioGroup.options = payload.options;
+    if (props.options && payload.options) radioGroup.options = payload.options;
     if (props.required && payload.required !== undefined) radioGroup.required = payload.required;
   } else {
     if (props.value) radioGroup.value = payload.value ?? undefined;

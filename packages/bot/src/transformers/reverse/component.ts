@@ -22,6 +22,7 @@ import {
   type DiscordThumbnailComponent,
   type DiscordUnfurledMediaItem,
   MessageComponentTypes,
+  type SelectOption,
   type TextStyles,
 } from '@discordeno/types';
 import type { Bot } from '../../bot.js';
@@ -170,7 +171,7 @@ function transformSelectMenuComponent(bot: Bot, payload: Component): DiscordSele
     disabled: payload.disabled,
     max_values: payload.maxValues,
     min_values: payload.minValues,
-    options: payload.options?.map((option) => ({
+    options: (payload.options as SelectOption[] | undefined)?.map((option) => ({
       label: option.label,
       value: option.value,
       description: option.description,
