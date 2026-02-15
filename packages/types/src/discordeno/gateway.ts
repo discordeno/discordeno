@@ -1,12 +1,12 @@
 /**
  * Types for:
- *  - https://discord.com/developers/docs/events/gateway
- *  - https://discord.com/developers/docs/events/gateway-events
+ *  - https://docs.discord.com/developers/events/gateway
+ *  - https://docs.discord.com/developers/events/gateway-events
  */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/events/gateway-events#request-guild-members */
+/** https://docs.discord.com/developers/events/gateway-events#request-guild-members */
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
   guildId: BigString;

@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/resources/entitlement */
+/** Types for: https://docs.discord.com/developers/resources/entitlement */
 
-/** https://discord.com/developers/docs/resources/entitlement#entitlement-object-entitlement-structure */
+/** https://docs.discord.com/developers/resources/entitlement#entitlement-object-entitlement-structure */
 export interface DiscordEntitlement {
   /** ID of the entitlement */
   id: string;
@@ -24,7 +24,7 @@ export interface DiscordEntitlement {
   consumed?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/entitlement#entitlement-object-entitlement-types */
+/** https://docs.discord.com/developers/resources/entitlement#entitlement-object-entitlement-types */
 export enum DiscordEntitlementType {
   /** Entitlement was purchased by user */
   Purchase = 1,

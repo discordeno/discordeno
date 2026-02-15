@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/resources/auto-moderation */
+/** Types for: https://docs.discord.com/developers/resources/auto-moderation */
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-auto-moderation-rule-structure */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-auto-moderation-rule-structure */
 export interface DiscordAutoModerationRule {
   /** The id of this rule */
   id: string;
@@ -26,7 +26,7 @@ export interface DiscordAutoModerationRule {
   exempt_channels: string[];
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-types */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-trigger-types */
 export enum AutoModerationTriggerTypes {
   /** Check if content contains words from a user defined list of keywords. Max 6 per guild */
   Keyword = 1,
@@ -40,7 +40,7 @@ export enum AutoModerationTriggerTypes {
   MemberProfile,
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata */
 export interface DiscordAutoModerationRuleTriggerMetadata {
   /**
    * Substrings which will be searched for in content.
@@ -95,7 +95,7 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   mention_raid_protection_enabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-keyword-preset-types */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-keyword-preset-types */
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
   /** Words that may be considered forms of swearing or cursing */
   Profanity = 1,
@@ -105,7 +105,7 @@ export enum DiscordAutoModerationRuleTriggerMetadataPresets {
   Slurs,
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-event-types */
 export enum AutoModerationEventTypes {
   /** When a user sends a message */
   MessageSend = 1,
@@ -113,7 +113,7 @@ export enum AutoModerationEventTypes {
   MemberUpdate,
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-auto-moderation-action-structure */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-action-object-auto-moderation-action-structure */
 export interface DiscordAutoModerationAction {
   /** The type of action to take when a rule is triggered */
   type: AutoModerationActionType;
@@ -121,7 +121,7 @@ export interface DiscordAutoModerationAction {
   metadata?: DiscordAutoModerationActionMetadata;
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-types */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-action-object-action-types */
 export enum AutoModerationActionType {
   /** Blocks the content of a message according to the rule */
   BlockMessage = 1,
@@ -140,7 +140,7 @@ export enum AutoModerationActionType {
   BlockMemberInteraction,
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-action-object-action-metadata */
 export interface DiscordAutoModerationActionMetadata {
   /**
    * The id of channel to which user content should be logged.

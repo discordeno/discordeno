@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/voice */
+/** Types for: https://docs.discord.com/developers/resources/voice */
 
 import type { DiscordMemberWithUser } from './guild.js';
 
-/** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
+/** https://docs.discord.com/developers/resources/voice#voice-state-object-voice-state-structure */
 export interface DiscordVoiceState {
   /** The guild id this voice state is for */
   guild_id?: string;
@@ -32,7 +32,7 @@ export interface DiscordVoiceState {
   request_to_speak_timestamp: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
+/** https://docs.discord.com/developers/resources/voice#voice-region-object-voice-region-structure */
 export interface DiscordVoiceRegion {
   /** Unique Id for the region */
   id: string;

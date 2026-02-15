@@ -1,9 +1,9 @@
-/** Types for: https://discord.com/developers/docs/resources/audit-log */
+/** Types for: https://docs.discord.com/developers/resources/audit-log */
 
 import type { AuditLogEvents } from '../discord/auditLog.js';
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-params */
+/** https://docs.discord.com/developers/resources/audit-log#get-guild-audit-log-query-string-params */
 export interface GetGuildAuditLog {
   /** Entries from a specific user ID */
   userId?: BigString;

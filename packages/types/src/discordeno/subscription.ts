@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/subscription */
+/** Types for: https://docs.discord.com/developers/resources/subscription */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/subscription#query-string-params */
+/** https://docs.discord.com/developers/resources/subscription#query-string-params */
 export interface ListSkuSubscriptionsOptions {
   /** List subscriptions before this ID */
   before?: BigString;

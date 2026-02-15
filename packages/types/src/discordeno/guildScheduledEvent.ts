@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/guild-scheduled-event */
+/** Types for: https://docs.discord.com/developers/resources/guild-scheduled-event */
 
 import type {
   DiscordScheduledEventEntityMetadata,
@@ -9,13 +9,13 @@ import type {
 } from '../discord/guildScheduledEvent.js';
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild-query-string-params */
+/** https://docs.discord.com/developers/resources/guild-scheduled-event#list-scheduled-events-for-guild-query-string-params */
 export interface GetScheduledEvents {
   /** include number of users subscribed to each event */
   withUserCount?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event-json-params */
+/** https://docs.discord.com/developers/resources/guild-scheduled-event#create-guild-scheduled-event-json-params */
 export interface CreateScheduledEvent {
   /** the channel id of the scheduled event. */
   channelId?: BigString;
@@ -38,7 +38,7 @@ export interface CreateScheduledEvent {
   recurrenceRule?: DiscordScheduledEventRecurrenceRule;
 }
 
-/** https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event-json-params */
+/** https://docs.discord.com/developers/resources/guild-scheduled-event#modify-guild-scheduled-event-json-params */
 export interface EditScheduledEvent {
   /** the channel id of the scheduled event. null if switching to external event. */
   channelId?: BigString | null;

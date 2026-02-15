@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/reference */
+/** Types for: https://docs.discord.com/developers/reference */
 
 /**
  * This is not a mapping of any discord documented type, however there is some docs that refer to an object like this:
- * https://discord.com/developers/docs/reference#uploading-files, the second paragraph
+ * https://docs.discord.com/developers/reference#uploading-files, the second paragraph
  *
  * > All files[n] parameters must include a valid `Content-Disposition` subpart header with a filename and unique name parameter.
  *

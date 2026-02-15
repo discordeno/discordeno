@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/application-role-connection-metadata */
+/** Types for: https://docs.discord.com/developers/resources/application-role-connection-metadata */
 
 import type { Localization } from './reference.js';
 
-/** https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-structure */
+/** https://docs.discord.com/developers/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-structure */
 export interface DiscordApplicationRoleConnectionMetadata {
   /** Type of metadata value */
   type: DiscordApplicationRoleConnectionMetadataType;
@@ -33,7 +33,7 @@ export interface DiscordApplicationRoleConnectionMetadata {
   description_localizations: Localization;
 }
 
-/** https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-type */
+/** https://docs.discord.com/developers/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-type */
 export enum DiscordApplicationRoleConnectionMetadataType {
   /** The metadata value (integer) is less than or equal to the guild's configured value (integer) */
   IntegerLessThanOrEqual = 1,

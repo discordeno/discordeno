@@ -76,7 +76,7 @@ export const GuildToggle = {
   invitesDisabled: 1n << 29n,
   /** Whether the guild has access to set an invite splash background */
   inviteSplash: 1n << 5n,
-  /** Whether the guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
+  /** Whether the guild has enabled [Membership Screening](https://docs.discord.com/developers/resources/guild#membership-screening-object) */
   memberVerificationGateEnabled: 1n << 19n,
   /** Whether the guild has more soundboard sound slot */
   moreSoundboard: 1n << 24n,
@@ -274,7 +274,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
     return this.has('welcomeScreenEnabled');
   }
 
-  /** Whether the guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
+  /** Whether the guild has enabled [Membership Screening](https://docs.discord.com/developers/resources/guild#membership-screening-object) */
   get memberVerificationGateEnabled(): boolean {
     return this.has('memberVerificationGateEnabled');
   }

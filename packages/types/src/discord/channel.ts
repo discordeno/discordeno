@@ -1,10 +1,10 @@
-/** Types for: https://discord.com/developers/docs/resources/channel */
+/** Types for: https://docs.discord.com/developers/resources/channel */
 
 import type { DiscordThreadCreateExtra } from './gateway.js';
 import type { DiscordMember } from './guild.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
+/** https://docs.discord.com/developers/resources/channel#channel-object-channel-structure */
 export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   /** The id of the channel */
   id: string;
@@ -134,7 +134,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   default_forum_layout?: ForumLayout;
 }
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
+/** https://docs.discord.com/developers/resources/channel#channel-object-channel-types */
 export enum ChannelTypes {
   /** A text channel within a server */
   GuildText,
@@ -164,7 +164,7 @@ export enum ChannelTypes {
   GuildMedia,
 }
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes */
+/** https://docs.discord.com/developers/resources/channel#channel-object-video-quality-modes */
 export enum VideoQualityModes {
   /** Discord chooses the quality for optimal performance */
   Auto = 1,
@@ -172,7 +172,7 @@ export enum VideoQualityModes {
   Full,
 }
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-channel-flags */
+/** https://docs.discord.com/developers/resources/channel#channel-object-channel-flags */
 export enum ChannelFlags {
   None,
   /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
@@ -183,7 +183,7 @@ export enum ChannelFlags {
   HideMediaDownloadOptions = 1 << 15,
 }
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-sort-order-types */
+/** https://docs.discord.com/developers/resources/channel#channel-object-sort-order-types */
 export enum SortOrderTypes {
   /** Sort forum posts by activity */
   LatestActivity,
@@ -191,7 +191,7 @@ export enum SortOrderTypes {
   CreationDate,
 }
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-forum-layout-types */
+/** https://docs.discord.com/developers/resources/channel#channel-object-forum-layout-types */
 export enum ForumLayout {
   /** No default has been set for forum channel. */
   NotSet = 0,
@@ -201,7 +201,7 @@ export enum ForumLayout {
   GalleryView = 2,
 }
 
-/** https://discord.com/developers/docs/resources/channel#followed-channel-object-followed-channel-structure */
+/** https://docs.discord.com/developers/resources/channel#followed-channel-object-followed-channel-structure */
 export interface DiscordFollowedChannel {
   /** Source message id */
   channel_id: string;
@@ -209,13 +209,13 @@ export interface DiscordFollowedChannel {
   webhook_id: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#overwrite-object-overwrite-structure */
+/** https://docs.discord.com/developers/resources/channel#overwrite-object-overwrite-structure */
 export enum OverwriteTypes {
   Role,
   Member,
 }
 
-/** https://discord.com/developers/docs/resources/channel#overwrite-object-overwrite-structure */
+/** https://docs.discord.com/developers/resources/channel#overwrite-object-overwrite-structure */
 export interface DiscordOverwrite {
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes;
@@ -227,7 +227,7 @@ export interface DiscordOverwrite {
   deny?: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure */
+/** https://docs.discord.com/developers/resources/channel#thread-metadata-object-thread-metadata-structure */
 export interface DiscordThreadMetadata {
   /** Whether the thread is archived */
   archived: boolean;
@@ -243,7 +243,7 @@ export interface DiscordThreadMetadata {
   create_timestamp?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#thread-member-object-thread-member-structure */
+/** https://docs.discord.com/developers/resources/channel#thread-member-object-thread-member-structure */
 export interface DiscordThreadMember {
   /**
    * The id of the thread
@@ -274,10 +274,10 @@ export interface DiscordThreadMember {
   member?: DiscordMember;
 }
 
-/** https://discord.com/developers/docs/resources/channel#thread-member-object-thread-member-structure, the first asterisk */
+/** https://docs.discord.com/developers/resources/channel#thread-member-object-thread-member-structure, the first asterisk */
 export interface DiscordThreadMemberGuildCreate extends Omit<DiscordThreadMember, 'id' | 'user_id' | 'member'> {}
 
-/** https://discord.com/developers/docs/resources/channel#default-reaction-object-default-reaction-structure */
+/** https://docs.discord.com/developers/resources/channel#default-reaction-object-default-reaction-structure */
 export interface DiscordDefaultReactionEmoji {
   /** The id of a guild's custom emoji */
   emoji_id: string | null;
@@ -285,7 +285,7 @@ export interface DiscordDefaultReactionEmoji {
   emoji_name: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#forum-tag-object-forum-tag-structure */
+/** https://docs.discord.com/developers/resources/channel#forum-tag-object-forum-tag-structure */
 export interface DiscordForumTag {
   /** The id of the tag */
   id: string;
@@ -300,9 +300,9 @@ export interface DiscordForumTag {
 }
 
 /**
- * https://discord.com/developers/docs/resources/channel#list-public-archived-threads
- * https://discord.com/developers/docs/resources/channel#list-private-archived-threads
- * https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads
+ * https://docs.discord.com/developers/resources/channel#list-public-archived-threads
+ * https://docs.discord.com/developers/resources/channel#list-private-archived-threads
+ * https://docs.discord.com/developers/resources/channel#list-joined-private-archived-threads
  */
 export interface DiscordListArchivedThreads {
   /** The archived threads */

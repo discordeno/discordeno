@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/resources/guild-template */
+/** Types for: https://docs.discord.com/developers/resources/guild-template */
 
-/** https://discord.com/developers/docs/resources/guild-template#create-guild-template-json-params */
+/** https://docs.discord.com/developers/resources/guild-template#create-guild-template-json-params */
 export interface CreateTemplate {
   /** Name which the template should have */
   name: string;
@@ -8,7 +8,7 @@ export interface CreateTemplate {
   description?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild-template#modify-guild-template-json-params */
+/** https://docs.discord.com/developers/resources/guild-template#modify-guild-template-json-params */
 export interface ModifyGuildTemplate {
   /** Name of the template (1-100 characters) */
   name?: string;

@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/user */
+/** Types for: https://docs.discord.com/developers/resources/user */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/user#get-current-user-guilds-query-string-params */
+/** https://docs.discord.com/developers/resources/user#get-current-user-guilds-query-string-params */
 export interface GetUserGuilds {
   /** Get guilds before this guild ID */
   before?: BigString;
@@ -14,7 +14,7 @@ export interface GetUserGuilds {
   withCounts?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/user#create-group-dm-json-params */
+/** https://docs.discord.com/developers/resources/user#create-group-dm-json-params */
 export interface CreateGroupDmOptions {
   /** Access tokens of users that have granted your app the `gdm.join` scope */
   accessTokens: string[];

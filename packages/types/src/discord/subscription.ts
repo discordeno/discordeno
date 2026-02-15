@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/resources/subscription */
+/** Types for: https://docs.discord.com/developers/resources/subscription */
 
-/** https://discord.com/developers/docs/resources/subscription#subscription-object */
+/** https://docs.discord.com/developers/resources/subscription#subscription-object */
 export interface DiscordSubscription {
   /** ID of the subscription */
   id: string;
@@ -24,7 +24,7 @@ export interface DiscordSubscription {
   country?: string;
 }
 
-/** https://discord.com/developers/docs/resources/subscription#subscription-statuses */
+/** https://docs.discord.com/developers/resources/subscription#subscription-statuses */
 export enum DiscordSubscriptionStatus {
   /** Subscription is active and scheduled to renew. */
   Active,

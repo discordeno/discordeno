@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/guild */
+/** Types for: https://docs.discord.com/developers/resources/guild */
 
 import type { DiscordChannel, DiscordThreadMember } from './channel.js';
 import type { DiscordEmoji } from './emoji.js';
@@ -9,7 +9,7 @@ import type { DiscordRole } from './permissions.js';
 import type { DiscordSticker } from './sticker.js';
 import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-guild-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-object-guild-structure */
 export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   /** Guild id */
   id: string;
@@ -116,7 +116,7 @@ export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   incidents_data: DiscordIncidentsData | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
+/** https://docs.discord.com/developers/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
   /** Members will receive notifications for all messages by default */
   AllMessages,
@@ -124,7 +124,7 @@ export enum DefaultMessageNotificationLevels {
   OnlyMentions,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level */
+/** https://docs.discord.com/developers/resources/guild#guild-object-explicit-content-filter-level */
 export enum ExplicitContentFilterLevels {
   /** Media content will not be scanned */
   Disabled,
@@ -134,7 +134,7 @@ export enum ExplicitContentFilterLevels {
   AllMembers,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
+/** https://docs.discord.com/developers/resources/guild#guild-object-mfa-level */
 export enum MfaLevels {
   /** Guild has no MFA/2FA requirement for moderation actions */
   None,
@@ -142,7 +142,7 @@ export enum MfaLevels {
   Elevated,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
+/** https://docs.discord.com/developers/resources/guild#guild-object-verification-level */
 export enum VerificationLevels {
   /** Unrestricted */
   None,
@@ -156,7 +156,7 @@ export enum VerificationLevels {
   VeryHigh,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level */
+/** https://docs.discord.com/developers/resources/guild#guild-object-guild-nsfw-level */
 export enum GuildNsfwLevel {
   Default,
   Explicit,
@@ -164,7 +164,7 @@ export enum GuildNsfwLevel {
   AgeRestricted,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-premium-tier */
+/** https://docs.discord.com/developers/resources/guild#guild-object-premium-tier */
 export enum PremiumTiers {
   /** Guild has not unlocked any Server Boost perks */
   None,
@@ -176,7 +176,7 @@ export enum PremiumTiers {
   Tier3,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags */
+/** https://docs.discord.com/developers/resources/guild#guild-object-system-channel-flags */
 export enum SystemChannelFlags {
   /** Suppress member join notifications */
   SuppressJoinNotifications = 1 << 0,
@@ -192,7 +192,7 @@ export enum SystemChannelFlags {
   SuppressRoleSubscriptionPurchaseNotificationReplies = 1 << 5,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
+/** https://docs.discord.com/developers/resources/guild#guild-object-guild-features */
 export enum GuildFeatures {
   /** Guild has access to set an animated guild banner image */
   AnimatedBanner = 'ANIMATED_BANNER',
@@ -235,7 +235,7 @@ export enum GuildFeatures {
   InvitesDisabled = 'INVITES_DISABLED',
   /** Guild has access to set an invite splash background */
   InviteSplash = 'INVITE_SPLASH',
-  /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
+  /** Guild has enabled [Membership Screening](https://docs.discord.com/developers/resources/guild#membership-screening-object) */
   MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
   /** Guild has increased custom soundboard sound slots. */
   MoreSoundboard = 'MORE_SOUNDBOARD',
@@ -280,10 +280,10 @@ export enum GuildFeatures {
   EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
 
-/** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
+/** https://docs.discord.com/developers/resources/guild#unavailable-guild-object */
 export interface DiscordUnavailableGuild extends Pick<DiscordGuild, 'id' | 'unavailable'> {}
 
-/** https://discord.com/developers/docs/resources/guild#guild-preview-object-guild-preview-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-preview-object-guild-preview-structure */
 export interface DiscordGuildPreview {
   /** Guild id */
   id: string;
@@ -309,7 +309,7 @@ export interface DiscordGuildPreview {
   stickers: DiscordSticker[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-widget-settings-object-guild-widget-settings-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-widget-settings-object-guild-widget-settings-structure */
 export interface DiscordGuildWidgetSettings {
   /** whether the widget is enabled */
   enabled: boolean;
@@ -317,7 +317,7 @@ export interface DiscordGuildWidgetSettings {
   channel_id: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-widget-object-guild-widget-structure */
 export interface DiscordGuildWidget {
   id: string;
   name: string;
@@ -327,7 +327,7 @@ export interface DiscordGuildWidget {
   presence_count: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-member-object-guild-member-structure */
 export interface DiscordMember {
   /** The user this guild member represents */
   user?: DiscordUser;
@@ -363,13 +363,13 @@ export interface DiscordMember {
   avatar_decoration_data?: DiscordAvatarDecorationData | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-member-object-guild-member-structure */
 export interface DiscordMemberWithUser extends DiscordMember {
   /** The user object for this member */
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags */
+/** https://docs.discord.com/developers/resources/guild#guild-member-object-guild-member-flags */
 export enum MemberFlags {
   /**
    * Member has left and rejoined the guild
@@ -438,7 +438,7 @@ export enum MemberFlags {
   AutomodQuarantinedGuildTag = 1 << 10,
 }
 
-/** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
+/** https://docs.discord.com/developers/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
   /** Integration Id */
   id: string;
@@ -474,13 +474,13 @@ export interface DiscordIntegration {
   scopes: OAuth2Scope[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
+/** https://docs.discord.com/developers/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,
   Kick,
 }
 
-/** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
+/** https://docs.discord.com/developers/resources/guild#integration-account-object-integration-account-structure */
 export interface DiscordIntegrationAccount {
   /** Id of the account */
   id: string;
@@ -488,7 +488,7 @@ export interface DiscordIntegrationAccount {
   name: string;
 }
 
-/** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
+/** https://docs.discord.com/developers/resources/guild#integration-application-object-integration-application-structure */
 export interface DiscordIntegrationApplication {
   /** The id of the app */
   id: string;
@@ -502,7 +502,7 @@ export interface DiscordIntegrationApplication {
   bot?: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/resources/guild#ban-object-ban-structure */
+/** https://docs.discord.com/developers/resources/guild#ban-object-ban-structure */
 export interface DiscordBan {
   /** The reason for the ban */
   reason: string | null;
@@ -510,7 +510,7 @@ export interface DiscordBan {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
+/** https://docs.discord.com/developers/resources/guild#welcome-screen-object-welcome-screen-structure */
 export interface DiscordWelcomeScreen {
   /** The server description shown in the welcome screen */
   description: string | null;
@@ -518,7 +518,7 @@ export interface DiscordWelcomeScreen {
   welcome_channels: DiscordWelcomeScreenChannel[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
+/** https://docs.discord.com/developers/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
 export interface DiscordWelcomeScreenChannel {
   /** The channel's id */
   channel_id: string;
@@ -530,7 +530,7 @@ export interface DiscordWelcomeScreenChannel {
   emoji_name: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-guild-onboarding-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-onboarding-object-guild-onboarding-structure */
 export interface DiscordGuildOnboarding {
   /** ID of the guild this onboarding is part of */
   guild_id: string;
@@ -544,7 +544,7 @@ export interface DiscordGuildOnboarding {
   mode: DiscordGuildOnboardingMode;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-onboarding-object-onboarding-prompt-structure */
 export interface DiscordGuildOnboardingPrompt {
   /** ID of the prompt */
   id: string;
@@ -562,7 +562,7 @@ export interface DiscordGuildOnboardingPrompt {
   in_onboarding: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure */
+/** https://docs.discord.com/developers/resources/guild#guild-onboarding-object-prompt-option-structure */
 export interface DiscordGuildOnboardingPromptOption {
   /** ID of the prompt option */
   id: string;
@@ -604,7 +604,7 @@ export interface DiscordGuildOnboardingPromptOption {
   description: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode */
+/** https://docs.discord.com/developers/resources/guild#guild-onboarding-object-onboarding-mode */
 export enum DiscordGuildOnboardingMode {
   /** Counts only Default Channels towards constraints */
   OnboardingDefault,
@@ -612,13 +612,13 @@ export enum DiscordGuildOnboardingMode {
   OnboardingAdvanced,
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types */
+/** https://docs.discord.com/developers/resources/guild#guild-onboarding-object-prompt-types */
 export enum DiscordGuildOnboardingPromptType {
   MultipleChoice,
   DropDown,
 }
 
-/** https://discord.com/developers/docs/resources/guild#incidents-data-object-incidents-data-structure */
+/** https://docs.discord.com/developers/resources/guild#incidents-data-object-incidents-data-structure */
 export interface DiscordIncidentsData {
   /** When invites get enabled again */
   invites_disabled_until: string | null;
@@ -630,7 +630,7 @@ export interface DiscordIncidentsData {
   raid_detected_at?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#list-active-guild-threads-response-body */
+/** https://docs.discord.com/developers/resources/guild#list-active-guild-threads-response-body */
 export interface DiscordListActiveThreads {
   /** The active threads */
   threads: DiscordChannel[];
@@ -638,7 +638,7 @@ export interface DiscordListActiveThreads {
   members: DiscordThreadMember[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban-bulk-ban-response */
+/** https://docs.discord.com/developers/resources/guild#bulk-guild-ban-bulk-ban-response */
 export interface DiscordBulkBan {
   /** list of user ids, that were successfully banned */
   banned_users: string[];
@@ -646,12 +646,12 @@ export interface DiscordBulkBan {
   failed_users: string[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
+/** https://docs.discord.com/developers/resources/guild#get-guild-prune-count */
 export interface DiscordPrunedCount {
   pruned: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-vanity-url */
+/** https://docs.discord.com/developers/resources/guild#get-guild-vanity-url */
 // TODO: This should provably have another name for clarity to what it really rappresent
 export interface DiscordVanityUrl extends Partial<Omit<DiscordInvite, 'code'>> {
   code: string | null;

@@ -60,7 +60,7 @@ export interface CreateOAuth2LinkOptions {
    * The type of response
    *
    * @remarks
-   * Should be defined only if using either OAuth2 authorization, implicit or not, or [advanced bot authorization](https://discord.com/developers/docs/topics/oauth2#advanced-bot-authorization)
+   * Should be defined only if using either OAuth2 authorization, implicit or not, or [advanced bot authorization](https://docs.discord.com/developers/topics/oauth2#advanced-bot-authorization)
    */
   responseType?: 'code' | 'token';
   /** The id of the application */
@@ -70,14 +70,14 @@ export interface CreateOAuth2LinkOptions {
   /**
    * The optional state for security
    *
-   * @see https://discord.com/developers/docs/topics/oauth2#state-and-security
+   * @see https://docs.discord.com/developers/topics/oauth2#state-and-security
    */
   state?: string;
   /**
    * The redirect uri for after the authentication
    *
    * @remarks
-   * Should be defined only if using either OAuth2 authorization, implicit or not, or [advanced bot authorization](https://discord.com/developers/docs/topics/oauth2#advanced-bot-authorization)
+   * Should be defined only if using either OAuth2 authorization, implicit or not, or [advanced bot authorization](https://docs.discord.com/developers/topics/oauth2#advanced-bot-authorization)
    */
   redirectUri?: string;
   /**
@@ -92,21 +92,21 @@ export interface CreateOAuth2LinkOptions {
    * The permissions of the invited bot
    *
    * @remarks
-   * Should be defined only in a [bot authorization flow](https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow) or with [advanced bot authorization](https://discord.com/developers/docs/topics/oauth2#advanced-bot-authorization)
+   * Should be defined only in a [bot authorization flow](https://docs.discord.com/developers/topics/oauth2#bot-authorization-flow) or with [advanced bot authorization](https://docs.discord.com/developers/topics/oauth2#advanced-bot-authorization)
    */
   permissions?: BigString | PermissionStrings[];
   /**
    * Pre-fills the dropdown picker with a guild for the user
    *
    * @remarks
-   * Should be defined only in a [bot authorization flow](https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow) or with [advanced bot authorization](https://discord.com/developers/docs/topics/oauth2#advanced-bot-authorization) or with the `webhook.incoming` scope
+   * Should be defined only in a [bot authorization flow](https://docs.discord.com/developers/topics/oauth2#bot-authorization-flow) or with [advanced bot authorization](https://docs.discord.com/developers/topics/oauth2#advanced-bot-authorization) or with the `webhook.incoming` scope
    */
   guildId?: BigString;
   /**
    * Disallows the user from changing the guild dropdown if set to true
    *
    * @remarks
-   * Should be defined only in a [bot authorization flow](https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow), with [advanced bot authorization](https://discord.com/developers/docs/topics/oauth2#advanced-bot-authorization) or with the `webhook.incoming` scope
+   * Should be defined only in a [bot authorization flow](https://docs.discord.com/developers/topics/oauth2#bot-authorization-flow), with [advanced bot authorization](https://docs.discord.com/developers/topics/oauth2#advanced-bot-authorization) or with the `webhook.incoming` scope
    */
   disableGuildSelect?: boolean;
   /**

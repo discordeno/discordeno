@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/message */
+/** Types for: https://docs.discord.com/developers/resources/message */
 
 import type { DiscordApplication } from './application.js';
 import type { DiscordChannel, DiscordThreadMember } from './channel.js';
@@ -15,7 +15,7 @@ import type { DiscordPoll } from './poll.js';
 import type { DiscordSticker, DiscordStickerItem } from './sticker.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/resources/message#message-object-message-structure */
+/** https://docs.discord.com/developers/resources/message#message-object-message-structure */
 export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   /** id of the message */
   id: string;
@@ -113,7 +113,7 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   call?: DiscordMessageCall;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-object-message-types */
+/** https://docs.discord.com/developers/resources/message#message-object-message-types */
 export enum MessageTypes {
   Default,
   RecipientAdd,
@@ -154,7 +154,7 @@ export enum MessageTypes {
   PollResult = 46,
 }
 
-/** https://discord.com/developers/docs/resources/message#message-object-message-activity-structure */
+/** https://docs.discord.com/developers/resources/message#message-object-message-activity-structure */
 export interface DiscordMessageActivity {
   /** Type of message activity */
   type: MessageActivityTypes;
@@ -162,7 +162,7 @@ export interface DiscordMessageActivity {
   party_id?: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-object-message-activity-types */
+/** https://docs.discord.com/developers/resources/message#message-object-message-activity-types */
 export enum MessageActivityTypes {
   Join = 1,
   Spectate = 2,
@@ -170,7 +170,7 @@ export enum MessageActivityTypes {
   JoinRequest = 5,
 }
 
-/** https://discord.com/developers/docs/resources/message#message-object-message-flags */
+/** https://docs.discord.com/developers/resources/message#message-object-message-flags */
 export enum MessageFlags {
   /** This message has been published to subscribed channels (via Channel Following) */
   Crossposted = 1 << 0,
@@ -205,13 +205,13 @@ export enum MessageFlags {
   IsComponentsV2 = 1 << 15,
 }
 
-/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object */
+/** https://docs.discord.com/developers/resources/message#message-interaction-metadata-object */
 export type DiscordMessageInteractionMetadata =
   | DiscordApplicationCommandInteractionMetadata
   | DiscordMessageComponentInteractionMetadata
   | DiscordModalSubmitInteractionMetadata;
 
-/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-application-command-interaction-metadata-structure */
+/** https://docs.discord.com/developers/resources/message#message-interaction-metadata-object-application-command-interaction-metadata-structure */
 export interface DiscordApplicationCommandInteractionMetadata {
   /** Id of the interaction */
   id: string;
@@ -229,7 +229,7 @@ export interface DiscordApplicationCommandInteractionMetadata {
   target_message_id?: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-message-component-interaction-metadata-structure */
+/** https://docs.discord.com/developers/resources/message#message-interaction-metadata-object-message-component-interaction-metadata-structure */
 export interface DiscordMessageComponentInteractionMetadata {
   /** Id of the interaction */
   id: string;
@@ -245,7 +245,7 @@ export interface DiscordMessageComponentInteractionMetadata {
   interacted_message_id: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-modal-submit-interaction-metadata-structure */
+/** https://docs.discord.com/developers/resources/message#message-interaction-metadata-object-modal-submit-interaction-metadata-structure */
 export interface DiscordModalSubmitInteractionMetadata {
   /** Id of the interaction */
   id: string;
@@ -261,7 +261,7 @@ export interface DiscordModalSubmitInteractionMetadata {
   triggering_interaction_metadata: DiscordApplicationCommandInteractionMetadata | DiscordMessageComponentInteractionMetadata;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-call-object-message-call-object-structure */
+/** https://docs.discord.com/developers/resources/message#message-call-object-message-call-object-structure */
 export interface DiscordMessageCall {
   /** Array of user object ids that participated in the call */
   participants: string[];
@@ -269,7 +269,7 @@ export interface DiscordMessageCall {
   ended_timestamp?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-reference-structure */
+/** https://docs.discord.com/developers/resources/message#message-reference-structure */
 export interface DiscordMessageReference {
   /** Type of reference */
   type?: DiscordMessageReferenceType;
@@ -286,7 +286,7 @@ export interface DiscordMessageReference {
   fail_if_not_exists?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-reference-types */
+/** https://docs.discord.com/developers/resources/message#message-reference-types */
 export enum DiscordMessageReferenceType {
   /**
    * A standard reference used by replies.
@@ -308,7 +308,7 @@ export enum DiscordMessageReferenceType {
   Forward,
 }
 
-/** https://discord.com/developers/docs/resources/message#message-snapshot-structure */
+/** https://docs.discord.com/developers/resources/message#message-snapshot-structure */
 export interface DiscordMessageSnapshot {
   /** Minimal subset of fields in the forwarded message */
   message: Pick<
@@ -328,7 +328,7 @@ export interface DiscordMessageSnapshot {
   >;
 }
 
-/** https://discord.com/developers/docs/resources/message#reaction-object-reaction-structure */
+/** https://docs.discord.com/developers/resources/message#reaction-object-reaction-structure */
 export interface DiscordReaction {
   /** Total number of times this emoji has been used to react (including super reacts) */
   count: number;
@@ -344,7 +344,7 @@ export interface DiscordReaction {
   burst_colors: string[];
 }
 
-/** https://discord.com/developers/docs/resources/message#reaction-count-details-object-reaction-count-details-structure */
+/** https://docs.discord.com/developers/resources/message#reaction-count-details-object-reaction-count-details-structure */
 export interface DiscordReactionCountDetails {
   /** Count of super reactions */
   burst: number;
@@ -352,7 +352,7 @@ export interface DiscordReactionCountDetails {
   normal: number;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-structure */
 export interface DiscordEmbed {
   /** Title of embed */
   title?: string;
@@ -382,10 +382,10 @@ export interface DiscordEmbed {
   fields?: DiscordEmbedField[];
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-types */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-types */
 export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result';
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-thumbnail-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-thumbnail-structure */
 export interface DiscordEmbedThumbnail {
   /** Source url of thumbnail (only supports http(s) and attachments) */
   url: string;
@@ -397,7 +397,7 @@ export interface DiscordEmbedThumbnail {
   width?: number;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-video-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-video-structure */
 export interface DiscordEmbedVideo {
   /** Source url of video */
   url?: string;
@@ -409,7 +409,7 @@ export interface DiscordEmbedVideo {
   width?: number;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-image-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-image-structure */
 export interface DiscordEmbedImage {
   /** Source url of image (only supports http(s) and attachments) */
   url: string;
@@ -421,7 +421,7 @@ export interface DiscordEmbedImage {
   width?: number;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-provider-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-provider-structure */
 export interface DiscordEmbedProvider {
   /** Name of provider */
   name?: string;
@@ -429,7 +429,7 @@ export interface DiscordEmbedProvider {
   url?: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-author-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-author-structure */
 export interface DiscordEmbedAuthor {
   /** Name of author */
   name: string;
@@ -441,7 +441,7 @@ export interface DiscordEmbedAuthor {
   proxy_icon_url?: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-footer-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-footer-structure */
 export interface DiscordEmbedFooter {
   /** Footer text */
   text: string;
@@ -451,7 +451,7 @@ export interface DiscordEmbedFooter {
   proxy_icon_url?: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#embed-object-embed-field-structure */
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-field-structure */
 export interface DiscordEmbedField {
   /** Name of the field */
   name: string;
@@ -461,7 +461,7 @@ export interface DiscordEmbedField {
   inline?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/message#attachment-object-attachment-structure */
+/** https://docs.discord.com/developers/resources/message#attachment-object-attachment-structure */
 export interface DiscordAttachment {
   /** Attachment id */
   id: string;
@@ -493,14 +493,14 @@ export interface DiscordAttachment {
   flags?: AttachmentFlags;
 }
 
-/** https://discord.com/developers/docs/resources/message#attachment-object-attachment-flags */
+/** https://docs.discord.com/developers/resources/message#attachment-object-attachment-flags */
 export enum AttachmentFlags {
   None,
   /** This attachment has been edited using the remix feature on mobile */
   IsRemix = 1 << 2,
 }
 
-/** https://discord.com/developers/docs/resources/message#channel-mention-object-channel-mention-structure */
+/** https://docs.discord.com/developers/resources/message#channel-mention-object-channel-mention-structure */
 export interface DiscordChannelMention {
   /** id of the channel */
   id: string;
@@ -512,7 +512,7 @@ export interface DiscordChannelMention {
   name: string;
 }
 
-/** https://discord.com/developers/docs/resources/message#allowed-mentions-object-allowed-mention-types */
+/** https://docs.discord.com/developers/resources/message#allowed-mentions-object-allowed-mention-types */
 export enum AllowedMentionsTypes {
   /** Controls role mentions */
   RoleMentions = 'roles',
@@ -522,7 +522,7 @@ export enum AllowedMentionsTypes {
   EveryoneMentions = 'everyone',
 }
 
-/** https://discord.com/developers/docs/resources/message#allowed-mentions-object-allowed-mentions-structure */
+/** https://docs.discord.com/developers/resources/message#allowed-mentions-object-allowed-mentions-structure */
 export interface DiscordAllowedMentions {
   /** An array of allowed mention types to parse from the content. */
   parse?: AllowedMentionsTypes[];
@@ -534,7 +534,7 @@ export interface DiscordAllowedMentions {
   replied_user?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/message#role-subscription-data-object-role-subscription-data-object-structure */
+/** https://docs.discord.com/developers/resources/message#role-subscription-data-object-role-subscription-data-object-structure */
 export interface DiscordRoleSubscriptionData {
   /** the id of the sku and listing that the user is subscribed to */
   role_subscription_listing_id: string;
@@ -546,7 +546,7 @@ export interface DiscordRoleSubscriptionData {
   is_renewal: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/message#message-pin-object-message-pin-object-struture */
+/** https://docs.discord.com/developers/resources/message#message-pin-object-message-pin-object-struture */
 export interface DiscordMessagePin {
   /** the time the message was pinned */
   pinned_at: string;
@@ -554,13 +554,13 @@ export interface DiscordMessagePin {
   message: DiscordMessage;
 }
 
-/** https://discord.com/developers/docs/resources/message#get-reactions-reaction-types */
+/** https://docs.discord.com/developers/resources/message#get-reactions-reaction-types */
 export enum DiscordReactionType {
   Normal,
   Burst,
 }
 
-/** https://discord.com/developers/docs/resources/message#get-channel-pins-response-structure */
+/** https://docs.discord.com/developers/resources/message#get-channel-pins-response-structure */
 export interface DiscordGetChannelPins {
   items: DiscordMessagePin[];
   has_more: boolean;

@@ -1,9 +1,9 @@
-/** Types for: https://discord.com/developers/docs/resources/lobby */
+/** Types for: https://docs.discord.com/developers/resources/lobby */
 
 import type { DiscordLobbyMemberFlags } from '../discord/lobby.js';
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/lobby#create-lobby */
+/** https://docs.discord.com/developers/resources/lobby#create-lobby */
 export interface CreateLobby {
   /** Optional dictionary of string key/value pairs. The max total length is 1000. */
   metadata?: Record<string, string> | null;
@@ -13,7 +13,7 @@ export interface CreateLobby {
   idleTimeoutSeconds?: number;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#create-lobby */
+/** https://docs.discord.com/developers/resources/lobby#create-lobby */
 export interface CreateLobbyMember {
   /** Discord user id of the user to add to the lobby */
   id: BigString;
@@ -27,7 +27,7 @@ export interface CreateLobbyMember {
   flags?: number;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#add-a-member-to-a-lobby */
+/** https://docs.discord.com/developers/resources/lobby#add-a-member-to-a-lobby */
 export interface ModifyLobby {
   /** Optional dictionary of string key/value pairs. The max total length is 1000. Overwrites any existing metadata. */
   metadata?: Record<string, string> | null;
@@ -37,7 +37,7 @@ export interface ModifyLobby {
   idleTimeoutSeconds?: number;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#add-a-member-to-a-lobby */
+/** https://docs.discord.com/developers/resources/lobby#add-a-member-to-a-lobby */
 export interface AddLobbyMember {
   /** Optional dictionary of string key/value pairs. The max total length is 1000. */
   metadata?: Record<string, string> | null;
@@ -45,7 +45,7 @@ export interface AddLobbyMember {
   flags?: number;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#link-channel-to-lobby */
+/** https://docs.discord.com/developers/resources/lobby#link-channel-to-lobby */
 export interface LinkChannelToLobby {
   /** The id of the channel to link to the lobby. If not provided, will unlink any currently linked channels from the lobby. */
   channelId?: BigString;

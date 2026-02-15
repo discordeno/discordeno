@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/topics/permissions */
+/** Types for: https://docs.discord.com/developers/topics/permissions */
 
-/** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
+/** https://docs.discord.com/developers/topics/permissions#permissions-bitwise-permission-flags */
 export const BitwisePermissionFlags = {
   /** Allows creation of instant invites */
   CREATE_INSTANT_INVITE: 1n << 0n,
@@ -106,10 +106,10 @@ export const BitwisePermissionFlags = {
   BYPASS_SLOWMODE: 1n << 52n,
 } as const;
 
-/** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
+/** https://docs.discord.com/developers/topics/permissions#permissions-bitwise-permission-flags */
 export type PermissionStrings = keyof typeof BitwisePermissionFlags;
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
+/** https://docs.discord.com/developers/topics/permissions#role-object-role-structure */
 export interface DiscordRole {
   /** Role id */
   id: string;
@@ -142,7 +142,7 @@ export interface DiscordRole {
   flags: RoleFlags;
 }
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
+/** https://docs.discord.com/developers/topics/permissions#role-object-role-tags-structure */
 export interface DiscordRoleTags {
   /** The id of the bot this role belongs to */
   bot_id?: string;
@@ -158,7 +158,7 @@ export interface DiscordRoleTags {
   guild_connections?: null;
 }
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
+/** https://docs.discord.com/developers/topics/permissions#role-object-role-colors-object */
 export interface DiscordRoleColors {
   /** The primary color for the role */
   primary_color: number;
@@ -168,7 +168,7 @@ export interface DiscordRoleColors {
   tertiary_color: number | null;
 }
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
+/** https://docs.discord.com/developers/topics/permissions#role-object-role-flags */
 export enum RoleFlags {
   None,
   /** Role can be selected by members in an onboarding prompt */

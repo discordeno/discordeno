@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/topics/permissions */
+/** Types for: https://docs.discord.com/developers/topics/permissions */
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-colors-object */
+/** https://docs.discord.com/developers/topics/permissions#role-object-role-colors-object */
 export interface GuildRoleColors {
   /** The primary color for the role */
   primaryColor: number;

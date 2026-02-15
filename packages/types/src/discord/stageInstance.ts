@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/resources/stage-instance */
+/** Types for: https://docs.discord.com/developers/resources/stage-instance */
 
-/** https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-stage-instance-structure */
+/** https://docs.discord.com/developers/resources/stage-instance#stage-instance-object-stage-instance-structure */
 export interface DiscordStageInstance {
   /** The id of this Stage instance */
   id: string;
@@ -21,7 +21,7 @@ export interface DiscordStageInstance {
   guild_scheduled_event_id: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level */
+/** https://docs.discord.com/developers/resources/stage-instance#stage-instance-object-privacy-level */
 export enum DiscordStageInstancePrivacyLevel {
   Public = 1,
   GuildOnly = 2,

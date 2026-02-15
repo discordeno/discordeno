@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/webhook */
+/** Types for: https://docs.discord.com/developers/resources/webhook */
 
 import type { DiscordAttachment, DiscordEmbed } from '../discord/message.js';
 import type { BigString, Camelize } from '../shared.js';
@@ -7,7 +7,7 @@ import type { AllowedMentions } from './message.js';
 import type { CreatePoll } from './poll.js';
 import type { FileContent } from './reference.js';
 
-/** https://discord.com/developers/docs/resources/webhook#create-webhook-json-params */
+/** https://docs.discord.com/developers/resources/webhook#create-webhook-json-params */
 export interface CreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string;
@@ -15,7 +15,7 @@ export interface CreateWebhook {
   avatar?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/webhook#modify-webhook-json-params */
+/** https://docs.discord.com/developers/resources/webhook#modify-webhook-json-params */
 export interface ModifyWebhook {
   /** The default name of the webhook */
   name?: string;
@@ -25,7 +25,7 @@ export interface ModifyWebhook {
   channelId?: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/webhook#execute-webhook */
+/** https://docs.discord.com/developers/resources/webhook#execute-webhook */
 export interface ExecuteWebhook {
   // Query Parameters
 
@@ -81,13 +81,13 @@ export interface ExecuteWebhook {
   poll?: CreatePoll;
 }
 
-/** https://discord.com/developers/docs/resources/webhook#get-webhook-message-query-string-params */
+/** https://docs.discord.com/developers/resources/webhook#get-webhook-message-query-string-params */
 export interface GetWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/webhook#edit-webhook-message */
+/** https://docs.discord.com/developers/resources/webhook#edit-webhook-message */
 export interface EditWebhookMessageOptions {
   // Query parameters
   /** Id of the thread the message is in */
@@ -135,7 +135,7 @@ export interface EditWebhookMessageOptions {
   poll?: CreatePoll;
 }
 
-/** https://discord.com/developers/docs/resources/webhook#delete-webhook-message-query-string-params */
+/** https://docs.discord.com/developers/resources/webhook#delete-webhook-message-query-string-params */
 export interface DeleteWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString;
