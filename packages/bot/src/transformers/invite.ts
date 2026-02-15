@@ -35,6 +35,7 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate | Discord
       invite.expiresAt = Date.parse(payload.expires_at);
     }
     if (props.flags && payload.flags) invite.flags = new ToggleBitfield(payload.flags);
+    // @ts-expect-error TODO: Partials
     if (props.roles && payload.roles) invite.roles = payload.roles.map((role) => bot.transformers.role(bot, role));
   } else {
     if (props.channelId && payload.channel_id) invite.channelId = bot.transformers.snowflake(payload.channel_id);

@@ -6,5 +6,6 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, 
 
   const payload = data.d as DiscordInviteCreate;
 
+  // TODO: Add role_ids, the transformer should be kept for the Invite type, not for the gateway event
   bot.events.inviteCreate(bot.transformers.invite(bot, payload, { shardId }));
 }

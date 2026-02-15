@@ -815,17 +815,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason });
       }
 
-      // When we have to upload a file, we need to use FormData, and each field has to be appended individually
+      // When we have to upload a file, we need to use FormData, and all other fields need to be part of the payload_json field.
       const form = new FormData();
 
-      for (const [key, value] of Object.entries(body)) {
-        if (key !== 'targetUsersFile' && key !== 'roleIds') {
-          form.append(camelToSnakeCase(key), rest.changeToDiscordFormat(value).toString());
-        }
-      }
-
+      form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...body, targetUsersFile: undefined })));
       form.append('target_users_file', body.targetUsersFile);
-      if (body.roleIds) form.append('role_ids', body.roleIds.map((x) => x.toString()).join(','));
 
       return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason });
     },

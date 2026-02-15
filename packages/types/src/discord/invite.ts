@@ -42,7 +42,7 @@ export interface DiscordInvite {
   /**
    * The roles assigned to the user upon accepting the invite
    */
-  roles?: DiscordRole[];
+  roles?: Pick<DiscordRole, 'id' | 'name' | 'position' | 'color' | 'colors' | 'icon' | 'unicode_emoji'>[];
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-object-invite-types */
