@@ -1,11 +1,11 @@
-/** Types for: https://discord.com/developers/docs/components/reference */
+/** Types for: https://docs.discord.com/developers/components/reference */
 
 import type { Require } from '../shared.js';
 import type { ChannelTypes } from './channel.js';
 import type { DiscordEmoji } from './emoji.js';
 import type { DiscordInteractionDataResolved } from './interactions.js';
 
-/** https://discord.com/developers/docs/components/reference#component-object-component-types */
+/** https://docs.discord.com/developers/components/reference#component-object-component-types */
 export enum MessageComponentTypes {
   /** A container for other components */
   ActionRow = 1,
@@ -71,7 +71,7 @@ export type DiscordMessageComponentFromMessageComponentInteractionResponse =
   | DiscordChannelSelectInteractionResponseFromMessageComponent
   | DiscordMentionableSelectInteractionResponseFromMessageComponent;
 
-/** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
+/** https://docs.discord.com/developers/components/reference#anatomy-of-a-component */
 export interface DiscordBaseComponent {
   /** The type of the component */
   type: MessageComponentTypes;
@@ -79,7 +79,7 @@ export interface DiscordBaseComponent {
   id?: number;
 }
 
-/** https://discord.com/developers/docs/components/reference#action-row-action-row-structure */
+/** https://docs.discord.com/developers/components/reference#action-row-action-row-structure */
 export interface DiscordActionRow extends DiscordBaseComponent {
   type: MessageComponentTypes.ActionRow;
 
@@ -95,7 +95,7 @@ export interface DiscordActionRow extends DiscordBaseComponent {
   components: (DiscordButtonComponent | DiscordSelectMenuComponent | DiscordTextInputComponent)[];
 }
 
-/** https://discord.com/developers/docs/components/reference#button-button-structure */
+/** https://docs.discord.com/developers/components/reference#button-button-structure */
 export interface DiscordButtonComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Button;
 
@@ -143,7 +143,7 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#button-button-styles */
+/** https://docs.discord.com/developers/components/reference#button-button-styles */
 export enum ButtonStyles {
   /** A blurple button */
   Primary = 1,
@@ -160,11 +160,11 @@ export enum ButtonStyles {
 }
 
 /**
- * https://discord.com/developers/docs/components/reference#string-select
- * https://discord.com/developers/docs/components/reference#user-select
- * https://discord.com/developers/docs/components/reference#role-select
- * https://discord.com/developers/docs/components/reference#mentionable-select
- * https://discord.com/developers/docs/components/reference#channel-select
+ * https://docs.discord.com/developers/components/reference#string-select
+ * https://docs.discord.com/developers/components/reference#user-select
+ * https://docs.discord.com/developers/components/reference#role-select
+ * https://docs.discord.com/developers/components/reference#mentionable-select
+ * https://docs.discord.com/developers/components/reference#channel-select
  */
 export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
   type:
@@ -213,7 +213,7 @@ export interface DiscordSelectMenuComponent extends DiscordBaseComponent {
   channel_types?: ChannelTypes[];
 }
 
-/** https://discord.com/developers/docs/components/reference#string-select-select-option-structure */
+/** https://docs.discord.com/developers/components/reference#string-select-select-option-structure */
 export interface DiscordSelectOption {
   /** The user-facing name of the option. Maximum 25 characters. */
   label: string;
@@ -227,7 +227,7 @@ export interface DiscordSelectOption {
   default?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#string-select-strings-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#string-select-strings-select-interaction-response-structure */
 export interface DiscordStringSelectInteractionResponse {
   /**
    * @remarks
@@ -247,15 +247,15 @@ export interface DiscordStringSelectInteractionResponse {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/components/reference#string-select-string-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#string-select-string-select-interaction-response-structure */
 export type DiscordStringSelectInteractionResponseFromModal = Require<Omit<DiscordStringSelectInteractionResponse, 'component_type'>, 'type'>;
-/** https://discord.com/developers/docs/components/reference#string-select-string-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#string-select-string-select-interaction-response-structure */
 export type DiscordStringSelectInteractionResponseFromMessageComponent = Require<
   Omit<DiscordStringSelectInteractionResponse, 'type'>,
   'component_type'
 >;
 
-/** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
+/** https://docs.discord.com/developers/components/reference#text-input-text-input-structure */
 export interface DiscordTextInputComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.TextInput;
 
@@ -284,7 +284,7 @@ export interface DiscordTextInputComponent extends DiscordBaseComponent {
   placeholder?: string;
 }
 
-/** https://discord.com/developers/docs/components/reference#text-input-text-input-styles */
+/** https://docs.discord.com/developers/components/reference#text-input-text-input-styles */
 export enum TextStyles {
   /** Intended for short single-line text */
   Short = 1,
@@ -292,7 +292,7 @@ export enum TextStyles {
   Paragraph = 2,
 }
 
-/** https://discord.com/developers/docs/components/reference#text-input-text-input-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#text-input-text-input-interaction-response-structure */
 export interface DiscordTextInputInteractionResponse {
   type: MessageComponentTypes.TextInput;
   /** 32 bit integer used as an optional identifier for component */
@@ -303,7 +303,7 @@ export interface DiscordTextInputInteractionResponse {
   value: string;
 }
 
-/** https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure */
+/** https://docs.discord.com/developers/components/reference#user-select-select-default-value-structure */
 export interface DiscordSelectMenuDefaultValue {
   /** ID of a user, role, or channel */
   id: string;
@@ -311,7 +311,7 @@ export interface DiscordSelectMenuDefaultValue {
   type: 'user' | 'role' | 'channel';
 }
 
-/** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#user-select-user-select-interaction-response-structure */
 export interface DiscordUserSelectInteractionResponse {
   /**
    * @remarks
@@ -333,12 +333,12 @@ export interface DiscordUserSelectInteractionResponse {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#user-select-user-select-interaction-response-structure */
 export type DiscordUserSelectInteractionResponseFromModal = Require<Omit<DiscordUserSelectInteractionResponse, 'component_type'>, 'type'>;
-/** https://discord.com/developers/docs/components/reference#user-select-user-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#user-select-user-select-interaction-response-structure */
 export type DiscordUserSelectInteractionResponseFromMessageComponent = Require<Omit<DiscordUserSelectInteractionResponse, 'type'>, 'component_type'>;
 
-/** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#role-select-role-select-interaction-response-structure */
 export interface DiscordRoleSelectInteractionResponse {
   /**
    * @remarks
@@ -360,12 +360,12 @@ export interface DiscordRoleSelectInteractionResponse {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#role-select-role-select-interaction-response-structure */
 export type DiscordRoleSelectInteractionResponseFromModal = Require<Omit<DiscordRoleSelectInteractionResponse, 'component_type'>, 'type'>;
-/** https://discord.com/developers/docs/components/reference#role-select-role-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#role-select-role-select-interaction-response-structure */
 export type DiscordRoleSelectInteractionResponseFromMessageComponent = Require<Omit<DiscordRoleSelectInteractionResponse, 'type'>, 'component_type'>;
 
-/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
 export interface DiscordMentionableSelectInteractionResponse {
   /**
    * @remarks
@@ -387,18 +387,18 @@ export interface DiscordMentionableSelectInteractionResponse {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
 export type DiscordMentionableSelectInteractionResponseFromModal = Require<
   Omit<DiscordMentionableSelectInteractionResponse, 'component_type'>,
   'type'
 >;
-/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#mentionable-select-mentionable-select-interaction-response-structure */
 export type DiscordMentionableSelectInteractionResponseFromMessageComponent = Require<
   Omit<DiscordMentionableSelectInteractionResponse, 'type'>,
   'component_type'
 >;
 
-/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#channel-select-channel-select-interaction-response-structure */
 export interface DiscordChannelSelectInteractionResponse {
   /**
    * @remarks
@@ -420,15 +420,15 @@ export interface DiscordChannelSelectInteractionResponse {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#channel-select-channel-select-interaction-response-structure */
 export type DiscordChannelSelectInteractionResponseFromModal = Require<Omit<DiscordChannelSelectInteractionResponse, 'component_type'>, 'type'>;
-/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#channel-select-channel-select-interaction-response-structure */
 export type DiscordChannelSelectInteractionResponseFromMessageComponent = Require<
   Omit<DiscordChannelSelectInteractionResponse, 'type'>,
   'component_type'
 >;
 
-/** https://discord.com/developers/docs/components/reference#section-section-structure */
+/** https://docs.discord.com/developers/components/reference#section-section-structure */
 export interface DiscordSectionComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Section;
 
@@ -438,7 +438,7 @@ export interface DiscordSectionComponent extends DiscordBaseComponent {
   accessory: DiscordButtonComponent | DiscordThumbnailComponent;
 }
 
-/** https://discord.com/developers/docs/components/reference#text-display-text-display-structure */
+/** https://docs.discord.com/developers/components/reference#text-display-text-display-structure */
 export interface DiscordTextDisplayComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.TextDisplay;
 
@@ -446,7 +446,7 @@ export interface DiscordTextDisplayComponent extends DiscordBaseComponent {
   content: string;
 }
 
-/** https://discord.com/developers/docs/components/reference#text-display-text-display-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#text-display-text-display-interaction-response-structure */
 export interface DiscordTextDisplayInteractionResponse {
   type: MessageComponentTypes.TextDisplay;
   /** 32 bit integer used as an optional identifier for component */
@@ -464,7 +464,7 @@ export interface DiscordThumbnailComponent extends DiscordBaseComponent {
   spoiler?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#media-gallery-media-gallery-structure */
+/** https://docs.discord.com/developers/components/reference#media-gallery-media-gallery-structure */
 export interface DiscordMediaGalleryComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.MediaGallery;
 
@@ -472,7 +472,7 @@ export interface DiscordMediaGalleryComponent extends DiscordBaseComponent {
   items: DiscordMediaGalleryItem[];
 }
 
-/** https://discord.com/developers/docs/components/reference#media-gallery-media-gallery-item-structure */
+/** https://docs.discord.com/developers/components/reference#media-gallery-media-gallery-item-structure */
 export interface DiscordMediaGalleryItem {
   /** A url or attachment */
   media: DiscordUnfurledMediaItem;
@@ -482,7 +482,7 @@ export interface DiscordMediaGalleryItem {
   spoiler?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#file-file-structure */
+/** https://docs.discord.com/developers/components/reference#file-file-structure */
 export interface DiscordFileComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.File;
 
@@ -496,7 +496,7 @@ export interface DiscordFileComponent extends DiscordBaseComponent {
   size: number;
 }
 
-/** https://discord.com/developers/docs/components/reference#separator-separator-structure */
+/** https://docs.discord.com/developers/components/reference#separator-separator-structure */
 export interface DiscordSeparatorComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Separator;
 
@@ -506,13 +506,13 @@ export interface DiscordSeparatorComponent extends DiscordBaseComponent {
   spacing?: SeparatorSpacingSize;
 }
 
-/** https://discord.com/developers/docs/components/reference#separator-separator-structure, spacing description */
+/** https://docs.discord.com/developers/components/reference#separator-separator-structure, spacing description */
 export enum SeparatorSpacingSize {
   Small = 1,
   Large = 2,
 }
 
-/** https://discord.com/developers/docs/components/reference#container-container-structure */
+/** https://docs.discord.com/developers/components/reference#container-container-structure */
 export interface DiscordContainerComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Container;
 
@@ -531,7 +531,7 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   spoiler?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#label-label-structure */
+/** https://docs.discord.com/developers/components/reference#label-label-structure */
 export interface DiscordLabelComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Label;
 
@@ -553,7 +553,7 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
   component: DiscordTextInputComponent | DiscordSelectMenuComponent | DiscordFileUploadComponent;
 }
 
-/** https://discord.com/developers/docs/components/reference#label-label-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#label-label-interaction-response-structure */
 export interface DiscordLabelInteractionResponse {
   type: MessageComponentTypes.Label;
   /** 32 bit integer used as an optional identifier for component */
@@ -569,7 +569,7 @@ export interface DiscordLabelInteractionResponse {
     | DiscordFileUploadInteractionResponse;
 }
 
-/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
+/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-structure */
 export interface DiscordFileUploadComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.FileUpload;
 
@@ -600,7 +600,7 @@ export interface DiscordFileUploadComponent extends DiscordBaseComponent {
   required?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-interaction-response-structure */
+/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-interaction-response-structure */
 export interface DiscordFileUploadInteractionResponse {
   type: MessageComponentTypes.FileUpload;
 
@@ -612,7 +612,7 @@ export interface DiscordFileUploadInteractionResponse {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/components/reference#unfurled-media-item-structure */
+/** https://docs.discord.com/developers/components/reference#unfurled-media-item-structure */
 export interface DiscordUnfurledMediaItem {
   /** Supports arbitrary urls and attachment://<filename> references */
   url: string;

@@ -25,7 +25,7 @@ export enum TransportCompression {
    * @remarks
    * Uses `node:zlib` to decompress the payloads
    *
-   * @see https://discord.com/developers/docs/topics/gateway#zlibstream
+   * @see https://docs.discord.com/developers/topics/gateway#zlibstream
    */
   zlib = 'zlib-stream',
   /**
@@ -36,7 +36,7 @@ export enum TransportCompression {
    *
    * `fzstd` is an optional dependency. You will need to install it to be able to use it.
    *
-   * @see https://discord.com/developers/docs/topics/gateway#zstdstream
+   * @see https://docs.discord.com/developers/topics/gateway#zstdstream
    */
   zstd = 'zstd-stream',
 }
@@ -50,7 +50,7 @@ export interface ShardGatewayConfig {
    *
    * @default false
    *
-   * @see https://discord.com/developers/docs/topics/gateway#payload-compression
+   * @see https://docs.discord.com/developers/topics/gateway#payload-compression
    */
   compress: boolean;
   /**
@@ -58,7 +58,7 @@ export interface ShardGatewayConfig {
    *
    * @default null
    *
-   * @see https://discord.com/developers/docs/topics/gateway#transport-compression
+   * @see https://docs.discord.com/developers/topics/gateway#transport-compression
    */
   transportCompression: TransportCompression | null;
   /** The calculated intent value of the events which the shard should receive.
@@ -177,7 +177,7 @@ export interface ShardSocketRequest {
   d: unknown;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#update-voice-state */
+/** https://docs.discord.com/developers/topics/gateway#update-voice-state */
 export interface UpdateVoiceState {
   /** id of the guild */
   guildId: string;

@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/application */
+/** Types for: https://docs.discord.com/developers/resources/application */
 
 import type { DiscordGuild } from './guild.js';
 import type { OAuth2Scope } from './oauth2.js';
@@ -6,7 +6,7 @@ import type { DiscordTeam } from './teams.js';
 import type { DiscordUser } from './user.js';
 import type { DiscordWebhookEventType } from './webhookEvents.js';
 
-/** https://discord.com/developers/docs/resources/application#application-object-application-structure */
+/** https://docs.discord.com/developers/resources/application#application-object-application-structure */
 export interface DiscordApplication {
   /** ID of the app */
   id: string;
@@ -74,7 +74,7 @@ export interface DiscordApplication {
   custom_install_url?: string;
 }
 
-/** https://discord.com/developers/docs/resources/application#application-object-application-integration-types */
+/** https://docs.discord.com/developers/resources/application#application-object-application-integration-types */
 export enum DiscordApplicationIntegrationType {
   /** App is installable to servers */
   GuildInstall = 0,
@@ -82,13 +82,13 @@ export enum DiscordApplicationIntegrationType {
   UserInstall = 1,
 }
 
-/** https://discord.com/developers/docs/resources/application#application-object-application-integration-type-configuration-object */
+/** https://docs.discord.com/developers/resources/application#application-object-application-integration-type-configuration-object */
 export interface DiscordApplicationIntegrationTypeConfiguration {
   /** Install params for each installation context's default in-app authorization link */
   oauth2_install_params?: DiscordInstallParams;
 }
 
-/** https://discord.com/developers/docs/resources/application#application-object-application-event-webhook-status */
+/** https://docs.discord.com/developers/resources/application#application-object-application-event-webhook-status */
 export enum DiscordApplicationEventWebhookStatus {
   /** Webhook events are disabled by developer */
   Disabled = 1,
@@ -98,7 +98,7 @@ export enum DiscordApplicationEventWebhookStatus {
   DisabledByDiscord = 3,
 }
 
-/** https://discord.com/developers/docs/resources/application#application-object-application-flags */
+/** https://docs.discord.com/developers/resources/application#application-object-application-flags */
 export enum ApplicationFlags {
   /** Indicates if an app uses the Auto Moderation API. */
   ApplicationAutoModerationRuleCreateBadge = 1 << 6,
@@ -122,7 +122,7 @@ export enum ApplicationFlags {
   ApplicationCommandBadge = 1 << 23,
 }
 
-/** https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure */
+/** https://docs.discord.com/developers/resources/application#install-params-object-install-params-structure */
 export interface DiscordInstallParams {
   /** Scopes to add the application to the server with */
   scopes: OAuth2Scope[];
@@ -130,7 +130,7 @@ export interface DiscordInstallParams {
   permissions: string;
 }
 
-/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-instance-object */
+/** https://docs.discord.com/developers/resources/application#get-application-activity-instance-activity-instance-object */
 export interface DiscordActivityInstance {
   /** Application ID */
   application_id: string;
@@ -144,7 +144,7 @@ export interface DiscordActivityInstance {
   users: string[];
 }
 
-/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-location-object */
+/** https://docs.discord.com/developers/resources/application#get-application-activity-instance-activity-location-object */
 export interface DiscordActivityLocation {
   /** The unique identifier for the location */
   id: string;
@@ -156,7 +156,7 @@ export interface DiscordActivityLocation {
   guild_id?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/application#get-application-activity-instance-activity-location-kind-enum */
+/** https://docs.discord.com/developers/resources/application#get-application-activity-instance-activity-location-kind-enum */
 export enum DiscordActivityLocationKind {
   /** The Location is a Guild Channel */
   GuildChannel = 'gc',

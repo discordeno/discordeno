@@ -682,7 +682,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             error.message = `[${reason.status}] ${errorText}`;
 
             // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
-            // https://discord.com/developers/docs/reference#error-messages
+            // https://docs.discord.com/developers/reference#error-messages
             if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
               error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
             }

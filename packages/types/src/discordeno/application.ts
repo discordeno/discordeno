@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/application */
+/** Types for: https://docs.discord.com/developers/resources/application */
 
 import type {
   ApplicationFlags,
@@ -8,7 +8,7 @@ import type {
 } from '../discord/application.js';
 import type { DiscordWebhookEventType } from '../discord/webhookEvents.js';
 
-/** https://discord.com/developers/docs/resources/application#edit-current-application-json-params */
+/** https://docs.discord.com/developers/resources/application#edit-current-application-json-params */
 export interface EditApplication {
   /** Default custom authorization URL for the app, if enabled */
   customInstallUrl?: string;

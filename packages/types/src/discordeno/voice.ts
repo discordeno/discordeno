@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/voice */
+/** Types for: https://docs.discord.com/developers/resources/voice */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state-json-params */
+/** https://docs.discord.com/developers/resources/voice#modify-current-user-voice-state-json-params */
 export interface EditOwnVoiceState {
   /** The id of the channel the user is currently in */
   channelId?: BigString;
@@ -12,7 +12,7 @@ export interface EditOwnVoiceState {
   requestToSpeakTimestamp?: number | null;
 }
 
-/** https://discord.com/developers/docs/resources/voice#modify-user-voice-state-json-params */
+/** https://docs.discord.com/developers/resources/voice#modify-user-voice-state-json-params */
 export interface EditUserVoiceState {
   /** The id of the channel the user is currently in */
   channelId?: BigString;
