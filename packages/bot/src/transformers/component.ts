@@ -351,12 +351,7 @@ function transformRadioGroupComponent(bot: Bot, payload: DiscordRadioGroupCompon
   // Check if this is the component (has options) or the interaction response (modal submit, has value)
   if ('options' in payload) {
     if (props.options && payload.options)
-      radioGroup.options = payload.options.map((option: DiscordRadioGroupOption) => ({
-        label: option.label,
-        value: option.value,
-        description: option.description,
-        default: option.default,
-      }));
+      radioGroup.options = payload.options;
     if (props.required && payload.required !== undefined) radioGroup.required = payload.required;
   } else {
     if (props.value) radioGroup.value = payload.value ?? undefined;
