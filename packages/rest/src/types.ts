@@ -814,7 +814,7 @@ export interface RestManager {
    * Gets the users allowed to see and accept this invite.
    *
    * @param inviteCode - The invite code of the invite to update.
-   * @returns CSV file containing the user IDs in the same format file that was uploaded on invite create
+   * @returns CSV file containing the user IDs with the header `user_id` and each user ID from the original file
    *
    * @remarks
    * Requires called to be the inviter, or have `MANAGE_GUILD` permission, or have `VIEW_AUDIT_LOG` permission.
