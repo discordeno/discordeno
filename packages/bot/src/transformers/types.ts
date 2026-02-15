@@ -585,7 +585,8 @@ export interface Component {
   /** List of channel types to include in a channel select menu options list */
   channelTypes?: ChannelTypes[];
   /** The choices! Maximum of 25 items. */
-  options?: SelectOption[];
+/** The string select options or the radio or checkbox group options */
+options?: SelectOption[] | RadioGroupOption[] | CheckboxGroupOption[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
