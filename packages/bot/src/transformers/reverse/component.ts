@@ -140,7 +140,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
     style: payload.style as TextStyles,
     custom_id: payload.customId!,
     label: payload.label!,
-    value: typeof payload.value === 'string' ? payload.value : undefined,
+    value: payload.value as string | undefined,
     max_length: payload.maxLength,
     min_length: payload.minLength,
     placeholder: payload.placeholder,
