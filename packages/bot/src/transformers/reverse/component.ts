@@ -252,12 +252,7 @@ function transformRadioGroupComponent(bot: Bot, payload: Component): DiscordRadi
     type: MessageComponentTypes.RadioGroup,
     id: payload.id,
     custom_id: payload.customId!,
-    options: (payload.options ?? []).map((option) => ({
-      value: option.value,
-      label: option.label,
-      description: option.description,
-      default: option.default,
-    })),
+    options: payload.options ?? [],
     required: payload.required,
   };
 }
