@@ -417,7 +417,6 @@ export interface ContainerComponent extends BaseComponent {
   spoiler?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#label-label-structure */
 /** https://docs.discord.com/developers/components/reference#label-label-structure */
 export interface LabelComponent extends BaseComponent {
   type: MessageComponentTypes.Label;
