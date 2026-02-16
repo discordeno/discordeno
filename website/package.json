@@ -36,9 +36,9 @@
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
     "@types/react": "^19.2.14",
-    "turbo": "^2.8.3",
+    "turbo": "^2.8.9",
     "typescript": "5.9.3",
-    "webpack": "5.105.1"
+    "webpack": "5.105.2"
   },
   "resolutions": {
     "@types/react": "^19.2.7"
