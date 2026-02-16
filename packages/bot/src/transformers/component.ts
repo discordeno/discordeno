@@ -387,9 +387,7 @@ function transformCheckboxComponent(bot: Bot, payload: DiscordCheckboxComponent 
   if (props.customId && payload.custom_id) checkbox.customId = payload.custom_id;
 
   if (props.value && 'value' in payload) checkbox.value = payload.value;
-  if (props.default && 'default' in payload && payload.default !== undefined) {
-    checkbox.default = payload.default;
-  }
+  if (props.default && 'default' in payload) checkbox.default = payload.default;
 
   return checkbox;
 }
