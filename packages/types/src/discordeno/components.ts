@@ -365,7 +365,7 @@ export interface ThumbnailComponent extends BaseComponent {
   /** A url or attachment */
   media: DiscordUnfurledMediaItem;
   /** Alt text for the media */
-  description?: string;
+  description?: string | null;
   /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean;
 }
