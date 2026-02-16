@@ -602,7 +602,7 @@ export interface Component {
   /** a list of child components */
   components?: Component[];
   /** List of default values for auto-populated select menu components; number of default values must be in the range defined by min_values and max_values */
-  defaultValues?: DiscordComponentDefaultValue[];
+  defaultValues?: ComponentDefaultValue[];
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: bigint;
   /** Optional identifier for component */
@@ -637,6 +637,8 @@ export interface Component {
   values?: string[];
   /** Whether the checkbox is selected by default (Checkbox component). */
   default?: boolean;
+  /** Resolved entities from selected options */
+  resolved?: InteractionDataResolved;
 }
 
 export interface UnfurledMediaItem {
@@ -663,7 +665,7 @@ export interface MediaGalleryItem {
   spoiler?: boolean;
 }
 
-export interface DiscordComponentDefaultValue {
+export interface ComponentDefaultValue {
   /** ID of a user, role, or channel */
   id: bigint;
   /** Type of value that id represents. */
@@ -1149,7 +1151,7 @@ export interface Invite {
   /**
    * The roles assigned to the user upon accepting the invite
    */
-  roles?: Role[];
+  roles?: Pick<Role, 'id' | 'name' | 'position' | 'color' | 'colors' | 'icon' | 'unicodeEmoji'>[];
 }
 
 export interface Member {
@@ -1739,7 +1741,7 @@ export interface InviteStageInstance {
 }
 
 export interface Sticker {
-  /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
+  /** [Id of the sticker](https://docs.discord.com/developers/reference#image-formatting) */
   id: bigint;
   /** Id of the pack the sticker is from */
   packId?: bigint;
@@ -1749,9 +1751,9 @@ export interface Sticker {
   description: string;
   /** a unicode emoji representing the sticker's expression */
   tags: string;
-  /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
+  /** [type of sticker](https://docs.discord.com/developers/resources/sticker#sticker-object-sticker-types) */
   type: StickerTypes;
-  /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
+  /** [Type of sticker format](https://docs.discord.com/developers/resources/sticker#sticker-object-sticker-format-types) */
   formatType: StickerFormatTypes;
   /** Whether or not the sticker is available */
   available?: boolean;
@@ -2008,7 +2010,7 @@ export interface Subscription {
   country?: string;
 }
 
-/** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
+/** https://docs.discord.com/developers/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
 export interface SoundboardSound {
   /** The name of this sound */
   name: string;
@@ -2028,7 +2030,7 @@ export interface SoundboardSound {
   user?: User;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
+/** https://docs.discord.com/developers/resources/lobby#lobby-object-lobby-structure */
 export interface Lobby {
   /** The id of this channel */
   id: bigint;
@@ -2042,7 +2044,7 @@ export interface Lobby {
   linkedChannel?: Channel;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
+/** https://docs.discord.com/developers/resources/lobby#lobby-member-object-lobby-member-structure */
 export interface LobbyMember {
   /** The id of the user */
   id: bigint;

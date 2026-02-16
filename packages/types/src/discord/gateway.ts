@@ -1,7 +1,7 @@
 /**
  * Types for:
- *  - https://discord.com/developers/docs/events/gateway
- *  - https://discord.com/developers/docs/events/gateway-events
+ *  - https://docs.discord.com/developers/events/gateway
+ *  - https://docs.discord.com/developers/events/gateway-events
  */
 
 import type { DiscordApplication } from './application.js';
@@ -20,7 +20,7 @@ import type { DiscordSticker } from './sticker.js';
 import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
 import type { DiscordVoiceState } from './voice.js';
 
-/** https://discord.com/developers/docs/events/gateway#list-of-intents */
+/** https://docs.discord.com/developers/events/gateway#list-of-intents */
 export enum GatewayIntents {
   /**
    * - GUILD_CREATE
@@ -172,9 +172,9 @@ export enum GatewayIntents {
 
 export { GatewayIntents as Intents };
 
-// TODO: Add TransportCompression: https://discord.com/developers/docs/events/gateway#transport-compression
+// TODO: Add TransportCompression: https://docs.discord.com/developers/events/gateway#transport-compression
 
-/** https://discord.com/developers/docs/events/gateway#get-gateway-bot */
+/** https://docs.discord.com/developers/events/gateway#get-gateway-bot */
 export interface DiscordGetGatewayBot {
   /** The WSS URL that can be used for connecting to the gateway */
   url: string;
@@ -184,7 +184,7 @@ export interface DiscordGetGatewayBot {
   session_start_limit: DiscordSessionStartLimit;
 }
 
-/** https://discord.com/developers/docs/events/gateway#session-start-limit-object */
+/** https://docs.discord.com/developers/events/gateway#session-start-limit-object */
 export interface DiscordSessionStartLimit {
   /** The total number of session starts the current user is allowed */
   total: number;
@@ -196,7 +196,7 @@ export interface DiscordSessionStartLimit {
   max_concurrency: number;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#receive-events */
+/** https://docs.discord.com/developers/events/gateway-events#receive-events */
 export type GatewayDispatchEventNames =
   | 'READY'
   | 'RESUMED'
@@ -275,10 +275,10 @@ export type GatewayDispatchEventNames =
   | 'MESSAGE_POLL_VOTE_ADD'
   | 'MESSAGE_POLL_VOTE_REMOVE';
 
-/** https://discord.com/developers/docs/events/gateway-events#receive-events */
+/** https://docs.discord.com/developers/events/gateway-events#receive-events */
 export type GatewayEventNames = GatewayDispatchEventNames;
 
-/** https://discord.com/developers/docs/events/gateway-events#payload-structure */
+/** https://docs.discord.com/developers/events/gateway-events#payload-structure */
 export interface DiscordGatewayPayload {
   /** opcode for the payload */
   op: number;
@@ -290,14 +290,14 @@ export interface DiscordGatewayPayload {
   t: GatewayEventNames | null;
 }
 
-// TODO: Add Identify: https://discord.com/developers/docs/events/gateway-events#identify-identify-structure
-// TODO: Add Identify Connection Properties: https://discord.com/developers/docs/events/gateway-events#identify-identify-connection-properties
-// TODO: Add Resume: https://discord.com/developers/docs/events/gateway-events#resume-resume-structure
-// TODO: Add Request Guild Members: https://discord.com/developers/docs/events/gateway-events#request-guild-members-request-guild-members-structure
-// TODO: Add Request Soundboard Sounds: https://discord.com/developers/docs/events/gateway-events#request-soundboard-sounds-request-soundboard-sounds-structure
-// TODO: Add Voice State Update: https://discord.com/developers/docs/events/gateway-events#update-voice-state-gateway-voice-state-update-structure
+// TODO: Add Identify: https://docs.discord.com/developers/events/gateway-events#identify-identify-structure
+// TODO: Add Identify Connection Properties: https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties
+// TODO: Add Resume: https://docs.discord.com/developers/events/gateway-events#resume-resume-structure
+// TODO: Add Request Guild Members: https://docs.discord.com/developers/events/gateway-events#request-guild-members-request-guild-members-structure
+// TODO: Add Request Soundboard Sounds: https://docs.discord.com/developers/events/gateway-events#request-soundboard-sounds-request-soundboard-sounds-structure
+// TODO: Add Voice State Update: https://docs.discord.com/developers/events/gateway-events#update-voice-state-gateway-voice-state-update-structure
 
-/** https://discord.com/developers/docs/events/gateway-events#update-presence-gateway-presence-update-structure */
+/** https://docs.discord.com/developers/events/gateway-events#update-presence-gateway-presence-update-structure */
 export interface DiscordUpdatePresence {
   /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
   since: number | null;
@@ -309,7 +309,7 @@ export interface DiscordUpdatePresence {
   afk: boolean;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#update-presence-status-types */
+/** https://docs.discord.com/developers/events/gateway-events#update-presence-status-types */
 export enum PresenceStatus {
   online,
   dnd,
@@ -318,13 +318,13 @@ export enum PresenceStatus {
   offline,
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#hello-hello-structure */
+/** https://docs.discord.com/developers/events/gateway-events#hello-hello-structure */
 export interface DiscordHello {
   /** The interval (in milliseconds) the client should heartbeat with */
   heartbeat_interval: number;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#ready-ready-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#ready-ready-event-fields */
 export interface DiscordReady {
   /** Gateway version */
   v: number;
@@ -342,7 +342,7 @@ export interface DiscordReady {
   application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags'>;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#auto-moderation-action-execution-auto-moderation-action-execution-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#auto-moderation-action-execution-auto-moderation-action-execution-event-fields */
 export interface DiscordAutoModerationActionExecution {
   /** The id of the guild */
   guild_id: string;
@@ -368,7 +368,7 @@ export interface DiscordAutoModerationActionExecution {
   matched_content: string | null;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#thread-create */
+/** https://docs.discord.com/developers/events/gateway-events#thread-create */
 export interface DiscordThreadCreateExtra {
   /**
    * When a thread is created this will be true on that channel payload for the thread.
@@ -379,7 +379,7 @@ export interface DiscordThreadCreateExtra {
   newly_created?: boolean;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#thread-list-sync-thread-list-sync-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#thread-list-sync-thread-list-sync-event-fields */
 export interface DiscordThreadListSync {
   /** The id of the guild */
   guild_id: string;
@@ -391,16 +391,16 @@ export interface DiscordThreadListSync {
   members: DiscordThreadMember[];
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
 export interface DiscordThreadMemberUpdateExtra {
   /** Id of the guild */
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#thread-member-update-thread-member-update-event-extra-fields */
 export interface DiscordThreadMemberUpdate extends DiscordThreadMember, DiscordThreadMemberUpdateExtra {}
 
-/** https://discord.com/developers/docs/events/gateway-events#thread-members-update-thread-members-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#thread-members-update-thread-members-update-event-fields */
 export interface DiscordThreadMembersUpdate {
   /** The id of the thread */
   id: string;
@@ -414,7 +414,7 @@ export interface DiscordThreadMembersUpdate {
   removed_member_ids?: string[];
 }
 
-/** https://discord.com/developers/docs/events/gateway#channel-pins-update */
+/** https://docs.discord.com/developers/events/gateway#channel-pins-update */
 export interface DiscordChannelPinsUpdate {
   /** The id of the guild */
   guild_id?: string;
@@ -424,7 +424,7 @@ export interface DiscordChannelPinsUpdate {
   last_pin_timestamp?: string | null;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-create-guild-create-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-create-guild-create-extra-fields */
 export interface DiscordGuildCreateExtra {
   /** When this guild was joined at */
   joined_at: string;
@@ -462,13 +462,13 @@ export interface DiscordGuildCreateExtra {
   soundboard_sounds: DiscordSoundboardSound[];
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-audit-log-entry-create-guild-audit-log-entry-create-event-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-audit-log-entry-create-guild-audit-log-entry-create-event-extra-fields */
 export interface DiscordGuildAuditLogEntryCreateExtra {
   /** The id of the guild */
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-ban-add-guild-ban-add-event-fields */
 export interface DiscordGuildBanAdd {
   /** id of the guild */
   guild_id: string;
@@ -476,7 +476,7 @@ export interface DiscordGuildBanAdd {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields */
 export interface DiscordGuildBanRemove {
   /** id of the guild */
   guild_id: string;
@@ -485,15 +485,15 @@ export interface DiscordGuildBanRemove {
 }
 
 /**
- * https://discord.com/developers/docs/events/gateway-events#guild-ban-add-guild-ban-add-event-fields
- * https://discord.com/developers/docs/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields
+ * https://docs.discord.com/developers/events/gateway-events#guild-ban-add-guild-ban-add-event-fields
+ * https://docs.discord.com/developers/events/gateway-events#guild-ban-remove-guild-ban-remove-event-fields
  *
  * @deprecated
  * Use {@link DiscordGuildBanAdd} and {@link DiscordGuildBanRemove} instead.
  */
 export interface DiscordGuildBanAddRemove extends DiscordGuildBanAdd {}
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-emojis-update-guild-emojis-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-emojis-update-guild-emojis-update-event-fields */
 export interface DiscordGuildEmojisUpdate {
   /** id of the guild */
   guild_id: string;
@@ -501,7 +501,7 @@ export interface DiscordGuildEmojisUpdate {
   emojis: DiscordEmoji[];
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-stickers-update-guild-stickers-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-stickers-update-guild-stickers-update-event-fields */
 export interface DiscordGuildStickersUpdate {
   /** id of the guild */
   guild_id: string;
@@ -509,22 +509,22 @@ export interface DiscordGuildStickersUpdate {
   stickers: DiscordSticker[];
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-integrations-update-guild-integrations-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-integrations-update-guild-integrations-update-event-fields */
 export interface DiscordGuildIntegrationsUpdate {
   /** id of the guild whose integrations were updated */
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
 export interface DiscordGuildMemberAddExtra {
   /** id of the guild */
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-member-add-guild-member-add-extra-fields */
 export interface DiscordGuildMemberAdd extends DiscordMemberWithUser, DiscordGuildMemberAddExtra {}
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-member-remove-guild-member-remove-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-member-remove-guild-member-remove-event-fields */
 export interface DiscordGuildMemberRemove {
   /** The id of the guild */
   guild_id: string;
@@ -532,7 +532,7 @@ export interface DiscordGuildMemberRemove {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-member-update-guild-member-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-member-update-guild-member-update-event-fields */
 export interface DiscordGuildMemberUpdate {
   /** The id of the guild */
   guild_id: string;
@@ -542,7 +542,7 @@ export interface DiscordGuildMemberUpdate {
   user: DiscordUser;
   /** Nickname of the user in the guild */
   nick?: string | null;
-  /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */
+  /** the member's [guild avatar hash](https://docs.discord.com/developers/reference#image-formatting) */
   avatar: string | null;
   /** the member's guild banner hash */
   banner: string | null;
@@ -564,7 +564,7 @@ export interface DiscordGuildMemberUpdate {
   avatar_decoration_data?: DiscordAvatarDecorationData | null;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-members-chunk-guild-members-chunk-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-members-chunk-guild-members-chunk-event-fields */
 export interface DiscordGuildMembersChunk {
   /** The id of the guild */
   guild_id: string;
@@ -582,7 +582,7 @@ export interface DiscordGuildMembersChunk {
   nonce?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-role-create-guild-role-create-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-role-create-guild-role-create-event-fields */
 export interface DiscordGuildRoleCreate {
   /** The id of the guild */
   guild_id: string;
@@ -590,7 +590,7 @@ export interface DiscordGuildRoleCreate {
   role: DiscordRole;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-role-update-guild-role-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-role-update-guild-role-update-event-fields */
 export interface DiscordGuildRoleUpdate {
   /** The id of the guild */
   guild_id: string;
@@ -598,7 +598,7 @@ export interface DiscordGuildRoleUpdate {
   role: DiscordRole;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-role-delete-guild-role-delete-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-role-delete-guild-role-delete-event-fields */
 export interface DiscordGuildRoleDelete {
   /** id of the guild */
   guild_id: string;
@@ -606,7 +606,7 @@ export interface DiscordGuildRoleDelete {
   role_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-scheduled-event-user-add-guild-scheduled-event-user-add-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-scheduled-event-user-add-guild-scheduled-event-user-add-event-fields */
 export interface DiscordScheduledEventUserAdd {
   /** id of the guild scheduled event */
   guild_scheduled_event_id: string;
@@ -616,7 +616,7 @@ export interface DiscordScheduledEventUserAdd {
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#guild-scheduled-event-user-remove-guild-scheduled-event-user-remove-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-scheduled-event-user-remove-guild-scheduled-event-user-remove-event-fields */
 export interface DiscordScheduledEventUserRemove {
   /** id of the guild scheduled event */
   guild_scheduled_event_id: string;
@@ -626,7 +626,7 @@ export interface DiscordScheduledEventUserRemove {
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-delete-guild-soundboard-sound-delete-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-soundboard-sound-delete-guild-soundboard-sound-delete-event-fields */
 export interface DiscordSoundboardSoundDelete {
   /** ID of the sound that was deleted */
   sound_id: string;
@@ -634,7 +634,7 @@ export interface DiscordSoundboardSoundDelete {
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#guild-soundboard-sounds-update-guild-soundboard-sounds-update-event-fields */
 export interface DiscordSoundboardSoundsUpdate {
   /** The guild's soundboard sounds */
   soundboard_sounds: DiscordSoundboardSound[];
@@ -642,7 +642,7 @@ export interface DiscordSoundboardSoundsUpdate {
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#soundboard-sounds-soundboard-sounds-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#soundboard-sounds-soundboard-sounds-event-fields */
 export interface DiscordSoundboardSounds {
   /** The guild's soundboard sounds */
   soundboard_sounds: DiscordSoundboardSound[];
@@ -650,28 +650,28 @@ export interface DiscordSoundboardSounds {
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#integration-create-integration-create-event-additional-fields */
+/** https://docs.discord.com/developers/events/gateway-events#integration-create-integration-create-event-additional-fields */
 export interface DiscordIntegrationCreateExtra {
   /** Id of the guild */
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#integration-update-integration-update-event-additional-fields */
+/** https://docs.discord.com/developers/events/gateway-events#integration-update-integration-update-event-additional-fields */
 export interface DiscordIntegrationUpdateExtra {
   /** Id of the guild */
   guild_id: string;
 }
 
 /**
- * https://discord.com/developers/docs/events/gateway-events#integration-create-integration-create-event-additional-fields
- * https://discord.com/developers/docs/events/gateway-events#integration-update-integration-update-event-additional-fields
+ * https://docs.discord.com/developers/events/gateway-events#integration-create-integration-create-event-additional-fields
+ * https://docs.discord.com/developers/events/gateway-events#integration-update-integration-update-event-additional-fields
  */
 export interface DiscordIntegrationCreateUpdate extends DiscordIntegration {
   /** Id of the guild */
   guild_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#integration-delete-integration-delete-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#integration-delete-integration-delete-event-fields */
 export interface DiscordIntegrationDelete {
   /** Integration id */
   id: string;
@@ -681,7 +681,7 @@ export interface DiscordIntegrationDelete {
   application_id?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#invite-create-invite-create-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#invite-create-invite-create-event-fields */
 export interface DiscordInviteCreate {
   /** The channel the invite is for */
   channel_id: string;
@@ -709,9 +709,11 @@ export interface DiscordInviteCreate {
   uses: number;
   /** The expiration date of this invite. */
   expires_at: string;
+  /** the role ID(s) for roles in the guild given to the users that accept this invite */
+  role_ids?: string[];
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#invite-delete-invite-delete-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#invite-delete-invite-delete-event-fields */
 export interface DiscordInviteDelete {
   /** The channel of the invite */
   channel_id: string;
@@ -721,7 +723,7 @@ export interface DiscordInviteDelete {
   code: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-create-message-create-extra-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-create-message-create-extra-fields */
 export interface DiscordMessageCreateExtra {
   /** ID of the guild the message was sent in - unless it is an ephemeral message */
   guild_id?: string;
@@ -731,10 +733,10 @@ export interface DiscordMessageCreateExtra {
   mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-update */
+/** https://docs.discord.com/developers/events/gateway-events#message-update */
 export type DiscordMessageUpdateExtra = DiscordMessageCreateExtra;
 
-/** https://discord.com/developers/docs/events/gateway-events#message-delete-message-delete-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-delete-message-delete-event-fields */
 export interface DiscordMessageDelete {
   /** The id of the message */
   id: string;
@@ -744,7 +746,7 @@ export interface DiscordMessageDelete {
   guild_id?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-delete-bulk-message-delete-bulk-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-delete-bulk-message-delete-bulk-event-fields */
 export interface DiscordMessageDeleteBulk {
   /** The ids of the messages */
   ids: string[];
@@ -754,7 +756,7 @@ export interface DiscordMessageDeleteBulk {
   guild_id?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-reaction-add-message-reaction-add-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-reaction-add-message-reaction-add-event-fields */
 export interface DiscordMessageReactionAdd {
   /** The id of the user */
   user_id: string;
@@ -778,7 +780,7 @@ export interface DiscordMessageReactionAdd {
   type: DiscordReactionType;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-message-reaction-remove-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-reaction-remove-message-reaction-remove-event-fields */
 export interface DiscordMessageReactionRemove {
   /** The id of the user */
   user_id: string;
@@ -796,7 +798,7 @@ export interface DiscordMessageReactionRemove {
   type: DiscordReactionType;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-all-message-reaction-remove-all-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-reaction-remove-all-message-reaction-remove-all-event-fields */
 export interface DiscordMessageReactionRemoveAll {
   /** The id of the channel */
   channel_id: string;
@@ -806,7 +808,7 @@ export interface DiscordMessageReactionRemoveAll {
   guild_id?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-reaction-remove-emoji-message-reaction-remove-emoji-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-reaction-remove-emoji-message-reaction-remove-emoji-event-fields */
 export interface DiscordMessageReactionRemoveEmoji {
   /** The id of the channel */
   channel_id: string;
@@ -818,7 +820,7 @@ export interface DiscordMessageReactionRemoveEmoji {
   emoji: Partial<DiscordEmoji>;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#presence-update-presence-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#presence-update-presence-update-event-fields */
 export interface DiscordPresenceUpdate {
   /** The user presence is being updated for */
   user: DiscordUser;
@@ -832,7 +834,7 @@ export interface DiscordPresenceUpdate {
   client_status: DiscordClientStatus;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#client-status-object */
+/** https://docs.discord.com/developers/events/gateway-events#client-status-object */
 export interface DiscordClientStatus {
   /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
   desktop?: string;
@@ -842,7 +844,7 @@ export interface DiscordClientStatus {
   web?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object */
 export interface DiscordActivity {
   /** The activity's name */
   name: string;
@@ -882,10 +884,10 @@ export interface DiscordActivity {
   buttons?: DiscordActivityButton[];
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object - Note at the bottom */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object - Note at the bottom */
 export type DiscordBotActivity = Pick<DiscordActivity, 'name' | 'state' | 'type' | 'url'>;
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-types */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
   Playing = 0,
   Streaming = 1,
@@ -895,7 +897,7 @@ export enum ActivityTypes {
   Competing = 5,
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-status-display-types */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-status-display-types */
 export enum DiscordStatusDisplayType {
   /** Example: "Listening to Spotify" */
   Name = 0,
@@ -905,7 +907,7 @@ export enum DiscordStatusDisplayType {
   Details = 2,
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-timestamps */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-timestamps */
 export interface DiscordActivityTimestamps {
   /** Unix time (in milliseconds) of when the activity started */
   start?: number;
@@ -913,7 +915,7 @@ export interface DiscordActivityTimestamps {
   end?: number;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-emoji */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-emoji */
 export interface DiscordActivityEmoji {
   /** The name of the emoji */
   name: string;
@@ -923,7 +925,7 @@ export interface DiscordActivityEmoji {
   id?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-party */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-party */
 export interface DiscordActivityParty {
   /** Used to show the party's current and maximum size */
   size?: [currentSize: number, maxSize: number];
@@ -931,7 +933,7 @@ export interface DiscordActivityParty {
   id?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-assets */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-assets */
 export interface DiscordActivityAssets {
   /** The id for a large asset of the activity, usually a snowflake */
   large_image?: string;
@@ -949,7 +951,7 @@ export interface DiscordActivityAssets {
   invite_cover_image?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-secrets */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-secrets */
 export interface DiscordActivitySecrets {
   /** The secret for joining a party */
   join?: string;
@@ -959,7 +961,7 @@ export interface DiscordActivitySecrets {
   match?: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#activity-object-activity-flags */
+/** https://docs.discord.com/developers/events/gateway-events#activity-object-activity-flags */
 export enum ActivityFlags {
   Instance = 1 << 0,
   Join = 1 << 1,
@@ -972,7 +974,7 @@ export enum ActivityFlags {
   Embedded = 1 << 8,
 }
 
-/** https://discord.com/developers/docs/events/gateway#activity-object-activity-buttons */
+/** https://docs.discord.com/developers/events/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
   label: string;
@@ -980,7 +982,7 @@ export interface DiscordActivityButton {
   url: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#typing-start-typing-start-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#typing-start-typing-start-event-fields */
 export interface DiscordTypingStart {
   /** id of the channel */
   channel_id: string;
@@ -994,7 +996,7 @@ export interface DiscordTypingStart {
   member?: DiscordMember;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#voice-channel-effect-send-voice-channel-effect-send-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#voice-channel-effect-send-voice-channel-effect-send-event-fields */
 export interface DiscordVoiceChannelEffectSend {
   /** ID of the channel the effect was sent in */
   channel_id: string;
@@ -1014,7 +1016,7 @@ export interface DiscordVoiceChannelEffectSend {
   sound_volume?: number;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#voice-channel-effect-send-animation-types */
+/** https://docs.discord.com/developers/events/gateway-events#voice-channel-effect-send-animation-types */
 export enum DiscordVoiceChannelEffectAnimationType {
   /** A fun animation, sent by a Nitro subscriber */
   Premium = 0,
@@ -1022,7 +1024,7 @@ export enum DiscordVoiceChannelEffectAnimationType {
   Basic = 1,
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#voice-server-update-voice-server-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#voice-server-update-voice-server-update-event-fields */
 export interface DiscordVoiceServerUpdate {
   /** Voice connection token */
   token: string;
@@ -1032,7 +1034,7 @@ export interface DiscordVoiceServerUpdate {
   endpoint: string | null;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#webhooks-update-webhooks-update-event-fields */
+/** https://docs.discord.com/developers/events/gateway-events#webhooks-update-webhooks-update-event-fields */
 export interface DiscordWebhookUpdate {
   /** id of the guild */
   guild_id: string;
@@ -1040,7 +1042,7 @@ export interface DiscordWebhookUpdate {
   channel_id: string;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-poll-vote-add-message-poll-vote-add-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-poll-vote-add-message-poll-vote-add-fields */
 export interface DiscordPollVoteAdd {
   /** ID of the user. Usually a snowflake */
   user_id: string;
@@ -1054,7 +1056,7 @@ export interface DiscordPollVoteAdd {
   answer_id: number;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#message-poll-vote-remove-message-poll-vote-remove-fields */
+/** https://docs.discord.com/developers/events/gateway-events#message-poll-vote-remove-message-poll-vote-remove-fields */
 export interface DiscordPollVoteRemove {
   /** ID of the user. Usually a snowflake */
   user_id: string;
@@ -1068,7 +1070,7 @@ export interface DiscordPollVoteRemove {
   answer_id: number;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#rate-limited-rate-limited-fields */
+/** https://docs.discord.com/developers/events/gateway-events#rate-limited-rate-limited-fields */
 export interface DiscordRateLimited {
   /** Gateway opcode of the event that was rate limited */
   opcode: GatewayOpcodes;
@@ -1083,7 +1085,7 @@ export interface DiscordRateLimited {
   meta: DiscordRequestGuildMemberRateLimitMetadata;
 }
 
-/** https://discord.com/developers/docs/events/gateway-events#rate-limited-request-guild-member-rate-limit-metadata-structure */
+/** https://docs.discord.com/developers/events/gateway-events#rate-limited-request-guild-member-rate-limit-metadata-structure */
 export interface DiscordRequestGuildMemberRateLimitMetadata {
   /** ID of the guild to get members for */
   guild_id: string;

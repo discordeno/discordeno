@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/components/reference */
+/** Types for: https://docs.discord.com/developers/components/reference */
 
 import type { ChannelTypes } from '../discord/channel.js';
 import type {
@@ -34,7 +34,7 @@ export type MessageComponent =
   | CheckboxGroupComponent
   | CheckboxComponent;
 
-/** https://discord.com/developers/docs/components/reference#anatomy-of-a-component */
+/** https://docs.discord.com/developers/components/reference#anatomy-of-a-component */
 export interface BaseComponent {
   /** The type of the component */
   type: MessageComponentTypes;
@@ -42,7 +42,7 @@ export interface BaseComponent {
   id?: number;
 }
 
-/** https://discord.com/developers/docs/components/reference#action-row-action-row-structure */
+/** https://docs.discord.com/developers/components/reference#action-row-action-row-structure */
 export interface ActionRow extends BaseComponent {
   type: MessageComponentTypes.ActionRow;
 
@@ -66,7 +66,7 @@ export interface ActionRow extends BaseComponent {
   )[];
 }
 
-/** https://discord.com/developers/docs/components/reference#button-button-structure */
+/** https://docs.discord.com/developers/components/reference#button-button-structure */
 export interface ButtonComponent extends BaseComponent {
   type: MessageComponentTypes.Button;
 
@@ -100,7 +100,7 @@ export interface ButtonComponent extends BaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#string-select-string-select-structure */
+/** https://docs.discord.com/developers/components/reference#string-select-string-select-structure */
 export interface StringSelectComponent extends BaseComponent {
   type: MessageComponentTypes.StringSelect;
 
@@ -134,7 +134,7 @@ export interface StringSelectComponent extends BaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#string-select-select-option-structure */
+/** https://docs.discord.com/developers/components/reference#string-select-select-option-structure */
 export interface SelectOption {
   /** The user-facing name of the option. Maximum 25 characters. */
   label: string;
@@ -156,7 +156,7 @@ export interface SelectOption {
   default?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#text-input-text-input-structure */
+/** https://docs.discord.com/developers/components/reference#text-input-text-input-structure */
 export interface TextInputComponent extends BaseComponent {
   type: MessageComponentTypes.TextInput;
 
@@ -185,7 +185,7 @@ export interface TextInputComponent extends BaseComponent {
   placeholder?: string;
 }
 
-/** https://discord.com/developers/docs/components/reference#user-select-user-select-structure */
+/** https://docs.discord.com/developers/components/reference#user-select-user-select-structure */
 export interface UserSelectComponent extends BaseComponent {
   type: MessageComponentTypes.UserSelect;
 
@@ -222,7 +222,7 @@ export interface UserSelectComponent extends BaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure */
+/** https://docs.discord.com/developers/components/reference#user-select-select-default-value-structure */
 export interface SelectMenuDefaultValue {
   /** ID of a user, role, or channel */
   id: BigString;
@@ -230,7 +230,7 @@ export interface SelectMenuDefaultValue {
   type: 'user' | 'role' | 'channel';
 }
 
-/** https://discord.com/developers/docs/components/reference#role-select-role-select-structure */
+/** https://docs.discord.com/developers/components/reference#role-select-role-select-structure */
 export interface RoleSelectComponent extends BaseComponent {
   type: MessageComponentTypes.RoleSelect;
 
@@ -267,7 +267,7 @@ export interface RoleSelectComponent extends BaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#mentionable-select-mentionable-select-structure */
+/** https://docs.discord.com/developers/components/reference#mentionable-select-mentionable-select-structure */
 export interface MentionableSelectComponent extends BaseComponent {
   type: MessageComponentTypes.MentionableSelect;
 
@@ -304,7 +304,7 @@ export interface MentionableSelectComponent extends BaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#channel-select-channel-select-structure */
+/** https://docs.discord.com/developers/components/reference#channel-select-channel-select-structure */
 export interface ChannelSelectComponent extends BaseComponent {
   type: MessageComponentTypes.ChannelSelect;
 
@@ -343,7 +343,7 @@ export interface ChannelSelectComponent extends BaseComponent {
   disabled?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#section-section-structure */
+/** https://docs.discord.com/developers/components/reference#section-section-structure */
 export interface SectionComponent extends BaseComponent {
   type: MessageComponentTypes.Section;
 
@@ -353,7 +353,7 @@ export interface SectionComponent extends BaseComponent {
   accessory: ButtonComponent | ThumbnailComponent;
 }
 
-/** https://discord.com/developers/docs/components/reference#text-display */
+/** https://docs.discord.com/developers/components/reference#text-display */
 export interface TextDisplayComponent extends BaseComponent {
   type: MessageComponentTypes.TextDisplay;
 
@@ -361,19 +361,19 @@ export interface TextDisplayComponent extends BaseComponent {
   content: string;
 }
 
-/** https://discord.com/developers/docs/components/reference#thumbnail */
+/** https://docs.discord.com/developers/components/reference#thumbnail */
 export interface ThumbnailComponent extends BaseComponent {
   type: MessageComponentTypes.Thumbnail;
 
   /** A url or attachment */
   media: DiscordUnfurledMediaItem;
   /** Alt text for the media */
-  description?: string;
+  description?: string | null;
   /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#media-gallery */
+/** https://docs.discord.com/developers/components/reference#media-gallery */
 export interface MediaGalleryComponent extends BaseComponent {
   type: MessageComponentTypes.MediaGallery;
 
@@ -381,7 +381,7 @@ export interface MediaGalleryComponent extends BaseComponent {
   items: DiscordMediaGalleryItem[];
 }
 
-/** https://discord.com/developers/docs/components/reference#file */
+/** https://docs.discord.com/developers/components/reference#file */
 export interface FileComponent extends BaseComponent {
   type: MessageComponentTypes.File;
 
@@ -395,7 +395,7 @@ export interface FileComponent extends BaseComponent {
   size: number;
 }
 
-/** https://discord.com/developers/docs/components/reference#separator */
+/** https://docs.discord.com/developers/components/reference#separator */
 export interface SeparatorComponent extends BaseComponent {
   type: MessageComponentTypes.Separator;
 
@@ -405,7 +405,7 @@ export interface SeparatorComponent extends BaseComponent {
   spacing?: SeparatorSpacingSize;
 }
 
-/** https://discord.com/developers/docs/components/reference#container */
+/** https://docs.discord.com/developers/components/reference#container */
 export interface ContainerComponent extends BaseComponent {
   type: MessageComponentTypes.Container;
 
@@ -477,6 +477,7 @@ export interface CheckboxComponent extends BaseComponent {
 }
 
 /** https://discord.com/developers/docs/components/reference#label-label-structure */
+/** https://docs.discord.com/developers/components/reference#label-label-structure */
 export interface LabelComponent extends BaseComponent {
   type: MessageComponentTypes.Label;
 
@@ -508,7 +509,7 @@ export interface LabelComponent extends BaseComponent {
     | CheckboxComponent;
 }
 
-/** https://discord.com/developers/docs/components/reference#file-upload-file-upload-structure */
+/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-structure */
 export interface FileUploadComponent extends BaseComponent {
   type: MessageComponentTypes.FileUpload;
 
