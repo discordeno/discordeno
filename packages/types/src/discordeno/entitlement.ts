@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/entitlement */
+/** Types for: https://docs.discord.com/developers/resources/entitlement */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/entitlement#list-entitlements-query-string-params */
+/** https://docs.discord.com/developers/resources/entitlement#list-entitlements-query-string-params */
 export interface GetEntitlements {
   /** User ID to look up entitlements for */
   userId?: BigString;
@@ -22,7 +22,7 @@ export interface GetEntitlements {
   excludeDeleted?: boolean;
 }
 
-/** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params */
+/** https://docs.discord.com/developers/monetization/entitlements#create-test-entitlement-json-params */
 export interface CreateTestEntitlement {
   /** ID of the SKU to grant the entitlement to */
   skuId: BigString;
@@ -32,7 +32,7 @@ export interface CreateTestEntitlement {
   ownerType: CreateEntitlementOwnerType;
 }
 
-/** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params - Description of ownerType */
+/** https://docs.discord.com/developers/monetization/entitlements#create-test-entitlement-json-params - Description of ownerType */
 export enum CreateEntitlementOwnerType {
   /** Guild subscription */
   GuildSubscription = 1,

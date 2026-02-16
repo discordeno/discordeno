@@ -1,6 +1,6 @@
-/** Types for: https://discord.com/developers/docs/resources/sku */
+/** Types for: https://docs.discord.com/developers/resources/sku */
 
-/** https://discord.com/developers/docs/resources/sku#sku-object-sku-structure */
+/** https://docs.discord.com/developers/resources/sku#sku-object-sku-structure */
 export interface DiscordSku {
   /** ID of SKU */
   id: string;
@@ -16,7 +16,7 @@ export interface DiscordSku {
   flags: SkuFlags;
 }
 
-/** https://discord.com/developers/docs/resources/sku#sku-object-sku-types */
+/** https://docs.discord.com/developers/resources/sku#sku-object-sku-types */
 export enum DiscordSkuType {
   /** Durable one-time purchase */
   Durable = 2,
@@ -28,7 +28,7 @@ export enum DiscordSkuType {
   SubscriptionGroup = 6,
 }
 
-/** https://discord.com/developers/docs/resources/sku#sku-object-sku-flags */
+/** https://docs.discord.com/developers/resources/sku#sku-object-sku-flags */
 export enum SkuFlags {
   /** SKU is available for purchase */
   Available = 1 << 2,
