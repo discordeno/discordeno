@@ -1,9 +1,9 @@
-/** Types for: https://discord.com/developers/docs/resources/poll */
+/** Types for: https://docs.discord.com/developers/resources/poll */
 
 import type { DiscordPollAnswer, DiscordPollLayoutType, DiscordPollMedia } from '../discord/poll.js';
 import type { BigString, Camelize } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/poll#poll-create-request-object */
+/** https://docs.discord.com/developers/resources/poll#poll-create-request-object */
 export interface CreatePoll {
   /** The question of the poll. Only `text` is supported. */
   question: Pick<Camelize<DiscordPollMedia>, 'text'>;
@@ -28,7 +28,7 @@ export interface CreatePoll {
   layoutType?: DiscordPollLayoutType;
 }
 
-/** https://discord.com/developers/docs/resources/poll#get-answer-voters-query-string-params */
+/** https://docs.discord.com/developers/resources/poll#get-answer-voters-query-string-params */
 export interface GetPollAnswerVotes {
   /** Get users after this user ID */
   after?: BigString;

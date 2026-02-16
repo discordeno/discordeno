@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/invite */
+/** Types for: https://docs.discord.com/developers/resources/invite */
 
 import type { DiscordApplication } from './application.js';
 import type { DiscordChannel } from './channel.js';
@@ -7,7 +7,7 @@ import type { DiscordScheduledEvent } from './guildScheduledEvent.js';
 import type { DiscordRole } from './permissions.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/resources/invite#invite-object-invite-structure */
+/** https://docs.discord.com/developers/resources/invite#invite-object-invite-structure */
 export interface DiscordInvite {
   /** The type of invite */
   type: DiscordInviteType;
@@ -45,26 +45,26 @@ export interface DiscordInvite {
   roles?: DiscordRole[];
 }
 
-/** https://discord.com/developers/docs/resources/invite#invite-object-invite-types */
+/** https://docs.discord.com/developers/resources/invite#invite-object-invite-types */
 export enum DiscordInviteType {
   Guild,
   GroupDm,
   Friend,
 }
 
-/** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
+/** https://docs.discord.com/developers/resources/invite#invite-object-invite-target-types */
 export enum TargetTypes {
   Stream = 1,
   EmbeddedApplication,
 }
 
-/** https://discord.com/developers/docs/resources/invite#invite-object-guild-invite-flags */
+/** https://docs.discord.com/developers/resources/invite#invite-object-guild-invite-flags */
 export enum DiscordGuildInviteFlags {
   /** This invite is a guest invite for a voice channel */
   isGuestInvite = 1 << 0,
 }
 
-/** https://discord.com/developers/docs/resources/invite#invite-metadata-object-invite-metadata-structure */
+/** https://docs.discord.com/developers/resources/invite#invite-metadata-object-invite-metadata-structure */
 export interface DiscordInviteMetadata extends DiscordInvite {
   /** Number of times this invite has been used */
   uses: number;
@@ -79,7 +79,7 @@ export interface DiscordInviteMetadata extends DiscordInvite {
 }
 
 /**
- * https://discord.com/developers/docs/resources/invite#invite-stage-instance-object-invite-stage-instance-structure
+ * https://docs.discord.com/developers/resources/invite#invite-stage-instance-object-invite-stage-instance-structure
  * @deprecated
  */
 export interface DiscordInviteStageInstance {
@@ -94,7 +94,7 @@ export interface DiscordInviteStageInstance {
 }
 
 /**
- * https://discord.com/developers/docs/resources/invite#get-target-users-job-status-example-response
+ * https://docs.discord.com/developers/resources/invite#get-target-users-job-status-example-response
  *
  * @remarks
  * Discord does not seem to actually document the type for this response, so this is based on the example provided
@@ -108,7 +108,7 @@ export interface DiscordTargetUsersJobStatus {
   error_message: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/invite#get-target-users-job-status-error-codes */
+/** https://docs.discord.com/developers/resources/invite#get-target-users-job-status-error-codes */
 export enum DiscordGetTargetUsersJobStatusErrorCodes {
   /** The default value. */
   Unspecified,

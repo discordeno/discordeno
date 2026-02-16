@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/guild */
+/** Types for: https://docs.discord.com/developers/resources/guild */
 
 import type { ChannelTypes, ForumLayout, SortOrderTypes, VideoQualityModes } from '../discord/channel.js';
 import type {
@@ -16,7 +16,7 @@ import type { BigString, Camelize } from '../shared.js';
 import type { DiscordenoDefaultReactionEmoji, DiscordenoForumTag, Overwrite } from './channel.js';
 import type { GuildRoleColors } from './permissions.js';
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-json-params */
 export interface ModifyGuild {
   /** Guild name */
   name?: string;
@@ -62,7 +62,7 @@ export interface ModifyGuild {
   safetyAlertsChannelId?: BigString | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params */
+/** https://docs.discord.com/developers/resources/guild#create-guild-channel-json-params */
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string;
@@ -102,7 +102,7 @@ export interface CreateGuildChannel {
   defaultThreadRateLimitPerUser?: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-channel-positions-json-params */
 export interface ModifyGuildChannelPositions {
   /** Channel id */
   id: BigString;
@@ -114,7 +114,7 @@ export interface ModifyGuildChannelPositions {
   parentId?: BigString | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#list-guild-members-query-string-params */
+/** https://docs.discord.com/developers/resources/guild#list-guild-members-query-string-params */
 export interface ListGuildMembers {
   /** Max number of members to return (1-1000). Default: 1 */
   limit?: number;
@@ -122,7 +122,7 @@ export interface ListGuildMembers {
   after?: string;
 }
 
-/** https://discord.com/developers/docs/resources/guild#search-guild-members-query-string-params */
+/** https://docs.discord.com/developers/resources/guild#search-guild-members-query-string-params */
 export interface SearchMembers {
   /** Query string to match username(s) and nickname(s) against */
   query: string;
@@ -130,7 +130,7 @@ export interface SearchMembers {
   limit?: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#add-guild-member-json-params */
+/** https://docs.discord.com/developers/resources/guild#add-guild-member-json-params */
 export interface AddGuildMemberOptions {
   /** access token of a user that has granted your app the `guilds.join` scope */
   accessToken: string;
@@ -144,7 +144,7 @@ export interface AddGuildMemberOptions {
   deaf?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-member-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-member-json-params */
 export interface ModifyGuildMember {
   /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
   nick?: string | null;
@@ -166,7 +166,7 @@ export interface ModifyGuildMember {
   flags?: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-current-member-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-current-member-json-params */
 export interface EditBotMemberOptions {
   /** Value to set user's nickname to	 */
   nick?: string | null;
@@ -178,7 +178,7 @@ export interface EditBotMemberOptions {
   bio?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-bans-query-string-params */
+/** https://docs.discord.com/developers/resources/guild#get-guild-bans-query-string-params */
 export interface GetBans {
   /** Number of users to return (up to maximum 1000). Default: 1000 */
   limit?: number;
@@ -188,7 +188,7 @@ export interface GetBans {
   after?: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-ban-json-params */
+/** https://docs.discord.com/developers/resources/guild#create-guild-ban-json-params */
 export interface CreateGuildBan {
   /**
    * Number of seconds to delete messages for, between 0 and 604800 (7 days)
@@ -198,7 +198,7 @@ export interface CreateGuildBan {
   deleteMessageSeconds?: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban-json-params */
+/** https://docs.discord.com/developers/resources/guild#bulk-guild-ban-json-params */
 export interface CreateGuildBulkBan {
   /** list of user ids to ban (max 200) */
   userIds: BigString[];
@@ -210,7 +210,7 @@ export interface CreateGuildBulkBan {
   deleteMessageSeconds?: number;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-role-json-params */
+/** https://docs.discord.com/developers/resources/guild#create-guild-role-json-params */
 export interface CreateGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string;
@@ -233,7 +233,7 @@ export interface CreateGuildRole {
   mentionable?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-role-positions-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-role-positions-json-params */
 export interface ModifyRolePositions {
   /** The role id */
   id: BigString;
@@ -241,7 +241,7 @@ export interface ModifyRolePositions {
   position?: number | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-role-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-role-json-params */
 export interface EditGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
   name?: string | null;
@@ -264,7 +264,7 @@ export interface EditGuildRole {
   mentionable?: boolean | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
+/** https://docs.discord.com/developers/resources/guild#get-guild-prune-count */
 export interface GetGuildPruneCountQuery {
   /** Number of days to count prune for (1 or more), default: 7 */
   days?: number;
@@ -272,7 +272,7 @@ export interface GetGuildPruneCountQuery {
   includeRoles?: string | string[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+/** https://docs.discord.com/developers/resources/guild#begin-guild-prune */
 export interface BeginGuildPrune {
   /** Number of days to prune (1 or more), default: 7 */
   days?: number;
@@ -282,7 +282,7 @@ export interface BeginGuildPrune {
   includeRoles?: string[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
+/** https://docs.discord.com/developers/resources/guild#get-guild-widget-image-query-string-params */
 export interface GetGuildWidgetImageQuery {
   /**
    * Style of the widget returned, default: shield
@@ -296,7 +296,7 @@ export interface GetGuildWidgetImageQuery {
   style?: 'shield' | 'banner1' | 'banner2' | 'banner3' | 'banner4';
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-onboarding-json-params */
 export interface EditGuildOnboarding {
   /** Prompts shown during onboarding and in customize community */
   prompts?: Camelize<DiscordGuildOnboardingPrompt>[];
@@ -308,7 +308,7 @@ export interface EditGuildOnboarding {
   mode?: DiscordGuildOnboardingMode;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-incident-actions-json-params */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-incident-actions-json-params */
 export interface ModifyGuildIncidentActions {
   /**
    * When invites will be enabled again
@@ -332,7 +332,7 @@ export interface ModifyGuildIncidentActions {
   dmsDisabledUntil?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
+/** https://docs.discord.com/developers/resources/guild#modify-guild-welcome-screen */
 export interface ModifyGuildWelcomeScreen {
   /** Whether the welcome screen is enabled */
   enabled?: boolean | null;

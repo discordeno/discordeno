@@ -1,11 +1,11 @@
-/** Types for: https://discord.com/developers/docs/topics/oauth2 */
+/** Types for: https://docs.discord.com/developers/topics/oauth2 */
 
 import type { DiscordApplication } from './application.js';
 import type { DiscordGuild } from './guild.js';
 import type { DiscordUser } from './user.js';
 import type { DiscordWebhook } from './webhook.js';
 
-/** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
+/** https://docs.discord.com/developers/topics/oauth2#shared-resources-oauth2-scopes */
 export enum OAuth2Scope {
   /**
    * Allows your app to fetch data from a user's "Now Playing/Recently Played" list
@@ -36,7 +36,7 @@ export enum OAuth2Scope {
    * Allows your app to update its Application Commands via this bearer token
    *
    * @remarks
-   * This scope can only be used when using a [Client Credential Grant](https://discord.com/developers/docs/topics/oauth2#client-credentials-grant)
+   * This scope can only be used when using a [Client Credential Grant](https://docs.discord.com/developers/topics/oauth2#client-credentials-grant)
    */
   ApplicationsCommandsUpdate = 'applications.commands.update',
   /** Allows your app to update permissions for its commands in a guild a user has permissions to */
@@ -47,7 +47,7 @@ export enum OAuth2Scope {
   ApplicationsStoreUpdate = 'applications.store.update',
   /** For oauth2 bots, this puts the bot in the user's selected guild by default */
   Bot = 'bot',
-  /** Allows requests to [/users/@me/connections](https://discord.com/developers/docs/resources/user#get-user-connections) */
+  /** Allows requests to [/users/@me/connections](https://docs.discord.com/developers/resources/user#get-user-connections) */
   Connections = 'connections',
   /**
    * Allows your app to see information about the user's DMs and group DMs
@@ -56,21 +56,21 @@ export enum OAuth2Scope {
    * This scope requires Discord approval to be used
    */
   DMChannelsRead = 'dm_channels.read',
-  /** Adds the `email` filed to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user) */
+  /** Adds the `email` filed to [/users/@me](https://docs.discord.com/developers/resources/user#get-current-user) */
   Email = 'email',
   /** Allows your app to join users to a group dm */
   GroupDMJoins = 'gdm.join',
-  /** Allows requests to [/users/@me/guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds) */
+  /** Allows requests to [/users/@me/guilds](https://docs.discord.com/developers/resources/user#get-current-user-guilds) */
   Guilds = 'guilds',
-  /** Allows requests to [/guilds/{guild.id}/members/{user.id}](https://discord.com/developers/docs/resources/guild#add-guild-member) */
+  /** Allows requests to [/guilds/{guild.id}/members/{user.id}](https://docs.discord.com/developers/resources/guild#add-guild-member) */
   GuildsJoin = 'guilds.join',
-  /** Allows requests to [/users/@me/guilds/{guild.id}/member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member) */
+  /** Allows requests to [/users/@me/guilds/{guild.id}/member](https://docs.discord.com/developers/resources/user#get-current-user-guild-member) */
   GuildsMembersRead = 'guilds.members.read',
   /**
-   * Allows requests to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   * Allows requests to [/users/@me](https://docs.discord.com/developers/resources/user#get-current-user)
    *
    * @remarks
-   * The return object from [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   * The return object from [/users/@me](https://docs.discord.com/developers/resources/user#get-current-user)
    * does NOT contain the `email` field unless the scope `email` is also used
    */
   Identify = 'identify',
@@ -135,7 +135,7 @@ export enum OAuth2Scope {
   WebhookIncoming = 'webhook.incoming',
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-redirect-url-example */
+/** https://docs.discord.com/developers/topics/oauth2#authorization-code-grant-redirect-url-example */
 export interface DiscordTokenExchangeAuthorizationCode {
   grant_type: 'authorization_code';
   /** The code for the token exchange */
@@ -146,7 +146,7 @@ export interface DiscordTokenExchangeAuthorizationCode {
   code_verifier?: string;
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-access-token-response */
+/** https://docs.discord.com/developers/topics/oauth2#authorization-code-grant-access-token-response */
 export interface DiscordAccessTokenResponse {
   /** The access token of the user */
   access_token: string;
@@ -170,19 +170,19 @@ export interface DiscordAccessTokenResponse {
 }
 
 /**
- * https://discord.com/developers/docs/topics/oauth2#authorization-code-grant
- * https://discord.com/developers/docs/topics/oauth2#client-credentials-grant
+ * https://docs.discord.com/developers/topics/oauth2#authorization-code-grant
+ * https://docs.discord.com/developers/topics/oauth2#client-credentials-grant
  */
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials;
 
-/** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-refresh-token-exchange-example */
+/** https://docs.discord.com/developers/topics/oauth2#authorization-code-grant-refresh-token-exchange-example */
 export interface DiscordTokenExchangeRefreshToken {
   grant_type: 'refresh_token';
   /** the user's refresh token */
   refresh_token: string;
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-token-revocation-example */
+/** https://docs.discord.com/developers/topics/oauth2#authorization-code-grant-token-revocation-example */
 export interface DiscordTokenRevocation {
   /** The access token to revoke */
   token: string;
@@ -190,14 +190,14 @@ export interface DiscordTokenRevocation {
   token_type_hint?: 'access_token' | 'refresh_token';
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+/** https://docs.discord.com/developers/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeClientCredentials {
   grant_type: 'client_credentials';
   /** The scope(s) for the access token */
   scope: OAuth2Scope[];
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
+/** https://docs.discord.com/developers/topics/oauth2#get-current-authorization-information-response-structure */
 export interface DiscordCurrentAuthorization {
   application: DiscordApplication;
   /** the scopes the user has authorized the application for */

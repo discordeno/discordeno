@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/sticker */
+/** Types for: https://docs.discord.com/developers/resources/sticker */
 
 import type { FileContent } from './reference.js';
 
-/** https://discord.com/developers/docs/resources/sticker#create-guild-sticker-form-params */
+/** https://docs.discord.com/developers/resources/sticker#create-guild-sticker-form-params */
 export interface CreateGuildStickerOptions {
   /** Name of the sticker (2-30 characters) */
   name: string;
@@ -14,7 +14,7 @@ export interface CreateGuildStickerOptions {
   file: FileContent;
 }
 
-/** https://discord.com/developers/docs/resources/sticker#modify-guild-sticker-json-params */
+/** https://docs.discord.com/developers/resources/sticker#modify-guild-sticker-json-params */
 export interface EditGuildStickerOptions {
   /** Name of the sticker (2-30 characters) */
   name?: string;

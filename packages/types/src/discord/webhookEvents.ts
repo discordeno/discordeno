@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/events/webhook-events */
+/** Types for: https://docs.discord.com/developers/events/webhook-events */
 
 import type { DiscordApplicationIntegrationType } from './application.js';
 import type { DiscordChannel } from './channel.js';
@@ -8,7 +8,7 @@ import type { DiscordMessage, MessageFlags, MessageTypes } from './message.js';
 import type { OAuth2Scope } from './oauth2.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/events/webhook-events#payload-structure */
+/** https://docs.discord.com/developers/events/webhook-events#payload-structure */
 export interface DiscordEventWebhookEvent {
   /** Version scheme for the webhook event. Currently always 1 */
   version: 1;
@@ -20,7 +20,7 @@ export interface DiscordEventWebhookEvent {
   event?: DiscordEventWebhookEventBody;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#webhook-types */
+/** https://docs.discord.com/developers/events/webhook-events#webhook-types */
 export enum DiscordEventWebhookType {
   /** PING event sent to verify your Webhook Event URL is active */
   Ping = 0,
@@ -28,7 +28,7 @@ export enum DiscordEventWebhookType {
   Event = 1,
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#event-body-object */
+/** https://docs.discord.com/developers/events/webhook-events#event-body-object */
 export interface DiscordEventWebhookEventBody {
   /** Event type */
   type: DiscordWebhookEventType;
@@ -49,7 +49,7 @@ export interface DiscordEventWebhookEventBody {
     | DiscordEventWebhookGameDirectMessageDeleteBody;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#event-types */
+/** https://docs.discord.com/developers/events/webhook-events#event-types */
 export enum DiscordWebhookEventType {
   /** Sent when an app was authorized by a user to a server or their account */
   ApplicationAuthorized = 'APPLICATION_AUTHORIZED',
@@ -77,7 +77,7 @@ export enum DiscordWebhookEventType {
   GameDirectMessageDelete = 'GAME_DIRECT_MESSAGE_DELETE',
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#application-authorized-application-authorized-structure */
+/** https://docs.discord.com/developers/events/webhook-events#application-authorized-application-authorized-structure */
 export interface DiscordEventWebhookApplicationAuthorizedBody {
   /** Installation context for the authorization. Either guild (0) if installed to a server or user (1) if installed to a user's account */
   integration_type?: DiscordApplicationIntegrationType;
@@ -89,26 +89,26 @@ export interface DiscordEventWebhookApplicationAuthorizedBody {
   guild?: DiscordGuild;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#application-authorized-application-authorized-structure */
+/** https://docs.discord.com/developers/events/webhook-events#application-authorized-application-authorized-structure */
 export interface DiscordEventWebhookApplicationDeauthorizedBody {
   /** User who deauthorized the app */
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#entitlement-create-entitlement-create-structure */
+/** https://docs.discord.com/developers/events/webhook-events#entitlement-create-entitlement-create-structure */
 export type DiscordEventWebhookEntitlementCreateBody = DiscordEntitlement;
 
-/** https://discord.com/developers/docs/events/webhook-events#entitlement-update-entitlement-update-structure */
+/** https://docs.discord.com/developers/events/webhook-events#entitlement-update-entitlement-update-structure */
 export type DiscordEventWebhookEntitlementUpdateBody = DiscordEntitlement;
 
-/** https://discord.com/developers/docs/events/webhook-events#entitlement-delete-entitlement-delete-structure */
+/** https://docs.discord.com/developers/events/webhook-events#entitlement-delete-entitlement-delete-structure */
 export type DiscordEventWebhookEntitlementDeleteBody = DiscordEntitlement;
 
-/** https://discord.com/developers/docs/events/webhook-events#lobby-message-create-lobby-message-create-structure */
+/** https://docs.discord.com/developers/events/webhook-events#lobby-message-create-lobby-message-create-structure */
 export type DiscordEventWebhookLobbyMessageCreateBody = DiscordSocialSDKLobbyMessage;
 
 // Discord does not explicitly says what "with additional fields for message updates" means, so we rely on the example and the DiscordMessage structure
-/** https://discord.com/developers/docs/events/webhook-events#lobby-message-update-lobby-message-update-structure */
+/** https://docs.discord.com/developers/events/webhook-events#lobby-message-update-lobby-message-update-structure */
 export interface DiscordEventWebhookLobbyMessageUpdateBody extends DiscordSocialSDKLobbyMessage {
   /** ISO8601 timestamp of when the message was last edited */
   edited_timestamp: string | null;
@@ -116,7 +116,7 @@ export interface DiscordEventWebhookLobbyMessageUpdateBody extends DiscordSocial
   timestamp: string;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#lobby-message-delete-lobby-message-delete-structure */
+/** https://docs.discord.com/developers/events/webhook-events#lobby-message-delete-lobby-message-delete-structure */
 export interface DiscordEventWebhookLobbyMessageDeleteBody {
   /** ID of the deleted message */
   id: string;
@@ -124,16 +124,16 @@ export interface DiscordEventWebhookLobbyMessageDeleteBody {
   lobby_id: string;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#game-direct-message-create-game-direct-message-create-structure */
+/** https://docs.discord.com/developers/events/webhook-events#game-direct-message-create-game-direct-message-create-structure */
 export type DiscordEventWebhookGameDirectMessageCreateBody = DiscordSocialSDKMessage | DiscordSocialSDKPassthroughMessage;
 
-/** https://discord.com/developers/docs/events/webhook-events#game-direct-message-update-game-direct-message-update-structure */
+/** https://docs.discord.com/developers/events/webhook-events#game-direct-message-update-game-direct-message-update-structure */
 export type DiscordEventWebhookGameDirectMessageUpdateBody = DiscordSocialSDKMessage | DiscordSocialSDKPassthroughMessage;
 
-/** https://discord.com/developers/docs/events/webhook-events#game-direct-message-delete-game-direct-message-delete-structure */
+/** https://docs.discord.com/developers/events/webhook-events#game-direct-message-delete-game-direct-message-delete-structure */
 export type DiscordEventWebhookGameDirectMessageDeleteBody = DiscordSocialSDKMessage | DiscordSocialSDKPassthroughMessage;
 
-/** https://discord.com/developers/docs/events/webhook-events#lobby-message-object-lobby-message-structure */
+/** https://docs.discord.com/developers/events/webhook-events#lobby-message-object-lobby-message-structure */
 export interface DiscordSocialSDKLobbyMessage {
   /** ID of the message */
   id: string;
@@ -159,7 +159,7 @@ export interface DiscordSocialSDKLobbyMessage {
   application_id?: string;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#message-object */
+/** https://docs.discord.com/developers/events/webhook-events#message-object */
 export interface DiscordSocialSDKMessage extends DiscordMessage {
   /** ID of the lobby where the message was created (only present in Linked Channel messages) */
   lobby_id?: string;
@@ -167,7 +167,7 @@ export interface DiscordSocialSDKMessage extends DiscordMessage {
   channel: DiscordChannel;
 }
 
-/** https://discord.com/developers/docs/events/webhook-events#passthrough-message-object-passthrough-message-structure */
+/** https://docs.discord.com/developers/events/webhook-events#passthrough-message-object-passthrough-message-structure */
 export interface DiscordSocialSDKPassthroughMessage {
   /** ID of the message */
   id: string;
