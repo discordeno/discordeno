@@ -417,65 +417,6 @@ export interface ContainerComponent extends BaseComponent {
   spoiler?: boolean;
 }
 
-/** https://docs.discord.com/developers/components/reference#radio-group-structure */
-export interface RadioGroupComponent extends BaseComponent {
-  type: MessageComponentTypes.RadioGroup;
-  /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string;
-  /** List of options to show; min 2, max 10. */
-  options: RadioGroupOption[];
-  /** Whether a selection is required to submit the modal. Defaults to `true`. */
-  required?: boolean;
-}
-
-/** https://docs.discord.com/developers/components/reference#radio-group-option-structure */
-export interface RadioGroupOption {
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string;
-  /** The user-facing label of the option. Maximum 100 characters. */
-  label: string;
-  /** An optional description for the option. Maximum 100 characters. */
-  description?: string;
-  /** Will render this option as already-selected by default. */
-  default?: boolean;
-}
-
-/** https://docs.discord.com/developers/components/reference#checkbox-group-structure */
-export interface CheckboxGroupComponent extends BaseComponent {
-  type: MessageComponentTypes.CheckboxGroup;
-  /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string;
-  /** List of options to show; min 1, max 10. */
-  options: CheckboxGroupOption[];
-  /** Minimum number of items that must be chosen; min 0, max 10. Defaults to 1; if set to 0 required must be false. */
-  minValues?: number;
-  /** Maximum number of items that can be chosen; min 1, max 10. Defaults to the number of options. */
-  maxValues?: number;
-  /** Whether selecting within the group is required. Defaults to `true`. */
-  required?: boolean;
-}
-
-/** https://docs.discord.com/developers/components/reference#checkbox-group-option-structure */
-export interface CheckboxGroupOption {
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string;
-  /** The user-facing label of the option. Maximum 100 characters. */
-  label: string;
-  /** An optional description for the option. Maximum 100 characters. */
-  description?: string;
-  /** Will render this option as already-selected by default. */
-  default?: boolean;
-}
-
-/** https://docs.discord.com/developers/components/reference#checkbox-structure */
-export interface CheckboxComponent extends BaseComponent {
-  type: MessageComponentTypes.Checkbox;
-  /** A custom identifier for this component. Maximum 100 characters. */
-  customId: string;
-  /** Whether the checkbox is selected by default. */
-  default?: boolean;
-}
-
 /** https://discord.com/developers/docs/components/reference#label-label-structure */
 /** https://docs.discord.com/developers/components/reference#label-label-structure */
 export interface LabelComponent extends BaseComponent {
@@ -534,4 +475,63 @@ export interface FileUploadComponent extends BaseComponent {
    * @default true
    */
   required?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#radio-group-structure */
+export interface RadioGroupComponent extends BaseComponent {
+  type: MessageComponentTypes.RadioGroup;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  customId: string;
+  /** List of options to show; min 2, max 10. */
+  options: RadioGroupOption[];
+  /** Whether a selection is required to submit the modal. Defaults to `true`. */
+  required?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#radio-group-option-structure */
+export interface RadioGroupOption {
+  /** The dev-defined value of the option. Maximum 100 characters. */
+  value: string;
+  /** The user-facing label of the option. Maximum 100 characters. */
+  label: string;
+  /** An optional description for the option. Maximum 100 characters. */
+  description?: string;
+  /** Will render this option as already-selected by default. */
+  default?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-group-structure */
+export interface CheckboxGroupComponent extends BaseComponent {
+  type: MessageComponentTypes.CheckboxGroup;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  customId: string;
+  /** List of options to show; min 1, max 10. */
+  options: CheckboxGroupOption[];
+  /** Minimum number of items that must be chosen; min 0, max 10. Defaults to 1; if set to 0 required must be false. */
+  minValues?: number;
+  /** Maximum number of items that can be chosen; min 1, max 10. Defaults to the number of options. */
+  maxValues?: number;
+  /** Whether selecting within the group is required. Defaults to `true`. */
+  required?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-group-option-structure */
+export interface CheckboxGroupOption {
+  /** The dev-defined value of the option. Maximum 100 characters. */
+  value: string;
+  /** The user-facing label of the option. Maximum 100 characters. */
+  label: string;
+  /** An optional description for the option. Maximum 100 characters. */
+  description?: string;
+  /** Will render this option as already-selected by default. */
+  default?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#checkbox-structure */
+export interface CheckboxComponent extends BaseComponent {
+  type: MessageComponentTypes.Checkbox;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  customId: string;
+  /** Whether the checkbox is selected by default. */
+  default?: boolean;
 }

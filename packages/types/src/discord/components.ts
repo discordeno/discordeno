@@ -690,6 +690,102 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   spoiler?: boolean;
 }
 
+/** https://discord.com/developers/docs/components/reference#label-label-structure */
+/** https://docs.discord.com/developers/components/reference#label-label-structure */
+export interface DiscordLabelComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.Label;
+
+  /**
+   * The label text
+   *
+   * @remarks
+   * Max 45 characters.
+   */
+  label: string;
+  /**
+   * An optional description text for the label
+   *
+   * @remarks
+   * Max 100 characters.
+   */
+  description?: string;
+  /** The component within the label */
+  component:
+    | DiscordTextInputComponent
+    | DiscordFileUploadComponent
+    | DiscordRadioGroupComponent
+    | DiscordCheckboxGroupComponent
+    | DiscordCheckboxComponent
+    | DiscordStringSelectComponent
+    | DiscordUserSelectComponent
+    | DiscordRoleSelectComponent
+    | DiscordMentionableSelectComponent
+    | DiscordChannelSelectComponent
+    | DiscordFileUploadComponent;
+}
+
+/** https://docs.discord.com/developers/components/reference#label-label-interaction-response-structure */
+export interface DiscordLabelInteractionResponse {
+  type: MessageComponentTypes.Label;
+  /** 32 bit integer used as an optional identifier for component */
+  id: number;
+  /** The component within the label */
+  component:
+    | DiscordTextInputInteractionResponse
+    | DiscordStringSelectInteractionResponseFromModal
+    | DiscordUserSelectInteractionResponseFromModal
+    | DiscordRoleSelectInteractionResponseFromModal
+    | DiscordMentionableSelectInteractionResponseFromModal
+    | DiscordChannelSelectInteractionResponseFromModal
+    | DiscordFileUploadInteractionResponse
+    | DiscordRadioGroupInteractionResponse
+    | DiscordCheckboxGroupInteractionResponse
+    | DiscordCheckboxInteractionResponse;
+}
+
+/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-structure */
+export interface DiscordFileUploadComponent extends DiscordBaseComponent {
+  type: MessageComponentTypes.FileUpload;
+
+  /** The custom id for the file upload */
+  custom_id: string;
+  /**
+   * The minimum number of files that must be uploaded
+   *
+   * @remarks
+   * Between 0-10
+   *
+   * @default 1
+   */
+  min_values?: number;
+  /** The maximum number of files that can be uploaded
+   *
+   * @remarks
+   * Between 1-10
+   *
+   * @default 1
+   */
+  max_values?: number;
+  /**
+   * Whether this component is required to be filled
+   *
+   * @default true
+   */
+  required?: boolean;
+}
+
+/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-interaction-response-structure */
+export interface DiscordFileUploadInteractionResponse {
+  type: MessageComponentTypes.FileUpload;
+
+  /** Unique identifier for the component */
+  id: number;
+  /** The custom id for the file upload */
+  custom_id: string;
+  /** IDs of the uploaded files found in the resolved data */
+  values: string[];
+}
+
 /** https://docs.discord.com/developers/components/reference#radio-group-structure */
 export interface DiscordRadioGroupComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.RadioGroup;
@@ -780,103 +876,6 @@ export interface DiscordCheckboxInteractionResponse {
   custom_id: string;
   /** The state of the checkbox (true if checked, false if unchecked) */
   value: boolean;
-}
-
-/** https://discord.com/developers/docs/components/reference#label-label-structure */
-/** https://docs.discord.com/developers/components/reference#label-label-structure */
-export interface DiscordLabelComponent extends DiscordBaseComponent {
-  type: MessageComponentTypes.Label;
-
-  /**
-   * The label text
-   *
-   * @remarks
-   * Max 45 characters.
-   */
-  label: string;
-  /**
-   * An optional description text for the label
-   *
-   * @remarks
-   * Max 100 characters.
-   */
-  description?: string;
-  /** The component within the label */
-  component:
-    | DiscordTextInputComponent
-    | DiscordSelectMenuComponent
-    | DiscordFileUploadComponent
-    | DiscordRadioGroupComponent
-    | DiscordCheckboxGroupComponent
-    | DiscordCheckboxComponent
-    | DiscordStringSelectComponent
-    | DiscordUserSelectComponent
-    | DiscordRoleSelectComponent
-    | DiscordMentionableSelectComponent
-    | DiscordChannelSelectComponent
-    | DiscordFileUploadComponent;
-}
-
-/** https://docs.discord.com/developers/components/reference#label-label-interaction-response-structure */
-export interface DiscordLabelInteractionResponse {
-  type: MessageComponentTypes.Label;
-  /** 32 bit integer used as an optional identifier for component */
-  id: number;
-  /** The component within the label */
-  component:
-    | DiscordTextInputInteractionResponse
-    | DiscordStringSelectInteractionResponseFromModal
-    | DiscordUserSelectInteractionResponseFromModal
-    | DiscordRoleSelectInteractionResponseFromModal
-    | DiscordMentionableSelectInteractionResponseFromModal
-    | DiscordChannelSelectInteractionResponseFromModal
-    | DiscordFileUploadInteractionResponse
-    | DiscordRadioGroupInteractionResponse
-    | DiscordCheckboxGroupInteractionResponse
-    | DiscordCheckboxInteractionResponse;
-}
-
-/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-structure */
-export interface DiscordFileUploadComponent extends DiscordBaseComponent {
-  type: MessageComponentTypes.FileUpload;
-
-  /** The custom id for the file upload */
-  custom_id: string;
-  /**
-   * The minimum number of files that must be uploaded
-   *
-   * @remarks
-   * Between 0-10
-   *
-   * @default 1
-   */
-  min_values?: number;
-  /** The maximum number of files that can be uploaded
-   *
-   * @remarks
-   * Between 1-10
-   *
-   * @default 1
-   */
-  max_values?: number;
-  /**
-   * Whether this component is required to be filled
-   *
-   * @default true
-   */
-  required?: boolean;
-}
-
-/** https://docs.discord.com/developers/components/reference#file-upload-file-upload-interaction-response-structure */
-export interface DiscordFileUploadInteractionResponse {
-  type: MessageComponentTypes.FileUpload;
-
-  /** Unique identifier for the component */
-  id: number;
-  /** The custom id for the file upload */
-  custom_id: string;
-  /** IDs of the uploaded files found in the resolved data */
-  values: string[];
 }
 
 /** https://docs.discord.com/developers/components/reference#unfurled-media-item-structure */
