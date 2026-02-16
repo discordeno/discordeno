@@ -690,7 +690,6 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   spoiler?: boolean;
 }
 
-/** https://discord.com/developers/docs/components/reference#label-label-structure */
 /** https://docs.discord.com/developers/components/reference#label-label-structure */
 export interface DiscordLabelComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Label;
