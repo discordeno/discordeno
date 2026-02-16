@@ -709,6 +709,8 @@ export interface DiscordInviteCreate {
   uses: number;
   /** The expiration date of this invite. */
   expires_at: string;
+  /** the role ID(s) for roles in the guild given to the users that accept this invite */
+  role_ids?: string[];
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#invite-delete-invite-delete-event-fields */
