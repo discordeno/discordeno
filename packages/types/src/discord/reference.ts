@@ -1,17 +1,17 @@
-/** Types for: https://discord.com/developers/docs/reference */
+/** Types for: https://docs.discord.com/developers/reference */
 
 /**
- * https://discord.com/developers/docs/reference#image-formatting
+ * https://docs.discord.com/developers/reference#image-formatting
  *
  * @remarks
  * json is only for stickers
  */
-export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'avif' | 'json';
+export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json';
 
-/** https://discord.com/developers/docs/reference#image-formatting */
+/** https://docs.discord.com/developers/reference#image-formatting */
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
 
-/** https://discord.com/developers/docs/reference#locales */
+/** https://docs.discord.com/developers/reference#locales */
 export enum Locales {
   Indonesian = 'id',
   Danish = 'da',

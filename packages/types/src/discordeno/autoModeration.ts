@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/auto-moderation */
+/** Types for: https://docs.discord.com/developers/resources/auto-moderation */
 
 import type {
   AutoModerationActionType,
@@ -9,7 +9,7 @@ import type {
 import type { BigString, Camelize } from '../shared.js';
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-auto-moderation-action-structure */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-action-object-auto-moderation-action-structure */
 export interface DiscordenoAutoModerationAction {
   /** The type of action to take when a rule is triggered */
   type: AutoModerationActionType;
@@ -23,7 +23,7 @@ export interface DiscordenoAutoModerationAction {
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
-/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata */
+/** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-action-object-action-metadata */
 export interface DiscordenoAutoModerationActionMetadata {
   /**
    * The id of channel to which user content should be logged.
@@ -54,7 +54,7 @@ export interface DiscordenoAutoModerationActionMetadata {
   customMessage?: string;
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule-json-params */
+/** https://docs.discord.com/developers/resources/auto-moderation#create-auto-moderation-rule-json-params */
 export interface CreateAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string;
@@ -74,7 +74,7 @@ export interface CreateAutoModerationRuleOptions {
   exemptChannels?: BigString[];
 }
 
-/** https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params */
+/** https://docs.discord.com/developers/resources/auto-moderation#modify-auto-moderation-rule-json-params */
 export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name?: string;

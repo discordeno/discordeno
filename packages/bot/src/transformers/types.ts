@@ -51,7 +51,6 @@ import type {
   MfaLevels,
   OAuth2Scope,
   OverwriteTypes,
-  PermissionStrings,
   PremiumTiers,
   PremiumTypes,
   PresenceStatus,
@@ -517,9 +516,9 @@ export interface Channel {
     /** Either 0 (role) or 1 (member) */
     type: OverwriteTypes;
     /** Permission bit set */
-    allow: PermissionStrings[];
+    allow: bigint;
     /** Permission bit set */
-    deny: PermissionStrings[];
+    deny: bigint;
   }[];
 }
 
@@ -1737,7 +1736,7 @@ export interface InviteStageInstance {
 }
 
 export interface Sticker {
-  /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
+  /** [Id of the sticker](https://docs.discord.com/developers/reference#image-formatting) */
   id: bigint;
   /** Id of the pack the sticker is from */
   packId?: bigint;
@@ -1747,9 +1746,9 @@ export interface Sticker {
   description: string;
   /** a unicode emoji representing the sticker's expression */
   tags: string;
-  /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
+  /** [type of sticker](https://docs.discord.com/developers/resources/sticker#sticker-object-sticker-types) */
   type: StickerTypes;
-  /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
+  /** [Type of sticker format](https://docs.discord.com/developers/resources/sticker#sticker-object-sticker-format-types) */
   formatType: StickerFormatTypes;
   /** Whether or not the sticker is available */
   available?: boolean;
@@ -2006,7 +2005,7 @@ export interface Subscription {
   country?: string;
 }
 
-/** https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
+/** https://docs.discord.com/developers/resources/soundboard#soundboard-sound-object-soundboard-sound-structure */
 export interface SoundboardSound {
   /** The name of this sound */
   name: string;
@@ -2026,7 +2025,7 @@ export interface SoundboardSound {
   user?: User;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#lobby-object-lobby-structure */
+/** https://docs.discord.com/developers/resources/lobby#lobby-object-lobby-structure */
 export interface Lobby {
   /** The id of this channel */
   id: bigint;
@@ -2040,7 +2039,7 @@ export interface Lobby {
   linkedChannel?: Channel;
 }
 
-/** https://discord.com/developers/docs/resources/lobby#lobby-member-object-lobby-member-structure */
+/** https://docs.discord.com/developers/resources/lobby#lobby-member-object-lobby-member-structure */
 export interface LobbyMember {
   /** The id of the user */
   id: bigint;

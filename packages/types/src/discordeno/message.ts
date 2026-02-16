@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/message */
+/** Types for: https://docs.discord.com/developers/resources/message */
 
 import type {
   AllowedMentionsTypes,
@@ -14,7 +14,7 @@ import type { CreatePoll } from './poll.js';
 import type { FileContent } from './reference.js';
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
-/** https://discord.com/developers/docs/resources/message#message-reference-structure */
+/** https://docs.discord.com/developers/resources/message#message-reference-structure */
 export interface DiscordenoMessageReference {
   /** Type of reference */
   type?: DiscordMessageReferenceType;
@@ -31,7 +31,7 @@ export interface DiscordenoMessageReference {
   failIfNotExists?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/message#allowed-mentions-object-default-settings-for-allowed-mentions */
+/** https://docs.discord.com/developers/resources/message#allowed-mentions-object-default-settings-for-allowed-mentions */
 export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
   parse?: AllowedMentionsTypes[];
@@ -43,34 +43,34 @@ export interface AllowedMentions {
   users?: bigint[];
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesLimit {
   /** Max number of messages to return (1-100) default 50 */
   limit?: number;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAround extends GetMessagesLimit {
   /** Get messages around this message id */
   around?: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesBefore extends GetMessagesLimit {
   /** Get messages before this message id */
   before?: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAfter extends GetMessagesLimit {
   /** Get messages after this message id */
   after?: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;
 
-/** https://discord.com/developers/docs/resources/message#create-message-jsonform-params */
+/** https://docs.discord.com/developers/resources/message#create-message-jsonform-params */
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string;
@@ -107,7 +107,7 @@ export interface CreateMessageOptions {
   poll?: CreatePoll;
 }
 
-/** https://discord.com/developers/docs/resources/message#get-reactions-query-string-params */
+/** https://docs.discord.com/developers/resources/message#get-reactions-query-string-params */
 export interface GetReactions {
   /** The type of reaction */
   type: DiscordReactionType;
@@ -117,7 +117,7 @@ export interface GetReactions {
   limit?: number;
 }
 
-/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
+/** https://docs.discord.com/developers/resources/channel#edit-message-json-params */
 export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null;
@@ -142,7 +142,7 @@ export interface EditMessage {
   attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
 }
 
-/** https://discord.com/developers/docs/resources/message#get-channel-pins-query-string-params */
+/** https://docs.discord.com/developers/resources/message#get-channel-pins-query-string-params */
 export interface GetChannelPinsOptions {
   /** Get messages pinned before this timestamp */
   before?: string;

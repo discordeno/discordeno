@@ -965,13 +965,14 @@ export enum DesiredPropertiesBehavior {
 }
 
 /** @private This is subject to breaking changes without notices */
-export type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredProperties> = IsKeyDesired<
-  Key,
-  TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
-  TProps[KeyByValue<TransformersObjects, T>]
-> extends true
-  ? Key
-  : never;
+export type RemoveKeyIfUndesired<Key, T, TProps extends TransformersDesiredProperties> =
+  IsKeyDesired<
+    Key,
+    TransformersDesiredPropertiesMetadata[KeyByValue<TransformersObjects, T>]['dependencies'],
+    TProps[KeyByValue<TransformersObjects, T>]
+  > extends true
+    ? Key
+    : never;
 
 /** @private This is subject to breaking changes without notices */
 export type GetErrorWhenUndesired<
@@ -1004,39 +1005,40 @@ export type IsObject<T> = T extends object ? (T extends Function ? false : true)
 /**
  * Transform a generic object properties based on the desired properties and behavior for other transformer objects in the object.
  */
-export type TransformProperty<T, TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = T extends Array<infer U> // is it an array?
-  ? // Yes, apply the desired props
-    TransformProperty<U, TProps, TBehavior>[]
-  : // No, is it a collection?
-    T extends Collection<infer U, infer UObj>
-    ? // Yes, check for nested proprieties
-      Collection<U, TransformProperty<UObj, TProps, TBehavior>>
-    : // No, is it a Bot?
-      Equals<T, Bot> extends true
-      ? // Yes, return a bot with the correct set of props & behavior
-        Bot<TProps, TBehavior>
-      : // No, is it a transformed object?
-        T extends TransformersObjects[keyof TransformersObjects]
-        ? // Yes, apply the desired props
-          SetupDesiredProps<T, TProps, TBehavior>
-        : // No, is it an interaction resolved data member? | We need to check this here because the type itself has not way of getting the desired props
-          Equals<T, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
+export type TransformProperty<T, TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> =
+  T extends Array<infer U> // is it an array?
+    ? // Yes, apply the desired props
+      TransformProperty<U, TProps, TBehavior>[]
+    : // No, is it a collection?
+      T extends Collection<infer U, infer UObj>
+      ? // Yes, check for nested proprieties
+        Collection<U, TransformProperty<UObj, TProps, TBehavior>>
+      : // No, is it a Bot?
+        Equals<T, Bot> extends true
+        ? // Yes, return a bot with the correct set of props & behavior
+          Bot<TProps, TBehavior>
+        : // No, is it a transformed object?
+          T extends TransformersObjects[keyof TransformersObjects]
           ? // Yes, apply the desired props
-            InteractionResolvedDataMember<TProps, TBehavior>
-          : // No, is it an interaction resolved data channel? | We need to check this here because the type itself has not way of getting the desired props
-            Equals<T, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
+            SetupDesiredProps<T, TProps, TBehavior>
+          : // No, is it an interaction resolved data member? | We need to check this here because the type itself has not way of getting the desired props
+            Equals<T, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
             ? // Yes, apply the desired props
-              InteractionResolvedDataChannel<TProps, TBehavior>
-            : // Is it a function?
-              T extends (...args: infer P) => Promise<infer R>
-              ? // Yes, we need to ensure we transform the return type as well
-                (...args: P) => Promise<TransformProperty<R, TProps, TBehavior>>
-              : // Is it an object?
-                IsObject<T> extends true
-                ? // Yes, we need to ensure we transform the nested properties as well
-                  { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
-                : // No, this is a normal value such as string / bigint / number
-                  T;
+              InteractionResolvedDataMember<TProps, TBehavior>
+            : // No, is it an interaction resolved data channel? | We need to check this here because the type itself has not way of getting the desired props
+              Equals<T, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
+              ? // Yes, apply the desired props
+                InteractionResolvedDataChannel<TProps, TBehavior>
+              : // Is it a function?
+                T extends (...args: infer P) => Promise<infer R>
+                ? // Yes, we need to ensure we transform the return type as well
+                  (...args: P) => Promise<TransformProperty<R, TProps, TBehavior>>
+                : // Is it an object?
+                  IsObject<T> extends true
+                  ? // Yes, we need to ensure we transform the nested properties as well
+                    { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
+                  : // No, this is a normal value such as string / bigint / number
+                    T;
 
 /**
  * Apply desired properties to an object.

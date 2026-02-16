@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/user */
+/** Types for: https://docs.discord.com/developers/resources/user */
 
 import type { DiscordIntegration } from './guild.js';
 
-/** https://discord.com/developers/docs/resources/user#user-object-user-structure */
+/** https://docs.discord.com/developers/resources/user#user-object-user-structure */
 export interface DiscordUser {
   /** The user's id */
   id: string;
@@ -44,7 +44,7 @@ export interface DiscordUser {
   primary_guild?: DiscordUserPrimaryGuild | null;
 }
 
-/** https://discord.com/developers/docs/resources/user#user-object-user-flags */
+/** https://docs.discord.com/developers/resources/user#user-object-user-flags */
 export enum UserFlags {
   DiscordEmployee = 1 << 0,
   PartneredServerOwner = 1 << 1,
@@ -63,7 +63,7 @@ export enum UserFlags {
   ActiveDeveloper = 1 << 22,
 }
 
-/** https://discord.com/developers/docs/resources/user#user-object-premium-types */
+/** https://docs.discord.com/developers/resources/user#user-object-premium-types */
 export enum PremiumTypes {
   None,
   NitroClassic,
@@ -71,7 +71,7 @@ export enum PremiumTypes {
   NitroBasic,
 }
 
-/** https://discord.com/developers/docs/resources/user#user-object-user-primary-guild */
+/** https://docs.discord.com/developers/resources/user#user-object-user-primary-guild */
 export interface DiscordUserPrimaryGuild {
   /** The id of the primary guild */
   identity_guild_id: string | null;
@@ -89,7 +89,7 @@ export interface DiscordUserPrimaryGuild {
   badge: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object-avatar-decoration-data-structure */
+/** https://docs.discord.com/developers/resources/user#avatar-decoration-data-object-avatar-decoration-data-structure */
 export interface DiscordAvatarDecorationData {
   /** the avatar decoration hash */
   asset: string;
@@ -97,13 +97,13 @@ export interface DiscordAvatarDecorationData {
   sku_id: string;
 }
 
-/** https://discord.com/developers/docs/resources/user#collectibles-collectible-structure */
+/** https://docs.discord.com/developers/resources/user#collectibles-collectible-structure */
 export interface DiscordCollectibles {
   /** object mapping of nameplate data */
   nameplate?: DiscordNameplate;
 }
 
-/** https://discord.com/developers/docs/resources/user#nameplate-nameplate-structure */
+/** https://docs.discord.com/developers/resources/user#nameplate-nameplate-structure */
 export interface DiscordNameplate {
   /** the nameplate's id */
   sku_id: string;
@@ -115,7 +115,7 @@ export interface DiscordNameplate {
   palette: string;
 }
 
-/** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */
+/** https://docs.discord.com/developers/resources/user#connection-object-connection-structure */
 export interface DiscordConnection {
   /** id of the connection account */
   id: string;
@@ -139,7 +139,7 @@ export interface DiscordConnection {
   visibility: DiscordConnectionVisibility;
 }
 
-/** https://discord.com/developers/docs/resources/user#connection-object-services */
+/** https://docs.discord.com/developers/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
   AmazonMusic = 'amazon-music',
   BattleNet = 'battlenet',
@@ -169,7 +169,7 @@ export enum DiscordConnectionServiceType {
   YouTube = 'youtube',
 }
 
-/** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
+/** https://docs.discord.com/developers/resources/user#connection-object-visibility-types */
 export enum DiscordConnectionVisibility {
   /** invisible to everyone except the user themselves */
   None = 0,
@@ -177,7 +177,7 @@ export enum DiscordConnectionVisibility {
   Everyone = 1,
 }
 
-/** https://discord.com/developers/docs/resources/user#application-role-connection-object-application-role-connection-structure */
+/** https://docs.discord.com/developers/resources/user#application-role-connection-object-application-role-connection-structure */
 export interface DiscordApplicationRoleConnection {
   /** the vanity name of the platform a bot has connected (max 50 characters) */
   platform_name: string | null;

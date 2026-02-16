@@ -1,7 +1,7 @@
 /**
  * Types for:
- * - https://discord.com/developers/docs/interactions/receiving-and-responding
- * - https://discord.com/developers/docs/interactions/application-commands
+ * - https://docs.discord.com/developers/interactions/receiving-and-responding
+ * - https://docs.discord.com/developers/interactions/application-commands
  */
 
 import type { DiscordApplicationIntegrationType } from './application.js';
@@ -14,7 +14,7 @@ import type { DiscordRole } from './permissions.js';
 import type { Localization } from './reference.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-interaction-structure */
 export interface DiscordInteraction {
   /** Id of the interaction */
   id: string;
@@ -69,13 +69,13 @@ export interface DiscordInteraction {
   attachment_size_limit: number;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure (Specifically, the member propriety) */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-interaction-structure (Specifically, the member propriety) */
 export interface DiscordInteractionMember extends DiscordMemberWithUser {
   /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
   permissions: string;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-interaction-type */
 export enum InteractionTypes {
   Ping = 1,
   ApplicationCommand = 2,
@@ -84,7 +84,7 @@ export enum InteractionTypes {
   ModalSubmit = 5,
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-interaction-context-types */
 export enum DiscordInteractionContextType {
   /** Interaction can be used within servers */
   Guild = 0,
@@ -94,14 +94,14 @@ export enum DiscordInteractionContextType {
   PrivateChannel = 2,
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object */
 export type DiscordAuthorizingIntegrationOwners = Partial<Record<DiscordApplicationIntegrationType, string>>;
 
 // Since this is a merge of 3 types, the properties appear in order of their first appearance in the 3 types
 /**
- * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-data-structure
- * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-message-component-data-structure
- * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-modal-submit-data-structure
+ * https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-application-command-data-structure
+ * https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-message-component-data-structure
+ * https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-modal-submit-data-structure
  */
 export interface DiscordInteractionData {
   // Application Command Data
@@ -134,7 +134,7 @@ export interface DiscordInteractionData {
   components?: DiscordMessageComponentFromModalInteractionResponse[];
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-resolved-data-structure */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-resolved-data-structure */
 export interface DiscordInteractionDataResolved {
   /** The Ids and User objects */
   users?: Record<string, DiscordUser>;
@@ -174,7 +174,7 @@ export interface DiscordInteractionDataResolved {
   attachments?: Record<string, DiscordAttachment>;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-interaction-data-option-structure */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-object-application-command-interaction-data-option-structure */
 export interface DiscordInteractionDataOption {
   /** Name of the parameter */
   name: string;
@@ -188,7 +188,7 @@ export interface DiscordInteractionDataOption {
   focused?: boolean;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure */
 export interface DiscordMessageInteraction {
   /** Id of the interaction */
   id: string;
@@ -202,7 +202,7 @@ export interface DiscordMessageInteraction {
   member?: Partial<DiscordMember>;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type */
 export enum InteractionResponseTypes {
   /** ACK a `Ping` */
   Pong = 1,
@@ -233,7 +233,7 @@ export enum InteractionResponseTypes {
   LaunchActivity = 12,
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object */
 export interface DiscordInteractionCallbackResponse {
   /** The interaction object associated with the interaction response */
   interaction: DiscordInteractionCallback;
@@ -241,7 +241,7 @@ export interface DiscordInteractionCallbackResponse {
   resource?: DiscordInteractionResource;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-object */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-callback-interaction-callback-object */
 export interface DiscordInteractionCallback {
   /** ID of the interaction */
   id: string;
@@ -257,7 +257,7 @@ export interface DiscordInteractionCallback {
   response_message_ephemeral?: boolean;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-resource-object */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-callback-interaction-callback-resource-object */
 export interface DiscordInteractionResource {
   type: InteractionResponseTypes;
   /**
@@ -276,13 +276,13 @@ export interface DiscordInteractionResource {
   message?: DiscordMessage;
 }
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-activity-instance-resource */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-callback-interaction-callback-activity-instance-resource */
 export interface DiscordActivityInstanceResource {
   /** Instance ID of the Activity if one was launched or joined. */
   id: string;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-object-application-command-structure */
 export interface DiscordApplicationCommand {
   /** Unique ID of command */
   id: string;
@@ -353,7 +353,7 @@ export interface DiscordApplicationCommand {
   handler?: DiscordInteractionEntryPointCommandHandlerType;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-object-application-command-types */
 export enum ApplicationCommandTypes {
   /** A text-based command that shows up when a user types `/` */
   ChatInput = 1,
@@ -365,7 +365,7 @@ export enum ApplicationCommandTypes {
   PrimaryEntryPoint,
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-object-application-command-option-structure */
 export interface DiscordApplicationCommandOption {
   /** Type of option */
   type: ApplicationCommandOptionTypes;
@@ -457,7 +457,7 @@ export interface DiscordApplicationCommandOption {
   autocomplete?: boolean;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-object-application-command-option-type */
 export enum ApplicationCommandOptionTypes {
   SubCommand = 1,
   SubCommandGroup,
@@ -477,7 +477,7 @@ export enum ApplicationCommandOptionTypes {
   Attachment,
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-object-application-command-option-choice-structure */
 export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
@@ -487,7 +487,7 @@ export interface DiscordApplicationCommandOptionChoice {
   value: string | number;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-entry-point-command-handler-types */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-object-entry-point-command-handler-types */
 export enum DiscordInteractionEntryPointCommandHandlerType {
   /** The app handles the interaction using an interaction token */
   AppHandler = 1,
@@ -495,7 +495,7 @@ export enum DiscordInteractionEntryPointCommandHandlerType {
   DiscordLaunchActivity = 2,
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure */
 export interface DiscordGuildApplicationCommandPermissions {
   /** ID of the command or the application ID. When the `id` field is the application ID instead of a command ID, the permissions apply to all commands that do not contain explicit overwrites. */
   id: string;
@@ -507,7 +507,7 @@ export interface DiscordGuildApplicationCommandPermissions {
   permissions: DiscordApplicationCommandPermissions[];
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permissions-structure */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-permissions-object-application-command-permissions-structure */
 export interface DiscordApplicationCommandPermissions {
   /** ID of the role, user, or channel. It can also be a permission constant */
   id: string;
@@ -517,7 +517,7 @@ export interface DiscordApplicationCommandPermissions {
   permission: boolean;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permission-type */
+/** https://docs.discord.com/developers/interactions/application-commands#application-command-permissions-object-application-command-permission-type */
 export enum ApplicationCommandPermissionTypes {
   Role = 1,
   User,

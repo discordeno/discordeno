@@ -1,10 +1,10 @@
-/** Types for: https://discord.com/developers/docs/resources/webhook */
+/** Types for: https://docs.discord.com/developers/resources/webhook */
 
 import type { DiscordChannel } from './channel.js';
 import type { DiscordGuild } from './guild.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
+/** https://docs.discord.com/developers/resources/webhook#webhook-object-webhook-structure */
 export interface DiscordWebhook {
   /** The id of the webhook */
   id: string;
@@ -32,7 +32,7 @@ export interface DiscordWebhook {
   url?: string;
 }
 
-/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types */
+/** https://docs.discord.com/developers/resources/webhook#webhook-object-webhook-types */
 export enum WebhookTypes {
   /** Incoming Webhooks can post messages to channels with a generated token */
   Incoming = 1,

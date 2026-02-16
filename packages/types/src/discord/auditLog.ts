@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/audit-log */
+/** Types for: https://docs.discord.com/developers/resources/audit-log */
 
 import type { DiscordAutoModerationRule } from './autoModeration.js';
 import type { DiscordChannel, DiscordOverwrite, DiscordThreadMetadata } from './channel.js';
@@ -14,7 +14,7 @@ import type { DiscordSticker } from './sticker.js';
 import type { DiscordUser } from './user.js';
 import type { DiscordWebhook } from './webhook.js';
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */
+/** https://docs.discord.com/developers/resources/audit-log#audit-log-object-audit-log-structure */
 export interface DiscordAuditLog {
   /** List of application commands referenced in the audit log */
   application_commands: DiscordApplicationCommand[];
@@ -39,7 +39,7 @@ export interface DiscordAuditLog {
   webhooks: DiscordWebhook[];
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
+/** https://docs.discord.com/developers/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
 export interface DiscordAuditLogEntry {
   /** ID of the affected entity (webhook, user, role, etc.) */
   target_id: string | null;
@@ -57,7 +57,7 @@ export interface DiscordAuditLogEntry {
   reason?: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
+/** https://docs.discord.com/developers/resources/audit-log#audit-log-entry-object-audit-log-events */
 export enum AuditLogEvents {
   /** Server settings were updated */
   GuildUpdate = 1,
@@ -195,7 +195,7 @@ export enum AuditLogEvents {
   HomeSettingsUpdate,
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
+/** https://docs.discord.com/developers/resources/audit-log#audit-log-entry-object-audit-log-events */
 export type DiscordAuditLogChange =
   | DiscordAuditLogChangeObject<DiscordGuild>
   | DiscordAuditLogChangeObject<DiscordChannel>
@@ -218,7 +218,7 @@ export type DiscordAuditLogChange =
   | DiscordAuditLogChangeObject<DiscordGuildOnboardingPrompt>
   | DiscordAuditLogChangeObject<DiscordGuildOnboarding>;
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
+/** https://docs.discord.com/developers/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
   /**
    * ID of the app whose permissions were targeted.
@@ -306,7 +306,7 @@ export interface DiscordOptionalAuditEntryInfo {
   integration_type?: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
+/** https://docs.discord.com/developers/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export type DiscordAuditLogChangeObject<T> = NonNullable<
   {
     [K in keyof T]: {

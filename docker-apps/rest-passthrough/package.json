@@ -19,8 +19,8 @@
   },
   "devDependencies": {
     "@favware/cliff-jumper": "^6.0.0",
-    "@types/node": "^25.0.10",
-    "dotenv": "^17.2.3",
+    "@types/node": "^25.2.2",
+    "dotenv": "^17.2.4",
     "typescript": "^5.9.3"
   }
 }

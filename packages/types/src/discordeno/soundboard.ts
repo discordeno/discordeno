@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/soundboard */
+/** Types for: https://docs.discord.com/developers/resources/soundboard */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/soundboard#send-soundboard-sound-json-params */
+/** https://docs.discord.com/developers/resources/soundboard#send-soundboard-sound-json-params */
 export interface SendSoundboardSound {
   /** The id of the soundboard sound to play */
   soundId: BigString;
@@ -10,7 +10,7 @@ export interface SendSoundboardSound {
   sourceGuildId?: BigString;
 }
 
-/** https://discord.com/developers/docs/resources/soundboard#create-guild-soundboard-sound-json-params */
+/** https://docs.discord.com/developers/resources/soundboard#create-guild-soundboard-sound-json-params */
 export interface CreateGuildSoundboardSound {
   /** Name of the soundboard sound (2-32 characters) */
   name: string;
@@ -24,7 +24,7 @@ export interface CreateGuildSoundboardSound {
   emojiName?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/soundboard#modify-guild-soundboard-sound-json-params */
+/** https://docs.discord.com/developers/resources/soundboard#modify-guild-soundboard-sound-json-params */
 export interface ModifyGuildSoundboardSound {
   /** Name of the soundboard sound (2-32 characters) */
   name?: string;

@@ -1,9 +1,9 @@
-/** Types for: https://discord.com/developers/docs/resources/poll */
+/** Types for: https://docs.discord.com/developers/resources/poll */
 
 import type { DiscordEmoji } from './emoji.js';
 import type { DiscordUser } from './user.js';
 
-/** https://discord.com/developers/docs/resources/poll#poll-object-poll-object-structure */
+/** https://docs.discord.com/developers/resources/poll#poll-object-poll-object-structure */
 export interface DiscordPoll {
   /** The question of the poll. Only `text` is supported. */
   question: DiscordPollMedia;
@@ -30,13 +30,13 @@ export interface DiscordPoll {
   results?: DiscordPollResult;
 }
 
-/** https://discord.com/developers/docs/resources/poll#layout-type */
+/** https://docs.discord.com/developers/resources/poll#layout-type */
 export enum DiscordPollLayoutType {
   /** The default layout */
   Default = 1,
 }
 
-/** https://discord.com/developers/docs/resources/poll#poll-media-object-poll-media-object-structure */
+/** https://docs.discord.com/developers/resources/poll#poll-media-object-poll-media-object-structure */
 export interface DiscordPollMedia {
   /**
    * The text of the field
@@ -55,7 +55,7 @@ export interface DiscordPollMedia {
   emoji?: Partial<DiscordEmoji>;
 }
 
-/** https://discord.com/developers/docs/resources/poll#poll-answer-object-poll-answer-object-structure */
+/** https://docs.discord.com/developers/resources/poll#poll-answer-object-poll-answer-object-structure */
 export interface DiscordPollAnswer {
   /**
    * The id of the answer
@@ -68,7 +68,7 @@ export interface DiscordPollAnswer {
   poll_media: DiscordPollMedia;
 }
 
-/** https://discord.com/developers/docs/resources/poll#poll-results-object-poll-results-object-structure */
+/** https://docs.discord.com/developers/resources/poll#poll-results-object-poll-results-object-structure */
 export interface DiscordPollResult {
   /** Whether the votes have been precisely counted */
   is_finalized: boolean;
@@ -76,7 +76,7 @@ export interface DiscordPollResult {
   answer_counts: DiscordPollAnswerCount[];
 }
 
-/** https://discord.com/developers/docs/resources/poll#poll-results-object-poll-results-object-structure */
+/** https://docs.discord.com/developers/resources/poll#poll-results-object-poll-results-object-structure */
 export interface DiscordPollAnswerCount {
   /** The {@link DiscordPollAnswer.answer_id | answer_id} */
   id: number;
@@ -86,7 +86,7 @@ export interface DiscordPollAnswerCount {
   me_voted: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/poll#get-answer-voters-response-body */
+/** https://docs.discord.com/developers/resources/poll#get-answer-voters-response-body */
 export interface DiscordGetAnswerVotesResponse {
   /** Users who voted for this answer */
   users: DiscordUser[];
