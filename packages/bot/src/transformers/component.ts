@@ -313,7 +313,7 @@ function transformChannelSelectMenuComponent(bot: Bot, payload: DiscordChannelSe
   if (props.id && payload.id) select.id = payload.id;
   if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
-  // Check if this is the mentionable select response
+  // Check if this is the channel select response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
     if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
