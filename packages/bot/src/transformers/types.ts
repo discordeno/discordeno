@@ -1146,7 +1146,7 @@ export interface Invite {
   /**
    * The roles assigned to the user upon accepting the invite
    */
-  roles?: Role[];
+  roles?: Pick<Role, 'id' | 'name' | 'position' | 'color' | 'colors' | 'icon' | 'unicodeEmoji'>[];
 }
 
 export interface Member {
