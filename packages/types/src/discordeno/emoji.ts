@@ -1,8 +1,8 @@
-/** Types for: https://discord.com/developers/docs/resources/emoji */
+/** Types for: https://docs.discord.com/developers/resources/emoji */
 
 import type { BigString } from '../shared.js';
 
-/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
+/** https://docs.discord.com/developers/resources/emoji#create-guild-emoji */
 export interface CreateGuildEmoji {
   /** Name of the emoji */
   name: string;
@@ -12,7 +12,7 @@ export interface CreateGuildEmoji {
   roles: BigString[];
 }
 
-/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
+/** https://docs.discord.com/developers/resources/emoji#modify-guild-emoji */
 export interface ModifyGuildEmoji {
   /** Name of the emoji */
   name?: string;
@@ -20,7 +20,7 @@ export interface ModifyGuildEmoji {
   roles?: BigString[] | null;
 }
 
-/** https://discord.com/developers/docs/resources/emoji#create-application-emoji */
+/** https://docs.discord.com/developers/resources/emoji#create-application-emoji */
 export interface CreateApplicationEmoji {
   /** Name of the emoji */
   name: string;
@@ -28,7 +28,7 @@ export interface CreateApplicationEmoji {
   image: string;
 }
 
-/** https://discord.com/developers/docs/resources/emoji#modify-application-emoji */
+/** https://docs.discord.com/developers/resources/emoji#modify-application-emoji */
 export interface ModifyApplicationEmoji {
   /** Name of the emoji */
   name: string;

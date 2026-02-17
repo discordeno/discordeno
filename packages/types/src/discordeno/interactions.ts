@@ -1,7 +1,7 @@
 /**
  * Types for:
- * - https://discord.com/developers/docs/interactions/receiving-and-responding
- * - https://discord.com/developers/docs/interactions/application-commands
+ * - https://docs.discord.com/developers/interactions/receiving-and-responding
+ * - https://docs.discord.com/developers/interactions/application-commands
  */
 
 import type { DiscordApplicationIntegrationType } from '../discord/application.js';
@@ -21,7 +21,7 @@ import type { AllowedMentions } from './message.js';
 import type { CreatePoll } from './poll.js';
 import type { FileContent } from './reference.js';
 
-/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-response-structure */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-response-object-interaction-response-structure */
 export interface InteractionResponse {
   /** The type of response */
   type: InteractionResponseTypes;
@@ -31,9 +31,9 @@ export interface InteractionResponse {
 
 // Since this is a merge of 3 types, the properties appear in order of their first appearance in the 3 types
 /**
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-messages
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-modal
+ * - https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-response-object-messages
+ * - https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-response-object-autocomplete
+ * - https://docs.discord.com/developers/interactions/receiving-and-responding#interaction-response-object-modal
  */
 export interface InteractionCallbackData {
   // Messages
@@ -72,14 +72,14 @@ export interface InteractionCallbackData {
 }
 
 /**
- * - https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response-query-string-params
- * - https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command-json-params
+ * - https://docs.discord.com/developers/interactions/receiving-and-responding#create-interaction-response-query-string-params
+ * - https://docs.discord.com/developers/interactions/application-commands#create-guild-application-command-json-params
  */
 export interface InteractionCallbackOptions {
   withResponse?: boolean;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands-query-string-params */
+/** https://docs.discord.com/developers/interactions/application-commands#get-global-application-commands-query-string-params */
 export interface GetGlobalApplicationCommandsOptions {
   /**
    * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
@@ -91,7 +91,7 @@ export interface GetGlobalApplicationCommandsOptions {
 /**
  * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
  *
- * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ * @see {@link https://docs.discord.com/developers/topics/oauth2#shared-resources-oauth2-scopes}
  */
 export interface CreateGlobalApplicationCommandOptions {
   /** The bearer token of the developer of the application */
@@ -99,8 +99,8 @@ export interface CreateGlobalApplicationCommandOptions {
 }
 
 /**
- * - https://discord.com/developers/docs/interactions/application-commands#create-global-application-command-json-params
- * - https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command-json-params
+ * - https://docs.discord.com/developers/interactions/application-commands#create-global-application-command-json-params
+ * - https://docs.discord.com/developers/interactions/application-commands#create-guild-application-command-json-params
  */
 export interface CreateApplicationCommand {
   /**
@@ -172,7 +172,7 @@ export interface CreateApplicationCommand {
 /**
  * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
  *
- * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ * @see {@link https://docs.discord.com/developers/topics/oauth2#shared-resources-oauth2-scopes}
  */
 export interface UpsertGlobalApplicationCommandOptions {
   /** The bearer token of the developer of the application */
@@ -182,14 +182,14 @@ export interface UpsertGlobalApplicationCommandOptions {
 /**
  * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
  *
- * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ * @see {@link https://docs.discord.com/developers/topics/oauth2#shared-resources-oauth2-scopes}
  */
 export interface CreateGuildApplicationCommandOptions {
   /** The bearer token of the developer of the application */
   bearerToken: string;
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands-query-string-params */
+/** https://docs.discord.com/developers/interactions/application-commands#get-guild-application-commands-query-string-params */
 export interface GetGuildApplicationCommandsOptions {
   /**
    * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
@@ -201,7 +201,7 @@ export interface GetGuildApplicationCommandsOptions {
 /**
  * Documented implicitly by the description of the `applications.commands.update` Oauth2 scope
  *
- * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ * @see {@link https://docs.discord.com/developers/topics/oauth2#shared-resources-oauth2-scopes}
  */
 export interface UpsertGuildApplicationCommandOptions {
   /** The bearer token of the developer of the application */
@@ -210,12 +210,12 @@ export interface UpsertGuildApplicationCommandOptions {
 
 /**
  * Additional properties for:
- * - https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
- * - https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
+ * - https://docs.discord.com/developers/interactions/application-commands#get-guild-application-command-permissions
+ * - https://docs.discord.com/developers/interactions/application-commands#edit-application-command-permissions
  *
  * The access token is documented implicitly by the description of the `applications.commands.update` Oauth2 scope
  *
- * @see {@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ * @see {@link https://docs.discord.com/developers/topics/oauth2#shared-resources-oauth2-scopes}
  */
 export interface GetApplicationCommandPermissionOptions {
   /** Access token of the user. Requires the `applications.commands.permissions.update` scope */

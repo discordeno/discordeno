@@ -8,7 +8,10 @@ export interface ImageOptions {
 
 /** Help format an image url. */
 export function formatImageUrl(url: string, size: ImageSize = 128, format?: ImageFormat): string {
-  return `${url}.${format ?? (url.includes('/a_') ? 'gif' : 'webp')}?size=${size}`;
+  const animated = url.includes('/a_');
+  format ??= animated ? 'gif' : 'webp';
+
+  return `${url}.${format}?size=${size}${animated && format === 'webp' ? '&animated=true' : ''}`;
 }
 
 /**

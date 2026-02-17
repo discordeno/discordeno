@@ -1,4 +1,4 @@
-/** Types for: https://discord.com/developers/docs/resources/channel */
+/** Types for: https://docs.discord.com/developers/resources/channel */
 
 import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js';
 import type { TargetTypes } from '../discord/invite.js';
@@ -8,7 +8,7 @@ import type { MessageComponents } from './components.js';
 import type { AllowedMentions } from './message.js';
 import type { FileContent } from './reference.js';
 
-/** https://discord.com/developers/docs/resources/channel#overwrite-object-overwrite-structure */
+/** https://docs.discord.com/developers/resources/channel#overwrite-object-overwrite-structure */
 export interface Overwrite {
   /** Role or user id */
   id: BigString;
@@ -16,15 +16,15 @@ export interface Overwrite {
   type: OverwriteTypes;
 
   // NOTE:
-  // - Discord says that these are always present, we keep them as optional (and allow for null) because when it is sent it can be null / not present, https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params, specificly the **
+  // - Discord says that these are always present, we keep them as optional (and allow for null) because when it is sent it can be null / not present, https://docs.discord.com/developers/resources/guild#create-guild-channel-json-params, specificly the **
   /** Permission bit set */
-  allow?: string | null;
+  allow?: BigString | null;
   /** Permission bit set */
-  deny?: string | null;
+  deny?: BigString | null;
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
-/** https://discord.com/developers/docs/resources/channel#default-reaction-object-default-reaction-structure */
+/** https://docs.discord.com/developers/resources/channel#default-reaction-object-default-reaction-structure */
 export interface DiscordenoDefaultReactionEmoji {
   /** The id of a guild's custom emoji */
   emoji_id: BigString | null;
@@ -33,7 +33,7 @@ export interface DiscordenoDefaultReactionEmoji {
 }
 
 // This needs the prefix Discordeno to avoid conflicts with the @discordeno/bot types.
-/** https://discord.com/developers/docs/resources/channel#forum-tag-object-forum-tag-structure */
+/** https://docs.discord.com/developers/resources/channel#forum-tag-object-forum-tag-structure */
 export interface DiscordenoForumTag {
   /** The id of the tag */
   id: string;
@@ -49,9 +49,9 @@ export interface DiscordenoForumTag {
 
 // Since this is a merge of 3 types, the properties appear in order of their first appearance in the 3 types
 /**
- * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-group-dm
- * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-guild-channel
- * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread
+ * - https://docs.discord.com/developers/resources/channel#modify-channel-json-params-group-dm
+ * - https://docs.discord.com/developers/resources/channel#modify-channel-json-params-guild-channel
+ * - https://docs.discord.com/developers/resources/channel#modify-channel-json-params-thread
  */
 export interface ModifyChannel {
   // Group DM
@@ -269,7 +269,7 @@ export interface ModifyChannel {
   appliedTags?: BigString[];
 }
 
-/** https://discord.com/developers/docs/resources/channel#edit-channel-permissions-json-params */
+/** https://docs.discord.com/developers/resources/channel#edit-channel-permissions-json-params */
 export interface EditChannelPermissionOverridesOptions {
   // This is included in here however it is a route parameter
   /** Role or user id */
@@ -284,7 +284,7 @@ export interface EditChannelPermissionOverridesOptions {
   deny?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params */
+/** https://docs.discord.com/developers/resources/channel#create-channel-invite-json-params */
 export interface CreateChannelInvite {
   /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
   maxAge?: number;
@@ -304,8 +304,6 @@ export interface CreateChannelInvite {
    * A csv file with a single column of user IDs for all the users able to accept this invite
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` permission.
-   *
    * Uploading a file with invalid user IDs will result in a 400 with the invalid IDs described.
    */
   targetUsersFile?: Blob;
@@ -318,7 +316,7 @@ export interface CreateChannelInvite {
   roleIds?: BigString[];
 }
 
-/** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */
+/** https://docs.discord.com/developers/resources/channel#group-dm-add-recipient-json-params */
 export interface AddDmRecipientOptions {
   /** access token of a user that has granted your app the `gdm.join` scope */
   accessToken: string;
@@ -326,7 +324,7 @@ export interface AddDmRecipientOptions {
   nick: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#start-thread-from-message-json-params */
+/** https://docs.discord.com/developers/resources/channel#start-thread-from-message-json-params */
 export interface StartThreadWithMessage {
   /** 1-100 character thread name */
   name: string;
@@ -336,7 +334,7 @@ export interface StartThreadWithMessage {
   rateLimitPerUser?: number | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params */
+/** https://docs.discord.com/developers/resources/channel#start-thread-without-message-json-params */
 export interface StartThreadWithoutMessage {
   /** 1-100 character thread name */
   name: string;
@@ -350,7 +348,7 @@ export interface StartThreadWithoutMessage {
   rateLimitPerUser?: number | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-jsonform-params*/
+/** https://docs.discord.com/developers/resources/channel#start-thread-in-forum-or-media-channel-jsonform-params*/
 export interface CreateForumPostWithMessage {
   /** 1-100 character thread name */
   name: string;
@@ -366,7 +364,7 @@ export interface CreateForumPostWithMessage {
   files?: FileContent[];
 }
 
-/** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object */
+/** https://docs.discord.com/developers/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object */
 export interface ForumAndMediaThreadMessage {
   /** The message contents (up to 2000 characters) */
   content?: string;
@@ -388,13 +386,13 @@ export interface ForumAndMediaThreadMessage {
   flags?: number;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-thread-member-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#get-thread-member-query-string-params */
 export interface GetThreadMember {
   /** Whether to include a guild member object for the thread member */
   withMember?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/channel#list-thread-members-query-string-params */
+/** https://docs.discord.com/developers/resources/channel#list-thread-members-query-string-params */
 export interface ListThreadMembers {
   /** Whether to include a guild member object for the thread member */
   withMember?: boolean;
@@ -405,9 +403,9 @@ export interface ListThreadMembers {
 }
 
 /**
- * - https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params
- * - https://discord.com/developers/docs/resources/channel#list-private-archived-threads-query-string-params
- * - https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads-query-string-params
+ * - https://docs.discord.com/developers/resources/channel#list-public-archived-threads-query-string-params
+ * - https://docs.discord.com/developers/resources/channel#list-private-archived-threads-query-string-params
+ * - https://docs.discord.com/developers/resources/channel#list-joined-private-archived-threads-query-string-params
  */
 export interface ListArchivedThreads {
   /** Returns threads before this timestamp */

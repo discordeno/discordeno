@@ -693,7 +693,7 @@ export class DiscordenoShard {
         this.events.invalidSession?.(this, resumable);
 
         // We need to wait for a random amount of time between 1 and 5
-        // Reference: https://discord.com/developers/docs/topics/gateway#resuming
+        // Reference: https://docs.discord.com/developers/events/gateway#resuming
         await delay(Math.floor((Math.random() * 4 + 1) * 1000));
 
         this.resolves.get('INVALID_SESSION')?.(packet);
@@ -796,7 +796,7 @@ export class DiscordenoShard {
     // The first heartbeat needs to be send with a random delay between `0` and `interval`
     // Using a `setTimeout(_, jitter)` here to accomplish that.
     // `Math.random()` can be `0` so we use `0.5` if this happens
-    // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating
+    // Reference: https://docs.discord.com/developers/events/gateway#heartbeating
     const jitter = Math.ceil(this.heart.interval * (Math.random() || 0.5));
 
     this.heart.timeoutId = setTimeout(() => {
@@ -827,7 +827,7 @@ export class DiscordenoShard {
         // The Shard did not receive a heartbeat ACK from Discord in time,
         // therefore we have to assume that the connection has failed or got "zombied".
         // The Shard needs to start a re-identify action accordingly.
-        // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
+        // Reference: https://docs.discord.com/developers/events/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
           this.logger.debug(`[Shard] Heartbeat not acknowledged for Shard #${this.id}. Assuming zombied connection.`);
           await this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.');

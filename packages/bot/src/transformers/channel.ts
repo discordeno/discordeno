@@ -1,5 +1,5 @@
 import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types';
-import { calculatePermissions, iconHashToBigInt } from '@discordeno/utils';
+import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
@@ -53,8 +53,8 @@ export const baseChannel: Channel = {
         return {
           type,
           id,
-          allow: calculatePermissions(allow),
-          deny: calculatePermissions(deny),
+          allow,
+          deny,
         };
       }) ?? []
     );

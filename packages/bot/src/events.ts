@@ -86,6 +86,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     temporary: boolean;
     uses: number;
     expiresAt: number;
+    roleIds?: bigint[];
   }) => unknown;
   inviteDelete: (payload: { channelId: bigint; guildId?: bigint; code: string }) => unknown;
   guildMemberAdd: (member: SetupDesiredProps<Member, TProps, TBehavior>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown;

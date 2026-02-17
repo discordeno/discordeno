@@ -30,7 +30,10 @@ export function transformInvite(bot: Bot, payload: Partial<DiscordInviteMetadata
     invite.guildScheduledEvent = bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event);
   if (props.expiresAt && payload.expires_at) invite.expiresAt = Date.parse(payload.expires_at);
   if (props.flags && payload.flags) invite.flags = new ToggleBitfield(payload.flags);
-  if (props.roles && payload.roles) invite.roles = payload.roles.map((role) => bot.transformers.role(bot, role));
+  if (props.roles && payload.roles) {
+    // Going from a Partial<T> To Pick<T, K> requires an as, as typescript can't guarantee that the properties exist on the partial
+    invite.roles = payload.roles.map((role) => bot.transformers.role(bot, role, { partial: true, guildId: payload.guild?.id })) as Invite['roles'];
+  }
 
   return callCustomizer('invite', bot, payload, invite, {
     shardId: extra?.shardId,

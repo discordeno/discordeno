@@ -352,7 +352,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // GET ALL NECESSARY HEADERS
       const remaining = headers.get(RATE_LIMIT_REMAINING_HEADER);
-      const retryAfter = headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
+      const retryAfter = headers.get('Retry-After') ?? headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
       const reset = Date.now() + Number(retryAfter) * 1000;
       const global = headers.get(RATE_LIMIT_GLOBAL_HEADER);
       // undefined override null needed for typings
@@ -500,7 +500,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         options.retryCount += 1;
 
-        const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER);
+        const resetAfter = response.headers.get('retry-after');
         if (resetAfter) await delay(Number(resetAfter) * 1000);
 
         return await options.retryRequest?.(options);
@@ -579,7 +579,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return;
       }
 
-      // If we the request has a token, use it
+      // If the request has a token, use it
       // Else fallback to prefix with the bot token
       const queueIdentifier = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`;
 
@@ -682,7 +682,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             error.message = `[${reason.status}] ${errorText}`;
 
             // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
-            // https://discord.com/developers/docs/reference#error-messages
+            // https://docs.discord.com/developers/reference#error-messages
             if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
               error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
             }
@@ -815,17 +815,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason });
       }
 
-      // When we have to upload a file, we need to use FormData, and each field has to be appended individually
+      // When we have to upload a file, we need to use FormData, and all other fields need to be part of the payload_json field.
       const form = new FormData();
 
-      for (const [key, value] of Object.entries(body)) {
-        if (key !== 'targetUsersFile' && key !== 'roleIds') {
-          form.append(camelToSnakeCase(key), rest.changeToDiscordFormat(value).toString());
-        }
-      }
-
+      form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...body, targetUsersFile: undefined })));
       form.append('target_users_file', body.targetUsersFile);
-      if (body.roleIds) form.append('role_ids', body.roleIds.map((x) => x.toString()).join(','));
 
       return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason });
     },

@@ -1,6 +1,12 @@
 import {
   type DiscordActionRow,
   type DiscordButtonComponent,
+  type DiscordChannelSelectComponent,
+  type DiscordChannelSelectInteractionResponseFromModal,
+  type DiscordCheckboxComponent,
+  type DiscordCheckboxGroupComponent,
+  type DiscordCheckboxGroupInteractionResponse,
+  type DiscordCheckboxInteractionResponse,
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordFileUploadComponent,
@@ -9,18 +15,26 @@ import {
   type DiscordLabelInteractionResponse,
   type DiscordMediaGalleryComponent,
   type DiscordMediaGalleryItem,
+  type DiscordMentionableSelectComponent,
+  type DiscordMentionableSelectInteractionResponseFromModal,
   type DiscordMessageComponent,
   type DiscordMessageComponentFromModalInteractionResponse,
+  type DiscordRadioGroupComponent,
+  type DiscordRadioGroupInteractionResponse,
+  type DiscordRoleSelectComponent,
+  type DiscordRoleSelectInteractionResponseFromModal,
   type DiscordSectionComponent,
-  type DiscordSelectMenuComponent,
   type DiscordSeparatorComponent,
-  type DiscordStringSelectInteractionResponse,
+  type DiscordStringSelectComponent,
+  type DiscordStringSelectInteractionResponseFromModal,
   type DiscordTextDisplayComponent,
   type DiscordTextDisplayInteractionResponse,
   type DiscordTextInputComponent,
   type DiscordTextInputInteractionResponse,
   type DiscordThumbnailComponent,
   type DiscordUnfurledMediaItem,
+  type DiscordUserSelectComponent,
+  type DiscordUserSelectInteractionResponseFromModal,
   MessageComponentTypes,
 } from '@discordeno/types';
 import type { Bot } from '../bot.js';
@@ -55,11 +69,19 @@ export function transformComponent(
       component = transformInputTextComponent(bot, payload);
       break;
     case MessageComponentTypes.StringSelect:
+      component = transformStringSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.UserSelect:
+      component = transformUserSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.RoleSelect:
+      component = transformRoleSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.MentionableSelect:
+      component = transformMentionableSelectMenuComponent(bot, payload);
+      break;
     case MessageComponentTypes.ChannelSelect:
-      component = transformSelectMenuComponent(bot, payload);
+      component = transformChannelSelectMenuComponent(bot, payload);
       break;
     case MessageComponentTypes.Section:
       component = transformSectionComponent(bot, payload);
@@ -84,6 +106,15 @@ export function transformComponent(
       break;
     case MessageComponentTypes.FileUpload:
       component = transformFileUploadComponent(bot, payload);
+      break;
+    case MessageComponentTypes.RadioGroup:
+      component = transformRadioGroupComponent(bot, payload);
+      break;
+    case MessageComponentTypes.CheckboxGroup:
+      component = transformCheckboxGroupComponent(bot, payload);
+      break;
+    case MessageComponentTypes.Checkbox:
+      component = transformCheckboxComponent(bot, payload);
       break;
   }
 
@@ -186,7 +217,10 @@ function transformInputTextComponent(bot: Bot, payload: Partial<DiscordTextInput
   return input;
 }
 
-function transformSelectMenuComponent(bot: Bot, payload: Partial<DiscordSelectMenuComponent | DiscordStringSelectInteractionResponse>) {
+function transformStringSelectMenuComponent(
+  bot: Bot,
+  payload: Partial<DiscordStringSelectComponent | DiscordStringSelectInteractionResponseFromModal>,
+) {
   const props = bot.transformers.desiredProperties.component;
   const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -198,17 +232,11 @@ function transformSelectMenuComponent(bot: Bot, payload: Partial<DiscordSelectMe
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
   } else {
-    const _payload = payload as Partial<DiscordSelectMenuComponent>;
+    const _payload = payload as Partial<DiscordStringSelectComponent>;
 
     if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
     if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
     if (props.maxValues && _payload.max_values) select.maxValues = _payload.max_values;
-    if (props.defaultValues && _payload.default_values)
-      select.defaultValues = _payload.default_values.map((defaultValue) => ({
-        id: bot.transformers.snowflake(defaultValue.id),
-        type: defaultValue.type,
-      }));
-    if (props.channelTypes && _payload.channel_types) select.channelTypes = _payload.channel_types;
     if (props.options && _payload.options)
       select.options = _payload.options.map((option) => ({
         label: option.label,
@@ -223,6 +251,129 @@ function transformSelectMenuComponent(bot: Bot, payload: Partial<DiscordSelectMe
           : undefined,
         default: option.default,
       }));
+    if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
+  }
+
+  return select;
+}
+
+function transformUserSelectMenuComponent(bot: Bot, payload: Partial<DiscordUserSelectComponent | DiscordUserSelectInteractionResponseFromModal>) {
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
+
+  // Check if this is the user select response
+  if ('values' in payload) {
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+  } else {
+    const _payload = payload as Partial<DiscordUserSelectComponent>;
+
+    if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
+    if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
+    if (props.maxValues && _payload.max_values) select.maxValues = _payload.max_values;
+    if (props.defaultValues && _payload.default_values)
+      select.defaultValues = _payload.default_values.map((defaultValue) => ({
+        id: bot.transformers.snowflake(defaultValue.id),
+        type: defaultValue.type,
+      }));
+    if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
+  }
+
+  return select;
+}
+
+function transformRoleSelectMenuComponent(bot: Bot, payload: Partial<DiscordRoleSelectComponent | DiscordRoleSelectInteractionResponseFromModal>) {
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
+
+  // Check if this is the role select response
+  if ('values' in payload) {
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+  } else {
+    const _payload = payload as Partial<DiscordUserSelectComponent>;
+
+    if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
+    if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
+    if (props.maxValues && _payload.max_values) select.maxValues = _payload.max_values;
+    if (props.defaultValues && _payload.default_values)
+      select.defaultValues = _payload.default_values.map((defaultValue) => ({
+        id: bot.transformers.snowflake(defaultValue.id),
+        type: defaultValue.type,
+      }));
+    if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
+  }
+
+  return select;
+}
+
+function transformMentionableSelectMenuComponent(
+  bot: Bot,
+  payload: Partial<DiscordMentionableSelectComponent | DiscordMentionableSelectInteractionResponseFromModal>,
+) {
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
+
+  // Check if this is the mentionable select response
+  if ('values' in payload) {
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+  } else {
+    const _payload = payload as Partial<DiscordUserSelectComponent>;
+
+    if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
+    if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
+    if (props.maxValues && _payload.max_values) select.maxValues = _payload.max_values;
+    if (props.defaultValues && _payload.default_values)
+      select.defaultValues = _payload.default_values.map((defaultValue) => ({
+        id: bot.transformers.snowflake(defaultValue.id),
+        type: defaultValue.type,
+      }));
+    if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
+  }
+
+  return select;
+}
+
+function transformChannelSelectMenuComponent(
+  bot: Bot,
+  payload: Partial<DiscordChannelSelectComponent | DiscordChannelSelectInteractionResponseFromModal>,
+) {
+  const props = bot.transformers.desiredProperties.component;
+  const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) select.type = payload.type;
+  if (props.id && payload.id) select.id = payload.id;
+  if (props.customId && payload.custom_id) select.customId = payload.custom_id;
+
+  // Check if this is the channel select response
+  if ('values' in payload) {
+    if (props.values && payload.values) select.values = payload.values;
+    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+  } else {
+    const _payload = payload as Partial<DiscordChannelSelectComponent>;
+
+    if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
+    if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
+    if (props.maxValues && _payload.max_values) select.maxValues = _payload.max_values;
+    if (props.defaultValues && _payload.default_values)
+      select.defaultValues = _payload.default_values.map((defaultValue) => ({
+        id: bot.transformers.snowflake(defaultValue.id),
+        type: defaultValue.type,
+      }));
+    if (props.channelTypes && _payload.channel_types) select.channelTypes = _payload.channel_types;
     if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
   }
 
@@ -341,4 +492,62 @@ function transformFileUploadComponent(bot: Bot, payload: Partial<DiscordFileUplo
   }
 
   return fileUpload;
+}
+
+function transformRadioGroupComponent(bot: Bot, payload: Partial<DiscordRadioGroupComponent | DiscordRadioGroupInteractionResponse>) {
+  const props = bot.transformers.desiredProperties.component;
+  const radioGroup = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) radioGroup.type = payload.type;
+  if (props.id && payload.id) radioGroup.id = payload.id;
+  if (props.customId && payload.custom_id) radioGroup.customId = payload.custom_id;
+
+  // Check if this is the component (has options) or the interaction response (modal submit, has value)
+  if ('options' in payload) {
+    if (props.options && payload.options) radioGroup.options = payload.options;
+    if (props.required && payload.required !== undefined) radioGroup.required = payload.required;
+  } else {
+    const _payload = payload as Partial<DiscordRadioGroupInteractionResponse>;
+
+    if (props.value) radioGroup.value = _payload.value ?? undefined;
+  }
+
+  return radioGroup;
+}
+
+function transformCheckboxGroupComponent(bot: Bot, payload: Partial<DiscordCheckboxGroupComponent | DiscordCheckboxGroupInteractionResponse>) {
+  const props = bot.transformers.desiredProperties.component;
+  const checkboxGroup = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) checkboxGroup.type = payload.type;
+  if (props.id && payload.id) checkboxGroup.id = payload.id;
+  if (props.customId && payload.custom_id) checkboxGroup.customId = payload.custom_id;
+
+  // Check if this is the component (has options) or the interaction response (modal submit, has values)
+  if ('options' in payload) {
+    if (props.options && payload.options) checkboxGroup.options = payload.options;
+    if (props.minValues && payload.min_values !== undefined) checkboxGroup.minValues = payload.min_values;
+    if (props.maxValues && payload.max_values !== undefined) checkboxGroup.maxValues = payload.max_values;
+    if (props.required && payload.required !== undefined) checkboxGroup.required = payload.required;
+  } else {
+    const _payload = payload as Partial<DiscordCheckboxGroupInteractionResponse>;
+
+    if (props.values && _payload.values) checkboxGroup.values = _payload.values;
+  }
+
+  return checkboxGroup;
+}
+
+function transformCheckboxComponent(bot: Bot, payload: Partial<DiscordCheckboxComponent | DiscordCheckboxInteractionResponse>) {
+  const props = bot.transformers.desiredProperties.component;
+  const checkbox = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.type && payload.type) checkbox.type = payload.type;
+  if (props.id && payload.id) checkbox.id = payload.id;
+  if (props.customId && payload.custom_id) checkbox.customId = payload.custom_id;
+
+  if (props.value && 'value' in payload) checkbox.value = payload.value;
+  if (props.default && 'default' in payload) checkbox.default = payload.default;
+
+  return checkbox;
 }
