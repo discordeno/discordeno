@@ -321,12 +321,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^25.2.3":
-  version: 25.2.3
-  resolution: "@types/node@npm:25.2.3"
+"@types/node@npm:^25.3.0":
+  version: 25.3.0
+  resolution: "@types/node@npm:25.3.0"
   dependencies:
-    undici-types: "npm:~7.16.0"
-  checksum: 10c0/925833029ce0bb4a72c36f90b93287184d3511aeb0fa60a994ae94b5430c22f9be6693d67d210df79267cb54c6f6978caaefb149d99ab5f83af5827ba7cb9822
+    undici-types: "npm:~7.18.0"
+  checksum: 10c0/7b2b18c9d68047157367fc2f786d4f166d22dc0ad9f82331ca02fb16f2f391854123dbe604dcb938cda119c87051e4bb71dcb9ece44a579f483a6f96d4bd41de
   languageName: node
   linkType: hard
 
@@ -1121,7 +1121,7 @@ __metadata:
     "@fastify/helmet": "npm:^13.0.2"
     "@fastify/multipart": "npm:^9.0.3"
     "@favware/cliff-jumper": "npm:^6.0.0"
-    "@types/node": "npm:^25.2.3"
+    "@types/node": "npm:^25.3.0"
     dotenv: "npm:^17.3.1"
     fastify: "npm:^5.5.0"
     typescript: "npm:^5.9.3"
@@ -1334,10 +1334,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~7.16.0":
-  version: 7.16.0
-  resolution: "undici-types@npm:7.16.0"
-  checksum: 10c0/3033e2f2b5c9f1504bdc5934646cb54e37ecaca0f9249c983f7b1fc2e87c6d18399ebb05dc7fd5419e02b2e915f734d872a65da2e3eeed1813951c427d33cc9a
+"undici-types@npm:~7.18.0":
+  version: 7.18.2
+  resolution: "undici-types@npm:7.18.2"
+  checksum: 10c0/85a79189113a238959d7a647368e4f7c5559c3a404ebdb8fc4488145ce9426fcd82252a844a302798dfc0e37e6fb178ff481ed03bc4caf634c5757d9ef43521d
   languageName: node
   linkType: hard
 
