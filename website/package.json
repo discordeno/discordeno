@@ -23,7 +23,7 @@
     "@docusaurus/plugin-content-docs": "^3.9.2",
     "@docusaurus/preset-classic": "^3.9.2",
     "@docusaurus/theme-common": "^3.9.2",
-    "@easyops-cn/docusaurus-search-local": "^0.55.0",
+    "@easyops-cn/docusaurus-search-local": "^0.55.1",
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.10.0",
     "prism-react-renderer": "^2.4.1",
