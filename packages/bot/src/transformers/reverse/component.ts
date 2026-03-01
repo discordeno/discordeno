@@ -4,6 +4,8 @@ import {
   type DiscordButtonComponent,
   type DiscordChannelSelectComponent,
   type DiscordChannelSelectInteractionResponseFromModal,
+  type DiscordCheckboxComponent,
+  type DiscordCheckboxGroupComponent,
   type DiscordContainerComponent,
   type DiscordFileComponent,
   type DiscordFileUploadComponent,
@@ -14,6 +16,7 @@ import {
   type DiscordMentionableSelectInteractionResponseFromModal,
   type DiscordMessageComponent,
   type DiscordMessageComponentFromModalInteractionResponse,
+  type DiscordRadioGroupComponent,
   type DiscordRoleSelectComponent,
   type DiscordRoleSelectInteractionResponseFromModal,
   type DiscordSectionComponent,
@@ -27,6 +30,7 @@ import {
   type DiscordUserSelectComponent,
   type DiscordUserSelectInteractionResponseFromModal,
   MessageComponentTypes,
+  type SelectOption,
   type TextStyles,
 } from '@discordeno/types';
 import type { Bot } from '../../bot.js';
@@ -68,6 +72,12 @@ export function transformComponentToDiscordComponent(
       return transformLabelComponent(bot, payload);
     case MessageComponentTypes.FileUpload:
       return transformFileUploadComponent(bot, payload);
+    case MessageComponentTypes.RadioGroup:
+      return transformRadioGroupComponent(bot, payload);
+    case MessageComponentTypes.CheckboxGroup:
+      return transformCheckboxGroupComponent(bot, payload);
+    case MessageComponentTypes.Checkbox:
+      return transformCheckboxComponent(bot, payload);
     case MessageComponentTypes.Separator:
     case MessageComponentTypes.TextDisplay:
       // As of now they are compatible
@@ -143,7 +153,7 @@ function transformInputTextComponent(_bot: Bot, payload: Component): DiscordText
     style: payload.style as TextStyles,
     custom_id: payload.customId!,
     label: payload.label!,
-    value: payload.value,
+    value: payload.value as string | undefined,
     max_length: payload.maxLength,
     min_length: payload.minLength,
     placeholder: payload.placeholder,
@@ -171,7 +181,7 @@ function transformStringSelectMenuComponent(
     disabled: payload.disabled,
     max_values: payload.maxValues,
     min_values: payload.minValues,
-    options: payload.options?.map((option) => ({
+    options: (payload.options as SelectOption[] | undefined)?.map((option) => ({
       label: option.label,
       value: option.value,
       description: option.description,
@@ -352,5 +362,36 @@ function transformFileUploadComponent(bot: Bot, payload: Component): DiscordFile
     max_values: payload.maxValues,
     min_values: payload.minValues,
     required: payload.required,
+  };
+}
+
+function transformRadioGroupComponent(bot: Bot, payload: Component): DiscordRadioGroupComponent {
+  return {
+    type: MessageComponentTypes.RadioGroup,
+    id: payload.id,
+    custom_id: payload.customId!,
+    options: payload.options ?? [],
+    required: payload.required,
+  };
+}
+
+function transformCheckboxGroupComponent(bot: Bot, payload: Component): DiscordCheckboxGroupComponent {
+  return {
+    type: MessageComponentTypes.CheckboxGroup,
+    id: payload.id,
+    custom_id: payload.customId!,
+    options: payload.options ?? [],
+    min_values: payload.minValues,
+    max_values: payload.maxValues,
+    required: payload.required,
+  };
+}
+
+function transformCheckboxComponent(bot: Bot, payload: Component): DiscordCheckboxComponent {
+  return {
+    type: MessageComponentTypes.Checkbox,
+    id: payload.id,
+    custom_id: payload.customId!,
+    default: payload.default,
   };
 }

@@ -13,6 +13,7 @@ import type {
   ButtonStyles,
   Camelize,
   ChannelTypes,
+  CheckboxGroupOption,
   DefaultMessageNotificationLevels,
   DiscordActivityInstanceResource,
   DiscordActivityLocationKind,
@@ -54,6 +55,7 @@ import type {
   PremiumTiers,
   PremiumTypes,
   PresenceStatus,
+  RadioGroupOption,
   RoleFlags,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
@@ -576,8 +578,8 @@ export interface Component {
   style?: ButtonStyles | TextStyles;
   /** text that appears on the button (max 80 characters) */
   label?: string;
-  /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
-  value?: string;
+  /** the dev-define value of the option, max 100 characters for select or 4000 for input; or boolean for checkbox response. */
+  value?: string | boolean;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: Pick<Partial<Emoji>, 'id' | 'name' | 'animated'>;
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
@@ -585,7 +587,8 @@ export interface Component {
   /** List of channel types to include in a channel select menu options list */
   channelTypes?: ChannelTypes[];
   /** The choices! Maximum of 25 items. */
-  options?: SelectOption[];
+  /** The string select options or the radio or checkbox group options */
+  options?: SelectOption[] | RadioGroupOption[] | CheckboxGroupOption[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
@@ -632,6 +635,8 @@ export interface Component {
   component?: Component;
   /** The text of the selected options */
   values?: string[];
+  /** Whether the checkbox is selected by default (Checkbox component). */
+  default?: boolean;
   /** Resolved entities from selected options */
   resolved?: InteractionDataResolved;
 }
