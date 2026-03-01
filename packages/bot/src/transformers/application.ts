@@ -1,9 +1,10 @@
-import { type DiscordApplication, DiscordApplicationIntegrationType, type DiscordUser } from '@discordeno/types';
+import { type DiscordApplication, DiscordApplicationIntegrationType } from '@discordeno/types';
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
+import { callCustomizer } from '../transformers.js';
 import type { Application } from './types.js';
 
-export function transformApplication(bot: Bot, payload: DiscordApplication, extra?: { shardId?: number }): Application {
+export function transformApplication(bot: Bot, payload: Partial<DiscordApplication>, extra?: { shardId?: number; partial?: boolean }) {
   const application = {
     name: payload.name,
     description: payload.description,
@@ -18,21 +19,17 @@ export function transformApplication(bot: Bot, payload: DiscordApplication, extr
     coverImage: payload.cover_image ? iconHashToBigInt(payload.cover_image) : undefined,
     flags: payload.flags,
 
-    id: bot.transformers.snowflake(payload.id),
+    id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     icon: payload.icon ? iconHashToBigInt(payload.icon) : undefined,
-    owner: payload.owner
-      ? // @ts-expect-error the partial here wont break anything
-        bot.transformers.user(bot, payload.owner)
-      : undefined,
+    owner: payload.owner ? bot.transformers.user(bot, payload.owner, { partial: true }) : undefined,
     team: payload.team ? bot.transformers.team(bot, payload.team) : undefined,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
     customInstallUrl: payload.custom_install_url,
-    // @ts-expect-error the partial here wont break anything
-    guild: payload.guild ? bot.transformers.guild(bot, payload.guild, { shardId: extra?.shardId }) : undefined,
+    guild: payload.guild ? bot.transformers.guild(bot, payload.guild, { shardId: extra?.shardId, partial: true }) : undefined,
     approximateGuildCount: payload.approximate_guild_count,
     approximateUserInstallCount: payload.approximate_user_install_count,
     approximateUserAuthorizationCount: payload.approximate_user_authorization_count,
-    bot: payload.bot ? bot.transformers.user(bot, payload.bot as DiscordUser) : undefined,
+    bot: payload.bot ? bot.transformers.user(bot, payload.bot, { partial: true }) : undefined,
     interactionsEndpointUrl: payload.interactions_endpoint_url ? payload.interactions_endpoint_url : undefined,
     redirectUris: payload.redirect_uris,
     roleConnectionsVerificationUrl: payload.role_connections_verification_url,
@@ -68,5 +65,8 @@ export function transformApplication(bot: Bot, payload: DiscordApplication, extr
     eventWebhooksTypes: payload.event_webhooks_types,
   } as Application;
 
-  return bot.transformers.customizers.application(bot, payload, application, extra);
+  return callCustomizer('application', bot, payload, application, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }

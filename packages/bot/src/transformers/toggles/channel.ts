@@ -17,7 +17,7 @@ export const ChannelToggle = {
 };
 
 export class ChannelToggles extends ToggleBitfield {
-  constructor(channelOrBitfield: DiscordChannel | number) {
+  constructor(channelOrBitfield: Partial<DiscordChannel> | number) {
     super();
 
     if (typeof channelOrBitfield === 'number') this.bitfield = channelOrBitfield;

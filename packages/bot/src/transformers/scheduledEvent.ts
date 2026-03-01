@@ -2,9 +2,10 @@ import type { DiscordScheduledEvent, DiscordScheduledEventRecurrenceRule } from 
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import type { ScheduledEvent, ScheduledEventRecurrenceRule } from './types.js';
 
-export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {
+export function transformScheduledEvent(bot: Bot, payload: Partial<DiscordScheduledEvent>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.scheduledEvent;
   const scheduledEvent = {} as SetupDesiredProps<ScheduledEvent, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -27,10 +28,16 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
   if (props.recurrenceRule && payload.recurrence_rule)
     scheduledEvent.recurrenceRule = bot.transformers.scheduledEventRecurrenceRule(bot, payload.recurrence_rule);
 
-  return bot.transformers.customizers.scheduledEvent(bot, payload, scheduledEvent);
+  return callCustomizer('scheduledEvent', bot, payload, scheduledEvent, {
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformScheduledEventRecurrenceRule(bot: Bot, payload: DiscordScheduledEventRecurrenceRule): ScheduledEventRecurrenceRule {
+export function transformScheduledEventRecurrenceRule(
+  bot: Bot,
+  payload: Partial<DiscordScheduledEventRecurrenceRule>,
+  extra?: { partial?: boolean },
+) {
   const props = bot.transformers.desiredProperties.scheduledEventRecurrenceRule;
   const recurrenceRule = {} as SetupDesiredProps<ScheduledEventRecurrenceRule, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -45,5 +52,7 @@ export function transformScheduledEventRecurrenceRule(bot: Bot, payload: Discord
   if (props.byYearDay && payload.by_year_day) recurrenceRule.byYearDay = payload.by_year_day;
   if (props.count && payload.count) recurrenceRule.count = payload.count;
 
-  return bot.transformers.customizers.scheduledEventRecurrenceRule(bot, payload, recurrenceRule);
+  return callCustomizer('scheduledEventRecurrenceRule', bot, payload, recurrenceRule, {
+    partial: extra?.partial ?? false,
+  });
 }
