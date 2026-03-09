@@ -1460,7 +1460,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:2.4.4"
     husky: "npm:^9.1.7"
-    lint-staged: "npm:^16.3.1"
+    lint-staged: "npm:^16.3.2"
     turbo: "npm:^2.8.12"
     typedoc: "npm:^0.28.17"
     typedoc-plugin-markdown: "npm:^4.10.0"
@@ -2046,9 +2046,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^16.3.1":
-  version: 16.3.1
-  resolution: "lint-staged@npm:16.3.1"
+"lint-staged@npm:^16.3.2":
+  version: 16.3.2
+  resolution: "lint-staged@npm:16.3.2"
   dependencies:
     commander: "npm:^14.0.3"
     listr2: "npm:^9.0.5"
@@ -2058,7 +2058,7 @@ __metadata:
     yaml: "npm:^2.8.2"
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 10c0/9aed98ab759c7acdcfb969c3c09b24597bd6717771ab1f1eec571038713bd0d0ad80304d0a737e5b7b7c64141e4ff9489022448492353f5d1b476223c43f40bc
+  checksum: 10c0/4cbaa85904a912215660ac3c69400b71beabe3fe7e82969cd32c726dbfb04b0f651d0660906215f955c1446ac6b520319e1c7a03c707353a5f038c3d0441a8c3
   languageName: node
   linkType: hard
 
