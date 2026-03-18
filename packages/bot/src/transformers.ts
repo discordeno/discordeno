@@ -254,7 +254,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   component: TransformerFunction<TProps, TBehavior, DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>;
   defaultReactionEmoji: TransformerFunction<TProps, TBehavior, DiscordDefaultReactionEmoji, DefaultReactionEmoji>;
   embed: TransformerFunction<TProps, TBehavior, DiscordEmbed, Embed>;
-  emoji: TransformerFunction<TProps, TBehavior, DiscordEmoji, Emoji>;
+  emoji: TransformerFunction<TProps, TBehavior, Partial<DiscordEmoji>, Emoji>;
   entitlement: TransformerFunction<TProps, TBehavior, DiscordEntitlement, Entitlement>;
   forumTag: TransformerFunction<TProps, TBehavior, DiscordForumTag, ForumTag>;
   gatewayBot: TransformerFunction<TProps, TBehavior, DiscordGetGatewayBot, GetGatewayBot>;
