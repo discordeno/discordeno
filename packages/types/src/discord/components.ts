@@ -144,7 +144,7 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
    * @remarks
    * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
    */
-  emoji?: Pick<DiscordEmoji, 'id' | 'name' | 'animated'>;
+  emoji?: Partial<Pick<DiscordEmoji, 'id' | 'name' | 'animated'>>;
   /**
    * A dev-defined unique string sent on click (max 100 characters).
    *
@@ -231,7 +231,7 @@ export interface DiscordSelectOption {
   /** An additional description of the option. Maximum 50 characters. */
   description?: string;
   /** The id, name, and animated properties of an emoji. */
-  emoji?: Pick<DiscordEmoji, 'id' | 'name' | 'animated'>;
+  emoji?: Partial<Pick<DiscordEmoji, 'id' | 'name' | 'animated'>>;
   /** Will render this option as already-selected by default. */
   default?: boolean;
 }
