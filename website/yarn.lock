@@ -1466,18 +1466,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@biomejs/biome@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/biome@npm:2.4.4"
+"@biomejs/biome@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/biome@npm:2.4.8"
   dependencies:
-    "@biomejs/cli-darwin-arm64": "npm:2.4.4"
-    "@biomejs/cli-darwin-x64": "npm:2.4.4"
-    "@biomejs/cli-linux-arm64": "npm:2.4.4"
-    "@biomejs/cli-linux-arm64-musl": "npm:2.4.4"
-    "@biomejs/cli-linux-x64": "npm:2.4.4"
-    "@biomejs/cli-linux-x64-musl": "npm:2.4.4"
-    "@biomejs/cli-win32-arm64": "npm:2.4.4"
-    "@biomejs/cli-win32-x64": "npm:2.4.4"
+    "@biomejs/cli-darwin-arm64": "npm:2.4.8"
+    "@biomejs/cli-darwin-x64": "npm:2.4.8"
+    "@biomejs/cli-linux-arm64": "npm:2.4.8"
+    "@biomejs/cli-linux-arm64-musl": "npm:2.4.8"
+    "@biomejs/cli-linux-x64": "npm:2.4.8"
+    "@biomejs/cli-linux-x64-musl": "npm:2.4.8"
+    "@biomejs/cli-win32-arm64": "npm:2.4.8"
+    "@biomejs/cli-win32-x64": "npm:2.4.8"
   dependenciesMeta:
     "@biomejs/cli-darwin-arm64":
       optional: true
@@ -1497,62 +1497,62 @@ __metadata:
       optional: true
   bin:
     biome: bin/biome
-  checksum: 10c0/f2b7620d39caeeb9e0ed070dd1065cc2378626c7fa6ecda3db84b64df4c94fb4909407726044e28c83e8a95121ad389498cc3f0e5be600a421d906ca705b821c
+  checksum: 10c0/aa77037ee9e49d3ee8d3efcbe11750a84a3536f9ef05457c77ce34dfb5f06da23630cd701ef98b06abf7c691b64ebebcde9fbfb32abadf6b55bdc825ee600662
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-arm64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-darwin-arm64@npm:2.4.4"
+"@biomejs/cli-darwin-arm64@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-darwin-arm64@npm:2.4.8"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-x64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-darwin-x64@npm:2.4.4"
+"@biomejs/cli-darwin-x64@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-darwin-x64@npm:2.4.8"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64-musl@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.4.4"
+"@biomejs/cli-linux-arm64-musl@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.4.8"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-arm64@npm:2.4.4"
+"@biomejs/cli-linux-arm64@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-linux-arm64@npm:2.4.8"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64-musl@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-x64-musl@npm:2.4.4"
+"@biomejs/cli-linux-x64-musl@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-linux-x64-musl@npm:2.4.8"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-x64@npm:2.4.4"
+"@biomejs/cli-linux-x64@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-linux-x64@npm:2.4.8"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-arm64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-win32-arm64@npm:2.4.4"
+"@biomejs/cli-win32-arm64@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-win32-arm64@npm:2.4.8"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-x64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-win32-x64@npm:2.4.4"
+"@biomejs/cli-win32-x64@npm:2.4.8":
+  version: 2.4.8
+  resolution: "@biomejs/cli-win32-x64@npm:2.4.8"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -4377,6 +4377,48 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@turbo/darwin-64@npm:2.8.19":
+  version: 2.8.19
+  resolution: "@turbo/darwin-64@npm:2.8.19"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@turbo/darwin-arm64@npm:2.8.19":
+  version: 2.8.19
+  resolution: "@turbo/darwin-arm64@npm:2.8.19"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@turbo/linux-64@npm:2.8.19":
+  version: 2.8.19
+  resolution: "@turbo/linux-64@npm:2.8.19"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@turbo/linux-arm64@npm:2.8.19":
+  version: 2.8.19
+  resolution: "@turbo/linux-arm64@npm:2.8.19"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@turbo/windows-64@npm:2.8.19":
+  version: 2.8.19
+  resolution: "@turbo/windows-64@npm:2.8.19"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@turbo/windows-arm64@npm:2.8.19":
+  version: 2.8.19
+  resolution: "@turbo/windows-arm64@npm:2.8.19"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.10.0, @tybys/wasm-util@npm:^0.10.1":
   version: 0.10.1
   resolution: "@tybys/wasm-util@npm:0.10.1"
@@ -7032,6 +7074,16 @@ __metadata:
     graceful-fs: "npm:^4.2.4"
     tapable: "npm:^2.3.0"
   checksum: 10c0/4ed5f38406fc9ad74c58a3d63b8215862243ab0ed6b0efc51ccdb72cdcedd3ac8638abe298680b279d7a83c3cb140e5eea7a5f8bd99696c74588f07ad89a95a7
+  languageName: node
+  linkType: hard
+
+"enhanced-resolve@npm:^5.20.0":
+  version: 5.20.1
+  resolution: "enhanced-resolve@npm:5.20.1"
+  dependencies:
+    graceful-fs: "npm:^4.2.4"
+    tapable: "npm:^2.3.0"
+  checksum: 10c0/c6503ee1b2d725843e047e774445ecb12b779aa52db25d11ebe18d4b3adc148d3d993d2038b3d0c38ad836c9c4b3930fbc55df42f72b44785e2f94e5530eda69
   languageName: node
   linkType: hard
 
@@ -13252,6 +13304,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"terser-webpack-plugin@npm:^5.3.17":
+  version: 5.4.0
+  resolution: "terser-webpack-plugin@npm:5.4.0"
+  dependencies:
+    "@jridgewell/trace-mapping": "npm:^0.3.25"
+    jest-worker: "npm:^27.4.5"
+    schema-utils: "npm:^4.3.0"
+    terser: "npm:^5.31.1"
+  peerDependencies:
+    webpack: ^5.1.0
+  peerDependenciesMeta:
+    "@swc/core":
+      optional: true
+    esbuild:
+      optional: true
+    uglify-js:
+      optional: true
+  checksum: 10c0/1feed4b9575af795dae6af0c8f0d76d6e1fb7b357b8628d90e834c23a651b918a58cdc48d0ae6c1f0581f74bc8169b33c3b8d049f2d2190bac4e310964e59fde
+  languageName: node
+  linkType: hard
+
 "terser@npm:^5.10.0, terser@npm:^5.15.1, terser@npm:^5.31.1":
   version: 5.46.0
   resolution: "terser@npm:5.46.0"
@@ -13382,74 +13455,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-darwin-64@npm:2.8.12":
-  version: 2.8.12
-  resolution: "turbo-darwin-64@npm:2.8.12"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"turbo-darwin-arm64@npm:2.8.12":
-  version: 2.8.12
-  resolution: "turbo-darwin-arm64@npm:2.8.12"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"turbo-linux-64@npm:2.8.12":
-  version: 2.8.12
-  resolution: "turbo-linux-64@npm:2.8.12"
-  conditions: os=linux & cpu=x64
-  languageName: node
-  linkType: hard
-
-"turbo-linux-arm64@npm:2.8.12":
-  version: 2.8.12
-  resolution: "turbo-linux-arm64@npm:2.8.12"
-  conditions: os=linux & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"turbo-windows-64@npm:2.8.12":
-  version: 2.8.12
-  resolution: "turbo-windows-64@npm:2.8.12"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"turbo-windows-arm64@npm:2.8.12":
-  version: 2.8.12
-  resolution: "turbo-windows-arm64@npm:2.8.12"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"turbo@npm:^2.8.10":
-  version: 2.8.12
-  resolution: "turbo@npm:2.8.12"
+"turbo@npm:^2.8.19":
+  version: 2.8.19
+  resolution: "turbo@npm:2.8.19"
   dependencies:
-    turbo-darwin-64: "npm:2.8.12"
-    turbo-darwin-arm64: "npm:2.8.12"
-    turbo-linux-64: "npm:2.8.12"
-    turbo-linux-arm64: "npm:2.8.12"
-    turbo-windows-64: "npm:2.8.12"
-    turbo-windows-arm64: "npm:2.8.12"
+    "@turbo/darwin-64": "npm:2.8.19"
+    "@turbo/darwin-arm64": "npm:2.8.19"
+    "@turbo/linux-64": "npm:2.8.19"
+    "@turbo/linux-arm64": "npm:2.8.19"
+    "@turbo/windows-64": "npm:2.8.19"
+    "@turbo/windows-arm64": "npm:2.8.19"
   dependenciesMeta:
-    turbo-darwin-64:
+    "@turbo/darwin-64":
       optional: true
-    turbo-darwin-arm64:
+    "@turbo/darwin-arm64":
       optional: true
-    turbo-linux-64:
+    "@turbo/linux-64":
       optional: true
-    turbo-linux-arm64:
+    "@turbo/linux-arm64":
       optional: true
-    turbo-windows-64:
+    "@turbo/windows-64":
       optional: true
-    turbo-windows-arm64:
+    "@turbo/windows-arm64":
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 10c0/062abeff6a78a8f230fc771bb5ee0090d51ef6a82989a4df634ff6f2990e883d6d23d1d3e9ad1092dc6008799145d7017bd2ba0b099de50cf2841eb202e3b843
+  checksum: 10c0/6242fb6a8a1e0a594078499d089ebf003d7748ec45d27fb17e0085710a762dc3fa9dacfeafcffd7e0e2b1ee2420a09be8ebf58e3cbc72976a3aa679b09a44f50
   languageName: node
   linkType: hard
 
@@ -13971,7 +14002,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.105.3, webpack@npm:^5.88.1, webpack@npm:^5.95.0":
+"webpack@npm:5.105.4":
+  version: 5.105.4
+  resolution: "webpack@npm:5.105.4"
+  dependencies:
+    "@types/eslint-scope": "npm:^3.7.7"
+    "@types/estree": "npm:^1.0.8"
+    "@types/json-schema": "npm:^7.0.15"
+    "@webassemblyjs/ast": "npm:^1.14.1"
+    "@webassemblyjs/wasm-edit": "npm:^1.14.1"
+    "@webassemblyjs/wasm-parser": "npm:^1.14.1"
+    acorn: "npm:^8.16.0"
+    acorn-import-phases: "npm:^1.0.3"
+    browserslist: "npm:^4.28.1"
+    chrome-trace-event: "npm:^1.0.2"
+    enhanced-resolve: "npm:^5.20.0"
+    es-module-lexer: "npm:^2.0.0"
+    eslint-scope: "npm:5.1.1"
+    events: "npm:^3.2.0"
+    glob-to-regexp: "npm:^0.4.1"
+    graceful-fs: "npm:^4.2.11"
+    json-parse-even-better-errors: "npm:^2.3.1"
+    loader-runner: "npm:^4.3.1"
+    mime-types: "npm:^2.1.27"
+    neo-async: "npm:^2.6.2"
+    schema-utils: "npm:^4.3.3"
+    tapable: "npm:^2.3.0"
+    terser-webpack-plugin: "npm:^5.3.17"
+    watchpack: "npm:^2.5.1"
+    webpack-sources: "npm:^3.3.4"
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 10c0/e9896d20bac351b119d59942b7efae5b117056ecf203acc0d1a84ecbf0a5a9a80ca733735f96bd163e3530be6ab7f615cd67e5320bd3c47d709c9bfe376c3280
+  languageName: node
+  linkType: hard
+
+"webpack@npm:^5.88.1, webpack@npm:^5.95.0":
   version: 5.105.3
   resolution: "webpack@npm:5.105.3"
   dependencies:
@@ -14031,7 +14100,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "website@workspace:."
   dependencies:
-    "@biomejs/biome": "npm:2.4.4"
+    "@biomejs/biome": "npm:2.4.8"
     "@docusaurus/core": "npm:^3.9.2"
     "@docusaurus/faster": "npm:^3.9.2"
     "@docusaurus/module-type-aliases": "npm:^3.9.2"
@@ -14048,9 +14117,9 @@ __metadata:
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.4"
     react-dom: "npm:^19.2.4"
-    turbo: "npm:^2.8.10"
+    turbo: "npm:^2.8.19"
     typescript: "npm:5.9.3"
-    webpack: "npm:5.105.3"
+    webpack: "npm:5.105.4"
   languageName: unknown
   linkType: soft
 
