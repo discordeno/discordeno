@@ -125,7 +125,7 @@ __metadata:
     "@swc/core": "npm:^1.15.18"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^25.3.3"
+    "@types/node": "npm:^25.5.0"
     "@types/sinon": "npm:^21.0.0"
     c8: "npm:^11.0.0"
     chai: "npm:^6.2.2"
@@ -148,7 +148,7 @@ __metadata:
     "@swc/core": "npm:^1.15.18"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^25.3.3"
+    "@types/node": "npm:^25.5.0"
     "@types/sinon": "npm:^21.0.0"
     "@types/ws": "npm:^8.18.1"
     c8: "npm:^11.0.0"
@@ -178,7 +178,7 @@ __metadata:
     "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^25.3.3"
+    "@types/node": "npm:^25.5.0"
     "@types/sinon": "npm:^21.0.0"
     c8: "npm:^11.0.0"
     chai: "npm:^6.2.2"
@@ -200,7 +200,7 @@ __metadata:
     "@swc/cli": "npm:^0.8.0"
     "@swc/core": "npm:^1.15.18"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^25.3.3"
+    "@types/node": "npm:^25.5.0"
     c8: "npm:^11.0.0"
     mocha: "npm:^11.7.5"
     ts-node: "npm:^10.9.2"
@@ -219,7 +219,7 @@ __metadata:
     "@swc/core": "npm:^1.15.18"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^25.3.3"
+    "@types/node": "npm:^25.5.0"
     "@types/sinon": "npm:^21.0.0"
     c8: "npm:^11.0.0"
     chai: "npm:^6.2.2"
@@ -877,12 +877,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^25.3.3":
-  version: 25.3.3
-  resolution: "@types/node@npm:25.3.3"
+"@types/node@npm:^25.5.0":
+  version: 25.5.0
+  resolution: "@types/node@npm:25.5.0"
   dependencies:
     undici-types: "npm:~7.18.0"
-  checksum: 10c0/63e1d3816a9f4a706ab5d588d18cb98aa824b97748ff585537d327528e9438f58f69f45c7762e7cd3a1ab32c1619f551aabe8075d13172f9273cf10f6d83ab91
+  checksum: 10c0/70c508165b6758c4f88d4f91abca526c3985eee1985503d4c2bd994dbaf588e52ac57e571160f18f117d76e963570ac82bd20e743c18987e82564312b3b62119
   languageName: node
   linkType: hard
 
@@ -1524,7 +1524,7 @@ __metadata:
     "@swc/core": "npm:^1.15.18"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^25.3.3"
+    "@types/node": "npm:^25.5.0"
     c8: "npm:^11.0.0"
     chai: "npm:^6.2.2"
     mocha: "npm:^11.7.5"
