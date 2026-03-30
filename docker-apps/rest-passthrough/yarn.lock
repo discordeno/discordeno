@@ -74,13 +74,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/env@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "@fastify/env@npm:5.0.2"
+"@fastify/env@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@fastify/env@npm:6.0.0"
   dependencies:
-    env-schema: "npm:^6.0.0"
+    env-schema: "npm:^7.0.0"
     fastify-plugin: "npm:^5.0.0"
-  checksum: 10c0/03de51cb521e40ee2d91f77881694cde8580aa794e601bead4156143cdcacf472afa461b52250df670749553743ffee05bcdd60dd7fd0a0ff7b2a247a8f5caaf
+  checksum: 10c0/7a8a924f502f4c54641b9a55941a57e60864ead6742f2f8a54cca22ced40ec477b20b243ae272cd4a5b79499961e158534095376e7c766583378816a235424b9
   languageName: node
   linkType: hard
 
@@ -513,20 +513,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-expand@npm:10.0.0":
-  version: 10.0.0
-  resolution: "dotenv-expand@npm:10.0.0"
-  checksum: 10c0/298f5018e29cfdcb0b5f463ba8e8627749103fbcf6cf81c561119115754ed582deee37b49dfc7253028aaba875ab7aea5fa90e5dac88e511d009ab0e6677924e
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^16.4.5":
-  version: 16.4.5
-  resolution: "dotenv@npm:16.4.5"
-  checksum: 10c0/48d92870076832af0418b13acd6e5a5a3e83bb00df690d9812e94b24aff62b88ade955ac99a05501305b8dc8f1b0ee7638b18493deb6fe93d680e5220936292f
-  languageName: node
-  linkType: hard
-
 "dotenv@npm:^17.3.1":
   version: 17.3.1
   resolution: "dotenv@npm:17.3.1"
@@ -534,14 +520,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"env-schema@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "env-schema@npm:6.0.0"
+"env-schema@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "env-schema@npm:7.0.0"
   dependencies:
     ajv: "npm:^8.12.0"
-    dotenv: "npm:^16.4.5"
-    dotenv-expand: "npm:10.0.0"
-  checksum: 10c0/f833641f68a98ba4a63f2fc2960b16c8073959c1c82c894ec1864c88e9bdbbb71e3ff7676825b82a7634cf78199db15ea43af16b73d03a60b0eeafb52c550194
+  checksum: 10c0/de1c32bdd174e874ea9fe39bf7272aea656ca2ef3c1cb12048d7bda0849aa7be7828744b128e8c62151ac052c618f4fc3804cb29174ce5b9f10f72214b91671d
   languageName: node
   linkType: hard
 
@@ -1117,7 +1101,7 @@ __metadata:
   resolution: "rest-passthrough@workspace:."
   dependencies:
     "@discordeno/rest": "npm:21.0.0"
-    "@fastify/env": "npm:^5.0.2"
+    "@fastify/env": "npm:^6.0.0"
     "@fastify/helmet": "npm:^13.0.2"
     "@fastify/multipart": "npm:^9.0.3"
     "@favware/cliff-jumper": "npm:^6.0.0"
