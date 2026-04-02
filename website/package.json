@@ -37,7 +37,7 @@
     "@docusaurus/types": "^3.9.2",
     "@types/react": "^19.2.14",
     "turbo": "^2.8.21",
-    "typescript": "5.9.3",
+    "typescript": "6.0.2",
     "webpack": "5.105.4"
   },
   "resolutions": {
