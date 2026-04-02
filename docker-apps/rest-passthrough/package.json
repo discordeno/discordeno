@@ -21,6 +21,6 @@
     "@favware/cliff-jumper": "^6.0.0",
     "@types/node": "^25.5.0",
     "dotenv": "^17.3.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }
