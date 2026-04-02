@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@discordeno/rest": "21.0.0",
-    "@fastify/env": "^5.0.2",
+    "@fastify/env": "^6.0.0",
     "@fastify/helmet": "^13.0.2",
     "@fastify/multipart": "^9.0.3",
     "fastify": "^5.5.0"
