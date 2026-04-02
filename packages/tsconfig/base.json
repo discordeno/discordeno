@@ -22,7 +22,8 @@
     "skipDefaultLibCheck": true,
     "strict": true,
     "incremental": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"]
   },
   "include": ["${configDir}/src"],
   "ts-node": {

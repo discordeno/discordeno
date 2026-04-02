@@ -5,13 +5,15 @@ export const defaultNodeOptions = {
   targetPosition: Position.Top,
   sourcePosition: Position.Bottom,
   draggable: false,
-  style: { width: '70px', height: '50px', padding: '10px 0' },
+  type: 'default',
+  style: { width: '80px', height: '50px', padding: '10px 0' },
 };
 
 const genServer = (x: number, id: number) => {
   const server: Node<any, string>[] = [
     {
       id: `s${id + 1}`,
+      type: 'default',
       data: { label: `Server ${id + 1}` },
       position: { x: x - 42.5, y: 100 },
     },
@@ -54,8 +56,8 @@ const genServer = (x: number, id: number) => {
             label: `Shard ${id * 500 + (i === 3 ? 49 : i) * 10}-${id * 500 + (i === 3 ? 49 : i) * 10 + 9}`,
           },
           position: { x: x - 112.5 + 75 * i, y: 300 },
-          type: 'output',
           ...defaultNodeOptions,
+          type: 'output',
           ...{
             style: {
               ...defaultNodeOptions.style,
@@ -78,9 +80,9 @@ const nodes = [
     position: { x: -42.5, y: 0 },
     type: 'input',
   },
-  ...genServer(-300, 0),
+  ...genServer(-310, 0),
   ...genServer(0, 1),
-  ...genServer(300, 9),
+  ...genServer(310, 9),
   {
     id: 'baseLineNodeText-6',
     type: 'baseLineNodeText',
