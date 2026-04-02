@@ -44,6 +44,6 @@
     "sinon": "^21.0.3",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }
