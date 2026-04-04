@@ -6,6 +6,22 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, 
 
   const payload = data.d as DiscordInviteCreate;
 
-  // TODO: Add role_ids, the transformer should be kept for the Invite type, not for the gateway event
-  bot.events.inviteCreate(bot.transformers.invite(bot, payload, { shardId }));
+  bot.events.inviteCreate({
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    code: payload.code,
+    createdAt: Date.parse(payload.created_at),
+    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
+    inviter: payload.inviter ? bot.transformers.user(bot, payload.inviter) : undefined,
+    maxAge: payload.max_age,
+    maxUses: payload.max_uses,
+    targetType: payload.target_type,
+    targetUser: payload.target_user ? bot.transformers.user(bot, payload.target_user) : undefined,
+    targetApplication: payload.target_application
+      ? bot.transformers.application(bot, payload.target_application, { shardId, partial: true })
+      : undefined,
+    temporary: payload.temporary,
+    uses: payload.uses,
+    expiresAt: Date.parse(payload.expires_at),
+    roleIds: payload.role_ids ? payload.role_ids.map((id) => bot.transformers.snowflake(id)) : undefined,
+  });
 }

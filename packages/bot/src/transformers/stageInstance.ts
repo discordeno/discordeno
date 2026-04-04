@@ -1,9 +1,10 @@
 import type { DiscordStageInstance } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import type { StageInstance } from './types.js';
 
-export function transformStageInstance(bot: Bot, payload: DiscordStageInstance): StageInstance {
+export function transformStageInstance(bot: Bot, payload: Partial<DiscordStageInstance>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.stageInstance;
   const stageInstance = {} as SetupDesiredProps<StageInstance, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -14,5 +15,7 @@ export function transformStageInstance(bot: Bot, payload: DiscordStageInstance):
   if (props.guildScheduledEventId && payload.guild_scheduled_event_id)
     stageInstance.guildScheduledEventId = bot.transformers.snowflake(payload.guild_scheduled_event_id);
 
-  return bot.transformers.customizers.stageInstance(bot, payload, stageInstance);
+  return callCustomizer('stageInstance', bot, payload, stageInstance, {
+    partial: extra?.partial ?? false,
+  });
 }
