@@ -22,7 +22,7 @@ export const baseEmoji: Emoji = {
   },
 };
 
-export function transformEmoji(bot: Bot, payload: Partial<DiscordEmoji>): Emoji {
+export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
   const props = bot.transformers.desiredProperties.emoji;
   const emoji = Object.create(baseEmoji) as SetupDesiredProps<Emoji, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
