@@ -171,6 +171,7 @@ function transformButtonComponent(bot: Bot, payload: DiscordButtonComponent) {
   if (props.label && payload.label) button.label = payload.label;
   if (props.customId && payload.custom_id) button.customId = payload.custom_id;
   if (props.style && payload.style) button.style = payload.style;
+  // @ts-expect-error TODO: Deal with partials
   if (props.emoji && payload.emoji) button.emoji = bot.transformers.emoji(bot, payload.emoji);
   if (props.url && payload.url) button.url = payload.url;
   if (props.disabled && payload.disabled) button.disabled = payload.disabled;
