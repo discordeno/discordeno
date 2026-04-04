@@ -13,7 +13,7 @@ export const EmojiToggle = {
 };
 
 export class EmojiToggles extends ToggleBitfield {
-  constructor(roleOrTogglesInt: Partial<DiscordEmoji> | number) {
+  constructor(roleOrTogglesInt: DiscordEmoji | number) {
     super();
 
     if (typeof roleOrTogglesInt === 'number') this.bitfield = roleOrTogglesInt;
