@@ -31,7 +31,7 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.10",
+    "@biomejs/biome": "2.4.12",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.21",
     "@types/chai": "^5.2.3",
