@@ -68,10 +68,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/deepmerge@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "@fastify/deepmerge@npm:2.0.1"
-  checksum: 10c0/043c7e5e028d01b4bdd6b99588e8f82e5b91399d68bcbcf11726c2d058faf6f0fdeecad837dded1e184430938cf29cfc65ae0d0ac4872ee865d32f6a3e86681f
+"@fastify/deepmerge@npm:^3.0.0":
+  version: 3.2.1
+  resolution: "@fastify/deepmerge@npm:3.2.1"
+  checksum: 10c0/2c0f8b627537834822ec761842e3a57965d3fb59e011ac5f2215b618ce34698e277bcbe4f586b09e4f03347391f292cfef9dccb6bda7b019ea9420d8767ade49
   languageName: node
   linkType: hard
 
@@ -127,16 +127,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^9.0.3":
-  version: 9.0.3
-  resolution: "@fastify/multipart@npm:9.0.3"
+"@fastify/multipart@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "@fastify/multipart@npm:10.0.0"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
-    "@fastify/deepmerge": "npm:^2.0.0"
+    "@fastify/deepmerge": "npm:^3.0.0"
     "@fastify/error": "npm:^4.0.0"
     fastify-plugin: "npm:^5.0.0"
-    secure-json-parse: "npm:^3.0.0"
-  checksum: 10c0/589571e71954e28b6445dcaeef3f4e978931f9a697cf259ef45327ee646f85db2195cd38fe4bf758aab3e0d61ceb30429b1389fd9e176f55a3c83b4186ebb20d
+    secure-json-parse: "npm:^4.0.0"
+  checksum: 10c0/49e09135599a59aab761b71f65ab5f9ad63c3ea28ede04389c308dea1149b1fd7779693230f5bc0ffc9063c42484e99a2d1d38c0fd73b074c9ed3216db12e9da
   languageName: node
   linkType: hard
 
@@ -1036,7 +1036,7 @@ __metadata:
     "@discordeno/rest": "npm:21.0.0"
     "@fastify/env": "npm:^6.0.0"
     "@fastify/helmet": "npm:^13.0.2"
-    "@fastify/multipart": "npm:^9.0.3"
+    "@fastify/multipart": "npm:^10.0.0"
     "@favware/cliff-jumper": "npm:^6.1.0"
     "@types/node": "npm:^25.6.0"
     dotenv: "npm:^17.4.2"
@@ -1093,13 +1093,6 @@ __metadata:
   version: 2.4.3
   resolution: "safe-stable-stringify@npm:2.4.3"
   checksum: 10c0/81dede06b8f2ae794efd868b1e281e3c9000e57b39801c6c162267eb9efda17bd7a9eafa7379e1f1cacd528d4ced7c80d7460ad26f62ada7c9e01dec61b2e768
-  languageName: node
-  linkType: hard
-
-"secure-json-parse@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "secure-json-parse@npm:3.0.2"
-  checksum: 10c0/4c9c005e7fdd8528df35fcdec41dc4e8e15820ce52de19f8102da808f9400a9ed8c0a28971e3efe24b001ee1e60296af553f12bbaab81a152f702dd00af2092d
   languageName: node
   linkType: hard
 
