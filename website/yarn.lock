@@ -2408,7 +2408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/module-type-aliases@npm:3.9.2, @docusaurus/module-type-aliases@npm:^3.9.2":
+"@docusaurus/module-type-aliases@npm:3.9.2":
   version: 3.9.2
   resolution: "@docusaurus/module-type-aliases@npm:3.9.2"
   dependencies:
@@ -2423,6 +2423,24 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 10c0/60f163ff9004bb1fcbbad94b18200b6bca967da14576f78f5c533f8535aae0a3a723245cb28e1ca93f9d5881d3f1077e03ebf12bbad59d0e1c6916300d086642
+  languageName: node
+  linkType: hard
+
+"@docusaurus/module-type-aliases@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "@docusaurus/module-type-aliases@npm:3.10.0"
+  dependencies:
+    "@docusaurus/types": "npm:3.10.0"
+    "@types/history": "npm:^4.7.11"
+    "@types/react": "npm:*"
+    "@types/react-router-config": "npm:*"
+    "@types/react-router-dom": "npm:*"
+    react-helmet-async: "npm:@slorber/react-helmet-async@1.3.0"
+    react-loadable: "npm:@docusaurus/react-loadable@6.0.0"
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: 10c0/61952050bef257a0999db849a328655a4141d31b8d4fa4d54828da7ee8f710d7e592081a150c8b9750640bcaf78f3b7ca7165aefbcc0048c328407d582fe21b8
   languageName: node
   linkType: hard
 
@@ -14125,7 +14143,7 @@ __metadata:
     "@biomejs/biome": "npm:2.4.12"
     "@docusaurus/core": "npm:^3.9.2"
     "@docusaurus/faster": "npm:^3.10.0"
-    "@docusaurus/module-type-aliases": "npm:^3.9.2"
+    "@docusaurus/module-type-aliases": "npm:^3.10.0"
     "@docusaurus/plugin-client-redirects": "npm:^3.9.2"
     "@docusaurus/plugin-content-docs": "npm:^3.9.2"
     "@docusaurus/preset-classic": "npm:^3.9.2"
