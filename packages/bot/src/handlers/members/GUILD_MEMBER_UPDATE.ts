@@ -7,9 +7,5 @@ export async function handleGuildMemberUpdate(bot: Bot, data: DiscordGatewayPayl
   const payload = data.d as DiscordGuildMemberUpdate;
 
   const user = bot.transformers.user(bot, payload.user);
-  bot.events.guildMemberUpdate(
-    // @ts-expect-error Flags in the update are nullable, while on the member they are be always present
-    bot.transformers.member(bot, payload, { guildId: payload.guild_id, userId: payload.user.id }),
-    user,
-  );
+  bot.events.guildMemberUpdate(bot.transformers.member(bot, payload, { guildId: payload.guild_id, userId: payload.user.id, partial: true }), user);
 }

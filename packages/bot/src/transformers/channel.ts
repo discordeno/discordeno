@@ -2,6 +2,7 @@ import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/typ
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import { ChannelToggles } from './toggles/channel.js';
 import { Permissions } from './toggles/Permissions.js';
 import type { Channel, ForumTag } from './types.js';
@@ -70,7 +71,7 @@ export const baseChannel: Channel = {
   },
 };
 
-export function transformChannel(bot: Bot, payload: DiscordChannel, extra?: { guildId?: BigString }) {
+export function transformChannel(bot: Bot, payload: Partial<DiscordChannel>, extra?: { guildId?: BigString; partial?: boolean }) {
   const channel = Object.create(baseChannel) as SetupDesiredProps<Channel, TransformersDesiredProperties, DesiredPropertiesBehavior>;
   const props = bot.transformers.desiredProperties.channel;
   channel.toggles = new ChannelToggles(payload);
@@ -78,7 +79,7 @@ export function transformChannel(bot: Bot, payload: DiscordChannel, extra?: { gu
   if (props.id && payload.id) channel.id = bot.transformers.snowflake(payload.id);
   if (props.guildId && (extra?.guildId ?? payload.guild_id))
     channel.guildId = extra?.guildId ? bot.transformers.snowflake(extra.guildId) : bot.transformers.snowflake(payload.guild_id!);
-  if (props.type) channel.type = payload.type;
+  if (props.type && payload.type !== undefined) channel.type = payload.type;
   if (props.position) channel.position = payload.position;
   if (props.name && payload.name) channel.name = payload.name;
   if (props.topic && payload.topic) channel.topic = payload.topic;
@@ -122,12 +123,13 @@ export function transformChannel(bot: Bot, payload: DiscordChannel, extra?: { gu
   if (props.defaultSortOrder && payload.default_sort_order !== undefined) channel.defaultSortOrder = payload.default_sort_order;
   if (props.defaultForumLayout && payload.default_forum_layout !== undefined) channel.defaultForumLayout = payload.default_forum_layout;
 
-  return bot.transformers.customizers.channel(bot, payload, channel, {
+  return callCustomizer('channel', bot, payload, channel, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
+    partial: extra?.partial ?? false,
   });
 }
 
-export function transformForumTag(bot: Bot, payload: DiscordForumTag): ForumTag {
+export function transformForumTag(bot: Bot, payload: Partial<DiscordForumTag>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.forumTag;
   const forumTag = {} as SetupDesiredProps<ForumTag, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -137,5 +139,7 @@ export function transformForumTag(bot: Bot, payload: DiscordForumTag): ForumTag 
   if (props.emojiId && payload.emoji_id) forumTag.emojiId = bot.transformers.snowflake(payload.emoji_id);
   if (props.emojiName && payload.emoji_name) forumTag.emojiName = payload.emoji_name;
 
-  return bot.transformers.customizers.forumTag(bot, payload, forumTag);
+  return callCustomizer('forumTag', bot, payload, forumTag, {
+    partial: extra?.partial ?? false,
+  });
 }

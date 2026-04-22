@@ -19,7 +19,7 @@ export const VoiceStateToggle = {
 };
 
 export class VoiceStateToggles extends ToggleBitfield {
-  constructor(voiceOrTogglesInt: DiscordVoiceState | number) {
+  constructor(voiceOrTogglesInt: Partial<DiscordVoiceState> | number) {
     super();
 
     if (typeof voiceOrTogglesInt === 'number') this.bitfield = voiceOrTogglesInt;
