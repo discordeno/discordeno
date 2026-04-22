@@ -12362,14 +12362,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^19.2.4":
-  version: 19.2.4
-  resolution: "react-dom@npm:19.2.4"
+"react-dom@npm:19.2.5":
+  version: 19.2.5
+  resolution: "react-dom@npm:19.2.5"
   dependencies:
     scheduler: "npm:^0.27.0"
   peerDependencies:
-    react: ^19.2.4
-  checksum: 10c0/f0c63f1794dedb154136d4d0f59af00b41907f4859571c155940296808f4b94bf9c0c20633db75b5b2112ec13d8d7dd4f9bf57362ed48782f317b11d05a44f35
+    react: ^19.2.5
+  checksum: 10c0/8067606e9f58e4c2e8cb5f09570217dbc71c4843ebcaa20ae2085912d3e3a351f17d8f7c1713313cdda7f272840c8c34ff6c860fcb840862071bceea218e0c63
   languageName: node
   linkType: hard
 
@@ -14527,7 +14527,7 @@ __metadata:
     "@xyflow/react": "npm:^12.10.2"
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.5"
-    react-dom: "npm:^19.2.4"
+    react-dom: "npm:19.2.5"
     turbo: "npm:^2.9.4"
     typescript: "npm:6.0.2"
     webpack: "npm:5.106.1"
