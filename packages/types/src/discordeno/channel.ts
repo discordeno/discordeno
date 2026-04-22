@@ -107,7 +107,7 @@ export interface ModifyChannel {
    * Amount of seconds a user has to wait before sending another message in seconds (0-21600)
    *
    * @remarks
-   * Bots and users with the permission `MANAGE_MESSAGES` or `MANAGE_CHANNEL`, are unaffected
+   * Bots and users with the permission `BYPASS_SLOWMODE`, are unaffected
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
    */

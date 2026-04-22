@@ -441,7 +441,7 @@ export interface Channel {
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   userLimit?: number;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `BYPASS_SLOWMODE`, are unaffected */
   rateLimitPerUser?: number;
   /** Id of the creator of the thread */
   ownerId?: bigint;
