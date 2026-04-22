@@ -29,22 +29,22 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.10",
+    "@biomejs/biome": "2.4.12",
     "@swc/cli": "^0.8.1",
-    "@swc/core": "^1.15.21",
+    "@swc/core": "^1.15.30",
     "@types/chai": "^5.2.3",
     "@types/chai-as-promised": "^8.0.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^25.5.2",
+    "@types/node": "^25.6.0",
     "@types/sinon": "^21.0.1",
     "c8": "^11.0.0",
     "chai": "^6.2.2",
     "chai-as-promised": "^8.0.2",
     "dotenv": "^17.4.2",
     "mocha": "^11.7.5",
-    "sinon": "^21.0.3",
+    "sinon": "^21.1.2",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   }
 }

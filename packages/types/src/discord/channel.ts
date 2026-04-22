@@ -47,7 +47,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
    * Amount of seconds a user has to wait before sending another message (0-21600)
    *
    * @remarks
-   * Bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected
+   * Bots, as well as users with the permission `BYPASS_SLOWMODE`, are unaffected
    * `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.
    */
   rate_limit_per_user?: number;
