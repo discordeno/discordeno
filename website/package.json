@@ -27,7 +27,7 @@
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.10.2",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.4",
+    "react": "^19.2.5",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
