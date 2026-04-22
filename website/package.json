@@ -17,11 +17,11 @@
     "check": "biome check --write"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.9.2",
+    "@docusaurus/core": "^3.10.0",
     "@docusaurus/faster": "^3.10.0",
-    "@docusaurus/plugin-client-redirects": "^3.9.2",
-    "@docusaurus/plugin-content-docs": "^3.9.2",
-    "@docusaurus/preset-classic": "^3.9.2",
+    "@docusaurus/plugin-client-redirects": "3.10.0",
+    "@docusaurus/plugin-content-docs": "^3.10.0",
+    "@docusaurus/preset-classic": "^3.10.0",
     "@docusaurus/theme-common": "^3.10.0",
     "@easyops-cn/docusaurus-search-local": "^0.55.1",
     "@mdx-js/react": "^3.1.1",
@@ -33,8 +33,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
     "@docusaurus/module-type-aliases": "^3.10.0",
-    "@docusaurus/tsconfig": "^3.9.2",
-    "@docusaurus/types": "^3.9.2",
+    "@docusaurus/tsconfig": "^3.10.0",
+    "@docusaurus/types": "^3.10.0",
     "@types/react": "^19.2.14",
     "turbo": "^2.9.4",
     "typescript": "6.0.2",
