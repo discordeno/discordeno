@@ -27,7 +27,7 @@
   "dependencies": {
     "@discordeno/types": "workspace:^",
     "@discordeno/utils": "workspace:^",
-    "ws": "^8.20.0"
+    "ws": "^8.20.1"
   },
   "optionalDependencies": {
     "fzstd": "^0.1.1"
