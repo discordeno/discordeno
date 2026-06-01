@@ -14413,9 +14413,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.106.1":
-  version: 5.106.1
-  resolution: "webpack@npm:5.106.1"
+"webpack@npm:5.106.2":
+  version: 5.106.2
+  resolution: "webpack@npm:5.106.2"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.8"
@@ -14433,9 +14433,8 @@ __metadata:
     events: "npm:^3.2.0"
     glob-to-regexp: "npm:^0.4.1"
     graceful-fs: "npm:^4.2.11"
-    json-parse-even-better-errors: "npm:^2.3.1"
     loader-runner: "npm:^4.3.1"
-    mime-types: "npm:^2.1.27"
+    mime-db: "npm:^1.54.0"
     neo-async: "npm:^2.6.2"
     schema-utils: "npm:^4.3.3"
     tapable: "npm:^2.3.0"
@@ -14447,7 +14446,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/eb56ba99564e185c83fb8d898253c0e6b91fcfcab54e3716bc6bc4df2636511686edb79073313ad9394b757c912b9489e28c7a5bd33d4d386d3103ba9608ca47
+  checksum: 10c0/933293ae94b7f3405147aebd824d978696693a7fbd85cfbf4d05b517329c93f69e634400ad70a27f4ba4148e14e2fd502e335cd8d30d75282091ab3c72a1ac01
   languageName: node
   linkType: hard
 
@@ -14530,7 +14529,7 @@ __metadata:
     react-dom: "npm:19.2.5"
     turbo: "npm:^2.9.4"
     typescript: "npm:6.0.2"
-    webpack: "npm:5.106.1"
+    webpack: "npm:5.106.2"
   languageName: unknown
   linkType: soft
 
