@@ -4888,44 +4888,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turbo/darwin-64@npm:2.9.14":
-  version: 2.9.14
-  resolution: "@turbo/darwin-64@npm:2.9.14"
+"@turbo/darwin-64@npm:2.9.16":
+  version: 2.9.16
+  resolution: "@turbo/darwin-64@npm:2.9.16"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@turbo/darwin-arm64@npm:2.9.14":
-  version: 2.9.14
-  resolution: "@turbo/darwin-arm64@npm:2.9.14"
+"@turbo/darwin-arm64@npm:2.9.16":
+  version: 2.9.16
+  resolution: "@turbo/darwin-arm64@npm:2.9.16"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@turbo/linux-64@npm:2.9.14":
-  version: 2.9.14
-  resolution: "@turbo/linux-64@npm:2.9.14"
+"@turbo/linux-64@npm:2.9.16":
+  version: 2.9.16
+  resolution: "@turbo/linux-64@npm:2.9.16"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@turbo/linux-arm64@npm:2.9.14":
-  version: 2.9.14
-  resolution: "@turbo/linux-arm64@npm:2.9.14"
+"@turbo/linux-arm64@npm:2.9.16":
+  version: 2.9.16
+  resolution: "@turbo/linux-arm64@npm:2.9.16"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@turbo/windows-64@npm:2.9.14":
-  version: 2.9.14
-  resolution: "@turbo/windows-64@npm:2.9.14"
+"@turbo/windows-64@npm:2.9.16":
+  version: 2.9.16
+  resolution: "@turbo/windows-64@npm:2.9.16"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@turbo/windows-arm64@npm:2.9.14":
-  version: 2.9.14
-  resolution: "@turbo/windows-arm64@npm:2.9.14"
+"@turbo/windows-arm64@npm:2.9.16":
+  version: 2.9.16
+  resolution: "@turbo/windows-arm64@npm:2.9.16"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -14048,16 +14048,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo@npm:^2.9.14":
-  version: 2.9.14
-  resolution: "turbo@npm:2.9.14"
+"turbo@npm:^2.9.16":
+  version: 2.9.16
+  resolution: "turbo@npm:2.9.16"
   dependencies:
-    "@turbo/darwin-64": "npm:2.9.14"
-    "@turbo/darwin-arm64": "npm:2.9.14"
-    "@turbo/linux-64": "npm:2.9.14"
-    "@turbo/linux-arm64": "npm:2.9.14"
-    "@turbo/windows-64": "npm:2.9.14"
-    "@turbo/windows-arm64": "npm:2.9.14"
+    "@turbo/darwin-64": "npm:2.9.16"
+    "@turbo/darwin-arm64": "npm:2.9.16"
+    "@turbo/linux-64": "npm:2.9.16"
+    "@turbo/linux-arm64": "npm:2.9.16"
+    "@turbo/windows-64": "npm:2.9.16"
+    "@turbo/windows-arm64": "npm:2.9.16"
   dependenciesMeta:
     "@turbo/darwin-64":
       optional: true
@@ -14073,7 +14073,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 10c0/77a20c05ef588a9bac02500108af644ac1129b23f6f8db53054c9c7af98ed6a71e019172a0dd6d03920c6068c1a93ea80e6b2fb857bf70ba09616381bf07ea47
+  checksum: 10c0/490dd844ca4bd3adbe016b9828a74a8bcf83bd4bf3efbdddc06b79efc3c5f10f76d812c5194151cc1ab438c07fde6fb6a0898d8e34994355f4793aca242f9ac1
   languageName: node
   linkType: hard
 
@@ -14715,7 +14715,7 @@ __metadata:
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.5"
     react-dom: "npm:19.2.5"
-    turbo: "npm:^2.9.14"
+    turbo: "npm:^2.9.16"
     typescript: "npm:6.0.3"
     webpack: "npm:5.107.2"
   languageName: unknown
