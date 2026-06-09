@@ -3302,7 +3302,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/theme-common@npm:3.10.0, @docusaurus/theme-common@npm:^3.10.0":
+"@docusaurus/theme-common@npm:3.10.0":
   version: 3.10.0
   resolution: "@docusaurus/theme-common@npm:3.10.0"
   dependencies:
@@ -3371,6 +3371,30 @@ __metadata:
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
   checksum: 10c0/4ecb8570e1fee75a6048ddb43065252e7b5b058f075867b541219830fb01bdc4b41b8f5f0251d6e9e7ffbe3704fd23d16ef90f92a3e2511ecc7ff6d9a2d5bfd6
+  languageName: node
+  linkType: hard
+
+"@docusaurus/theme-common@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "@docusaurus/theme-common@npm:3.10.1"
+  dependencies:
+    "@docusaurus/mdx-loader": "npm:3.10.1"
+    "@docusaurus/module-type-aliases": "npm:3.10.1"
+    "@docusaurus/utils": "npm:3.10.1"
+    "@docusaurus/utils-common": "npm:3.10.1"
+    "@types/history": "npm:^4.7.11"
+    "@types/react": "npm:*"
+    "@types/react-router-config": "npm:*"
+    clsx: "npm:^2.0.0"
+    parse-numeric-range: "npm:^1.3.0"
+    prism-react-renderer: "npm:^2.3.0"
+    tslib: "npm:^2.6.0"
+    utility-types: "npm:^3.10.0"
+  peerDependencies:
+    "@docusaurus/plugin-content-docs": "*"
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  checksum: 10c0/f66e25b6449e03b5c8812be407e80c1c9ffc87b07395273d009a40761302e6230ab357096de95b47f77aef1d7e4d0363220cca07b7fbdeb9679770e20e0ab7a4
   languageName: node
   linkType: hard
 
@@ -15041,7 +15065,7 @@ __metadata:
     "@docusaurus/plugin-client-redirects": "npm:3.10.0"
     "@docusaurus/plugin-content-docs": "npm:^3.10.1"
     "@docusaurus/preset-classic": "npm:^3.10.0"
-    "@docusaurus/theme-common": "npm:^3.10.0"
+    "@docusaurus/theme-common": "npm:^3.10.1"
     "@docusaurus/tsconfig": "npm:^3.10.0"
     "@docusaurus/types": "npm:^3.10.1"
     "@easyops-cn/docusaurus-search-local": "npm:^0.55.2"
