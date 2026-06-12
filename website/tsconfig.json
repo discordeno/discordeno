@@ -2,8 +2,11 @@
   // This file is not used in compilation. It is here just for a nice editor experience.
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "baseUrl": ".",
-    "downlevelIteration": true
+    // When @docusaurus/tsconfig is updated for TS 6, we can remove this and just extend the base config.
+    "baseUrl": null,
+    "paths": {
+      "@site/*": ["./*"]
+    }
   },
   "exclude": ["node_modules", ".docusarus", "build"]
 }

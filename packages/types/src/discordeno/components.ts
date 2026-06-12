@@ -390,9 +390,9 @@ export interface FileComponent extends BaseComponent {
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean;
   /** The name of the file. This field is ignored and provided by the API as part of the response */
-  name: string;
+  name?: string;
   /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
-  size: number;
+  size?: number;
 }
 
 /** https://docs.discord.com/developers/components/reference#separator */

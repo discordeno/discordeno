@@ -1795,7 +1795,7 @@ export interface RestManager {
    *
    * @remarks
    * Includes the `user` field if the bot has the `MANAGE_GUILD_EXPRESSIONS` permission,
-   * or if the bot created the emoji and has the the `CREATE_GUILD_EXPRESSIONS` permission.
+   * or if the bot created the emoji and has the `CREATE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#get-guild-emoji}
    */

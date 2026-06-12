@@ -33,7 +33,7 @@ export default function BaseFlowChart({ initialNodes = [], initialEdges = [] }: 
           nodes={nodes}
           edges={edges}
           defaultEdgeOptions={{ focusable: false, animated: true }}
-          colorMode={color.isDarkTheme ? 'dark' : 'light'}
+          colorMode={color.colorMode === 'dark' ? 'dark' : 'light'}
           nodeTypes={{
             baseLineNode: () => (
               <div style={{ height: '1px', width: '20px' }}>

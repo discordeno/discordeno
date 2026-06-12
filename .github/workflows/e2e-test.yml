@@ -23,7 +23,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.3.11
+        uses: rharkor/caching-for-turbo@v2.4.2
         with:
           cache-prefix: turbo-cache-
       - name: E2E Test
@@ -35,7 +35,7 @@ jobs:
           PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
           PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
       - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         if: ${{ inputs.event_name != 'pull_request' }}
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info

@@ -171,11 +171,13 @@ export default function DiscordenoReviews() {
                           fill="currentColor"
                         />
                       </svg>
-                      {review.memory_improvement
-                        ? (review.memory_improvement.from / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
-                          'GB' +
-                          ` (${DiscordLibraries[review.previous_library]})`
-                        : DiscordLibraries[review.previous_library]}
+                      {review.previous_library
+                        ? review.memory_improvement
+                          ? (review.memory_improvement.from / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
+                            'GB' +
+                            ` (${DiscordLibraries[review.previous_library]})`
+                          : DiscordLibraries[review.previous_library]
+                        : undefined}
                       <div>→</div>
                       {review.memory_improvement
                         ? (review.memory_improvement.to / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'GB'

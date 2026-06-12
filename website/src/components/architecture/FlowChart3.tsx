@@ -31,8 +31,8 @@ const handlers: Record<
 };
 
 export default function FlowChart() {
-  const transformers = [];
-  const events = [];
+  const transformers: string[] = [];
+  const events: string[] = [];
   const initialNodes: Node[] = [
     {
       id: 'baseNode-gateway',
@@ -274,7 +274,7 @@ export default function FlowChart() {
   const [edges, setEdges] = useEdgesState(initialEdges);
   const [userClick, setUserClick] = useState(false);
 
-  const nodeMouseHandler = (_: React.MouseEvent, node: Node, userTrigger = true) => {
+  const nodeMouseHandler = (_: React.MouseEvent | null, node: Node, userTrigger = true) => {
     if (userTrigger) setUserClick(true);
     if (node.id.split('-')[0] === 'baseNode') {
       edges.forEach((e) => {
@@ -287,6 +287,7 @@ export default function FlowChart() {
     }
     if (handlerKeys.find((h) => handlers[h].event === node.id)) {
       const handlerName = handlerKeys.find((h) => handlers[h].event === node.id);
+      if (!handlerName) return;
       const handler = handlers[handlerName];
       edges.forEach((e) => {
         if (e.id.startsWith('baseLine')) return;
@@ -401,11 +402,11 @@ export default function FlowChart() {
       const randomIndex = Math.round((handlerKeys.length - 1) * Math.random());
       if (!userClick) {
         nodeMouseHandler(
-          undefined,
+          null,
           {
             id: handlerKeys[randomIndex],
-            data: undefined,
-            position: undefined,
+            data: undefined!,
+            position: undefined!,
           },
           false,
         );
@@ -439,7 +440,7 @@ export default function FlowChart() {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          colorMode={color.isDarkTheme ? 'dark' : 'light'}
+          colorMode={color.colorMode === 'dark' ? 'dark' : 'light'}
           defaultEdgeOptions={{ focusable: false }}
           onNodeDoubleClick={nodeMouseHandler}
           onNodeClick={nodeMouseHandler}
@@ -450,7 +451,7 @@ export default function FlowChart() {
               nodeMouseHandler(e, {
                 id: ' - ',
                 data: { label: ' - ' },
-                position: undefined,
+                position: undefined!,
               });
             }
           }}

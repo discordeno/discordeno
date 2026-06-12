@@ -27,7 +27,7 @@ const config: Config = {
       removeLegacyPostBuildHeadAttribute: true,
       useCssCascadeLayers: false,
     },
-    experimental_faster: {
+    faster: {
       lightningCssMinimizer: true,
       mdxCrossCompilerCache: true,
       rspackBundler: true,

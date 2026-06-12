@@ -31,17 +31,17 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.1",
-    "@swc/cli": "^0.8.0",
-    "@swc/core": "^1.15.11",
+    "@biomejs/biome": "2.4.16",
+    "@swc/cli": "^0.8.1",
+    "@swc/core": "^1.15.40",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^25.2.3",
-    "c8": "^10.1.3",
+    "@types/node": "^25.9.2",
+    "c8": "^11.0.0",
     "chai": "^6.2.2",
-    "mocha": "^11.7.5",
+    "mocha": "^11.7.6",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

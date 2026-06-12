@@ -144,7 +144,7 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
    * @remarks
    * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
    */
-  emoji?: Pick<DiscordEmoji, 'id' | 'name' | 'animated'>;
+  emoji?: Partial<Pick<DiscordEmoji, 'id' | 'name' | 'animated'>>;
   /**
    * A dev-defined unique string sent on click (max 100 characters).
    *
@@ -231,7 +231,7 @@ export interface DiscordSelectOption {
   /** An additional description of the option. Maximum 50 characters. */
   description?: string;
   /** The id, name, and animated properties of an emoji. */
-  emoji?: Pick<DiscordEmoji, 'id' | 'name' | 'animated'>;
+  emoji?: Partial<Pick<DiscordEmoji, 'id' | 'name' | 'animated'>>;
   /** Will render this option as already-selected by default. */
   default?: boolean;
 }
@@ -650,9 +650,9 @@ export interface DiscordFileComponent extends DiscordBaseComponent {
   /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
   spoiler?: boolean;
   /** The name of the file. This field is ignored and provided by the API as part of the response */
-  name: string;
+  name?: string;
   /** The size of the file in bytes. This field is ignored and provided by the API as part of the response */
-  size: number;
+  size?: number;
 }
 
 /** https://docs.discord.com/developers/components/reference#separator-separator-structure */
