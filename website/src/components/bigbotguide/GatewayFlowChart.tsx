@@ -1,4 +1,5 @@
 import { Background, Controls, type Edge, type Node, Position, ReactFlow } from '@xyflow/react';
+import * as React from 'react';
 import '@xyflow/react/dist/style.css';
 
 export const defaultNodeOptions = {
@@ -120,30 +121,33 @@ const edges: Edge<any>[] = [
 function Flow() {
   const colorMode = document.documentElement.dataset['theme'] || 'light';
 
-  return (
-    <div style={{ height: '40vh' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        colorMode={colorMode === 'dark' ? 'dark' : 'light'}
-        nodeTypes={{
-          baseLineNodeText: (n) => (
-            <div
-              style={{
-                textAlign: 'center',
-                width: '400px',
-              }}
-            >
-              <h3>{n.data.label}</h3>
-            </div>
-          ),
-        }}
-        fitView
-      >
-        <Background />
-        <Controls />
-      </ReactFlow>
-    </div>
+  return React.createElement(
+    'div',
+    { style: { height: '40vh' } },
+    React.createElement(
+      ReactFlow,
+      {
+        nodes: nodes,
+        edges: edges,
+        colorMode: colorMode === 'dark' ? 'dark' : 'light',
+        nodeTypes: {
+          baseLineNodeText: (n: any) =>
+            React.createElement(
+              'div',
+              {
+                style: {
+                  textAlign: 'center',
+                  width: '400px',
+                },
+              },
+              React.createElement('h3', null, n.data.label),
+            ),
+        },
+        fitView: true,
+      },
+      React.createElement(Background, null),
+      React.createElement(Controls, null),
+    ),
   );
 }
 
