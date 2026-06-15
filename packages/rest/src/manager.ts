@@ -114,6 +114,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
     maxRetryCount: Infinity,
+    requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
     rateLimitedPaths: new Map(),
@@ -428,6 +429,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`;
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions);
 
+      // Retries a request that was aborted because it hit `rest.requestTimeout`, or rejects it once the retry
+      // budget is exhausted. The caller is responsible for the `invalidBucket`/event bookkeeping beforehand.
+      const handleTimeout = async (options: SendRequestOptions, error: Error): Promise<void> => {
+        if (options.retryCount >= rest.maxRetryCount) {
+          rest.logger.debug(`request to ${url} timed out and exceeded the maximum allowed retries.`);
+          options.reject({
+            ok: false,
+            status: 999,
+            error: 'The request timed out and it maxed out the retries limit.',
+            errorObject: error,
+          });
+          return;
+        }
+
+        rest.logger.debug(`request to ${url} timed out after ${rest.requestTimeout}ms, retrying.`, error);
+        options.retryCount += 1;
+        await options.retryRequest?.(options);
+      };
+
       const loggingHeaders = { ...payload.headers };
 
       if (payload.headers.authorization) {
@@ -435,17 +455,37 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authorizationScheme} tokenhere`;
       }
 
-      const request = new Request(url, payload);
+      // Set up a hard deadline for this attempt. When it fires we abort the fetch (and any in-progress body
+      // read), which forces the awaited fetch below to reject so a stalled connection can never keep this
+      // queue's `processPending` loop (and therefore the whole queue) wedged forever.
+      let timedOut = false;
+      const controller = new AbortController();
+      const timeoutId =
+        rest.requestTimeout > 0
+          ? setTimeout(() => {
+              timedOut = true;
+              controller.abort();
+            }, rest.requestTimeout).unref()
+          : undefined;
+
+      const request = new Request(url, { ...payload, signal: controller.signal });
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
       });
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
       const response = await fetch(request).catch(async (error) => {
-        rest.logger.debug(`request fetch to ${url} failed.`, error);
+        if (timeoutId) clearTimeout(timeoutId);
+
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+
+        // The attempt exceeded `rest.requestTimeout` and was aborted. Treat it like a transient failure and
+        // retry it through the queue, so a single stalled connection doesn't permanently fail the request.
+        if (timedOut) return await handleTimeout(options, error);
+
+        rest.logger.debug(`request fetch to ${url} failed.`, error);
         options.reject({
           ok: false,
           status: 999,
@@ -461,6 +501,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
       const body = await (response.headers.get('Content-Type')?.startsWith('application/json') ? response.json() : response.text()).catch(() => null);
+
+      // The attempt is complete now that the body has been read, so cancel the deadline.
+      if (timeoutId) clearTimeout(timeoutId);
+
+      // The deadline fired while reading the response body (the `.catch` above swallowed the abort as a null
+      // body). Retry it like any other timeout instead of treating it as an empty response.
+      if (timedOut) {
+        rest.events.requestError(request, new Error('Request timed out while reading the response body'), { body: options.requestBodyOptions?.body });
+        rest.invalidBucket.handleCompletedRequest(999, false);
+        return await handleTimeout(options, new Error('Request timed out while reading the response body'));
+      }
 
       rest.events.response(request, response, {
         requestBody: options.requestBodyOptions?.body,
@@ -610,15 +661,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.headers[rest.authorizationHeader] = rest.authorization;
         }
 
-        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options));
+        // Give the request to the proxy a hard deadline too, so a stalled proxy can't hang the caller forever.
+        const controller = new AbortController();
+        const timeoutId = rest.requestTimeout > 0 ? setTimeout(() => controller.abort(), rest.requestTimeout).unref() : undefined;
+
+        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, {
+          ...rest.createRequestBody(method, options),
+          signal: controller.signal,
+        });
         rest.events.request(request, {
           body: options?.body,
         });
 
-        const result = await fetch(request);
+        let result: Response;
+        // biome-ignore lint/suspicious/noExplicitAny: matches the previous inferred type from `response.json()`
+        let body: any;
+        try {
+          result = await fetch(request);
 
-        // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
+          // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+          body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
+        } finally {
+          if (timeoutId) clearTimeout(timeoutId);
+        }
 
         rest.events.response(request, result, {
           requestBody: options?.body,

@@ -207,6 +207,23 @@ export interface CreateRestManagerOptions {
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>;
   /** Events for the rest manager */
   events?: Partial<RestManagerEvents>;
+  /**
+   * The maximum time in milliseconds a single request attempt may take before it is aborted.
+   *
+   * @remarks
+   * This is a total deadline for each attempt (it also covers reading the response body), not a per-chunk timeout.
+   * When an attempt times out it is retried through the queue up to {@link RestManager.maxRetryCount} times before failing.
+   * Without it, a connection that stalls after connecting could keep a queue from ever progressing.
+   *
+   * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a
+   * large attachment over a slow connection) can legitimately exceed it and be aborted/retried. Raise this value
+   * for upload-heavy bots if you see such requests timing out.
+   *
+   * Set to `0` to disable it and rely on the runtime's default fetch timeouts.
+   *
+   * @default 30000 // 30 seconds
+   */
+  requestTimeout?: number;
 }
 
 export interface RestManager {
@@ -236,6 +253,8 @@ export interface RestManager {
   updateBearerTokenEndpoint?: string;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
+  /** The maximum time in milliseconds a single request attempt may take before it is aborted and retried. Defaults to 30000 (30 seconds). Set to 0 to disable. */
+  requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
   globallyRateLimited: boolean;
   /** Whether or not the rate limited paths are being processed to allow requests to be made once time is up. Defaults to false. */
