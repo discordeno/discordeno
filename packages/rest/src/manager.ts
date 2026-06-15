@@ -482,7 +482,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
-      const response = await fetch(request).catch(async (error) => {
+
+      let response: Response;
+      try {
+        response = await fetch(request);
+      } catch (error) {
         if (timeoutId) clearTimeout(timeoutId);
 
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
@@ -491,19 +495,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // The attempt exceeded `rest.requestTimeout` and was aborted. Treat it like a transient failure and
         // retry it through the queue, so a single stalled connection doesn't permanently fail the request.
-        if (timedOut) return await handleTimeout(options, error);
+        if (timedOut) return await handleTimeout(options, error as Error);
 
         rest.logger.debug(`request fetch to ${url} failed.`, error);
         options.reject({
           ok: false,
           status: 999,
           error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
-          errorObject: error,
+          errorObject: error as Error,
         });
-      });
-
-      // If response is undefined, the error has been handled in the catch block above
-      if (!response) return;
+        return;
+      }
 
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`);
 
