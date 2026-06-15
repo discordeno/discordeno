@@ -87,6 +87,13 @@ export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
+/** Calls `.unref()` on a timer if the runtime's `setTimeout` returns an object supporting it (Node, Bun), so the timer doesn't keep the process alive. Browsers and Deno return a plain number and have no equivalent. */
+function unrefTimer(timer: unknown): void {
+  if (typeof timer === 'object' && timer !== null && 'unref' in timer && typeof (timer as { unref: unknown }).unref === 'function') {
+    (timer as { unref: () => void }).unref();
+  }
+}
+
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
@@ -465,8 +472,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           ? setTimeout(() => {
               timedOut = true;
               controller.abort();
-            }, rest.requestTimeout).unref()
+            }, rest.requestTimeout)
           : undefined;
+      unrefTimer(timeoutId);
 
       const request = new Request(url, { ...payload, signal: controller.signal });
       rest.events.request(request, {
@@ -663,7 +671,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // Give the request to the proxy a hard deadline too, so a stalled proxy can't hang the caller forever.
         const controller = new AbortController();
-        const timeoutId = rest.requestTimeout > 0 ? setTimeout(() => controller.abort(), rest.requestTimeout).unref() : undefined;
+        const timeoutId = rest.requestTimeout > 0 ? setTimeout(() => controller.abort(), rest.requestTimeout) : undefined;
+        unrefTimer(timeoutId);
 
         const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, {
           ...rest.createRequestBody(method, options),
