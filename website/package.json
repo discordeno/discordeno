@@ -27,7 +27,7 @@
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.11.0",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.5",
+    "react": "^19.2.7",
     "react-dom": "19.2.5"
   },
   "devDependencies": {
@@ -35,7 +35,7 @@
     "@docusaurus/module-type-aliases": "^3.10.1",
     "@docusaurus/tsconfig": "^3.10.1",
     "@docusaurus/types": "^3.10.1",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.17",
     "turbo": "^2.9.16",
     "typescript": "6.0.3",
     "webpack": "5.107.2"
