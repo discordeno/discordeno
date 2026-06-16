@@ -87,9 +87,9 @@ export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
-/** Whether an error is an `AbortSignal.timeout()` abort (a `TimeoutError` `DOMException`). Checked by name so it works across runtimes without depending on `DOMException`/`instanceof`. */
+/** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
 function isTimeoutError(error: unknown): boolean {
-  return typeof error === 'object' && error !== null && (error as { name?: unknown }).name === 'TimeoutError';
+  return error instanceof DOMException && error.name === 'TimeoutError';
 }
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
@@ -657,20 +657,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             body: options?.body,
           });
 
-          let result: Response;
-          try {
-            result = await fetch(request);
-          } catch (fetchError) {
+          const result = await fetch(request).catch((fetchError) => {
             rest.events.requestError(request, fetchError, { body: options?.body });
 
             // The attempt hit `rest.requestTimeout` and was aborted; retry it until the budget is exhausted.
             if (isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
               rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
-              continue;
+              return undefined;
             }
 
             throw fetchError;
-          }
+          });
+
+          // If result is undefined, the attempt timed out and is being retried.
+          if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
           const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
