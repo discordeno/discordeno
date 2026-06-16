@@ -87,11 +87,9 @@ export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
-/** Calls `.unref()` on a timer if the runtime's `setTimeout` returns an object supporting it (Node, Bun), so the timer doesn't keep the process alive. Browsers and Deno return a plain number and have no equivalent. */
-function unrefTimer(timer: unknown): void {
-  if (typeof timer === 'object' && timer !== null && 'unref' in timer && typeof (timer as { unref: unknown }).unref === 'function') {
-    (timer as { unref: () => void }).unref();
-  }
+/** Whether an error is an `AbortSignal.timeout()` abort (a `TimeoutError` `DOMException`). Checked by name so it works across runtimes without depending on `DOMException`/`instanceof`. */
+function isTimeoutError(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && (error as { name?: unknown }).name === 'TimeoutError';
 }
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
@@ -462,66 +460,40 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authorizationScheme} tokenhere`;
       }
 
-      // Set up a hard deadline for this attempt. When it fires we abort the fetch (and any in-progress body
-      // read), which forces the awaited fetch below to reject so a stalled connection can never keep this
-      // queue's `processPending` loop (and therefore the whole queue) wedged forever.
-      let timedOut = false;
-      const controller = new AbortController();
-      const timeoutId =
-        rest.requestTimeout > 0
-          ? setTimeout(() => {
-              timedOut = true;
-              controller.abort();
-            }, rest.requestTimeout)
-          : undefined;
-      unrefTimer(timeoutId);
-
-      const request = new Request(url, { ...payload, signal: controller.signal });
+      // Give this attempt a hard deadline. `AbortSignal.timeout` aborts the fetch (and any in-progress body
+      // read) once it fires, which makes the awaited fetch reject so a stalled connection can never keep this
+      // queue's `processPending` loop (and therefore the whole queue) wedged forever. Omitted when disabled.
+      const request = new Request(url, { ...payload, signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined });
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
       });
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
-
-      let response: Response;
-      try {
-        response = await fetch(request);
-      } catch (error) {
-        if (timeoutId) clearTimeout(timeoutId);
-
+      const response = await fetch(request).catch(async (error) => {
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
 
-        // The attempt exceeded `rest.requestTimeout` and was aborted. Treat it like a transient failure and
-        // retry it through the queue, so a single stalled connection doesn't permanently fail the request.
-        if (timedOut) return await handleTimeout(options, error as Error);
+        // The attempt hit `rest.requestTimeout` and was aborted. Treat it like a transient failure and retry
+        // it through the queue, so a single stalled connection doesn't permanently fail the request.
+        if (isTimeoutError(error)) return await handleTimeout(options, error);
 
         rest.logger.debug(`request fetch to ${url} failed.`, error);
         options.reject({
           ok: false,
           status: 999,
           error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
-          errorObject: error as Error,
+          errorObject: error,
         });
-        return;
-      }
+      });
+
+      // If response is undefined, the error has been handled in the catch block above
+      if (!response) return;
 
       rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`);
 
       // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
       const body = await (response.headers.get('Content-Type')?.startsWith('application/json') ? response.json() : response.text()).catch(() => null);
-
-      // The attempt is complete now that the body has been read, so cancel the deadline.
-      if (timeoutId) clearTimeout(timeoutId);
-
-      // The deadline fired while reading the response body (the `.catch` above swallowed the abort as a null
-      // body). Retry it like any other timeout instead of treating it as an empty response.
-      if (timedOut) {
-        rest.events.requestError(request, new Error('Request timed out while reading the response body'), { body: options.requestBodyOptions?.body });
-        rest.invalidBucket.handleCompletedRequest(999, false);
-        return await handleTimeout(options, new Error('Request timed out while reading the response body'));
-      }
 
       rest.events.response(request, response, {
         requestBody: options.requestBodyOptions?.body,
@@ -671,47 +643,55 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.headers[rest.authorizationHeader] = rest.authorization;
         }
 
-        // Give the request to the proxy a hard deadline too, so a stalled proxy can't hang the caller forever.
-        const controller = new AbortController();
-        const timeoutId = rest.requestTimeout > 0 ? setTimeout(() => controller.abort(), rest.requestTimeout) : undefined;
-        unrefTimer(timeoutId);
+        const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, {
-          ...rest.createRequestBody(method, options),
-          signal: controller.signal,
-        });
-        rest.events.request(request, {
-          body: options?.body,
-        });
-
-        let result: Response;
-        // biome-ignore lint/suspicious/noExplicitAny: matches the previous inferred type from `response.json()`
-        let body: any;
-        try {
-          result = await fetch(request);
-
-          // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-          body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
-        } finally {
-          if (timeoutId) clearTimeout(timeoutId);
-        }
-
-        rest.events.response(request, result, {
-          requestBody: options?.body,
-          responseBody: body,
-        });
-
-        if (!result.ok) {
-          error.cause = Object.assign(Object.create(baseErrorPrototype), {
-            ok: false,
-            status: result.status,
-            body,
+        // Retry on timeout up to `maxRetryCount`, mirroring the queued `sendRequest` path, so a stalled proxy
+        // connection doesn't permanently fail the request (and can never hang the caller forever).
+        for (let retryCount = 0; ; retryCount++) {
+          // Give the request to the proxy a hard deadline too via `AbortSignal.timeout` (omitted when disabled).
+          const request = new Request(url, {
+            ...rest.createRequestBody(method, options),
+            signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined,
+          });
+          rest.events.request(request, {
+            body: options?.body,
           });
 
-          throw error;
-        }
+          let result: Response;
+          try {
+            result = await fetch(request);
+          } catch (fetchError) {
+            rest.events.requestError(request, fetchError, { body: options?.body });
 
-        return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
+            // The attempt hit `rest.requestTimeout` and was aborted; retry it until the budget is exhausted.
+            if (isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
+              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
+              continue;
+            }
+
+            throw fetchError;
+          }
+
+          // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
+
+          rest.events.response(request, result, {
+            requestBody: options?.body,
+            responseBody: body,
+          });
+
+          if (!result.ok) {
+            error.cause = Object.assign(Object.create(baseErrorPrototype), {
+              ok: false,
+              status: result.status,
+              body,
+            });
+
+            throw error;
+          }
+
+          return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
+        }
       }
 
       return await new Promise(async (resolve, reject) => {
