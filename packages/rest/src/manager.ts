@@ -87,11 +87,6 @@ export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
-/** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
-function isTimeoutError(error: unknown): boolean {
-  return error instanceof DOMException && error.name === 'TimeoutError';
-}
-
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
@@ -1971,4 +1966,9 @@ enum HttpResponseCode {
   Error = 400,
   /** This request got rate limited. */
   TooManyRequests = 429,
+}
+
+/** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
+function isTimeoutError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'TimeoutError';
 }
