@@ -38,6 +38,19 @@ describe('[rest] manager', () => {
       expect(rest.baseUrl).to.be.equal(options.proxy.baseUrl);
     });
 
+    it('Strips a trailing slash from proxy base urls', () => {
+      const rest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'http://microservices_bot-gateway:6001/',
+          authorization: token,
+        },
+      });
+
+      expect(rest.baseUrl).to.be.equal('http://microservices_bot-gateway:6001');
+      expect(rest.isProxied).to.be.equal(true);
+    });
+
     it('With an application id', () => {
       const subrest = createRestManager({ ...options, applicationId: '130136895395987456' });
       expect(subrest.applicationId).to.be.equal(130136895395987456n);

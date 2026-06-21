@@ -90,7 +90,7 @@ export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
-  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL;
+  const baseUrl = (options.proxy?.baseUrl ?? DISCORD_API_URL).replace(/\/$/, '');
   // Discord error can get nested a lot, so we use a custom inspect to change the depth to Infinity
   const baseErrorPrototype = {
     [inspect.custom](_depth: number, options: InspectOptions, _inspect: typeof inspect) {
