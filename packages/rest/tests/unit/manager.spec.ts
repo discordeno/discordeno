@@ -44,9 +44,9 @@ describe('[rest] manager', () => {
       expect(rest.isProxied).to.be.equal(true);
     });
 
-it('With an application id', () => {
-const rest = createRestManager({ ...options, applicationId: '130136895395987456' });
-expect(rest.applicationId).to.be.equal(130136895395987456n);
+    it('With an application id', () => {
+      const rest = createRestManager({ ...options, applicationId: '130136895395987456' });
+      expect(rest.applicationId).to.be.equal(130136895395987456n);
     });
   });
 
