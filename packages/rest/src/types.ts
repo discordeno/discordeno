@@ -131,7 +131,7 @@ import type {
   ListThreadMembers,
   ModifyApplicationEmoji,
   ModifyChannel,
-  ModifyCurrentMemberOptions,
+  ModifyCurrentMember,
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
@@ -2844,7 +2844,7 @@ export interface RestManager {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-current-member}
    */
-  editCurrentMember: (guildId: BigString, options: ModifyCurrentMemberOptions, reason?: string) => Promise<Camelize<DiscordMember>>;
+  editCurrentMember: (guildId: BigString, options: ModifyCurrentMember, reason?: string) => Promise<Camelize<DiscordMember>>;
   /**
    * Edits a member's properties.
    *

@@ -167,7 +167,7 @@ export interface ModifyGuildMember {
 }
 
 /** https://docs.discord.com/developers/resources/guild#modify-current-member-json-params */
-export interface ModifyCurrentMemberOptions {
+export interface ModifyCurrentMember {
   /** Value to set user's nickname to	 */
   nick?: string | null;
   /** Data URI base64 encoded banner image */

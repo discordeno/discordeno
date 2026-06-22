@@ -86,7 +86,7 @@ import type {
   ListThreadMembers,
   ModifyApplicationEmoji,
   ModifyChannel,
-  ModifyCurrentMemberOptions,
+  ModifyCurrentMember,
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
@@ -1135,11 +1135,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     commands: CreateApplicationCommand[],
     options?: UpsertGuildApplicationCommandOptions,
   ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>[]>;
-  editCurrentMember: (
-    guildId: BigString,
-    options: ModifyCurrentMemberOptions,
-    reason?: string,
-  ) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
+  editCurrentMember: (guildId: BigString, options: ModifyCurrentMember, reason?: string) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
   editMember: (
     guildId: BigString,
     userId: BigString,
