@@ -39,15 +39,8 @@ describe('[rest] manager', () => {
     });
 
     it('Strips a trailing slash from proxy base urls', () => {
-      const rest = createRestManager({
-        token,
-        proxy: {
-          baseUrl: 'http://microservices_bot-gateway:6001/',
-          authorization: token,
-        },
-      });
-
-      expect(rest.baseUrl).to.be.equal('http://microservices_bot-gateway:6001');
+      const rest = createRestManager({ ...options, proxy: { ...options.proxy, baseUrl: 'https://localhost:8000/' } });
+      expect(rest.baseUrl).to.be.equal('https://localhost:8000');
       expect(rest.isProxied).to.be.equal(true);
     });
 
