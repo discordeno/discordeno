@@ -92,7 +92,6 @@ import type {
   DiscordWelcomeScreen,
   EditApplication,
   EditAutoModerationRuleOptions,
-  EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
   EditGuildOnboarding,
   EditGuildRole,
@@ -132,6 +131,7 @@ import type {
   ListThreadMembers,
   ModifyApplicationEmoji,
   ModifyChannel,
+  ModifyCurrentMemberOptions,
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
@@ -2844,7 +2844,7 @@ export interface RestManager {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-current-member}
    */
-  editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<Camelize<DiscordMember>>;
+  editCurrentMember: (guildId: BigString, options: ModifyCurrentMemberOptions, reason?: string) => Promise<Camelize<DiscordMember>>;
   /**
    * Edits a member's properties.
    *
@@ -2863,17 +2863,6 @@ export interface RestManager {
    */
   editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember, reason?: string) => Promise<Camelize<DiscordMember>>;
   /**
-   * Gets the member object by user ID.
-   *
-  
-   * @param guildId - The ID of the guild to get the member object for.
-   * @param userId - The ID of the user to get the member object for.
-   * @returns An instance of {@link DiscordMemberWithUser}.
-   *
-   * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-member}
-   */
-  getMember: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>;
-  /**
    * Gets the current member object.
    *
    * @param bearerToken - The access token of the user
@@ -2886,6 +2875,17 @@ export interface RestManager {
    * @see {@link https://docs.discord.com/developers/resources/user#get-current-user-guild-member}
    */
   getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<Camelize<DiscordMemberWithUser>>;
+  /**
+   * Gets the member object by user ID.
+   *
+  
+   * @param guildId - The ID of the guild to get the member object for.
+   * @param userId - The ID of the user to get the member object for.
+   * @returns An instance of {@link DiscordMemberWithUser}.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-member}
+   */
+  getMember: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>;
   /**
    * Gets the list of members for a guild.
    *

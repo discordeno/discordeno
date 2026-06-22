@@ -1671,16 +1671,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason });
     },
 
-    async editBotMember(guildId, body, reason) {
+    async editCurrentMember(guildId, body, reason) {
       return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body, reason });
     },
 
     async editMember(guildId, userId, body, reason) {
       return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body, reason });
-    },
-
-    async getMember(guildId, userId) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getCurrentMember(guildId, token) {
@@ -1690,6 +1686,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         unauthorized: true,
       });
+    },
+
+    async getMember(guildId, userId) {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getMembers(guildId, options) {
