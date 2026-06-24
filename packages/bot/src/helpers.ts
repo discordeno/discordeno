@@ -50,7 +50,6 @@ import type {
   DiscordVanityUrl,
   EditApplication,
   EditAutoModerationRuleOptions,
-  EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
   EditGuildOnboarding,
   EditGuildRole,
@@ -87,6 +86,7 @@ import type {
   ListThreadMembers,
   ModifyApplicationEmoji,
   ModifyChannel,
+  ModifyCurrentMember,
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
@@ -564,18 +564,18 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
         bot.transformers.applicationCommand(bot, snakelize(res)),
       );
     },
-    editBotMember: async (guildId, options, reason) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.editBotMember(guildId, options, reason)), { guildId, userId: bot.id });
+    editCurrentMember: async (guildId, options, reason) => {
+      return bot.transformers.member(bot, snakelize(await bot.rest.editCurrentMember(guildId, options, reason)), { guildId, userId: bot.id });
     },
     editMember: async (guildId, userId, options, reason) => {
       return bot.transformers.member(bot, snakelize(await bot.rest.editMember(guildId, userId, options, reason)), { guildId, userId });
     },
-    getMember: async (guildId, userId) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.getMember(guildId, userId)), { guildId, userId });
-    },
     getCurrentMember: async (guildId, bearerToken) => {
       const res = await bot.rest.getCurrentMember(guildId, bearerToken);
       return bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) });
+    },
+    getMember: async (guildId, userId) => {
+      return bot.transformers.member(bot, snakelize(await bot.rest.getMember(guildId, userId)), { guildId, userId });
     },
     getMembers: async (guildId, options) => {
       return (await bot.rest.getMembers(guildId, options)).map((res) =>
@@ -1135,15 +1135,15 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     commands: CreateApplicationCommand[],
     options?: UpsertGuildApplicationCommandOptions,
   ) => Promise<SetupDesiredProps<ApplicationCommand, TProps, TBehavior>[]>;
-  editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
+  editCurrentMember: (guildId: BigString, options: ModifyCurrentMember, reason?: string) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
   editMember: (
     guildId: BigString,
     userId: BigString,
     options: ModifyGuildMember,
     reason?: string,
   ) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
-  getMember: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
   getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
+  getMember: (guildId: BigString, userId: BigString) => Promise<SetupDesiredProps<Member, TProps, TBehavior>>;
   getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<SetupDesiredProps<Member, TProps, TBehavior>[]>;
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>;
   searchMembers: (

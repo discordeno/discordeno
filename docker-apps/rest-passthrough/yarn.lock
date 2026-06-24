@@ -75,13 +75,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/env@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@fastify/env@npm:6.0.0"
+"@fastify/env@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@fastify/env@npm:7.0.0"
   dependencies:
     env-schema: "npm:^7.0.0"
     fastify-plugin: "npm:^5.0.0"
-  checksum: 10c0/7a8a924f502f4c54641b9a55941a57e60864ead6742f2f8a54cca22ced40ec477b20b243ae272cd4a5b79499961e158534095376e7c766583378816a235424b9
+  checksum: 10c0/9d783bbec495cace1749f4cd176b79bd61735268fe6b5fc5a7d98880f8ee83f73556ed4da1e52a4ffe6ea2a2d3e393d8487805cc27a0c9560a34c967852b9bfb
   languageName: node
   linkType: hard
 
@@ -815,13 +815,13 @@ __metadata:
   linkType: hard
 
 "js-yaml@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "js-yaml@npm:4.1.1"
+  version: 4.2.0
+  resolution: "js-yaml@npm:4.2.0"
   dependencies:
     argparse: "npm:^2.0.1"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10c0/561c7d7088c40a9bb53cc75becbfb1df6ae49b34b5e6e5a81744b14ae8667ec564ad2527709d1a6e7d5e5fa6d483aa0f373a50ad98d42fde368ec4a190d4fae7
+  checksum: 10c0/1916456c118746603b067d74bbcbb0445d9a1d5e474ad4ae775e7b20525bed902e01d9d97dd0c81fcd8d4f596162309d0eb057f4aa38f3e9647f14075e9dea45
   languageName: node
   linkType: hard
 
@@ -1027,7 +1027,7 @@ __metadata:
   resolution: "rest-passthrough@workspace:."
   dependencies:
     "@discordeno/rest": "npm:21.0.0"
-    "@fastify/env": "npm:^6.0.0"
+    "@fastify/env": "npm:^7.0.0"
     "@fastify/helmet": "npm:^13.0.2"
     "@fastify/multipart": "npm:^10.0.0"
     "@favware/cliff-jumper": "npm:^6.1.0"
