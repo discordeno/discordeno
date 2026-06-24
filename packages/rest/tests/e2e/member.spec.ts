@@ -28,11 +28,11 @@ describe('Member tests', () => {
 
   it("Edit a bot's nickname", async () => {
     const nick = 'lts20050703';
-    const member = await rest.editBotMember(e2eCache.guildId, { nick });
+    const member = await rest.editCurrentMember(e2eCache.guildId, { nick });
     expect(member.nick).to.equal(nick);
 
     // Change nickname back
-    const member2 = await rest.editBotMember(e2eCache.guildId, { nick: null });
+    const member2 = await rest.editCurrentMember(e2eCache.guildId, { nick: null });
     expect(member2.nick).to.null;
   });
 

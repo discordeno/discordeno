@@ -90,7 +90,7 @@ export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
-  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL;
+  const baseUrl = (options.proxy?.baseUrl ?? DISCORD_API_URL).replace(/\/$/, '');
   // Discord error can get nested a lot, so we use a custom inspect to change the depth to Infinity
   const baseErrorPrototype = {
     [inspect.custom](_depth: number, options: InspectOptions, _inspect: typeof inspect) {
@@ -1671,16 +1671,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason });
     },
 
-    async editBotMember(guildId, body, reason) {
+    async editCurrentMember(guildId, body, reason) {
       return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body, reason });
     },
 
     async editMember(guildId, userId, body, reason) {
       return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body, reason });
-    },
-
-    async getMember(guildId, userId) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getCurrentMember(guildId, token) {
@@ -1690,6 +1686,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         unauthorized: true,
       });
+    },
+
+    async getMember(guildId, userId) {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getMembers(guildId, options) {
