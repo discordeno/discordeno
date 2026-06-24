@@ -234,6 +234,7 @@ export interface RestManager {
   version: ApiVersions;
   /**
    * The base url to connect to. If you create a proxy rest, that url would go here.
+   * IT SHOULD NOT END WITH A /
    * @default https://discord.com/api
    */
   baseUrl: string;
