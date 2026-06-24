@@ -75,13 +75,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/env@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@fastify/env@npm:6.0.0"
+"@fastify/env@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@fastify/env@npm:7.0.0"
   dependencies:
     env-schema: "npm:^7.0.0"
     fastify-plugin: "npm:^5.0.0"
-  checksum: 10c0/7a8a924f502f4c54641b9a55941a57e60864ead6742f2f8a54cca22ced40ec477b20b243ae272cd4a5b79499961e158534095376e7c766583378816a235424b9
+  checksum: 10c0/9d783bbec495cace1749f4cd176b79bd61735268fe6b5fc5a7d98880f8ee83f73556ed4da1e52a4ffe6ea2a2d3e393d8487805cc27a0c9560a34c967852b9bfb
   languageName: node
   linkType: hard
 
@@ -1027,7 +1027,7 @@ __metadata:
   resolution: "rest-passthrough@workspace:."
   dependencies:
     "@discordeno/rest": "npm:21.0.0"
-    "@fastify/env": "npm:^6.0.0"
+    "@fastify/env": "npm:^7.0.0"
     "@fastify/helmet": "npm:^13.0.2"
     "@fastify/multipart": "npm:^10.0.0"
     "@favware/cliff-jumper": "npm:^6.1.0"
