@@ -26,11 +26,11 @@ jobs:
       - name: yarn install (root)
         run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
+        uses: rharkor/caching-for-turbo@v2.5.0
         with:
           cache-prefix: turbo-cache-
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
+        uses: rharkor/caching-for-turbo@v2.5.0
         with:
           cache-prefix: turbo-cache-website-
           server-port: 41231 # The default is 41230, but we use a different cache key so we need a different port
@@ -41,7 +41,7 @@ jobs:
       - run: yarn install --immutable
         working-directory: ./website
       - name: Restore bundler cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: ${{ runner.os }}-docusaurus-bundler-${{ github.sha }}
           path: ./website/node_modules/.cache
@@ -70,7 +70,7 @@ jobs:
       - name: yarn install (root)
         run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
+        uses: rharkor/caching-for-turbo@v2.5.0
         with:
           cache-prefix: turbo-cache-
       - name: Build all pkg
