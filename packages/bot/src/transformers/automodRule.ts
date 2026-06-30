@@ -2,7 +2,7 @@ import type { DiscordAutoModerationRule } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { AutoModerationRule } from './types.js';
 
-export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule): AutoModerationRule {
+export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule) {
   const rule = {
     name: payload.name,
     eventType: payload.event_type,

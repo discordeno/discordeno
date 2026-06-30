@@ -14,13 +14,8 @@ import {
 import { Collection } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { InteractionResolvedDataChannel } from '../commandOptionsParser.js';
-import type {
-  CompleteDesiredProperties,
-  DesiredPropertiesBehavior,
-  SetupDesiredProps,
-  TransformersDesiredProperties,
-  TransformProperty,
-} from '../desiredProperties.js';
+import type { CompleteDesiredProperties, DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import type {
   Interaction,
   InteractionCallback,
@@ -28,6 +23,7 @@ import type {
   InteractionDataOption,
   InteractionDataResolved,
   InteractionResource,
+  Message,
 } from './types.js';
 
 // Assume we have all desired properties for this or else typescript will get very confused for the return types of these functions.
@@ -144,12 +140,11 @@ export const baseInteraction: SetupDesiredProps<Interaction, CompleteDesiredProp
   },
 };
 
-export function transformInteraction(bot: Bot, payload: DiscordInteraction, extra?: { shardId?: number }): Interaction {
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
-
-  const interaction: SetupDesiredProps<Interaction, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseInteraction);
+export function transformInteraction(bot: Bot, payload: Partial<DiscordInteraction>, extra?: { shardId?: number; partial?: boolean }) {
   const props = bot.transformers.desiredProperties.interaction;
+  const interaction: SetupDesiredProps<Interaction, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseInteraction);
 
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
   interaction.bot = bot;
   interaction.acknowledged = false;
 
@@ -160,9 +155,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction, extr
   if (props.version && payload.version) interaction.version = payload.version;
   if (props.locale && payload.locale) interaction.locale = payload.locale;
   if (props.guildLocale && payload.guild_locale) interaction.guildLocale = payload.guild_locale;
-  if (props.guild && payload.guild)
-    // @ts-expect-error payload.guild is a Partial<DiscordGuild>
-    interaction.guild = bot.transformers.guild(bot, payload.guild, { shardId: extra?.shardId });
+  if (props.guild && payload.guild) interaction.guild = bot.transformers.guild(bot, payload.guild, { shardId: extra?.shardId, partial: true });
   if (props.guildId && guildId) interaction.guildId = guildId;
   if (props.user) {
     if (payload.member?.user) interaction.user = bot.transformers.user(bot, payload.member?.user);
@@ -170,9 +163,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction, extr
   }
   if (props.appPermissions && payload.app_permissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions);
   if (props.message && payload.message) interaction.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId });
-  if (props.channel && payload.channel)
-    // @ts-expect-error payload.channel is a Partial<>
-    interaction.channel = bot.transformers.channel(bot, payload.channel, { guildId });
+  if (props.channel && payload.channel) interaction.channel = bot.transformers.channel(bot, payload.channel, { guildId, partial: true });
   if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id);
   if (props.member && guildId && payload.member)
     interaction.member = bot.transformers.member(bot, payload.member, {
@@ -211,11 +202,13 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction, extr
     };
   }
 
-  // Typescript has an hard time with interaction.bot, so we need to tell him for sure this interaction is the of the correct type
-  return bot.transformers.customizers.interaction(bot, payload, interaction as unknown as typeof bot.transformers.$inferredTypes.interaction, extra);
+  return callCustomizer('interaction', bot, payload, interaction, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption): InteractionDataOption {
+export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
   const opt = {
     name: option.name,
     type: option.type,
@@ -229,16 +222,19 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
 
 export function transformInteractionDataResolved(
   bot: Bot,
-  payload: DiscordInteractionDataResolved,
-  extra?: { shardId?: number; guildId?: BigString },
-): TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> {
-  const transformed: TransformProperty<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> = {};
+  payload: Partial<DiscordInteractionDataResolved>,
+  extra?: { shardId?: number; guildId?: BigString; partial?: boolean },
+) {
+  const transformed: SetupDesiredProps<InteractionDataResolved, TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> = {};
 
   if (payload.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.messages).map(([key, value]) => {
-        // @ts-expect-error TODO: Deal with partials
-        const message = bot.transformers.message(bot, value, { shardId: extra?.shardId });
+        const message = bot.transformers.message(bot, value, { shardId: extra?.shardId, partial: true }) as SetupDesiredProps<
+          Message,
+          TransformersDesiredProperties,
+          DesiredPropertiesBehavior.RemoveKey
+        >;
         const id = bot.transformers.snowflake(key);
 
         return [id, message];
@@ -260,10 +256,10 @@ export function transformInteractionDataResolved(
   if (extra?.guildId && payload.members) {
     transformed.members = new Collection(
       Object.entries(payload.members).map(([key, value]) => {
-        // @ts-expect-error TODO: Deal with partials, value is missing 2 values but the transformer can handle it, despite what the types says
         const member = bot.transformers.member(bot, value, {
           guildId: extra.guildId,
           userId: bot.transformers.snowflake(key),
+          partial: true,
         });
         const id = bot.transformers.snowflake(key);
 
@@ -308,17 +304,18 @@ export function transformInteractionDataResolved(
     );
   }
 
-  return bot.transformers.customizers.interactionDataResolved(bot, payload, transformed, {
+  return callCustomizer('interactionDataResolved', bot, payload, transformed, {
     shardId: extra?.shardId,
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
+    partial: extra?.partial ?? false,
   });
 }
 
 export function transformInteractionCallbackResponse(
   bot: Bot,
-  payload: DiscordInteractionCallbackResponse,
-  extra?: { shardId?: number },
-): InteractionCallbackResponse {
+  payload: Partial<DiscordInteractionCallbackResponse>,
+  extra?: { shardId?: number; partial?: boolean },
+) {
   const props = bot.transformers.desiredProperties.interactionCallbackResponse;
   const response = {} as SetupDesiredProps<InteractionCallbackResponse, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -326,10 +323,13 @@ export function transformInteractionCallbackResponse(
   if (props.resource && payload.resource)
     response.resource = bot.transformers.interactionResource(bot, payload.resource, { shardId: extra?.shardId });
 
-  return bot.transformers.customizers.interactionCallbackResponse(bot, payload, response, extra);
+  return callCustomizer('interactionCallbackResponse', bot, payload, response, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformInteractionCallback(bot: Bot, payload: DiscordInteractionCallback): InteractionCallback {
+export function transformInteractionCallback(bot: Bot, payload: Partial<DiscordInteractionCallback>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.interactionCallback;
   const callback = {} as SetupDesiredProps<InteractionCallback, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -340,10 +340,16 @@ export function transformInteractionCallback(bot: Bot, payload: DiscordInteracti
   if (props.responseMessageEphemeral && payload.response_message_ephemeral) callback.responseMessageEphemeral = payload.response_message_ephemeral;
   if (props.responseMessageLoading && payload.response_message_loading) callback.responseMessageLoading = payload.response_message_loading;
 
-  return bot.transformers.customizers.interactionCallback(bot, payload, callback);
+  return callCustomizer('interactionCallback', bot, payload, callback, {
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformInteractionResource(bot: Bot, payload: DiscordInteractionResource, extra?: { shardId?: number }): InteractionResource {
+export function transformInteractionResource(
+  bot: Bot,
+  payload: Partial<DiscordInteractionResource>,
+  extra?: { shardId?: number; partial?: boolean },
+) {
   const props = bot.transformers.desiredProperties.interactionResource;
   const resource = {} as SetupDesiredProps<InteractionResource, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -351,5 +357,8 @@ export function transformInteractionResource(bot: Bot, payload: DiscordInteracti
   if (props.activityInstance && payload.activity_instance) resource.activityInstance = payload.activity_instance;
   if (props.message && payload.message) resource.message = bot.transformers.message(bot, payload.message, { shardId: extra?.shardId });
 
-  return bot.transformers.customizers.interactionResource(bot, payload, resource, extra);
+  return callCustomizer('interactionResource', bot, payload, resource, {
+    shardId: extra?.shardId,
+    partial: extra?.partial ?? false,
+  });
 }

@@ -2,7 +2,7 @@ import type { DiscordAutoModerationActionExecution } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { AutoModerationActionExecution } from './types.js';
 
-export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution): AutoModerationActionExecution {
+export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution) {
   const rule = {
     content: payload.content,
     ruleTriggerType: payload.rule_trigger_type,
