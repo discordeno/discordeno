@@ -323,12 +323,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.0.1":
-  version: 26.0.1
-  resolution: "@types/node@npm:26.0.1"
+"@types/node@npm:^26.1.0":
+  version: 26.1.0
+  resolution: "@types/node@npm:26.1.0"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10c0/31d204333c70124da6bcac7d1f27d8980149fe3f95a8419bfcd19c3e5823705c0e370d71ac34399352e1263b2d5fc41c87af964ec81e5a05a32224d65d8d224e
+  checksum: 10c0/61c22ad1ef215e24138cb8b7368fb68bab9de4c123b3f23d411749b015ba1b7d22f878ad54add26a0b69068d7e07c04af665069d8571b6c6c3b9b2fb73b7bd91
   languageName: node
   linkType: hard
 
@@ -1031,7 +1031,7 @@ __metadata:
     "@fastify/helmet": "npm:^13.0.2"
     "@fastify/multipart": "npm:^10.0.0"
     "@favware/cliff-jumper": "npm:^6.1.0"
-    "@types/node": "npm:^26.0.1"
+    "@types/node": "npm:^26.1.0"
     dotenv: "npm:^17.4.2"
     fastify: "npm:^5.5.0"
     typescript: "npm:^6.0.3"
