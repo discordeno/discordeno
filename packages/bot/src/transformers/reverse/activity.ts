@@ -29,8 +29,9 @@ export function transformActivityToDiscordActivity(_bot: Bot, payload: Activity)
     assets: {
       large_image: payload.largeImage,
       large_text: payload.largeText,
-      small_image: payload.largeImage,
-      small_text: payload.largeText,
+      small_image: payload.smallImage,
+      small_text: payload.smallText,
+      invite_cover_image: payload.inviteCoverImage,
     },
     secrets: {
       join: payload.join,
