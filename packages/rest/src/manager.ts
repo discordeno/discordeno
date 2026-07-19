@@ -640,10 +640,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        // Retry on timeout up to `maxRetryCount`, mirroring the queued `sendRequest` path, so a stalled proxy
-        // connection doesn't permanently fail the request (and can never hang the caller forever).
+        // A timed-out attempt must NOT be re-sent here: hitting `rest.requestTimeout` only aborts our side of the
+        // connection, while the proxy keeps processing the request (it may simply be queued behind a rate limit)
+        // and it can still reach Discord. Re-sending it would execute non-idempotent requests twice (e.g. duplicate
+        // channel creates). Only attempts that failed to reach the proxy at all (connection refused/reset) are
+        // retried, since those were never processed. Retrying on Discord errors is the job of the queue when
+        // talking to Discord directly (`isProxied` is false); a proxy is expected to handle its own retrying.
         for (let retryCount = 0; ; retryCount++) {
-          // Give the request to the proxy a hard deadline too via `AbortSignal.timeout` (omitted when disabled).
+          // Give the request to the proxy a hard deadline via `AbortSignal.timeout` (omitted when disabled), so a
+          // stalled connection can never hang the caller forever.
           const request = new Request(url, {
             ...rest.createRequestBody(method, options),
             signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined,
@@ -652,19 +657,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             body: options?.body,
           });
 
-          const result = await fetch(request).catch((fetchError) => {
+          const result = await fetch(request).catch(async (fetchError) => {
             rest.events.requestError(request, fetchError, { body: options?.body });
 
-            // The attempt hit `rest.requestTimeout` and was aborted; retry it until the budget is exhausted.
-            if (isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
-              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
+            // The proxy could not be reached, so the request was never processed and is safe to retry.
+            if (!isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
+              rest.logger.debug(`request to proxy ${url} failed before reaching it, retrying.`, fetchError);
+              // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
+              await delay(250);
               return undefined;
             }
 
             throw fetchError;
           });
 
-          // If result is undefined, the attempt timed out and is being retried.
+          // If result is undefined, the attempt never reached the proxy and is being retried.
           if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header

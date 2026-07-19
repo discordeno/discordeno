@@ -1,9 +1,12 @@
-import { expect } from 'chai';
+import { use as chaiUse, expect } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { afterEach, beforeEach, describe, it } from 'mocha';
 import sinon from 'sinon';
 import { createRestManager } from '../../src/manager.js';
 import type { RestManager } from '../../src/types.js';
 import { fakeToken as token } from '../constants.js';
+
+chaiUse(chaiAsPromised);
 
 describe('[rest] manager', () => {
   describe('create a rest manager with only a token', () => {
@@ -227,6 +230,52 @@ describe('[rest] manager', () => {
         expect(rest.rateLimitedPaths.size).to.be.equal(0);
         expect(rest.globallyRateLimited).to.be.equal(true);
       });
+    });
+  });
+
+  describe('rest.makeRequest with a proxy', () => {
+    let rest: RestManager;
+    let fetchStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      rest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'https://localhost:8000',
+          authorization: token,
+        },
+      });
+      fetchStub = sinon.stub(globalThis, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchStub.restore();
+    });
+
+    it('Does not retry when the attempt times out', async () => {
+      fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Retries when the proxy cannot be reached', async () => {
+      fetchStub.onFirstCall().rejects(new TypeError('fetch failed'));
+      fetchStub
+        .onSecondCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      const result = await rest.makeRequest('GET', '/gateway/bot');
+      expect(result).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
+    it('Does not retry a connection failure once maxRetryCount is exhausted', async () => {
+      rest.maxRetryCount = 0;
+      fetchStub.rejects(new TypeError('fetch failed'));
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
     });
   });
 });

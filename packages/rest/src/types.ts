@@ -211,8 +211,13 @@ export interface CreateRestManagerOptions {
    *
    * @remarks
    * This is a total deadline for each attempt (it also covers reading the response body), not a per-chunk timeout.
-   * When an attempt times out it is retried through the queue up to {@link RestManager.maxRetryCount} times before failing.
-   * Without it, a connection that stalls after connecting could keep a queue from ever progressing.
+   * When talking to Discord directly, a timed-out attempt is retried through the queue up to
+   * {@link RestManager.maxRetryCount} times before failing. Without it, a connection that stalls after connecting
+   * could keep a queue from ever progressing.
+   *
+   * When a `proxy` is configured, a timed-out attempt is NOT retried: the proxy keeps processing the request after
+   * the timeout aborts our side of the connection (it may simply be queued behind a rate limit), so re-sending it
+   * could execute it twice. Only attempts that failed to reach the proxy at all are retried.
    *
    * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a
    * large attachment over a slow connection) can legitimately exceed it and be aborted/retried. Raise this value
@@ -252,7 +257,7 @@ export interface RestManager {
   updateBearerTokenEndpoint?: string;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
-  /** The maximum time in milliseconds a single request attempt may take before it is aborted and retried. Defaults to 30000 (30 seconds). Set to 0 to disable. */
+  /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, never through a proxy. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
   globallyRateLimited: boolean;
