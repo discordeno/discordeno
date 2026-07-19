@@ -426,6 +426,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
+      // The request may have been aborted while it was waiting in the queue; never dispatch it in that case.
+      // This is the last check before the request goes out, so an aborted request is guaranteed to never reach
+      // Discord, while anything past this point is allowed to finish and report its real outcome.
+      if (options.requestBodyOptions?.signal?.aborted) {
+        options.reject({
+          ok: false,
+          status: 999,
+          statusText: 'The request was aborted.',
+        });
+        return;
+      }
+
+      // From here on the attempt counts as dispatched: aborting the signal no longer rejects the request, it
+      // finishes and reports its real outcome instead.
+      options.dispatched = true;
+
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`;
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions);
 
@@ -599,6 +615,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
+      // The request is (back) in the queue and not on the wire, so an abort may reject it again.
+      request.dispatched = false;
+
       const url = rest.simplifyUrl(request.route, request.method);
 
       if (request.runThroughQueue === false) {
@@ -647,6 +666,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // retried, since those were never processed. Retrying on Discord errors is the job of the queue when
         // talking to Discord directly (`isProxied` is false); a proxy is expected to handle its own retrying.
         for (let retryCount = 0; ; retryCount++) {
+          // Same contract as the queued path: an aborted request is never sent, but once an attempt is in
+          // flight it is allowed to finish, so this is only checked before each attempt.
+          if (options?.signal?.aborted) throw options.signal.reason;
+
           // Give the request to the proxy a hard deadline via `AbortSignal.timeout` (omitted when disabled), so a
           // stalled connection can never hang the caller forever.
           const request = new Request(url, {
@@ -697,6 +720,19 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       return await new Promise(async (resolve, reject) => {
+        const signal = options?.signal;
+        const abortListener = () => {
+          // Once the attempt is on the wire it is allowed to finish and resolve with the real outcome, so only
+          // reject requests that are still waiting in the queue.
+          if (payload.dispatched) return;
+
+          payload.reject({
+            ok: false,
+            status: 999,
+            statusText: 'The request was aborted.',
+          });
+        };
+
         const payload: SendRequestOptions = {
           route,
           method,
@@ -706,9 +742,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload);
           },
           resolve: (data) => {
+            signal?.removeEventListener('abort', abortListener);
             resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!);
           },
           reject: (reason) => {
+            signal?.removeEventListener('abort', abortListener);
             let errorText: string;
 
             switch (reason.status) {
@@ -750,6 +788,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
           runThroughQueue: options?.runThroughQueue,
         };
+
+        // Reject a queued request as soon as its signal aborts instead of when the queue reaches it, so a
+        // caller enforcing a deadline gets its answer right away. `sendRequest` checks the signal again at
+        // dispatch time, which is what actually guarantees an aborted request is never sent.
+        if (signal?.aborted) {
+          payload.reject({
+            ok: false,
+            status: 999,
+            statusText: 'The request was aborted.',
+          });
+          return;
+        }
+
+        signal?.addEventListener('abort', abortListener, { once: true });
 
         await rest.processRequest(payload);
       });
