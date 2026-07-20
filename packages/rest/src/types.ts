@@ -3300,7 +3300,7 @@ export interface CreateRequestBodyOptions {
    * @remarks
    * Aborting rejects a request that is still waiting in the queue right away and guarantees it is never sent.
    * An attempt that is already in flight gets its connection cancelled as well, though that cannot recall it:
-   * Discord (or the proxy) may have received it and will still process it, only the response is discarded.
+   * Discord (or the proxy) may have received it and may still process it, only the response is discarded.
    * This lets a rest proxy drop requests that nobody is waiting on anymore (client disconnect, deadline)
    * instead of leaving them in the queue.
    */

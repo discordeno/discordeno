@@ -307,36 +307,48 @@ describe('[rest] manager', () => {
     });
 
     it('Rejects a queued request when the signal aborts', async () => {
-      const rest = createRestManager({ token });
-      // Hold the first request open so the next request stays stuck in the queue behind it
-      let finishFirstRequest: (value: Response) => void = () => {};
-      fetchStub.returns(
-        new Promise((resolve) => {
-          finishFirstRequest = resolve;
-        }),
-      );
+      const clock = sinon.useFakeTimers();
 
-      const first = rest.makeRequest('GET', '/gateway/bot');
-      // Let the first request reach fetch and block the queue
-      await new Promise((resolve) => setImmediate(resolve));
+      try {
+        const rest = createRestManager({ token });
+        // Hold the first request open so the next request stays stuck in the queue behind it
+        let finishFirstRequest: (value: Response) => void = () => {};
+        fetchStub.callsFake(async (request: Request) => {
+          // Like real fetch, refuse to send a request whose signal is already aborted
+          if (request.signal.aborted) throw request.signal.reason;
+          return await new Promise<Response>((resolve) => {
+            finishFirstRequest = resolve;
+          });
+        });
 
-      const controller = new AbortController();
-      const queued = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
-      controller.abort();
+        const first = rest.makeRequest('GET', '/gateway/bot');
+        // Let the first request reach fetch and block the queue
+        await clock.tickAsync(0);
 
-      await expect(queued).to.eventually.be.rejected;
-      expect(fetchStub.callCount).to.be.equal(1);
+        const controller = new AbortController();
+        const queued = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+        controller.abort();
 
-      // Let the first request finish so the queue drains and doesn't keep the process alive
-      finishFirstRequest(
-        new Response('{}', {
-          headers: { 'Content-Type': 'application/json', 'x-ratelimit-limit': '5', 'x-ratelimit-remaining': '4', 'x-ratelimit-reset-after': '1' },
-        }),
-      );
-      await first;
-      // The aborted request gets dequeued after the first one completes; it must never be sent
-      await new Promise((resolve) => setImmediate(resolve));
-      expect(fetchStub.callCount).to.be.equal(1);
+        // The caller is rejected right away, while the request is still stuck in the queue
+        await expect(queued).to.eventually.be.rejected;
+        expect(fetchStub.callCount).to.be.equal(1);
+
+        // Let the first request finish so the queue drains
+        finishFirstRequest(
+          new Response('{}', {
+            headers: { 'Content-Type': 'application/json', 'x-ratelimit-limit': '5', 'x-ratelimit-remaining': '4', 'x-ratelimit-reset-after': '1' },
+          }),
+        );
+        await clock.tickAsync(1000);
+        await first;
+        // The stale entry gets dequeued once the queue frees up (it re-checks every second); it reaches
+        // fetch with an already aborted signal, so nothing goes on the wire
+        await clock.tickAsync(1000);
+        expect(fetchStub.callCount).to.be.equal(2);
+        expect((fetchStub.secondCall.args[0] as Request).signal.aborted).to.be.equal(true);
+      } finally {
+        clock.restore();
+      }
     });
 
     it('Cancels an in flight request when the signal aborts', async () => {

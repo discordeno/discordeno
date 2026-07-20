@@ -426,19 +426,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      // The request may have been aborted while it was waiting in the queue; never dispatch it in that case.
-      // This is the last check before the request goes out, so an aborted request is guaranteed to never reach
-      // Discord. `makeRequest` already rejected the caller when the signal fired, this just drops the stale
-      // queue entry.
-      if (options.requestBodyOptions?.signal?.aborted) {
-        options.reject({
-          ok: false,
-          status: 999,
-          statusText: 'The request was aborted.',
-        });
-        return;
-      }
-
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`;
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions);
 
@@ -471,8 +458,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Give this attempt a hard deadline. `AbortSignal.timeout` aborts the fetch (and any in-progress body
       // read) once it fires, which makes the awaited fetch reject so a stalled connection can never keep this
       // queue's `processPending` loop (and therefore the whole queue) wedged forever. Omitted when disabled.
-      // The caller's own signal is combined in as well, so aborting also cancels an attempt that is already in
-      // flight instead of leaving the connection open with nobody waiting on it.
+      // The caller's signal is handed to fetch too: fetch refuses to send a request whose signal is already
+      // aborted (so a queue entry that got aborted while waiting never goes out), and aborting mid-request
+      // tears down the connection.
       const signals: AbortSignal[] = [];
       if (options.requestBodyOptions?.signal) signals.push(options.requestBodyOptions.signal);
       if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
@@ -682,8 +670,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           if (options?.signal?.aborted) throw options.signal.reason;
 
           // Give the request to the proxy a hard deadline via `AbortSignal.timeout` (omitted when disabled), so a
-          // stalled connection can never hang the caller forever. The caller's own signal is combined in as well,
-          // so aborting also cancels an attempt that is already in flight.
+          // stalled connection can never hang the caller forever. The caller's signal is handed to fetch too,
+          // so aborting tears down a request that is already on the wire.
           const signals: AbortSignal[] = [];
           if (options?.signal) signals.push(options.signal);
           if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
@@ -808,8 +796,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         };
 
         // Reject a queued request as soon as its signal aborts instead of when the queue reaches it, so a
-        // caller enforcing a deadline gets its answer right away. `sendRequest` checks the signal again at
-        // dispatch time, which is what actually guarantees an aborted request is never sent.
+        // caller enforcing a deadline gets its answer right away. Fetch itself refuses to send a request whose
+        // signal is already aborted, which is what guarantees the stale queue entry never goes out.
         if (signal?.aborted) {
           payload.reject({
             ok: false,
