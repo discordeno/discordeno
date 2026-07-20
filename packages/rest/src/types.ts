@@ -3295,13 +3295,14 @@ export interface CreateRequestBodyOptions {
   reason?: string;
   files?: FileContent[];
   /**
-   * An `AbortSignal` to cancel the request while it is still waiting in the queue.
+   * An `AbortSignal` to cancel the request.
    *
    * @remarks
-   * The signal is only checked before the request is dispatched: aborting rejects a queued request right away,
-   * but a request that is already in flight completes normally and resolves with the real outcome, since Discord
-   * processes it either way. This lets a rest proxy drop requests that nobody is waiting on anymore (client
-   * disconnect, deadline) without ever discarding the result of a request that did go out.
+   * Aborting rejects a request that is still waiting in the queue right away and guarantees it is never sent.
+   * An attempt that is already in flight gets its connection cancelled as well, though that cannot recall it:
+   * Discord (or the proxy) may have received it and will still process it, only the response is discarded.
+   * This lets a rest proxy drop requests that nobody is waiting on anymore (client disconnect, deadline)
+   * instead of leaving them in the queue.
    */
   signal?: AbortSignal;
 }
@@ -3329,13 +3330,6 @@ export interface SendRequestOptions {
   reject: (value: RestRequestRejection) => void;
   /** If this request has a bucket id which it falls under for rate limit */
   bucketId?: string;
-  /**
-   * Whether the current attempt has been dispatched to Discord. Reset when the request is (re)enqueued.
-   *
-   * Once an attempt is dispatched, aborting its signal no longer rejects the request, so it can finish and
-   * resolve with the real outcome.
-   */
-  dispatched?: boolean;
   /** Additional request options, used for things like overriding authorization header. */
   requestBodyOptions?: CreateRequestBodyOptions;
   /**

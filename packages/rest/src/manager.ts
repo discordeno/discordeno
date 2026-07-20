@@ -428,7 +428,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async sendRequest(options) {
       // The request may have been aborted while it was waiting in the queue; never dispatch it in that case.
       // This is the last check before the request goes out, so an aborted request is guaranteed to never reach
-      // Discord, while anything past this point is allowed to finish and report its real outcome.
+      // Discord. `makeRequest` already rejected the caller when the signal fired, this just drops the stale
+      // queue entry.
       if (options.requestBodyOptions?.signal?.aborted) {
         options.reject({
           ok: false,
@@ -437,10 +438,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         });
         return;
       }
-
-      // From here on the attempt counts as dispatched: aborting the signal no longer rejects the request, it
-      // finishes and reports its real outcome instead.
-      options.dispatched = true;
 
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`;
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions);
@@ -474,7 +471,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Give this attempt a hard deadline. `AbortSignal.timeout` aborts the fetch (and any in-progress body
       // read) once it fires, which makes the awaited fetch reject so a stalled connection can never keep this
       // queue's `processPending` loop (and therefore the whole queue) wedged forever. Omitted when disabled.
-      const request = new Request(url, { ...payload, signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined });
+      // The caller's own signal is combined in as well, so aborting also cancels an attempt that is already in
+      // flight instead of leaving the connection open with nobody waiting on it.
+      const signals: AbortSignal[] = [];
+      if (options.requestBodyOptions?.signal) signals.push(options.requestBodyOptions.signal);
+      if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
+
+      const request = new Request(url, { ...payload, signal: signals.length > 0 ? AbortSignal.any(signals) : undefined });
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
       });
@@ -484,6 +487,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+
+        // The caller aborted the request while it was in flight, so the fetch was cancelled. Never retry it,
+        // Discord may have received it already; the caller was rejected the moment the signal fired.
+        if (options.requestBodyOptions?.signal?.aborted) {
+          options.reject({
+            ok: false,
+            status: 999,
+            statusText: 'The request was aborted.',
+            errorObject: error,
+          });
+          return;
+        }
 
         // The attempt hit `rest.requestTimeout` and was aborted. Treat it like a transient failure and retry
         // it through the queue, so a single stalled connection doesn't permanently fail the request.
@@ -615,9 +630,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
-      // The request is (back) in the queue and not on the wire, so an abort may reject it again.
-      request.dispatched = false;
-
       const url = rest.simplifyUrl(request.route, request.method);
 
       if (request.runThroughQueue === false) {
@@ -666,15 +678,19 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // retried, since those were never processed. Retrying on Discord errors is the job of the queue when
         // talking to Discord directly (`isProxied` is false); a proxy is expected to handle its own retrying.
         for (let retryCount = 0; ; retryCount++) {
-          // Same contract as the queued path: an aborted request is never sent, but once an attempt is in
-          // flight it is allowed to finish, so this is only checked before each attempt.
+          // The request may have been aborted while waiting out the retry backoff; never send it in that case.
           if (options?.signal?.aborted) throw options.signal.reason;
 
           // Give the request to the proxy a hard deadline via `AbortSignal.timeout` (omitted when disabled), so a
-          // stalled connection can never hang the caller forever.
+          // stalled connection can never hang the caller forever. The caller's own signal is combined in as well,
+          // so aborting also cancels an attempt that is already in flight.
+          const signals: AbortSignal[] = [];
+          if (options?.signal) signals.push(options.signal);
+          if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
+
           const request = new Request(url, {
             ...rest.createRequestBody(method, options),
-            signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined,
+            signal: signals.length > 0 ? AbortSignal.any(signals) : undefined,
           });
           rest.events.request(request, {
             body: options?.body,
@@ -682,6 +698,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
           const result = await fetch(request).catch(async (fetchError) => {
             rest.events.requestError(request, fetchError, { body: options?.body });
+
+            // The caller aborted the request, cancelling the attempt; never retry it, the proxy may have
+            // received it already.
+            if (options?.signal?.aborted) throw fetchError;
 
             // The proxy could not be reached, so the request was never processed and is safe to retry.
             if (!isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
@@ -722,10 +742,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise(async (resolve, reject) => {
         const signal = options?.signal;
         const abortListener = () => {
-          // Once the attempt is on the wire it is allowed to finish and resolve with the real outcome, so only
-          // reject requests that are still waiting in the queue.
-          if (payload.dispatched) return;
-
+          // Reject right away instead of waiting for the queue to reach the request. If the attempt is already
+          // in flight, the signal is also attached to the fetch itself, so the connection gets torn down too.
           payload.reject({
             ok: false,
             status: 999,

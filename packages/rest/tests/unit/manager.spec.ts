@@ -301,10 +301,8 @@ describe('[rest] manager', () => {
 
     it('Rejects an already aborted request without sending it', async () => {
       const rest = createRestManager({ token });
-      const controller = new AbortController();
-      controller.abort();
 
-      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal })).to.eventually.be.rejected;
+      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: AbortSignal.abort() })).to.eventually.be.rejected;
       expect(fetchStub.callCount).to.be.equal(0);
     });
 
@@ -341,13 +339,14 @@ describe('[rest] manager', () => {
       expect(fetchStub.callCount).to.be.equal(1);
     });
 
-    it('Lets an in flight request finish when the signal aborts', async () => {
+    it('Cancels an in flight request when the signal aborts', async () => {
       const rest = createRestManager({ token });
-      let finishRequest: (value: Response) => void = () => {};
-      fetchStub.returns(
-        new Promise((resolve) => {
-          finishRequest = resolve;
-        }),
+      // Behave like real fetch: never settle until the signal on the request aborts
+      fetchStub.callsFake(
+        async (request: Request) =>
+          await new Promise<Response>((_resolve, reject) => {
+            request.signal.addEventListener('abort', () => reject(request.signal.reason), { once: true });
+          }),
       );
 
       const controller = new AbortController();
@@ -356,23 +355,37 @@ describe('[rest] manager', () => {
       await new Promise((resolve) => setImmediate(resolve));
       controller.abort();
 
-      finishRequest(
-        new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), {
-          headers: { 'Content-Type': 'application/json', 'x-ratelimit-limit': '5', 'x-ratelimit-remaining': '4', 'x-ratelimit-reset-after': '1' },
-        }),
-      );
-
-      expect(await promise).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      await expect(promise).to.eventually.be.rejected;
       expect(fetchStub.callCount).to.be.equal(1);
+      // The signal must be forwarded to fetch so the connection itself gets torn down
+      expect((fetchStub.firstCall.args[0] as Request).signal.aborted).to.be.equal(true);
     });
 
     it('Throws for an aborted request in proxy mode without contacting the proxy', async () => {
       const rest = createRestManager({ token, proxy: { baseUrl: 'https://localhost:8000', authorization: token } });
+
+      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: AbortSignal.abort() })).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(0);
+    });
+
+    it('Cancels an in flight request to the proxy when the signal aborts, without retrying it', async () => {
+      const rest = createRestManager({ token, proxy: { baseUrl: 'https://localhost:8000', authorization: token } });
+      // Behave like real fetch: never settle until the signal on the request aborts
+      fetchStub.callsFake(
+        async (request: Request) =>
+          await new Promise<Response>((_resolve, reject) => {
+            request.signal.addEventListener('abort', () => reject(request.signal.reason), { once: true });
+          }),
+      );
+
       const controller = new AbortController();
+      const promise = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+      // Let the request go out before aborting
+      await new Promise((resolve) => setImmediate(resolve));
       controller.abort();
 
-      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal })).to.eventually.be.rejected;
-      expect(fetchStub.callCount).to.be.equal(0);
+      await expect(promise).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
     });
   });
 });
