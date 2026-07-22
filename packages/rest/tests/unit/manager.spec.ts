@@ -260,7 +260,17 @@ describe('[rest] manager', () => {
     });
 
     it('Retries when the proxy cannot be reached', async () => {
-      const clock = sinon.useFakeTimers();
+      // Exclude queueMicrotask from faked timers. On Node.js v22 (undici 6.x),
+      // Response.json()/Response.text() reads the body via a ReadableStream whose
+      // pull method schedules queueMicrotask(() => readableStreamClose(controller)).
+      // When queueMicrotask is faked by sinon, that callback is stored in the
+      // clock's internal job queue instead of running as a real V8 microtask.
+      // The readAllBytes loop then spins forever (each reader.read() re-triggers
+      // pull, enqueuing more data and scheduling another faked microtask), which
+      // hangs tickAsync and leaks memory. Excluding queueMicrotask lets the stream
+      // close callback run as a normal microtask while still faking setTimeout for
+      // the delay(250) backoff.
+      const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
 
       try {
         fetchStub.onFirstCall().rejects(new TypeError('fetch failed'));
@@ -307,7 +317,8 @@ describe('[rest] manager', () => {
     });
 
     it('Rejects a queued request when the signal aborts', async () => {
-      const clock = sinon.useFakeTimers();
+      // See the comment in "Retries when the proxy cannot be reached" for why queueMicrotask is excluded from faked timers.
+      const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
 
       try {
         const rest = createRestManager({ token });
