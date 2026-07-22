@@ -157,7 +157,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.10"
     "@types/node": "npm:^26.1.1"
     "@types/sinon": "npm:^21.0.1"
-    "@types/ws": "npm:^8"
+    "@types/ws": "npm:^8.18.1"
     c8: "npm:^11.0.0"
     chai: "npm:^6.2.2"
     fzstd: "npm:^0.1.1"
@@ -912,16 +912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 26.1.1
-  resolution: "@types/node@npm:26.1.1"
-  dependencies:
-    undici-types: "npm:~8.3.0"
-  checksum: 10c0/25ac5093195736dd074d5027adbba85617bc951d5a41506ebd3b9073048acb7233613f3822d5f9b9447f9c0841c91f6387c46283916767e3ef79f23917452c46
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^26.1.1":
+"@types/node@npm:*, @types/node@npm:^26.1.1":
   version: 26.1.1
   resolution: "@types/node@npm:26.1.1"
   dependencies:
@@ -953,7 +944,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8":
+"@types/ws@npm:^8.18.1":
   version: 8.18.1
   resolution: "@types/ws@npm:8.18.1"
   dependencies:
