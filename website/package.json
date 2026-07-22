@@ -31,14 +31,14 @@
     "react-dom": "19.2.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.5",
     "@docusaurus/module-type-aliases": "^3.10.1",
     "@docusaurus/tsconfig": "^3.10.1",
     "@docusaurus/types": "^3.10.1",
     "@types/react": "^19.2.14",
     "turbo": "^2.10.0",
     "typescript": "6.0.3",
-    "webpack": "5.108.2"
+    "webpack": "5.108.4"
   },
   "resolutions": {
     "@types/react": "^19.2.7"

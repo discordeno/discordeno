@@ -24,7 +24,7 @@
     "test:type": "tsc --noEmit"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.5",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.43",
     "@types/mocha": "^10.0.10",
