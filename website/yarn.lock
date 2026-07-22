@@ -14041,9 +14041,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.108.2":
-  version: 5.108.2
-  resolution: "webpack@npm:5.108.2"
+"webpack@npm:5.108.4":
+  version: 5.108.4
+  resolution: "webpack@npm:5.108.4"
   dependencies:
     "@types/estree": "npm:^1.0.8"
     "@types/json-schema": "npm:^7.0.15"
@@ -14072,7 +14072,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/0415339267d6759502022d0fe9a18f59d8c5d5bd08c42566f6591b86814073ee63078ad90344e45ed8bd6f2de13d58623a98b4bf47a620fca356b997da3d7f74
+  checksum: 10c0/842a8628822f3cb82c2b0ff9c4242ba05c0dae1f306248c87dfb543bb56b86b047b5f08efff0d5c56067bfc6b245a2f4f8ad32923bee8c303d29c43172467e38
   languageName: node
   linkType: hard
 
@@ -14155,7 +14155,7 @@ __metadata:
     react-dom: "npm:19.2.7"
     turbo: "npm:^2.10.0"
     typescript: "npm:6.0.3"
-    webpack: "npm:5.108.2"
+    webpack: "npm:5.108.4"
   languageName: unknown
   linkType: soft
 
