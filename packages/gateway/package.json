@@ -30,12 +30,12 @@
     "ws": "^8.21.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.5",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.43",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.1.1",
     "@types/sinon": "^21.0.1",
     "@types/ws": "^8.18.1",
     "c8": "^11.0.0",
