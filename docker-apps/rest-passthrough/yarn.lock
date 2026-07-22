@@ -108,13 +108,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/helmet@npm:^13.0.2":
-  version: 13.0.2
-  resolution: "@fastify/helmet@npm:13.0.2"
+"@fastify/helmet@npm:^13.1.0":
+  version: 13.1.0
+  resolution: "@fastify/helmet@npm:13.1.0"
   dependencies:
-    fastify-plugin: "npm:^5.0.0"
+    fastify-plugin: "npm:^6.0.0"
     helmet: "npm:^8.0.0"
-  checksum: 10c0/d0dbabdd3ccafc723eb5c1d0dbf76c462c69c9a7f7b54d299c776f327ed2e708b4a9b335b92a6b1f9a2d9b5c46a64d0936b0955b9f2733df34004be92968a51b
+  checksum: 10c0/a92d544a66c922f58d3920cbee2df85a8292a7efb9f76898b818adb0ccacdac4de823f5d1bfbab0e653bc7c054130085af6a17a95a4b68264582e2a56c60fbcf
   languageName: node
   linkType: hard
 
@@ -624,6 +624,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastify-plugin@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "fastify-plugin@npm:6.0.0"
+  checksum: 10c0/4d9207efcbb0e6e8bd849eb8e00b097ae2d73590b1499f51d0bed135d08664e19d9428f2e8fc1a126b55ec4d2ac011dbcc72e753c255c46a751d6d34b57e5d4f
+  languageName: node
+  linkType: hard
+
 "fastify@npm:^5.5.0":
   version: 5.5.0
   resolution: "fastify@npm:5.5.0"
@@ -1028,7 +1035,7 @@ __metadata:
   dependencies:
     "@discordeno/rest": "npm:21.0.0"
     "@fastify/env": "npm:^7.0.0"
-    "@fastify/helmet": "npm:^13.0.2"
+    "@fastify/helmet": "npm:^13.1.0"
     "@fastify/multipart": "npm:^10.0.0"
     "@favware/cliff-jumper": "npm:^6.1.0"
     "@types/node": "npm:^26.0.1"
