@@ -26,8 +26,7 @@
   },
   "dependencies": {
     "@discordeno/types": "workspace:^",
-    "@discordeno/utils": "workspace:^",
-    "ws": "^8.21.0"
+    "@discordeno/utils": "workspace:^"
   },
   "optionalDependencies": {
     "fzstd": "^0.1.1"
@@ -47,6 +46,7 @@
     "sinon": "^22.0.0",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "ws": "^8.21.1"
   }
 }
