@@ -160,16 +160,12 @@ __metadata:
     "@types/ws": "npm:^8.18.1"
     c8: "npm:^11.0.0"
     chai: "npm:^6.2.2"
-    fzstd: "npm:^0.1.1"
     mocha: "npm:^11.7.6"
     sinon: "npm:^22.0.0"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:^6.0.3"
     ws: "npm:^8.21.1"
-  dependenciesMeta:
-    fzstd:
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -1811,13 +1807,6 @@ __metadata:
   version: 1.0.2
   resolution: "function-timeout@npm:1.0.2"
   checksum: 10c0/75d7ac6c83c450b84face2c9d22307b00e10c7376aa3a34c7be260853582c5e4c502904e2f6bf1d4500c4052e748e001388f6bbd9d34ebfdfb6c4fec2169d0ff
-  languageName: node
-  linkType: hard
-
-"fzstd@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "fzstd@npm:0.1.1"
-  checksum: 10c0/c4ae25a4b9e7ac58e9716fcb0c4ec19f3e678d90a67a59e97ce361beb27e4aa4b8666b58b4dc2d715e92db4b65b189c978186a5fedba6fccb5ec9765717dd1cd
   languageName: node
   linkType: hard
 
