@@ -296,6 +296,41 @@ describe('[rest] manager', () => {
       await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
       expect(fetchStub.callCount).to.be.equal(1);
     });
+
+    it('Retries a timed out attempt when proxy.retryOnTimeout is enabled', async () => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'https://localhost:8000',
+          authorization: token,
+          retryOnTimeout: true,
+        },
+      });
+
+      fetchStub.onFirstCall().rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+      fetchStub
+        .onSecondCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      expect(await retryingRest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
+    it('Does not retry a timed out attempt once maxRetryCount is exhausted, even with proxy.retryOnTimeout enabled', async () => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'https://localhost:8000',
+          authorization: token,
+          retryOnTimeout: true,
+        },
+      });
+      retryingRest.maxRetryCount = 0;
+      fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+
+      await expect(retryingRest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
   });
 
   describe('rest.makeRequest with an AbortSignal', () => {

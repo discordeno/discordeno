@@ -113,6 +113,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     invalidBucket: createInvalidRequestBucket({ logger: options.logger }),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
+    retryProxiedRequestsOnTimeout: options.proxy?.retryOnTimeout ?? false,
     maxRetryCount: Infinity,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
@@ -659,12 +660,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        // A timed-out attempt must NOT be re-sent here: hitting `rest.requestTimeout` only aborts our side of the
-        // connection, while the proxy keeps processing the request (it may simply be queued behind a rate limit)
-        // and it can still reach Discord. Re-sending it would execute non-idempotent requests twice (e.g. duplicate
-        // channel creates). Only attempts that failed to reach the proxy at all (connection refused/reset) are
-        // retried, since those were never processed. Retrying on Discord errors is the job of the queue when
-        // talking to Discord directly (`isProxied` is false); a proxy is expected to handle its own retrying.
+        // A timed-out attempt must NOT be re-sent here by default: hitting `rest.requestTimeout` only aborts our
+        // side of the connection, while the proxy keeps processing the request (it may simply be queued behind a
+        // rate limit) and it can still reach Discord. Re-sending it would execute non-idempotent requests twice
+        // (e.g. duplicate channel creates). Only attempts that failed to reach the proxy at all (connection
+        // refused/reset) are retried, since those were never processed — unless the user opted into timeout
+        // retries via `proxy.retryOnTimeout` because their setup deduplicates re-sent requests. Retrying on
+        // Discord errors is the job of the queue when talking to Discord directly (`isProxied` is false); a proxy
+        // is expected to handle its own retrying.
         for (let retryCount = 0; ; retryCount++) {
           // The request may have been aborted while waiting out the retry backoff; never send it in that case.
           if (options?.signal?.aborted) throw options.signal.reason;
@@ -691,18 +694,27 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // received it already.
             if (options?.signal?.aborted) throw fetchError;
 
-            // The proxy could not be reached, so the request was never processed and is safe to retry.
-            if (!isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
-              rest.logger.debug(`request to proxy ${url} failed before reaching it, retrying.`, fetchError);
-              // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
-              await delay(250);
-              return undefined;
+            if (retryCount < rest.maxRetryCount) {
+              // The proxy could not be reached, so the request was never processed and is safe to retry.
+              if (!isTimeoutError(fetchError)) {
+                rest.logger.debug(`request to proxy ${url} failed before reaching it, retrying.`, fetchError);
+                // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
+                await delay(250);
+                return undefined;
+              }
+
+              // A timed-out attempt may still be processed by the proxy, so it is only re-sent when the user
+              // opted in with `proxy.retryOnTimeout` because their setup deduplicates requests.
+              if (rest.retryProxiedRequestsOnTimeout) {
+                rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
+                return undefined;
+              }
             }
 
             throw fetchError;
           });
 
-          // If result is undefined, the attempt never reached the proxy and is being retried.
+          // If result is undefined, the attempt failed in a retryable way and is being retried.
           if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
