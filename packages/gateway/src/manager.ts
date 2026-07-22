@@ -186,14 +186,14 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         // Move the events from the old shards to the new ones
         for (const shard of gateway.resharding.shards.values()) {
-          shard.events = options.events ?? {};
+          shard.events = gateway.events ?? {};
         }
 
         // Old shards stop processing events
         for (const shard of gateway.shards.values()) {
           const oldHandler = shard.events.message;
 
-          // Change with spread operator to not affect new shards, as changing anything on shard.events will directly change options.events, which changes new shards' events
+          // Change with spread operator to not affect new shards, as changing anything on shard.events will directly change gateway.events, which changes new shards' events
           shard.events = {
             ...shard.events,
             message: async function (_, message) {
@@ -232,7 +232,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       );
     },
     calculateWorkerId(shardId) {
-      const workerId = options.spreadShardsInRoundRobin
+      const workerId = gateway.spreadShardsInRoundRobin
         ? shardId % gateway.totalWorkers
         : Math.min(Math.floor(shardId / gateway.shardsPerWorker), gateway.totalWorkers - 1);
       gateway.logger.debug(
@@ -354,7 +354,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             url: this.url,
             version: this.version,
           },
-          events: options.events ?? {},
+          events: gateway.events ?? {},
           logger: this.logger,
           requestIdentify: async () => await gateway.requestIdentify(shardId),
           makePresence: gateway.makePresence,
