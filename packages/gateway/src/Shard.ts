@@ -1,9 +1,8 @@
 import { Buffer } from 'node:buffer';
-import zlib from 'node:zlib';
+import { createInflate, createZstdDecompress, type Inflate, inflateSync, type ZstdDecompress, constants as zlibConstants } from 'node:zlib';
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types';
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types';
 import { delay, LeakyBucket, logger } from '@discordeno/utils';
-import type { Decompress as FZstdDecompress } from 'fzstd';
 import NodeWebSocket from 'ws';
 import {
   type ShardEvents,
@@ -16,13 +15,6 @@ import {
 } from './types.js';
 
 const ZLIB_SYNC_FLUSH = new Uint8Array([0x0, 0x0, 0xff, 0xff]);
-
-let fzstd: typeof import('fzstd');
-
-/** Since fzstd is an optional dependency, we need to import it lazily. */
-async function getFZStd() {
-  return (fzstd ??= await import('fzstd'));
-}
 
 export class DiscordenoShard {
   /** The id of the shard. */
@@ -67,14 +59,10 @@ export class DiscordenoShard {
   goingOffline = false;
   /** Text decoder used for compressed payloads. */
   textDecoder = new TextDecoder();
-  /** zlib Inflate or zstd decompress (from node:zlib) instance for transport payloads. */
-  inflate?: zlib.Inflate | zlib.ZstdDecompress;
-  /** ZLib inflate buffer. */
+  /** zlib Inflate or zstd decompress instance for transport payloads. */
+  inflate?: Inflate | ZstdDecompress;
+  /** zlib inflate/zstd buffer. */
   inflateBuffer: Uint8Array | null = null;
-  /** ZStd Decompress instance for ZStd-stream transport payloads. */
-  zstdDecompress?: FZstdDecompress;
-  /** Queue for compressed payloads for Zstd Decompress */
-  decompressionPromisesQueue: ((data: DiscordGatewayPayload) => void)[] = [];
   /**
    * A function that will be called once the socket is closed and handleClose() has finished updating internal states.
    *
@@ -183,79 +171,39 @@ export class DiscordenoShard {
     if (this.gatewayConfig.transportCompression) {
       url.searchParams.set('compress', this.gatewayConfig.transportCompression);
 
+      this.inflateBuffer = null;
+
       if (this.gatewayConfig.transportCompression === TransportCompression.zlib) {
-        this.inflateBuffer = null;
-        this.inflate = zlib.createInflate({
-          finishFlush: zlib.constants.Z_SYNC_FLUSH,
+        this.inflate = createInflate({
+          finishFlush: zlibConstants.Z_SYNC_FLUSH,
           chunkSize: 64 * 1024,
         });
-
-        this.inflate.on('error', (e) => {
-          this.logger.error('The was an error in decompressing a ZLib compressed payload', e);
+      } else if (this.gatewayConfig.transportCompression === TransportCompression.zstd) {
+        this.inflate = createZstdDecompress({
+          chunkSize: 64 * 1024,
         });
-
-        this.inflate.on('data', (data) => {
-          if (!(data instanceof Uint8Array)) return;
-
-          if (this.inflateBuffer) {
-            const newBuffer = new Uint8Array(this.inflateBuffer.byteLength + data.byteLength);
-            newBuffer.set(this.inflateBuffer);
-            newBuffer.set(data, this.inflateBuffer.byteLength);
-            this.inflateBuffer = newBuffer;
-
-            return;
-          }
-
-          this.inflateBuffer = data;
-        });
+      } else {
+        throw new Error(`[Shard] Unknown transport compression type: ${this.gatewayConfig.transportCompression}`);
       }
 
-      if (this.gatewayConfig.transportCompression === TransportCompression.zstd) {
-        if ('createZstdDecompress' in zlib) {
-          this.logger.debug('[Shard] Using node:zlib zstd decompression.');
+      this.inflate.on('error', (e) => {
+        this.logger.error('The was an error in decompressing a compressed payload', e);
+      });
 
-          this.inflateBuffer = null;
-          this.inflate = zlib.createZstdDecompress({
-            chunkSize: 64 * 1024,
-          });
+      this.inflate.on('data', (data) => {
+        if (!(data instanceof Uint8Array)) return;
 
-          this.inflate.on('error', (e) => {
-            this.logger.error('The was an error in decompressing a Zstd compressed payload', e);
-          });
+        if (this.inflateBuffer) {
+          const newBuffer = new Uint8Array(this.inflateBuffer.byteLength + data.byteLength);
+          newBuffer.set(this.inflateBuffer);
+          newBuffer.set(data, this.inflateBuffer.byteLength);
+          this.inflateBuffer = newBuffer;
 
-          this.inflate.on('data', (data) => {
-            if (!(data instanceof Uint8Array)) return;
-
-            if (this.inflateBuffer) {
-              const newBuffer = new Uint8Array(this.inflateBuffer.byteLength + data.byteLength);
-              newBuffer.set(this.inflateBuffer);
-              newBuffer.set(data, this.inflateBuffer.byteLength);
-              this.inflateBuffer = newBuffer;
-
-              return;
-            }
-
-            this.inflateBuffer = data;
-          });
-        } else {
-          const fzstd = await getFZStd().catch(() => {
-            this.logger.warn('[Shard] "fzstd" is not installed. Disabled transport compression.');
-            url.searchParams.delete('compress');
-
-            return null;
-          });
-
-          if (fzstd) {
-            this.logger.debug('[Shard] Using fzstd zstd decompression.');
-
-            this.zstdDecompress = new fzstd.Decompress((data) => {
-              const decodedData = this.textDecoder.decode(data);
-              const parsedData = JSON.parse(decodedData);
-              this.decompressionPromisesQueue.shift()?.(parsedData);
-            });
-          }
+          return;
         }
-      }
+
+        this.inflateBuffer = data;
+      });
     }
 
     if (this.gatewayConfig.compress && this.gatewayConfig.transportCompression) {
@@ -439,9 +387,7 @@ export class DiscordenoShard {
 
     // Clear the zlib/zstd data
     this.inflate = undefined;
-    this.zstdDecompress = undefined;
     this.inflateBuffer = null;
-    this.decompressionPromisesQueue = [];
 
     this.logger.debug(`[Shard] Shard #${this.id} closed with code ${close.code}${close.reason ? `, and reason: ${close.reason}` : ''}.`);
 
@@ -548,20 +494,17 @@ export class DiscordenoShard {
     // A buffer is a Uint8Array under the hood. An ArrayBuffer is generic, so we need to create the Uint8Array that uses the whole ArrayBuffer
     const compressedData: Uint8Array = data instanceof Buffer ? data : new Uint8Array(data);
 
-    if (this.gatewayConfig.transportCompression === TransportCompression.zlib) {
+    if (this.gatewayConfig.transportCompression) {
       if (!this.inflate) {
-        this.logger.fatal('[Shard] zlib-stream transport compression was enabled but no instance of Inflate was found.');
+        this.logger.fatal('[Shard] Transport compression was enabled but no instance of the decompression was found.');
         return null;
       }
 
-      // Alias, used to avoid some null checks in the Promise constructor
-      const inflate = this.inflate;
-
       const writePromise = new Promise<void>((resolve, reject) => {
-        inflate.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()));
+        this.inflate!.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()));
       });
 
-      if (!endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return null;
+      if (this.gatewayConfig.transportCompression === TransportCompression.zlib && !endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return null;
 
       await writePromise;
 
@@ -576,41 +519,8 @@ export class DiscordenoShard {
       return JSON.parse(decodedData);
     }
 
-    if (this.gatewayConfig.transportCompression === TransportCompression.zstd) {
-      if (this.zstdDecompress) {
-        this.zstdDecompress.push(compressedData);
-
-        const decompressionPromise = new Promise<DiscordGatewayPayload>((r) => this.decompressionPromisesQueue.push(r));
-        return await decompressionPromise;
-      }
-
-      if (this.inflate) {
-        // Alias, used to avoid some null checks in the Promise constructor
-        const decompress = this.inflate;
-
-        const writePromise = new Promise<void>((resolve, reject) => {
-          decompress.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()));
-        });
-
-        await writePromise;
-
-        if (!this.inflateBuffer) {
-          this.logger.warn('[Shard] The ZLib inflate buffer was cleared at an unexpected moment.');
-          return null;
-        }
-
-        const decodedData = this.textDecoder.decode(this.inflateBuffer);
-        this.inflateBuffer = null;
-
-        return JSON.parse(decodedData);
-      }
-
-      this.logger.fatal('[Shard] zstd-stream transport compression was enabled but no zstd decompressor was found.');
-      return null;
-    }
-
     if (this.gatewayConfig.compress) {
-      const decompressed = zlib.inflateSync(compressedData);
+      const decompressed = inflateSync(compressedData);
       const decodedData = this.textDecoder.decode(decompressed);
 
       return JSON.parse(decodedData);
