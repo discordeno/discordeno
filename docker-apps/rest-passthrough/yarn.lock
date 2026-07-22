@@ -108,13 +108,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/helmet@npm:^13.0.2":
-  version: 13.0.2
-  resolution: "@fastify/helmet@npm:13.0.2"
+"@fastify/helmet@npm:^13.1.0":
+  version: 13.1.0
+  resolution: "@fastify/helmet@npm:13.1.0"
   dependencies:
-    fastify-plugin: "npm:^5.0.0"
+    fastify-plugin: "npm:^6.0.0"
     helmet: "npm:^8.0.0"
-  checksum: 10c0/d0dbabdd3ccafc723eb5c1d0dbf76c462c69c9a7f7b54d299c776f327ed2e708b4a9b335b92a6b1f9a2d9b5c46a64d0936b0955b9f2733df34004be92968a51b
+  checksum: 10c0/a92d544a66c922f58d3920cbee2df85a8292a7efb9f76898b818adb0ccacdac4de823f5d1bfbab0e653bc7c054130085af6a17a95a4b68264582e2a56c60fbcf
   languageName: node
   linkType: hard
 
@@ -127,16 +127,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "@fastify/multipart@npm:10.0.0"
+"@fastify/multipart@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "@fastify/multipart@npm:10.1.0"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
     "@fastify/deepmerge": "npm:^3.0.0"
     "@fastify/error": "npm:^4.0.0"
-    fastify-plugin: "npm:^5.0.0"
+    fastify-plugin: "npm:^6.0.0"
     secure-json-parse: "npm:^4.0.0"
-  checksum: 10c0/49e09135599a59aab761b71f65ab5f9ad63c3ea28ede04389c308dea1149b1fd7779693230f5bc0ffc9063c42484e99a2d1d38c0fd73b074c9ed3216db12e9da
+  checksum: 10c0/c305393cb53f673c8a12cd7439a1028dda7ae9f4c7c75aba45f3721df5f746651e2670bcd1b5c84544e6bc032b6f8251203c4a8f0153983e992d56dc97c170a1
   languageName: node
   linkType: hard
 
@@ -323,12 +323,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.0.1":
-  version: 26.0.1
-  resolution: "@types/node@npm:26.0.1"
+"@types/node@npm:^26.1.1":
+  version: 26.1.1
+  resolution: "@types/node@npm:26.1.1"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10c0/31d204333c70124da6bcac7d1f27d8980149fe3f95a8419bfcd19c3e5823705c0e370d71ac34399352e1263b2d5fc41c87af964ec81e5a05a32224d65d8d224e
+  checksum: 10c0/25ac5093195736dd074d5027adbba85617bc951d5a41506ebd3b9073048acb7233613f3822d5f9b9447f9c0841c91f6387c46283916767e3ef79f23917452c46
   languageName: node
   linkType: hard
 
@@ -611,9 +611,9 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^3.0.0, fast-uri@npm:^3.0.1":
-  version: 3.1.2
-  resolution: "fast-uri@npm:3.1.2"
-  checksum: 10c0/5b35641895959f3f7ab7a7b1b5542bded159346f25ec9f256817b206d50b64eda5828e90d605a2e2fc645c90519a7259c2bab2c942ee728c88b88e5be21b090d
+  version: 3.1.4
+  resolution: "fast-uri@npm:3.1.4"
+  checksum: 10c0/f90948821ceb49980f64f89b8216ba498f5957f26035be813526a55b6145d26cbd63ef5618d5205a3292b31edc9c08589749350cd72bd86c7095eb434dceb757
   languageName: node
   linkType: hard
 
@@ -621,6 +621,13 @@ __metadata:
   version: 5.0.1
   resolution: "fastify-plugin@npm:5.0.1"
   checksum: 10c0/c5e5932e7b8c5713ff881adeade3e8ee8fc288e8249d79cd193a2a2438eef1ad58ae5814f12835acbf04025dbddf2628787cd845f3e550dee847f494a08f7c5b
+  languageName: node
+  linkType: hard
+
+"fastify-plugin@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "fastify-plugin@npm:6.0.0"
+  checksum: 10c0/4d9207efcbb0e6e8bd849eb8e00b097ae2d73590b1499f51d0bed135d08664e19d9428f2e8fc1a126b55ec4d2ac011dbcc72e753c255c46a751d6d34b57e5d4f
   languageName: node
   linkType: hard
 
@@ -815,13 +822,13 @@ __metadata:
   linkType: hard
 
 "js-yaml@npm:^4.1.1":
-  version: 4.2.0
-  resolution: "js-yaml@npm:4.2.0"
+  version: 4.3.0
+  resolution: "js-yaml@npm:4.3.0"
   dependencies:
     argparse: "npm:^2.0.1"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10c0/1916456c118746603b067d74bbcbb0445d9a1d5e474ad4ae775e7b20525bed902e01d9d97dd0c81fcd8d4f596162309d0eb057f4aa38f3e9647f14075e9dea45
+  checksum: 10c0/058b30473d6915ca5b4feb11e2f7d4d97242f98d00a798ed48dd90b46b7c640398afe9128c5db22c5300f8c6528fe2a174b9a93f351a70ebc28c6203938d8bff
   languageName: node
   linkType: hard
 
@@ -1028,10 +1035,10 @@ __metadata:
   dependencies:
     "@discordeno/rest": "npm:21.0.0"
     "@fastify/env": "npm:^7.0.0"
-    "@fastify/helmet": "npm:^13.0.2"
-    "@fastify/multipart": "npm:^10.0.0"
+    "@fastify/helmet": "npm:^13.1.0"
+    "@fastify/multipart": "npm:^10.1.0"
     "@favware/cliff-jumper": "npm:^6.1.0"
-    "@types/node": "npm:^26.0.1"
+    "@types/node": "npm:^26.1.1"
     dotenv: "npm:^17.4.2"
     fastify: "npm:^5.5.0"
     typescript: "npm:^6.0.3"
