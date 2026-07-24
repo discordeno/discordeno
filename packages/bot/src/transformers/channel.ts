@@ -104,6 +104,7 @@ export function transformChannel(bot: Bot, payload: DiscordChannel, extra?: { gu
   if (props.defaultAutoArchiveDuration && payload.default_auto_archive_duration)
     channel.defaultAutoArchiveDuration = payload.default_auto_archive_duration;
   if (props.permissions && payload.permissions) channel.permissions = new Permissions(payload.permissions);
+  if (props.appPermissions && payload.app_permissions) channel.appPermissions = new Permissions(payload.app_permissions);
   if (props.flags) channel.flags = payload.flags;
   if (props.permissionOverwrites && payload.permission_overwrites)
     channel.internalOverwrites = payload.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type));
