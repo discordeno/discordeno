@@ -45,10 +45,10 @@ export interface DiscordApplication {
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
   /**
-    * App's legacy public flags
-    * 
-    * @see {@link ApplicationFlags}
-    */
+   * App's legacy public flags
+   *
+   * @see {@link ApplicationFlags}
+   */
   flags?: ApplicationFlags;
   /**
    * App's public flags
