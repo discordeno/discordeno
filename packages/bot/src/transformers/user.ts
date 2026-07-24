@@ -2,6 +2,7 @@ import type { DiscordCollectibles, DiscordNameplate, DiscordUser, DiscordUserPri
 import { avatarUrl, defaultAvatarUrl, displayAvatarUrl, iconHashToBigInt, snowflakeToTimestamp } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
 import { UserToggles } from './toggles/user.js';
 import type { Collectibles, Nameplate, User, UserPrimaryGuild } from './types.js';
@@ -44,7 +45,7 @@ export const baseUser: User = {
   },
 };
 
-export function transformUser(bot: Bot, payload: DiscordUser): User {
+export function transformUser(bot: Bot, payload: Partial<DiscordUser>, extra?: { partial?: boolean }) {
   const user: SetupDesiredProps<User, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseUser);
   const props = bot.transformers.desiredProperties.user;
 
@@ -66,19 +67,23 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   if (props.collectibles && payload.collectibles) user.collectibles = bot.transformers.collectibles(bot, payload.collectibles);
   if (props.primaryGuild && payload.primary_guild) user.primaryGuild = bot.transformers.userPrimaryGuild(bot, payload.primary_guild);
 
-  return bot.transformers.customizers.user(bot, payload, user);
+  return callCustomizer('user', bot, payload, user, {
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformCollectibles(bot: Bot, payload: DiscordCollectibles): Collectibles {
+export function transformCollectibles(bot: Bot, payload: Partial<DiscordCollectibles>, extra?: { partial?: boolean }) {
   const collectibles = {} as SetupDesiredProps<Collectibles, TransformersDesiredProperties, DesiredPropertiesBehavior>;
   const props = bot.transformers.desiredProperties.collectibles;
 
   if (props.nameplate && payload.nameplate) collectibles.nameplate = bot.transformers.nameplate(bot, payload.nameplate);
 
-  return bot.transformers.customizers.collectibles(bot, payload, collectibles);
+  return callCustomizer('collectibles', bot, payload, collectibles, {
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformNameplate(bot: Bot, payload: DiscordNameplate): Nameplate {
+export function transformNameplate(bot: Bot, payload: Partial<DiscordNameplate>, extra?: { partial?: boolean }) {
   const nameplate = {} as SetupDesiredProps<Nameplate, TransformersDesiredProperties, DesiredPropertiesBehavior>;
   const props = bot.transformers.desiredProperties.nameplate;
 
@@ -87,10 +92,12 @@ export function transformNameplate(bot: Bot, payload: DiscordNameplate): Namepla
   if (props.label && payload.label) nameplate.label = payload.label;
   if (props.palette && payload.palette) nameplate.palette = payload.palette;
 
-  return bot.transformers.customizers.nameplate(bot, payload, nameplate);
+  return callCustomizer('nameplate', bot, payload, nameplate, {
+    partial: extra?.partial ?? false,
+  });
 }
 
-export function transformUserPrimaryGuild(bot: Bot, payload: DiscordUserPrimaryGuild): UserPrimaryGuild {
+export function transformUserPrimaryGuild(bot: Bot, payload: Partial<DiscordUserPrimaryGuild>, extra?: { partial?: boolean }) {
   const userPrimaryGuild = {} as SetupDesiredProps<UserPrimaryGuild, TransformersDesiredProperties, DesiredPropertiesBehavior>;
   const props = bot.transformers.desiredProperties.userPrimaryGuild;
 
@@ -99,5 +106,7 @@ export function transformUserPrimaryGuild(bot: Bot, payload: DiscordUserPrimaryG
   if (props.tag && payload.tag) userPrimaryGuild.tag = payload.tag;
   if (props.badge && payload.badge) userPrimaryGuild.badge = iconHashToBigInt(payload.badge);
 
-  return bot.transformers.customizers.userPrimaryGuild(bot, payload, userPrimaryGuild);
+  return callCustomizer('userPrimaryGuild', bot, payload, userPrimaryGuild, {
+    partial: extra?.partial ?? false,
+  });
 }

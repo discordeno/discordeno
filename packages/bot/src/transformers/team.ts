@@ -3,7 +3,7 @@ import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { Team } from './types.js';
 
-export function transformTeam(bot: Bot, payload: DiscordTeam): Team {
+export function transformTeam(bot: Bot, payload: DiscordTeam) {
   const id = bot.transformers.snowflake(payload.id);
 
   const team = {

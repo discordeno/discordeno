@@ -17,7 +17,7 @@ export const RoleToggle = {
 };
 
 export class RoleToggles extends ToggleBitfield {
-  constructor(roleOrTogglesInt: DiscordRole | number) {
+  constructor(roleOrTogglesInt: Partial<DiscordRole> | number) {
     super();
 
     if (typeof roleOrTogglesInt === 'number') this.bitfield = roleOrTogglesInt;
