@@ -3278,6 +3278,21 @@ export interface RestManager {
    * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
    */
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<Camelize<DiscordLobby>>;
+  /**
+   * Sets the moderation metadata for a lobby message. The metadata is app-scoped and delivered to active game clients via the Social SDK as a realtime message update.
+   *
+   * @param lobbyId - The ID of the lobby to set the moderation metadata
+   * @param messageId - The ID of the message to set the moderation metadata
+   * @param options - The moderation metadata to set
+   *
+   * @remarks
+   * Uses `Bot` token for authorization.
+   *
+   * For the options: Free-form key–value pairs describing the moderation decision. Up to 5 keys; key length <= 1024 characters; value length <= 2000 characters
+   *
+   * @see {@link https://discord.com/developers/docs/game-sdk/social-sdk/chat-moderation#server-side-chat-moderation} for the full moderation flow.
+   */
+  updateLobbyMessageModerationMetadata: (lobbyId: BigString, messageId: BigString, options: Record<string, string>) => Promise<void>;
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';

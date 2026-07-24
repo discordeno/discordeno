@@ -693,6 +693,10 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       link: (lobbyId) => {
         return `/lobbies/${encode(lobbyId)}/channel-linking`;
       },
+
+      moderationMetadata: (lobbyId, messageId) => {
+        return `/lobbies/${encode(lobbyId)}/messages/${encode(messageId)}/moderation-metadata`;
+      },
     },
 
     applicationEmoji(applicationId, emojiId) {
