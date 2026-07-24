@@ -61,7 +61,7 @@ export interface DiscordApplication {
   /** Event webhook URL for the app to receive webhook events */
   event_webhooks_url?: string | null;
   /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
-  event_webhooks_status: DiscordApplicationEventWebhookStatus;
+  event_webhooks_status?: DiscordApplicationEventWebhookStatus;
   /** List of Webhook event types the app subscribes to */
   event_webhooks_types?: DiscordWebhookEventType[];
   /** up to 5 tags describing the content and functionality of the application */
