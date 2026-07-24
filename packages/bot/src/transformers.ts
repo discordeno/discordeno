@@ -2,6 +2,7 @@ import type {
   AllowedMentions,
   BigString,
   DiscordActivity,
+  DiscordActivityAssets,
   DiscordActivityInstance,
   DiscordActivityLocation,
   DiscordAllowedMentions,
@@ -86,7 +87,7 @@ import {
   type SetupDesiredProps,
   type TransformersDesiredProperties,
 } from './desiredProperties.js';
-import { transformActivity, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
+import { transformActivity, transformActivityAssets, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
 import { transformApplication } from './transformers/application.js';
 import { transformApplicationCommand } from './transformers/applicationCommand.js';
 import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js';
@@ -127,7 +128,7 @@ import {
 import { transformGuildOnboarding, transformGuildOnboardingPrompt, transformGuildOnboardingPromptOption } from './transformers/onboarding.js';
 import { transformPoll, transformPollMedia } from './transformers/poll.js';
 import { transformPresence } from './transformers/presence.js';
-import { transformActivityToDiscordActivity } from './transformers/reverse/activity.js';
+import { transformActivityAssetsToDiscordActivityAssets, transformActivityToDiscordActivity } from './transformers/reverse/activity.js';
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js';
 import { transformApplicationToDiscordApplication } from './transformers/reverse/application.js';
 import { transformApplicationCommandToDiscordApplicationCommand } from './transformers/reverse/applicationCommand.js';
@@ -155,6 +156,7 @@ import { transformTemplate } from './transformers/template.js';
 import { type ThreadMemberTransformerExtra, transformThreadMember, transformThreadMemberGuildCreate } from './transformers/threadMember.js';
 import type {
   Activity,
+  ActivityAssets,
   ActivityInstance,
   ActivityLocation,
   Application,
@@ -237,6 +239,7 @@ import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerFunctions<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
   activity: TransformerFunction<TProps, TBehavior, DiscordActivity, Activity>;
+  activityAssets: TransformerFunction<TProps, TBehavior, DiscordActivityAssets, ActivityAssets>;
   activityInstance: TransformerFunction<TProps, TBehavior, DiscordActivityInstance, ActivityInstance>;
   activityLocation: TransformerFunction<TProps, TBehavior, DiscordActivityLocation, ActivityLocation>;
   application: TransformerFunction<TProps, TBehavior, DiscordApplication, Application, { shardId?: number }>;
@@ -330,6 +333,7 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   desiredProperties: TProps;
   reverse: {
     activity: (bot: Bot<TProps, TBehavior>, payload: Activity) => DiscordActivity;
+    activityAssets: (bot: Bot<TProps, TBehavior>, payload: ActivityAssets) => DiscordActivityAssets;
     allowedMentions: (bot: Bot<TProps, TBehavior>, payload: AllowedMentions) => DiscordAllowedMentions;
     application: (bot: Bot<TProps, TBehavior>, payload: Application) => DiscordApplication;
     applicationCommand: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommand) => DiscordApplicationCommand;
@@ -358,6 +362,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
   return {
     customizers: {
       activity: _options.customizers?.activity ?? defaultCustomizer,
+      activityAssets: _options.customizers?.activityAssets ?? defaultCustomizer,
       activityInstance: _options.customizers?.activityInstance ?? defaultCustomizer,
       activityLocation: _options.customizers?.activityLocation ?? defaultCustomizer,
       application: _options.customizers?.application ?? defaultCustomizer,
@@ -433,6 +438,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     desiredProperties: createDesiredPropertiesObject(_options.desiredProperties ?? {}),
     reverse: {
       activity: _options.reverse?.activity ?? transformActivityToDiscordActivity,
+      activityAssets: _options.reverse?.activityAssets ?? transformActivityAssetsToDiscordActivityAssets,
       allowedMentions: _options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       application: _options.reverse?.application ?? transformApplicationToDiscordApplication,
       applicationCommand: _options.reverse?.applicationCommand ?? transformApplicationCommandToDiscordApplicationCommand,
@@ -450,6 +456,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       user: _options.reverse?.user ?? transformUserToDiscordUser,
     },
     activity: _options.activity ?? transformActivity,
+    activityAssets: _options.activityAssets ?? transformActivityAssets,
     activityInstance: _options.activityInstance ?? transformActivityInstance,
     activityLocation: _options.activityLocation ?? transformActivityLocation,
     application: _options.application ?? transformApplication,
