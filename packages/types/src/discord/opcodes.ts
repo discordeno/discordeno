@@ -445,6 +445,8 @@ export enum HTTPJsonErrorCodes {
   AccountNotVerified = 50178,
   /** The provided file does not have a valid duration. */
   InvalidFileDuration = 50192,
+  /** Cannot send messages to this user due to having no mutual guilds */
+  CantMessageUserNoMutualGuilds = 50278,
   /** You do not have permission to send this sticker. */
   NoStickerPermission = 50600,
 
