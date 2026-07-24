@@ -469,6 +469,8 @@ export interface Channel {
   defaultAutoArchiveDuration?: number;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions;
+  /**computed permissions for the bot user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately */
+  appPermissions?: Permissions;
   /** The flags of the channel */
   flags?: number;
   /**

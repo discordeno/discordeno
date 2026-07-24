@@ -106,11 +106,20 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
    * Computed permissions for the invoking user in the channel.
    *
    * @remarks
-   * The computed permissions include channel overwrites but does not include implicit permissions, those need to be checked separatly.
+   * This does not include implicit permissions, which may need to be checked separately
    *
    * Only presented when part of `resolved` data received on an interaction.
    */
   permissions?: string;
+  /**
+   * computed permissions for the bot user in the channel, including overwrites.
+   *
+   * @remarks
+   * This does not include implicit permissions, which may need to be checked separately
+   *
+   * Only included when part of the `resolved` data received on an interaction.
+   */
+  app_permissions?: string;
   /** The flags of the channel */
   flags?: ChannelFlags;
   /** number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted */
