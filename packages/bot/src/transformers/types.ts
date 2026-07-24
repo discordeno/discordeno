@@ -17,6 +17,9 @@ import type {
   DefaultMessageNotificationLevels,
   DiscordActivityInstanceResource,
   DiscordActivityLocationKind,
+  DiscordActivityParty,
+  DiscordActivitySecrets,
+  DiscordActivityTimestamps,
   DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
@@ -32,6 +35,7 @@ import type {
   DiscordScheduledEventRecurrenceRuleNWeekday,
   DiscordScheduledEventRecurrenceRuleWeekday,
   DiscordSkuType,
+  DiscordStatusDisplayType,
   DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
@@ -88,36 +92,65 @@ import type { UserToggles } from './toggles/user.js';
 import type { VoiceStateToggles } from './toggles/voice.js';
 
 export interface Activity {
-  join?: string;
-  flags?: number;
-  applicationId?: bigint;
-  spectate?: string;
-  url?: string;
-  startedAt?: number;
-  endedAt?: number;
-  details?: string;
-  state?: string;
-  emoji?: ActivityEmoji;
-  partyId?: string;
-  partyCurrentSize?: number;
-  partyMaxSize?: number;
-  largeImage?: string;
-  largeText?: string;
-  smallImage?: string;
-  smallText?: string;
-  inviteCoverImage?: string;
-  match?: string;
-  instance?: boolean;
-  buttons?: ActivityButton[];
+  /** The activity's name */
   name: string;
+  /** Activity type */
   type: ActivityTypes;
+  /** Stream url, is validated when type is 1 */
+  url?: string;
+  /** Unix timestamp of when the activity was added to the user's session */
   createdAt: number;
+  /** Unix timestamps for start and/or end of the game */
+  timestamps?: DiscordActivityTimestamps;
+  /** Application id for the game */
+  applicationId?: bigint;
+  /** Controls which field is displayed in the user's status text in the member list */
+  statusDisplayType?: DiscordStatusDisplayType;
+  /** What the player is currently doing */
+  details?: string;
+  /** URL that is linked when clicking on the details text */
+  detailsUrl?: string;
+  /** The user's current party status */
+  state?: string;
+  /** URL that is linked when clicking on the state text */
+  stateUrl?: string;
+  /** The emoji used for a custom status */
+  emoji?: ActivityEmoji;
+  /** Information for the current party of the player */
+  party?: DiscordActivityParty;
+  /** Images for the presence and their hover texts */
+  assets?: ActivityAssets;
+  /** Secrets for Rich Presence joining and spectating */
+  secrets?: DiscordActivitySecrets;
+  /** Whether or not the activity is an instanced game session */
+  instance?: boolean;
+  /** Activity flags `OR`d together, describes what the payload includes */
+  flags?: number;
+  /** The custom buttons shown in the Rich Presence (max 2) */
+  buttons?: ActivityButton[];
 }
 
 export interface ActivityEmoji {
   id?: bigint;
   animated?: boolean;
   name: string;
+}
+
+export interface ActivityAssets {
+  /** The id for a large asset of the activity, usually a snowflake */
+  largeImage?: string;
+  /** Text displayed when hovering over the large image of the activity */
+  largeText?: string;
+  /** URL that is opened when clicking on the large image */
+  largeUrl?: string;
+  /** The id for a small asset of the activity, usually a snowflake */
+  smallImage?: string;
+  /** Text displayed when hovering over the small image of the activity */
+  smallText?: string;
+  /** URL that is opened when clicking on the small image */
+  smallUrl?: string;
+  /** See Activity Asset Image. Displayed as a banner on a Game Invite. */
+  inviteCoverImage?: string;
 }
 
 export interface ActivityButton {
