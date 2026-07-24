@@ -20,9 +20,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue has gone stale for over a month. If this issue is useful, leave a comment below. Otherwise, it will be closed shortly.'
           stale-pr-message: 'This pull request has gone stale for over a month. If this pull request is still useful, leave a comment below. Otherwise, it will be closed shortly.'
-          stale-issue-label: 'no-issue-activity'
-          stale-pr-label: 'no-pr-activity'
-          only-labels: 'w-unverified'
-          exempt-issue-labels: 'api-docs-commits,help-wanted,w-verified,w-pending'
-          exempt-pr-labels: 'w-verified'
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          exempt-issue-labels: 'api-docs-commits,help-wanted,no-stale'
+          exempt-pr-labels: 'no-stale'
           close-issue-reason: 'not_planned'
