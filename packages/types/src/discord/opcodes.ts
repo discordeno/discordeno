@@ -517,6 +517,9 @@ export enum HTTPJsonErrorCodes {
   /** Message blocked by harmful links filter */
   HarmfulLinks = 240000,
 
+  /** Access to joining new servers has been limited for the user */
+  JoinGuildLimited = 340015,
+
   /** Cannot enable onboarding, requirements are not met */
   OnboardingRequirementsNotMet = 350000,
   /** Cannot update onboarding while below requirements */
