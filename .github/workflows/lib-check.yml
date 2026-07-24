@@ -46,7 +46,6 @@ jobs:
   format:
     name: Format
     runs-on: ubuntu-latest
-    needs: build-type-and-test
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -97,11 +96,26 @@ jobs:
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:unit
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v7
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Download and verify codecov cli
+        run: |
+          curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+
+          shasum -a 256 -c codecov.SHA256SUM
+          sudo chmod +x codecov
+      - name: Upload coverage report to codecov
+        run: |
+          find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
+            sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
+
+            ./codecov --verbose upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
+              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
+              --file packages/$package/coverage/lcov.info --flag $package-unit --flag $package
+          done
 
   unit-tests-deno:
     name: Deno Unit Tests
@@ -159,16 +173,32 @@ jobs:
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:integration
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v7
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Download and verify codecov cli
+        run: |
+          curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+
+          shasum -a 256 -c codecov.SHA256SUM
+          sudo chmod +x codecov
+      - name: Upload coverage report to codecov
+        run: |
+          find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
+            sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
+
+            ./codecov --verbose upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
+              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
+              --file packages/$package/coverage/lcov.info --flag $package-integration --flag $package
+          done
 
   e2e-tests:
     name: E2E Tests
     needs: [build-dist]
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
     concurrency:
       group: e2e-tests
       queue: max
@@ -187,8 +217,23 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           E2E_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v7
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Download and verify codecov cli
+        run: |
+          curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+
+          shasum -a 256 -c codecov.SHA256SUM
+          sudo chmod +x codecov
+      - name: Upload coverage report to codecov
+        run: |
+          find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
+            sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
+
+            ./codecov --verbose upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
+              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
+              --file packages/$package/coverage/lcov.info --flag $package-e2e --flag $package
+          done
