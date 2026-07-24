@@ -172,6 +172,8 @@ export enum HTTPJsonErrorCodes {
   ExplicitContent = 20009,
   /** You are not authorized to perform this action on this application */
   UnauthorizedAction = 20012,
+  /** This action requires a premium subscription */
+  PremiumRequired = 20015,
   /** This action cannot be performed due to slowmode rate limit */
   SlowmodeRateLimit = 20016,
   /** Only the owner of this account can perform this action */
@@ -180,7 +182,7 @@ export enum HTTPJsonErrorCodes {
   AnnouncementRateLimits = 20022,
   /** Under minimum age */
   UnderMinimumAge = 20024,
-  /** The channel you are writing has hit the write rate limit */
+  /** The write action you are performing on the channel has hit the write rate limit */
   ChannelWriteRateLimit = 20028,
   /** The write action you are performing on the server has hit the write rate limit */
   ServerWriteRateLimit = 20029,
@@ -193,7 +195,7 @@ export enum HTTPJsonErrorCodes {
   MaxGuildsReached = 30001,
   /** Maximum number of friends reached (1000) */
   MaxFriendsReached = 30002,
-  /** Maximum number of pins reached for the channel (50) */
+  /** Maximum number of pins reached for the channel (250) */
   MaxPinsReached = 30003,
   /** Maximum number of recipients reached (10) */
   MaxRecipientsReached = 30004,
@@ -439,12 +441,16 @@ export enum HTTPJsonErrorCodes {
   VoiceMessageCannotEdit = 50162,
   /** Cannot delete guild subscription integration */
   DeleteSubscriptionIntegration = 50163,
+  /** Cannot send voice effect when user is server muted, deafened, or suppressed */
+  VoiceEffectUserMuted = 50167,
   /** You cannot send voice messages in this channel. */
   NoVoiceMessages = 50173,
   /** The user account must first be verified */
   AccountNotVerified = 50178,
   /** The provided file does not have a valid duration. */
   InvalidFileDuration = 50192,
+  /** Cannot send messages to this user due to having no mutual guilds */
+  CantMessageUserNoMutualGuilds = 50278,
   /** You do not have permission to send this sticker. */
   NoStickerPermission = 50600,
 
@@ -516,6 +522,9 @@ export enum HTTPJsonErrorCodes {
 
   /** Message blocked by harmful links filter */
   HarmfulLinks = 240000,
+
+  /** Access to joining new servers has been limited for the user */
+  AccessToJoinServersLimited = 340015,
 
   /** Cannot enable onboarding, requirements are not met */
   OnboardingRequirementsNotMet = 350000,
