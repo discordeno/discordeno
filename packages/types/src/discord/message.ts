@@ -111,6 +111,8 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   poll?: DiscordPoll;
   /** The call associated with the message */
   call?: DiscordMessageCall;
+  /** The custom client-side theme shared via the message */
+  shared_client_theme: DiscordSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#message-object-message-types */
@@ -552,6 +554,28 @@ export interface DiscordMessagePin {
   pinned_at: string;
   /** the pinned message */
   message: DiscordMessage;
+}
+
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-struture */
+export interface DiscordSharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradient_angle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  base_mix: number;
+  /** The mode of the theme */
+  base_theme?: DiscordBaseTheme | null;
+}
+
+/** https://docs.discord.com/developers/resources/message#base-theme-types */
+export enum DiscordBaseTheme {
+  /** Equivalent to {@link Dark} */
+  Unset,
+  Dark,
+  Light,
+  Darker,
+  Midnight,
 }
 
 /** https://docs.discord.com/developers/resources/message#get-reactions-reaction-types */
