@@ -272,6 +272,8 @@ export enum HTTPJsonErrorCodes {
   FeatureDisabled = 40006,
   /** The user is banned from this guild */
   UserBanned = 40007,
+  /** Only one channel can have a parent_id modified at a time */
+  OnlyOneChannelParentIdEdit = 40009,
   /** Connection has been revoked */
   ConnectionRevoked = 40012,
   /** Only consumable SKUs can be consumed */
