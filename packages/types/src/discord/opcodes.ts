@@ -195,7 +195,7 @@ export enum HTTPJsonErrorCodes {
   MaxGuildsReached = 30001,
   /** Maximum number of friends reached (1000) */
   MaxFriendsReached = 30002,
-  /** Maximum number of pins reached for the channel (50) */
+  /** Maximum number of pins reached for the channel (250) */
   MaxPinsReached = 30003,
   /** Maximum number of recipients reached (10) */
   MaxRecipientsReached = 30004,
