@@ -905,6 +905,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason });
     },
 
+    async setVoiceChannelStatus(channelId, options, reason) {
+      await rest.put(rest.routes.channels.voiceStatus(channelId), { body: options, reason });
+    },
+
     async deleteChannel(channelId, reason) {
       await rest.delete(rest.routes.channels.channel(channelId), {
         reason,

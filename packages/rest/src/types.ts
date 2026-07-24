@@ -147,6 +147,7 @@ import type {
   ScheduledEventStatus,
   SearchMembers,
   SendSoundboardSound,
+  SetVoiceChannelStatus,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   UpsertGlobalApplicationCommandOptions,
@@ -669,6 +670,22 @@ export interface RestManager {
    * @see {@link https://docs.discord.com/developers/resources/auto-moderation#delete-auto-moderation-rule}
    */
   deleteAutomodRule: (guildId: BigString, ruleId: BigString, reason?: string) => Promise<void>;
+  /**
+   * Set a voice channel’s status
+   *
+   * @param channelId - The ID of the channel to set the status of.
+   * @param options - The parameters for the status of the voice channel.
+   * @param reason - An optional reason for the action, to be included in the audit log.
+   * @returns Nothing
+   *
+   * @remarks
+   * Requires the `SET_VOICE_CHANNEL_STATUS` permission, and additionally the `MANAGE_CHANNELS` permission if the current user is not connected to the voice channel.
+   *
+   * Fires a _Voice Channel Status Update_ Gateway event.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/channel#set-voice-channel-status}
+   */
+  setVoiceChannelStatus: (channelId: BigString, options: SetVoiceChannelStatus, reason?: string) => Promise<void>;
   /**
    * Deletes a channel from within a guild.
    *

@@ -269,6 +269,17 @@ export interface ModifyChannel {
   appliedTags?: BigString[];
 }
 
+/** https://docs.discord.com/developers/resources/channel#set-voice-channel-status */
+export interface SetVoiceChannelStatus {
+  /**
+   * New voice channel status
+   *
+   * @remarks
+   * up to 500 characters
+   */
+  status: string | null;
+}
+
 /** https://docs.discord.com/developers/resources/channel#edit-channel-permissions-json-params */
 export interface EditChannelPermissionOverridesOptions {
   // This is included in here however it is a route parameter

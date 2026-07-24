@@ -118,6 +118,7 @@ export interface RestRoutes {
       votes: (channelId: BigString, messageId: BigString, answerId: number, options?: GetPollAnswerVotes) => string;
       expire: (channelId: BigString, messageId: BigString) => string;
     };
+    voiceStatus: (channelId: BigString) => string;
   };
   /** Routes for guild related endpoints. */
   guilds: {

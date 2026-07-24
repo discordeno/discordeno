@@ -26,6 +26,8 @@ export enum GatewayOpcodes {
   HeartbeatACK,
   /** Used to request soundboard sounds for a list of guilds. */
   RequestSoundboardSounds = 31,
+  /** Request ephemeral channel data for channels in a guild. */
+  RequestChannelInfo = 43,
 }
 
 /** https://docs.discord.com/developers/topics/opcodes-and-status-codes#gateway-gateway-close-event-codes */
