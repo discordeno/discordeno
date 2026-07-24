@@ -1202,6 +1202,8 @@ export interface Member {
   completedOnboarding?: boolean;
   /** Guild member flags */
   flags: number;
+  /** Data for the member's collectibles */
+  collectibles: Collectibles;
 }
 
 export interface Message {

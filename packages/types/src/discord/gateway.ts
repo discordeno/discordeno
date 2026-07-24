@@ -17,7 +17,7 @@ import type { DiscordRole } from './permissions.js';
 import type { DiscordSoundboardSound } from './soundboard.js';
 import type { DiscordStageInstance } from './stageInstance.js';
 import type { DiscordSticker } from './sticker.js';
-import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
+import type { DiscordAvatarDecorationData, DiscordCollectibles, DiscordUser } from './user.js';
 import type { DiscordVoiceState } from './voice.js';
 
 /** https://docs.discord.com/developers/events/gateway#list-of-intents */
@@ -562,6 +562,8 @@ export interface DiscordGuildMemberUpdate {
   flags?: number;
   /** Data for the member's guild avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData | null;
+  /** Data for the member's collectibles */
+  collectibles?: DiscordCollectibles | null;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#guild-members-chunk-guild-members-chunk-event-fields */
