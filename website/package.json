@@ -28,7 +28,7 @@
     "@xyflow/react": "^12.11.2",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.8",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.5",
@@ -41,7 +41,7 @@
     "webpack": "5.109.0"
   },
   "resolutions": {
-    "@types/react": "^19.2.7"
+    "@types/react": "^19.2.8"
   },
   "browserslist": {
     "production": [
