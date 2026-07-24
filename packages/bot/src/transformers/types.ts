@@ -437,7 +437,7 @@ export interface Channel {
   topic?: string;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
-  /** The bitrate (in bits) of the voice or stage channel */
+  /** The bitrate (in bits per second) of the voice or stage channel */
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   userLimit?: number;

@@ -70,7 +70,7 @@ export interface CreateGuildChannel {
   type?: ChannelTypes;
   /** Channel topic (0-1024 characters) */
   topic?: string;
-  /** The bitrate (in bits) of the voice channel (voice only) */
+  /** The bitrate (in bits per second) of the voice channel (voice only) */
   bitrate?: number;
   /** The user limit of the voice channel (voice only) */
   userLimit?: number;
