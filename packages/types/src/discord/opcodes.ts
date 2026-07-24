@@ -182,7 +182,7 @@ export enum HTTPJsonErrorCodes {
   AnnouncementRateLimits = 20022,
   /** Under minimum age */
   UnderMinimumAge = 20024,
-  /** The channel you are writing has hit the write rate limit */
+  /** The write action you are performing on the channel has hit the write rate limit */
   ChannelWriteRateLimit = 20028,
   /** The write action you are performing on the server has hit the write rate limit */
   ServerWriteRateLimit = 20029,
@@ -449,6 +449,8 @@ export enum HTTPJsonErrorCodes {
   AccountNotVerified = 50178,
   /** The provided file does not have a valid duration. */
   InvalidFileDuration = 50192,
+  /** Cannot send messages to this user due to having no mutual guilds */
+  CantMessageUserNoMutualGuilds = 50278,
   /** You do not have permission to send this sticker. */
   NoStickerPermission = 50600,
 

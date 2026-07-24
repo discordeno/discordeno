@@ -1,6 +1,7 @@
 import { type DiscordApplication, DiscordApplicationIntegrationType, type DiscordUser } from '@discordeno/types';
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
+import { ToggleBitfield } from './toggles/ToggleBitfield.js';
 import type { Application } from './types.js';
 
 export function transformApplication(bot: Bot, payload: DiscordApplication, extra?: { shardId?: number }): Application {
@@ -17,6 +18,8 @@ export function transformApplication(bot: Bot, payload: DiscordApplication, extr
     slug: payload.slug,
     coverImage: payload.cover_image ? iconHashToBigInt(payload.cover_image) : undefined,
     flags: payload.flags,
+    // flags_new is a string with the bitfield inside
+    flagsNew: payload.flags_new ? new ToggleBitfield(Number(payload.flags_new)) : undefined,
 
     id: bot.transformers.snowflake(payload.id),
     icon: payload.icon ? iconHashToBigInt(payload.icon) : undefined,
