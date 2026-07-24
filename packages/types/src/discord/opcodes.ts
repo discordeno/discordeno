@@ -478,6 +478,8 @@ export enum HTTPJsonErrorCodes {
   MaxActiveThreads = 160006,
   /** Maximum number of active announcement threads reached */
   MaxActiveAnnouncementThreads = 160007,
+  /** You cannot forward a message whose content you cannot read */
+  CannotForwardUnreadableMessage = 160014,
 
   /** Invalid JSON for uploaded Lottie file */
   InvalidLottieJSON = 170001,
