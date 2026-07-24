@@ -1826,7 +1826,7 @@ export interface User {
   toggles?: UserToggles;
   /** The user's username, not unique across the platform */
   username: string;
-  /** The user's display name, if it is set. For bots, this is the application name */
+  /** The user's display name, if it is set */
   globalName?: string;
   /** The user's display name based on `globalName` and `username` */
   displayName: string;
