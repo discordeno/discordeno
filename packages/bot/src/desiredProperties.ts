@@ -541,6 +541,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       mentionedChannelIds: defaultValue,
       mentionedRoleIds: defaultValue,
       mentions: defaultValue,
+      channelType: defaultValue,
       messageReference: defaultValue,
       messageSnapshots: defaultValue,
       referencedMessage: defaultValue,
