@@ -82,7 +82,7 @@ export interface CreateGuildChannel {
   permissionOverwrites?: Overwrite[];
   /** Id of the parent category for a channel */
   parentId?: BigString;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw?: boolean;
   /** Channel voice region id of the voice or stage channel, automatic when set to null */
   rtcRegion?: string;

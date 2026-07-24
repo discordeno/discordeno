@@ -2,7 +2,7 @@ import type { DiscordChannel } from '@discordeno/types';
 import { ToggleBitfield } from './ToggleBitfield.js';
 
 export const ChannelToggle = {
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw: 1 << 0,
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
   locked: 1 << 1,

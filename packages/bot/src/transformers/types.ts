@@ -39,7 +39,7 @@ import type {
   EmbedTypes,
   ExplicitContentFilterLevels,
   ForumLayout,
-  GuildNsfwLevel,
+  GuildAgeRestrictionLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
   InteractionCallbackOptions,
@@ -497,7 +497,7 @@ export interface Channel {
   /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   defaultSortOrder?: SortOrderTypes | null;
   defaultForumLayout?: ForumLayout;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw: boolean;
   /** Thread-specific fields not needed by other channels */
   threadMetadata?: ChannelThreadMetadata;
@@ -846,7 +846,7 @@ export interface Guild {
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximatePresenceCount?: number;
   /** Guild NSFW level */
-  nsfwLevel: GuildNsfwLevel;
+  nsfwLevel: GuildAgeRestrictionLevel;
   /** Whether the guild has the boost progress bar enabled */
   premiumProgressBarEnabled: boolean;
   /** Guild id */
