@@ -1,9 +1,12 @@
-import { expect } from 'chai';
+import { use as chaiUse, expect } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { afterEach, beforeEach, describe, it } from 'mocha';
 import sinon from 'sinon';
 import { createRestManager } from '../../src/manager.js';
 import type { RestManager } from '../../src/types.js';
 import { fakeToken as token } from '../constants.js';
+
+chaiUse(chaiAsPromised);
 
 describe('[rest] manager', () => {
   describe('create a rest manager with only a token', () => {
@@ -227,6 +230,220 @@ describe('[rest] manager', () => {
         expect(rest.rateLimitedPaths.size).to.be.equal(0);
         expect(rest.globallyRateLimited).to.be.equal(true);
       });
+    });
+  });
+
+  describe('rest.makeRequest with a proxy', () => {
+    let rest: RestManager;
+    let fetchStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      rest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'https://localhost:8000',
+          authorization: token,
+        },
+      });
+      fetchStub = sinon.stub(globalThis, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchStub.restore();
+    });
+
+    it('Does not retry when the attempt times out', async () => {
+      fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Retries when the proxy cannot be reached', async () => {
+      // Exclude queueMicrotask from faked timers. On Node.js v22 (undici 6.x),
+      // Response.json()/Response.text() reads the body via a ReadableStream whose
+      // pull method schedules queueMicrotask(() => readableStreamClose(controller)).
+      // When queueMicrotask is faked by sinon, that callback is stored in the
+      // clock's internal job queue instead of running as a real V8 microtask.
+      // The readAllBytes loop then spins forever (each reader.read() re-triggers
+      // pull, enqueuing more data and scheduling another faked microtask), which
+      // hangs tickAsync and leaks memory. Excluding queueMicrotask lets the stream
+      // close callback run as a normal microtask while still faking setTimeout for
+      // the delay(250) backoff.
+      const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
+
+      try {
+        fetchStub.onFirstCall().rejects(new TypeError('fetch failed'));
+        fetchStub
+          .onSecondCall()
+          .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+        const promise = rest.makeRequest('GET', '/gateway/bot');
+        // Advance past the backoff between the failed attempt and the retry
+        await clock.tickAsync(250);
+
+        expect(await promise).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+        expect(fetchStub.callCount).to.be.equal(2);
+      } finally {
+        clock.restore();
+      }
+    });
+
+    it('Does not retry a connection failure once maxRetryCount is exhausted', async () => {
+      rest.maxRetryCount = 0;
+      fetchStub.rejects(new TypeError('fetch failed'));
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Retries a timed out attempt when proxy.retryOnTimeout is enabled', async () => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'https://localhost:8000',
+          authorization: token,
+          retryOnTimeout: true,
+        },
+      });
+
+      fetchStub.onFirstCall().rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+      fetchStub
+        .onSecondCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      expect(await retryingRest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
+    it('Does not retry a timed out attempt once maxRetryCount is exhausted, even with proxy.retryOnTimeout enabled', async () => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: {
+          baseUrl: 'https://localhost:8000',
+          authorization: token,
+          retryOnTimeout: true,
+        },
+      });
+      retryingRest.maxRetryCount = 0;
+      fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+
+      await expect(retryingRest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
+  });
+
+  describe('rest.makeRequest with an AbortSignal', () => {
+    let fetchStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      fetchStub = sinon.stub(globalThis, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchStub.restore();
+    });
+
+    it('Rejects an already aborted request without sending it', async () => {
+      const rest = createRestManager({ token });
+
+      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: AbortSignal.abort() })).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(0);
+    });
+
+    it('Rejects a queued request when the signal aborts', async () => {
+      // See the comment in "Retries when the proxy cannot be reached" for why queueMicrotask is excluded from faked timers.
+      const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
+
+      try {
+        const rest = createRestManager({ token });
+        // Hold the first request open so the next request stays stuck in the queue behind it
+        let finishFirstRequest: (value: Response) => void = () => {};
+        fetchStub.callsFake(async (request: Request) => {
+          // Like real fetch, refuse to send a request whose signal is already aborted
+          if (request.signal.aborted) throw request.signal.reason;
+          return await new Promise<Response>((resolve) => {
+            finishFirstRequest = resolve;
+          });
+        });
+
+        const first = rest.makeRequest('GET', '/gateway/bot');
+        // Let the first request reach fetch and block the queue
+        await clock.tickAsync(0);
+
+        const controller = new AbortController();
+        const queued = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+        controller.abort();
+
+        // The caller is rejected right away, while the request is still stuck in the queue
+        await expect(queued).to.eventually.be.rejected;
+        expect(fetchStub.callCount).to.be.equal(1);
+
+        // Let the first request finish so the queue drains
+        finishFirstRequest(
+          new Response('{}', {
+            headers: { 'Content-Type': 'application/json', 'x-ratelimit-limit': '5', 'x-ratelimit-remaining': '4', 'x-ratelimit-reset-after': '1' },
+          }),
+        );
+        await clock.tickAsync(1000);
+        await first;
+        // The stale entry gets dequeued once the queue frees up (it re-checks every second); it reaches
+        // fetch with an already aborted signal, so nothing goes on the wire
+        await clock.tickAsync(1000);
+        expect(fetchStub.callCount).to.be.equal(2);
+        expect((fetchStub.secondCall.args[0] as Request).signal.aborted).to.be.equal(true);
+      } finally {
+        clock.restore();
+      }
+    });
+
+    it('Cancels an in flight request when the signal aborts', async () => {
+      const rest = createRestManager({ token });
+      // Behave like real fetch: never settle until the signal on the request aborts
+      fetchStub.callsFake(
+        async (request: Request) =>
+          await new Promise<Response>((_resolve, reject) => {
+            request.signal.addEventListener('abort', () => reject(request.signal.reason), { once: true });
+          }),
+      );
+
+      const controller = new AbortController();
+      const promise = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+      // Let the request go out before aborting
+      await new Promise((resolve) => setImmediate(resolve));
+      controller.abort();
+
+      await expect(promise).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
+      // The signal must be forwarded to fetch so the connection itself gets torn down
+      expect((fetchStub.firstCall.args[0] as Request).signal.aborted).to.be.equal(true);
+    });
+
+    it('Throws for an aborted request in proxy mode without contacting the proxy', async () => {
+      const rest = createRestManager({ token, proxy: { baseUrl: 'https://localhost:8000', authorization: token } });
+
+      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: AbortSignal.abort() })).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(0);
+    });
+
+    it('Cancels an in flight request to the proxy when the signal aborts, without retrying it', async () => {
+      const rest = createRestManager({ token, proxy: { baseUrl: 'https://localhost:8000', authorization: token } });
+      // Behave like real fetch: never settle until the signal on the request aborts
+      fetchStub.callsFake(
+        async (request: Request) =>
+          await new Promise<Response>((_resolve, reject) => {
+            request.signal.addEventListener('abort', () => reject(request.signal.reason), { once: true });
+          }),
+      );
+
+      const controller = new AbortController();
+      const promise = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+      // Let the request go out before aborting
+      await new Promise((resolve) => setImmediate(resolve));
+      controller.abort();
+
+      await expect(promise).to.eventually.be.rejected;
+      expect(fetchStub.callCount).to.be.equal(1);
     });
   });
 });

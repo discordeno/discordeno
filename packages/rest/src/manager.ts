@@ -113,6 +113,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     invalidBucket: createInvalidRequestBucket({ logger: options.logger }),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
+    retryProxiedRequestsOnTimeout: options.proxy?.retryOnTimeout ?? false,
     maxRetryCount: Infinity,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
@@ -458,7 +459,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Give this attempt a hard deadline. `AbortSignal.timeout` aborts the fetch (and any in-progress body
       // read) once it fires, which makes the awaited fetch reject so a stalled connection can never keep this
       // queue's `processPending` loop (and therefore the whole queue) wedged forever. Omitted when disabled.
-      const request = new Request(url, { ...payload, signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined });
+      // The caller's signal is handed to fetch too: fetch refuses to send a request whose signal is already
+      // aborted (so a queue entry that got aborted while waiting never goes out), and aborting mid-request
+      // tears down the connection.
+      const signals: AbortSignal[] = [];
+      if (options.requestBodyOptions?.signal) signals.push(options.requestBodyOptions.signal);
+      if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
+
+      const request = new Request(url, { ...payload, signal: signals.length > 0 ? AbortSignal.any(signals) : undefined });
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
       });
@@ -468,6 +476,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+
+        // The caller aborted the request while it was in flight, so the fetch was cancelled. Never retry it,
+        // Discord may have received it already; the caller was rejected the moment the signal fired.
+        if (options.requestBodyOptions?.signal?.aborted) {
+          options.reject({
+            ok: false,
+            status: 999,
+            statusText: 'The request was aborted.',
+            errorObject: error,
+          });
+          return;
+        }
 
         // The attempt hit `rest.requestTimeout` and was aborted. Treat it like a transient failure and retry
         // it through the queue, so a single stalled connection doesn't permanently fail the request.
@@ -640,31 +660,61 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        // Retry on timeout up to `maxRetryCount`, mirroring the queued `sendRequest` path, so a stalled proxy
-        // connection doesn't permanently fail the request (and can never hang the caller forever).
+        // A timed-out attempt must NOT be re-sent here by default: hitting `rest.requestTimeout` only aborts our
+        // side of the connection, while the proxy keeps processing the request (it may simply be queued behind a
+        // rate limit) and it can still reach Discord. Re-sending it would execute non-idempotent requests twice
+        // (e.g. duplicate channel creates). Only attempts that failed to reach the proxy at all (connection
+        // refused/reset) are retried, since those were never processed — unless the user opted into timeout
+        // retries via `proxy.retryOnTimeout` because their setup deduplicates re-sent requests. Retrying on
+        // Discord errors is the job of the queue when talking to Discord directly (`isProxied` is false); a proxy
+        // is expected to handle its own retrying.
         for (let retryCount = 0; ; retryCount++) {
-          // Give the request to the proxy a hard deadline too via `AbortSignal.timeout` (omitted when disabled).
+          // The request may have been aborted while waiting out the retry backoff; never send it in that case.
+          if (options?.signal?.aborted) throw options.signal.reason;
+
+          // Give the request to the proxy a hard deadline via `AbortSignal.timeout` (omitted when disabled), so a
+          // stalled connection can never hang the caller forever. The caller's signal is handed to fetch too,
+          // so aborting tears down a request that is already on the wire.
+          const signals: AbortSignal[] = [];
+          if (options?.signal) signals.push(options.signal);
+          if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
+
           const request = new Request(url, {
             ...rest.createRequestBody(method, options),
-            signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined,
+            signal: signals.length > 0 ? AbortSignal.any(signals) : undefined,
           });
           rest.events.request(request, {
             body: options?.body,
           });
 
-          const result = await fetch(request).catch((fetchError) => {
+          const result = await fetch(request).catch(async (fetchError) => {
             rest.events.requestError(request, fetchError, { body: options?.body });
 
-            // The attempt hit `rest.requestTimeout` and was aborted; retry it until the budget is exhausted.
-            if (isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
-              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
-              return undefined;
+            // The caller aborted the request, cancelling the attempt; never retry it, the proxy may have
+            // received it already.
+            if (options?.signal?.aborted) throw fetchError;
+
+            if (retryCount < rest.maxRetryCount) {
+              // The proxy could not be reached, so the request was never processed and is safe to retry.
+              if (!isTimeoutError(fetchError)) {
+                rest.logger.debug(`request to proxy ${url} failed before reaching it, retrying.`, fetchError);
+                // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
+                await delay(250);
+                return undefined;
+              }
+
+              // A timed-out attempt may still be processed by the proxy, so it is only re-sent when the user
+              // opted in with `proxy.retryOnTimeout` because their setup deduplicates requests.
+              if (rest.retryProxiedRequestsOnTimeout) {
+                rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
+                return undefined;
+              }
             }
 
             throw fetchError;
           });
 
-          // If result is undefined, the attempt timed out and is being retried.
+          // If result is undefined, the attempt failed in a retryable way and is being retried.
           if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
@@ -690,6 +740,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       return await new Promise(async (resolve, reject) => {
+        const signal = options?.signal;
+        const abortListener = () => {
+          // Reject right away instead of waiting for the queue to reach the request. If the attempt is already
+          // in flight, the signal is also attached to the fetch itself, so the connection gets torn down too.
+          payload.reject({
+            ok: false,
+            status: 999,
+            statusText: 'The request was aborted.',
+          });
+        };
+
         const payload: SendRequestOptions = {
           route,
           method,
@@ -699,9 +760,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload);
           },
           resolve: (data) => {
+            signal?.removeEventListener('abort', abortListener);
             resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!);
           },
           reject: (reason) => {
+            signal?.removeEventListener('abort', abortListener);
             let errorText: string;
 
             switch (reason.status) {
@@ -743,6 +806,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
           runThroughQueue: options?.runThroughQueue,
         };
+
+        // Reject a queued request as soon as its signal aborts instead of when the queue reaches it, so a
+        // caller enforcing a deadline gets its answer right away. Fetch itself refuses to send a request whose
+        // signal is already aborted, which is what guarantees the stale queue entry never goes out.
+        if (signal?.aborted) {
+          payload.reject({
+            ok: false,
+            status: 999,
+            statusText: 'The request was aborted.',
+          });
+          return;
+        }
+
+        signal?.addEventListener('abort', abortListener, { once: true });
 
         await rest.processRequest(payload);
       });

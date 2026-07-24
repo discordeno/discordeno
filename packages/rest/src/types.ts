@@ -193,6 +193,21 @@ export interface CreateRestManagerOptions {
      * This value is actually required if you want to use `updateTokenQueues`
      */
     updateBearerTokenEndpoint?: string;
+    /**
+     * Whether a request attempt that hit {@link CreateRestManagerOptions.requestTimeout | requestTimeout} should be re-sent to the proxy.
+     *
+     * @remarks
+     * The timeout only aborts our side of the connection: the proxy may still be processing the request (it may
+     * simply be queued behind a rate limit) and it can still reach Discord, so re-sending it can execute
+     * non-idempotent requests twice (e.g. duplicate channel creates).
+     *
+     * Only enable this when your setup can deduplicate requests, for example by attaching an idempotency
+     * key to each request that the proxy tracks in a store of your choosing (in memory, redis, ...) so a
+     * re-sent request is recognized and executed only once. Discordeno does not provide such a mechanism.
+     *
+     * @default false
+     */
+    retryOnTimeout?: boolean;
   };
   /**
    * The api versions which can be used to make requests.
@@ -211,8 +226,14 @@ export interface CreateRestManagerOptions {
    *
    * @remarks
    * This is a total deadline for each attempt (it also covers reading the response body), not a per-chunk timeout.
-   * When an attempt times out it is retried through the queue up to {@link RestManager.maxRetryCount} times before failing.
-   * Without it, a connection that stalls after connecting could keep a queue from ever progressing.
+   * When talking to Discord directly, a timed-out attempt is retried through the queue up to
+   * {@link RestManager.maxRetryCount} times before failing. Without it, a connection that stalls after connecting
+   * could keep a queue from ever progressing.
+   *
+   * When a `proxy` is configured, a timed-out attempt is NOT retried: the proxy keeps processing the request after
+   * the timeout aborts our side of the connection (it may simply be queued behind a rate limit), so re-sending it
+   * could execute it twice. Only attempts that failed to reach the proxy at all are retried. If your setup can
+   * deduplicate re-sent requests, `proxy.retryOnTimeout` opts back into retrying timed-out attempts.
    *
    * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a
    * large attachment over a slow connection) can legitimately exceed it and be aborted/retried. Raise this value
@@ -250,9 +271,11 @@ export interface RestManager {
   authorizationHeader: string;
   /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
   updateBearerTokenEndpoint?: string;
+  /** Whether a proxied request attempt that hit `requestTimeout` is re-sent to the proxy. Only safe when the proxy setup deduplicates requests. Defaults to false. */
+  retryProxiedRequestsOnTimeout: boolean;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
-  /** The maximum time in milliseconds a single request attempt may take before it is aborted and retried. Defaults to 30000 (30 seconds). Set to 0 to disable. */
+  /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequestsOnTimeout` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
   globallyRateLimited: boolean;
@@ -3292,6 +3315,17 @@ export interface CreateRequestBodyOptions {
   unauthorized?: boolean;
   reason?: string;
   files?: FileContent[];
+  /**
+   * An `AbortSignal` to cancel the request.
+   *
+   * @remarks
+   * Aborting rejects a request that is still waiting in the queue right away and guarantees it is never sent.
+   * An attempt that is already in flight gets its connection cancelled as well, though that cannot recall it:
+   * Discord (or the proxy) may have received it and may still process it, only the response is discarded.
+   * This lets a rest proxy drop requests that nobody is waiting on anymore (client disconnect, deadline)
+   * instead of leaving them in the queue.
+   */
+  signal?: AbortSignal;
 }
 
 export type MakeRequestOptions = Omit<CreateRequestBodyOptions, 'method'> & Pick<SendRequestOptions, 'runThroughQueue'>;
