@@ -118,7 +118,8 @@ export interface CreateMessageOptions {
   enforceNonce?: boolean;
   /** A poll object */
   poll?: CreatePoll;
-  sharedClientTheme: DiscordenoSharedClientTheme;
+  /** The custom client-side theme shared via the message */
+  sharedClientTheme?: DiscordenoSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#get-reactions-query-string-params */
