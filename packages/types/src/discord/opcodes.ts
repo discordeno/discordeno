@@ -172,6 +172,8 @@ export enum HTTPJsonErrorCodes {
   ExplicitContent = 20009,
   /** You are not authorized to perform this action on this application */
   UnauthorizedAction = 20012,
+  /** This action requires a premium subscription */
+  PremiumRequired = 20015,
   /** This action cannot be performed due to slowmode rate limit */
   SlowmodeRateLimit = 20016,
   /** Only the owner of this account can perform this action */
@@ -439,6 +441,8 @@ export enum HTTPJsonErrorCodes {
   VoiceMessageCannotEdit = 50162,
   /** Cannot delete guild subscription integration */
   DeleteSubscriptionIntegration = 50163,
+  /** Cannot send voice effect when user is server muted, deafened, or suppressed */
+  VoiceEffectUserMuted = 50167,
   /** You cannot send voice messages in this channel. */
   NoVoiceMessages = 50173,
   /** The user account must first be verified */
