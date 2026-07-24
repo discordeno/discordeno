@@ -262,6 +262,10 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           return `/channels/${encode(channelId)}/polls/${encode(messageId)}/expire`;
         },
       },
+
+      voiceStatus: (channelId) => {
+        return `/channels/${encode(channelId)}/voice-status`;
+      },
     },
 
     // Guild Endpoints

@@ -2053,3 +2053,21 @@ export interface LobbyMember {
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
 }
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-structure */
+export interface ChannelInfo {
+  /** The guild id */
+  guildId: bigint;
+  /** Ephemeral data for channels in the guild */
+  channels: ChannelInfoData[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-channel-structure */
+export interface ChannelInfoData {
+  /** The channel id */
+  id: bigint;
+  /** The voice channel status */
+  status?: string;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voiceStartTime?: number;
+}

@@ -6,6 +6,7 @@ import type {
   AutoModerationActionExecution,
   AutoModerationRule,
   Channel,
+  ChannelInfo,
   Emoji,
   Entitlement,
   Guild,
@@ -82,6 +83,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: SetupDesiredProps<Message, TProps, TBehavior>) => unknown;
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown;
   messageUpdate: (message: SetupDesiredProps<Message, TProps, TBehavior>) => unknown;
+  channelInfo: (channel: SetupDesiredProps<ChannelInfo, TProps, TBehavior>) => unknown;
   reactionAdd: (payload: {
     userId: bigint;
     channelId: bigint;
@@ -120,6 +122,8 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     soundId?: bigint | number;
     soundVolume?: number;
   }) => unknown;
+  voiceChannelStatusUpdate: (payload: { id: bigint; guildId: bigint; status?: string }) => unknown;
+  voiceChannelStartTimeUpdate: (payload: { id: bigint; guildId: bigint; voiceStartTime?: number }) => unknown;
   voiceServerUpdate: (payload: { token: string; endpoint?: string; guildId: bigint }) => unknown;
   voiceStateUpdate: (voiceState: SetupDesiredProps<VoiceState, TProps, TBehavior>) => unknown;
   channelCreate: (channel: SetupDesiredProps<Channel, TProps, TBehavior>) => unknown;
