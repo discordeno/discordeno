@@ -1927,6 +1927,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async updateLobbyMessageModerationMetadata(lobbyId, messageId, options) {
+      await rest.put(rest.routes.lobby.moderationMetadata(lobbyId, messageId), {
+        body: options,
+      });
+    },
+
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
 
