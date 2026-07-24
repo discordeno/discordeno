@@ -44,8 +44,14 @@ export interface DiscordApplication {
   slug?: string;
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
-  /** The application's public flags */
+  /** App's legacy public flags */
   flags?: ApplicationFlags;
+  /**
+   * App's public flags
+   *
+   * @see {@link ApplicationFlags}
+   */
+  flags_new?: string;
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number;
   /** Approximate count of users that have installed the app. (authorized with `application.commands` as a scope) */
