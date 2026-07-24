@@ -522,7 +522,7 @@ export enum HTTPJsonErrorCodes {
   HarmfulLinks = 240000,
 
   /** Access to joining new servers has been limited for the user */
-  JoinGuildLimited = 340015,
+  AccessToJoinServersLimited = 340015,
 
   /** Cannot enable onboarding, requirements are not met */
   OnboardingRequirementsNotMet = 350000,
