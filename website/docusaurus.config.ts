@@ -22,21 +22,7 @@ const config: Config = {
   trailingSlash: false,
 
   future: {
-    v4: {
-      // Used for https://docusaurus.io/blog/releases/3.8#worker-threads
-      removeLegacyPostBuildHeadAttribute: true,
-      useCssCascadeLayers: false,
-    },
-    faster: {
-      lightningCssMinimizer: true,
-      mdxCrossCompilerCache: true,
-      rspackBundler: true,
-      rspackPersistentCache: true,
-      ssgWorkerThreads: true,
-      swcHtmlMinimizer: true,
-      swcJsLoader: true,
-      swcJsMinimizer: true,
-    },
+    v4: true,
   },
 
   onBrokenLinks: 'throw',
