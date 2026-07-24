@@ -3,6 +3,7 @@
 import type {
   AllowedMentionsTypes,
   DiscordAttachment,
+  DiscordBaseTheme,
   DiscordEmbed,
   DiscordMessageReferenceType,
   DiscordReactionType,
@@ -41,6 +42,18 @@ export interface AllowedMentions {
   roles?: bigint[];
   /** Array of user_ids to mention (Max size of 100) */
   users?: bigint[];
+}
+
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-struture */
+export interface DiscordenoSharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradientAngle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  baseMix: number;
+  /** The mode of the theme */
+  base_theme?: DiscordBaseTheme | null;
 }
 
 /** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
@@ -105,6 +118,8 @@ export interface CreateMessageOptions {
   enforceNonce?: boolean;
   /** A poll object */
   poll?: CreatePoll;
+  /** The custom client-side theme shared via the message */
+  sharedClientTheme?: DiscordenoSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#get-reactions-query-string-params */

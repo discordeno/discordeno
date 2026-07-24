@@ -5,6 +5,7 @@ import {
   type DiscordMessageInteractionMetadata,
   type DiscordMessagePin,
   type DiscordMessageSnapshot,
+  type DiscordSharedClientTheme,
   MessageFlags,
 } from '@discordeno/types';
 import { snowflakeToTimestamp } from '@discordeno/utils';
@@ -12,7 +13,15 @@ import type { Bot } from '../bot.js';
 import { CHANNEL_MENTION_REGEX } from '../constants.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
-import type { Message, MessageCall, MessageInteraction, MessageInteractionMetadata, MessagePin, MessageSnapshot } from './types.js';
+import type {
+  Message,
+  MessageCall,
+  MessageInteraction,
+  MessageInteractionMetadata,
+  MessagePin,
+  MessageSnapshot,
+  SharedClientTheme,
+} from './types.js';
 
 const EMPTY_STRING = '';
 
@@ -319,4 +328,16 @@ export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): Mes
   if (props.endedTimestamp && payload.ended_timestamp) call.endedTimestamp = Date.parse(payload.ended_timestamp);
 
   return bot.transformers.customizers.messageCall(bot, payload, call);
+}
+
+export function transformSharedClientTheme(bot: Bot, payload: DiscordSharedClientTheme): SharedClientTheme {
+  const props = bot.transformers.desiredProperties.sharedClientTheme;
+  const theme = {} as SetupDesiredProps<SharedClientTheme, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.colors && payload.colors) theme.colors = payload.colors;
+  if (props.baseMix && payload.base_mix) theme.baseMix = payload.base_mix;
+  if (props.gradientAngle && payload.gradient_angle) theme.gradientAngle = payload.gradient_angle;
+  if (props.baseTheme && payload.base_theme) theme.baseTheme = payload.base_theme;
+
+  return bot.transformers.customizers.sharedClientTheme(bot, payload, theme);
 }

@@ -59,6 +59,7 @@ import type {
   DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
+  DiscordSharedClientTheme,
   DiscordSku,
   DiscordSoundboardSound,
   DiscordStageInstance,
@@ -123,6 +124,7 @@ import {
   transformMessageInteractionMetadata,
   transformMessagePin,
   transformMessageSnapshot,
+  transformSharedClientTheme,
 } from './transformers/message.js';
 import { transformGuildOnboarding, transformGuildOnboardingPrompt, transformGuildOnboardingPromptOption } from './transformers/onboarding.js';
 import { transformPoll, transformPollMedia } from './transformers/poll.js';
@@ -209,6 +211,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SharedClientTheme,
   Sku,
   SoundboardSound,
   StageInstance,
@@ -301,6 +304,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   roleColors: TransformerFunction<TProps, TBehavior, DiscordRoleColors, RoleColors>;
   scheduledEvent: TransformerFunction<TProps, TBehavior, DiscordScheduledEvent, ScheduledEvent>;
   scheduledEventRecurrenceRule: TransformerFunction<TProps, TBehavior, DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule>;
+  sharedClientTheme: TransformerFunction<TProps, TBehavior, DiscordSharedClientTheme, SharedClientTheme>;
   sku: TransformerFunction<TProps, TBehavior, DiscordSku, Sku>;
   soundboardSound: TransformerFunction<TProps, TBehavior, DiscordSoundboardSound, SoundboardSound>;
   stageInstance: TransformerFunction<TProps, TBehavior, DiscordStageInstance, StageInstance>;
@@ -410,6 +414,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       roleColors: _options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: _options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: _options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sharedClientTheme: _options.customizers?.sharedClientTheme ?? defaultCustomizer,
       sku: _options.customizers?.sku ?? defaultCustomizer,
       soundboardSound: _options.customizers?.soundboardSound ?? defaultCustomizer,
       stageInstance: _options.customizers?.stageInstance ?? defaultCustomizer,
@@ -502,6 +507,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     roleColors: _options.roleColors ?? transformRoleColors,
     scheduledEvent: _options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: _options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sharedClientTheme: _options.sharedClientTheme ?? transformSharedClientTheme,
     sku: _options.sku ?? transformSku,
     soundboardSound: _options.soundboardSound ?? transformSoundboardSound,
     snowflake: _options.snowflake ?? snowflakeToBigint,

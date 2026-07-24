@@ -21,6 +21,7 @@ import type {
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordBaseTheme,
   DiscordEntitlementType,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPromptType,
@@ -1269,6 +1270,8 @@ export interface Message {
   poll?: Poll;
   /** The call associated with the message */
   call?: MessageCall;
+  /** The custom client-side theme shared via the message */
+  sharedClientTheme: SharedClientTheme;
   /** Holds all the boolean values on this message. */
   bitfield?: ToggleBitfield;
   /** Whether this message has been published to subscribed channels (via Channel Following) */
@@ -1407,6 +1410,17 @@ export interface MessagePin {
   pinnedAt: number;
   /** the pinned message */
   message: Message;
+}
+
+export interface SharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradientAngle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  baseMix: number;
+  /** The mode of the theme */
+  baseTheme?: DiscordBaseTheme;
 }
 
 export interface Reaction {
