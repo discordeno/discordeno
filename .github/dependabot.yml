@@ -16,10 +16,6 @@ updates:
       # Check for updates to GitHub Actions every month
       interval: 'weekly'
   - package-ecosystem: 'npm'
-    directory: '/docker-apps/rest-passthrough'
-    schedule:
-      interval: 'weekly'
-  - package-ecosystem: 'npm'
     directory: '/website'
     schedule:
       interval: 'weekly'
