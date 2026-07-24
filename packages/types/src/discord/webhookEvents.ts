@@ -1,10 +1,10 @@
 /** Types for: https://docs.discord.com/developers/events/webhook-events */
 
-import type { DiscordApplicationIntegrationType } from './application.js';
+import type { DiscordApplication, DiscordApplicationIntegrationType } from './application.js';
 import type { DiscordChannel } from './channel.js';
 import type { DiscordEntitlement } from './entitlement.js';
 import type { DiscordGuild } from './guild.js';
-import type { DiscordMessage, MessageFlags, MessageTypes } from './message.js';
+import type { DiscordMessage, DiscordMessageActivity, MessageFlags, MessageTypes } from './message.js';
 import type { OAuth2Scope } from './oauth2.js';
 import type { DiscordUser } from './user.js';
 
@@ -125,13 +125,13 @@ export interface DiscordEventWebhookLobbyMessageDeleteBody {
 }
 
 /** https://docs.discord.com/developers/events/webhook-events#game-direct-message-create-game-direct-message-create-structure */
-export type DiscordEventWebhookGameDirectMessageCreateBody = DiscordSocialSDKMessage | DiscordSocialSDKPassthroughMessage;
+export type DiscordEventWebhookGameDirectMessageCreateBody = DiscordSocialSDKMessage | DiscordSocialSDKDmMessage;
 
 /** https://docs.discord.com/developers/events/webhook-events#game-direct-message-update-game-direct-message-update-structure */
-export type DiscordEventWebhookGameDirectMessageUpdateBody = DiscordSocialSDKMessage | DiscordSocialSDKPassthroughMessage;
+export type DiscordEventWebhookGameDirectMessageUpdateBody = DiscordSocialSDKMessage | DiscordSocialSDKDmMessage;
 
 /** https://docs.discord.com/developers/events/webhook-events#game-direct-message-delete-game-direct-message-delete-structure */
-export type DiscordEventWebhookGameDirectMessageDeleteBody = DiscordSocialSDKMessage | DiscordSocialSDKPassthroughMessage;
+export type DiscordEventWebhookGameDirectMessageDeleteBody = DiscordSocialSDKMessage | DiscordSocialSDKDmMessage;
 
 /** https://docs.discord.com/developers/events/webhook-events#lobby-message-object-lobby-message-structure */
 export interface DiscordSocialSDKLobbyMessage {
@@ -167,18 +167,14 @@ export interface DiscordSocialSDKMessage extends DiscordMessage {
   channel: DiscordChannel;
 }
 
-/** https://docs.discord.com/developers/events/webhook-events#passthrough-message-object-passthrough-message-structure */
-export interface DiscordSocialSDKPassthroughMessage {
+/** https://docs.discord.com/developers/events/webhook-events#sdk-dm-object-sdk-dm-structure */
+export interface DiscordSocialSDKDmMessage {
   /** ID of the message */
   id: string;
   /** Type of message */
   type: MessageTypes;
   /** Contents of the message */
   content: string;
-  /** ID of the channel the message was sent in */
-  channel_id: string;
-  /** ID of the message recipient */
-  recipient_id: string;
   /** Author of the message */
   author: DiscordUser;
   /** Message flags combined as a bitfield
@@ -190,4 +186,8 @@ export interface DiscordSocialSDKPassthroughMessage {
   application_id: string;
   /** Channel object with recipient information */
   channel: DiscordChannel;
+  /** Sent with Rich Presence-related chat embeds */
+  activity?: DiscordMessageActivity;
+  /** Sent with Rich Presence-related chat embeds */
+  application?: Partial<DiscordApplication>;
 }
