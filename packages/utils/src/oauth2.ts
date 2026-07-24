@@ -3,10 +3,9 @@ import { encodeBase64Url } from './base64.js';
 import { calculateBits } from './permissions.js';
 
 export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
-  const joinedScopeString = options.scope.join('%20');
+  let url = `https://discord.com/oauth2/authorize?client_id=${options.clientId}`;
 
-  let url = `https://discord.com/oauth2/authorize?client_id=${options.clientId}&scope=${joinedScopeString}`;
-
+  if (options.scope) url += `&scope=${options.scope.join('%20')}`;
   if (options.responseType) url += `&response_type=${options.responseType}`;
   if (options.state) url += `&state=${encodeURIComponent(options.state)}`;
   if (options.redirectUri) url += `&redirect_uri=${encodeURIComponent(options.redirectUri)}`;
@@ -66,7 +65,7 @@ export interface CreateOAuth2LinkOptions {
   /** The id of the application */
   clientId: BigString;
   /** The scopes for the application */
-  scope: OAuth2Scope[];
+  scope?: OAuth2Scope[];
   /**
    * The optional state for security
    *
