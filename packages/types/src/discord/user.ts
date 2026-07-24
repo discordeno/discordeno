@@ -156,7 +156,6 @@ export enum DiscordConnectionServiceType {
   PayPal = 'paypal',
   PlayStationNetwork = 'playstation',
   Reddit = 'reddit',
-  RiotGames = 'riotgames',
   Roblox = 'roblox',
   Spotify = 'spotify',
   Skype = 'skype',
