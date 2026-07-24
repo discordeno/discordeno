@@ -113,7 +113,7 @@ export interface ModifyChannel {
    */
   rateLimitPerUser?: number | null;
   /**
-   * The bitrate (in bits) of the voice or stage channel
+   * The bitrate (in bits per second) of the voice or stage channel
    *
    * @remarks
    * Minimum of 8000 bits
