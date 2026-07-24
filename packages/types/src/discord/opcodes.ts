@@ -182,7 +182,7 @@ export enum HTTPJsonErrorCodes {
   AnnouncementRateLimits = 20022,
   /** Under minimum age */
   UnderMinimumAge = 20024,
-  /** The channel you are writing has hit the write rate limit */
+  /** The write action you are performing on the channel has hit the write rate limit */
   ChannelWriteRateLimit = 20028,
   /** The write action you are performing on the server has hit the write rate limit */
   ServerWriteRateLimit = 20029,
