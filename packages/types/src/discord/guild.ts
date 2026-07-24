@@ -7,7 +7,7 @@ import type { DiscordInvite } from './invite.js';
 import type { OAuth2Scope } from './oauth2.js';
 import type { DiscordRole } from './permissions.js';
 import type { DiscordSticker } from './sticker.js';
-import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
+import type { DiscordAvatarDecorationData, DiscordCollectibles, DiscordUser } from './user.js';
 
 /** https://docs.discord.com/developers/resources/guild#guild-object-guild-structure */
 export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
@@ -361,6 +361,8 @@ export interface DiscordMember {
   communication_disabled_until?: string | null;
   /** data for the member's guild avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData | null;
+  /** data for the member's collectibles */
+  collectibles?: DiscordCollectibles | null;
 }
 
 /** https://docs.discord.com/developers/resources/guild#guild-member-object-guild-member-structure */

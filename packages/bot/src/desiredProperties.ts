@@ -520,6 +520,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       communicationDisabledUntil: defaultValue,
       toggles: defaultValue,
       avatarDecorationData: defaultValue,
+      collectibles: defaultValue,
       ...desiredProperties.member,
     },
     message: {

@@ -142,6 +142,7 @@ import {
 import { transformEmbedToDiscordEmbed } from './transformers/reverse/embed.js';
 import { transformMemberToDiscordMember, transformUserToDiscordUser } from './transformers/reverse/member.js';
 import { transformTeamToDiscordTeam } from './transformers/reverse/team.js';
+import { transformCollectiblesToDiscordCollectibles, transformNameplateToDiscordNameplate } from './transformers/reverse/user.js';
 import { transformRole, transformRoleColors } from './transformers/role.js';
 import { transformScheduledEvent, transformScheduledEventRecurrenceRule } from './transformers/scheduledEvent.js';
 import { transformSku } from './transformers/sku.js';
@@ -336,10 +337,12 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
     applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
     applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice;
     attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment;
+    collectibles: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Collectibles, TProps, TBehavior>) => DiscordCollectibles;
     component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse;
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed;
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem;
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember;
+    nameplate: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Nameplate, TProps, TBehavior>) => DiscordNameplate;
     snowflake: (snowflake: BigString) => string;
     team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam;
     unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: UnfurledMediaItem) => DiscordUnfurledMediaItem;
@@ -440,10 +443,12 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       applicationCommandOptionChoice:
         _options.reverse?.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
       attachment: _options.reverse?.attachment ?? transformAttachmentToDiscordAttachment,
+      collectibles: _options.reverse?.collectibles ?? transformCollectiblesToDiscordCollectibles,
       component: _options.reverse?.component ?? transformComponentToDiscordComponent,
       embed: _options.reverse?.embed ?? transformEmbedToDiscordEmbed,
       mediaGalleryItem: _options.reverse?.mediaGalleryItem ?? transformMediaGalleryItemToDiscordMediaGalleryItem,
       member: _options.reverse?.member ?? transformMemberToDiscordMember,
+      nameplate: _options.reverse?.nameplate ?? transformNameplateToDiscordNameplate,
       snowflake: _options.reverse?.snowflake ?? bigintToSnowflake,
       team: _options.reverse?.team ?? transformTeamToDiscordTeam,
       unfurledMediaItem: _options.reverse?.unfurledMediaItem ?? transformUnfurledMediaItemToDiscordUnfurledMediaItem,
