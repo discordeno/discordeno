@@ -151,6 +151,7 @@ export interface ActivityLocation {
 
 export interface Application {
   flags?: ApplicationFlags;
+  flagsNew?: ToggleBitfield;
   icon?: bigint;
   rpcOrigins?: string[];
   termsOfServiceUrl?: string;
