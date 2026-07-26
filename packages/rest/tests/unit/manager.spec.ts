@@ -2,7 +2,7 @@ import { use as chaiUse, expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { afterEach, beforeEach, describe, it } from 'mocha';
 import sinon from 'sinon';
-import { createRestManager, MAX_PROXY_CONNECTION_RETRIES } from '../../src/manager.js';
+import { createRestManager } from '../../src/manager.js';
 import type { RestManager } from '../../src/types.js';
 import { fakeToken as token } from '../constants.js';
 
@@ -301,22 +301,23 @@ describe('[rest] manager', () => {
       expect(fetchStub.callCount).to.be.equal(1);
     });
 
-    it('Gives up on a proxy that stays unreachable instead of retrying forever', async () => {
+    it('Stops re-sending after maxProxyConnectionRetryCount when the proxy stays unreachable', async () => {
       // See the comment in "Retries when the proxy cannot be reached" for why queueMicrotask is excluded from faked timers.
       const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
 
       try {
-        // The default, which would keep the request alive forever if the connection retries were not capped
+        // maxRetryCount is Infinity by default, so the request would never fail if it were the only counter
         expect(rest.maxRetryCount).to.be.equal(Infinity);
+        rest.maxProxyConnectionRetryCount = 2;
         fetchStub.rejects(new TypeError('fetch failed'));
 
         const promise = rest.makeRequest('GET', '/gateway/bot');
-        // Advance past every backoff, plus one more in case the retries are not capped
-        await clock.tickAsync(250 * (MAX_PROXY_CONNECTION_RETRIES + 1));
+        // Advance past every backoff, plus one more in case the request is re-sent again
+        await clock.tickAsync(250 * 3);
 
         const error = await expect(promise).to.eventually.be.rejectedWith(Error);
         expect(error.message).to.be.equal('[999] The proxy could not be reached.');
-        expect(fetchStub.callCount).to.be.equal(MAX_PROXY_CONNECTION_RETRIES + 1);
+        expect(fetchStub.callCount).to.be.equal(3);
       } finally {
         clock.restore();
       }
