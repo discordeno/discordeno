@@ -39,7 +39,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   nsfw?: boolean;
   /** The id of the last message sent in this channel (may not point to an existing or valid message or thread) */
   last_message_id?: string | null;
-  /** The bitrate (in bits) of the voice or stage channel */
+  /** The bitrate (in bits per second) of the voice or stage channel */
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   user_limit?: number;
