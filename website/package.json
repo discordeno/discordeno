@@ -27,21 +27,21 @@
     "@mdx-js/react": "^3.1.1",
     "@xyflow/react": "^12.11.2",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.7",
-    "react-dom": "19.2.7"
+    "react": "^19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.5",
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
-    "@types/react": "^19.2.14",
-    "turbo": "^2.10.5",
+    "@types/react": "^19.2.17",
+    "turbo": "^2.10.6",
     "typescript": "6.0.3",
-    "webpack": "5.108.4"
+    "webpack": "5.109.0"
   },
   "resolutions": {
-    "@types/react": "^19.2.7"
+    "@types/react": "^19.2.8"
   },
   "browserslist": {
     "production": [
