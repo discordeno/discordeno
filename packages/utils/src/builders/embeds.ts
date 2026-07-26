@@ -4,7 +4,6 @@ import type {
   DiscordEmbedField,
   DiscordEmbedFooter,
   DiscordEmbedImage,
-  DiscordEmbedThumbnail,
   DiscordEmbedVideo,
 } from '@discordeno/types';
 
@@ -253,10 +252,10 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * Set the thumbnail of the current embed.
    *
    * @param {string} url - URL of the image
-   * @param {?Omit<DiscordEmbedThumbnail, 'url'>} [options]
+   * @param {?Omit<DiscordEmbedImage, 'url'>} [options]
    * @returns {EmbedsBuilder}
    */
-  setThumbnail(url: string, options?: Omit<DiscordEmbedThumbnail, 'url'>): this {
+  setThumbnail(url: string, options?: Omit<DiscordEmbedImage, 'url'>): this {
     this.#currentEmbed.thumbnail = {
       ...this.#currentEmbed.thumbnail,
       ...options,
