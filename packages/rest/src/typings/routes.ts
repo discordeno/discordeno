@@ -6,6 +6,7 @@ import type {
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
+  GetLobbyMessages,
   GetMessagesOptions,
   GetPollAnswerVotes,
   GetReactions,
@@ -316,6 +317,12 @@ export interface RestRoutes {
     leave: (lobbyId: BigString) => string;
     /** Route to link a lobby */
     link: (lobbyId: BigString) => string;
+    /** Route to lobby messages */
+    messages: (lobbyId: BigString, options?: GetLobbyMessages) => string;
+    /** Route to invite self to the lobby's linked channel */
+    inviteSelf: (lobbyId: BigString) => string;
+    /** Route to invite a specific user to the lobby's linked channel */
+    inviteUser: (lobbyId: BigString, userId: BigString) => string;
   };
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string;

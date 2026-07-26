@@ -24,6 +24,7 @@ import type {
   CreateGuildStickerOptions,
   CreateLobby,
   CreateMessageOptions,
+  CreateOrJoinLobby,
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
@@ -66,7 +67,9 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -112,6 +115,7 @@ import type {
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
+  GetLobbyMessages,
   GetMessagesOptions,
   GetPollAnswerVotes,
   GetReactions,
@@ -146,6 +150,7 @@ import type {
   ScheduledEventEntityType,
   ScheduledEventStatus,
   SearchMembers,
+  SendLobbyMessage,
   SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
@@ -3207,6 +3212,18 @@ export interface RestManager {
    */
   createLobby: (options: CreateLobby) => Promise<Camelize<DiscordLobby>>;
   /**
+   * Creates a new lobby for the application identified by a `secret`, or joins the calling user to the existing lobby with that secret if one already exists.
+   *
+   * Updates lobby metadata and the calling member's metadata on join.
+   *
+   * @param options - The options to create or join the lobby
+   * @returns - The created or joined lobby
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   */
+  createOrJoinLobby: (options: CreateOrJoinLobby) => Promise<Camelize<DiscordLobby>>;
+  /**
    * Returns a lobby object for the specified lobby id, if it exists.
    *
    * @param lobbyId - The ID of the lobby to get
@@ -3281,6 +3298,62 @@ export interface RestManager {
    * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
    */
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<Camelize<DiscordLobby>>;
+  /**
+   * Sends a message to the specified lobby. The calling user must be a member of the lobby.
+   *
+   * @param bearerToken - The access token of the user
+   * @param lobbyId - The ID of the lobby to send the message to
+   * @param options - The options to send the message
+   * @returns Returns the created lobby message object.
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   *
+   * If the lobby has a linked channel, the message is also forwarded to that channel.
+   * If forwarding fails (for example, due to AutoMod), the lobby message is still delivered to other lobby members.
+   */
+  sendLobbyMessage: (bearerToken: string, lobbyId: BigString, options: SendLobbyMessage) => Promise<Camelize<DiscordLobbyMessage>>;
+  /**
+   * Returns the most recent messages in the specified lobby. The calling user must be a member of the lobby.
+   *
+   * @param bearerToken - The access token of the user
+   * @param lobbyId - The ID of the lobby to get the messages from
+   * @param options - The options to get the messages
+   * @returns Returns an array of lobby message objects
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   */
+  getLobbyMessages: (bearerToken: string, lobbyId: BigString, options?: GetLobbyMessages) => Promise<Camelize<DiscordLobbyMessage>[]>;
+  /**
+   * Creates a single-use guild invite to the lobby's linked channel, targeted at the calling user.
+   *
+   *
+   * @param bearerToken - The access token of the user
+   * @param lobbyId - The ID of the lobby to create the invite for
+   * @returns The created invite object
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   *
+   * The lobby must have a linked channel and the caller must be a member of the lobby.
+   * The invite expires after one hour.
+   */
+  createLobbyChannelInviteForSelf: (bearerToken: string, lobbyId: BigString) => Promise<Camelize<DiscordLobbyInvite>>;
+  /**
+   * Creates a single-use guild invite to the lobby's linked channel on behalf of an application, targeted at the specified user.
+   *
+   * @param lobbyId - The ID of the lobby to create the invite for
+   * @param userId - The ID of the user to create the invite for
+   * @returns The created invite object
+   *
+   * @remarks
+   * Uses `Bot` token for authorization
+   *
+   * The lobby must have a linked channel.
+   * The invite expires after one hour.
+   */
+  createLobbyChannelInviteForUser: (lobbyId: BigString, userId: BigString) => Promise<Camelize<DiscordLobbyInvite>>;
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
