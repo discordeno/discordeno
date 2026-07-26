@@ -485,7 +485,7 @@ export interface DiscordAttachment {
   width?: number | null;
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean;
-  /** The duration of the audio file for a voice message */
+  /** The duration of the audio or video file */
   duration_secs?: number;
   /** A base64 encoded bytearray representing a sampled waveform for a voice message */
   waveform?: string;

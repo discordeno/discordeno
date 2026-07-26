@@ -2,10 +2,10 @@
 
 import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js';
 import type { TargetTypes } from '../discord/invite.js';
-import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js';
+import type { DiscordEmbed, MessageFlags } from '../discord/message.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { MessageComponents } from './components.js';
-import type { AllowedMentions } from './message.js';
+import type { AllowedMentions, AttachmentRequest } from './message.js';
 import type { FileContent } from './reference.js';
 
 /** https://docs.discord.com/developers/resources/channel#overwrite-object-overwrite-structure */
@@ -372,8 +372,8 @@ export interface ForumAndMediaThreadMessage {
   components?: MessageComponents;
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: BigString[];
-  /** Attachment objects with `filename` and `description` */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
+  /** Metadata for the attachments */
+  attachments?: Partial<AttachmentRequest>[];
   /**
    * Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set
    *
