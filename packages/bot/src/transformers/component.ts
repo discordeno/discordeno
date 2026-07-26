@@ -456,6 +456,7 @@ function transformFileUploadComponent(bot: Bot, payload: DiscordFileUploadCompon
     if (props.minValues && payload.min_values) fileUpload.minValues = payload.min_values;
     if (props.maxValues && payload.max_values) fileUpload.maxValues = payload.max_values;
     if (props.required && payload.required) fileUpload.required = payload.required;
+    if (props.fileTypes && payload.file_types) fileUpload.fileTypes = payload.file_types;
   }
 
   return fileUpload;
