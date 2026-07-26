@@ -110,7 +110,7 @@ jobs:
       - name: Upload coverage report to codecov
         shell: bash
         run: |
-          CC_FLAGS="--disable-search --fail-on-error --git-service github"
+          CC_FLAGS="--disable-search --git-service github"
 
           if [ -n "${{ github.event.pull_request.head.sha }}" ]; then
             CC_FLAGS+=" --sha ${{ github.event.pull_request.head.sha }}"
@@ -212,7 +212,7 @@ jobs:
       - name: Upload coverage report to codecov
         shell: bash
         run: |
-          CC_FLAGS="--disable-search --fail-on-error --git-service github"
+          CC_FLAGS="--disable-search --git-service github"
 
           if [ -n "${{ github.event.pull_request.head.sha }}" ]; then
             CC_FLAGS+=" --sha ${{ github.event.pull_request.head.sha }}"
@@ -281,7 +281,7 @@ jobs:
       - name: Upload coverage report to codecov
         shell: bash
         run: |
-          CC_FLAGS="--disable-search --fail-on-error --git-service github"
+          CC_FLAGS="--disable-search --git-service github"
 
           if [ -n "${{ github.event.pull_request.head.sha }}" ]; then
             CC_FLAGS+=" --sha ${{ github.event.pull_request.head.sha }}"
