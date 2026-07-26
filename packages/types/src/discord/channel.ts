@@ -181,6 +181,14 @@ export enum ChannelFlags {
   RequireTag = 1 << 4,
   /** When set hides the embedded media download options. Available only for media channels. */
   HideMediaDownloadOptions = 1 << 15,
+  /**
+   * This channel is a Spoiler Channel i.e. users must opt in to view its contents.
+   *
+   * @remarks
+   * Can be set on all textual guild channels and voice channels (not `GUILD_STAGE`).
+   * Can only be set if channel's `nsfw` is false
+   */
+  IsSpoilerChannel = 1 << 21,
 }
 
 /** https://docs.discord.com/developers/resources/channel#channel-object-sort-order-types */

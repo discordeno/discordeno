@@ -178,11 +178,7 @@ export interface ModifyChannel {
    * Channel flags combined as a bitfield.
    *
    * @remarks
-   * - `REQUIRE_TAG` is supported only by {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels.
-   * - `HIDE_MEDIA_DOWNLOAD_OPTIONS` is supported only by {@link ChannelTypes.GuildMedia} channels
-   * - `PINNED` can only be set for threads in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
-   *
-   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildMedia}, {@link ChannelTypes.GuildForum} or a thread.
    *
    * @see {@link ChannelFlags}
    */
