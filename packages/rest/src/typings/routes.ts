@@ -17,6 +17,7 @@ import type {
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
   ListThreadMembers,
+  SearchGuildMessagesOptions,
 } from '@discordeno/types';
 
 export interface RestRoutes {
@@ -121,6 +122,8 @@ export interface RestRoutes {
   };
   /** Routes for guild related endpoints. */
   guilds: {
+    /** Route for searching a guild's messages. */
+    messagesSearch: (guildId: BigString, options?: SearchGuildMessagesOptions) => string;
     /** Routes for handling a non-specific guild. */
     all: () => string;
     /** Route for fetching an user guilds. Requires `guilds` OAuth2 scope */

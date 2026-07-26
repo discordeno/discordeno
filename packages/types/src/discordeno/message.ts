@@ -70,6 +70,57 @@ export interface GetMessagesAfter extends GetMessagesLimit {
 /** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;
 
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
+export type SearchGuildMessagesAuthorType = 'user' | 'bot' | 'webhook' | '-user' | '-bot' | '-webhook';
+export type SearchGuildMessagesHas =
+  | 'image'
+  | 'sound'
+  | 'video'
+  | 'file'
+  | 'sticker'
+  | 'embed'
+  | 'link'
+  | 'poll'
+  | 'snapshot'
+  | '-image'
+  | '-sound'
+  | '-video'
+  | '-file'
+  | '-sticker'
+  | '-embed'
+  | '-link'
+  | '-poll'
+  | '-snapshot';
+export type SearchGuildMessagesEmbedType = 'image' | 'video' | 'gif' | 'sound' | 'article';
+
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
+export interface SearchGuildMessagesOptions {
+  limit?: number;
+  offset?: number;
+  maxId?: BigString;
+  minId?: BigString;
+  slop?: number;
+  content?: string;
+  channelId?: BigString[];
+  authorType?: SearchGuildMessagesAuthorType[];
+  authorId?: BigString[];
+  mentions?: BigString[];
+  mentionsRoleId?: BigString[];
+  mentionEveryone?: boolean;
+  repliedToUserId?: BigString[];
+  repliedToMessageId?: BigString[];
+  pinned?: boolean;
+  has?: SearchGuildMessagesHas[];
+  embedType?: SearchGuildMessagesEmbedType[];
+  embedProvider?: string[];
+  linkHostname?: string[];
+  attachmentFilename?: string[];
+  attachmentExtension?: string[];
+  sortBy?: 'timestamp' | 'relevance';
+  sortOrder?: 'asc' | 'desc';
+  includeNsfw?: boolean;
+}
+
 /** https://docs.discord.com/developers/resources/message#create-message-jsonform-params */
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */

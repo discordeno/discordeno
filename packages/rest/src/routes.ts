@@ -1,4 +1,4 @@
-import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/types';
+import type { GetMessagesOptions, GetScheduledEventUsers, SearchGuildMessagesOptions } from '@discordeno/types';
 import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils';
 import type { RestRoutes } from './typings/routes.js';
 
@@ -267,6 +267,18 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
     // Guild Endpoints
     guilds: {
+      messagesSearch: (guildId, options?: SearchGuildMessagesOptions) => {
+        const params = new URLSearchParams();
+        if (options) {
+          for (const [key, value] of Object.entries(options)) {
+            if (value === undefined) continue;
+            const queryKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+            for (const item of Array.isArray(value) ? value : [value]) params.append(queryKey, String(item));
+          }
+        }
+        const query = params.toString();
+        return `/guilds/${encode(guildId)}/messages/search${query ? `?${query}` : ''}`;
+      },
       all: () => {
         return '/guilds';
       },

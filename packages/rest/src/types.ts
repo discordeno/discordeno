@@ -73,6 +73,8 @@ import type {
   DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
+  DiscordSearchGuildMessages,
+  DiscordSearchGuildMessagesIndexing,
   DiscordSku,
   DiscordSoundboardSound,
   DiscordStageInstance,
@@ -145,6 +147,7 @@ import type {
   ModifyWebhook,
   ScheduledEventEntityType,
   ScheduledEventStatus,
+  SearchGuildMessagesOptions,
   SearchMembers,
   SendSoundboardSound,
   StartThreadWithMessage,
@@ -2070,6 +2073,12 @@ export interface RestManager {
    * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-messages}
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Camelize<DiscordMessage>[]>;
+  /** Search messages in a guild. Requires `READ_MESSAGE_HISTORY` and is restricted by the `MESSAGE_CONTENT` intent.
+   * @see {@link https://docs.discord.com/developers/resources/message#search-guild-messages} */
+  searchGuildMessages: (
+    guildId: BigString,
+    options?: SearchGuildMessagesOptions,
+  ) => Promise<Camelize<DiscordSearchGuildMessages | DiscordSearchGuildMessagesIndexing>>;
   /**
    * Returns a sticker pack for the given ID.
    *

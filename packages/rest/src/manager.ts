@@ -42,6 +42,8 @@ import type {
   DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
+  DiscordSearchGuildMessages,
+  DiscordSearchGuildMessagesIndexing,
   DiscordSku,
   DiscordSoundboardSound,
   DiscordStageInstance,
@@ -1431,6 +1433,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options));
     },
 
+    async searchGuildMessages(guildId, options) {
+      return await rest.get<DiscordSearchGuildMessages | DiscordSearchGuildMessagesIndexing>(rest.routes.guilds.messagesSearch(guildId, options));
+    },
     async getStickerPack(stickerPackId) {
       return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId));
     },

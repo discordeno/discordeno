@@ -113,6 +113,24 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   call?: DiscordMessageCall;
 }
 
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-response-body */
+export interface DiscordSearchGuildMessages {
+  doing_deep_historical_index: boolean;
+  documents_indexed?: number;
+  total_results: number;
+  messages: DiscordMessage[][];
+  threads?: DiscordChannel[];
+  members?: DiscordThreadMember[];
+}
+
+/** https://docs.discord.com/developers/resources/message#search-guild-messages */
+export interface DiscordSearchGuildMessagesIndexing {
+  message: string;
+  code: 110000;
+  documents_indexed: number;
+  retry_after: number;
+}
+
 /** https://docs.discord.com/developers/resources/message#message-object-message-types */
 export enum MessageTypes {
   Default,
