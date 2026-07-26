@@ -2,7 +2,7 @@ import { use as chaiUse, expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { afterEach, beforeEach, describe, it } from 'mocha';
 import sinon from 'sinon';
-import { createRestManager } from '../../src/manager.js';
+import { createRestManager, MAX_PROXY_CONNECTION_RETRIES } from '../../src/manager.js';
 import type { RestManager } from '../../src/types.js';
 import { fakeToken as token } from '../constants.js';
 
@@ -253,10 +253,14 @@ describe('[rest] manager', () => {
     });
 
     it('Does not retry when the attempt times out', async () => {
-      fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
+      const timeoutError = new DOMException('The operation timed out.', 'TimeoutError');
+      fetchStub.rejects(timeoutError);
 
-      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
+      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
       expect(fetchStub.callCount).to.be.equal(1);
+      // The failure is reported with the same error format as a request that is not proxied
+      expect(error.message).to.be.equal(`[999] The request to the proxy timed out after ${rest.requestTimeout}ms.`);
+      expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: timeoutError });
     });
 
     it('Retries when the proxy cannot be reached', async () => {
@@ -295,6 +299,27 @@ describe('[rest] manager', () => {
 
       await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
       expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Gives up on a proxy that stays unreachable instead of retrying forever', async () => {
+      // See the comment in "Retries when the proxy cannot be reached" for why queueMicrotask is excluded from faked timers.
+      const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
+
+      try {
+        // The default, which would keep the request alive forever if the connection retries were not capped
+        expect(rest.maxRetryCount).to.be.equal(Infinity);
+        fetchStub.rejects(new TypeError('fetch failed'));
+
+        const promise = rest.makeRequest('GET', '/gateway/bot');
+        // Advance past every backoff, plus one more in case the retries are not capped
+        await clock.tickAsync(250 * (MAX_PROXY_CONNECTION_RETRIES + 1));
+
+        const error = await expect(promise).to.eventually.be.rejectedWith(Error);
+        expect(error.message).to.be.equal('[999] The proxy could not be reached.');
+        expect(fetchStub.callCount).to.be.equal(MAX_PROXY_CONNECTION_RETRIES + 1);
+      } finally {
+        clock.restore();
+      }
     });
 
     it('Retries a timed out attempt when proxy.retryOnTimeout is enabled', async () => {
@@ -422,8 +447,9 @@ describe('[rest] manager', () => {
     it('Throws for an aborted request in proxy mode without contacting the proxy', async () => {
       const rest = createRestManager({ token, proxy: { baseUrl: 'https://localhost:8000', authorization: token } });
 
-      await expect(rest.makeRequest('GET', '/gateway/bot', { signal: AbortSignal.abort() })).to.eventually.be.rejected;
+      const error = await expect(rest.makeRequest('GET', '/gateway/bot', { signal: AbortSignal.abort() })).to.eventually.be.rejectedWith(Error);
       expect(fetchStub.callCount).to.be.equal(0);
+      expect(error.message).to.be.equal('[999] The request was aborted.');
     });
 
     it('Cancels an in flight request to the proxy when the signal aborts, without retrying it', async () => {

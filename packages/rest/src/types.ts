@@ -232,7 +232,7 @@ export interface CreateRestManagerOptions {
    *
    * When a `proxy` is configured, a timed-out attempt is NOT retried: the proxy keeps processing the request after
    * the timeout aborts our side of the connection (it may simply be queued behind a rate limit), so re-sending it
-   * could execute it twice. Only attempts that failed to reach the proxy at all are retried. If your setup can
+   * could execute it twice. Only attempts that failed to reach the proxy at all are retried, a few times. If your setup can
    * deduplicate re-sent requests, `proxy.retryOnTimeout` opts back into retrying timed-out attempts.
    *
    * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a

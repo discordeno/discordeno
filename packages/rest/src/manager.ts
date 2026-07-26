@@ -74,7 +74,14 @@ import {
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
 import { createRoutes } from './routes.js';
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js';
+import type {
+  CreateRequestBodyOptions,
+  CreateRestManagerOptions,
+  MakeRequestOptions,
+  RestManager,
+  RestRequestRejection,
+  SendRequestOptions,
+} from './types.js';
 
 export const DISCORD_API_VERSION = 10;
 export const DISCORD_API_URL = 'https://discord.com/api';
@@ -86,6 +93,9 @@ export const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global';
 export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
+
+/** How many times a request that never reached the proxy is re-sent before it fails. */
+export const MAX_PROXY_CONNECTION_RETRIES = 3;
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
@@ -101,6 +111,50 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         customInspect: false,
       });
     },
+  };
+
+  // Fills in the error given to the user with the message and cause built from the rejection. The error itself is
+  // created at the call site because of how stack traces get calculated.
+  const fillRequestError = (error: Error, reason: RestRequestRejection): Error => {
+    let errorText: string;
+
+    switch (reason.status) {
+      case 400:
+        errorText = "The options was improperly formatted, or the server couldn't understand it.";
+        break;
+      case 401:
+        errorText = 'The Authorization header was missing or invalid.';
+        break;
+      case 403:
+        errorText = 'The Authorization token you passed did not have permission to the resource.';
+        break;
+      case 404:
+        errorText = "The resource at the location specified doesn't exist.";
+        break;
+      case 405:
+        errorText = 'The HTTP method used is not valid for the location specified.';
+        break;
+      case 429:
+        errorText = "You're being ratelimited.";
+        break;
+      case 502:
+        errorText = 'There was not a gateway available to process your options. Wait a bit and retry.';
+        break;
+      default:
+        errorText = reason.statusText ?? reason.error ?? 'Unknown error';
+    }
+
+    error.message = `[${reason.status}] ${errorText}`;
+
+    // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
+    // https://docs.discord.com/developers/reference#error-messages
+    if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
+      error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
+    }
+
+    error.cause = Object.assign(Object.create(baseErrorPrototype), reason);
+
+    return error;
   };
 
   const rest: RestManager = {
@@ -670,7 +724,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // is expected to handle its own retrying.
         for (let retryCount = 0; ; retryCount++) {
           // The request may have been aborted while waiting out the retry backoff; never send it in that case.
-          if (options?.signal?.aborted) throw options.signal.reason;
+          if (options?.signal?.aborted) {
+            throw fillRequestError(error, { ok: false, status: 999, statusText: 'The request was aborted.', errorObject: options.signal.reason });
+          }
 
           // Give the request to the proxy a hard deadline via `AbortSignal.timeout` (omitted when disabled), so a
           // stalled connection can never hang the caller forever. The caller's signal is handed to fetch too,
@@ -692,26 +748,42 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
             // The caller aborted the request, cancelling the attempt; never retry it, the proxy may have
             // received it already.
-            if (options?.signal?.aborted) throw fetchError;
+            if (options?.signal?.aborted) {
+              throw fillRequestError(error, { ok: false, status: 999, statusText: 'The request was aborted.', errorObject: fetchError });
+            }
 
-            if (retryCount < rest.maxRetryCount) {
-              // The proxy could not be reached, so the request was never processed and is safe to retry.
-              if (!isTimeoutError(fetchError)) {
-                rest.logger.debug(`request to proxy ${url} failed before reaching it, retrying.`, fetchError);
-                // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
-                await delay(250);
-                return undefined;
-              }
-
+            if (isTimeoutError(fetchError)) {
               // A timed-out attempt may still be processed by the proxy, so it is only re-sent when the user
               // opted in with `proxy.retryOnTimeout` because their setup deduplicates requests.
-              if (rest.retryProxiedRequestsOnTimeout) {
+              if (rest.retryProxiedRequestsOnTimeout && retryCount < rest.maxRetryCount) {
                 rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
                 return undefined;
               }
+
+              throw fillRequestError(error, {
+                ok: false,
+                status: 999,
+                statusText: `The request to the proxy timed out after ${rest.requestTimeout}ms.`,
+                errorObject: fetchError,
+              });
             }
 
-            throw fetchError;
+            // The proxy could not be reached, so the request was never processed and is safe to retry. This is
+            // capped separately from `maxRetryCount` because that one defaults to Infinity, and a proxy that
+            // stays down would otherwise keep every request (and its body) alive forever.
+            if (retryCount < Math.min(rest.maxRetryCount, MAX_PROXY_CONNECTION_RETRIES)) {
+              rest.logger.debug(`request to proxy ${url} failed before reaching it, retrying.`, fetchError);
+              // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
+              await delay(250);
+              return undefined;
+            }
+
+            throw fillRequestError(error, {
+              ok: false,
+              status: 999,
+              statusText: 'The proxy could not be reached.',
+              errorObject: fetchError,
+            });
           });
 
           // If result is undefined, the attempt failed in a retryable way and is being retried.
@@ -726,13 +798,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           });
 
           if (!result.ok) {
-            error.cause = Object.assign(Object.create(baseErrorPrototype), {
-              ok: false,
-              status: result.status,
-              body,
-            });
-
-            throw error;
+            throw fillRequestError(error, { ok: false, status: result.status, statusText: result.statusText, body });
           }
 
           return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
@@ -765,44 +831,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
           reject: (reason) => {
             signal?.removeEventListener('abort', abortListener);
-            let errorText: string;
-
-            switch (reason.status) {
-              case 400:
-                errorText = "The options was improperly formatted, or the server couldn't understand it.";
-                break;
-              case 401:
-                errorText = 'The Authorization header was missing or invalid.';
-                break;
-              case 403:
-                errorText = 'The Authorization token you passed did not have permission to the resource.';
-                break;
-              case 404:
-                errorText = "The resource at the location specified doesn't exist.";
-                break;
-              case 405:
-                errorText = 'The HTTP method used is not valid for the location specified.';
-                break;
-              case 429:
-                errorText = "You're being ratelimited.";
-                break;
-              case 502:
-                errorText = 'There was not a gateway available to process your options. Wait a bit and retry.';
-                break;
-              default:
-                errorText = reason.statusText ?? 'Unknown error';
-            }
-
-            error.message = `[${reason.status}] ${errorText}`;
-
-            // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
-            // https://docs.discord.com/developers/reference#error-messages
-            if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
-              error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
-            }
-
-            error.cause = Object.assign(Object.create(baseErrorPrototype), reason);
-            reject(error);
+            reject(fillRequestError(error, reason));
           },
           runThroughQueue: options?.runThroughQueue,
         };
