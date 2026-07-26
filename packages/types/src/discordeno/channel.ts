@@ -97,7 +97,7 @@ export interface ModifyChannel {
    */
   topic?: string | null;
   /**
-   * Whether the channel is nsfw
+   * Whether the channel is age-restricted
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.

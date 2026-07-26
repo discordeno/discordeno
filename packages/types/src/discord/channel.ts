@@ -35,7 +35,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
    * The limit is max of 4096 characters for GUILD_FORUM channels and a max of 1024 characters for all others channel types
    */
   topic?: string | null;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw?: boolean;
   /** The id of the last message sent in this channel (may not point to an existing or valid message or thread) */
   last_message_id?: string | null;
