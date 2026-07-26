@@ -2073,8 +2073,14 @@ export interface RestManager {
    * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-messages}
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Camelize<DiscordMessage>[]>;
-  /** Search messages in a guild. Requires `READ_MESSAGE_HISTORY` and is restricted by the `MESSAGE_CONTENT` intent.
-   * @see {@link https://docs.discord.com/developers/resources/message#search-guild-messages} */
+  /**
+   * Search messages in a guild.
+   *
+   * @remarks
+   * Requires `READ_MESSAGE_HISTORY` and is restricted by the `MESSAGE_CONTENT` intent.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/message#search-guild-messages}
+   */
   searchGuildMessages: (
     guildId: BigString,
     options?: SearchGuildMessagesOptions,

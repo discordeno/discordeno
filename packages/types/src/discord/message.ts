@@ -115,11 +115,17 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
 
 /** https://docs.discord.com/developers/resources/message#search-guild-messages-response-body */
 export interface DiscordSearchGuildMessages {
+  /** Whether the guild is undergoing a deep historical indexing operation */
   doing_deep_historical_index: boolean;
+  /** The number of documents indexed during the current index operation, if any */
   documents_indexed?: number;
+  /** The total number of results that match the query */
   total_results: number;
+  /** Nested messages that match the query; surrounding context is no longer returned */
   messages: DiscordMessage[][];
+  /** The threads that contain the returned messages */
   threads?: DiscordChannel[];
+  /** A thread member object for each returned thread the current user has joined */
   members?: DiscordThreadMember[];
 }
 

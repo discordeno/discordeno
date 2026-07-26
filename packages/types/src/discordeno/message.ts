@@ -71,53 +71,132 @@ export interface GetMessagesAfter extends GetMessagesLimit {
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;
 
 /** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
-export type SearchGuildMessagesAuthorType = 'user' | 'bot' | 'webhook' | '-user' | '-bot' | '-webhook';
-export type SearchGuildMessagesHas =
-  | 'image'
-  | 'sound'
-  | 'video'
-  | 'file'
-  | 'sticker'
-  | 'embed'
-  | 'link'
-  | 'poll'
-  | 'snapshot'
-  | '-image'
-  | '-sound'
-  | '-video'
-  | '-file'
-  | '-sticker'
-  | '-embed'
-  | '-link'
-  | '-poll'
-  | '-snapshot';
-export type SearchGuildMessagesEmbedType = 'image' | 'video' | 'gif' | 'sound' | 'article';
+export enum SearchGuildMessagesAuthorType {
+  /** Return messages sent by user accounts */
+  User = 'user',
+  /** Return messages sent by bot accounts */
+  Bot = 'bot',
+  /** Return messages sent by webhooks */
+  Webhook = 'webhook',
+  /** Exclude messages sent by user accounts */
+  ExcludeUser = '-user',
+  /** Exclude messages sent by bot accounts */
+  ExcludeBot = '-bot',
+  /** Exclude messages sent by webhooks */
+  ExcludeWebhook = '-webhook',
+}
+
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
+export enum SearchGuildMessagesHas {
+  /** Return messages that have an image */
+  Image = 'image',
+  /** Return messages that have a sound attachment */
+  Sound = 'sound',
+  /** Return messages that have a video */
+  Video = 'video',
+  /** Return messages that have an attachment */
+  File = 'file',
+  /** Return messages that have a sent sticker */
+  Sticker = 'sticker',
+  /** Return messages that have an embed */
+  Embed = 'embed',
+  /** Return messages that have a link */
+  Link = 'link',
+  /** Return messages that have a poll */
+  Poll = 'poll',
+  /** Return messages that have a forwarded message */
+  Snapshot = 'snapshot',
+  /** Exclude messages that have an image */
+  ExcludeImage = '-image',
+  /** Exclude messages that have a sound attachment */
+  ExcludeSound = '-sound',
+  /** Exclude messages that have a video */
+  ExcludeVideo = '-video',
+  /** Exclude messages that have an attachment */
+  ExcludeFile = '-file',
+  /** Exclude messages that have a sent sticker */
+  ExcludeSticker = '-sticker',
+  /** Exclude messages that have an embed */
+  ExcludeEmbed = '-embed',
+  /** Exclude messages that have a link */
+  ExcludeLink = '-link',
+  /** Exclude messages that have a poll */
+  ExcludePoll = '-poll',
+  /** Exclude messages that have a forwarded message */
+  ExcludeSnapshot = '-snapshot',
+}
+
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
+export enum SearchGuildMessagesEmbedType {
+  /** Return messages that have an image embed */
+  Image = 'image',
+  /** Return messages that have a video embed */
+  Video = 'video',
+  /** Return messages that have a gifv embed */
+  Gif = 'gif',
+  /** Return messages that have a sound embed */
+  Sound = 'sound',
+  /** Return messages that have an article embed */
+  Article = 'article',
+}
+
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
+export enum SearchGuildMessagesSortBy {
+  /** Sort by message creation time (default) */
+  Timestamp = 'timestamp',
+  /** Sort by relevance to the search query */
+  Relevance = 'relevance',
+}
 
 /** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
 export interface SearchGuildMessagesOptions {
+  /** Max number of messages to return (1-25, default 25) */
   limit?: number;
+  /** Number to offset the returned messages by (max 9975) */
   offset?: number;
+  /** Get messages before this message ID */
   maxId?: BigString;
+  /** Get messages after this message ID */
   minId?: BigString;
+  /** Max number of words to skip between matching tokens in the search content (max 100, default 2) */
   slop?: number;
+  /** Filter messages by content (max 1024 characters) */
   content?: string;
+  /** Filter messages by these channels (max 500) */
   channelId?: BigString[];
+  /** Filter messages by author type */
   authorType?: SearchGuildMessagesAuthorType[];
+  /** Filter messages by these authors (max 100) */
   authorId?: BigString[];
+  /** Filter messages that mention these users (max 100) */
   mentions?: BigString[];
+  /** Filter messages that mention these roles (max 100) */
   mentionsRoleId?: BigString[];
+  /** Filter messages by whether they do or do not mention @everyone */
   mentionEveryone?: boolean;
+  /** Filter messages that reply to these users (max 100) */
   repliedToUserId?: BigString[];
+  /** Filter messages that reply to these messages (max 100) */
   repliedToMessageId?: BigString[];
+  /** Filter messages by whether they are or are not pinned */
   pinned?: boolean;
+  /** Filter messages by whether they have or do not have specific things */
   has?: SearchGuildMessagesHas[];
+  /** Filter messages by embed type */
   embedType?: SearchGuildMessagesEmbedType[];
+  /** Filter messages by embed provider (case-sensitive, max 256 characters, max 100) */
   embedProvider?: string[];
+  /** Filter messages by link hostname (max 256 characters, max 100) */
   linkHostname?: string[];
+  /** Filter messages by attachment filename (max 1024 characters, max 100) */
   attachmentFilename?: string[];
+  /** Filter messages by attachment extension (max 256 characters, max 100) */
   attachmentExtension?: string[];
-  sortBy?: 'timestamp' | 'relevance';
+  /** The sorting algorithm to use */
+  sortBy?: SearchGuildMessagesSortBy;
+  /** The direction to sort (default desc); ignored when sorting by relevance */
   sortOrder?: 'asc' | 'desc';
+  /** Whether to include results from age-restricted channels (default false) */
   includeNsfw?: boolean;
 }
 

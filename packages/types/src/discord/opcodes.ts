@@ -465,6 +465,8 @@ export enum HTTPJsonErrorCodes {
   /** User cannot use burst reactions */
   NoBurstReactions = 90002,
 
+  /** Index not yet available. Try again later */
+  IndexNotAvailable = 110000,
   /** Application not yet available. Try again later */
   AppNotAvailable = 110001,
 
