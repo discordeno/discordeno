@@ -199,7 +199,7 @@ export interface DiscordStringSelectComponent extends DiscordBaseComponent {
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
   /**
-   * The minimum number of items that must be selected.
+   * The minimum number of items that must be chosen.
    *
    * @default 1
    *
@@ -209,7 +209,7 @@ export interface DiscordStringSelectComponent extends DiscordBaseComponent {
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
    */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -335,7 +335,7 @@ export interface DiscordUserSelectComponent extends DiscordBaseComponent {
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
-   * The minimum number of items that must be selected.
+   * The minimum number of items that must be chosen.
    *
    * @default 1
    *
@@ -345,7 +345,7 @@ export interface DiscordUserSelectComponent extends DiscordBaseComponent {
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
    */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -416,7 +416,7 @@ export interface DiscordRoleSelectComponent extends DiscordBaseComponent {
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
-   * The minimum number of items that must be selected.
+   * The minimum number of items that must be chosen.
    *
    * @default 1
    *
@@ -426,7 +426,7 @@ export interface DiscordRoleSelectComponent extends DiscordBaseComponent {
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
    */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -489,7 +489,7 @@ export interface DiscordMentionableSelectComponent extends DiscordBaseComponent 
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
-   * The minimum number of items that must be selected.
+   * The minimum number of items that must be chosen.
    *
    * @default 1
    *
@@ -499,7 +499,7 @@ export interface DiscordMentionableSelectComponent extends DiscordBaseComponent 
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
    */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -570,7 +570,7 @@ export interface DiscordChannelSelectComponent extends DiscordBaseComponent {
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
-   * The minimum number of items that must be selected.
+   * The minimum number of items that must be chosen.
    *
    * @default 1
    *
@@ -580,7 +580,7 @@ export interface DiscordChannelSelectComponent extends DiscordBaseComponent {
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
    */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
