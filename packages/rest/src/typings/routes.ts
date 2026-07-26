@@ -316,6 +316,8 @@ export interface RestRoutes {
     leave: (lobbyId: BigString) => string;
     /** Route to link a lobby */
     link: (lobbyId: BigString) => string;
+    /** Route to bulk update members of a lobby */
+    membersBulk: (lobbyId: BigString) => string;
   };
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string;

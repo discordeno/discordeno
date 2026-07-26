@@ -694,6 +694,10 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       link: (lobbyId) => {
         return `/lobbies/${encode(lobbyId)}/channel-linking`;
       },
+
+      membersBulk: (lobbyId) => {
+        return `/lobbies/${encode(lobbyId)}/members/bulk`;
+      },
     },
 
     applicationEmoji(applicationId, emojiId) {

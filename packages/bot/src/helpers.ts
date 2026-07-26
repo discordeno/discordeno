@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkUpdateLobbyMember,
   Camelize,
   CreateApplicationCommand,
   CreateApplicationEmoji,
@@ -619,6 +620,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     addMemberToLobby: async (lobbyId, userId, options) => {
       return bot.transformers.lobbyMember(bot, snakelize(await bot.rest.addMemberToLobby(lobbyId, userId, options)));
     },
+    bulkUpdateLobbyMembers: async (lobbyId, options) => {
+      return (await bot.rest.bulkUpdateLobbyMembers(lobbyId, options)).map((res) => bot.transformers.lobbyMember(bot, snakelize(res)));
+    },
     linkChannelToLobby: async (lobbyId, bearerToken, options) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.linkChannelToLobby(lobbyId, bearerToken, options)));
     },
@@ -1162,6 +1166,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getLobby: (lobbyId: BigString) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   modifyLobby: (lobbyId: BigString, options: ModifyLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>>;
+  bulkUpdateLobbyMembers: (lobbyId: BigString, options: BulkUpdateLobbyMember[]) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>[]>;
   linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   getTargetUsers: (inviteCode: string) => Promise<string>;

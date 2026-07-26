@@ -1895,6 +1895,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async bulkUpdateLobbyMembers(lobbyId, options) {
+      return await rest.post<DiscordLobbyMember[]>(rest.routes.lobby.membersBulk(lobbyId), {
+        body: options,
+      });
+    },
+
     async removeMemberFromLobby(lobbyId, userId) {
       return await rest.delete(rest.routes.lobby.member(lobbyId, userId));
     },

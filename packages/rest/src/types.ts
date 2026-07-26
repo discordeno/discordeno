@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkUpdateLobbyMember,
   Camelize,
   ChannelTypes,
   CreateApplicationCommand,
@@ -3239,6 +3240,22 @@ export interface RestManager {
    * @returns The lobby member object
    */
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<Camelize<DiscordLobbyMember>>;
+  /**
+   * Adds, updates, or removes up to 25 members from the specified lobby in a single request.
+   *
+   * @param lobbyId - The ID of the lobby to add, update, or remove members from
+   * @param options - The options to add, update, or remove members from the lobby
+   * @returns Returns an array of lobby member objects for the upserted members. Removed members are not included in the response.
+   *
+   * @remarks
+   * Members with `remove_member: false` (the default) are upserted — added if not present, or updated with the provided metadata and flags if already a member. Members with `remove_member: true` are removed.
+   *
+   * Users unknown to Discord will return a 404 UNKNOWN_USER error.
+   * Users that fail permission checks or who have already reached the maximum number of lobbies per application (and are not already a member of this lobby) are silently dropped from the upsert set.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/lobby#bulk-update-lobby-members}
+   */
+  bulkUpdateLobbyMembers: (lobbyId: BigString, options: BulkUpdateLobbyMember[]) => Promise<Camelize<DiscordLobbyMember>[]>;
   /**
    * Removes the provided user from the specified lobby. It is safe to call this even if the user is no longer a member of the lobby, but will fail if the lobby does not exist.
    *
