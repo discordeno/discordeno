@@ -46,7 +46,6 @@ jobs:
   format:
     name: Format
     runs-on: ubuntu-latest
-    needs: build-type-and-test
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -81,118 +80,163 @@ jobs:
       - name: Test Type Test
         run: yarn test:test-type
 
-  # Not using matrix because test later on cant needs a specific job
-  bot-unit-test:
-    name: Bot
+  unit-tests:
+    name: Unit Tests
     needs: [build-dist]
-    uses: ./.github/workflows/unit-test.yml
-    secrets: inherit
-    with:
-      package: bot
-  # https://github.com/orgs/community/discussions/12835
-  #  bot-e2e-test:
-  #    name: Bot
-  #    needs: bot-unit-test
-  #    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
-  #    uses: ./.github/workflows/e2e-test.yml
-  #    secrets: inherit
-  #    with:
-  #      package: bot
-  bot-other-runtime-test:
-    name: Bot
-    needs: bot-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    secrets: inherit
-    with:
-      package: bot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --immutable
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.5.0
+        with:
+          cache-prefix: turbo-cache-
+      - run: yarn test:unit
+      - name: Download and verify codecov cli
+        run: |
+          curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
 
-  discordeno-unit-test:
-    name: Discordeno
-    needs: [build-dist]
-    uses: ./.github/workflows/unit-test.yml
-    secrets: inherit
-    with:
-      package: discordeno
-  discordeno-other-runtime-test:
-    name: Discordeno
-    needs: discordeno-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    secrets: inherit
-    with:
-      package: discordeno
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
 
-  gateway-unit-test:
-    name: Gateway
-    needs: [build-dist]
-    uses: ./.github/workflows/unit-test.yml
-    secrets: inherit
-    with:
-      package: gateway
-  gateway-integration-test:
-    name: Gateway
-    needs: build-dist
-    uses: ./.github/workflows/integration-test.yml
-    secrets: inherit
-    with:
-      package: gateway
-  gateway-other-runtime-test:
-    name: Gateway
-    needs: [gateway-unit-test]
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    secrets: inherit
-    with:
-      package: gateway
+          shasum -a 256 -c codecov.SHA256SUM
+          sudo chmod +x codecov
+      - name: Upload coverage report to codecov
+        run: |
+          find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
+            sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
 
-  rest-unit-test:
-    name: Rest
-    needs: [build-dist]
-    uses: ./.github/workflows/unit-test.yml
-    secrets: inherit
-    with:
-      package: rest
-  # https://github.com/orgs/community/discussions/12835
-  # rest-e2e-test:
-  #   name: Rest
-  #   needs: rest-unit-test
-  #   if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
-  #   uses: ./.github/workflows/e2e-test.yml
-  #   secrets: inherit
-  #   with:
-  #     package: rest
-  rest-other-runtime-test:
-    name: Rest
-    needs: rest-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    secrets: inherit
-    with:
-      package: rest
+            echo "Uploading $package converage/lcov.info file"
+            ./codecov upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
+              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
+              --file packages/$package/coverage/lcov.info --flag $package-unit --flag $package
+          done
 
-  types-unit-test:
-    name: Types
-    needs: [build-dist]
-    uses: ./.github/workflows/unit-test.yml
-    secrets: inherit
-    with:
-      package: types
-  types-other-runtime-test:
-    name: Types
-    needs: types-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    secrets: inherit
-    with:
-      package: types
+  unit-tests-deno:
+    name: Deno Unit Tests
+    needs: [build-dist, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: yarn
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: 'v2.9.x'
+      - run: yarn install --immutable
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.5.0
+        with:
+          cache-prefix: turbo-cache-
+      - run: yarn test:deno-unit
 
-  utils-unit-test:
-    name: Utils
+  unit-tests-bun:
+    name: Bun Unit Tests
+    needs: [build-dist, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: yarn
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - run: yarn install --immutable
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.5.0
+        with:
+          cache-prefix: turbo-cache-
+      - run: yarn test:bun-unit
+
+  integration-tests:
+    name: Integration Tests
     needs: [build-dist]
-    uses: ./.github/workflows/unit-test.yml
-    secrets: inherit
-    with:
-      package: utils
-  utils-other-runtime-test:
-    name: Utils
-    needs: utils-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    secrets: inherit
-    with:
-      package: utils
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --immutable
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.5.0
+        with:
+          cache-prefix: turbo-cache-
+      - run: yarn test:integration
+      - name: Download and verify codecov cli
+        run: |
+          curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+
+          shasum -a 256 -c codecov.SHA256SUM
+          sudo chmod +x codecov
+      - name: Upload coverage report to codecov
+        run: |
+          find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
+            sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
+
+            echo "Uploading $package converage/lcov.info file"
+            ./codecov upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
+              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
+              --file packages/$package/coverage/lcov.info --flag $package-integration --flag $package
+          done
+
+  e2e-tests:
+    name: E2E Tests
+    needs: [build-dist]
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    concurrency:
+      group: e2e-tests
+      queue: max
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --immutable
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.5.0
+        with:
+          cache-prefix: turbo-cache-
+      - run: yarn test:e2e
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          E2E_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
+      - name: Download and verify codecov cli
+        run: |
+          curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+
+          shasum -a 256 -c codecov.SHA256SUM
+          sudo chmod +x codecov
+      - name: Upload coverage report to codecov
+        run: |
+          find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
+            sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
+
+            echo "Uploading $package converage/lcov.info file"
+            ./codecov upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
+              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
+              --file packages/$package/coverage/lcov.info --flag $package-e2e --flag $package
+          done
