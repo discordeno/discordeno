@@ -46,5 +46,6 @@ export function transformMemberToDiscordMember(bot: Bot, payload: typeof bot.tra
         }
       : undefined,
     user: _payload.user ? bot.transformers.reverse.user(bot, _payload.user) : undefined,
+    banner: _payload.banner ? iconBigintToHash(_payload.banner) : undefined,
   };
 }

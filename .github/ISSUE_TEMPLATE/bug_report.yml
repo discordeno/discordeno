@@ -1,7 +1,7 @@
 name: Bug Report
 description: Found a bug? Help us squash it.
 title: '[Bug]: '
-labels: ['t-bug', 'w-unverified']
+labels: ['t-bug']
 body:
   - type: markdown
     attributes:

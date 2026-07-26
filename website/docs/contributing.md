@@ -186,4 +186,4 @@ This requires you have setup the required environment variables, see above for m
 - If the contribution is relatively small go ahead and do it! If it is a larger change, I would highly recommend you read the guides we have on the website in order to understand our library better before undertaking such a big action.
 - If an issue exists for the contribution you want to make, leave a comment on it so no one else begins working on it as well. If an issue does NOT exist for the contribution, then create an issue first before working on it to get some feedback to decide whether it is worth doing.
 - Formatting and linting will be automatically handled by Husky and lint-staged. However, if it doesn't work you can format and lint by doing `yarn check`
-- If you want to edit a docker app (rest proxy for example), the website or some examples you will need to run `yarn` to install the dependencies of those
+- If you want to edit the website or some examples you will need to run `yarn` in the website/ directory to install the deps

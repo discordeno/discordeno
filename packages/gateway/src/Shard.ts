@@ -3,7 +3,6 @@ import { createInflate, createZstdDecompress, type Inflate, inflateSync, type Zs
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types';
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types';
 import { delay, LeakyBucket, logger } from '@discordeno/utils';
-import NodeWebSocket from 'ws';
 import {
   type ShardEvents,
   type ShardGatewayConfig,
@@ -126,7 +125,7 @@ export class DiscordenoShard {
   async close(code: number, reason: string): Promise<void> {
     this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket with code ${code}.`);
 
-    if (this.socket?.readyState !== NodeWebSocket.OPEN) {
+    if (this.socket?.readyState !== WebSocket.OPEN) {
       this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`);
       return;
     }
@@ -211,12 +210,7 @@ export class DiscordenoShard {
       this.gatewayConfig.compress = false;
     }
 
-    // We check for built-in WebSocket implementations in Bun or Deno, NodeJS v22 has an implementation too but it seems to be less optimized so for now it is better to use the ws npm package
-    const shouldUseBuiltin = Reflect.has(globalThis, 'WebSocket') && (Reflect.has(globalThis, 'Bun') || Reflect.has(globalThis, 'Deno'));
-
-    // @ts-expect-error NodeWebSocket doesn't support "dispatchEvent", and while we don't use it, it is required on the "WebSocket" type
-    const socket: WebSocket = shouldUseBuiltin ? new WebSocket(url) : new NodeWebSocket(url);
-    this.socket = socket;
+    const socket = (this.socket = new WebSocket(url));
 
     // By default WebSocket will give us a Blob, this changes it so that it gives us an ArrayBuffer
     socket.binaryType = 'arraybuffer';
@@ -299,7 +293,7 @@ export class DiscordenoShard {
 
   /** Check whether the connection to Discord is currently open. */
   isOpen(): boolean {
-    return this.socket?.readyState === NodeWebSocket.OPEN;
+    return this.socket?.readyState === WebSocket.OPEN;
   }
 
   /** Attempt to resume the previous shards session with the gateway. */
