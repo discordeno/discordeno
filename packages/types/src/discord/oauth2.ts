@@ -75,6 +75,13 @@ export enum OAuth2Scope {
    */
   Identify = 'identify',
   /**
+   * Allows your app to read a user's Nitro subscription type as defined by `premium_type` on the User object
+   *
+   * @remarks
+   * This scope only available to approved partners to be used
+   */
+  IdentifyPremium = 'identify.premium',
+  /**
    * For local rpc server api access, this allows you to read messages from all client channels
    * (otherwise restricted to channels/guilds your app creates)
    */
