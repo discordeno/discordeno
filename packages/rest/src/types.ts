@@ -232,9 +232,8 @@ export interface CreateRestManagerOptions {
    *
    * When a `proxy` is configured, a timed-out attempt is NOT retried: the proxy keeps processing the request after
    * the timeout aborts our side of the connection (it may simply be queued behind a rate limit), so re-sending it
-   * could execute it twice. Only attempts that failed to reach the proxy at all are retried, up to
-   * {@link RestManager.maxProxyConnectionRetryCount} times. If your setup can deduplicate re-sent requests,
-   * `proxy.retryOnTimeout` opts back into retrying timed-out attempts.
+   * could execute it twice. If your setup can deduplicate re-sent requests, `proxy.retryOnTimeout` opts back into
+   * retrying timed-out attempts.
    *
    * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a
    * large attachment over a slow connection) can legitimately exceed it and be aborted/retried. Raise this value
@@ -276,13 +275,6 @@ export interface RestManager {
   retryProxiedRequestsOnTimeout: boolean;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
-  /**
-   * The maximum amount of times a request that never reached the proxy should be re-sent, bound by `maxRetryCount` when that one is lower. Defaults to 3.
-   *
-   * @remarks
-   * This has its own counter because `maxRetryCount` is Infinity by default, which would keep every request alive for as long as the proxy stays down.
-   */
-  maxProxyConnectionRetryCount: number;
   /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequestsOnTimeout` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
@@ -315,6 +307,8 @@ export interface RestManager {
   changeToDiscordFormat: (obj: any) => any;
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody;
+  /** Fills in the message and the cause of the error that is given to the user when a request fails. The error itself is created by the caller because of how stack traces get calculated. */
+  createRequestError: (error: Error, reason: RestRequestRejection) => Error;
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void;
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
