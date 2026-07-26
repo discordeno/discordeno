@@ -151,6 +151,7 @@ export interface ActivityLocation {
 
 export interface Application {
   flags?: ApplicationFlags;
+  flagsNew?: ToggleBitfield;
   icon?: bigint;
   rpcOrigins?: string[];
   termsOfServiceUrl?: string;
@@ -437,7 +438,7 @@ export interface Channel {
   topic?: string;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
-  /** The bitrate (in bits) of the voice or stage channel */
+  /** The bitrate (in bits per second) of the voice or stage channel */
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   userLimit?: number;
@@ -1826,7 +1827,7 @@ export interface User {
   toggles?: UserToggles;
   /** The user's username, not unique across the platform */
   username: string;
-  /** The user's display name, if it is set. For bots, this is the application name */
+  /** The user's display name, if it is set */
   globalName?: string;
   /** The user's display name based on `globalName` and `username` */
   displayName: string;
