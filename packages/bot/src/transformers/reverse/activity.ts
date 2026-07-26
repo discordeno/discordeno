@@ -1,17 +1,13 @@
-import type { DiscordActivity } from '@discordeno/types';
+import type { DiscordActivity, DiscordActivityAssets } from '@discordeno/types';
 import type { Bot } from '../../bot.js';
-import type { Activity } from '../types.js';
+import type { Activity, ActivityAssets } from '../types.js';
 
-export function transformActivityToDiscordActivity(_bot: Bot, payload: Activity): DiscordActivity {
+export function transformActivityToDiscordActivity(bot: Bot, payload: Activity): DiscordActivity {
   return {
     name: payload.name,
     type: payload.type,
     url: payload.url ?? undefined,
     created_at: payload.createdAt,
-    timestamps: {
-      start: payload.startedAt,
-      end: payload.endedAt,
-    },
     application_id: payload.applicationId?.toString(),
     details: payload.details ?? undefined,
     state: payload.state ?? undefined,
@@ -22,24 +18,27 @@ export function transformActivityToDiscordActivity(_bot: Bot, payload: Activity)
           id: payload.emoji.id?.toString(),
         }
       : undefined,
-    party: {
-      id: payload.partyId,
-      size: payload.partyCurrentSize && payload.partyMaxSize ? [payload.partyCurrentSize, payload.partyMaxSize] : undefined,
-    },
-    assets: {
-      large_image: payload.largeImage,
-      large_text: payload.largeText,
-      small_image: payload.smallImage,
-      small_text: payload.smallText,
-      invite_cover_image: payload.inviteCoverImage,
-    },
-    secrets: {
-      join: payload.join,
-      spectate: payload.spectate,
-      match: payload.match,
-    },
+    assets: payload.assets ? bot.transformers.reverse.activityAssets(bot, payload.assets) : undefined,
+    details_url: payload.detailsUrl ?? undefined,
+    state_url: payload.stateUrl ?? undefined,
+    party: payload.party,
+    timestamps: payload.timestamps,
+    status_display_type: payload.statusDisplayType,
+    secrets: payload.secrets,
     instance: payload.instance,
     flags: payload.flags,
     buttons: payload.buttons,
+  };
+}
+
+export function transformActivityAssetsToDiscordActivityAssets(bot: Bot, payload: ActivityAssets): DiscordActivityAssets {
+  return {
+    large_image: payload.largeImage,
+    large_text: payload.largeText,
+    large_url: payload.largeUrl,
+    small_image: payload.smallImage,
+    small_text: payload.smallText,
+    small_url: payload.smallUrl,
+    invite_cover_image: payload.inviteCoverImage,
   };
 }
