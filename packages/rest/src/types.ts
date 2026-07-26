@@ -2289,6 +2289,9 @@ export interface RestManager {
    * @param userId - The ID of the user to get the voice state from
    * @returns An instance of {@link DiscordVoiceState}.
    *
+   * @remarks
+   * If the specified user is connected to a voice channel, the current user must have permission to connect to the channel.
+   *
    * @see {@link https://docs.discord.com/developers/resources/voice#get-user-voice-state}
    */
   getUserVoiceState: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordVoiceState>>;
