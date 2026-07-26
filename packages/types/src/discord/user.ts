@@ -10,7 +10,7 @@ export interface DiscordUser {
   username: string;
   /** The user's discord-tag */
   discriminator: string;
-  /** The user's display name, if it is set. For bots, this is the application name */
+  /** The user's display name, if it is set */
   global_name: string | null;
   /** The user's avatar hash */
   avatar: string | null;
