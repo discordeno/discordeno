@@ -49,7 +49,7 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
    * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
    */
   mention_channels?: DiscordChannelMention[];
-  /** Any attached files */
+  /** Any attached files that are not referenced in embeds or components */
   attachments: DiscordAttachment[];
   /** Any embedded content */
   embeds: DiscordEmbed[];

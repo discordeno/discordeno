@@ -1,4 +1,0 @@
-name: app-rest-passthrough
-org: discordeno
-packagePath: .
-commitMessageTemplate: 'chore(release): release {{new-version}}'

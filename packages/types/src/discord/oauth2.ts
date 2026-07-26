@@ -27,7 +27,7 @@ export enum OAuth2Scope {
    * Allows your app to upload/update builds for a user's applications
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   ApplicationsBuildsUpload = 'applications.builds.upload',
   /** Allows your app to add commands to a guild - included by default with the `bot` scope */
@@ -53,7 +53,7 @@ export enum OAuth2Scope {
    * Allows your app to see information about the user's DMs and group DMs
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   DMChannelsRead = 'dm_channels.read',
   /** Adds the `email` filed to [/users/@me](https://docs.discord.com/developers/resources/user#get-current-user) */
@@ -93,42 +93,42 @@ export enum OAuth2Scope {
    * For local rpc server access, this allows you to control a user's local Discord client
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   RPC = 'rpc',
   /**
    * For local rpc server access, this allows you to update a user's activity
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   RPCActivitiesWrite = 'rpc.activities.write',
   /**
    * For local rpc server api access, this allows you to receive notifications pushed out to the user
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   RPCNotificationsRead = 'rpc.notifications.read',
   /**
    * For local rpc server access, this allows you to read a user's voice settings and listen for voice events
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   RPCVoiceRead = 'rpc.voice.read',
   /**
    * For local rpc server access, this allows you to update a user's voice settings
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   RPCVoiceWrite = 'rpc.voice.write',
   /**
    * Allows your app to connect to voice on user's behalf and see all the voice members
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope only available to approved partners to be used
    */
   Voice = 'voice',
   /** Generate a webhook that is returned in the oauth token response for authorization code grants */

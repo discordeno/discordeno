@@ -43,7 +43,7 @@ import type {
   EmbedTypes,
   ExplicitContentFilterLevels,
   ForumLayout,
-  GuildNsfwLevel,
+  GuildAgeRestrictionLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
   InteractionCallbackOptions,
@@ -184,6 +184,7 @@ export interface ActivityLocation {
 
 export interface Application {
   flags?: ApplicationFlags;
+  flagsNew?: ToggleBitfield;
   icon?: bigint;
   rpcOrigins?: string[];
   termsOfServiceUrl?: string;
@@ -470,7 +471,7 @@ export interface Channel {
   topic?: string;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
-  /** The bitrate (in bits) of the voice or stage channel */
+  /** The bitrate (in bits per second) of the voice or stage channel */
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   userLimit?: number;
@@ -530,7 +531,7 @@ export interface Channel {
   /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   defaultSortOrder?: SortOrderTypes | null;
   defaultForumLayout?: ForumLayout;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw: boolean;
   /** Thread-specific fields not needed by other channels */
   threadMetadata?: ChannelThreadMetadata;
@@ -879,7 +880,7 @@ export interface Guild {
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximatePresenceCount?: number;
   /** Guild NSFW level */
-  nsfwLevel: GuildNsfwLevel;
+  nsfwLevel: GuildAgeRestrictionLevel;
   /** Whether the guild has the boost progress bar enabled */
   premiumProgressBarEnabled: boolean;
   /** Guild id */
@@ -1859,7 +1860,7 @@ export interface User {
   toggles?: UserToggles;
   /** The user's username, not unique across the platform */
   username: string;
-  /** The user's display name, if it is set. For bots, this is the application name */
+  /** The user's display name, if it is set */
   globalName?: string;
   /** The user's display name based on `globalName` and `username` */
   displayName: string;
