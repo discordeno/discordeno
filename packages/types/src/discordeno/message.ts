@@ -110,7 +110,7 @@ export interface CreateMessageOptions {
 /** https://docs.discord.com/developers/resources/message#get-reactions-query-string-params */
 export interface GetReactions {
   /** The type of reaction */
-  type: DiscordReactionType;
+  type?: DiscordReactionType;
   /** Get users after this user Id */
   after?: string;
   /** Max number of users to return (1-100) */

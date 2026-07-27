@@ -35,11 +35,11 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
    * The limit is max of 4096 characters for GUILD_FORUM channels and a max of 1024 characters for all others channel types
    */
   topic?: string | null;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw?: boolean;
   /** The id of the last message sent in this channel (may not point to an existing or valid message or thread) */
   last_message_id?: string | null;
-  /** The bitrate (in bits) of the voice or stage channel */
+  /** The bitrate (in bits per second) of the voice or stage channel */
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   user_limit?: number;
@@ -181,6 +181,14 @@ export enum ChannelFlags {
   RequireTag = 1 << 4,
   /** When set hides the embedded media download options. Available only for media channels. */
   HideMediaDownloadOptions = 1 << 15,
+  /**
+   * This channel is a Spoiler Channel i.e. users must opt in to view its contents.
+   *
+   * @remarks
+   * Can be set on all textual guild channels and voice channels (not `GUILD_STAGE`).
+   * Can only be set if channel's `nsfw` is false
+   */
+  IsSpoilerChannel = 1 << 21,
 }
 
 /** https://docs.discord.com/developers/resources/channel#channel-object-sort-order-types */
