@@ -28,8 +28,8 @@ export interface DiscordSubscription {
 export enum DiscordSubscriptionStatus {
   /** Subscription is active and scheduled to renew. */
   Active,
-  /** Subscription is active but will not renew. */
-  Ending,
   /** Subscription is inactive and not being charged. */
   Inactive,
+  /** Subscription is active but will not renew. */
+  Ending,
 }
