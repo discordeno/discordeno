@@ -17,6 +17,9 @@ import type {
   DefaultMessageNotificationLevels,
   DiscordActivityInstanceResource,
   DiscordActivityLocationKind,
+  DiscordActivityParty,
+  DiscordActivitySecrets,
+  DiscordActivityTimestamps,
   DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
@@ -33,6 +36,7 @@ import type {
   DiscordScheduledEventRecurrenceRuleNWeekday,
   DiscordScheduledEventRecurrenceRuleWeekday,
   DiscordSkuType,
+  DiscordStatusDisplayType,
   DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
@@ -40,7 +44,7 @@ import type {
   EmbedTypes,
   ExplicitContentFilterLevels,
   ForumLayout,
-  GuildNsfwLevel,
+  GuildAgeRestrictionLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
   InteractionCallbackOptions,
@@ -89,36 +93,65 @@ import type { UserToggles } from './toggles/user.js';
 import type { VoiceStateToggles } from './toggles/voice.js';
 
 export interface Activity {
-  join?: string;
-  flags?: number;
-  applicationId?: bigint;
-  spectate?: string;
-  url?: string;
-  startedAt?: number;
-  endedAt?: number;
-  details?: string;
-  state?: string;
-  emoji?: ActivityEmoji;
-  partyId?: string;
-  partyCurrentSize?: number;
-  partyMaxSize?: number;
-  largeImage?: string;
-  largeText?: string;
-  smallImage?: string;
-  smallText?: string;
-  inviteCoverImage?: string;
-  match?: string;
-  instance?: boolean;
-  buttons?: ActivityButton[];
+  /** The activity's name */
   name: string;
+  /** Activity type */
   type: ActivityTypes;
+  /** Stream url, is validated when type is 1 */
+  url?: string;
+  /** Unix timestamp of when the activity was added to the user's session */
   createdAt: number;
+  /** Unix timestamps for start and/or end of the game */
+  timestamps?: DiscordActivityTimestamps;
+  /** Application id for the game */
+  applicationId?: bigint;
+  /** Controls which field is displayed in the user's status text in the member list */
+  statusDisplayType?: DiscordStatusDisplayType;
+  /** What the player is currently doing */
+  details?: string;
+  /** URL that is linked when clicking on the details text */
+  detailsUrl?: string;
+  /** The user's current party status */
+  state?: string;
+  /** URL that is linked when clicking on the state text */
+  stateUrl?: string;
+  /** The emoji used for a custom status */
+  emoji?: ActivityEmoji;
+  /** Information for the current party of the player */
+  party?: DiscordActivityParty;
+  /** Images for the presence and their hover texts */
+  assets?: ActivityAssets;
+  /** Secrets for Rich Presence joining and spectating */
+  secrets?: DiscordActivitySecrets;
+  /** Whether or not the activity is an instanced game session */
+  instance?: boolean;
+  /** Activity flags `OR`d together, describes what the payload includes */
+  flags?: number;
+  /** The custom buttons shown in the Rich Presence (max 2) */
+  buttons?: ActivityButton[];
 }
 
 export interface ActivityEmoji {
   id?: bigint;
   animated?: boolean;
   name: string;
+}
+
+export interface ActivityAssets {
+  /** The id for a large asset of the activity, usually a snowflake */
+  largeImage?: string;
+  /** Text displayed when hovering over the large image of the activity */
+  largeText?: string;
+  /** URL that is opened when clicking on the large image */
+  largeUrl?: string;
+  /** The id for a small asset of the activity, usually a snowflake */
+  smallImage?: string;
+  /** Text displayed when hovering over the small image of the activity */
+  smallText?: string;
+  /** URL that is opened when clicking on the small image */
+  smallUrl?: string;
+  /** See Activity Asset Image. Displayed as a banner on a Game Invite. */
+  inviteCoverImage?: string;
 }
 
 export interface ActivityButton {
@@ -152,6 +185,7 @@ export interface ActivityLocation {
 
 export interface Application {
   flags?: ApplicationFlags;
+  flagsNew?: ToggleBitfield;
   icon?: bigint;
   rpcOrigins?: string[];
   termsOfServiceUrl?: string;
@@ -438,7 +472,7 @@ export interface Channel {
   topic?: string;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
-  /** The bitrate (in bits) of the voice or stage channel */
+  /** The bitrate (in bits per second) of the voice or stage channel */
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   userLimit?: number;
@@ -470,6 +504,8 @@ export interface Channel {
   defaultAutoArchiveDuration?: number;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions;
+  /**computed permissions for the bot user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately */
+  appPermissions?: Permissions;
   /** The flags of the channel */
   flags?: number;
   /**
@@ -498,7 +534,7 @@ export interface Channel {
   /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   defaultSortOrder?: SortOrderTypes | null;
   defaultForumLayout?: ForumLayout;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw: boolean;
   /** Thread-specific fields not needed by other channels */
   threadMetadata?: ChannelThreadMetadata;
@@ -847,7 +883,7 @@ export interface Guild {
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximatePresenceCount?: number;
   /** Guild NSFW level */
-  nsfwLevel: GuildNsfwLevel;
+  nsfwLevel: GuildAgeRestrictionLevel;
   /** Whether the guild has the boost progress bar enabled */
   premiumProgressBarEnabled: boolean;
   /** Guild id */
@@ -1242,6 +1278,8 @@ export interface Message {
   member?: Member;
   /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
   mentions?: User[];
+  /** The type of channel the message was sent in. Only present when received from the gateway MESSAGE_CREATE event */
+  channelType?: ChannelTypes;
   /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
   mentionedChannelIds?: bigint[];
   /** Roles specifically mentioned in this message */
@@ -1840,7 +1878,7 @@ export interface User {
   toggles?: UserToggles;
   /** The user's username, not unique across the platform */
   username: string;
-  /** The user's display name, if it is set. For bots, this is the application name */
+  /** The user's display name, if it is set */
   globalName?: string;
   /** The user's display name based on `globalName` and `username` */
   displayName: string;
@@ -2066,4 +2104,38 @@ export interface LobbyMember {
   metadata?: Record<string, string>;
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-message-object */
+export interface LobbyMessage {
+  /** id of the message */
+  id: bigint;
+  /** Message type */
+  type: MessageTypes;
+  /** Message content */
+  content: string;
+  /** id of the lobby this message was sent to */
+  lobbyId: bigint;
+  /** Included for compatibility with the messages interface; equal to lobby_id */
+  channelId: bigint;
+  /** The user who sent the message */
+  author: User;
+  /** Dispatch-only metadata sent with the message */
+  metadata?: Record<string, string>;
+  /** Moderation metadata set via Update Lobby Message Moderation Metadata */
+  moderationMetadata?: Record<string, string>;
+  /**
+   * Message flags bitfield
+   *
+   * @see {@link MessageFlags}
+   */
+  flags: ToggleBitfield;
+  /** The application that sent the message */
+  applicationId: bigint;
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */
+export interface LobbyInvite {
+  /** The invite code for the lobby's linked channel */
+  code: string;
 }

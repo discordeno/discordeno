@@ -49,7 +49,7 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
    * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
    */
   mention_channels?: DiscordChannelMention[];
-  /** Any attached files */
+  /** Any attached files that are not referenced in embeds or components */
   attachments: DiscordAttachment[];
   /** Any embedded content */
   embeds: DiscordEmbed[];
@@ -487,7 +487,7 @@ export interface DiscordAttachment {
   width?: number | null;
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean;
-  /** The duration of the audio file for a voice message */
+  /** The duration of the audio or video file */
   duration_secs?: number;
   /** A base64 encoded bytearray representing a sampled waveform for a voice message */
   waveform?: string;

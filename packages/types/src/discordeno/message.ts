@@ -2,7 +2,6 @@
 
 import type {
   AllowedMentionsTypes,
-  DiscordAttachment,
   DiscordBaseTheme,
   DiscordEmbed,
   DiscordMessageReferenceType,
@@ -30,6 +29,41 @@ export interface DiscordenoMessageReference {
   guildId?: BigString;
   /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
   failIfNotExists?: boolean;
+}
+
+/** https://docs.discord.com/developers/resources/message#attachment-object-attachment-request-structure */
+export interface AttachmentRequest {
+  /** Attachment id, for new attachments this must match the `n` in `files[n]` */
+  id: BigString | number;
+  /** Name of file attached */
+  filename?: string;
+  /** The title of the file */
+  title?: string;
+  /**
+   * Description (alt text) for the file
+   *
+   * @remarks
+   * max 1024 characters
+   */
+  description?: string;
+  /**
+   * The duration of the audio or video file
+   *
+   * @remarks
+   * Required for voice messages
+   */
+  durationSecs?: number;
+  /**
+   * Base64 encoded bytearray representing a sampled waveform
+   *
+   * @remarks
+   * Required for voice messages
+   */
+  waweform?: string;
+  /**
+   * Whether the attachment should be marked as a spoiler and blurred until clicked, this sets the `IS_SPOILER` attachment flag
+   */
+  isSpoiler: boolean;
 }
 
 /** https://docs.discord.com/developers/resources/message#allowed-mentions-object-default-settings-for-allowed-mentions */
@@ -83,7 +117,7 @@ export interface GetMessagesAfter extends GetMessagesLimit {
 /** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;
 
-/** https://docs.discord.com/developers/resources/message#create-message-jsonform-params */
+/** https://docs.discord.com/developers/resources/message#create-message-json/form-params */
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string;
@@ -103,8 +137,8 @@ export interface CreateMessageOptions {
   stickerIds?: BigString[];
   /** The contents of the files being sent */
   files?: FileContent[];
-  /** Attachment objects with filename and description */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
+  /** Attached files to keep and their metadata */
+  attachments?: Partial<AttachmentRequest>[];
   /**
    * Message flags combined as a bitfield
    *
@@ -125,14 +159,14 @@ export interface CreateMessageOptions {
 /** https://docs.discord.com/developers/resources/message#get-reactions-query-string-params */
 export interface GetReactions {
   /** The type of reaction */
-  type: DiscordReactionType;
+  type?: DiscordReactionType;
   /** Get users after this user Id */
   after?: string;
   /** Max number of users to return (1-100) */
   limit?: number;
 }
 
-/** https://docs.discord.com/developers/resources/channel#edit-message-json-params */
+/** https://docs.discord.com/developers/resources/channel#edit-message-json/form-params */
 export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null;
@@ -153,8 +187,8 @@ export interface EditMessage {
   components?: MessageComponents;
   /** The contents of the files being sent/edited */
   files?: FileContent[];
-  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
+  /** Attached files to keep and their metadata. */
+  attachments?: Partial<AttachmentRequest>[];
 }
 
 /** https://docs.discord.com/developers/resources/message#get-channel-pins-query-string-params */
