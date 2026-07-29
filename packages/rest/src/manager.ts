@@ -35,7 +35,9 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -1946,6 +1948,44 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.put(rest.routes.lobby.moderationMetadata(lobbyId, messageId), {
         body: options,
       });
+    },
+
+    createOrJoinLobby(options) {
+      return rest.put<DiscordLobby>(rest.routes.lobby.create(), {
+        body: options,
+      });
+    },
+
+    sendLobbyMessage(bearerToken, lobbyId, options) {
+      return rest.post<DiscordLobbyMessage>(rest.routes.lobby.messages(lobbyId), {
+        body: options,
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    getLobbyMessages(bearerToken, lobbyId, options) {
+      return rest.get<DiscordLobbyMessage[]>(rest.routes.lobby.messages(lobbyId, options), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    createLobbyChannelInviteForSelf(bearerToken, lobbyId) {
+      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteSelf(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    createLobbyChannelInviteForUser(lobbyId, userId) {
+      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteUser(lobbyId, userId));
     },
 
     preferSnakeCase(enabled: boolean) {

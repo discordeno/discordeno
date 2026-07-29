@@ -2091,3 +2091,37 @@ export interface LobbyMember {
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
 }
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-message-object */
+export interface LobbyMessage {
+  /** id of the message */
+  id: bigint;
+  /** Message type */
+  type: MessageTypes;
+  /** Message content */
+  content: string;
+  /** id of the lobby this message was sent to */
+  lobbyId: bigint;
+  /** Included for compatibility with the messages interface; equal to lobby_id */
+  channelId: bigint;
+  /** The user who sent the message */
+  author: User;
+  /** Dispatch-only metadata sent with the message */
+  metadata?: Record<string, string>;
+  /** Moderation metadata set via Update Lobby Message Moderation Metadata */
+  moderationMetadata?: Record<string, string>;
+  /**
+   * Message flags bitfield
+   *
+   * @see {@link MessageFlags}
+   */
+  flags: ToggleBitfield;
+  /** The application that sent the message */
+  applicationId: bigint;
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */
+export interface LobbyInvite {
+  /** The invite code for the lobby's linked channel */
+  code: string;
+}

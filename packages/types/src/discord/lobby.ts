@@ -1,6 +1,8 @@
 /** Types for: https://docs.discord.com/developers/resources/lobby */
 
 import type { DiscordChannel } from './channel.js';
+import type { MessageFlags, MessageTypes } from './message.js';
+import type { DiscordUser } from './user.js';
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-object-lobby-structure */
 export interface DiscordLobby {
@@ -30,4 +32,38 @@ export interface DiscordLobbyMember {
 export enum DiscordLobbyMemberFlags {
   /** User can link a text channel to a lobby */
   CanLinkLobby = 1 << 0,
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-message-object */
+export interface DiscordLobbyMessage {
+  /** id of the message */
+  id: string;
+  /** Message type */
+  type: MessageTypes;
+  /** Message content */
+  content: string;
+  /** id of the lobby this message was sent to */
+  lobby_id: string;
+  /** Included for compatibility with the messages interface; equal to lobby_id */
+  channel_id: string;
+  /** The user who sent the message */
+  author: DiscordUser;
+  /** Dispatch-only metadata sent with the message */
+  metadata?: Record<string, string> | null;
+  /** Moderation metadata set via Update Lobby Message Moderation Metadata */
+  moderation_metadata?: Record<string, string> | null;
+  /**
+   * Message flags bitfield
+   *
+   * @see {@link MessageFlags}
+   */
+  flags: number;
+  /** The application that sent the message */
+  application_id: string;
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */
+export interface DiscordLobbyInvite {
+  /** The invite code for the lobby's linked channel */
+  code: string;
 }

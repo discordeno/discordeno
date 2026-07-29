@@ -24,6 +24,7 @@ import type {
   CreateGuildStickerOptions,
   CreateLobby,
   CreateMessageOptions,
+  CreateOrJoinLobby,
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
@@ -70,6 +71,7 @@ import type {
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
+  GetLobbyMessages,
   GetMessagesOptions,
   GetReactions,
   GetScheduledEvents,
@@ -99,6 +101,7 @@ import type {
   ModifyRolePositions,
   ModifyWebhook,
   SearchMembers,
+  SendLobbyMessage,
   SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
@@ -126,7 +129,9 @@ import type {
   InteractionCallbackResponse,
   Invite,
   Lobby,
+  LobbyInvite,
   LobbyMember,
+  LobbyMessage,
   Member,
   Message,
   MessagePin,
@@ -611,6 +616,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     createLobby: async (options) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.createLobby(options)));
     },
+    createOrJoinLobby: async (options) => {
+      return bot.transformers.lobby(bot, snakelize(await bot.rest.createOrJoinLobby(options)));
+    },
     getLobby: async (lobbyId) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.getLobby(lobbyId)));
     },
@@ -631,6 +639,18 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     updateLobbyMessageModerationMetadata: async (lobbyId, messageId, options) => {
       return await bot.rest.updateLobbyMessageModerationMetadata(lobbyId, messageId, options);
+    },
+    sendLobbyMessage: async (bearerToken, lobbyId, options) => {
+      return bot.transformers.lobbyMessage(bot, snakelize(await bot.rest.sendLobbyMessage(bearerToken, lobbyId, options)));
+    },
+    getLobbyMessages: async (bearerToken, lobbyId, options) => {
+      return (await bot.rest.getLobbyMessages(bearerToken, lobbyId, options)).map((res) => bot.transformers.lobbyMessage(bot, snakelize(res)));
+    },
+    createLobbyChannelInviteForSelf: async (bearerToken, lobbyId) => {
+      return bot.transformers.lobbyInvite(bot, snakelize(await bot.rest.createLobbyChannelInviteForSelf(bearerToken, lobbyId)));
+    },
+    createLobbyChannelInviteForUser: async (lobbyId, userId) => {
+      return bot.transformers.lobbyInvite(bot, snakelize(await bot.rest.createLobbyChannelInviteForUser(lobbyId, userId)));
     },
     getTargetUsers: async (inviteCode) => {
       return await bot.rest.getTargetUsers(inviteCode);
@@ -1170,6 +1190,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: Camelize<DiscordApplicationRoleConnectionMetadata>[],
   ) => Promise<Camelize<DiscordApplicationRoleConnectionMetadata>[]>;
   createLobby: (options: CreateLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
+  createOrJoinLobby: (options: CreateOrJoinLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   getLobby: (lobbyId: BigString) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   modifyLobby: (lobbyId: BigString, options: ModifyLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>>;
@@ -1180,6 +1201,18 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getTargetUsers: (inviteCode: string) => Promise<string>;
   updateTargetUsers: (inviteCode: string, targetUsersFile: Blob) => Promise<void>;
   getTargetUsersJobStatus: (inviteCode: string) => Promise<Camelize<DiscordTargetUsersJobStatus>>;
+  sendLobbyMessage: (
+    bearerToken: string,
+    lobbyId: BigString,
+    options: SendLobbyMessage,
+  ) => Promise<SetupDesiredProps<LobbyMessage, TProps, TBehavior>>;
+  getLobbyMessages: (
+    bearerToken: string,
+    lobbyId: BigString,
+    options?: GetLobbyMessages,
+  ) => Promise<SetupDesiredProps<LobbyMessage, TProps, TBehavior>[]>;
+  createLobbyChannelInviteForSelf: (bearerToken: string, lobbyId: BigString) => Promise<SetupDesiredProps<LobbyInvite, TProps, TBehavior>>;
+  createLobbyChannelInviteForUser: (lobbyId: BigString, userId: BigString) => Promise<SetupDesiredProps<LobbyInvite, TProps, TBehavior>>;
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>;
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>;
