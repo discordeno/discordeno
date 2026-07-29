@@ -338,7 +338,7 @@ export function transformSharedClientTheme(bot: Bot, payload: DiscordSharedClien
   if (props.colors && payload.colors) theme.colors = payload.colors;
   if (props.baseMix) theme.baseMix = payload.base_mix;
   if (props.gradientAngle) theme.gradientAngle = payload.gradient_angle;
-  if (props.baseTheme && 'base_theme' in payload) theme.baseTheme = payload.base_theme;
+  if (props.baseTheme && payload.base_theme !== undefined && payload.base_theme !== null) theme.baseTheme = payload.base_theme;
 
   return bot.transformers.customizers.sharedClientTheme(bot, payload, theme);
 }
