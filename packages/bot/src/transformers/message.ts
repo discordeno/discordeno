@@ -199,6 +199,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage, extra?: { sh
   if (props.mentionedRoleIds && payload.mention_roles?.length)
     message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id));
   if (props.mentions && payload.mentions?.length) message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user));
+  if (props.channelType && payload.channel_type) message.channelType = payload.channel_type;
   if (props.messageReference && payload.message_reference) {
     const reference = {} as NonNullable<Message['messageReference']>;
     const messageReferenceProps = bot.transformers.desiredProperties.messageReference;

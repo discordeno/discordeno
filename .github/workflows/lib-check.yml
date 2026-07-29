@@ -20,7 +20,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - name: Build Types
@@ -37,7 +37,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - name: Build Dist
@@ -54,7 +54,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - name: Build Types
@@ -74,7 +74,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - name: Test Type Test
@@ -92,7 +92,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:unit
@@ -108,14 +108,38 @@ jobs:
           shasum -a 256 -c codecov.SHA256SUM
           sudo chmod +x codecov
       - name: Upload coverage report to codecov
+        shell: bash
         run: |
+          CC_FLAGS="--disable-search --git-service github"
+
+          if [ -n "${{ github.event.pull_request.head.sha }}" ]; then
+            CC_FLAGS+=" --sha ${{ github.event.pull_request.head.sha }}"
+          fi
+
+          if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ];
+          then
+            echo "Fork detected"
+            CC_FLAGS+=" --branch ${{ github.event.pull_request.head.label }} --pr ${{ github.event.number }}"
+          fi
+
+          CC_TOKEN=""
+          CC_LOG_TOKEN=""
+          if [ -n "${{ secrets.CODECOV_TOKEN }}" ]; then
+            echo "CODECOV_TOKEN is set, adding to codecov upload-process command"
+            CC_TOKEN+=" --token ${{ secrets.CODECOV_TOKEN }}"
+            CC_LOG_TOKEN+=" --token ***"
+          fi
+
           find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
             sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
 
+            CC_FLAGS+=" --file packages/$package/coverage/lcov.info --flag $package-unit --flag $package"
+
+
             echo "Uploading $package converage/lcov.info file"
-            ./codecov upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
-              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
-              --file packages/$package/coverage/lcov.info --flag $package-unit --flag $package
+            echo "Running \"./codecov upload-process $CC_LOG_TOKEN $CC_FLAGS\""
+
+            ./codecov upload-process $CC_TOKEN $CC_FLAGS
           done
 
   unit-tests-deno:
@@ -133,7 +157,7 @@ jobs:
           deno-version: 'v2.9.x'
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:deno-unit
@@ -153,7 +177,7 @@ jobs:
           bun-version: '1.3.14'
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:bun-unit
@@ -170,7 +194,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:integration
@@ -186,14 +210,38 @@ jobs:
           shasum -a 256 -c codecov.SHA256SUM
           sudo chmod +x codecov
       - name: Upload coverage report to codecov
+        shell: bash
         run: |
+          CC_FLAGS="--disable-search --git-service github"
+
+          if [ -n "${{ github.event.pull_request.head.sha }}" ]; then
+            CC_FLAGS+=" --sha ${{ github.event.pull_request.head.sha }}"
+          fi
+
+          if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ];
+          then
+            echo "Fork detected"
+            CC_FLAGS+=" --branch ${{ github.event.pull_request.head.label }} --pr ${{ github.event.number }}"
+          fi
+
+          CC_TOKEN=""
+          CC_LOG_TOKEN=""
+          if [ -n "${{ secrets.CODECOV_TOKEN }}" ]; then
+            echo "CODECOV_TOKEN is set, adding to codecov upload-process command"
+            CC_TOKEN+=" --token ${{ secrets.CODECOV_TOKEN }}"
+            CC_LOG_TOKEN+=" --token ***"
+          fi
+
           find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
             sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
 
+            CC_FLAGS+=" --file packages/$package/coverage/lcov.info --flag $package-integration --flag $package"
+
+
             echo "Uploading $package converage/lcov.info file"
-            ./codecov upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
-              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
-              --file packages/$package/coverage/lcov.info --flag $package-integration --flag $package
+            echo "Running \"./codecov upload-process $CC_LOG_TOKEN $CC_FLAGS\""
+
+            ./codecov upload-process $CC_TOKEN $CC_FLAGS
           done
 
   e2e-tests:
@@ -212,7 +260,7 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.5.0
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
       - run: yarn test:e2e
@@ -231,12 +279,36 @@ jobs:
           shasum -a 256 -c codecov.SHA256SUM
           sudo chmod +x codecov
       - name: Upload coverage report to codecov
+        shell: bash
         run: |
+          CC_FLAGS="--disable-search --git-service github"
+
+          if [ -n "${{ github.event.pull_request.head.sha }}" ]; then
+            CC_FLAGS+=" --sha ${{ github.event.pull_request.head.sha }}"
+          fi
+
+          if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ];
+          then
+            echo "Fork detected"
+            CC_FLAGS+=" --branch ${{ github.event.pull_request.head.label }} --pr ${{ github.event.number }}"
+          fi
+
+          CC_TOKEN=""
+          CC_LOG_TOKEN=""
+          if [ -n "${{ secrets.CODECOV_TOKEN }}" ]; then
+            echo "CODECOV_TOKEN is set, adding to codecov upload-process command"
+            CC_TOKEN+=" --token ${{ secrets.CODECOV_TOKEN }}"
+            CC_LOG_TOKEN+=" --token ***"
+          fi
+
           find packages/ -name "lcov.info" -type f | awk -F'/' '{ print $2 }' | while read -r package; do
             sed -i "s|SF:src|SF:packages/${package}/src|g" "packages/$package/coverage/lcov.info"
 
+            CC_FLAGS+=" --file packages/$package/coverage/lcov.info --flag $package-e2e --flag $package"
+
+
             echo "Uploading $package converage/lcov.info file"
-            ./codecov upload-process --disable-search --token ${{ secrets.CODECOV_TOKEN }} \
-              --fail-on-error --git-service github --sha $(git rev-parse HEAD) \
-              --file packages/$package/coverage/lcov.info --flag $package-e2e --flag $package
+            echo "Running \"./codecov upload-process $CC_LOG_TOKEN $CC_FLAGS\""
+
+            ./codecov upload-process $CC_TOKEN $CC_FLAGS
           done

@@ -629,6 +629,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     unlinkChannelToLobby: async (lobbyId, bearerToken) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.unlinkChannelToLobby(lobbyId, bearerToken)));
     },
+    updateLobbyMessageModerationMetadata: async (lobbyId, messageId, options) => {
+      return await bot.rest.updateLobbyMessageModerationMetadata(lobbyId, messageId, options);
+    },
     getTargetUsers: async (inviteCode) => {
       return await bot.rest.getTargetUsers(inviteCode);
     },
@@ -746,6 +749,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     editUserApplicationRoleConnection: async (bearerToken, applicationId, options) => {
       return await bot.rest.editUserApplicationRoleConnection(bearerToken, applicationId, options);
+    },
+    deleteCurrentUserApplicationRoleConnection: async (bearerToken, applicationId) => {
+      return await bot.rest.deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId);
     },
     joinThread: async (channelId) => {
       return await bot.rest.joinThread(channelId);
@@ -983,6 +989,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnection>,
   ) => Promise<Camelize<DiscordApplicationRoleConnection>>;
+  deleteCurrentUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<void>;
   executeWebhook: (
     webhookId: BigString,
     token: string,
@@ -1169,6 +1176,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   bulkUpdateLobbyMembers: (lobbyId: BigString, options: BulkUpdateLobbyMember[]) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>[]>;
   linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
+  updateLobbyMessageModerationMetadata: (lobbyId: BigString, messageId: BigString, options: Record<string, string>) => Promise<void>;
   getTargetUsers: (inviteCode: string) => Promise<string>;
   updateTargetUsers: (inviteCode: string, targetUsersFile: Blob) => Promise<void>;
   getTargetUsersJobStatus: (inviteCode: string) => Promise<Camelize<DiscordTargetUsersJobStatus>>;

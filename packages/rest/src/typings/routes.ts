@@ -318,6 +318,8 @@ export interface RestRoutes {
     link: (lobbyId: BigString) => string;
     /** Route to bulk update members of a lobby */
     membersBulk: (lobbyId: BigString) => string;
+    /** Route to set the lobby moderation metadata */
+    moderationMetadata: (lobbyId: BigString, messageId: BigString) => string;
   };
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string;
