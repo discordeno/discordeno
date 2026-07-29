@@ -503,6 +503,8 @@ export interface Channel {
   defaultAutoArchiveDuration?: number;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions;
+  /**computed permissions for the bot user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately */
+  appPermissions?: Permissions;
   /** The flags of the channel */
   flags?: number;
   /**
@@ -1275,6 +1277,8 @@ export interface Message {
   member?: Member;
   /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
   mentions?: User[];
+  /** The type of channel the message was sent in. Only present when received from the gateway MESSAGE_CREATE event */
+  channelType?: ChannelTypes;
   /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
   mentionedChannelIds?: bigint[];
   /** Roles specifically mentioned in this message */

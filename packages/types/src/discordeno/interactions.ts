@@ -71,10 +71,7 @@ export interface InteractionCallbackData {
   title?: string;
 }
 
-/**
- * - https://docs.discord.com/developers/interactions/receiving-and-responding#create-interaction-response-query-string-params
- * - https://docs.discord.com/developers/interactions/application-commands#create-guild-application-command-json-params
- */
+/** https://docs.discord.com/developers/interactions/receiving-and-responding#create-interaction-response-query-string-params */
 export interface InteractionCallbackOptions {
   withResponse?: boolean;
 }
@@ -159,12 +156,13 @@ export interface CreateApplicationCommand {
   type?: ApplicationCommandTypes;
   /** Indicates whether the command is age-restricted, defaults to `false` */
   nsfw?: boolean;
-  // Discord seems to have forgot to add this to the docs, however it is in the examples for this feature...
   /**
    * Determines whether the interaction is handled by the app's interactions handler or by Discord
    *
    * @remarks
-   * This can only be set for application commands of type `PRIMARY_ENTRY_POINT` for applications with the `EMBEDDED` flag (i.e. applications that have an Activity).
+   * Only for `PRIMARY_ENTRY_POINT` commands
+   *
+   * This is only available for globally-scoped commands and is not available for guild-scoped commands
    */
   handler?: DiscordInteractionEntryPointCommandHandlerType;
 }
