@@ -335,9 +335,9 @@ export function transformSharedClientTheme(bot: Bot, payload: DiscordSharedClien
   const theme = {} as SetupDesiredProps<SharedClientTheme, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.colors && payload.colors) theme.colors = payload.colors;
-  if (props.baseMix && payload.base_mix) theme.baseMix = payload.base_mix;
-  if (props.gradientAngle && payload.gradient_angle) theme.gradientAngle = payload.gradient_angle;
-  if (props.baseTheme && payload.base_theme) theme.baseTheme = payload.base_theme;
+  if (props.baseMix) theme.baseMix = payload.base_mix;
+  if (props.gradientAngle) theme.gradientAngle = payload.gradient_angle;
+  if (props.baseTheme && 'base_theme' in payload) theme.baseTheme = payload.base_theme;
 
   return bot.transformers.customizers.sharedClientTheme(bot, payload, theme);
 }

@@ -112,7 +112,7 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   /** The call associated with the message */
   call?: DiscordMessageCall;
   /** The custom client-side theme shared via the message */
-  shared_client_theme: DiscordSharedClientTheme;
+  shared_client_theme?: DiscordSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#message-object-message-types */
@@ -556,7 +556,7 @@ export interface DiscordMessagePin {
   message: DiscordMessage;
 }
 
-/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-struture */
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
 export interface DiscordSharedClientTheme {
   /** The hexadecimal-encoded colors of the theme (max of 5) */
   colors: string[];

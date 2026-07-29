@@ -1271,7 +1271,7 @@ export interface Message {
   /** The call associated with the message */
   call?: MessageCall;
   /** The custom client-side theme shared via the message */
-  sharedClientTheme: SharedClientTheme;
+  sharedClientTheme?: SharedClientTheme;
   /** Holds all the boolean values on this message. */
   bitfield?: ToggleBitfield;
   /** Whether this message has been published to subscribed channels (via Channel Following) */

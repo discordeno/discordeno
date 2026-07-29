@@ -44,7 +44,7 @@ export interface AllowedMentions {
   users?: bigint[];
 }
 
-/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-struture */
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
 export interface DiscordenoSharedClientTheme {
   /** The hexadecimal-encoded colors of the theme (max of 5) */
   colors: string[];
@@ -53,7 +53,7 @@ export interface DiscordenoSharedClientTheme {
   /** The intensity of the theme's colors (max of 100) */
   baseMix: number;
   /** The mode of the theme */
-  base_theme?: DiscordBaseTheme | null;
+  baseTheme?: DiscordBaseTheme | null;
 }
 
 /** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
