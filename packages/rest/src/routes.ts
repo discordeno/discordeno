@@ -94,6 +94,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`;
 
           if (options) {
+            if (options.type) url += `type=${encode(options.type)}`;
             if (options.after) url += `after=${encode(options.after)}`;
             if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
@@ -692,6 +693,10 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
       link: (lobbyId) => {
         return `/lobbies/${encode(lobbyId)}/channel-linking`;
+      },
+
+      moderationMetadata: (lobbyId, messageId) => {
+        return `/lobbies/${encode(lobbyId)}/messages/${encode(messageId)}/moderation-metadata`;
       },
     },
 
