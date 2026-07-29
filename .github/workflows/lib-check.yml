@@ -109,6 +109,8 @@ jobs:
           sudo chmod +x codecov
       - name: Upload coverage report to codecov
         shell: bash
+        env:
+          PR_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
         run: |
           CC_FLAGS="--disable-search --git-service github"
 
@@ -119,7 +121,7 @@ jobs:
           if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ];
           then
             echo "Fork detected"
-            CC_FLAGS+=" --branch ${{ github.event.pull_request.head.label }} --pr ${{ github.event.number }}"
+            CC_FLAGS+=" --branch $PR_HEAD_LABEL --pr ${{ github.event.number }}"
           fi
 
           CC_TOKEN=""
@@ -211,6 +213,8 @@ jobs:
           sudo chmod +x codecov
       - name: Upload coverage report to codecov
         shell: bash
+        env:
+          PR_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
         run: |
           CC_FLAGS="--disable-search --git-service github"
 
@@ -221,7 +225,7 @@ jobs:
           if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ];
           then
             echo "Fork detected"
-            CC_FLAGS+=" --branch ${{ github.event.pull_request.head.label }} --pr ${{ github.event.number }}"
+            CC_FLAGS+=" --branch $PR_HEAD_LABEL --pr ${{ github.event.number }}"
           fi
 
           CC_TOKEN=""
@@ -251,7 +255,6 @@ jobs:
     if: github.event_name != 'pull_request'
     concurrency:
       group: e2e-tests
-      queue: max
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -280,6 +283,8 @@ jobs:
           sudo chmod +x codecov
       - name: Upload coverage report to codecov
         shell: bash
+        env:
+          PR_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
         run: |
           CC_FLAGS="--disable-search --git-service github"
 
@@ -290,7 +295,7 @@ jobs:
           if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ];
           then
             echo "Fork detected"
-            CC_FLAGS+=" --branch ${{ github.event.pull_request.head.label }} --pr ${{ github.event.number }}"
+            CC_FLAGS+=" --branch $PR_HEAD_LABEL --pr ${{ github.event.number }}"
           fi
 
           CC_TOKEN=""
