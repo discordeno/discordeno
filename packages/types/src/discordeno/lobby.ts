@@ -45,6 +45,26 @@ export interface AddLobbyMember {
   flags?: number;
 }
 
+/** https://docs.discord.com/developers/resources/lobby#bulk-update-lobby-members */
+export interface BulkUpdateLobbyMember {
+  /** Discord user id of the user to add, update, or remove */
+  id: BigString;
+  /** Optional dictionary of string key/value pairs. The max total length is 1000. */
+  metadata?: Record<string, string> | null;
+  /**
+   * Lobby member flags combined as a bitfield
+   *
+   * @see {@link DiscordLobbyMemberFlags}
+   */
+  flags?: number;
+  /**
+   * if `true`, the user is removed from the lobby instead of upserted.
+   *
+   * @default false
+   */
+  removeMember?: boolean;
+}
+
 /** https://docs.discord.com/developers/resources/lobby#link-channel-to-lobby */
 export interface LinkChannelToLobby {
   /** The id of the channel to link to the lobby. If not provided, will unlink any currently linked channels from the lobby. */

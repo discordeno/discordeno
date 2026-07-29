@@ -695,6 +695,10 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
         return `/lobbies/${encode(lobbyId)}/channel-linking`;
       },
 
+      membersBulk: (lobbyId) => {
+        return `/lobbies/${encode(lobbyId)}/members/bulk`;
+      },
+
       moderationMetadata: (lobbyId, messageId) => {
         return `/lobbies/${encode(lobbyId)}/messages/${encode(messageId)}/moderation-metadata`;
       },
