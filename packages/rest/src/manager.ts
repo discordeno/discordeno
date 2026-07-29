@@ -115,6 +115,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
     retryProxiedRequestsOnTimeout: options.proxy?.retryOnTimeout ?? false,
     maxRetryCount: Infinity,
+    maxProxyConnectionRetryCount: 3,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -702,8 +703,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // A timed out attempt is not re-sent by default: the timeout only aborts our side of the connection, the proxy keeps processing the
         // request (it may simply be queued behind a rate limit) and it can still reach Discord, so re-sending it would execute non-idempotent
-        // requests twice. Retrying is the proxy's job, it is the one talking to Discord.
-        for (let retryCount = 0; ; retryCount++) {
+        // requests twice. Retrying that is the proxy's job, it is the one talking to Discord. Attempts that never made it onto the wire are
+        // still re-sent, those never reached the proxy at all.
+        let timeoutRetryCount = 0;
+        let connectionRetryCount = 0;
+
+        for (;;) {
           // The request may have been aborted while the previous attempt was timing out, never send it in that case.
           if (options?.signal?.aborted) {
             throw rest.createRequestError(error, { ok: false, status: 999, error: 'The request was aborted.', errorObject: options.signal.reason });
@@ -723,7 +728,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             body: options?.body,
           });
 
-          const result = await fetch(request).catch((fetchError) => {
+          const result = await fetch(request).catch(async (fetchError) => {
             rest.events.requestError(request, fetchError, { body: options?.body });
 
             // The caller aborted the request, never re-send it, the proxy may have received it already.
@@ -733,7 +738,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
             if (isTimeoutError(fetchError)) {
               // Only re-sent when the user opted in with `proxy.retryOnTimeout`, because their setup deduplicates requests.
-              if (rest.retryProxiedRequestsOnTimeout && retryCount < rest.maxRetryCount) {
+              if (rest.retryProxiedRequestsOnTimeout && timeoutRetryCount < rest.maxRetryCount) {
+                timeoutRetryCount++;
                 rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
                 return undefined;
               }
@@ -743,6 +749,27 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
                 ok: false,
                 status: 999,
                 error: 'The request timed out and it maxed out the retries limit.',
+                errorObject: fetchError,
+              });
+            }
+
+            // We never managed to connect, so the request was never handed to the proxy and is safe to send again. This is the common case
+            // while the proxy is restarting. It has its own counter because `maxRetryCount` is Infinity by default and a proxy that stays
+            // down would otherwise keep every request alive forever.
+            if (isConnectError(fetchError)) {
+              if (connectionRetryCount < Math.min(rest.maxRetryCount, rest.maxProxyConnectionRetryCount)) {
+                connectionRetryCount++;
+                rest.logger.debug(`could not connect to the proxy at ${url}, retrying.`, fetchError);
+                // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
+                await delay(250);
+                return undefined;
+              }
+
+              rest.logger.debug(`could not connect to the proxy at ${url} and exceeded the maximum allowed retries.`);
+              throw rest.createRequestError(error, {
+                ok: false,
+                status: 999,
+                error: 'The proxy could not be reached and it maxed out the retries limit.',
                 errorObject: fetchError,
               });
             }
@@ -757,7 +784,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             });
           });
 
-          // If result is undefined, the attempt timed out and is being re-sent.
+          // If result is undefined, the attempt failed in a way that is safe to re-send and is being retried.
           if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
@@ -2044,4 +2071,37 @@ enum HttpResponseCode {
 /** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
 function isTimeoutError(error: unknown): boolean {
   return error instanceof DOMException && error.name === 'TimeoutError';
+}
+
+/** The error codes runtimes use when the connection was never established, so nothing was sent. */
+const connectErrorCodes = new Set([
+  // Node.js / undici
+  'ECONNREFUSED',
+  'ENOTFOUND',
+  'EAI_AGAIN',
+  'UND_ERR_CONNECT_TIMEOUT',
+  // Bun
+  'ConnectionRefused',
+]);
+
+/**
+ * Whether an error means we never managed to connect, which makes the request safe to send again.
+ *
+ * @remarks
+ * Only failures that happened while connecting count. A socket that dies once the request is on the wire (`ECONNRESET` and friends) may have
+ * already been forwarded to Discord, so re-sending those could execute a request twice, which is exactly what we are trying to avoid.
+ *
+ * `fetch` gives us no standard way to tell those apart, the codes below are runtime specific and a code we do not recognize is treated as
+ * unsafe. `fetch` wraps the underlying error in `cause`, and in an `AggregateError` when the host resolved to several addresses.
+ */
+function isConnectError(error: unknown, depth = 0): boolean {
+  // Guards against a cause that points back at itself, the chains we care about are only a couple of levels deep.
+  if (depth > 5 || !(error instanceof Error)) return false;
+
+  const code = (error as Error & { code?: unknown }).code;
+  if (typeof code === 'string' && connectErrorCodes.has(code)) return true;
+
+  if (error instanceof AggregateError && error.errors.some((suberror) => isConnectError(suberror, depth + 1))) return true;
+
+  return isConnectError(error.cause, depth + 1);
 }

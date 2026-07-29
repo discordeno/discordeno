@@ -263,13 +263,47 @@ describe('[rest] manager', () => {
       expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: timeoutError });
     });
 
-    it('Will not re-send the request when the proxy cannot be reached', async () => {
-      const fetchError = new TypeError('fetch failed');
+    it('Will not re-send the request when the connection failed after it was sent', async () => {
+      // A socket that dies mid request may have been forwarded to Discord already, unlike one that never connected
+      const fetchError = new TypeError('fetch failed', { cause: Object.assign(new Error('read ECONNRESET'), { code: 'ECONNRESET' }) });
       fetchStub.rejects(fetchError);
 
       const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
       expect(fetchStub.callCount).to.be.equal(1);
       expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
+    });
+
+    it('Will re-send the request when the proxy could not be connected to', async () => {
+      // The proxy is restarting, the request never got there
+      fetchStub
+        .onFirstCall()
+        .rejects(new TypeError('fetch failed', { cause: Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' }) }));
+      fetchStub
+        .onSecondCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
+    it('Will re-send the request when the host resolved to several addresses and none of them could be connected to', async () => {
+      const connectError = Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' });
+      fetchStub.onFirstCall().rejects(new TypeError('fetch failed', { cause: new AggregateError([connectError, connectError]) }));
+      fetchStub
+        .onSecondCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
+    it('Will stop re-sending the request once maxProxyConnectionRetryCount is exhausted', async () => {
+      rest.maxProxyConnectionRetryCount = 2;
+      fetchStub.rejects(new TypeError('fetch failed', { cause: Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' }) }));
+
+      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(3);
+      expect(error.message).to.be.equal('[999] The proxy could not be reached and it maxed out the retries limit.');
     });
 
     it('Will re-send a timed out attempt when proxy.retryOnTimeout is enabled', async () => {

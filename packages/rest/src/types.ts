@@ -275,6 +275,16 @@ export interface RestManager {
   retryProxiedRequestsOnTimeout: boolean;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
+  /**
+   * The maximum amount of times a request that never reached the proxy should be re-sent. Defaults to 3.
+   *
+   * @remarks
+   * Only attempts that failed while connecting are re-sent, those were never handed to the proxy. This has its own limit because
+   * {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as long as the proxy stays down.
+   *
+   * Whichever of the two is lower applies.
+   */
+  maxProxyConnectionRetryCount: number;
   /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequestsOnTimeout` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
