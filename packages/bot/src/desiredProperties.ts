@@ -26,7 +26,9 @@ import type {
   Invite,
   InviteStageInstance,
   Lobby,
+  LobbyInvite,
   LobbyMember,
+  LobbyMessage,
   MediaGalleryItem,
   Member,
   Message,
@@ -88,6 +90,8 @@ export interface TransformersObjects {
   inviteStageInstance: InviteStageInstance;
   lobby: Lobby;
   lobbyMember: LobbyMember;
+  lobbyMessage: LobbyMessage;
+  lobbyInvite: LobbyInvite;
   mediaGalleryItem: MediaGalleryItem;
   member: Member;
   message: Message;
@@ -294,6 +298,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       permissionOverwrites: defaultValue,
       id: defaultValue,
       permissions: defaultValue,
+      appPermissions: defaultValue,
       lastMessageId: defaultValue,
       ownerId: defaultValue,
       applicationId: defaultValue,
@@ -541,6 +546,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       mentionedChannelIds: defaultValue,
       mentionedRoleIds: defaultValue,
       mentions: defaultValue,
+      channelType: defaultValue,
       messageReference: defaultValue,
       messageSnapshots: defaultValue,
       referencedMessage: defaultValue,
@@ -871,6 +877,23 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       metadata: defaultValue,
       flags: defaultValue,
       ...desiredProperties.lobbyMember,
+    },
+    lobbyMessage: {
+      id: defaultValue,
+      content: defaultValue,
+      applicationId: defaultValue,
+      flags: defaultValue,
+      author: defaultValue,
+      channelId: defaultValue,
+      lobbyId: defaultValue,
+      metadata: defaultValue,
+      moderationMetadata: defaultValue,
+      type: defaultValue,
+      ...desiredProperties.lobbyMessage,
+    },
+    lobbyInvite: {
+      code: defaultValue,
+      ...desiredProperties.lobbyInvite,
     },
   } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>;
 }
