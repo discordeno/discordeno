@@ -8,6 +8,11 @@ import { fakeToken as token } from '../constants.js';
 
 chaiUse(chaiAsPromised);
 
+/** Builds an error in the shape Node.js gives a failed syscall. */
+function nodeError(message: string, code: string, syscall: string): Error {
+  return Object.assign(new Error(message), { code, syscall });
+}
+
 describe('[rest] manager', () => {
   describe('create a rest manager with only a token', () => {
     const rest = createRestManager({ token });
@@ -263,9 +268,44 @@ describe('[rest] manager', () => {
       expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: timeoutError });
     });
 
+    // The errors below are the ones each runtime actually throws, taken from a fetch to a port nothing listens on, an unresolvable host and an
+    // unreachable network on Node.js, Bun and Deno.
+    const connectErrors = {
+      refused: () => new TypeError('fetch failed', { cause: nodeError('connect ECONNREFUSED 127.0.0.1:8000', 'ECONNREFUSED', 'connect') }),
+      // Both addresses of a dual stack host failed, so undici hands us all of them at once
+      dualStack: () =>
+        new TypeError('fetch failed', {
+          cause: new AggregateError([
+            nodeError('connect ECONNREFUSED ::1:8000', 'ECONNREFUSED', 'connect'),
+            nodeError('connect ECONNREFUSED 127.0.0.1:8000', 'ECONNREFUSED', 'connect'),
+          ]),
+        }),
+      unreachable: () => new TypeError('fetch failed', { cause: nodeError('connect EHOSTUNREACH 192.168.178.14:80', 'EHOSTUNREACH', 'connect') }),
+      dns: () => new TypeError('fetch failed', { cause: nodeError('getaddrinfo EAI_AGAIN proxy.local', 'EAI_AGAIN', 'getaddrinfo') }),
+      // Bun reports the same error for every failure to connect
+      bun: () => Object.assign(new Error('Unable to connect. Is the computer able to access the url?'), { code: 'ConnectionRefused' }),
+      // Deno reports neither a code nor a syscall
+      deno: () =>
+        new TypeError('fetch failed', {
+          cause: new Error('error sending request for url (http://proxy.local/): client error (Connect): tcp connect error: No route to host'),
+        }),
+    };
+
+    for (const [name, createFetchError] of Object.entries(connectErrors)) {
+      it(`Will re-send the request when it could not connect to the proxy (${name})`, async () => {
+        fetchStub.onFirstCall().rejects(createFetchError());
+        fetchStub
+          .onSecondCall()
+          .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+        expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+        expect(fetchStub.callCount).to.be.equal(2);
+      });
+    }
+
     it('Will not re-send the request when the connection failed after it was sent', async () => {
-      // A socket that dies mid request may have been forwarded to Discord already, unlike one that never connected
-      const fetchError = new TypeError('fetch failed', { cause: Object.assign(new Error('read ECONNRESET'), { code: 'ECONNRESET' }) });
+      // A socket that dies once the request is on the wire may have been forwarded to Discord already, unlike one that never connected
+      const fetchError = new TypeError('fetch failed', { cause: nodeError('read ECONNRESET', 'ECONNRESET', 'read') });
       fetchStub.rejects(fetchError);
 
       const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
@@ -273,46 +313,18 @@ describe('[rest] manager', () => {
       expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
     });
 
-    it('Will re-send the request when the proxy could not be connected to', async () => {
-      // The proxy is restarting, the request never got there
-      fetchStub
-        .onFirstCall()
-        .rejects(new TypeError('fetch failed', { cause: Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' }) }));
-      fetchStub
-        .onSecondCall()
-        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+    it('Will not re-send the request when the proxy closed the connection', async () => {
+      const fetchError = new TypeError('fetch failed', { cause: Object.assign(new Error('other side closed'), { code: 'UND_ERR_SOCKET' }) });
+      fetchStub.rejects(fetchError);
 
-      expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
-      expect(fetchStub.callCount).to.be.equal(2);
-    });
-
-    it('Will re-send the request when the host resolved to several addresses and none of them could be connected to', async () => {
-      const connectError = Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' });
-      fetchStub.onFirstCall().rejects(new TypeError('fetch failed', { cause: new AggregateError([connectError, connectError]) }));
-      fetchStub
-        .onSecondCall()
-        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
-
-      expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
-      expect(fetchStub.callCount).to.be.equal(2);
-    });
-
-    it('Will re-send the request when the runtime only reports the failure in the message', async () => {
-      // Deno does not give us a code to go off
-      fetchStub
-        .onFirstCall()
-        .rejects(new TypeError('client error (Connect): tcp connect error: Connection refused (os error 61): error sending request'));
-      fetchStub
-        .onSecondCall()
-        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
-
-      expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
-      expect(fetchStub.callCount).to.be.equal(2);
+      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(1);
+      expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
     });
 
     it('Will stop re-sending the request once maxProxyConnectionRetryCount is exhausted', async () => {
       rest.maxProxyConnectionRetryCount = 2;
-      fetchStub.rejects(new TypeError('fetch failed', { cause: Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' }) }));
+      fetchStub.rejects(connectErrors.refused());
 
       const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
       expect(fetchStub.callCount).to.be.equal(3);
