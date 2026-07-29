@@ -6,7 +6,7 @@
 
 import type { DiscordApplication } from './application.js';
 import type { AutoModerationTriggerTypes, DiscordAutoModerationAction } from './autoModeration.js';
-import type { DiscordChannel, DiscordThreadMember } from './channel.js';
+import type { ChannelTypes, DiscordChannel, DiscordThreadMember } from './channel.js';
 import type { DiscordEmoji } from './emoji.js';
 import type { DiscordIntegration, DiscordMember, DiscordMemberWithUser, DiscordUnavailableGuild } from './guild.js';
 import type { DiscordScheduledEvent } from './guildScheduledEvent.js';
@@ -731,6 +731,8 @@ export interface DiscordMessageCreateExtra {
   member?: Partial<DiscordMemberWithUser>;
   /** Users specifically mentioned in the message */
   mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>;
+  /** The type of channel the message was sent in */
+  channel_type: ChannelTypes;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#message-update */
