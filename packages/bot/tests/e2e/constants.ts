@@ -1,6 +1,8 @@
-import dotenv from 'dotenv';
-
-dotenv.config({ path: '../../.env' });
+try {
+  process.loadEnvFile('../../.env');
+} catch {
+  // ignore
+}
 
 if (!process.env.DISCORD_TOKEN) throw new Error('Token was not provided.');
 export const token = process.env.DISCORD_TOKEN;

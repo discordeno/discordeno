@@ -105,7 +105,7 @@ export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcome_screen?: DiscordWelcomeScreen;
   /** Guild NSFW level */
-  nsfw_level: GuildNsfwLevel;
+  nsfw_level: GuildAgeRestrictionLevel;
   /** Custom guild stickers */
   stickers?: DiscordSticker[];
   /** Whether the guild has the boost progress bar enabled */
@@ -157,7 +157,7 @@ export enum VerificationLevels {
 }
 
 /** https://docs.discord.com/developers/resources/guild#guild-object-guild-nsfw-level */
-export enum GuildNsfwLevel {
+export enum GuildAgeRestrictionLevel {
   Default,
   Explicit,
   Safe,
