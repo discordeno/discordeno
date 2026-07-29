@@ -2073,22 +2073,38 @@ function isTimeoutError(error: unknown): boolean {
   return error instanceof DOMException && error.name === 'TimeoutError';
 }
 
-/** The error codes runtimes use when the connection was never established, so nothing was sent. */
+/** How far to follow an error's `cause` before giving up, guards against one that points back at itself. */
+const maxErrorChainDepth = 5;
+
+/** The syscalls Node.js reports a failure on while it is still trying to reach the other side, it is `read` or `write` after that. */
 const connectSyscalls = new Set(['connect', 'getaddrinfo']);
 
 /** The error codes for the same, used by the runtimes that report no syscall. */
 const connectErrorCodes = new Set([
   // undici's own connect timeout, no syscall of ours failed for it
   'UND_ERR_CONNECT_TIMEOUT',
-  // Bun uses this for every failure to connect, not just refused ones, and it is the name of the matching `Deno.errors` class
+  // Bun reports this for every failure to connect, not just refused ones, and it is the name of the matching `Deno.errors` class
   'ConnectionRefused',
-  // Node.js reports these on `getaddrinfo`, they are here for anything that keeps the code but drops the syscall
+  // The codes Node.js reports these under, for any runtime that borrows them without also reporting the syscall. Codes that can just as well
+  // happen once the request is on the wire (`ECONNRESET`, `ETIMEDOUT`, ...) are deliberately not here.
+  'ECONNREFUSED',
+  'EHOSTUNREACH',
+  'ENETUNREACH',
   'ENOTFOUND',
   'EAI_AGAIN',
 ]);
 
 /** Deno reports neither, the phase the request failed in only shows up in the message. */
 const connectErrorMessages = ['client error (Connect)', 'tcp connect error', 'dns error'];
+
+/**
+ * The parts of a message that mean the request was already on the wire, whatever else the message says.
+ *
+ * @remarks
+ * A dropped connection is reported in terms of the request it was carrying, and that wording can be wrapped in the wording for a failure to
+ * connect, so this has to win over {@link connectErrorMessages} rather than sit next to it.
+ */
+const sentRequestErrorMessages = ['client error (SendRequest)', 'connection closed before message completed', 'error decoding response body'];
 
 /**
  * Whether an error means we never managed to connect, which makes the request safe to send again.
@@ -2098,13 +2114,25 @@ const connectErrorMessages = ['client error (Connect)', 'tcp connect error', 'dn
  * have been forwarded to Discord already, so re-sending those could execute a request twice, which is what we are trying to avoid.
  *
  * `fetch` gives us no standard way to tell the two apart, so this goes off what each runtime does give us and treats anything it does not
- * recognize as unsafe. Node.js names the syscall that failed, which covers every reason a connection could not be established (refused,
- * unreachable host or network, dns, ...) without having to keep a list of their error codes, and it is `read` or `write` once the request is
- * on the wire. The underlying error is wrapped in `cause`, and in an `AggregateError` when the host resolved to several addresses.
+ * recognize as unsafe.
  */
-function isConnectError(error: unknown, depth = 0): boolean {
-  // Guards against a cause that points back at itself, the chains we care about are only a couple of levels deep.
-  if (depth > 5 || !(error instanceof Error)) return false;
+function isConnectError(error: unknown): boolean {
+  // Checked over the whole chain and before anything else: a dropped connection is reported in terms of the request it was carrying, and a
+  // runtime that wraps that in the wording for the connection itself would otherwise look like it never got to send anything.
+  if (mentions(error, sentRequestErrorMessages)) return false;
+
+  return failedBeforeSending(error);
+}
+
+/**
+ * Whether an error, or one it wraps, is a runtime saying it never got as far as sending.
+ *
+ * @remarks
+ * Node.js names the syscall that failed, which covers every reason a connection could not be established (refused, unreachable host or
+ * network, dns, ...) without keeping a list of their error codes. Bun and Deno report a code and a message respectively.
+ */
+function failedBeforeSending(error: unknown, depth = 0): boolean {
+  if (depth > maxErrorChainDepth || !(error instanceof Error)) return false;
 
   const { code, syscall } = error as Error & { code?: unknown; syscall?: unknown };
 
@@ -2113,7 +2141,18 @@ function isConnectError(error: unknown, depth = 0): boolean {
   if (connectErrorCodes.has(error.name)) return true;
   if (connectErrorMessages.some((message) => error.message.includes(message))) return true;
 
-  if (error instanceof AggregateError && error.errors.some((suberror) => isConnectError(suberror, depth + 1))) return true;
+  // The reason is wrapped in `cause`, and in an `AggregateError` when the host resolved to several addresses and each of them failed.
+  if (error instanceof AggregateError && error.errors.some((suberror) => failedBeforeSending(suberror, depth + 1))) return true;
 
-  return isConnectError(error.cause, depth + 1);
+  return failedBeforeSending(error.cause, depth + 1);
+}
+
+/** Whether an error, or one it wraps, has any of the given parts in its message. */
+function mentions(error: unknown, parts: string[], depth = 0): boolean {
+  if (depth > maxErrorChainDepth || !(error instanceof Error)) return false;
+
+  if (parts.some((part) => error.message.includes(part))) return true;
+  if (error instanceof AggregateError && error.errors.some((suberror) => mentions(suberror, parts, depth + 1))) return true;
+
+  return mentions(error.cause, parts, depth + 1);
 }

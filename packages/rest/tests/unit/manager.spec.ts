@@ -284,11 +284,20 @@ describe('[rest] manager', () => {
       dns: () => new TypeError('fetch failed', { cause: nodeError('getaddrinfo EAI_AGAIN proxy.local', 'EAI_AGAIN', 'getaddrinfo') }),
       // Bun reports the same error for every failure to connect
       bun: () => Object.assign(new Error('Unable to connect. Is the computer able to access the url?'), { code: 'ConnectionRefused' }),
-      // Deno reports neither a code nor a syscall
+      // Deno reports neither a code nor a syscall. Everything up to the reason is Deno's own wording, the reason itself comes from the
+      // operating system and is translated on a system that does not run in english, so it is never what we go off.
       deno: () =>
         new TypeError('fetch failed', {
-          cause: new Error('error sending request for url (http://proxy.local/): client error (Connect): tcp connect error: No route to host'),
+          cause: new Error(
+            'error sending request for url (http://proxy.local/): client error (Connect): tcp connect error: No route to host (os error 113)',
+          ),
         }),
+      denoDns: () =>
+        new TypeError('fetch failed', {
+          cause: new Error('error sending request for url (http://proxy.local/): client error (Connect): dns error: Host unknown (os error 11001)'),
+        }),
+      // A runtime that borrows the codes Node.js uses without also saying which syscall failed
+      codeWithoutSyscall: () => new TypeError('fetch failed', { cause: Object.assign(new Error('connect EHOSTUNREACH'), { code: 'EHOSTUNREACH' }) }),
     };
 
     for (const [name, createFetchError] of Object.entries(connectErrors)) {
@@ -303,24 +312,40 @@ describe('[rest] manager', () => {
       });
     }
 
-    it('Will not re-send the request when the connection failed after it was sent', async () => {
-      // A socket that dies once the request is on the wire may have been forwarded to Discord already, unlike one that never connected
-      const fetchError = new TypeError('fetch failed', { cause: nodeError('read ECONNRESET', 'ECONNRESET', 'read') });
-      fetchStub.rejects(fetchError);
+    // The other half of it: a failure that could just as well have happened once the request was on the wire is never re-sent, it may have
+    // been forwarded to Discord already.
+    const ambiguousErrors = {
+      // undici when the proxy goes away mid request
+      closed: () => new TypeError('fetch failed', { cause: Object.assign(new Error('other side closed'), { code: 'UND_ERR_SOCKET' }) }),
+      // Bun words every dropped connection the same way, whether the request went out or not
+      bunClosed: () => Object.assign(new Error('The socket connection was closed unexpectedly.'), { code: 'ECONNRESET' }),
+      // The socket went quiet while we were waiting on it, which is long after the request was written
+      timedOut: () => new TypeError('fetch failed', { cause: nodeError('read ETIMEDOUT', 'ETIMEDOUT', 'read') }),
+      reset: () => new TypeError('fetch failed', { cause: nodeError('read ECONNRESET', 'ECONNRESET', 'read') }),
+      // The connection was dropped while it was carrying the request, reported in terms of the request
+      dropped: () =>
+        new TypeError('fetch failed', {
+          cause: new Error(
+            'error sending request for url (http://proxy.local/): client error (SendRequest): connection closed before message completed',
+          ),
+        }),
+      // The same, but a runtime that words a dropped connection as one it could not keep up
+      droppedAsConnect: () =>
+        new TypeError('fetch failed', {
+          cause: new Error('error sending request for url (http://proxy.local/): client error (Connect): connection closed before message completed'),
+        }),
+    };
 
-      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
-      expect(fetchStub.callCount).to.be.equal(1);
-      expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
-    });
+    for (const [name, createFetchError] of Object.entries(ambiguousErrors)) {
+      it(`Will not re-send the request when the connection may have carried it already (${name})`, async () => {
+        const fetchError = createFetchError();
+        fetchStub.rejects(fetchError);
 
-    it('Will not re-send the request when the proxy closed the connection', async () => {
-      const fetchError = new TypeError('fetch failed', { cause: Object.assign(new Error('other side closed'), { code: 'UND_ERR_SOCKET' }) });
-      fetchStub.rejects(fetchError);
-
-      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
-      expect(fetchStub.callCount).to.be.equal(1);
-      expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
-    });
+        const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+        expect(fetchStub.callCount).to.be.equal(1);
+        expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
+      });
+    }
 
     it('Will stop re-sending the request once maxProxyConnectionRetryCount is exhausted', async () => {
       rest.maxProxyConnectionRetryCount = 2;
