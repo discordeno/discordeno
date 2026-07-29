@@ -1,6 +1,13 @@
 /** Types for: https://docs.discord.com/developers/resources/message */
 
-import type { AllowedMentionsTypes, DiscordEmbed, DiscordMessageReferenceType, DiscordReactionType, MessageFlags } from '../discord/message.js';
+import type {
+  AllowedMentionsTypes,
+  DiscordBaseTheme,
+  DiscordEmbed,
+  DiscordMessageReferenceType,
+  DiscordReactionType,
+  MessageFlags,
+} from '../discord/message.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { MessageComponents } from './components.js';
 import type { CreatePoll } from './poll.js';
@@ -71,6 +78,18 @@ export interface AllowedMentions {
   users?: bigint[];
 }
 
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
+export interface DiscordenoSharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradientAngle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  baseMix: number;
+  /** The mode of the theme */
+  baseTheme?: DiscordBaseTheme | null;
+}
+
 /** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesLimit {
   /** Max number of messages to return (1-100) default 50 */
@@ -133,6 +152,8 @@ export interface CreateMessageOptions {
   enforceNonce?: boolean;
   /** A poll object */
   poll?: CreatePoll;
+  /** The custom client-side theme shared via the message */
+  sharedClientTheme?: DiscordenoSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#get-reactions-query-string-params */

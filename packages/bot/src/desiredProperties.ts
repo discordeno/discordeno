@@ -48,6 +48,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SharedClientTheme,
   Sku,
   SoundboardSound,
   StageInstance,
@@ -111,6 +112,7 @@ export interface TransformersObjects {
   roleColors: RoleColors;
   scheduledEvent: ScheduledEvent;
   scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule;
+  sharedClientTheme: SharedClientTheme;
   sku: Sku;
   soundboardSound: SoundboardSound;
   stageInstance: StageInstance;
@@ -558,6 +560,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       webhookId: defaultValue,
       poll: defaultValue,
       call: defaultValue,
+      sharedClientTheme: defaultValue,
       resolved: defaultValue,
       ...desiredProperties.message,
     },
@@ -661,6 +664,13 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       byYearDay: defaultValue,
       count: defaultValue,
       ...desiredProperties.scheduledEventRecurrenceRule,
+    },
+    sharedClientTheme: {
+      colors: defaultValue,
+      baseMix: defaultValue,
+      gradientAngle: defaultValue,
+      baseTheme: defaultValue,
+      ...desiredProperties.sharedClientTheme,
     },
     stageInstance: {
       id: defaultValue,
