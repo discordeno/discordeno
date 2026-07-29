@@ -317,6 +317,10 @@ export interface RestRoutes {
     leave: (lobbyId: BigString) => string;
     /** Route to link a lobby */
     link: (lobbyId: BigString) => string;
+    /** Route to bulk update members of a lobby */
+    membersBulk: (lobbyId: BigString) => string;
+    /** Route to set the lobby moderation metadata */
+    moderationMetadata: (lobbyId: BigString, messageId: BigString) => string;
     /** Route to lobby messages */
     messages: (lobbyId: BigString, options?: GetLobbyMessages) => string;
     /** Route to invite self to the lobby's linked channel */

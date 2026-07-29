@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkUpdateLobbyMember,
   Camelize,
   ChannelTypes,
   CreateApplicationCommand,
@@ -1171,6 +1172,12 @@ export interface RestManager {
    *
    * Fires a _Channel Update_ gateway event for every channel impacted in this change.
    *
+   * At most one entry per request may change `parent_id`. A request that changes `parent_id` for more than one channel fails with a 400 response and error code 40009.
+   *
+   * Permissions are checked per entry, based on what the entry changes:
+   * - An entry that only changes `position` requires the `MANAGE_CHANNELS` permission at the guild level (or on the channel's current parent category). It does **not** require access to the individual channel, so a full reordering may include channels the current user cannot view.
+   * - An entry that changes `parent_id` requires the `MANAGE_CHANNELS` permission on that channel and on the destination (the new parent category, or the guild when moving the channel out of a category), and the current user must be able to view the channel. Otherwise the request fails with a `403` response and error code 50001. Setting `lock_permissions` additionally requires `MANAGE_ROLES`.
+   *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-channel-positions}
    */
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>;
@@ -1459,6 +1466,18 @@ export interface RestManager {
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnection>,
   ) => Promise<Camelize<DiscordApplicationRoleConnection>>;
+  /**
+   * Deletes the application role connection for the user.
+   *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to delete the role connection
+   *
+   * @remarks
+   * This requires the `role_connections.write` scope.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/user#delete-current-user-application-role-connection}
+   */
+  deleteCurrentUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<void>;
   /**
    * Edits a webhook.
    *
@@ -3257,6 +3276,22 @@ export interface RestManager {
    */
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<Camelize<DiscordLobbyMember>>;
   /**
+   * Adds, updates, or removes up to 25 members from the specified lobby in a single request.
+   *
+   * @param lobbyId - The ID of the lobby to add, update, or remove members from
+   * @param options - The options to add, update, or remove members from the lobby
+   * @returns Returns an array of lobby member objects for the upserted members. Removed members are not included in the response.
+   *
+   * @remarks
+   * Members with `remove_member: false` (the default) are upserted — added if not present, or updated with the provided metadata and flags if already a member. Members with `remove_member: true` are removed.
+   *
+   * Users unknown to Discord will return a 404 UNKNOWN_USER error.
+   * Users that fail permission checks or who have already reached the maximum number of lobbies per application (and are not already a member of this lobby) are silently dropped from the upsert set.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/lobby#bulk-update-lobby-members}
+   */
+  bulkUpdateLobbyMembers: (lobbyId: BigString, options: BulkUpdateLobbyMember[]) => Promise<Camelize<DiscordLobbyMember>[]>;
+  /**
    * Removes the provided user from the specified lobby. It is safe to call this even if the user is no longer a member of the lobby, but will fail if the lobby does not exist.
    *
    * @param lobbyId - The ID of the lobby to remove the user from
@@ -3298,6 +3333,21 @@ export interface RestManager {
    * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
    */
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<Camelize<DiscordLobby>>;
+  /**
+   * Sets the moderation metadata for a lobby message. The metadata is app-scoped and delivered to active game clients via the Social SDK as a realtime message update.
+   *
+   * @param lobbyId - The ID of the lobby to set the moderation metadata
+   * @param messageId - The ID of the message to set the moderation metadata
+   * @param options - The moderation metadata to set
+   *
+   * @remarks
+   * Uses `Bot` token for authorization.
+   *
+   * For the options: Free-form key–value pairs describing the moderation decision. Up to 5 keys; key length <= 1024 characters; value length <= 2000 characters
+   *
+   * @see {@link https://discord.com/developers/docs/game-sdk/social-sdk/chat-moderation#server-side-chat-moderation} for the full moderation flow.
+   */
+  updateLobbyMessageModerationMetadata: (lobbyId: BigString, messageId: BigString, options: Record<string, string>) => Promise<void>;
   /**
    * Sends a message to the specified lobby. The calling user must be a member of the lobby.
    *

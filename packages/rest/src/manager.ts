@@ -1783,6 +1783,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId) {
+      return await rest.delete(rest.routes.oauth2.roleConnections(applicationId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
     async addGuildMember(guildId, userId, body) {
       return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
         body,
@@ -1897,6 +1906,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async bulkUpdateLobbyMembers(lobbyId, options) {
+      return await rest.post<DiscordLobbyMember[]>(rest.routes.lobby.membersBulk(lobbyId), {
+        body: options,
+      });
+    },
+
     async removeMemberFromLobby(lobbyId, userId) {
       return await rest.delete(rest.routes.lobby.member(lobbyId, userId));
     },
@@ -1926,6 +1941,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           authorization: `Bearer ${bearerToken}`,
         },
         unauthorized: true,
+      });
+    },
+
+    async updateLobbyMessageModerationMetadata(lobbyId, messageId, options) {
+      await rest.put(rest.routes.lobby.moderationMetadata(lobbyId, messageId), {
+        body: options,
       });
     },
 

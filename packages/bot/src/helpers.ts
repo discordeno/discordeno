@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkUpdateLobbyMember,
   Camelize,
   CreateApplicationCommand,
   CreateApplicationEmoji,
@@ -627,11 +628,17 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     addMemberToLobby: async (lobbyId, userId, options) => {
       return bot.transformers.lobbyMember(bot, snakelize(await bot.rest.addMemberToLobby(lobbyId, userId, options)));
     },
+    bulkUpdateLobbyMembers: async (lobbyId, options) => {
+      return (await bot.rest.bulkUpdateLobbyMembers(lobbyId, options)).map((res) => bot.transformers.lobbyMember(bot, snakelize(res)));
+    },
     linkChannelToLobby: async (lobbyId, bearerToken, options) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.linkChannelToLobby(lobbyId, bearerToken, options)));
     },
     unlinkChannelToLobby: async (lobbyId, bearerToken) => {
       return bot.transformers.lobby(bot, snakelize(await bot.rest.unlinkChannelToLobby(lobbyId, bearerToken)));
+    },
+    updateLobbyMessageModerationMetadata: async (lobbyId, messageId, options) => {
+      return await bot.rest.updateLobbyMessageModerationMetadata(lobbyId, messageId, options);
     },
     sendLobbyMessage: async (bearerToken, lobbyId, options) => {
       return bot.transformers.lobbyMessage(bot, snakelize(await bot.rest.sendLobbyMessage(bearerToken, lobbyId, options)));
@@ -762,6 +769,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     editUserApplicationRoleConnection: async (bearerToken, applicationId, options) => {
       return await bot.rest.editUserApplicationRoleConnection(bearerToken, applicationId, options);
+    },
+    deleteCurrentUserApplicationRoleConnection: async (bearerToken, applicationId) => {
+      return await bot.rest.deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId);
     },
     joinThread: async (channelId) => {
       return await bot.rest.joinThread(channelId);
@@ -999,6 +1009,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnection>,
   ) => Promise<Camelize<DiscordApplicationRoleConnection>>;
+  deleteCurrentUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<void>;
   executeWebhook: (
     webhookId: BigString,
     token: string,
@@ -1183,8 +1194,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getLobby: (lobbyId: BigString) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   modifyLobby: (lobbyId: BigString, options: ModifyLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>>;
+  bulkUpdateLobbyMembers: (lobbyId: BigString, options: BulkUpdateLobbyMember[]) => Promise<SetupDesiredProps<LobbyMember, TProps, TBehavior>[]>;
   linkChannelToLobby: (lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
+  updateLobbyMessageModerationMetadata: (lobbyId: BigString, messageId: BigString, options: Record<string, string>) => Promise<void>;
   getTargetUsers: (inviteCode: string) => Promise<string>;
   updateTargetUsers: (inviteCode: string, targetUsersFile: Blob) => Promise<void>;
   getTargetUsersJobStatus: (inviteCode: string) => Promise<Camelize<DiscordTargetUsersJobStatus>>;
