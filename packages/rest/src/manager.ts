@@ -2080,9 +2080,12 @@ const connectErrorCodes = new Set([
   'ENOTFOUND',
   'EAI_AGAIN',
   'UND_ERR_CONNECT_TIMEOUT',
-  // Bun
+  // Bun, and the name of the `Deno.errors` class for the same failure
   'ConnectionRefused',
 ]);
+
+/** Deno puts no code on the errors its `fetch` throws, the phase the request failed in only shows up in the message. */
+const connectErrorMessages = ['tcp connect error', 'dns error', 'client error (Connect)'];
 
 /**
  * Whether an error means we never managed to connect, which makes the request safe to send again.
@@ -2091,8 +2094,9 @@ const connectErrorCodes = new Set([
  * Only failures that happened while connecting count. A socket that dies once the request is on the wire (`ECONNRESET` and friends) may have
  * already been forwarded to Discord, so re-sending those could execute a request twice, which is exactly what we are trying to avoid.
  *
- * `fetch` gives us no standard way to tell those apart, the codes below are runtime specific and a code we do not recognize is treated as
- * unsafe. `fetch` wraps the underlying error in `cause`, and in an `AggregateError` when the host resolved to several addresses.
+ * `fetch` gives us no standard way to tell those apart, so this goes off what each runtime gives us and treats anything it does not recognize
+ * as unsafe. The error the underlying failure happened in is wrapped in `cause`, and in an `AggregateError` when the host resolved to several
+ * addresses and each of them failed.
  */
 function isConnectError(error: unknown, depth = 0): boolean {
   // Guards against a cause that points back at itself, the chains we care about are only a couple of levels deep.
@@ -2100,6 +2104,9 @@ function isConnectError(error: unknown, depth = 0): boolean {
 
   const code = (error as Error & { code?: unknown }).code;
   if (typeof code === 'string' && connectErrorCodes.has(code)) return true;
+  if (connectErrorCodes.has(error.name)) return true;
+
+  if (connectErrorMessages.some((message) => error.message.includes(message))) return true;
 
   if (error instanceof AggregateError && error.errors.some((suberror) => isConnectError(suberror, depth + 1))) return true;
 

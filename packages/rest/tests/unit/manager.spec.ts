@@ -297,6 +297,19 @@ describe('[rest] manager', () => {
       expect(fetchStub.callCount).to.be.equal(2);
     });
 
+    it('Will re-send the request when the runtime only reports the failure in the message', async () => {
+      // Deno does not give us a code to go off
+      fetchStub
+        .onFirstCall()
+        .rejects(new TypeError('client error (Connect): tcp connect error: Connection refused (os error 61): error sending request'));
+      fetchStub
+        .onSecondCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
     it('Will stop re-sending the request once maxProxyConnectionRetryCount is exhausted', async () => {
       rest.maxProxyConnectionRetryCount = 2;
       fetchStub.rejects(new TypeError('fetch failed', { cause: Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' }) }));
