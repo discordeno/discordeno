@@ -294,6 +294,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       permissionOverwrites: defaultValue,
       id: defaultValue,
       permissions: defaultValue,
+      appPermissions: defaultValue,
       lastMessageId: defaultValue,
       ownerId: defaultValue,
       applicationId: defaultValue,
