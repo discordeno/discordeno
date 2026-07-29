@@ -1781,6 +1781,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId) {
+      return await rest.delete(rest.routes.oauth2.roleConnections(applicationId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
     async addGuildMember(guildId, userId, body) {
       return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
         body,

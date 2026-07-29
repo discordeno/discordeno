@@ -1461,6 +1461,18 @@ export interface RestManager {
     options: Camelize<DiscordApplicationRoleConnection>,
   ) => Promise<Camelize<DiscordApplicationRoleConnection>>;
   /**
+   * Deletes the application role connection for the user.
+   *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to delete the role connection
+   *
+   * @remarks
+   * This requires the `role_connections.write` scope.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/user#delete-current-user-application-role-connection}
+   */
+  deleteCurrentUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<void>;
+  /**
    * Edits a webhook.
    *
    * @param webhookId - The ID of the webhook to edit.
