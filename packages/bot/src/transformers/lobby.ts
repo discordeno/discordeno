@@ -33,7 +33,7 @@ export function transformLobbyMessage(bot: Bot, payload: DiscordLobbyMessage): L
   const lobbyMessage = {} as SetupDesiredProps<LobbyMessage, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.id && payload.id) lobbyMessage.id = bot.transformers.snowflake(payload.id);
-  if (props.type && payload.type) lobbyMessage.type = payload.type;
+  if (props.type) lobbyMessage.type = payload.type;
   if (props.content && payload.content) lobbyMessage.content = payload.content;
   if (props.lobbyId && payload.lobby_id) lobbyMessage.lobbyId = bot.transformers.snowflake(payload.lobby_id);
   if (props.channelId && payload.channel_id) lobbyMessage.channelId = bot.transformers.snowflake(payload.channel_id);
