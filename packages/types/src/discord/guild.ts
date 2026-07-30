@@ -7,7 +7,7 @@ import type { DiscordInvite } from './invite.js';
 import type { OAuth2Scope } from './oauth2.js';
 import type { DiscordRole } from './permissions.js';
 import type { DiscordSticker } from './sticker.js';
-import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
+import type { DiscordAvatarDecorationData, DiscordCollectibles, DiscordUser } from './user.js';
 
 /** https://docs.discord.com/developers/resources/guild#guild-object-guild-structure */
 export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
@@ -105,7 +105,7 @@ export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcome_screen?: DiscordWelcomeScreen;
   /** Guild NSFW level */
-  nsfw_level: GuildNsfwLevel;
+  nsfw_level: GuildAgeRestrictionLevel;
   /** Custom guild stickers */
   stickers?: DiscordSticker[];
   /** Whether the guild has the boost progress bar enabled */
@@ -157,7 +157,7 @@ export enum VerificationLevels {
 }
 
 /** https://docs.discord.com/developers/resources/guild#guild-object-guild-nsfw-level */
-export enum GuildNsfwLevel {
+export enum GuildAgeRestrictionLevel {
   Default,
   Explicit,
   Safe,
@@ -361,6 +361,8 @@ export interface DiscordMember {
   communication_disabled_until?: string | null;
   /** data for the member's guild avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData | null;
+  /** data for the member's collectibles */
+  collectibles?: DiscordCollectibles | null;
 }
 
 /** https://docs.discord.com/developers/resources/guild#guild-member-object-guild-member-structure */

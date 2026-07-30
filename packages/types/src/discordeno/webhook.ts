@@ -1,9 +1,9 @@
 /** Types for: https://docs.discord.com/developers/resources/webhook */
 
-import type { DiscordAttachment, DiscordEmbed } from '../discord/message.js';
+import type { DiscordEmbed } from '../discord/message.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { MessageComponents } from './components.js';
-import type { AllowedMentions } from './message.js';
+import type { AllowedMentions, AttachmentRequest } from './message.js';
 import type { CreatePoll } from './poll.js';
 import type { FileContent } from './reference.js';
 
@@ -25,7 +25,7 @@ export interface ModifyWebhook {
   channelId?: BigString;
 }
 
-/** https://docs.discord.com/developers/resources/webhook#execute-webhook */
+/** https://docs.discord.com/developers/resources/webhook#execute-webhook-json/form-params */
 export interface ExecuteWebhook {
   // Query Parameters
 
@@ -65,8 +65,8 @@ export interface ExecuteWebhook {
   components?: MessageComponents;
   /** The contents of the files being sent */
   files?: FileContent[];
-  /** Attachment objects with filename and description */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
+  /** Metadata for the attachments */
+  attachments?: Partial<AttachmentRequest>[];
   /**
    * Message flags combined in a bitfield
    *
@@ -87,7 +87,7 @@ export interface GetWebhookMessageOptions {
   threadId: BigString;
 }
 
-/** https://docs.discord.com/developers/resources/webhook#edit-webhook-message */
+/** https://docs.discord.com/developers/resources/webhook#edit-webhook-message-json/form-params */
 export interface EditWebhookMessageOptions {
   // Query parameters
   /** Id of the thread the message is in */
@@ -124,8 +124,8 @@ export interface EditWebhookMessageOptions {
   components?: MessageComponents;
   /** The contents of the files being sent */
   files?: FileContent[];
-  /** Attached files to keep and possible descriptions for new files */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
+  /** Attached files to keep and their metadata */
+  attachments?: Partial<AttachmentRequest>[];
   /**
    * A poll!
    *

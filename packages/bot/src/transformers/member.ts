@@ -56,6 +56,7 @@ export function transformMember(bot: Bot, payload: Partial<DiscordMember>, extra
   if (props.toggles) member.toggles = new MemberToggles(payload);
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data);
+  if (props.collectibles && payload.collectibles) member.collectibles = bot.transformers.collectibles(bot, payload.collectibles);
 
   return callCustomizer('member', bot, payload, member, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,

@@ -35,7 +35,9 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -90,7 +92,7 @@ export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
-  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL;
+  const baseUrl = (options.proxy?.baseUrl ?? DISCORD_API_URL).replace(/\/$/, '');
   // Discord error can get nested a lot, so we use a custom inspect to change the depth to Infinity
   const baseErrorPrototype = {
     [inspect.custom](_depth: number, options: InspectOptions, _inspect: typeof inspect) {
@@ -114,6 +116,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
     maxRetryCount: Infinity,
+    requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
     rateLimitedPaths: new Map(),
@@ -428,6 +431,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`;
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions);
 
+      // Retries a request that was aborted because it hit `rest.requestTimeout`, or rejects it once the retry
+      // budget is exhausted. The caller is responsible for the `invalidBucket`/event bookkeeping beforehand.
+      const handleTimeout = async (options: SendRequestOptions, error: Error): Promise<void> => {
+        if (options.retryCount >= rest.maxRetryCount) {
+          rest.logger.debug(`request to ${url} timed out and exceeded the maximum allowed retries.`);
+          options.reject({
+            ok: false,
+            status: 999,
+            error: 'The request timed out and it maxed out the retries limit.',
+            errorObject: error,
+          });
+          return;
+        }
+
+        rest.logger.debug(`request to ${url} timed out after ${rest.requestTimeout}ms, retrying.`, error);
+        options.retryCount += 1;
+        await options.retryRequest?.(options);
+      };
+
       const loggingHeaders = { ...payload.headers };
 
       if (payload.headers.authorization) {
@@ -435,17 +457,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authorizationScheme} tokenhere`;
       }
 
-      const request = new Request(url, payload);
+      // Give this attempt a hard deadline. `AbortSignal.timeout` aborts the fetch (and any in-progress body
+      // read) once it fires, which makes the awaited fetch reject so a stalled connection can never keep this
+      // queue's `processPending` loop (and therefore the whole queue) wedged forever. Omitted when disabled.
+      const request = new Request(url, { ...payload, signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined });
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
       });
 
       rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders });
       const response = await fetch(request).catch(async (error) => {
-        rest.logger.debug(`request fetch to ${url} failed.`, error);
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+
+        // The attempt hit `rest.requestTimeout` and was aborted. Treat it like a transient failure and retry
+        // it through the queue, so a single stalled connection doesn't permanently fail the request.
+        if (isTimeoutError(error)) return await handleTimeout(options, error);
+
+        rest.logger.debug(`request fetch to ${url} failed.`, error);
         options.reject({
           ok: false,
           status: 999,
@@ -610,32 +640,55 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           options.headers[rest.authorizationHeader] = rest.authorization;
         }
 
-        const request = new Request(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options));
-        rest.events.request(request, {
-          body: options?.body,
-        });
+        const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        const result = await fetch(request);
-
-        // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-        const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
-
-        rest.events.response(request, result, {
-          requestBody: options?.body,
-          responseBody: body,
-        });
-
-        if (!result.ok) {
-          error.cause = Object.assign(Object.create(baseErrorPrototype), {
-            ok: false,
-            status: result.status,
-            body,
+        // Retry on timeout up to `maxRetryCount`, mirroring the queued `sendRequest` path, so a stalled proxy
+        // connection doesn't permanently fail the request (and can never hang the caller forever).
+        for (let retryCount = 0; ; retryCount++) {
+          // Give the request to the proxy a hard deadline too via `AbortSignal.timeout` (omitted when disabled).
+          const request = new Request(url, {
+            ...rest.createRequestBody(method, options),
+            signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined,
+          });
+          rest.events.request(request, {
+            body: options?.body,
           });
 
-          throw error;
-        }
+          const result = await fetch(request).catch((fetchError) => {
+            rest.events.requestError(request, fetchError, { body: options?.body });
 
-        return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
+            // The attempt hit `rest.requestTimeout` and was aborted; retry it until the budget is exhausted.
+            if (isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
+              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
+              return undefined;
+            }
+
+            throw fetchError;
+          });
+
+          // If result is undefined, the attempt timed out and is being retried.
+          if (!result) continue;
+
+          // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
+
+          rest.events.response(request, result, {
+            requestBody: options?.body,
+            responseBody: body,
+          });
+
+          if (!result.ok) {
+            error.cause = Object.assign(Object.create(baseErrorPrototype), {
+              ok: false,
+              status: result.status,
+              body,
+            });
+
+            throw error;
+          }
+
+          return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
+        }
       }
 
       return await new Promise(async (resolve, reject) => {
@@ -1620,16 +1673,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason });
     },
 
-    async editBotMember(guildId, body, reason) {
+    async editCurrentMember(guildId, body, reason) {
       return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body, reason });
     },
 
     async editMember(guildId, userId, body, reason) {
       return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body, reason });
-    },
-
-    async getMember(guildId, userId) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getCurrentMember(guildId, token) {
@@ -1639,6 +1688,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         unauthorized: true,
       });
+    },
+
+    async getMember(guildId, userId) {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
     },
 
     async getMembers(guildId, options) {
@@ -1725,6 +1778,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body,
         headers: {
           authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    async deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId) {
+      return await rest.delete(rest.routes.oauth2.roleConnections(applicationId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
         },
         unauthorized: true,
       });
@@ -1844,6 +1906,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async bulkUpdateLobbyMembers(lobbyId, options) {
+      return await rest.post<DiscordLobbyMember[]>(rest.routes.lobby.membersBulk(lobbyId), {
+        body: options,
+      });
+    },
+
     async removeMemberFromLobby(lobbyId, userId) {
       return await rest.delete(rest.routes.lobby.member(lobbyId, userId));
     },
@@ -1874,6 +1942,50 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         unauthorized: true,
       });
+    },
+
+    async updateLobbyMessageModerationMetadata(lobbyId, messageId, options) {
+      await rest.put(rest.routes.lobby.moderationMetadata(lobbyId, messageId), {
+        body: options,
+      });
+    },
+
+    createOrJoinLobby(options) {
+      return rest.put<DiscordLobby>(rest.routes.lobby.create(), {
+        body: options,
+      });
+    },
+
+    sendLobbyMessage(bearerToken, lobbyId, options) {
+      return rest.post<DiscordLobbyMessage>(rest.routes.lobby.messages(lobbyId), {
+        body: options,
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    getLobbyMessages(bearerToken, lobbyId, options) {
+      return rest.get<DiscordLobbyMessage[]>(rest.routes.lobby.messages(lobbyId, options), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    createLobbyChannelInviteForSelf(bearerToken, lobbyId) {
+      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteSelf(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    createLobbyChannelInviteForUser(lobbyId, userId) {
+      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteUser(lobbyId, userId));
     },
 
     preferSnakeCase(enabled: boolean) {
@@ -1915,4 +2027,9 @@ enum HttpResponseCode {
   Error = 400,
   /** This request got rate limited. */
   TooManyRequests = 429,
+}
+
+/** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
+function isTimeoutError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'TimeoutError';
 }

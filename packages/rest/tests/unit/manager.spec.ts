@@ -38,9 +38,15 @@ describe('[rest] manager', () => {
       expect(rest.baseUrl).to.be.equal(options.proxy.baseUrl);
     });
 
+    it('Strips a trailing slash from proxy base urls', () => {
+      const rest = createRestManager({ ...options, proxy: { ...options.proxy, baseUrl: 'https://localhost:8000/' } });
+      expect(rest.baseUrl).to.be.equal('https://localhost:8000');
+      expect(rest.isProxied).to.be.equal(true);
+    });
+
     it('With an application id', () => {
-      const subrest = createRestManager({ ...options, applicationId: '130136895395987456' });
-      expect(subrest.applicationId).to.be.equal(130136895395987456n);
+      const rest = createRestManager({ ...options, applicationId: '130136895395987456' });
+      expect(rest.applicationId).to.be.equal(130136895395987456n);
     });
   });
 

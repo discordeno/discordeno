@@ -2,10 +2,10 @@
 
 import type { ChannelFlags, ChannelTypes, ForumLayout, OverwriteTypes, SortOrderTypes, VideoQualityModes } from '../discord/channel.js';
 import type { TargetTypes } from '../discord/invite.js';
-import type { DiscordAttachment, DiscordEmbed, MessageFlags } from '../discord/message.js';
+import type { DiscordEmbed, MessageFlags } from '../discord/message.js';
 import type { BigString, Camelize } from '../shared.js';
 import type { MessageComponents } from './components.js';
-import type { AllowedMentions } from './message.js';
+import type { AllowedMentions, AttachmentRequest } from './message.js';
 import type { FileContent } from './reference.js';
 
 /** https://docs.discord.com/developers/resources/channel#overwrite-object-overwrite-structure */
@@ -97,7 +97,7 @@ export interface ModifyChannel {
    */
   topic?: string | null;
   /**
-   * Whether the channel is nsfw
+   * Whether the channel is age-restricted
    *
    * @remarks
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
@@ -113,7 +113,7 @@ export interface ModifyChannel {
    */
   rateLimitPerUser?: number | null;
   /**
-   * The bitrate (in bits) of the voice or stage channel
+   * The bitrate (in bits per second) of the voice or stage channel
    *
    * @remarks
    * Minimum of 8000 bits
@@ -178,11 +178,7 @@ export interface ModifyChannel {
    * Channel flags combined as a bitfield.
    *
    * @remarks
-   * - `REQUIRE_TAG` is supported only by {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels.
-   * - `HIDE_MEDIA_DOWNLOAD_OPTIONS` is supported only by {@link ChannelTypes.GuildMedia} channels
-   * - `PINNED` can only be set for threads in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
-   *
-   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildMedia}, {@link ChannelTypes.GuildForum} or a thread.
    *
    * @see {@link ChannelFlags}
    */
@@ -376,8 +372,8 @@ export interface ForumAndMediaThreadMessage {
   components?: MessageComponents;
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: BigString[];
-  /** Attachment objects with `filename` and `description` */
-  attachments?: Pick<DiscordAttachment, 'filename' | 'description' | 'id'>[];
+  /** Metadata for the attachments */
+  attachments?: Partial<AttachmentRequest>[];
   /**
    * Message flags combined as a bitfield, only SUPPRESS_EMBEDS, SUPPRESS_NOTIFICATIONS and IS_COMPONENTS_V2 can be set
    *

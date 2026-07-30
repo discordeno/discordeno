@@ -44,8 +44,18 @@ export interface DiscordApplication {
   slug?: string;
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
-  /** The application's public flags */
+  /**
+   * App's legacy public flags
+   *
+   * @see {@link ApplicationFlags}
+   */
   flags?: ApplicationFlags;
+  /**
+   * App's public flags
+   *
+   * @see {@link ApplicationFlags}
+   */
+  flags_new?: string;
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number;
   /** Approximate count of users that have installed the app. (authorized with `application.commands` as a scope) */
@@ -61,7 +71,7 @@ export interface DiscordApplication {
   /** Event webhook URL for the app to receive webhook events */
   event_webhooks_url?: string | null;
   /** If webhook events are enabled for the app. 1 to disable, and 2 to enable. */
-  event_webhooks_status: DiscordApplicationEventWebhookStatus;
+  event_webhooks_status?: DiscordApplicationEventWebhookStatus;
   /** List of Webhook event types the app subscribes to */
   event_webhooks_types?: DiscordWebhookEventType[];
   /** up to 5 tags describing the content and functionality of the application */

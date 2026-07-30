@@ -2,6 +2,7 @@ import type {
   AllowedMentions,
   BigString,
   DiscordActivity,
+  DiscordActivityAssets,
   DiscordActivityInstance,
   DiscordActivityLocation,
   DiscordAllowedMentions,
@@ -40,7 +41,9 @@ import type {
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMediaGalleryItem,
   DiscordMember,
   DiscordMessage,
@@ -58,6 +61,7 @@ import type {
   DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
+  DiscordSharedClientTheme,
   DiscordSku,
   DiscordSoundboardSound,
   DiscordStageInstance,
@@ -85,7 +89,7 @@ import {
   type SetupDesiredProps,
   type TransformersDesiredProperties,
 } from './desiredProperties.js';
-import { transformActivity, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
+import { transformActivity, transformActivityAssets, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
 import { transformApplication } from './transformers/application.js';
 import { transformApplicationCommand } from './transformers/applicationCommand.js';
 import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js';
@@ -114,7 +118,7 @@ import {
   transformInteractionResource,
 } from './transformers/interaction.js';
 import { transformInvite } from './transformers/invite.js';
-import { transformLobby, transformLobbyMember } from './transformers/lobby.js';
+import { transformLobby, transformLobbyInvite, transformLobbyMember, transformLobbyMessage } from './transformers/lobby.js';
 import { transformMember } from './transformers/member.js';
 import {
   transformMessage,
@@ -122,11 +126,12 @@ import {
   transformMessageInteractionMetadata,
   transformMessagePin,
   transformMessageSnapshot,
+  transformSharedClientTheme,
 } from './transformers/message.js';
 import { transformGuildOnboarding, transformGuildOnboardingPrompt, transformGuildOnboardingPromptOption } from './transformers/onboarding.js';
 import { transformPoll, transformPollMedia } from './transformers/poll.js';
 import { transformPresence } from './transformers/presence.js';
-import { transformActivityToDiscordActivity } from './transformers/reverse/activity.js';
+import { transformActivityAssetsToDiscordActivityAssets, transformActivityToDiscordActivity } from './transformers/reverse/activity.js';
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js';
 import { transformApplicationToDiscordApplication } from './transformers/reverse/application.js';
 import { transformApplicationCommandToDiscordApplicationCommand } from './transformers/reverse/applicationCommand.js';
@@ -141,6 +146,7 @@ import {
 import { transformEmbedToDiscordEmbed } from './transformers/reverse/embed.js';
 import { transformMemberToDiscordMember, transformUserToDiscordUser } from './transformers/reverse/member.js';
 import { transformTeamToDiscordTeam } from './transformers/reverse/team.js';
+import { transformCollectiblesToDiscordCollectibles, transformNameplateToDiscordNameplate } from './transformers/reverse/user.js';
 import { transformRole, transformRoleColors } from './transformers/role.js';
 import { transformScheduledEvent, transformScheduledEventRecurrenceRule } from './transformers/scheduledEvent.js';
 import { transformSku } from './transformers/sku.js';
@@ -154,6 +160,7 @@ import { transformTemplate } from './transformers/template.js';
 import { type ThreadMemberTransformerExtra, transformThreadMember, transformThreadMemberGuildCreate } from './transformers/threadMember.js';
 import type {
   Activity,
+  ActivityAssets,
   ActivityInstance,
   ActivityLocation,
   Application,
@@ -192,7 +199,9 @@ import type {
   Invite,
   InviteStageInstance,
   Lobby,
+  LobbyInvite,
   LobbyMember,
+  LobbyMessage,
   MediaGalleryItem,
   Member,
   Message,
@@ -208,6 +217,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SharedClientTheme,
   Sku,
   SoundboardSound,
   StageInstance,
@@ -236,6 +246,7 @@ import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerInformations = {
   activity: TransformerInformation<DiscordActivity, Activity, false>;
+  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets, false>;
   activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance, true>;
   activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation, true>;
   application: TransformerInformation<DiscordApplication, Application, true, { shardId?: number }>;
@@ -278,6 +289,8 @@ export type TransformerInformations = {
   inviteStageInstance: TransformerInformation<DiscordInviteStageInstance, InviteStageInstance, true, { guildId?: BigString }>;
   lobby: TransformerInformation<DiscordLobby, Lobby, true>;
   lobbyMember: TransformerInformation<DiscordLobbyMember, LobbyMember, true>;
+  lobbyMessage: TransformerInformation<DiscordLobbyMessage, LobbyMessage, true>;
+  lobbyInvite: TransformerInformation<DiscordLobbyInvite, LobbyInvite, true>;
   mediaGalleryItem: TransformerInformation<DiscordMediaGalleryItem, MediaGalleryItem, true>;
   member: TransformerInformation<DiscordMember, Member, true, { guildId?: BigString; userId?: BigString }>;
   message: TransformerInformation<DiscordMessage, Message, true, { shardId?: number }>;
@@ -293,6 +306,7 @@ export type TransformerInformations = {
   roleColors: TransformerInformation<DiscordRoleColors, RoleColors, true>;
   scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent, true>;
   scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule, true>;
+  sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme, true>;
   sku: TransformerInformation<DiscordSku, Sku, true>;
   soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound, true>;
   stageInstance: TransformerInformation<DiscordStageInstance, StageInstance, true>;
@@ -322,16 +336,19 @@ export type Transformers<TProps extends TransformersDesiredProperties, TBehavior
   desiredProperties: TProps;
   reverse: {
     activity: (bot: Bot<TProps, TBehavior>, payload: Activity) => DiscordActivity;
+    activityAssets: (bot: Bot<TProps, TBehavior>, payload: ActivityAssets) => DiscordActivityAssets;
     allowedMentions: (bot: Bot<TProps, TBehavior>, payload: AllowedMentions) => DiscordAllowedMentions;
     application: (bot: Bot<TProps, TBehavior>, payload: Application) => DiscordApplication;
     applicationCommand: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommand) => DiscordApplicationCommand;
     applicationCommandOption: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
     applicationCommandOptionChoice: (bot: Bot<TProps, TBehavior>, payload: ApplicationCommandOptionChoice) => DiscordApplicationCommandOptionChoice;
     attachment: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Attachment, TProps, TBehavior>) => DiscordAttachment;
+    collectibles: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Collectibles, TProps, TBehavior>) => DiscordCollectibles;
     component: (bot: Bot<TProps, TBehavior>, payload: Component) => DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse;
     embed: (bot: Bot<TProps, TBehavior>, payload: Embed) => DiscordEmbed;
     mediaGalleryItem: (bot: Bot<TProps, TBehavior>, payload: MediaGalleryItem) => DiscordMediaGalleryItem;
     member: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Member, TProps, TBehavior>) => DiscordMember;
+    nameplate: (bot: Bot<TProps, TBehavior>, payload: SetupDesiredProps<Nameplate, TProps, TBehavior>) => DiscordNameplate;
     snowflake: (snowflake: BigString) => string;
     team: (bot: Bot<TProps, TBehavior>, payload: Team) => DiscordTeam;
     unfurledMediaItem: (bot: Bot<TProps, TBehavior>, payload: UnfurledMediaItem) => DiscordUnfurledMediaItem;
@@ -350,6 +367,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
   return {
     customizers: {
       activity: _options.customizers?.activity ?? defaultCustomizer,
+      activityAssets: _options.customizers?.activityAssets ?? defaultCustomizer,
       activityInstance: _options.customizers?.activityInstance ?? defaultCustomizer,
       activityLocation: _options.customizers?.activityLocation ?? defaultCustomizer,
       application: _options.customizers?.application ?? defaultCustomizer,
@@ -387,6 +405,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       inviteStageInstance: _options.customizers?.inviteStageInstance ?? defaultCustomizer,
       lobby: _options.customizers?.lobby ?? defaultCustomizer,
       lobbyMember: _options.customizers?.lobbyMember ?? defaultCustomizer,
+      lobbyMessage: _options.customizers?.lobbyMessage ?? defaultCustomizer,
+      lobbyInvite: _options.customizers?.lobbyInvite ?? defaultCustomizer,
       mediaGalleryItem: _options.customizers?.mediaGalleryItem ?? defaultCustomizer,
       member: _options.customizers?.member ?? defaultCustomizer,
       message: _options.customizers?.message ?? defaultCustomizer,
@@ -402,6 +422,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       roleColors: _options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: _options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: _options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sharedClientTheme: _options.customizers?.sharedClientTheme ?? defaultCustomizer,
       sku: _options.customizers?.sku ?? defaultCustomizer,
       soundboardSound: _options.customizers?.soundboardSound ?? defaultCustomizer,
       stageInstance: _options.customizers?.stageInstance ?? defaultCustomizer,
@@ -425,6 +446,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     desiredProperties: createDesiredPropertiesObject(_options.desiredProperties ?? {}),
     reverse: {
       activity: _options.reverse?.activity ?? transformActivityToDiscordActivity,
+      activityAssets: _options.reverse?.activityAssets ?? transformActivityAssetsToDiscordActivityAssets,
       allowedMentions: _options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       application: _options.reverse?.application ?? transformApplicationToDiscordApplication,
       applicationCommand: _options.reverse?.applicationCommand ?? transformApplicationCommandToDiscordApplicationCommand,
@@ -432,16 +454,19 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       applicationCommandOptionChoice:
         _options.reverse?.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
       attachment: _options.reverse?.attachment ?? transformAttachmentToDiscordAttachment,
+      collectibles: _options.reverse?.collectibles ?? transformCollectiblesToDiscordCollectibles,
       component: _options.reverse?.component ?? transformComponentToDiscordComponent,
       embed: _options.reverse?.embed ?? transformEmbedToDiscordEmbed,
       mediaGalleryItem: _options.reverse?.mediaGalleryItem ?? transformMediaGalleryItemToDiscordMediaGalleryItem,
       member: _options.reverse?.member ?? transformMemberToDiscordMember,
+      nameplate: _options.reverse?.nameplate ?? transformNameplateToDiscordNameplate,
       snowflake: _options.reverse?.snowflake ?? bigintToSnowflake,
       team: _options.reverse?.team ?? transformTeamToDiscordTeam,
       unfurledMediaItem: _options.reverse?.unfurledMediaItem ?? transformUnfurledMediaItemToDiscordUnfurledMediaItem,
       user: _options.reverse?.user ?? transformUserToDiscordUser,
     },
     activity: _options.activity ?? transformActivity,
+    activityAssets: _options.activityAssets ?? transformActivityAssets,
     activityInstance: _options.activityInstance ?? transformActivityInstance,
     activityLocation: _options.activityLocation ?? transformActivityLocation,
     application: _options.application ?? transformApplication,
@@ -479,6 +504,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     inviteStageInstance: _options.inviteStageInstance ?? transformInviteStageInstance,
     lobby: _options.lobby ?? transformLobby,
     lobbyMember: _options.lobbyMember ?? transformLobbyMember,
+    lobbyMessage: _options.lobbyMessage ?? transformLobbyMessage,
+    lobbyInvite: _options.lobbyInvite ?? transformLobbyInvite,
     mediaGalleryItem: _options.mediaGalleryItem ?? transformMediaGalleryItem,
     member: _options.member ?? transformMember,
     message: _options.message ?? transformMessage,
@@ -494,6 +521,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     roleColors: _options.roleColors ?? transformRoleColors,
     scheduledEvent: _options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: _options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sharedClientTheme: _options.sharedClientTheme ?? transformSharedClientTheme,
     sku: _options.sku ?? transformSku,
     soundboardSound: _options.soundboardSound ?? transformSoundboardSound,
     snowflake: _options.snowflake ?? snowflakeToBigint,
@@ -522,8 +550,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
  *
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
- * @template TExtra - Additional extra information that might be needed for transformation.
  * @template TPartial - Indicates if the transformer supports partial payloads.
+ * @template TExtra - Additional extra information that might be needed for transformation.
  */
 export type TransformerInformation<TPayload, TTransformed, TPartial extends boolean, TExtra = {}> = {
   payload: TPayload;

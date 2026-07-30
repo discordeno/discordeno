@@ -70,7 +70,7 @@ export interface CreateGuildChannel {
   type?: ChannelTypes;
   /** Channel topic (0-1024 characters) */
   topic?: string;
-  /** The bitrate (in bits) of the voice channel (voice only) */
+  /** The bitrate (in bits per second) of the voice channel (voice only) */
   bitrate?: number;
   /** The user limit of the voice channel (voice only) */
   userLimit?: number;
@@ -82,7 +82,7 @@ export interface CreateGuildChannel {
   permissionOverwrites?: Overwrite[];
   /** Id of the parent category for a channel */
   parentId?: BigString;
-  /** Whether the channel is nsfw */
+  /** Whether the channel is age-restricted */
   nsfw?: boolean;
   /** Channel voice region id of the voice or stage channel, automatic when set to null */
   rtcRegion?: string;
@@ -100,6 +100,15 @@ export interface CreateGuildChannel {
   defaultForumLayout?: ForumLayout;
   /** The initial ratelimit to set on newly created threads in a channel. */
   defaultThreadRateLimitPerUser?: number;
+  /**
+   * Channel flags combined as a bitfield.
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildMedia}, {@link ChannelTypes.GuildForum}.
+   *
+   * @see {@link ChannelFlags}
+   */
+  flags?: number;
 }
 
 /** https://docs.discord.com/developers/resources/guild#modify-guild-channel-positions-json-params */
@@ -112,6 +121,12 @@ export interface ModifyGuildChannelPositions {
   lockPermissions?: boolean | null;
   /** The new parent ID for the channel that is moved */
   parentId?: BigString | null;
+  /**
+   * Channel flags combined as a bitfield.
+   *
+   * @see {@link ChannelFlags}
+   */
+  flags?: number | null;
 }
 
 /** https://docs.discord.com/developers/resources/guild#list-guild-members-query-string-params */
@@ -167,7 +182,7 @@ export interface ModifyGuildMember {
 }
 
 /** https://docs.discord.com/developers/resources/guild#modify-current-member-json-params */
-export interface EditBotMemberOptions {
+export interface ModifyCurrentMember {
   /** Value to set user's nickname to	 */
   nick?: string | null;
   /** Data URI base64 encoded banner image */

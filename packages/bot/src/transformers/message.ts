@@ -5,6 +5,7 @@ import {
   type DiscordMessageInteractionMetadata,
   type DiscordMessagePin,
   type DiscordMessageSnapshot,
+  type DiscordSharedClientTheme,
   MessageFlags,
 } from '@discordeno/types';
 import { snowflakeToTimestamp } from '@discordeno/utils';
@@ -13,7 +14,15 @@ import { CHANNEL_MENTION_REGEX } from '../constants.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
-import type { Message, MessageCall, MessageInteraction, MessageInteractionMetadata, MessagePin, MessageSnapshot } from './types.js';
+import type {
+  Message,
+  MessageCall,
+  MessageInteraction,
+  MessageInteractionMetadata,
+  MessagePin,
+  MessageSnapshot,
+  SharedClientTheme,
+} from './types.js';
 
 const EMPTY_STRING = '';
 
@@ -197,6 +206,7 @@ export function transformMessage(bot: Bot, payload: Partial<DiscordMessage>, ext
   if (props.mentionedRoleIds && payload.mention_roles?.length)
     message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id));
   if (props.mentions && payload.mentions?.length) message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user));
+  if (props.channelType && payload.channel_type) message.channelType = payload.channel_type;
   if (props.messageReference && payload.message_reference) {
     const reference = {} as NonNullable<Message['messageReference']>;
     const messageReferenceProps = bot.transformers.desiredProperties.messageReference;
@@ -326,6 +336,20 @@ export function transformMessageCall(bot: Bot, payload: Partial<DiscordMessageCa
   if (props.endedTimestamp && payload.ended_timestamp) call.endedTimestamp = Date.parse(payload.ended_timestamp);
 
   return callCustomizer('messageCall', bot, payload, call, {
+    partial: extra?.partial ?? false,
+  });
+}
+
+export function transformSharedClientTheme(bot: Bot, payload: Partial<DiscordSharedClientTheme>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.sharedClientTheme;
+  const theme = {} as SetupDesiredProps<SharedClientTheme, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.colors && payload.colors) theme.colors = payload.colors;
+  if (props.baseMix && payload.base_mix !== undefined) theme.baseMix = payload.base_mix;
+  if (props.gradientAngle && payload.gradient_angle !== undefined) theme.gradientAngle = payload.gradient_angle;
+  if (props.baseTheme && payload.base_theme !== undefined && payload.base_theme !== null) theme.baseTheme = payload.base_theme;
+
+  return callCustomizer('sharedClientTheme', bot, payload, theme, {
     partial: extra?.partial ?? false,
   });
 }

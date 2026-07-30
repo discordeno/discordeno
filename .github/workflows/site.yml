@@ -15,33 +15,37 @@ jobs:
       contents: read
       actions: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: yarn
-          cache-dependency-path: |
-            yarn.lock
-            website/yarn.lock
+          cache-dependency-path: yarn.lock
+      - uses: actions/setup-node@v7
+        with:
+          cache: yarn
+          cache-dependency-path: website/yarn.lock
       - name: yarn install (root)
         run: yarn install --immutable
+        # Root turbo cache
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
+        uses: rharkor/caching-for-turbo@v2.5.1
         with:
           cache-prefix: turbo-cache-
-      - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
-        with:
-          cache-prefix: turbo-cache-website-
-          server-port: 41231 # The default is 41230, but we use a different cache key so we need a different port
       - name: Build all pkg
-        run: yarn release-build
+        run: yarn build:type
       - name: Build docs
         run: yarn turbo build:doc --single-package
       - run: yarn install --immutable
         working-directory: ./website
+        # Website turbo cache
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v2.5.1
+        with:
+          cache-prefix: turbo-cache-website-
+          server-port: 41231
       - name: Restore bundler cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: ${{ runner.os }}-docusaurus-bundler-${{ github.sha }}
           path: ./website/node_modules/.cache
@@ -50,8 +54,6 @@ jobs:
       - name: Build website
         run: yarn turbo build
         working-directory: ./website
-        env:
-          TURBO_API: http://localhost:41231
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
@@ -59,24 +61,11 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
           cache: yarn
-          cache-dependency-path: |
-            yarn.lock
-            website/yarn.lock
-      - name: yarn install (root)
-        run: yarn install --immutable
-      - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
-        with:
-          cache-prefix: turbo-cache-
-      - name: Build all pkg
-        run: yarn release-build
-      - name: Build docs
-        run: yarn turbo build:doc --single-package
+          cache-dependency-path: website/yarn.lock
       - run: yarn install --immutable
         working-directory: ./website
       - run: yarn typecheck
