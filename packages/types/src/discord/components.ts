@@ -901,7 +901,7 @@ export interface DiscordUnfurledMediaItem {
    *
    * @see {@link DiscordUnfurledMediaItemFlags}
    */
-  flags: number;
+  flags?: number;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
   attachment_id?: string | null;
 }

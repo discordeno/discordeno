@@ -711,7 +711,7 @@ export interface UnfurledMediaItem {
    *
    * @see {@link DiscordUnfurledMediaItemFlags}
    */
-  flags: ToggleBitfield;
+  flags?: ToggleBitfield;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
   attachmentId?: bigint;
 }
@@ -788,13 +788,6 @@ export interface EmbedFooter {
   iconUrl?: string;
   proxyIconUrl?: string;
   text: string;
-}
-
-export interface EmbedThumbnail {
-  proxyUrl?: string;
-  height?: number;
-  width?: number;
-  url: string;
 }
 
 export interface EmbedProvider {
