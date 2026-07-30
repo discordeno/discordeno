@@ -1237,7 +1237,7 @@ export interface Member {
   /** Guild member flags */
   flags: number;
   /** Data for the member's collectibles */
-  collectibles: Collectibles;
+  collectibles?: Collectibles;
 }
 
 export interface Message {
