@@ -35,7 +35,9 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -1786,6 +1788,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId) {
+      return await rest.delete(rest.routes.oauth2.roleConnections(applicationId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
     async addGuildMember(guildId, userId, body) {
       return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
         body,
@@ -1900,6 +1911,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
+    async bulkUpdateLobbyMembers(lobbyId, options) {
+      return await rest.post<DiscordLobbyMember[]>(rest.routes.lobby.membersBulk(lobbyId), {
+        body: options,
+      });
+    },
+
     async removeMemberFromLobby(lobbyId, userId) {
       return await rest.delete(rest.routes.lobby.member(lobbyId, userId));
     },
@@ -1930,6 +1947,50 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         unauthorized: true,
       });
+    },
+
+    async updateLobbyMessageModerationMetadata(lobbyId, messageId, options) {
+      await rest.put(rest.routes.lobby.moderationMetadata(lobbyId, messageId), {
+        body: options,
+      });
+    },
+
+    createOrJoinLobby(options) {
+      return rest.put<DiscordLobby>(rest.routes.lobby.create(), {
+        body: options,
+      });
+    },
+
+    sendLobbyMessage(bearerToken, lobbyId, options) {
+      return rest.post<DiscordLobbyMessage>(rest.routes.lobby.messages(lobbyId), {
+        body: options,
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    getLobbyMessages(bearerToken, lobbyId, options) {
+      return rest.get<DiscordLobbyMessage[]>(rest.routes.lobby.messages(lobbyId, options), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    createLobbyChannelInviteForSelf(bearerToken, lobbyId) {
+      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteSelf(lobbyId), {
+        headers: {
+          authorization: `Bearer ${bearerToken}`,
+        },
+        unauthorized: true,
+      });
+    },
+
+    createLobbyChannelInviteForUser(lobbyId, userId) {
+      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteUser(lobbyId, userId));
     },
 
     preferSnakeCase(enabled: boolean) {

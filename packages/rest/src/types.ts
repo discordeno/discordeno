@@ -5,6 +5,7 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkUpdateLobbyMember,
   Camelize,
   ChannelTypes,
   CreateApplicationCommand,
@@ -24,6 +25,7 @@ import type {
   CreateGuildStickerOptions,
   CreateLobby,
   CreateMessageOptions,
+  CreateOrJoinLobby,
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
@@ -66,7 +68,9 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
@@ -114,6 +118,7 @@ import type {
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
+  GetLobbyMessages,
   GetMessagesOptions,
   GetPollAnswerVotes,
   GetReactions,
@@ -149,6 +154,7 @@ import type {
   ScheduledEventStatus,
   SearchGuildMessagesOptions,
   SearchMembers,
+  SendLobbyMessage,
   SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
@@ -1463,6 +1469,18 @@ export interface RestManager {
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnection>,
   ) => Promise<Camelize<DiscordApplicationRoleConnection>>;
+  /**
+   * Deletes the application role connection for the user.
+   *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to delete the role connection
+   *
+   * @remarks
+   * This requires the `role_connections.write` scope.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/user#delete-current-user-application-role-connection}
+   */
+  deleteCurrentUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<void>;
   /**
    * Edits a webhook.
    *
@@ -3228,6 +3246,18 @@ export interface RestManager {
    */
   createLobby: (options: CreateLobby) => Promise<Camelize<DiscordLobby>>;
   /**
+   * Creates a new lobby for the application identified by a `secret`, or joins the calling user to the existing lobby with that secret if one already exists.
+   *
+   * Updates lobby metadata and the calling member's metadata on join.
+   *
+   * @param options - The options to create or join the lobby
+   * @returns - The created or joined lobby
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   */
+  createOrJoinLobby: (options: CreateOrJoinLobby) => Promise<Camelize<DiscordLobby>>;
+  /**
    * Returns a lobby object for the specified lobby id, if it exists.
    *
    * @param lobbyId - The ID of the lobby to get
@@ -3260,6 +3290,22 @@ export interface RestManager {
    * @returns The lobby member object
    */
   addMemberToLobby: (lobbyId: BigString, userId: BigString, options: AddLobbyMember) => Promise<Camelize<DiscordLobbyMember>>;
+  /**
+   * Adds, updates, or removes up to 25 members from the specified lobby in a single request.
+   *
+   * @param lobbyId - The ID of the lobby to add, update, or remove members from
+   * @param options - The options to add, update, or remove members from the lobby
+   * @returns Returns an array of lobby member objects for the upserted members. Removed members are not included in the response.
+   *
+   * @remarks
+   * Members with `remove_member: false` (the default) are upserted — added if not present, or updated with the provided metadata and flags if already a member. Members with `remove_member: true` are removed.
+   *
+   * Users unknown to Discord will return a 404 UNKNOWN_USER error.
+   * Users that fail permission checks or who have already reached the maximum number of lobbies per application (and are not already a member of this lobby) are silently dropped from the upsert set.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/lobby#bulk-update-lobby-members}
+   */
+  bulkUpdateLobbyMembers: (lobbyId: BigString, options: BulkUpdateLobbyMember[]) => Promise<Camelize<DiscordLobbyMember>[]>;
   /**
    * Removes the provided user from the specified lobby. It is safe to call this even if the user is no longer a member of the lobby, but will fail if the lobby does not exist.
    *
@@ -3302,6 +3348,77 @@ export interface RestManager {
    * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
    */
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<Camelize<DiscordLobby>>;
+  /**
+   * Sets the moderation metadata for a lobby message. The metadata is app-scoped and delivered to active game clients via the Social SDK as a realtime message update.
+   *
+   * @param lobbyId - The ID of the lobby to set the moderation metadata
+   * @param messageId - The ID of the message to set the moderation metadata
+   * @param options - The moderation metadata to set
+   *
+   * @remarks
+   * Uses `Bot` token for authorization.
+   *
+   * For the options: Free-form key–value pairs describing the moderation decision. Up to 5 keys; key length <= 1024 characters; value length <= 2000 characters
+   *
+   * @see {@link https://discord.com/developers/docs/game-sdk/social-sdk/chat-moderation#server-side-chat-moderation} for the full moderation flow.
+   */
+  updateLobbyMessageModerationMetadata: (lobbyId: BigString, messageId: BigString, options: Record<string, string>) => Promise<void>;
+  /**
+   * Sends a message to the specified lobby. The calling user must be a member of the lobby.
+   *
+   * @param bearerToken - The access token of the user
+   * @param lobbyId - The ID of the lobby to send the message to
+   * @param options - The options to send the message
+   * @returns Returns the created lobby message object.
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   *
+   * If the lobby has a linked channel, the message is also forwarded to that channel.
+   * If forwarding fails (for example, due to AutoMod), the lobby message is still delivered to other lobby members.
+   */
+  sendLobbyMessage: (bearerToken: string, lobbyId: BigString, options: SendLobbyMessage) => Promise<Camelize<DiscordLobbyMessage>>;
+  /**
+   * Returns the most recent messages in the specified lobby. The calling user must be a member of the lobby.
+   *
+   * @param bearerToken - The access token of the user
+   * @param lobbyId - The ID of the lobby to get the messages from
+   * @param options - The options to get the messages
+   * @returns Returns an array of lobby message objects
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   */
+  getLobbyMessages: (bearerToken: string, lobbyId: BigString, options?: GetLobbyMessages) => Promise<Camelize<DiscordLobbyMessage>[]>;
+  /**
+   * Creates a single-use guild invite to the lobby's linked channel, targeted at the calling user.
+   *
+   *
+   * @param bearerToken - The access token of the user
+   * @param lobbyId - The ID of the lobby to create the invite for
+   * @returns The created invite object
+   *
+   * @remarks
+   * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
+   *
+   * The lobby must have a linked channel and the caller must be a member of the lobby.
+   * The invite expires after one hour.
+   */
+  createLobbyChannelInviteForSelf: (bearerToken: string, lobbyId: BigString) => Promise<Camelize<DiscordLobbyInvite>>;
+  /**
+   * Creates a single-use guild invite to the lobby's linked channel on behalf of an application, targeted at the specified user.
+   *
+   * @param lobbyId - The ID of the lobby to create the invite for
+   * @param userId - The ID of the user to create the invite for
+   * @returns The created invite object
+   *
+   * @remarks
+   * Uses `Bot` token for authorization
+   *
+   * The lobby must have a linked channel.
+   * The invite expires after one hour.
+   */
+  createLobbyChannelInviteForUser: (lobbyId: BigString, userId: BigString) => Promise<Camelize<DiscordLobbyInvite>>;
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';

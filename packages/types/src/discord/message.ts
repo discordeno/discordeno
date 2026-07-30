@@ -111,6 +111,8 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   poll?: DiscordPoll;
   /** The call associated with the message */
   call?: DiscordMessageCall;
+  /** The custom client-side theme shared via the message */
+  shared_client_theme?: DiscordSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#search-guild-messages-response-body */
@@ -395,7 +397,7 @@ export interface DiscordEmbed {
   /** Image information */
   image?: DiscordEmbedImage;
   /** Thumbnail information */
-  thumbnail?: DiscordEmbedThumbnail;
+  thumbnail?: DiscordEmbedImage;
   /** Video information */
   video?: DiscordEmbedVideo;
   /** Provider information */
@@ -404,21 +406,21 @@ export interface DiscordEmbed {
   author?: DiscordEmbedAuthor;
   /** Fields information */
   fields?: DiscordEmbedField[];
+  /**
+   * Embed flags combined as a bitfield
+   *
+   * @see {@link DiscordEmbedFlags}
+   */
+  flags?: number;
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-types */
 export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result';
 
-/** https://docs.discord.com/developers/resources/message#embed-object-embed-thumbnail-structure */
-export interface DiscordEmbedThumbnail {
-  /** Source url of thumbnail (only supports http(s) and attachments) */
-  url: string;
-  /** A proxied url of the thumbnail */
-  proxy_url?: string;
-  /** Height of thumbnail */
-  height?: number;
-  /** Width of thumbnail */
-  width?: number;
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-flags */
+export enum DiscordEmbedFlags {
+  /** This embed is a fallback for a reply to an activity card */
+  IsContentInventoryEntry = 1 << 5,
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-video-structure */
@@ -431,6 +433,20 @@ export interface DiscordEmbedVideo {
   height?: number;
   /** Width of video */
   width?: number;
+  /** The video's media type */
+  content_type?: string;
+  /** Thumbhash placeholder of the video */
+  placeholder?: string;
+  /** Version of the placeholder */
+  placeholder_version?: number;
+  /** Description (alt text) of the video */
+  description?: string;
+  /**
+   * Embed media flags combined as a bitfield
+   *
+   * @see {@link DiscordEmbedMediaFlags}
+   */
+  flags?: number;
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-image-structure */
@@ -443,6 +459,26 @@ export interface DiscordEmbedImage {
   height?: number;
   /** Width of image */
   width?: number;
+  /** The image's media type */
+  content_type?: string;
+  /** Thumbhash placeholder of the image */
+  placeholder?: string;
+  /** Version of the placeholder */
+  placeholder_version?: number;
+  /** Description (alt text) of the image */
+  description?: string;
+  /**
+   * Embed media flags combined as a bitfield
+   *
+   * @see {@link DiscordEmbedMediaFlags}
+   */
+  flags?: number;
+}
+
+/** https://docs.discord.com/developers/resources/message#embed-object-embed-media-flags */
+export enum DiscordEmbedMediaFlags {
+  /** This image is animated */
+  IsAnimated = 1 << 5,
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-provider-structure */
@@ -503,25 +539,47 @@ export interface DiscordAttachment {
   url: string;
   /** A proxied url of file */
   proxy_url: string;
-  /** Height of file (if image) */
+  /** Height of file (if image or video) */
   height?: number | null;
-  /** Width of file (if image) */
+  /** Width of file (if image or video) */
   width?: number | null;
+  /** Thumbhash placeholder (if image or video) */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video) */
+  placeholder_version?: number;
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean;
-  /** The duration of the audio file for a voice message */
+  /** The duration of the audio or video file */
   duration_secs?: number;
   /** A base64 encoded bytearray representing a sampled waveform for a voice message */
   waveform?: string;
   /** Attachment flags combined as a bitfield */
   flags?: AttachmentFlags;
+  /** for Clips, array of users who were in the stream */
+  clip_participants?: DiscordUser[];
+  /** for Clips, when the clip was created. ISO8601 timestamp */
+  clip_created_at?: string;
+  /** for Clips, the application in the stream, if recognized */
+  application?: DiscordApplication | null;
 }
 
 /** https://docs.discord.com/developers/resources/message#attachment-object-attachment-flags */
 export enum AttachmentFlags {
   None,
-  /** This attachment has been edited using the remix feature on mobile */
+  /** This attachment is a Clip from a stream */
+  IsClip = 1 << 0,
+  /** This attachment is the thumbnail of a thread in a media channel, displayed in the grid but not on the message */
+  IsThumbnail = 1 << 1,
+  /**
+   * This attachment has been edited using the remix feature on mobile
+   *
+   * @deprecated
+   */
   IsRemix = 1 << 2,
+  /** This attachment was marked as a spoiler and is blurred until clicked */
+  IsSpoiler = 1 << 3,
+  /** This attachment is an animated image */
+  IsAnimated = 1 << 5,
 }
 
 /** https://docs.discord.com/developers/resources/message#channel-mention-object-channel-mention-structure */
@@ -576,6 +634,28 @@ export interface DiscordMessagePin {
   pinned_at: string;
   /** the pinned message */
   message: DiscordMessage;
+}
+
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
+export interface DiscordSharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradient_angle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  base_mix: number;
+  /** The mode of the theme */
+  base_theme?: DiscordBaseTheme | null;
+}
+
+/** https://docs.discord.com/developers/resources/message#base-theme-types */
+export enum DiscordBaseTheme {
+  /** Equivalent to {@link Dark} */
+  Unset,
+  Dark,
+  Light,
+  Darker,
+  Midnight,
 }
 
 /** https://docs.discord.com/developers/resources/message#get-reactions-reaction-types */
