@@ -24,6 +24,7 @@ import type {
   DiscordApplicationIntegrationType,
   DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordBaseTheme,
   DiscordEmbedFlags,
   DiscordEmbedMediaFlags,
   DiscordEntitlementType,
@@ -516,6 +517,8 @@ export interface Channel {
   defaultAutoArchiveDuration?: number;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions;
+  /**computed permissions for the bot user in the channel, including overwrites, only included when part of the resolved data received on an interaction. This does not include implicit permissions, which may need to be checked separately */
+  appPermissions?: Permissions;
   /** The flags of the channel */
   flags?: number;
   /**
@@ -1316,6 +1319,8 @@ export interface Message {
   member?: Member;
   /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
   mentions?: User[];
+  /** The type of channel the message was sent in. Only present when received from the gateway MESSAGE_CREATE event */
+  channelType?: ChannelTypes;
   /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
   mentionedChannelIds?: bigint[];
   /** Roles specifically mentioned in this message */
@@ -1344,6 +1349,8 @@ export interface Message {
   poll?: Poll;
   /** The call associated with the message */
   call?: MessageCall;
+  /** The custom client-side theme shared via the message */
+  sharedClientTheme?: SharedClientTheme;
   /** Holds all the boolean values on this message. */
   bitfield?: ToggleBitfield;
   /** Whether this message has been published to subscribed channels (via Channel Following) */
@@ -1482,6 +1489,17 @@ export interface MessagePin {
   pinnedAt: number;
   /** the pinned message */
   message: Message;
+}
+
+export interface SharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradientAngle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  baseMix: number;
+  /** The mode of the theme */
+  baseTheme?: DiscordBaseTheme;
 }
 
 export interface Reaction {
@@ -2127,4 +2145,38 @@ export interface LobbyMember {
   metadata?: Record<string, string>;
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-message-object */
+export interface LobbyMessage {
+  /** id of the message */
+  id: bigint;
+  /** Message type */
+  type: MessageTypes;
+  /** Message content */
+  content: string;
+  /** id of the lobby this message was sent to */
+  lobbyId: bigint;
+  /** Included for compatibility with the messages interface; equal to lobby_id */
+  channelId: bigint;
+  /** The user who sent the message */
+  author: User;
+  /** Dispatch-only metadata sent with the message */
+  metadata?: Record<string, string>;
+  /** Moderation metadata set via Update Lobby Message Moderation Metadata */
+  moderationMetadata?: Record<string, string>;
+  /**
+   * Message flags bitfield
+   *
+   * @see {@link MessageFlags}
+   */
+  flags: ToggleBitfield;
+  /** The application that sent the message */
+  applicationId: bigint;
+}
+
+/** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */
+export interface LobbyInvite {
+  /** The invite code for the lobby's linked channel */
+  code: string;
 }

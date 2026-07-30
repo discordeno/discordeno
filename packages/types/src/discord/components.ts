@@ -198,9 +198,18 @@ export interface DiscordStringSelectComponent extends DiscordBaseComponent {
   options: DiscordSelectOption[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be chosen.
+   *
+   * @default 1
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -325,9 +334,18 @@ export interface DiscordUserSelectComponent extends DiscordBaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   default_values?: DiscordSelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be chosen.
+   *
+   * @default 1
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -397,9 +415,18 @@ export interface DiscordRoleSelectComponent extends DiscordBaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   default_values?: DiscordSelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be chosen.
+   *
+   * @default 1
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -461,9 +488,18 @@ export interface DiscordMentionableSelectComponent extends DiscordBaseComponent 
    * The number of default values must be in the range defined by minValues and maxValues
    */
   default_values?: DiscordSelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be chosen.
+   *
+   * @default 1
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -533,9 +569,18 @@ export interface DiscordChannelSelectComponent extends DiscordBaseComponent {
    * The number of default values must be in the range defined by minValues and maxValues
    */
   default_values?: DiscordSelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be chosen.
+   *
+   * @default 1
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   */
   min_values?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /** The maximum number of items that can be chosen. Default 1. Max 25. */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -762,6 +807,8 @@ export interface DiscordFileUploadComponent extends DiscordBaseComponent {
    * @remarks
    * Between 1-10
    *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
    * @default 1
    */
   max_values?: number;
@@ -826,7 +873,16 @@ export interface DiscordCheckboxGroupComponent extends DiscordBaseComponent {
   custom_id: string;
   /** List of options to show; min 1, max 10. */
   options: DiscordCheckboxGroupOption[];
-  /** Minimum number of items that must be chosen; min 0, max 10. Defaults to 1; if set to 0 required must be false. */
+  /**
+   * Minimum number of items that must be chosen.
+   *
+   * @default 1
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   */
   min_values?: number;
   /** Maximum number of items that can be chosen; min 1, max 10. Defaults to the number of options. */
   max_values?: number;
