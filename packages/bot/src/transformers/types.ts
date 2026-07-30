@@ -25,6 +25,8 @@ import type {
   DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordBaseTheme,
+  DiscordEmbedFlags,
+  DiscordEmbedMediaFlags,
   DiscordEntitlementType,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPromptType,
@@ -40,6 +42,7 @@ import type {
   DiscordSubscriptionStatus,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
+  DiscordUnfurledMediaItemFlags,
   DiscordWebhookEventType,
   EmbedTypes,
   ExplicitContentFilterLevels,
@@ -316,10 +319,14 @@ export interface Attachment {
   id: bigint;
   /** description for the file (max 1024 characters) */
   description?: string;
-  /** Height of file (if image) */
+  /** Height of file (if image or video) */
   height?: number;
-  /** Width of file (if image) */
+  /** Width of file (if image or video) */
   width?: number;
+  /** Thumbhash placeholder (if image or video) */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video) */
+  placeholderVersion?: number;
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean;
   /** The duration of the audio file for a voice message */
@@ -328,6 +335,12 @@ export interface Attachment {
   waveform?: string;
   /** Attachment flags combined as a bitfield */
   flags?: AttachmentFlags;
+  /** for Clips, array of users who were in the stream */
+  clipParticipants?: User[];
+  /** for Clips, when the clip was created. ISO8601 timestamp */
+  clipCreatedAt?: string;
+  /** for Clips, the application in the stream, if recognized */
+  application?: Application;
 }
 
 export interface AuditLogEntry {
@@ -687,8 +700,21 @@ export interface UnfurledMediaItem {
   height?: number | null;
   /** The width of the media item. This field is ignored and provided by the API as part of the response */
   width?: number | null;
+  /** Thumbhash placeholder if image or video. This field is ignored and provided by the API as part of the response */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video). This field is ignored and provided by the API as part of the response */
+  placeholderVersion?: number;
   /** The media type of the content. This field is ignored and provided by the API as part of the response */
   contentType?: string;
+  /**
+   * Unfurled media item flags combined as a bitfield
+   *
+   * @remarks
+   * This field is ignored and provided by the API as part of the response
+   *
+   * @see {@link DiscordUnfurledMediaItemFlags}
+   */
+  flags?: ToggleBitfield;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
   attachmentId?: bigint;
 }
@@ -719,10 +745,12 @@ export interface Embed {
   timestamp?: number;
   color?: number;
   footer?: EmbedFooter;
-  thumbnail?: EmbedThumbnail;
+  thumbnail?: EmbedImage;
   provider?: EmbedProvider;
   author?: EmbedAuthor;
   fields?: EmbedField[];
+  /** @see {@link DiscordEmbedFlags} */
+  flags?: ToggleBitfield;
 }
 
 export interface EmbedImage {
@@ -730,6 +758,16 @@ export interface EmbedImage {
   height?: number;
   width?: number;
   url: string;
+  contentType?: string;
+  placeholder?: string;
+  placeholderVersion?: number;
+  description?: string;
+  /**
+   * Embed media flags combined as a bitfield
+   *
+   * @see {@link DiscordEmbedMediaFlags}
+   */
+  flags?: ToggleBitfield;
 }
 
 export interface EmbedVideo {
@@ -737,19 +775,22 @@ export interface EmbedVideo {
   proxyUrl?: string;
   height?: number;
   width?: number;
+  contentType?: string;
+  placeholder?: string;
+  placeholderVersion?: number;
+  description?: string;
+  /**
+   * Embed media flags combined as a bitfield
+   *
+   * @see {@link DiscordEmbedMediaFlags}
+   */
+  flags?: ToggleBitfield;
 }
 
 export interface EmbedFooter {
   iconUrl?: string;
   proxyIconUrl?: string;
   text: string;
-}
-
-export interface EmbedThumbnail {
-  proxyUrl?: string;
-  height?: number;
-  width?: number;
-  url: string;
 }
 
 export interface EmbedProvider {

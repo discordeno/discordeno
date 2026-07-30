@@ -283,6 +283,11 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       duration_secs: defaultValue,
       waveform: defaultValue,
       flags: defaultValue,
+      application: defaultValue,
+      clipCreatedAt: defaultValue,
+      clipParticipants: defaultValue,
+      placeholder: defaultValue,
+      placeholderVersion: defaultValue,
       ...desiredProperties.attachment,
     },
     channel: {
@@ -714,6 +719,9 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       width: defaultValue,
       contentType: defaultValue,
       attachmentId: defaultValue,
+      flags: defaultValue,
+      placeholder: defaultValue,
+      placeholderVersion: defaultValue,
       ...desiredProperties.unfurledMediaItem,
     },
     user: {

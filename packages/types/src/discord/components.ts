@@ -943,8 +943,27 @@ export interface DiscordUnfurledMediaItem {
   height?: number | null;
   /** The width of the media item. This field is ignored and provided by the API as part of the response */
   width?: number | null;
+  /** Thumbhash placeholder if image or video. This field is ignored and provided by the API as part of the response */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video). This field is ignored and provided by the API as part of the response */
+  placeholder_version?: number;
   /** The media type of the content. This field is ignored and provided by the API as part of the response */
   content_type?: string;
+  /**
+   * Unfurled media item flags combined as a bitfield
+   *
+   * @remarks
+   * This field is ignored and provided by the API as part of the response
+   *
+   * @see {@link DiscordUnfurledMediaItemFlags}
+   */
+  flags?: number;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
   attachment_id?: string | null;
+}
+
+/** https://docs.discord.com/developers/components/reference#unfurled-media-item-unfurled-media-item-flags */
+export enum DiscordUnfurledMediaItemFlags {
+  /** This image is animated */
+  IsAnimated = 1 << 0,
 }
