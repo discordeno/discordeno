@@ -452,7 +452,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async requestMembers(guildId, options) {
       const shardId = gateway.calculateShardId(guildId);
 
-      if (gateway.intents && (!options?.limit || options.limit > 1) && !(gateway.intents & GatewayIntents.GuildMembers))
+      if ((!options?.limit || options.limit > 1) && (gateway.intents & GatewayIntents.GuildMembers) === 0)
         throw new Error('Cannot fetch more then 1 member without the GUILD_MEMBERS intent');
 
       gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> data: ${JSON.stringify(options)}`);

@@ -49,7 +49,7 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
    * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
    */
   mention_channels?: DiscordChannelMention[];
-  /** Any attached files */
+  /** Any attached files that are not referenced in embeds or components */
   attachments: DiscordAttachment[];
   /** Any embedded content */
   embeds: DiscordEmbed[];
@@ -111,6 +111,8 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   poll?: DiscordPoll;
   /** The call associated with the message */
   call?: DiscordMessageCall;
+  /** The custom client-side theme shared via the message */
+  shared_client_theme?: DiscordSharedClientTheme;
 }
 
 /** https://docs.discord.com/developers/resources/message#message-object-message-types */
@@ -485,7 +487,7 @@ export interface DiscordAttachment {
   width?: number | null;
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean;
-  /** The duration of the audio file for a voice message */
+  /** The duration of the audio or video file */
   duration_secs?: number;
   /** A base64 encoded bytearray representing a sampled waveform for a voice message */
   waveform?: string;
@@ -552,6 +554,28 @@ export interface DiscordMessagePin {
   pinned_at: string;
   /** the pinned message */
   message: DiscordMessage;
+}
+
+/** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
+export interface DiscordSharedClientTheme {
+  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  colors: string[];
+  /** The direction of the theme's colors (max of 360) */
+  gradient_angle: number;
+  /** The intensity of the theme's colors (max of 100) */
+  base_mix: number;
+  /** The mode of the theme */
+  base_theme?: DiscordBaseTheme | null;
+}
+
+/** https://docs.discord.com/developers/resources/message#base-theme-types */
+export enum DiscordBaseTheme {
+  /** Equivalent to {@link Dark} */
+  Unset,
+  Dark,
+  Light,
+  Darker,
+  Midnight,
 }
 
 /** https://docs.discord.com/developers/resources/message#get-reactions-reaction-types */

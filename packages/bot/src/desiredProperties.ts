@@ -28,7 +28,9 @@ import type {
   Invite,
   InviteStageInstance,
   Lobby,
+  LobbyInvite,
   LobbyMember,
+  LobbyMessage,
   MediaGalleryItem,
   Member,
   Message,
@@ -48,6 +50,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SharedClientTheme,
   Sku,
   SoundboardSound,
   StageInstance,
@@ -92,6 +95,8 @@ export interface TransformersObjects {
   inviteStageInstance: InviteStageInstance;
   lobby: Lobby;
   lobbyMember: LobbyMember;
+  lobbyMessage: LobbyMessage;
+  lobbyInvite: LobbyInvite;
   mediaGalleryItem: MediaGalleryItem;
   member: Member;
   message: Message;
@@ -111,6 +116,7 @@ export interface TransformersObjects {
   roleColors: RoleColors;
   scheduledEvent: ScheduledEvent;
   scheduledEventRecurrenceRule: ScheduledEventRecurrenceRule;
+  sharedClientTheme: SharedClientTheme;
   sku: Sku;
   soundboardSound: SoundboardSound;
   stageInstance: StageInstance;
@@ -298,6 +304,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       permissionOverwrites: defaultValue,
       id: defaultValue,
       permissions: defaultValue,
+      appPermissions: defaultValue,
       lastMessageId: defaultValue,
       ownerId: defaultValue,
       applicationId: defaultValue,
@@ -556,6 +563,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       mentionedChannelIds: defaultValue,
       mentionedRoleIds: defaultValue,
       mentions: defaultValue,
+      channelType: defaultValue,
       messageReference: defaultValue,
       messageSnapshots: defaultValue,
       referencedMessage: defaultValue,
@@ -567,6 +575,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       webhookId: defaultValue,
       poll: defaultValue,
       call: defaultValue,
+      sharedClientTheme: defaultValue,
       resolved: defaultValue,
       ...desiredProperties.message,
     },
@@ -670,6 +679,13 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       byYearDay: defaultValue,
       count: defaultValue,
       ...desiredProperties.scheduledEventRecurrenceRule,
+    },
+    sharedClientTheme: {
+      colors: defaultValue,
+      baseMix: defaultValue,
+      gradientAngle: defaultValue,
+      baseTheme: defaultValue,
+      ...desiredProperties.sharedClientTheme,
     },
     stageInstance: {
       id: defaultValue,
@@ -886,6 +902,23 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       metadata: defaultValue,
       flags: defaultValue,
       ...desiredProperties.lobbyMember,
+    },
+    lobbyMessage: {
+      id: defaultValue,
+      content: defaultValue,
+      applicationId: defaultValue,
+      flags: defaultValue,
+      author: defaultValue,
+      channelId: defaultValue,
+      lobbyId: defaultValue,
+      metadata: defaultValue,
+      moderationMetadata: defaultValue,
+      type: defaultValue,
+      ...desiredProperties.lobbyMessage,
+    },
+    lobbyInvite: {
+      code: defaultValue,
+      ...desiredProperties.lobbyInvite,
     },
   } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>;
 }
