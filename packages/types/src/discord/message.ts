@@ -394,7 +394,7 @@ export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-flags */
 export enum DiscordEmbedFlags {
   /** This embed is a fallback for a reply to an activity card */
-  IsContentInventoryEntry = 1 << 0,
+  IsContentInventoryEntry = 1 << 5,
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-video-structure */
