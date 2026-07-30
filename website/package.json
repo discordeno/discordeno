@@ -1,7 +1,7 @@
 {
   "name": "website",
   "version": "0.0.0",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.17.1",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -36,7 +36,7 @@
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
     "@types/react": "^19.2.17",
-    "turbo": "^2.10.6",
+    "turbo": "^2.10.7",
     "typescript": "6.0.3",
     "webpack": "5.109.0"
   },

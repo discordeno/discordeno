@@ -694,6 +694,32 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       link: (lobbyId) => {
         return `/lobbies/${encode(lobbyId)}/channel-linking`;
       },
+
+      membersBulk: (lobbyId) => {
+        return `/lobbies/${encode(lobbyId)}/members/bulk`;
+      },
+
+      moderationMetadata: (lobbyId, messageId) => {
+        return `/lobbies/${encode(lobbyId)}/messages/${encode(messageId)}/moderation-metadata`;
+      },
+
+      messages: (lobbyId, options) => {
+        let url = `/lobbies/${encode(lobbyId)}/messages?`;
+
+        if (options) {
+          if (options.limit) url += `limit=${encode(options.limit)}`;
+        }
+
+        return url;
+      },
+
+      inviteSelf: (lobbyId) => {
+        return `/lobbies/${encode(lobbyId)}/members/@me/invites`;
+      },
+
+      inviteUser: (lobbyId, userId) => {
+        return `/lobbies/${encode(lobbyId)}/members/${encode(userId)}/invites`;
+      },
     },
 
     applicationEmoji(applicationId, emojiId) {

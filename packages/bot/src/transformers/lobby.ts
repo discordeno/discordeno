@@ -1,8 +1,8 @@
-import type { DiscordLobby, DiscordLobbyMember } from '@discordeno/types';
+import type { DiscordLobby, DiscordLobbyInvite, DiscordLobbyMember, DiscordLobbyMessage } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
-import type { Lobby, LobbyMember } from './types.js';
+import type { Lobby, LobbyInvite, LobbyMember, LobbyMessage } from './types.js';
 
 export function transformLobby(bot: Bot, payload: DiscordLobby): Lobby {
   const props = bot.transformers.desiredProperties.lobby;
@@ -26,4 +26,31 @@ export function transformLobbyMember(bot: Bot, payload: DiscordLobbyMember): Lob
   if (props.flags && payload.flags) lobbyMember.flags = new ToggleBitfield(payload.flags);
 
   return bot.transformers.customizers.lobbyMember(bot, payload, lobbyMember);
+}
+
+export function transformLobbyMessage(bot: Bot, payload: DiscordLobbyMessage): LobbyMessage {
+  const props = bot.transformers.desiredProperties.lobbyMessage;
+  const lobbyMessage = {} as SetupDesiredProps<LobbyMessage, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.id && payload.id) lobbyMessage.id = bot.transformers.snowflake(payload.id);
+  if (props.type) lobbyMessage.type = payload.type;
+  if (props.content && payload.content) lobbyMessage.content = payload.content;
+  if (props.lobbyId && payload.lobby_id) lobbyMessage.lobbyId = bot.transformers.snowflake(payload.lobby_id);
+  if (props.channelId && payload.channel_id) lobbyMessage.channelId = bot.transformers.snowflake(payload.channel_id);
+  if (props.author && payload.author) lobbyMessage.author = bot.transformers.user(bot, payload.author);
+  if (props.metadata && payload.metadata) lobbyMessage.metadata = payload.metadata;
+  if (props.moderationMetadata && payload.moderation_metadata) lobbyMessage.moderationMetadata = payload.moderation_metadata;
+  if (props.flags && payload.flags) lobbyMessage.flags = new ToggleBitfield(payload.flags);
+  if (props.applicationId && payload.application_id) lobbyMessage.applicationId = bot.transformers.snowflake(payload.application_id);
+
+  return bot.transformers.customizers.lobbyMessage(bot, payload, lobbyMessage);
+}
+
+export function transformLobbyInvite(bot: Bot, payload: DiscordLobbyInvite): LobbyInvite {
+  const props = bot.transformers.desiredProperties.lobbyInvite;
+  const lobbyInvite = {} as SetupDesiredProps<LobbyInvite, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.code && payload.code) lobbyInvite.code = payload.code;
+
+  return bot.transformers.customizers.lobbyInvite(bot, payload, lobbyInvite);
 }

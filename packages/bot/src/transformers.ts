@@ -42,7 +42,9 @@ import type {
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
   DiscordLobby,
+  DiscordLobbyInvite,
   DiscordLobbyMember,
+  DiscordLobbyMessage,
   DiscordMediaGalleryItem,
   DiscordMember,
   DiscordMessage,
@@ -60,6 +62,7 @@ import type {
   DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
+  DiscordSharedClientTheme,
   DiscordSku,
   DiscordSoundboardSound,
   DiscordStageInstance,
@@ -116,7 +119,7 @@ import {
   transformInteractionResource,
 } from './transformers/interaction.js';
 import { transformInvite } from './transformers/invite.js';
-import { transformLobby, transformLobbyMember } from './transformers/lobby.js';
+import { transformLobby, transformLobbyInvite, transformLobbyMember, transformLobbyMessage } from './transformers/lobby.js';
 import { transformMember } from './transformers/member.js';
 import {
   transformMessage,
@@ -124,6 +127,7 @@ import {
   transformMessageInteractionMetadata,
   transformMessagePin,
   transformMessageSnapshot,
+  transformSharedClientTheme,
 } from './transformers/message.js';
 import { transformGuildOnboarding, transformGuildOnboardingPrompt, transformGuildOnboardingPromptOption } from './transformers/onboarding.js';
 import { transformPoll, transformPollMedia } from './transformers/poll.js';
@@ -196,7 +200,9 @@ import type {
   Invite,
   InviteStageInstance,
   Lobby,
+  LobbyInvite,
   LobbyMember,
+  LobbyMessage,
   MediaGalleryItem,
   Member,
   Message,
@@ -212,6 +218,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SharedClientTheme,
   Sku,
   SoundboardSound,
   StageInstance,
@@ -290,6 +297,8 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   inviteStageInstance: TransformerFunction<TProps, TBehavior, DiscordInviteStageInstance, InviteStageInstance, { guildId?: BigString }>;
   lobby: TransformerFunction<TProps, TBehavior, DiscordLobby, Lobby>;
   lobbyMember: TransformerFunction<TProps, TBehavior, DiscordLobbyMember, LobbyMember>;
+  lobbyMessage: TransformerFunction<TProps, TBehavior, DiscordLobbyMessage, LobbyMessage>;
+  lobbyInvite: TransformerFunction<TProps, TBehavior, DiscordLobbyInvite, LobbyInvite>;
   mediaGalleryItem: TransformerFunction<TProps, TBehavior, DiscordMediaGalleryItem, MediaGalleryItem>;
   member: TransformerFunction<TProps, TBehavior, DiscordMember, Member, { guildId?: BigString; userId?: BigString }>;
   message: TransformerFunction<TProps, TBehavior, DiscordMessage, Message, { shardId?: number }>;
@@ -305,6 +314,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
   roleColors: TransformerFunction<TProps, TBehavior, DiscordRoleColors, RoleColors>;
   scheduledEvent: TransformerFunction<TProps, TBehavior, DiscordScheduledEvent, ScheduledEvent>;
   scheduledEventRecurrenceRule: TransformerFunction<TProps, TBehavior, DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule>;
+  sharedClientTheme: TransformerFunction<TProps, TBehavior, DiscordSharedClientTheme, SharedClientTheme>;
   sku: TransformerFunction<TProps, TBehavior, DiscordSku, Sku>;
   soundboardSound: TransformerFunction<TProps, TBehavior, DiscordSoundboardSound, SoundboardSound>;
   stageInstance: TransformerFunction<TProps, TBehavior, DiscordStageInstance, StageInstance>;
@@ -403,6 +413,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       inviteStageInstance: _options.customizers?.inviteStageInstance ?? defaultCustomizer,
       lobby: _options.customizers?.lobby ?? defaultCustomizer,
       lobbyMember: _options.customizers?.lobbyMember ?? defaultCustomizer,
+      lobbyMessage: _options.customizers?.lobbyMessage ?? defaultCustomizer,
+      lobbyInvite: _options.customizers?.lobbyInvite ?? defaultCustomizer,
       mediaGalleryItem: _options.customizers?.mediaGalleryItem ?? defaultCustomizer,
       member: _options.customizers?.member ?? defaultCustomizer,
       message: _options.customizers?.message ?? defaultCustomizer,
@@ -418,6 +430,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       roleColors: _options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: _options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: _options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sharedClientTheme: _options.customizers?.sharedClientTheme ?? defaultCustomizer,
       sku: _options.customizers?.sku ?? defaultCustomizer,
       soundboardSound: _options.customizers?.soundboardSound ?? defaultCustomizer,
       stageInstance: _options.customizers?.stageInstance ?? defaultCustomizer,
@@ -499,6 +512,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     inviteStageInstance: _options.inviteStageInstance ?? transformInviteStageInstance,
     lobby: _options.lobby ?? transformLobby,
     lobbyMember: _options.lobbyMember ?? transformLobbyMember,
+    lobbyMessage: _options.lobbyMessage ?? transformLobbyMessage,
+    lobbyInvite: _options.lobbyInvite ?? transformLobbyInvite,
     mediaGalleryItem: _options.mediaGalleryItem ?? transformMediaGalleryItem,
     member: _options.member ?? transformMember,
     message: _options.message ?? transformMessage,
@@ -514,6 +529,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     roleColors: _options.roleColors ?? transformRoleColors,
     scheduledEvent: _options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: _options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sharedClientTheme: _options.sharedClientTheme ?? transformSharedClientTheme,
     sku: _options.sku ?? transformSku,
     soundboardSound: _options.soundboardSound ?? transformSoundboardSound,
     snowflake: _options.snowflake ?? snowflakeToBigint,
