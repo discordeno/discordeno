@@ -1,4 +1,4 @@
-import type { DiscordEmoji, DiscordPoll, DiscordPollMedia } from '@discordeno/types';
+import type { DiscordPoll, DiscordPollMedia } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
@@ -35,7 +35,7 @@ export function transformPollMedia(bot: Bot, payload: Partial<DiscordPollMedia>,
   const pollMedia = {} as SetupDesiredProps<PollMedia, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.text && payload.text) pollMedia.text = payload.text;
-  if (props.emoji && payload.emoji) pollMedia.emoji = bot.transformers.emoji(bot, payload.emoji as DiscordEmoji);
+  if (props.emoji && payload.emoji) pollMedia.emoji = bot.transformers.emoji(bot, payload.emoji, { partial: true });
 
   return callCustomizer('pollMedia', bot, payload, pollMedia, {
     partial: extra?.partial ?? false,

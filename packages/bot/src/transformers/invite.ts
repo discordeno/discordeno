@@ -20,7 +20,7 @@ export function transformInvite(bot: Bot, payload: Partial<DiscordInviteMetadata
   if (props.targetApplication && payload.target_application)
     invite.targetApplication = bot.transformers.application(bot, payload.target_application, { shardId: extra?.shardId, partial: true });
   if (props.temporary && payload.temporary) invite.temporary = payload.temporary;
-  if (props.uses && payload.uses) invite.uses = payload.uses;
+  if (props.uses && payload.uses !== undefined) invite.uses = payload.uses;
   if (props.channelId && payload.channel?.id) invite.channelId = bot.transformers.snowflake(payload.channel.id);
   if (props.guildId && payload.guild?.id) invite.guildId = bot.transformers.snowflake(payload.guild.id);
   if (props.approximateMemberCount && payload.approximate_member_count) invite.approximateMemberCount = payload.approximate_member_count;

@@ -1,4 +1,4 @@
-import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@discordeno/types';
+import { ChannelTypes, type DiscordGuild } from '@discordeno/types';
 import { Collection, iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
@@ -141,7 +141,7 @@ export function transformGuild(bot: Bot, payload: Partial<DiscordGuild>, extra?:
   if (props.unavailable && payload.unavailable) guild.unavailable = payload.unavailable;
   if (props.iconHash && payload.icon_hash) guild.iconHash = iconHashToBigInt(payload.icon_hash);
   if (props.presences && payload.presences)
-    guild.presences = payload.presences?.map((presence) => bot.transformers.presence(bot, presence as DiscordPresenceUpdate));
+    guild.presences = payload.presences?.map((presence) => bot.transformers.presence(bot, presence, { partial: true }));
   if (props.safetyAlertsChannelId && payload.safety_alerts_channel_id)
     guild.safetyAlertsChannelId = bot.transformers.snowflake(payload.safety_alerts_channel_id);
   if (props.incidentsData && payload.incidents_data) guild.incidentsData = bot.transformers.incidentsData(bot, payload.incidents_data);

@@ -694,7 +694,7 @@ export function callCustomizer<TInfo extends keyof TransformerInformations>(
   transformed:
     | SetupDesiredProps<TransformerInformations[TInfo]['transformed'], TransformersDesiredProperties, DesiredPropertiesBehavior>
     | Partial<SetupDesiredProps<TransformerInformations[TInfo]['transformed'], TransformersDesiredProperties, DesiredPropertiesBehavior>>,
-  extra: TransformerInformations[typeof customizer]['extra'] & { partial: boolean },
+  extra: TransformerInformations[TInfo]['extra'] & { partial: boolean },
 ): any {
   // The type of the customizer is not generalizable, so we use unknown, callCustomizer has the correct type and we cast it here
   const customizerFn = bot.transformers.customizers[customizer] as (bot: Bot, payload: unknown, transformed: unknown, extra: unknown) => any;

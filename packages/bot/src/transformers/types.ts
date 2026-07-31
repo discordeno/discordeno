@@ -967,7 +967,7 @@ export interface Guild {
   /** All active threads in the guild that the current user has permission to view */
   threads: Collection<bigint, Channel>;
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: PresenceUpdate[];
+  presences?: Partial<PresenceUpdate>[];
   /** Banner hash */
   banner?: bigint;
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
@@ -1208,7 +1208,7 @@ export interface Invite {
   /** The maximum number of times the invite can be used */
   maxUses: number;
   /** The type of target for this voice channel invite */
-  targetType: TargetTypes;
+  targetType?: TargetTypes;
   /** The target user for this invite */
   targetUser: User;
   /** The embedded application to open for this voice channel embedded application invite */

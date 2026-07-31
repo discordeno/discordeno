@@ -21,7 +21,7 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload, 
       : undefined,
     temporary: payload.temporary,
     uses: payload.uses,
-    expiresAt: Date.parse(payload.expires_at),
+    expiresAt: payload.expires_at ? Date.parse(payload.expires_at) : undefined,
     roleIds: payload.role_ids ? payload.role_ids.map((id) => bot.transformers.snowflake(id)) : undefined,
   });
 }

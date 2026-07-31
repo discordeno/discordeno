@@ -80,12 +80,12 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
     inviter?: SetupDesiredProps<User, TProps, TBehavior>;
     maxAge: number;
     maxUses: number;
-    targetType: TargetTypes;
+    targetType?: TargetTypes;
     targetUser?: SetupDesiredProps<User, TProps, TBehavior>;
     targetApplication?: Partial<SetupDesiredProps<Application, TProps, TBehavior>>;
     temporary: boolean;
     uses: number;
-    expiresAt: number;
+    expiresAt?: number;
     roleIds?: bigint[];
   }) => unknown;
   inviteDelete: (payload: { channelId: bigint; guildId?: bigint; code: string }) => unknown;

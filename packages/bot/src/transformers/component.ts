@@ -50,9 +50,9 @@ export function transformComponent(
 ) {
   let component: SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  // I don't know what we could do with a component without a type, so we just throw an error
+  // There's nothing to do with a component without a type, as it means an issue on Discord, so we just throw an error
   if (!payload.type) {
-    throw new Error(`[Component transformer] Received component payload without a type.`);
+    throw new Error(`[Discordeno] Received a component payload without a type in the component transformer.`);
   }
 
   // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
@@ -191,8 +191,7 @@ function transformButtonComponent(bot: Bot, payload: Partial<DiscordButtonCompon
   if (props.label && payload.label) button.label = payload.label;
   if (props.customId && payload.custom_id) button.customId = payload.custom_id;
   if (props.style && payload.style) button.style = payload.style;
-  // @ts-expect-error TODO: Deal with partials
-  if (props.emoji && payload.emoji) button.emoji = bot.transformers.emoji(bot, payload.emoji);
+  if (props.emoji && payload.emoji) button.emoji = bot.transformers.emoji(bot, payload.emoji, { partial: true });
   if (props.url && payload.url) button.url = payload.url;
   if (props.disabled && payload.disabled) button.disabled = payload.disabled;
   if (props.skuId && payload.sku_id) button.skuId = bot.transformers.snowflake(payload.sku_id);
