@@ -229,4 +229,54 @@ describe('[rest] manager', () => {
       });
     });
   });
+
+  describe('rest.sendRequest with a server error', () => {
+    let rest: RestManager;
+    let fetchStub: sinon.SinonStub;
+
+    const jsonHeaders = { 'Content-Type': 'application/json' };
+    const gatewayResponse = () => new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: jsonHeaders });
+    const rejection = async (promise: Promise<unknown>) =>
+      await promise.then(
+        () => undefined,
+        (reason: Error) => reason,
+      );
+
+    beforeEach(() => {
+      rest = createRestManager({ token });
+      fetchStub = sinon.stub(globalThis, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchStub.restore();
+    });
+
+    for (const status of [502, 503]) {
+      it(`Will re-send the request when a gateway in front of the api answered (${status})`, async () => {
+        fetchStub.onFirstCall().resolves(new Response('{}', { status, headers: jsonHeaders }));
+        fetchStub.onSecondCall().resolves(gatewayResponse());
+
+        expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+        expect(fetchStub.callCount).to.be.equal(2);
+      });
+    }
+
+    // These two reached the api, so it may have carried the request out before it failed or ran out of time
+    for (const status of [500, 504]) {
+      it(`Will not re-send the request when the api itself answered (${status})`, async () => {
+        fetchStub.resolves(new Response('{}', { status, headers: jsonHeaders }));
+
+        expect(await rejection(rest.makeRequest('GET', '/gateway/bot'))).to.be.instanceOf(Error);
+        expect(fetchStub.callCount).to.be.equal(1);
+      });
+    }
+
+    it('Will stop re-sending once maxRetryCount is exhausted', async () => {
+      rest.maxRetryCount = 0;
+      fetchStub.resolves(new Response('{}', { status: 502, headers: jsonHeaders }));
+
+      expect(await rejection(rest.makeRequest('GET', '/gateway/bot'))).to.be.instanceOf(Error);
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
+  });
 });
