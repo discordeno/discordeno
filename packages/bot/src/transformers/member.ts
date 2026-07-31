@@ -2,6 +2,7 @@ import type { BigString, DiscordMember } from '@discordeno/types';
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import { MemberToggles } from './toggles/member.js';
 import { Permissions } from './toggles/Permissions.js';
 import type { Member } from './types.js';
@@ -36,7 +37,7 @@ export const baseMember: Member = {
   },
 };
 
-export function transformMember(bot: Bot, payload: DiscordMember, extra?: { guildId?: BigString; userId?: BigString }): Member {
+export function transformMember(bot: Bot, payload: Partial<DiscordMember>, extra?: { guildId?: BigString; userId?: BigString; partial?: boolean }) {
   const member: SetupDesiredProps<Member, TransformersDesiredProperties, DesiredPropertiesBehavior> = Object.create(baseMember);
   const props = bot.transformers.desiredProperties.member;
 
@@ -55,9 +56,11 @@ export function transformMember(bot: Bot, payload: DiscordMember, extra?: { guil
   if (props.toggles) member.toggles = new MemberToggles(payload);
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data);
+  if (props.collectibles && payload.collectibles) member.collectibles = bot.transformers.collectibles(bot, payload.collectibles);
 
-  return bot.transformers.customizers.member(bot, payload, member, {
+  return callCustomizer('member', bot, payload, member, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra.guildId) : undefined,
     userId: extra?.userId ? bot.transformers.snowflake(extra.userId) : undefined,
+    partial: extra?.partial ?? false,
   });
 }

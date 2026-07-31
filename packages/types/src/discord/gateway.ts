@@ -17,7 +17,7 @@ import type { DiscordRole } from './permissions.js';
 import type { DiscordSoundboardSound } from './soundboard.js';
 import type { DiscordStageInstance } from './stageInstance.js';
 import type { DiscordSticker } from './sticker.js';
-import type { DiscordAvatarDecorationData, DiscordUser } from './user.js';
+import type { DiscordAvatarDecorationData, DiscordCollectibles, DiscordUser } from './user.js';
 import type { DiscordVoiceState } from './voice.js';
 
 /** https://docs.discord.com/developers/events/gateway#list-of-intents */
@@ -562,6 +562,8 @@ export interface DiscordGuildMemberUpdate {
   flags?: number;
   /** Data for the member's guild avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData | null;
+  /** Data for the member's collectibles */
+  collectibles?: DiscordCollectibles | null;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#guild-members-chunk-guild-members-chunk-event-fields */
@@ -698,7 +700,7 @@ export interface DiscordInviteCreate {
   /** The maximum number of times the invite can be used */
   max_uses: number;
   /** The type of target for this voice channel invite */
-  target_type: TargetTypes;
+  target_type?: TargetTypes;
   /** The target user for this invite */
   target_user?: DiscordUser;
   /** The embedded application to open for this voice channel embedded application invite */
@@ -708,7 +710,7 @@ export interface DiscordInviteCreate {
   /** How many times the invite has been used (always will be 0) */
   uses: number;
   /** The expiration date of this invite. */
-  expires_at: string;
+  expires_at: string | null;
   /** the role ID(s) for roles in the guild given to the users that accept this invite */
   role_ids?: string[];
 }
