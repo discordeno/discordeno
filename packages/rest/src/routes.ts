@@ -1,5 +1,5 @@
 import type { GetMessagesOptions, GetScheduledEventUsers, SearchGuildMessagesOptions } from '@discordeno/types';
-import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils';
+import { camelToSnakeCase, isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils';
 import type { RestRoutes } from './typings/routes.js';
 
 /**
