@@ -335,7 +335,7 @@ function transformMentionableSelectMenuComponent(
     if (props.values && payload.values) select.values = payload.values;
     if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
   } else {
-    const _payload = payload as Partial<DiscordUserSelectComponent>;
+    const _payload = payload as Partial<DiscordMentionableSelectComponent>;
 
     if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
     if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
