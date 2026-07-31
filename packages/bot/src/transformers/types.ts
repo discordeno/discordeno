@@ -1210,7 +1210,7 @@ export interface Invite {
   /** The type of target for this voice channel invite */
   targetType?: TargetTypes;
   /** The target user for this invite */
-  targetUser: User;
+  targetUser?: User;
   /** The embedded application to open for this voice channel embedded application invite */
   targetApplication?: Partial<Application>;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
