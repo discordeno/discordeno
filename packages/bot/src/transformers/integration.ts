@@ -3,7 +3,7 @@ import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { Integration } from './types.js';
 
-export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate): Integration {
+export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
   const integration = {
     guildId: bot.transformers.snowflake(payload.guild_id),
     id: bot.transformers.snowflake(payload.id),

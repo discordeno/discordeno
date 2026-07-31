@@ -75,6 +75,7 @@ import type {
   StickerFormatTypes,
   StickerTypes,
   SystemChannelFlags,
+  TargetTypes,
   TeamMembershipStates,
   TextStyles,
   VerificationLevels,
@@ -966,7 +967,7 @@ export interface Guild {
   /** All active threads in the guild that the current user has permission to view */
   threads: Collection<bigint, Channel>;
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: PresenceUpdate[];
+  presences?: Partial<PresenceUpdate>[];
   /** Banner hash */
   banner?: bigint;
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
@@ -1173,7 +1174,7 @@ export interface InteractionData {
 }
 
 export interface InteractionDataResolved {
-  messages?: Collection<bigint, Message>;
+  messages?: Collection<bigint, Partial<Message>>;
   users?: Collection<bigint, User>;
   members?: Collection<bigint, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>>;
   roles?: Collection<bigint, Role>;
@@ -1207,14 +1208,14 @@ export interface Invite {
   /** The maximum number of times the invite can be used */
   maxUses: number;
   /** The type of target for this voice channel invite */
-  targetType: number;
+  targetType?: TargetTypes;
   /** The target user for this invite */
-  targetUser: User;
+  targetUser?: User;
   /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Application;
+  targetApplication?: Partial<Application>;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
   temporary: boolean;
-  /** How many times the invite has been used (always will be 0) */
+  /** How many times the invite has been used */
   uses: number;
   /** Approximate count of online members (only present when target_user is set) */
   approximateMemberCount: number;

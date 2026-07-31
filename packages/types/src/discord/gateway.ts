@@ -700,7 +700,7 @@ export interface DiscordInviteCreate {
   /** The maximum number of times the invite can be used */
   max_uses: number;
   /** The type of target for this voice channel invite */
-  target_type: TargetTypes;
+  target_type?: TargetTypes;
   /** The target user for this invite */
   target_user?: DiscordUser;
   /** The embedded application to open for this voice channel embedded application invite */
@@ -710,7 +710,7 @@ export interface DiscordInviteCreate {
   /** How many times the invite has been used (always will be 0) */
   uses: number;
   /** The expiration date of this invite. */
-  expires_at: string;
+  expires_at: string | null;
   /** the role ID(s) for roles in the guild given to the users that accept this invite */
   role_ids?: string[];
 }
