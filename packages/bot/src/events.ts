@@ -91,7 +91,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   inviteDelete: (payload: { channelId: bigint; guildId?: bigint; code: string }) => unknown;
   guildMemberAdd: (member: SetupDesiredProps<Member, TProps, TBehavior>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown;
   guildMemberRemove: (user: SetupDesiredProps<User, TProps, TBehavior>, guildId: bigint) => unknown;
-  guildMemberUpdate: (member: SetupDesiredProps<Member, TProps, TBehavior>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown;
+  guildMemberUpdate: (member: Partial<SetupDesiredProps<Member, TProps, TBehavior>>, user: SetupDesiredProps<User, TProps, TBehavior>) => unknown;
   guildStickersUpdate: (payload: { guildId: bigint; stickers: SetupDesiredProps<Sticker, TProps, TBehavior>[] }) => unknown;
   messageCreate: (message: SetupDesiredProps<Message, TProps, TBehavior>) => unknown;
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: SetupDesiredProps<Message, TProps, TBehavior>) => unknown;

@@ -23,7 +23,6 @@ import type {
   InteractionDataOption,
   InteractionDataResolved,
   InteractionResource,
-  Message,
 } from './types.js';
 
 // Assume we have all desired properties for this or else typescript will get very confused for the return types of these functions.
@@ -230,11 +229,7 @@ export function transformInteractionDataResolved(
   if (payload.messages) {
     transformed.messages = new Collection(
       Object.entries(payload.messages).map(([key, value]) => {
-        const message = bot.transformers.message(bot, value, { shardId: extra?.shardId, partial: true }) as SetupDesiredProps<
-          Message,
-          TransformersDesiredProperties,
-          DesiredPropertiesBehavior.RemoveKey
-        >;
+        const message = bot.transformers.message(bot, value, { shardId: extra?.shardId, partial: true });
         const id = bot.transformers.snowflake(key);
 
         return [id, message];
@@ -282,13 +277,10 @@ export function transformInteractionDataResolved(
   if (payload.channels) {
     transformed.channels = new Collection(
       Object.entries(payload.channels).map(([key, value]) => {
-        const channel = bot.transformers.channel(bot, value) as InteractionResolvedDataChannel<
-          TransformersDesiredProperties,
-          DesiredPropertiesBehavior.RemoveKey
-        >;
+        const channel = bot.transformers.channel(bot, value, { partial: true });
         const id = bot.transformers.snowflake(key);
 
-        return [id, channel];
+        return [id, channel as InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey>];
       }),
     );
   }

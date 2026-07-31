@@ -1174,7 +1174,7 @@ export interface InteractionData {
 }
 
 export interface InteractionDataResolved {
-  messages?: Collection<bigint, Message>;
+  messages?: Collection<bigint, Partial<Message>>;
   users?: Collection<bigint, User>;
   members?: Collection<bigint, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>>;
   roles?: Collection<bigint, Role>;
