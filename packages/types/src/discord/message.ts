@@ -134,7 +134,7 @@ export interface DiscordSearchGuildMessages {
 /** https://docs.discord.com/developers/resources/message#search-guild-messages */
 export interface DiscordSearchGuildMessagesIndexing {
   message: string;
-  code: 110000;
+  code: HTTPJsonErrorCodes.IndexNotAvailable;
   documents_indexed: number;
   retry_after: number;
 }
