@@ -156,6 +156,7 @@ export interface DiscordInteractionDataResolved {
       | 'name'
       | 'type'
       | 'permissions'
+      | 'app_permissions'
       | 'last_message_id'
       | 'last_pin_timestamp'
       | 'nsfw'

@@ -91,7 +91,10 @@ export function transformUnfurledMediaItemToDiscordUnfurledMediaItem(bot: Bot, p
     proxy_url: payload.proxyUrl,
     height: payload.height,
     width: payload.width,
+    placeholder: payload.placeholder,
+    placeholder_version: payload.placeholderVersion,
     content_type: payload.contentType,
+    flags: payload.flags?.bitfield,
     attachment_id: payload.attachmentId ? bot.transformers.reverse.snowflake(payload.attachmentId) : undefined,
   };
 }
