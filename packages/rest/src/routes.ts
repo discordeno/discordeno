@@ -268,16 +268,17 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
     // Guild Endpoints
     guilds: {
       messagesSearch: (guildId, options?: SearchGuildMessagesOptions) => {
-        const params = new URLSearchParams();
+        let url = `/guilds/${encode(guildId)}/messages/search?`;
+
         if (options) {
           for (const [key, value] of Object.entries(options)) {
             if (value === undefined) continue;
-            const queryKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-            for (const item of Array.isArray(value) ? value : [value]) params.append(queryKey, String(item));
+
+            for (const item of Array.isArray(value) ? value : [value]) url += `&${camelToSnakeCase(key)}=${encode(item)}`;
           }
         }
-        const query = params.toString();
-        return `/guilds/${encode(guildId)}/messages/search${query ? `?${query}` : ''}`;
+        
+        return url;
       },
       all: () => {
         return '/guilds';
