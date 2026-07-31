@@ -208,7 +208,6 @@ function transformInputTextComponent(bot: Bot, payload: Partial<DiscordTextInput
   if (props.value && payload.value) input.value = payload.value;
   if (props.customId && payload.custom_id) input.customId = payload.custom_id;
 
-  // Check if it is the component or the response
   // We assume that if we find 'values' it is the interaction response
   if ('style' in payload) {
     if (props.style && payload.style) input.style = payload.style;
@@ -233,7 +232,6 @@ function transformStringSelectMenuComponent(
   if (props.id && payload.id) select.id = payload.id;
   if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
-  // We assume that if we find 'values' it is the interaction response
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
@@ -271,7 +269,6 @@ function transformUserSelectMenuComponent(bot: Bot, payload: Partial<DiscordUser
   if (props.id && payload.id) select.id = payload.id;
   if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
-  // Check if this is the user select response
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
@@ -301,13 +298,12 @@ function transformRoleSelectMenuComponent(bot: Bot, payload: Partial<DiscordRole
   if (props.id && payload.id) select.id = payload.id;
   if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
-  // Check if this is the role select response
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
     if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
   } else {
-    const _payload = payload as Partial<DiscordUserSelectComponent>;
+    const _payload = payload as Partial<DiscordRoleSelectComponent>;
 
     if (props.placeholder && _payload.placeholder) select.placeholder = _payload.placeholder;
     if (props.minValues && _payload.min_values) select.minValues = _payload.min_values;
@@ -334,7 +330,6 @@ function transformMentionableSelectMenuComponent(
   if (props.id && payload.id) select.id = payload.id;
   if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
-  // Check if this is the mentionable select response
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
@@ -367,7 +362,6 @@ function transformChannelSelectMenuComponent(
   if (props.id && payload.id) select.id = payload.id;
   if (props.customId && payload.custom_id) select.customId = payload.custom_id;
 
-  // Check if this is the channel select response
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
@@ -446,7 +440,6 @@ function transformTextDisplayComponent(bot: Bot, payload: Partial<DiscordTextDis
 
   if (props.type && payload.type) textDisplay.type = payload.type;
   if (props.id && payload.id) textDisplay.id = payload.id;
-  // That that this isn't a response
   // We assume that if we find 'content' it is the component
   if ('content' in payload) {
     if (props.content && payload.content) textDisplay.content = payload.content;
@@ -473,7 +466,6 @@ function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponen
 
   if (props.type && payload.type) label.type = payload.type;
   if (props.id && payload.id) label.id = payload.id;
-  // Check that this isn't a response
   // We assume that if we find 'label' it is the component
   if ('label' in payload) {
     if (props.label && payload.label) label.label = payload.label;
@@ -492,7 +484,6 @@ function transformFileUploadComponent(bot: Bot, payload: Partial<DiscordFileUplo
   if (props.id && payload.id) fileUpload.id = payload.id;
   if (props.customId && payload.custom_id) fileUpload.customId = payload.custom_id;
 
-  // Check that this is a response
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) fileUpload.values = payload.values;
@@ -515,7 +506,6 @@ function transformRadioGroupComponent(bot: Bot, payload: Partial<DiscordRadioGro
   if (props.id && payload.id) radioGroup.id = payload.id;
   if (props.customId && payload.custom_id) radioGroup.customId = payload.custom_id;
 
-  // Check if this is the component (has options) or the interaction response (modal submit, has value)
   // We assume that if we find 'options' it is the component
   if ('options' in payload) {
     if (props.options && payload.options) radioGroup.options = payload.options;
@@ -537,7 +527,6 @@ function transformCheckboxGroupComponent(bot: Bot, payload: Partial<DiscordCheck
   if (props.id && payload.id) checkboxGroup.id = payload.id;
   if (props.customId && payload.custom_id) checkboxGroup.customId = payload.custom_id;
 
-  // Check if this is the component (has options) or the interaction response (modal submit, has values)
   // We assume that if we find 'options' it is the component
   if ('options' in payload) {
     if (props.options && payload.options) checkboxGroup.options = payload.options;
