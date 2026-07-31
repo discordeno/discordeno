@@ -200,20 +200,24 @@ export interface CreateRestManagerOptions {
      */
     updateBearerTokenEndpoint?: string;
     /**
-     * Whether a request attempt that hit {@link CreateRestManagerOptions.requestTimeout | requestTimeout} should be re-sent to the proxy.
+     * Whether an attempt that failed without producing a response should be re-sent to the proxy.
      *
      * @remarks
-     * The timeout only aborts our side of the connection: the proxy may still be processing the request (it may
-     * simply be queued behind a rate limit) and it can still reach Discord, so re-sending it can execute
-     * non-idempotent requests twice (e.g. duplicate channel creates).
+     * This covers both an attempt that hit {@link CreateRestManagerOptions.requestTimeout | requestTimeout} and one whose
+     * connection failed. Neither tells us whether the proxy got the request: the timeout only aborts our side of the
+     * connection while the proxy keeps processing (it may simply be queued behind a rate limit), and a socket that dies
+     * once the request is on the wire may still have delivered it. `fetch` gives no way to tell those apart from never
+     * having connected at all, so re-sending can execute non-idempotent requests twice (e.g. duplicate channel creates).
      *
-     * Only enable this when your setup can deduplicate requests, for example by attaching an idempotency
+     * Only enable this when re-sending a request to your proxy is safe, for example by attaching an idempotency
      * key to each request that the proxy tracks in a store of your choosing (in memory, redis, ...) so a
      * re-sent request is recognized and executed only once. Discordeno does not provide such a mechanism.
      *
+     * Bounded by {@link RestManager.maxRetryCount} and {@link RestManager.maxProxyRetryCount}.
+     *
      * @default false
      */
-    retryOnTimeout?: boolean;
+    retryRequests?: boolean;
   };
   /**
    * The api versions which can be used to make requests.
@@ -238,8 +242,7 @@ export interface CreateRestManagerOptions {
    *
    * When a `proxy` is configured, a timed-out attempt is NOT retried: the proxy keeps processing the request after
    * the timeout aborts our side of the connection (it may simply be queued behind a rate limit), so re-sending it
-   * could execute it twice. If your setup can deduplicate re-sent requests, `proxy.retryOnTimeout` opts back into
-   * retrying timed-out attempts.
+   * could execute it twice. If re-sending against your proxy is safe, `proxy.retryRequests` opts back into it.
    *
    * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a
    * large attachment over a slow connection) can legitimately exceed it and be aborted/retried. Raise this value
@@ -277,21 +280,21 @@ export interface RestManager {
   authorizationHeader: string;
   /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
   updateBearerTokenEndpoint?: string;
-  /** Whether a proxied request attempt that hit `requestTimeout` is re-sent to the proxy. Only safe when the proxy setup deduplicates requests. Defaults to false. */
-  retryProxiedRequestsOnTimeout: boolean;
+  /** Whether a proxied attempt that failed without producing a response is re-sent to the proxy. Only safe when re-sending against the proxy is. Defaults to false. */
+  retryProxiedRequests: boolean;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
   /**
-   * The maximum amount of times a request that never reached the proxy should be re-sent. Defaults to 3.
+   * The maximum amount of times a proxied request should be re-sent. Defaults to 3.
    *
    * @remarks
-   * Only attempts that failed while connecting are re-sent, those were never handed to the proxy. This has its own limit because
-   * {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as long as the proxy stays down.
+   * This has its own limit because {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as
+   * long as the proxy stays down.
    *
-   * Whichever of the two is lower applies.
+   * Whichever of the two is lower applies. Only used when {@link RestManager.retryProxiedRequests} is enabled.
    */
-  maxProxyConnectionRetryCount: number;
-  /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequestsOnTimeout` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
+  maxProxyRetryCount: number;
+  /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequests` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
   globallyRateLimited: boolean;

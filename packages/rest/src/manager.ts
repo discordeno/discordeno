@@ -115,9 +115,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     invalidBucket: createInvalidRequestBucket({ logger: options.logger }),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
-    retryProxiedRequestsOnTimeout: options.proxy?.retryOnTimeout ?? false,
+    retryProxiedRequests: options.proxy?.retryRequests ?? false,
     maxRetryCount: Infinity,
-    maxProxyConnectionRetryCount: 3,
+    maxProxyRetryCount: 3,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -703,12 +703,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        // A timed out attempt is not re-sent by default: the timeout only aborts our side of the connection, the proxy keeps processing the
-        // request (it may simply be queued behind a rate limit) and it can still reach Discord, so re-sending it would execute non-idempotent
-        // requests twice. Retrying that is the proxy's job, it is the one talking to Discord. Attempts that never made it onto the wire are
-        // still re-sent, those never reached the proxy at all.
-        let timeoutRetryCount = 0;
-        let connectionRetryCount = 0;
+        // An attempt that failed without a response is not re-sent by default. Whatever it failed on, the proxy may already have the request
+        // (a timeout only aborts our side of the connection, and a socket that dies once the request is on the wire may still have delivered
+        // it), so re-sending it would execute non-idempotent requests twice. `fetch` gives no way to tell the two apart, so the caller is the
+        // one who decides: `proxy.retryRequests` says re-sending against this proxy is safe. Retrying towards Discord is the proxy's job, it
+        // is the one talking to Discord.
+        let retryCount = 0;
 
         for (;;) {
           // The request may have been aborted while the previous attempt was timing out, never send it in that case.
@@ -738,40 +738,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               throw rest.createRequestError(error, { ok: false, status: 999, error: 'The request was aborted.', errorObject: fetchError });
             }
 
-            if (isTimeoutError(fetchError)) {
-              // Only re-sent when the user opted in with `proxy.retryOnTimeout`, because their setup deduplicates requests.
-              if (rest.retryProxiedRequestsOnTimeout && timeoutRetryCount < rest.maxRetryCount) {
-                timeoutRetryCount++;
-                rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
-                return undefined;
-              }
+            const timedOut = isTimeoutError(fetchError);
 
-              rest.logger.debug(`request to proxy ${url} timed out and exceeded the maximum allowed retries.`);
+            if (rest.retryProxiedRequests && retryCount < rest.maxRetryCount && retryCount < rest.maxProxyRetryCount) {
+              retryCount++;
+              rest.logger.debug(`request to proxy ${url} failed without a response, retrying.`, fetchError);
+              // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
+              if (!timedOut) await delay(250);
+              return undefined;
+            }
+
+            if (timedOut) {
+              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms.`);
               throw rest.createRequestError(error, {
                 ok: false,
                 status: 999,
                 error: 'The request timed out and it maxed out the retries limit.',
-                errorObject: fetchError,
-              });
-            }
-
-            // We never managed to connect, so the request was never handed to the proxy and is safe to send again. This is the common case
-            // while the proxy is restarting. It has its own counter because `maxRetryCount` is Infinity by default and a proxy that stays
-            // down would otherwise keep every request alive forever.
-            if (isConnectError(fetchError)) {
-              if (connectionRetryCount < Math.min(rest.maxRetryCount, rest.maxProxyConnectionRetryCount)) {
-                connectionRetryCount++;
-                rest.logger.debug(`could not connect to the proxy at ${url}, retrying.`, fetchError);
-                // Small backoff so a proxy that is down or restarting isn't hammered in a tight loop.
-                await delay(250);
-                return undefined;
-              }
-
-              rest.logger.debug(`could not connect to the proxy at ${url} and exceeded the maximum allowed retries.`);
-              throw rest.createRequestError(error, {
-                ok: false,
-                status: 999,
-                error: 'The proxy could not be reached and it maxed out the retries limit.',
                 errorObject: fetchError,
               });
             }
@@ -790,12 +772,23 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
+          let bodyReadFailed = false;
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => {
+            bodyReadFailed = true;
+            return null;
+          });
 
           rest.events.response(request, result, {
             requestBody: options?.body,
             responseBody: body,
           });
+
+          // `fetch` resolves once the headers are in, so an abort can land while the body above is still being read. That read rejects, the
+          // fallback turns it into a `null` body and the caller gets it back as a successful empty response. A read that did finish is kept,
+          // the same way the queued path hands back a result that arrived before the signal fired.
+          if (bodyReadFailed && options?.signal?.aborted) {
+            throw rest.createRequestError(error, { ok: false, status: 999, error: 'The request was aborted.', errorObject: options.signal.reason });
+          }
 
           if (!result.ok) {
             throw rest.createRequestError(error, { ok: false, status: result.status, statusText: result.statusText, body });
@@ -2132,88 +2125,4 @@ enum HttpResponseCode {
 /** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
 function isTimeoutError(error: unknown): boolean {
   return error instanceof DOMException && error.name === 'TimeoutError';
-}
-
-/** How far to follow an error's `cause` before giving up, guards against one that points back at itself. */
-const maxErrorChainDepth = 5;
-
-/** The syscalls Node.js reports a failure on while it is still trying to reach the other side, it is `read` or `write` after that. */
-const connectSyscalls = new Set(['connect', 'getaddrinfo']);
-
-/** The error codes for the same, used by the runtimes that report no syscall. */
-const connectErrorCodes = new Set([
-  // undici's own connect timeout, no syscall of ours failed for it
-  'UND_ERR_CONNECT_TIMEOUT',
-  // Bun reports this for every failure to connect, not just refused ones, and it is the name of the matching `Deno.errors` class
-  'ConnectionRefused',
-  // The codes Node.js reports these under, for any runtime that borrows them without also reporting the syscall. Codes that can just as well
-  // happen once the request is on the wire (`ECONNRESET`, `ETIMEDOUT`, ...) are deliberately not here.
-  'ECONNREFUSED',
-  'EHOSTUNREACH',
-  'ENETUNREACH',
-  'ENOTFOUND',
-  'EAI_AGAIN',
-]);
-
-/** Deno reports neither, the phase the request failed in only shows up in the message. */
-const connectErrorMessages = ['client error (Connect)', 'tcp connect error', 'dns error'];
-
-/**
- * The parts of a message that mean the request was already on the wire, whatever else the message says.
- *
- * @remarks
- * A dropped connection is reported in terms of the request it was carrying, and that wording can be wrapped in the wording for a failure to
- * connect, so this has to win over {@link connectErrorMessages} rather than sit next to it.
- */
-const sentRequestErrorMessages = ['client error (SendRequest)', 'connection closed before message completed', 'error decoding response body'];
-
-/**
- * Whether an error means we never managed to connect, which makes the request safe to send again.
- *
- * @remarks
- * Only failures that happened before the request went out count. A socket that dies once it is on the wire (`ECONNRESET` and friends) may
- * have been forwarded to Discord already, so re-sending those could execute a request twice, which is what we are trying to avoid.
- *
- * `fetch` gives us no standard way to tell the two apart, so this goes off what each runtime does give us and treats anything it does not
- * recognize as unsafe.
- */
-function isConnectError(error: unknown): boolean {
-  // Checked over the whole chain and before anything else: a dropped connection is reported in terms of the request it was carrying, and a
-  // runtime that wraps that in the wording for the connection itself would otherwise look like it never got to send anything.
-  if (mentions(error, sentRequestErrorMessages)) return false;
-
-  return failedBeforeSending(error);
-}
-
-/**
- * Whether an error, or one it wraps, is a runtime saying it never got as far as sending.
- *
- * @remarks
- * Node.js names the syscall that failed, which covers every reason a connection could not be established (refused, unreachable host or
- * network, dns, ...) without keeping a list of their error codes. Bun and Deno report a code and a message respectively.
- */
-function failedBeforeSending(error: unknown, depth = 0): boolean {
-  if (depth > maxErrorChainDepth || !(error instanceof Error)) return false;
-
-  const { code, syscall } = error as Error & { code?: unknown; syscall?: unknown };
-
-  if (typeof syscall === 'string' && connectSyscalls.has(syscall)) return true;
-  if (typeof code === 'string' && connectErrorCodes.has(code)) return true;
-  if (connectErrorCodes.has(error.name)) return true;
-  if (connectErrorMessages.some((message) => error.message.includes(message))) return true;
-
-  // The reason is wrapped in `cause`, and in an `AggregateError` when the host resolved to several addresses and each of them failed.
-  if (error instanceof AggregateError && error.errors.some((suberror) => failedBeforeSending(suberror, depth + 1))) return true;
-
-  return failedBeforeSending(error.cause, depth + 1);
-}
-
-/** Whether an error, or one it wraps, has any of the given parts in its message. */
-function mentions(error: unknown, parts: string[], depth = 0): boolean {
-  if (depth > maxErrorChainDepth || !(error instanceof Error)) return false;
-
-  if (parts.some((part) => error.message.includes(part))) return true;
-  if (error instanceof AggregateError && error.errors.some((suberror) => mentions(suberror, parts, depth + 1))) return true;
-
-  return mentions(error.cause, parts, depth + 1);
 }

@@ -9,9 +9,6 @@ import { fakeToken as token } from '../constants.js';
 chaiUse(chaiAsPromised);
 
 /** Builds an error in the shape Node.js gives a failed syscall. */
-function nodeError(message: string, code: string, syscall: string): Error {
-  return Object.assign(new Error(message), { code, syscall });
-}
 
 describe('[rest] manager', () => {
   describe('create a rest manager with only a token', () => {
@@ -268,127 +265,80 @@ describe('[rest] manager', () => {
       expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: timeoutError });
     });
 
-    // The errors below are the ones each runtime actually throws, taken from a fetch to a port nothing listens on, an unresolvable host and an
-    // unreachable network on Node.js, Bun and Deno.
-    const connectErrors = {
-      refused: () => new TypeError('fetch failed', { cause: nodeError('connect ECONNREFUSED 127.0.0.1:8000', 'ECONNREFUSED', 'connect') }),
-      // Both addresses of a dual stack host failed, so undici hands us all of them at once
-      dualStack: () =>
-        new TypeError('fetch failed', {
-          cause: new AggregateError([
-            nodeError('connect ECONNREFUSED ::1:8000', 'ECONNREFUSED', 'connect'),
-            nodeError('connect ECONNREFUSED 127.0.0.1:8000', 'ECONNREFUSED', 'connect'),
-          ]),
-        }),
-      unreachable: () => new TypeError('fetch failed', { cause: nodeError('connect EHOSTUNREACH 192.168.178.14:80', 'EHOSTUNREACH', 'connect') }),
-      dns: () => new TypeError('fetch failed', { cause: nodeError('getaddrinfo EAI_AGAIN proxy.local', 'EAI_AGAIN', 'getaddrinfo') }),
-      // Bun reports the same error for every failure to connect
-      bun: () => Object.assign(new Error('Unable to connect. Is the computer able to access the url?'), { code: 'ConnectionRefused' }),
-      // Deno reports neither a code nor a syscall. Everything up to the reason is Deno's own wording, the reason itself comes from the
-      // operating system and is translated on a system that does not run in english, so it is never what we go off.
-      deno: () =>
-        new TypeError('fetch failed', {
-          cause: new Error(
-            'error sending request for url (http://proxy.local/): client error (Connect): tcp connect error: No route to host (os error 113)',
-          ),
-        }),
-      denoDns: () =>
-        new TypeError('fetch failed', {
-          cause: new Error('error sending request for url (http://proxy.local/): client error (Connect): dns error: Host unknown (os error 11001)'),
-        }),
-      // A runtime that borrows the codes Node.js uses without also saying which syscall failed
-      codeWithoutSyscall: () => new TypeError('fetch failed', { cause: Object.assign(new Error('connect EHOSTUNREACH'), { code: 'EHOSTUNREACH' }) }),
+    it('Will not re-send the request when the connection fails', async () => {
+      const fetchError = new TypeError('fetch failed', { cause: new Error('connect ECONNREFUSED 127.0.0.1:8000') });
+      fetchStub.rejects(fetchError);
+
+      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(1);
+      expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
+    });
+
+    // Both of these failed without giving us a response, so neither says whether the proxy got the request. They are re-sent together or not
+    // at all, which is what `proxy.retryRequests` decides.
+    const failuresWithoutAResponse = {
+      timeout: () => new DOMException('The operation timed out.', 'TimeoutError'),
+      connect: () => new TypeError('fetch failed', { cause: new Error('connect ECONNREFUSED 127.0.0.1:8000') }),
     };
 
-    for (const [name, createFetchError] of Object.entries(connectErrors)) {
-      it(`Will re-send the request when it could not connect to the proxy (${name})`, async () => {
+    for (const [name, createFetchError] of Object.entries(failuresWithoutAResponse)) {
+      it(`Will re-send the request when proxy.retryRequests is enabled (${name})`, async () => {
+        const retryingRest = createRestManager({
+          token,
+          proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
+        });
+
         fetchStub.onFirstCall().rejects(createFetchError());
         fetchStub
           .onSecondCall()
           .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
 
-        expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+        expect(await retryingRest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
         expect(fetchStub.callCount).to.be.equal(2);
       });
     }
 
-    // The other half of it: a failure that could just as well have happened once the request was on the wire is never re-sent, it may have
-    // been forwarded to Discord already.
-    const ambiguousErrors = {
-      // undici when the proxy goes away mid request
-      closed: () => new TypeError('fetch failed', { cause: Object.assign(new Error('other side closed'), { code: 'UND_ERR_SOCKET' }) }),
-      // Bun words every dropped connection the same way, whether the request went out or not
-      bunClosed: () => Object.assign(new Error('The socket connection was closed unexpectedly.'), { code: 'ECONNRESET' }),
-      // The socket went quiet while we were waiting on it, which is long after the request was written
-      timedOut: () => new TypeError('fetch failed', { cause: nodeError('read ETIMEDOUT', 'ETIMEDOUT', 'read') }),
-      reset: () => new TypeError('fetch failed', { cause: nodeError('read ECONNRESET', 'ECONNRESET', 'read') }),
-      // The connection was dropped while it was carrying the request, reported in terms of the request
-      dropped: () =>
-        new TypeError('fetch failed', {
-          cause: new Error(
-            'error sending request for url (http://proxy.local/): client error (SendRequest): connection closed before message completed',
-          ),
-        }),
-      // The same, but a runtime that words a dropped connection as one it could not keep up
-      droppedAsConnect: () =>
-        new TypeError('fetch failed', {
-          cause: new Error('error sending request for url (http://proxy.local/): client error (Connect): connection closed before message completed'),
-        }),
-    };
-
-    for (const [name, createFetchError] of Object.entries(ambiguousErrors)) {
-      it(`Will not re-send the request when the connection may have carried it already (${name})`, async () => {
-        const fetchError = createFetchError();
-        fetchStub.rejects(fetchError);
-
-        const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
-        expect(fetchStub.callCount).to.be.equal(1);
-        expect(error.cause).to.deep.include({ ok: false, status: 999, errorObject: fetchError });
-      });
-    }
-
-    it('Will stop re-sending the request once maxProxyConnectionRetryCount is exhausted', async () => {
-      rest.maxProxyConnectionRetryCount = 2;
-      fetchStub.rejects(connectErrors.refused());
-
-      const error = await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
-      expect(fetchStub.callCount).to.be.equal(3);
-      expect(error.message).to.be.equal('[999] The proxy could not be reached and it maxed out the retries limit.');
-    });
-
-    it('Will re-send a timed out attempt when proxy.retryOnTimeout is enabled', async () => {
+    it('Will stop re-sending once maxRetryCount is exhausted, even with proxy.retryRequests enabled', async () => {
       const retryingRest = createRestManager({
         token,
-        proxy: {
-          baseUrl: 'https://localhost:8000',
-          authorization: token,
-          retryOnTimeout: true,
-        },
-      });
-
-      fetchStub.onFirstCall().rejects(new DOMException('The operation timed out.', 'TimeoutError'));
-      fetchStub
-        .onSecondCall()
-        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
-
-      expect(await retryingRest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
-      expect(fetchStub.callCount).to.be.equal(2);
-    });
-
-    it('Will not re-send a timed out attempt once maxRetryCount is exhausted, even with proxy.retryOnTimeout enabled', async () => {
-      const retryingRest = createRestManager({
-        token,
-        proxy: {
-          baseUrl: 'https://localhost:8000',
-          authorization: token,
-          retryOnTimeout: true,
-        },
+        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
       });
       retryingRest.maxRetryCount = 0;
       fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
 
       await expect(retryingRest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejected;
       expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Will stop re-sending once maxProxyRetryCount is exhausted', async () => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
+      });
+      retryingRest.maxProxyRetryCount = 2;
+      fetchStub.rejects(failuresWithoutAResponse.connect());
+
+      const error = await expect(retryingRest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(3);
+      expect(error.cause).to.deep.include({ ok: false, status: 999 });
+    });
+
+    it('Will count re-sends of different failures against the same maxRetryCount', async () => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
+      });
+      retryingRest.maxRetryCount = 1;
+
+      fetchStub.onFirstCall().rejects(failuresWithoutAResponse.timeout());
+      fetchStub.onSecondCall().rejects(failuresWithoutAResponse.connect());
+      fetchStub
+        .onThirdCall()
+        .resolves(new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: { 'Content-Type': 'application/json' } }));
+
+      await expect(retryingRest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      // The timed out attempt used up the single retry this request gets, the failure to connect does not get one of its own
+      expect(fetchStub.callCount).to.be.equal(2);
     });
   });
 
@@ -439,6 +389,11 @@ describe('[rest] manager', () => {
         await expect(queued).to.eventually.be.rejected;
         expect(fetchStub.callCount).to.be.equal(1);
 
+        // And the queue no longer holds on to it
+        const queue = [...rest.queues.values()][0];
+        expect(queue.waiting.length).to.be.equal(0);
+        expect(queue.pending.length).to.be.equal(0);
+
         // Let the first request finish so the queue drains
         finishFirstRequest(
           new Response('{}', {
@@ -447,11 +402,53 @@ describe('[rest] manager', () => {
         );
         await clock.tickAsync(1000);
         await first;
-        // The stale entry gets dequeued once the queue frees up (it re-checks every second); it reaches
-        // fetch with an already aborted signal, so nothing goes on the wire
+        // Nothing is left of the cancelled request, so the queue never spends a rate limit slot on it
         await clock.tickAsync(1000);
-        expect(fetchStub.callCount).to.be.equal(2);
-        expect((fetchStub.secondCall.args[0] as Request).signal.aborted).to.be.equal(true);
+        expect(fetchStub.callCount).to.be.equal(1);
+      } finally {
+        clock.restore();
+      }
+    });
+
+    it('Will drop a queued request that was aborted before the queue got to it', async () => {
+      const clock = sinon.useFakeTimers({ toNotFake: ['queueMicrotask'] });
+
+      try {
+        const rest = createRestManager({ token });
+        let finishFirstRequest: (value: Response) => void = () => {};
+        fetchStub.callsFake(async (request: Request) => {
+          // Like real fetch, refuse to send a request whose signal is already aborted
+          if (request.signal.aborted) throw request.signal.reason;
+          return await new Promise<Response>((resolve) => {
+            finishFirstRequest = resolve;
+          });
+        });
+
+        const first = rest.makeRequest('GET', '/gateway/bot');
+        // Let the first request reach fetch and block the queue
+        await clock.tickAsync(0);
+
+        const controller = new AbortController();
+        const queued = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+        // Let it get past the waiting list and into the pending one before giving up on it
+        await clock.tickAsync(1000);
+        controller.abort();
+
+        await expect(queued).to.eventually.be.rejected;
+
+        finishFirstRequest(
+          new Response('{}', {
+            headers: { 'Content-Type': 'application/json', 'x-ratelimit-limit': '5', 'x-ratelimit-remaining': '4', 'x-ratelimit-reset-after': '1' },
+          }),
+        );
+        await clock.tickAsync(1000);
+        await first;
+        await clock.tickAsync(1000);
+
+        // The cancelled request is dropped instead of being sent with an already aborted signal
+        expect(fetchStub.callCount).to.be.equal(1);
+        const queue = [...rest.queues.values()][0];
+        expect(queue.pending.length).to.be.equal(0);
       } finally {
         clock.restore();
       }
@@ -505,6 +502,30 @@ describe('[rest] manager', () => {
 
       await expect(promise).to.eventually.be.rejected;
       expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Will reject when the signal aborts while the proxy response body is being read', async () => {
+      const rest = createRestManager({ token, proxy: { baseUrl: 'https://localhost:8000', authorization: token } });
+      // Behave like real fetch: resolve as soon as the headers are in and fail the body read once the signal aborts
+      fetchStub.callsFake(async (request: Request) => {
+        const body = new ReadableStream({
+          start(streamController) {
+            streamController.enqueue(new TextEncoder().encode('{"url":'));
+            request.signal.addEventListener('abort', () => streamController.error(request.signal.reason), { once: true });
+          },
+        });
+
+        return new Response(body, { headers: { 'Content-Type': 'application/json' } });
+      });
+
+      const controller = new AbortController();
+      const promise = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+      // Let the headers arrive, the body is still being read at this point
+      await new Promise((resolve) => setImmediate(resolve));
+      controller.abort();
+
+      const error = await expect(promise).to.eventually.be.rejectedWith(Error);
+      expect(error.message).to.be.equal('[999] The request was aborted.');
     });
   });
 });
