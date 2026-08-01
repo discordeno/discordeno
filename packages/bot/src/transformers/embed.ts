@@ -1,8 +1,9 @@
 import type { DiscordEmbed } from '@discordeno/types';
 import type { Bot } from '../bot.js';
+import { ToggleBitfield } from './toggles/ToggleBitfield.js';
 import type { Embed } from './types.js';
 
-export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
+export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
   const embed = {
     title: payload.title,
     type: payload.type,
@@ -23,6 +24,11 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
           proxyUrl: payload.image.proxy_url,
           height: payload.image.height,
           width: payload.image.width,
+          contentType: payload.image.content_type,
+          placeholder: payload.image.placeholder,
+          placeholderVersion: payload.image.placeholder_version,
+          description: payload.image.description,
+          flags: payload.image.flags ? new ToggleBitfield(payload.image.flags) : undefined,
         }
       : undefined,
     thumbnail: payload.thumbnail
@@ -31,6 +37,11 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
           proxyUrl: payload.thumbnail.proxy_url,
           height: payload.thumbnail.height,
           width: payload.thumbnail.width,
+          contentType: payload.thumbnail.content_type,
+          placeholder: payload.thumbnail.placeholder,
+          placeholderVersion: payload.thumbnail.placeholder_version,
+          description: payload.thumbnail.description,
+          flags: payload.thumbnail.flags ? new ToggleBitfield(payload.thumbnail.flags) : undefined,
         }
       : undefined,
     video: payload.video
@@ -39,6 +50,11 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
           proxyUrl: payload.video.proxy_url,
           height: payload.video.height,
           width: payload.video.width,
+          contentType: payload.video.content_type,
+          placeholder: payload.video.placeholder,
+          placeholderVersion: payload.video.placeholder_version,
+          description: payload.video.description,
+          flags: payload.video.flags ? new ToggleBitfield(payload.video.flags) : undefined,
         }
       : undefined,
     provider: payload.provider,
@@ -51,6 +67,7 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
         }
       : undefined,
     fields: payload.fields,
+    flags: payload.flags ? new ToggleBitfield(payload.flags) : undefined,
   } as Embed;
 
   return bot.transformers.customizers.embed(bot, payload, embed);

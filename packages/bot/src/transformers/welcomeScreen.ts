@@ -2,7 +2,7 @@ import type { DiscordWelcomeScreen } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { WelcomeScreen } from './types.js';
 
-export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen): WelcomeScreen {
+export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) {
   const welcomeScreen = {
     description: payload.description ?? undefined,
     welcomeChannels: payload.welcome_channels.map((channel) => ({

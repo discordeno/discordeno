@@ -23,6 +23,11 @@ export function transformEmbedToDiscordEmbed(_bot: Bot, payload: Embed): Discord
           proxy_url: payload.image.proxyUrl,
           height: payload.image.height,
           width: payload.image.width,
+          content_type: payload.image.contentType,
+          placeholder: payload.image.placeholder,
+          placeholder_version: payload.image.placeholderVersion,
+          description: payload.image.description,
+          flags: payload.image.flags?.bitfield,
         }
       : undefined,
     thumbnail: payload.thumbnail
@@ -31,6 +36,11 @@ export function transformEmbedToDiscordEmbed(_bot: Bot, payload: Embed): Discord
           proxy_url: payload.thumbnail.proxyUrl,
           height: payload.thumbnail.height,
           width: payload.thumbnail.width,
+          content_type: payload.thumbnail.contentType,
+          placeholder: payload.thumbnail.placeholder,
+          placeholder_version: payload.thumbnail.placeholderVersion,
+          description: payload.thumbnail.description,
+          flags: payload.thumbnail.flags?.bitfield,
         }
       : undefined,
     video: payload.video
@@ -39,6 +49,11 @@ export function transformEmbedToDiscordEmbed(_bot: Bot, payload: Embed): Discord
           proxy_url: payload.video.proxyUrl,
           height: payload.video.height,
           width: payload.video.width,
+          content_type: payload.video.contentType,
+          placeholder: payload.video.placeholder,
+          placeholder_version: payload.video.placeholderVersion,
+          description: payload.video.description,
+          flags: payload.video.flags?.bitfield,
         }
       : undefined,
     provider: payload.provider,
