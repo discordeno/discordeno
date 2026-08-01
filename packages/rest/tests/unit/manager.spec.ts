@@ -8,7 +8,6 @@ import { fakeToken as token } from '../constants.js';
 
 chaiUse(chaiAsPromised);
 
-/** Builds an error in the shape Node.js gives a failed syscall. */
 
 describe('[rest] manager', () => {
   describe('create a rest manager with only a token', () => {
