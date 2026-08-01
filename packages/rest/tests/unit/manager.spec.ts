@@ -244,6 +244,9 @@ describe('[rest] manager', () => {
 
     beforeEach(() => {
       rest = createRestManager({ token });
+      // Re-sending is checked by counting the calls to fetch, never by timing, so the backoff between them is turned off to keep the suite
+      // fast and free of a wait that could get flaky under load.
+      rest.serverErrorRetryDelayStep = 0;
       fetchStub = sinon.stub(globalThis, 'fetch');
     });
 
@@ -277,6 +280,14 @@ describe('[rest] manager', () => {
 
       expect(await rejection(rest.makeRequest('GET', '/gateway/bot'))).to.be.instanceOf(Error);
       expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Will stop re-sending once maxServerErrorRetryCount is exhausted', async () => {
+      rest.maxServerErrorRetryCount = 2;
+      fetchStub.resolves(new Response('{}', { status: 502, headers: jsonHeaders }));
+
+      expect(await rejection(rest.makeRequest('GET', '/gateway/bot'))).to.be.instanceOf(Error);
+      expect(fetchStub.callCount).to.be.equal(3);
     });
   });
 });
