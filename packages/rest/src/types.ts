@@ -285,11 +285,14 @@ export interface RestManager {
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
   /**
-   * The maximum amount of times a proxied request should be re-sent. Defaults to 3.
+   * The maximum amount of times a proxied request should be re-sent. Defaults to 15.
    *
    * @remarks
    * This has its own limit because {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as
    * long as the proxy stays down.
+   *
+   * Each further attempt waits 250ms longer than the one before it (250ms, then 500ms, then 750ms, ...), so the default spans about 30
+   * seconds in total, enough to sit out a proxy being restarted or redeployed.
    *
    * Whichever of the two is lower applies. Only used when {@link RestManager.retryProxiedRequests} is enabled.
    */
