@@ -118,6 +118,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     retryProxiedRequests: options.proxy?.retryRequests ?? false,
     maxRetryCount: Infinity,
     maxProxyRetryCount: 15,
+    proxyRetryDelayStep: 250,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -745,7 +746,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               rest.logger.debug(`request to proxy ${url} failed without a response, retrying.`, fetchError);
               // Wait a little longer before each further attempt so a proxy that is down isn't hammered in a tight loop, while staying
               // frequent enough to notice it coming back. A timed out attempt already sat out `requestTimeout`, so it goes again right away.
-              if (!timedOut) await delay(proxyRetryDelayStep * retryCount);
+              if (!timedOut) await delay(rest.proxyRetryDelayStep * retryCount);
               return undefined;
             }
 
@@ -2122,9 +2123,6 @@ enum HttpResponseCode {
   /** This request got rate limited. */
   TooManyRequests = 429,
 }
-
-/** How much longer to wait before each further re-send to a proxy, in milliseconds. The nth attempt waits n times this. */
-const proxyRetryDelayStep = 250;
 
 /** Whether an error is the `TimeoutError` thrown by `AbortSignal.timeout()`. */
 function isTimeoutError(error: unknown): boolean {

@@ -254,6 +254,18 @@ describe('[rest] manager', () => {
       fetchStub.restore();
     });
 
+    // Re-sending is checked by counting the calls to fetch, never by timing, so the backoff between them is turned off to keep the suite fast
+    // and free of a wait that could get flaky under load.
+    const createRetryingRest = (): RestManager => {
+      const retryingRest = createRestManager({
+        token,
+        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
+      });
+      retryingRest.proxyRetryDelayStep = 0;
+
+      return retryingRest;
+    };
+
     it('Will not re-send the request when the attempt times out', async () => {
       const timeoutError = new DOMException('The operation timed out.', 'TimeoutError');
       fetchStub.rejects(timeoutError);
@@ -283,10 +295,7 @@ describe('[rest] manager', () => {
 
     for (const [name, createFetchError] of Object.entries(failuresWithoutAResponse)) {
       it(`Will re-send the request when proxy.retryRequests is enabled (${name})`, async () => {
-        const retryingRest = createRestManager({
-          token,
-          proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
-        });
+        const retryingRest = createRetryingRest();
 
         fetchStub.onFirstCall().rejects(createFetchError());
         fetchStub
@@ -299,10 +308,7 @@ describe('[rest] manager', () => {
     }
 
     it('Will stop re-sending once maxRetryCount is exhausted, even with proxy.retryRequests enabled', async () => {
-      const retryingRest = createRestManager({
-        token,
-        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
-      });
+      const retryingRest = createRetryingRest();
       retryingRest.maxRetryCount = 0;
       fetchStub.rejects(new DOMException('The operation timed out.', 'TimeoutError'));
 
@@ -311,10 +317,7 @@ describe('[rest] manager', () => {
     });
 
     it('Will stop re-sending once maxProxyRetryCount is exhausted', async () => {
-      const retryingRest = createRestManager({
-        token,
-        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
-      });
+      const retryingRest = createRetryingRest();
       retryingRest.maxProxyRetryCount = 2;
       fetchStub.rejects(failuresWithoutAResponse.connect());
 
@@ -324,10 +327,7 @@ describe('[rest] manager', () => {
     });
 
     it('Will count re-sends of different failures against the same maxRetryCount', async () => {
-      const retryingRest = createRestManager({
-        token,
-        proxy: { baseUrl: 'https://localhost:8000', authorization: token, retryRequests: true },
-      });
+      const retryingRest = createRetryingRest();
       retryingRest.maxRetryCount = 1;
 
       fetchStub.onFirstCall().rejects(failuresWithoutAResponse.timeout());
