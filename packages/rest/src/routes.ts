@@ -267,19 +267,6 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
     // Guild Endpoints
     guilds: {
-      messagesSearch: (guildId, options?: SearchGuildMessagesOptions) => {
-        let url = `/guilds/${encode(guildId)}/messages/search?`;
-
-        if (options) {
-          for (const [key, value] of Object.entries(options)) {
-            if (value === undefined) continue;
-
-            for (const item of Array.isArray(value) ? value : [value]) url += `&${camelToSnakeCase(key)}=${encode(item)}`;
-          }
-        }
-        
-        return url;
-      },
       all: () => {
         return '/guilds';
       },
@@ -459,6 +446,19 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
           return url;
         },
+      },
+      messagesSearch: (guildId, options?: SearchGuildMessagesOptions) => {
+        let url = `/guilds/${encode(guildId)}/messages/search?`;
+
+        if (options) {
+          for (const [key, value] of Object.entries(options)) {
+            if (value === undefined) continue;
+
+            for (const item of Array.isArray(value) ? value : [value]) url += `&${camelToSnakeCase(key)}=${encode(item)}`;
+          }
+        }
+
+        return url;
       },
       preview: (guildId) => {
         return `/guilds/${encode(guildId)}/preview`;

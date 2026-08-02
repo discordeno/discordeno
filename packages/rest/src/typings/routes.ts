@@ -123,8 +123,6 @@ export interface RestRoutes {
   };
   /** Routes for guild related endpoints. */
   guilds: {
-    /** Route for searching a guild's messages. */
-    messagesSearch: (guildId: BigString, options?: SearchGuildMessagesOptions) => string;
     /** Routes for handling a non-specific guild. */
     all: () => string;
     /** Route for fetching an user guilds. Requires `guilds` OAuth2 scope */
@@ -169,6 +167,8 @@ export interface RestRoutes {
     invites: (guildId: BigString) => string;
     /** Route for handling a bot leaving a guild. */
     leave: (guildId: BigString) => string;
+    /** Route for searching a guild's messages. */
+    messagesSearch: (guildId: BigString, options?: SearchGuildMessagesOptions) => string;
     /** Route for handling a guild's preview. */
     preview: (guildId: BigString) => string;
     /** Route for handling pruning of a guild. */

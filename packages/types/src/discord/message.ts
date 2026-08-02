@@ -11,6 +11,7 @@ import type {
   DiscordMessageInteraction,
   InteractionTypes,
 } from './interactions.js';
+import type { HTTPJsonErrorCodes } from './opcodes.js';
 import type { DiscordPoll } from './poll.js';
 import type { DiscordSticker, DiscordStickerItem } from './sticker.js';
 import type { DiscordUser } from './user.js';

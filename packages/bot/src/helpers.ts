@@ -430,16 +430,6 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getMessages: async (channelId, options) => {
       return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)));
     },
-    searchGuildMessages: async (guildId, options) => {
-      const result = await bot.rest.searchGuildMessages(guildId, options);
-      if ('code' in result) return result;
-      return {
-        ...result,
-        messages: result.messages.map((messages) => messages.map((message) => bot.transformers.message(bot, snakelize(message)))),
-        threads: result.threads?.map((thread) => bot.transformers.channel(bot, snakelize(thread), { guildId })),
-        members: result.members?.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
-      };
-    },
     getStickerPack: async (stickerPackId) => {
       return bot.transformers.stickerPack(bot, snakelize(await bot.rest.getStickerPack(stickerPackId)));
     },
@@ -554,6 +544,16 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     publishMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)));
+    },
+    searchGuildMessages: async (guildId, options) => {
+      const result = await bot.rest.searchGuildMessages(guildId, options);
+      if ('code' in result) return result;
+      return {
+        ...result,
+        messages: result.messages.map((messages) => messages.map((message) => bot.transformers.message(bot, snakelize(message)))),
+        threads: result.threads?.map((thread) => bot.transformers.channel(bot, snakelize(thread), { guildId })),
+        members: result.members?.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
+      };
     },
     sendMessage: async (channelId, options) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.sendMessage(channelId, options)));
