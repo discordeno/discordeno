@@ -2894,9 +2894,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@easyops-cn/docusaurus-search-local@npm:^0.55.2":
-  version: 0.55.2
-  resolution: "@easyops-cn/docusaurus-search-local@npm:0.55.2"
+"@easyops-cn/docusaurus-search-local@npm:^0.55.3":
+  version: 0.55.3
+  resolution: "@easyops-cn/docusaurus-search-local@npm:0.55.3"
   dependencies:
     "@docusaurus/plugin-content-docs": "npm:^2 || ^3"
     "@docusaurus/theme-translations": "npm:^2 || ^3"
@@ -2923,7 +2923,7 @@ __metadata:
   peerDependenciesMeta:
     open-ask-ai:
       optional: true
-  checksum: 10c0/e8d6f4a4a130eec26e044ed6ee92cb88a79a4123ae63895bdbe06bfffe5cb12543c679b8cf59c0c32a7036e82b4e5e0c71c04e10189a6b11ea1c985e11f6f7b7
+  checksum: 10c0/1b12d64ad6b83dec0810518ef20d643af524bd17a23e83c55c33ae9837f4f30f474c49398b93522d063bd2039762ea76475aec81e81ab0a8254ae3fe65f16313
   languageName: node
   linkType: hard
 
@@ -14394,7 +14394,7 @@ __metadata:
     "@docusaurus/theme-common": "npm:^3.10.2"
     "@docusaurus/tsconfig": "npm:^3.10.2"
     "@docusaurus/types": "npm:^3.10.2"
-    "@easyops-cn/docusaurus-search-local": "npm:^0.55.2"
+    "@easyops-cn/docusaurus-search-local": "npm:^0.55.3"
     "@mdx-js/react": "npm:^3.1.1"
     "@types/react": "npm:^19.2.17"
     "@xyflow/react": "npm:^12.11.2"
