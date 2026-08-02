@@ -629,7 +629,7 @@ export interface DiscordRoleSubscriptionData {
   is_renewal: boolean;
 }
 
-/** https://docs.discord.com/developers/resources/message#message-pin-object-message-pin-object-struture */
+/** https://docs.discord.com/developers/resources/message#message-pin-object-message-pin-object-structure */
 export interface DiscordMessagePin {
   /** the time the message was pinned */
   pinned_at: string;
