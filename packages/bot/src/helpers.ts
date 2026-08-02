@@ -46,6 +46,8 @@ import type {
   DiscordInvite,
   DiscordListArchivedThreads,
   DiscordPrunedCount,
+  DiscordSearchGuildMessages,
+  DiscordSearchGuildMessagesIndexing,
   DiscordTargetUsersJobStatus,
   DiscordTokenExchange,
   DiscordTokenRevocation,
@@ -100,6 +102,7 @@ import type {
   ModifyLobby,
   ModifyRolePositions,
   ModifyWebhook,
+  SearchGuildMessagesOptions,
   SearchMembers,
   SendLobbyMessage,
   SendSoundboardSound,
@@ -541,6 +544,16 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     publishMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)));
+    },
+    searchGuildMessages: async (guildId, options) => {
+      const result = await bot.rest.searchGuildMessages(guildId, options);
+      if ('code' in result) return result;
+      return {
+        ...result,
+        messages: result.messages.map((messages) => messages.map((message) => bot.transformers.message(bot, snakelize(message)))),
+        threads: result.threads?.map((thread) => bot.transformers.channel(bot, snakelize(thread), { guildId })),
+        members: result.members?.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
+      };
     },
     sendMessage: async (channelId, options) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.sendMessage(channelId, options)));
@@ -1071,6 +1084,17 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   getInvites: (guildId: BigString) => Promise<SetupDesiredProps<Invite, TProps, TBehavior>[]>;
   getMessage: (channelId: BigString, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<SetupDesiredProps<Message, TProps, TBehavior>[]>;
+  searchGuildMessages: (
+    guildId: BigString,
+    options?: SearchGuildMessagesOptions,
+  ) => Promise<
+    | Camelize<DiscordSearchGuildMessagesIndexing>
+    | (Omit<Camelize<DiscordSearchGuildMessages>, 'messages' | 'threads' | 'members'> & {
+        messages: SetupDesiredProps<Message, TProps, TBehavior>[][];
+        threads?: SetupDesiredProps<Channel, TProps, TBehavior>[];
+        members?: SetupDesiredProps<ThreadMember, TProps, TBehavior>[];
+      })
+  >;
   getStickerPack: (stickerPackId: BigString) => Promise<SetupDesiredProps<StickerPack, TProps, TBehavior>>;
   getStickerPacks: () => Promise<SetupDesiredProps<StickerPack, TProps, TBehavior>[]>;
   getOriginalInteractionResponse: (token: string) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;

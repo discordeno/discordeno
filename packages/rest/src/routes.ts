@@ -1,5 +1,5 @@
-import type { GetMessagesOptions, GetScheduledEventUsers } from '@discordeno/types';
-import { isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils';
+import type { GetMessagesOptions, GetScheduledEventUsers, SearchGuildMessagesOptions } from '@discordeno/types';
+import { camelToSnakeCase, isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils';
 import type { RestRoutes } from './typings/routes.js';
 
 /**
@@ -446,6 +446,19 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
           return url;
         },
+      },
+      messagesSearch: (guildId, options?: SearchGuildMessagesOptions) => {
+        let url = `/guilds/${encode(guildId)}/messages/search?`;
+
+        if (options) {
+          for (const [key, value] of Object.entries(options)) {
+            if (value === undefined) continue;
+
+            for (const item of Array.isArray(value) ? value : [value]) url += `&${camelToSnakeCase(key)}=${encode(item)}`;
+          }
+        }
+
+        return url;
       },
       preview: (guildId) => {
         return `/guilds/${encode(guildId)}/preview`;
