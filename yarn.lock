@@ -132,7 +132,7 @@ __metadata:
     "@swc/core": "npm:^1.15.46"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.1.1"
+    "@types/node": "npm:^26.1.2"
     "@types/sinon": "npm:^21.0.1"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
@@ -155,7 +155,7 @@ __metadata:
     "@swc/core": "npm:^1.15.46"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.1.1"
+    "@types/node": "npm:^26.1.2"
     "@types/sinon": "npm:^21.0.1"
     "@types/ws": "npm:^8.18.1"
     c8: "npm:^12.0.0"
@@ -181,7 +181,7 @@ __metadata:
     "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.1.1"
+    "@types/node": "npm:^26.1.2"
     "@types/sinon": "npm:^21.0.1"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
@@ -202,7 +202,7 @@ __metadata:
     "@swc/cli": "npm:^0.8.1"
     "@swc/core": "npm:^1.15.46"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.1.1"
+    "@types/node": "npm:^26.1.2"
     c8: "npm:^12.0.0"
     mocha: "npm:^11.7.6"
     ts-node: "npm:^10.9.2"
@@ -221,7 +221,7 @@ __metadata:
     "@swc/core": "npm:^1.15.46"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.1.1"
+    "@types/node": "npm:^26.1.2"
     "@types/sinon": "npm:^21.0.1"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
@@ -907,12 +907,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^26.1.1":
+"@types/node@npm:*":
   version: 26.1.1
   resolution: "@types/node@npm:26.1.1"
   dependencies:
     undici-types: "npm:~8.3.0"
   checksum: 10c0/25ac5093195736dd074d5027adbba85617bc951d5a41506ebd3b9073048acb7233613f3822d5f9b9447f9c0841c91f6387c46283916767e3ef79f23917452c46
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^26.1.2":
+  version: 26.1.2
+  resolution: "@types/node@npm:26.1.2"
+  dependencies:
+    undici-types: "npm:~8.3.0"
+  checksum: 10c0/a45503222c7db8f374afd5c9381db63dd95b6b1f703abea0890dd3d4a09eeb41da489e08a1a45baf18fe89fb77fbf310ff2789f680c490b04dafc41a60800a86
   languageName: node
   linkType: hard
 
@@ -1523,7 +1532,7 @@ __metadata:
     "@swc/core": "npm:^1.15.46"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.1.1"
+    "@types/node": "npm:^26.1.2"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
     mocha: "npm:^11.7.6"
