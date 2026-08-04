@@ -20,9 +20,18 @@ app.all('/*', async (req, res) => {
   const hasBody = req.method !== 'GET' && req.method !== 'DELETE';
   const body = hasBody ? (isMultipart ? await parseMultiformBody(req.body) : req.body) : undefined;
 
+  // Tie the request to the connection: when the client aborts, the request is dropped from the queue instead
+  // of being executed with nobody waiting for the result anymore.
+  // https://fastify.dev/docs/latest/Guides/Detecting-When-Clients-Abort/
+  const controller = new AbortController();
+  req.raw.on('close', () => {
+    if (req.raw.aborted) controller.abort();
+  });
+
   try {
     const result = await restManager.makeRequest(req.method as RequestMethods, url, {
       body,
+      signal: controller.signal,
     });
 
     if (result) {
