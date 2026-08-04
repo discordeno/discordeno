@@ -8,7 +8,6 @@ import { fakeToken as token } from '../constants.js';
 
 chaiUse(chaiAsPromised);
 
-
 describe('[rest] manager', () => {
   describe('create a rest manager with only a token', () => {
     const rest = createRestManager({ token });
