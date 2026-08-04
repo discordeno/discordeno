@@ -18,6 +18,7 @@ import type {
   ListGuildMembers,
   ListSkuSubscriptionsOptions,
   ListThreadMembers,
+  SearchGuildMessagesOptions,
 } from '@discordeno/types';
 
 export interface RestRoutes {
@@ -166,6 +167,8 @@ export interface RestRoutes {
     invites: (guildId: BigString) => string;
     /** Route for handling a bot leaving a guild. */
     leave: (guildId: BigString) => string;
+    /** Route for searching a guild's messages. */
+    messagesSearch: (guildId: BigString, options?: SearchGuildMessagesOptions) => string;
     /** Route for handling a guild's preview. */
     preview: (guildId: BigString) => string;
     /** Route for handling pruning of a guild. */
