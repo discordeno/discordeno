@@ -20,6 +20,7 @@ export function transformPresenceToDiscordPresence(bot: Bot, payload: PresenceUp
       desktop: payload.desktop,
       mobile: payload.mobile,
       web: payload.web,
+      vr: payload.vr,
     },
   };
 }
