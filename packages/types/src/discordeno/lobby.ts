@@ -78,6 +78,12 @@ export interface AddLobbyMember {
   metadata?: Record<string, string> | null;
   /** Lobby member flags combined as a bitfield */
   flags?: number;
+  /**
+   * Additional display name for the member, such as an in-game character name. 1-80 characters.
+   *
+   * Omit the field to preserve the member's current value, or send `null` to clear it.
+   */
+  additionalName?: string | null;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#bulk-update-lobby-members */
@@ -92,6 +98,12 @@ export interface BulkUpdateLobbyMember {
    * @see {@link DiscordLobbyMemberFlags}
    */
   flags?: number;
+  /**
+   * Additional display name for the member, such as an in-game character name. 1-80 characters.
+   *
+   * Omit the field to preserve the member's current value, or send `null` to clear it.
+   */
+  additionalName?: string | null;
   /**
    * if `true`, the user is removed from the lobby instead of upserted.
    *
