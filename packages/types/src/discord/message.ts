@@ -195,6 +195,7 @@ export enum MessageActivityTypes {
   Spectate = 2,
   Listen = 3,
   JoinRequest = 5,
+  StreamRequest = 6,
 }
 
 /** https://docs.discord.com/developers/resources/message#message-object-message-flags */
