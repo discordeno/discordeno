@@ -523,6 +523,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+        // Nothing below this reaches `processHeaders`, so this is the only chance the queue gets to have the rate limit slot this attempt spent
+        // handed back to it. It has to happen before a timeout is retried as well, because that retry goes back through the queue and would end
+        // up waiting on the very slot it is holding.
+        const queueIdentifier = payload.headers.authorization ?? `Bot ${rest.token}`;
+        rest.queues.get(`${queueIdentifier}${rest.simplifyUrl(options.route, options.method)}`)?.handleFailedRequest();
 
         // The caller aborted the request, never re-send it, Discord may have received it already. The caller was rejected the moment the signal fired.
         if (options.requestBodyOptions?.signal?.aborted) {
