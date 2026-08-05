@@ -193,6 +193,10 @@ export enum AuditLogEvents {
   HomeSettingsCreate = 190,
   /** Guild Server Guide was updated */
   HomeSettingsUpdate,
+  /** A voice channel status was set by a user */
+  VoiceChannelStatusCreate,
+  /** A voice channel status was deleted by a user */
+  VoiceChannelStatusDelete,
 }
 
 /** https://docs.discord.com/developers/resources/audit-log#audit-log-entry-object-audit-log-events */
@@ -245,7 +249,7 @@ export interface DiscordOptionalAuditEntryInfo {
    * Channel in which the entities were targeted.
    *
    * @remarks
-   * Only present on event of types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`, `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`
+   * Only present on event of types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`, `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER`, `VOICE_CHANNEL_STATUS_UPDATE`, `VOICE_CHANNEL_STATUS_DELETE`
    */
   channel_id?: string;
   /**
@@ -304,6 +308,13 @@ export interface DiscordOptionalAuditEntryInfo {
    * Only present on event of types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
    */
   integration_type?: string;
+  /**
+   * The new voice channel status
+   *
+   * @remarks
+   * Only present on event of types: `VOICE_CHANNEL_STATUS_CREATE`
+   */
+  status?: string;
 }
 
 /** https://docs.discord.com/developers/resources/audit-log#audit-log-change-object-audit-log-change-structure */

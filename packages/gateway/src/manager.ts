@@ -6,9 +6,11 @@ import {
   type DiscordGetGatewayBot,
   type DiscordMemberWithUser,
   type DiscordReady,
+  type DiscordRequestChannelInfo,
   type DiscordUpdatePresence,
   GatewayIntents,
   GatewayOpcodes,
+  type RequestChannelInfo,
   type RequestGuildMembers,
 } from '@discordeno/types';
 import { Collection, jsonSafeReplacer, LeakyBucket, logger } from '@discordeno/utils';
@@ -504,6 +506,20 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return await members;
     },
 
+    async requestChannelInfo(guildId, options) {
+      const shardId = gateway.calculateShardId(guildId);
+
+      gateway.logger.debug(`[Gateway] requestChannelInfo guildId: ${guildId}`);
+
+      await gateway.sendPayload(shardId, {
+        op: GatewayOpcodes.RequestChannelInfo,
+        d: {
+          guild_id: guildId.toString(),
+          fields: options.fields,
+        } satisfies DiscordRequestChannelInfo,
+      });
+    },
+
     async leaveVoiceChannel(guildId) {
       const shardId = gateway.calculateShardId(guildId);
 
@@ -825,6 +841,14 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://docs.discord.com/developers/events/gateway-events#request-guild-members}
    */
   requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMemberWithUser[]>>;
+  /**
+   * Requests ephemeral channel data for channels in a guild
+   *
+   * @param guildId - The ID of the guild to get the ephemeral channel data for.
+   * @param options - The parameters for the fetching of the ephemeral channel data.
+   * @returns - This method returns nothing. The server will send a CHANNEL_INFO event
+   */
+  requestChannelInfo: (guildId: BigString, options: RequestChannelInfo) => Promise<void>;
   /**
    * Leaves the voice channel the bot user is currently in.
    *
