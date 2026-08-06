@@ -58,7 +58,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   /** Id of the creator of the group DM or the thread */
   owner_id?: string;
   /** Application id of the group DM creator if it is bot-created */
-  application_id?: string;
+  application_id?: string | null;
   /** For group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope. */
   managed?: boolean;
   /**
