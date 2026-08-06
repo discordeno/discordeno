@@ -43,7 +43,7 @@
     "sinon": "^22.0.0",
     "tsconfig": "*",
     "tsx": "^4.23.5",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "ws": "^8.21.1"
   }
 }
