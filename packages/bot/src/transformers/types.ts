@@ -1683,6 +1683,7 @@ export interface PresenceUpdate {
   desktop?: string;
   mobile?: string;
   web?: string;
+  vr?: string;
   user: User;
   guildId: bigint;
   status: PresenceStatus;

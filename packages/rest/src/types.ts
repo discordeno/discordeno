@@ -77,6 +77,8 @@ import type {
   DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
+  DiscordSearchGuildMessages,
+  DiscordSearchGuildMessagesIndexing,
   DiscordSku,
   DiscordSoundboardSound,
   DiscordStageInstance,
@@ -150,6 +152,7 @@ import type {
   ModifyWebhook,
   ScheduledEventEntityType,
   ScheduledEventStatus,
+  SearchGuildMessagesOptions,
   SearchMembers,
   SendLobbyMessage,
   SendSoundboardSound,
@@ -199,6 +202,25 @@ export interface CreateRestManagerOptions {
      * This value is actually required if you want to use `updateTokenQueues`
      */
     updateBearerTokenEndpoint?: string;
+    /**
+     * Whether an attempt that failed without producing a response should be re-sent to the proxy.
+     *
+     * @remarks
+     * This covers both an attempt that hit {@link CreateRestManagerOptions.requestTimeout | requestTimeout} and one whose
+     * connection failed. Neither tells us whether the proxy got the request: the timeout only aborts our side of the
+     * connection while the proxy keeps processing (it may simply be queued behind a rate limit), and a socket that dies
+     * once the request is on the wire may still have delivered it. `fetch` gives no way to tell those apart from never
+     * having connected at all, so re-sending can execute non-idempotent requests twice (e.g. duplicate channel creates).
+     *
+     * Only enable this when re-sending a request to your proxy is safe, for example by attaching an idempotency
+     * key to each request that the proxy tracks in a store of your choosing (in memory, redis, ...) so a
+     * re-sent request is recognized and executed only once. Discordeno does not provide such a mechanism.
+     *
+     * Bounded by {@link RestManager.maxRetryCount} and {@link RestManager.maxProxyRetryCount}.
+     *
+     * @default false
+     */
+    retryRequests?: boolean;
   };
   /**
    * The api versions which can be used to make requests.
@@ -217,8 +239,13 @@ export interface CreateRestManagerOptions {
    *
    * @remarks
    * This is a total deadline for each attempt (it also covers reading the response body), not a per-chunk timeout.
-   * When an attempt times out it is retried through the queue up to {@link RestManager.maxRetryCount} times before failing.
-   * Without it, a connection that stalls after connecting could keep a queue from ever progressing.
+   * When talking to Discord directly, a timed-out attempt is retried through the queue up to
+   * {@link RestManager.maxRetryCount} times before failing. Without it, a connection that stalls after connecting
+   * could keep a queue from ever progressing.
+   *
+   * When a `proxy` is configured, a timed-out attempt is NOT retried: the proxy keeps processing the request after
+   * the timeout aborts our side of the connection (it may simply be queued behind a rate limit), so re-sending it
+   * could execute it twice. If re-sending against your proxy is safe, `proxy.retryRequests` opts back into it.
    *
    * Because it is a total deadline rather than a per-chunk one, a slow but healthy request (e.g. uploading a
    * large attachment over a slow connection) can legitimately exceed it and be aborted/retried. Raise this value
@@ -256,9 +283,36 @@ export interface RestManager {
   authorizationHeader: string;
   /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
   updateBearerTokenEndpoint?: string;
+  /** Whether a proxied attempt that failed without producing a response is re-sent to the proxy. Only safe when re-sending against the proxy is. Defaults to false. */
+  retryProxiedRequests: boolean;
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number;
-  /** The maximum time in milliseconds a single request attempt may take before it is aborted and retried. Defaults to 30000 (30 seconds). Set to 0 to disable. */
+  /**
+   * The maximum amount of times a proxied request should be re-sent. Defaults to 15.
+   *
+   * @remarks
+   * This has its own limit because {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as
+   * long as the proxy stays down.
+   *
+   * Each further attempt waits {@link RestManager.proxyRetryDelayStep} longer than the one before it, so the defaults span about 30 seconds
+   * in total, enough to sit out a proxy being restarted or redeployed.
+   *
+   * Whichever of the two is lower applies. Only used when {@link RestManager.retryProxiedRequests} is enabled.
+   */
+  maxProxyRetryCount: number;
+  /**
+   * How much longer to wait before each further re-send to a proxy, in milliseconds. Defaults to 250.
+   *
+   * @remarks
+   * The nth attempt waits n times this (250ms, then 500ms, then 750ms, ...), so a proxy that is down isn't hammered in a tight loop while
+   * still being checked often enough to notice it coming back.
+   *
+   * An attempt that timed out already sat out {@link RestManager.requestTimeout}, so it is re-sent right away without this delay.
+   *
+   * Only used when {@link RestManager.retryProxiedRequests} is enabled.
+   */
+  proxyRetryDelayStep: number;
+  /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequests` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
   globallyRateLimited: boolean;
@@ -290,6 +344,8 @@ export interface RestManager {
   changeToDiscordFormat: (obj: any) => any;
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody;
+  /** Fills in the message and the cause of the error that is given to the user when a request fails. The error itself is created by the caller because of how stack traces get calculated. */
+  createRequestError: (error: Error, reason: RestRequestRejection) => Error;
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void;
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
@@ -2095,6 +2151,18 @@ export interface RestManager {
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Camelize<DiscordMessage>[]>;
   /**
+   * Search messages in a guild.
+   *
+   * @remarks
+   * Requires `READ_MESSAGE_HISTORY` and is restricted by the `MESSAGE_CONTENT` intent.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/message#search-guild-messages}
+   */
+  searchGuildMessages: (
+    guildId: BigString,
+    options?: SearchGuildMessagesOptions,
+  ) => Promise<Camelize<DiscordSearchGuildMessages | DiscordSearchGuildMessagesIndexing>>;
+  /**
    * Returns a sticker pack for the given ID.
    *
    * @returns A {@link DiscordStickerPack} object.
@@ -3415,6 +3483,17 @@ export interface CreateRequestBodyOptions {
   unauthorized?: boolean;
   reason?: string;
   files?: FileContent[];
+  /**
+   * An `AbortSignal` to cancel the request.
+   *
+   * @remarks
+   * Aborting rejects a request that is still waiting in the queue right away and guarantees it is never sent.
+   * An attempt that is already in flight gets its connection cancelled as well, though that cannot recall it:
+   * Discord (or the proxy) may have received it and may still process it, only the response is discarded.
+   * This lets a rest proxy drop requests that nobody is waiting on anymore (client disconnect, deadline)
+   * instead of leaving them in the queue.
+   */
+  signal?: AbortSignal;
 }
 
 export type MakeRequestOptions = Omit<CreateRequestBodyOptions, 'method'> & Pick<SendRequestOptions, 'runThroughQueue'>;

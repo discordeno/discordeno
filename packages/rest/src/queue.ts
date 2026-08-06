@@ -56,15 +56,27 @@ export class Queue {
     return this.remaining > 0;
   }
 
-  /** Pauses the execution until a request is allowed to be made. */
-  async waitUntilRequestAvailable(): Promise<void> {
+  /** Pauses the execution until a request is allowed to be made, or until the given signal aborts. */
+  async waitUntilRequestAvailable(signal?: AbortSignal): Promise<void> {
     return await new Promise(async (resolve) => {
       // If whatever amount of requests is left is more than the safety margin, allow the request
       if (this.isRequestAllowed()) {
         // this.remaining++;
         resolve();
       } else {
-        this.waiting.push(resolve);
+        const stopWaiting = () => {
+          signal?.removeEventListener('abort', onAbort);
+          resolve();
+        };
+        // A caller that gives up is taken back out of the queue right away, so its request and body aren't kept alive until the queue resumes.
+        const onAbort = () => {
+          const index = this.waiting.indexOf(stopWaiting);
+          if (index !== -1) this.waiting.splice(index, 1);
+          stopWaiting();
+        };
+
+        this.waiting.push(stopWaiting);
+        signal?.addEventListener('abort', onAbort, { once: true });
         await this.processWaiting();
       }
     });
@@ -89,6 +101,9 @@ export class Queue {
 
     // Mark as false so next pending request can be triggered by new loop.
     this.processing = false;
+    // The waiting list can empty out without anything moving on to the pending one, when every request in it was cancelled, and nothing would
+    // look at this queue again.
+    this.cleanup();
   }
 
   /** Process the queue of all requests pending to be sent. */
@@ -101,6 +116,14 @@ export class Queue {
 
     while (this.pending.length > 0) {
       this.rest.logger.debug(`Queue ${this.queueType} ${this.url} process pending while loop ran with ${this.pending.length}.`);
+
+      // Drop the requests whose caller gave up, they were rejected the moment their signal fired. This happens before anything is spent on
+      // them: sending them would use up a rate limit slot and delay the requests that are still wanted, and fetch refuses them anyway.
+      if (this.pending[0]?.requestBodyOptions?.signal?.aborted) {
+        this.pending.shift();
+        continue;
+      }
+
       if (!this.firstRequest && !this.isRequestAllowed()) {
         const now = Date.now();
         const future = this.frozenAt + this.interval;
@@ -169,7 +192,16 @@ export class Queue {
 
   /** Checks if a request is available and adds it to the queue. Also triggers queue processing if not already processing. */
   async makeRequest(options: SendRequestOptions): Promise<void> {
-    await this.waitUntilRequestAvailable();
+    const signal = options.requestBodyOptions?.signal;
+
+    await this.waitUntilRequestAvailable(signal);
+
+    // The caller gave up while this was waiting for a slot, it has already been rejected and there is nothing left to send.
+    if (signal?.aborted) {
+      this.cleanup();
+      return;
+    }
+
     this.pending.push(options);
     this.processPending();
   }
