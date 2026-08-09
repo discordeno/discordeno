@@ -1,5 +1,4 @@
 import { type InspectOptions, inspect } from 'node:util';
-import type { Camelize } from '@discordeno/types';
 import {
   camelize,
   camelToSnakeCase,
@@ -10,7 +9,7 @@ import {
   logger,
   snowflakeToTimestamp,
 } from '@discordeno/utils';
-import { type RestEndpoints, restEndpoints } from './endpoints.js';
+import { type CamelizedRestEndpoints, restEndpoints } from './endpoints.js';
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
 import { createRoutes } from './routes.js';
@@ -783,33 +782,33 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       });
     },
 
-    async get<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('GET', url, options)) as Camelize<T>;
+    async get(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('GET', url, options);
     },
 
-    async post<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('POST', url, options)) as Camelize<T>;
+    async post(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('POST', url, options);
     },
 
     async delete(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
       camelize(await rest.makeRequest('DELETE', url, options));
     },
 
-    async patch<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PATCH', url, options)) as Camelize<T>;
+    async patch(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('PATCH', url, options);
     },
 
-    async put<T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PUT', url, options)) as Camelize<T>;
+    async put(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('PUT', url, options);
     },
 
     // We need to wrap all the functions to pass the rest manager as the first argument, so we can use it in the endpoints
     ...(Object.fromEntries(
       Object.entries(restEndpoints).map(([key, endpointFunc]) => {
         const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
-        return [key, async (...args: unknown[]) => await func(rest, ...args)];
+        return [key, async (...args: unknown[]) => camelize(await func(rest, ...args))];
       }),
-    ) as RestEndpoints),
+    ) as CamelizedRestEndpoints),
 
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
