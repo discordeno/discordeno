@@ -9,7 +9,7 @@ import {
   logger,
   snowflakeToTimestamp,
 } from '@discordeno/utils';
-import { type CamelizedRestEndpoints, restEndpoints } from './endpoints.js';
+import { type CamelizedRestEndpoints, type RestEndpoints, restEndpoints } from './endpoints.js';
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
 import { createRoutes } from './routes.js';
@@ -809,6 +809,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return [key, async (...args: unknown[]) => camelize(await func(rest, ...args))];
       }),
     ) as CamelizedRestEndpoints),
+
+    // Same as above: this time since we don't need to camelize we can use .bind
+    // undefined is used as the this because it will be the values for this in the functions above too since it isn't called with a this context
+    snake: Object.fromEntries(
+      Object.entries(restEndpoints).map(([key, endpointFunc]) => {
+        const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
+        return [key, func.bind(undefined, rest)];
+      }),
+    ) as RestEndpoints,
 
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
