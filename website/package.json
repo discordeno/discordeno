@@ -40,9 +40,6 @@
     "typescript": "7.0.2",
     "webpack": "5.109.2"
   },
-  "resolutions": {
-    "@types/react": "^19.2.8"
-  },
   "browserslist": {
     "production": [
       ">0.5%",
