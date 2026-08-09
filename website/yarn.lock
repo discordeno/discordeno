@@ -14396,7 +14396,7 @@ __metadata:
     "@docusaurus/types": "npm:^3.10.2"
     "@easyops-cn/docusaurus-search-local": "npm:^0.55.3"
     "@mdx-js/react": "npm:^3.1.1"
-    "@types/react": "npm:^19.2.17"
+    "@types/react": "npm:^19.2.18"
     "@xyflow/react": "npm:^12.11.2"
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.2.8"
