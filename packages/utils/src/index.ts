@@ -3,7 +3,7 @@ export * from './bucket.js';
 export * from './builders.js';
 export * from './Collection.js';
 export * from './casing.js';
-export * from './colors.js';
+export { getColorEnabled, setColorEnabled } from './colors.js';
 export * from './constants.js';
 export * from './hash.js';
 export * from './images.js';
