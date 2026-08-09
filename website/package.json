@@ -35,13 +35,10 @@
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
-    "@types/react": "^19.2.17",
+    "@types/react": "^19.2.18",
     "turbo": "^2.10.7",
     "typescript": "7.0.2",
     "webpack": "5.109.2"
-  },
-  "resolutions": {
-    "@types/react": "^19.2.8"
   },
   "browserslist": {
     "production": [
