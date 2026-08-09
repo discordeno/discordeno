@@ -36,7 +36,7 @@
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
     "@types/react": "^19.2.18",
-    "turbo": "^2.10.7",
+    "turbo": "^2.10.8",
     "typescript": "7.0.2",
     "webpack": "5.109.2"
   },
