@@ -810,8 +810,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }),
     ) as CamelizedRestEndpoints),
 
-    // Same as above: this time since we don't need to camelize we can use .bind
-    // undefined is used as the this because it will be the values for this in the functions above too since it isn't called with a this context
+    // Same as above
     snake: Object.fromEntries(
       Object.entries(restEndpoints).map(([key, endpointFunc]) => {
         const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
