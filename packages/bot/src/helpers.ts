@@ -111,7 +111,7 @@ import type {
   UpsertGlobalApplicationCommandOptions,
   UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types';
-import { snakelize } from '@discordeno/utils';
+import { camelize } from '@discordeno/utils';
 import type { Bot } from './bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js';
 import type { ThreadMemberTransformerExtra } from './transformers/threadMember.js';
@@ -160,143 +160,143 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 ): BotHelpers<TProps, TBehavior> {
   return {
     createAutomodRule: async (guildId, options, reason) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.createAutomodRule(guildId, options, reason)));
+      return bot.transformers.automodRule(bot, await bot.rest.snake.createAutomodRule(guildId, options, reason));
     },
     createChannel: async (guildId, options, reason) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.createChannel(guildId, options, reason)), { guildId });
+      return bot.transformers.channel(bot, await bot.rest.snake.createChannel(guildId, options, reason), { guildId });
     },
     createEmoji: async (guildId, options, reason) => {
-      return bot.transformers.emoji(bot, snakelize(await bot.rest.createEmoji(guildId, options, reason)));
+      return bot.transformers.emoji(bot, await bot.rest.snake.createEmoji(guildId, options, reason));
     },
     createApplicationEmoji: async (options) => {
-      return bot.transformers.emoji(bot, snakelize(await bot.rest.createApplicationEmoji(options)));
+      return bot.transformers.emoji(bot, await bot.rest.snake.createApplicationEmoji(options));
     },
     createForumThread: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.createForumThread(channelId, options, reason)));
+      return bot.transformers.channel(bot, await bot.rest.snake.createForumThread(channelId, options, reason));
     },
     createGlobalApplicationCommand: async (command, options) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGlobalApplicationCommand(command, options)));
+      return bot.transformers.applicationCommand(bot, await bot.rest.snake.createGlobalApplicationCommand(command, options));
     },
     createGuildApplicationCommand: async (command, guildId, options) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGuildApplicationCommand(command, guildId, options)));
+      return bot.transformers.applicationCommand(bot, await bot.rest.snake.createGuildApplicationCommand(command, guildId, options));
     },
     createGuildSticker: async (guildId, options, reason) => {
-      return bot.transformers.sticker(bot, snakelize(await bot.rest.createGuildSticker(guildId, options, reason)));
+      return bot.transformers.sticker(bot, await bot.rest.snake.createGuildSticker(guildId, options, reason));
     },
     createGuildTemplate: async (guildId, options) => {
-      return bot.transformers.template(bot, snakelize(await bot.rest.createGuildTemplate(guildId, options)));
+      return bot.transformers.template(bot, await bot.rest.snake.createGuildTemplate(guildId, options));
     },
     createInvite: async (channelId, options, reason) => {
       return await bot.rest.createInvite(channelId, options, reason);
     },
     getGuildRoleMemberCounts: async (guildId) => {
-      return await bot.rest.getGuildRoleMemberCounts(guildId);
+      return await bot.rest.snake.getGuildRoleMemberCounts(guildId);
     },
     createRole: async (guildId, options, reason) => {
-      return bot.transformers.role(bot, snakelize(await bot.rest.createRole(guildId, options, reason)), { guildId });
+      return bot.transformers.role(bot, await bot.rest.snake.createRole(guildId, options, reason), { guildId });
     },
     createScheduledEvent: async (guildId, options, reason) => {
-      return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.createScheduledEvent(guildId, options, reason)));
+      return bot.transformers.scheduledEvent(bot, await bot.rest.snake.createScheduledEvent(guildId, options, reason));
     },
     createStageInstance: async (options, reason) => {
-      return bot.transformers.stageInstance(bot, snakelize(await bot.rest.createStageInstance(options, reason)));
+      return bot.transformers.stageInstance(bot, await bot.rest.snake.createStageInstance(options, reason));
     },
     createWebhook: async (channelId, options, reason) => {
-      return bot.transformers.webhook(bot, snakelize(await bot.rest.createWebhook(channelId, options, reason)));
+      return bot.transformers.webhook(bot, await bot.rest.snake.createWebhook(channelId, options, reason));
     },
     editApplicationCommandPermissions: async (guildId, commandId, bearerToken, options) => {
       return bot.transformers.applicationCommandPermission(
         bot,
-        snakelize(await bot.rest.editApplicationCommandPermissions(guildId, commandId, bearerToken, options)),
+        await bot.rest.snake.editApplicationCommandPermissions(guildId, commandId, bearerToken, options),
       );
     },
     editAutomodRule: async (guildId, ruleId, options, reason) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.editAutomodRule(guildId, ruleId, options, reason)));
+      return bot.transformers.automodRule(bot, await bot.rest.snake.editAutomodRule(guildId, ruleId, options, reason));
     },
     editBotProfile: async (options) => {
-      return bot.transformers.user(bot, snakelize(await bot.rest.editBotProfile(options)));
+      return bot.transformers.user(bot, await bot.rest.snake.editBotProfile(options));
     },
     editChannel: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.editChannel(channelId, options, reason)));
+      return bot.transformers.channel(bot, await bot.rest.snake.editChannel(channelId, options, reason));
     },
     editEmoji: async (guildId, id, options, reason) => {
-      return bot.transformers.emoji(bot, snakelize(await bot.rest.editEmoji(guildId, id, options, reason)));
+      return bot.transformers.emoji(bot, await bot.rest.snake.editEmoji(guildId, id, options, reason));
     },
     editApplicationEmoji: async (id, options) => {
-      return bot.transformers.emoji(bot, snakelize(await bot.rest.editApplicationEmoji(id, options)));
+      return bot.transformers.emoji(bot, await bot.rest.snake.editApplicationEmoji(id, options));
     },
     editFollowupMessage: async (token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editFollowupMessage(token, messageId, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.editFollowupMessage(token, messageId, options));
     },
     editGlobalApplicationCommand: async (commandId, options) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.editGlobalApplicationCommand(commandId, options)));
+      return bot.transformers.applicationCommand(bot, await bot.rest.snake.editGlobalApplicationCommand(commandId, options));
     },
     editGuild: async (guildId, options, reason) => {
-      return bot.transformers.guild(bot, snakelize(await bot.rest.editGuild(guildId, options, reason)));
+      return bot.transformers.guild(bot, await bot.rest.snake.editGuild(guildId, options, reason));
     },
     editGuildApplicationCommand: async (commandId, guildId, options) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.editGuildApplicationCommand(commandId, guildId, options)));
+      return bot.transformers.applicationCommand(bot, await bot.rest.snake.editGuildApplicationCommand(commandId, guildId, options));
     },
     editGuildSticker: async (guildId, stickerId, options, reason) => {
-      return bot.transformers.sticker(bot, snakelize(await bot.rest.editGuildSticker(guildId, stickerId, options, reason)));
+      return bot.transformers.sticker(bot, await bot.rest.snake.editGuildSticker(guildId, stickerId, options, reason));
     },
     editGuildTemplate: async (guildId, templateCode, options) => {
-      return bot.transformers.template(bot, snakelize(await bot.rest.editGuildTemplate(guildId, templateCode, options)));
+      return bot.transformers.template(bot, await bot.rest.snake.editGuildTemplate(guildId, templateCode, options));
     },
     editMessage: async (channelId, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editMessage(channelId, messageId, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.editMessage(channelId, messageId, options));
     },
     editOriginalInteractionResponse: async (token, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalInteractionResponse(token, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.editOriginalInteractionResponse(token, options));
     },
     editRole: async (guildId, roleId, options, reason) => {
-      return bot.transformers.role(bot, snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), { guildId });
+      return bot.transformers.role(bot, await bot.rest.snake.editRole(guildId, roleId, options, reason), { guildId });
     },
     editRolePositions: async (guildId, options, reason) => {
-      return snakelize(await bot.rest.editRolePositions(guildId, options, reason)).map((role) => bot.transformers.role(bot, role, { guildId }));
+      return (await bot.rest.snake.editRolePositions(guildId, options, reason)).map((role) => bot.transformers.role(bot, role, { guildId }));
     },
     editScheduledEvent: async (guildId, eventId, options, reason) => {
-      return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.editScheduledEvent(guildId, eventId, options, reason)));
+      return bot.transformers.scheduledEvent(bot, await bot.rest.snake.editScheduledEvent(guildId, eventId, options, reason));
     },
     editStageInstance: async (channelId, topic, reason) => {
-      return bot.transformers.stageInstance(bot, snakelize(await bot.rest.editStageInstance(channelId, topic, reason)));
+      return bot.transformers.stageInstance(bot, await bot.rest.snake.editStageInstance(channelId, topic, reason));
     },
     editWebhook: async (webhookId, options, reason) => {
-      return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhook(webhookId, options, reason)));
+      return bot.transformers.webhook(bot, await bot.rest.snake.editWebhook(webhookId, options, reason));
     },
     editWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.editWebhookMessage(webhookId, token, messageId, options));
     },
     editWebhookWithToken: async (webhookId, token, options) => {
-      return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhookWithToken(webhookId, token, options)));
+      return bot.transformers.webhook(bot, await bot.rest.snake.editWebhookWithToken(webhookId, token, options));
     },
     editWelcomeScreen: async (guildId, options, reason) => {
-      return bot.transformers.welcomeScreen(bot, snakelize(await bot.rest.editWelcomeScreen(guildId, options, reason)));
+      return bot.transformers.welcomeScreen(bot, await bot.rest.snake.editWelcomeScreen(guildId, options, reason));
     },
     editWidgetSettings: async (guildId, options, reason) => {
-      return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.editWidgetSettings(guildId, options, reason)));
+      return bot.transformers.widgetSettings(bot, await bot.rest.snake.editWidgetSettings(guildId, options, reason));
     },
     executeWebhook: async (webhookId, token, options) => {
-      const result = await bot.rest.executeWebhook(webhookId, token, options);
+      const result = await bot.rest.snake.executeWebhook(webhookId, token, options);
       if (!result) return;
 
-      return bot.transformers.message(bot, snakelize(result));
+      return bot.transformers.message(bot, result);
     },
     followAnnouncement: async (sourceChannelId, targetChannelId) => {
       return await bot.rest.followAnnouncement(sourceChannelId, targetChannelId);
     },
     getActiveThreads: async (guildId) => {
-      const result = await bot.rest.getActiveThreads(guildId);
+      const result = await bot.rest.snake.getActiveThreads(guildId);
       return {
-        threads: result.threads.map((thread) => bot.transformers.channel(bot, snakelize(thread), { guildId })),
-        members: result.members.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
+        threads: result.threads.map((thread) => bot.transformers.channel(bot, thread, { guildId })),
+        members: result.members.map((member) => bot.transformers.threadMember(bot, member, { guildId })),
       };
     },
     getApplicationInfo: async () => {
-      return bot.transformers.application(bot, snakelize(await bot.rest.getApplicationInfo()));
+      return bot.transformers.application(bot, await bot.rest.snake.getApplicationInfo());
     },
     editApplicationInfo: async (body) => {
-      return bot.transformers.application(bot, snakelize(await bot.rest.editApplicationInfo(body)));
+      return bot.transformers.application(bot, await bot.rest.snake.editApplicationInfo(body));
     },
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken);
@@ -305,30 +305,30 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.exchangeToken(clientId, clientSecret, options);
     },
     revokeToken: async (clientId, clientSecret, options) => {
-      return await bot.rest.revokeToken(clientId, clientSecret, options);
+      return await bot.rest.snake.revokeToken(clientId, clientSecret, options);
     },
     getApplicationCommandPermission: async (guildId, commandId, options) => {
-      const res = await bot.rest.getApplicationCommandPermission(guildId, commandId, options);
-      const snakedRes = snakelize(res);
+      const res = await bot.rest.snake.getApplicationCommandPermission(guildId, commandId, options);
+      const snakedRes = res;
 
       return bot.transformers.applicationCommandPermission(bot, snakedRes);
     },
     getApplicationCommandPermissions: async (guildId, options) => {
-      return (await bot.rest.getApplicationCommandPermissions(guildId, options)).map((res) =>
-        bot.transformers.applicationCommandPermission(bot, snakelize(res)),
+      return (await bot.rest.snake.getApplicationCommandPermissions(guildId, options)).map((res) =>
+        bot.transformers.applicationCommandPermission(bot, res),
       );
     },
     getAuditLog: async (guildId, options) => {
       return await bot.rest.getAuditLog(guildId, options);
     },
     getAutomodRule: async (guildId, ruleId) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.getAutomodRule(guildId, ruleId)));
+      return bot.transformers.automodRule(bot, await bot.rest.snake.getAutomodRule(guildId, ruleId));
     },
     getAutomodRules: async (guildId) => {
-      return (await bot.rest.getAutomodRules(guildId)).map((res) => bot.transformers.automodRule(bot, snakelize(res)));
+      return (await bot.rest.snake.getAutomodRules(guildId)).map((res) => bot.transformers.automodRule(bot, res));
     },
     getAvailableVoiceRegions: async () => {
-      return (await bot.rest.getAvailableVoiceRegions()).map((res) => bot.transformers.voiceRegion(bot, snakelize(res)));
+      return (await bot.rest.snake.getAvailableVoiceRegions()).map((res) => bot.transformers.voiceRegion(bot, res));
     },
     getBan: async (guildId, userId) => {
       return await bot.rest.getBan(guildId, userId);
@@ -337,110 +337,109 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.getBans(guildId, options);
     },
     getChannel: async (channelId) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.getChannel(channelId)));
+      return bot.transformers.channel(bot, await bot.rest.snake.getChannel(channelId));
     },
     getChannelInvites: async (channelId) => {
-      return (await bot.rest.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, snakelize(res)));
+      return (await bot.rest.snake.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, res));
     },
     getChannels: async (guildId) => {
-      return (await bot.rest.getChannels(guildId)).map((res) => bot.transformers.channel(bot, snakelize(res), { guildId }));
+      return (await bot.rest.snake.getChannels(guildId)).map((res) => bot.transformers.channel(bot, res, { guildId }));
     },
     getChannelWebhooks: async (channelId) => {
-      return (await bot.rest.getChannelWebhooks(channelId)).map((res) => bot.transformers.webhook(bot, snakelize(res)));
+      return (await bot.rest.snake.getChannelWebhooks(channelId)).map((res) => bot.transformers.webhook(bot, res));
     },
     getDmChannel: async (userId) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.getDmChannel(userId)));
+      return bot.transformers.channel(bot, await bot.rest.snake.getDmChannel(userId));
     },
     getGroupDmChannel: async (options) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.getGroupDmChannel(options)));
+      return bot.transformers.channel(bot, await bot.rest.snake.getGroupDmChannel(options));
     },
     getEmoji: async (guildId, emojiId) => {
-      return bot.transformers.emoji(bot, snakelize(await bot.rest.getEmoji(guildId, emojiId)));
+      return bot.transformers.emoji(bot, await bot.rest.snake.getEmoji(guildId, emojiId));
     },
     getApplicationEmoji: async (emojiId) => {
-      return bot.transformers.emoji(bot, snakelize(await bot.rest.getApplicationEmoji(emojiId)));
+      return bot.transformers.emoji(bot, await bot.rest.snake.getApplicationEmoji(emojiId));
     },
     getEmojis: async (guildId) => {
-      return (await bot.rest.getEmojis(guildId)).map((res) => bot.transformers.emoji(bot, snakelize(res)));
+      return (await bot.rest.snake.getEmojis(guildId)).map((res) => bot.transformers.emoji(bot, res));
     },
     getApplicationEmojis: async () => {
-      const res = await bot.rest.getApplicationEmojis();
+      const res = await bot.rest.snake.getApplicationEmojis();
 
       return {
-        items: res.items.map((item) => bot.transformers.emoji(bot, snakelize(item))),
+        items: res.items.map((item) => bot.transformers.emoji(bot, item)),
       };
     },
     getFollowupMessage: async (token, messageId) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getFollowupMessage(token, messageId)));
+      return bot.transformers.message(bot, await bot.rest.snake.getFollowupMessage(token, messageId));
     },
     getGatewayBot: async () => {
-      return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getGatewayBot()));
+      return bot.transformers.gatewayBot(bot, await bot.rest.snake.getGatewayBot());
     },
     getGlobalApplicationCommand: async (commandId) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGlobalApplicationCommand(commandId)));
+      return bot.transformers.applicationCommand(bot, await bot.rest.snake.getGlobalApplicationCommand(commandId));
     },
     getGlobalApplicationCommands: async (options) => {
-      return (await bot.rest.getGlobalApplicationCommands(options)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)));
+      return (await bot.rest.snake.getGlobalApplicationCommands(options)).map((res) => bot.transformers.applicationCommand(bot, res));
     },
     getGuild: async (guildId, options) => {
-      return bot.transformers.guild(bot, snakelize(await bot.rest.getGuild(guildId, options)));
+      return bot.transformers.guild(bot, await bot.rest.snake.getGuild(guildId, options));
     },
     getGuilds: async (bearerToken, options) => {
-      return (await bot.rest.getGuilds(bearerToken, options)).map((res) => bot.transformers.guild(bot, snakelize(res), { partial: true }));
+      return (await bot.rest.snake.getGuilds(bearerToken, options)).map((res) => bot.transformers.guild(bot, res, { partial: true }));
     },
     getGuildApplicationCommand: async (commandId, guildId) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGuildApplicationCommand(commandId, guildId)));
+      return bot.transformers.applicationCommand(bot, await bot.rest.snake.getGuildApplicationCommand(commandId, guildId));
     },
     getGuildApplicationCommands: async (guildId, options) => {
-      return (await bot.rest.getGuildApplicationCommands(guildId, options)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)));
+      return (await bot.rest.snake.getGuildApplicationCommands(guildId, options)).map((res) => bot.transformers.applicationCommand(bot, res));
     },
     getGuildPreview: async (guildId) => {
       return await bot.rest.getGuildPreview(guildId);
-      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getGuildPreview(guildId)))
     },
     getGuildSticker: async (guildId, stickerId) => {
-      return bot.transformers.sticker(bot, snakelize(await bot.rest.getGuildSticker(guildId, stickerId)));
+      return bot.transformers.sticker(bot, await bot.rest.snake.getGuildSticker(guildId, stickerId));
     },
     getGuildStickers: async (guildId) => {
-      return (await bot.rest.getGuildStickers(guildId)).map((res) => bot.transformers.sticker(bot, snakelize(res)));
+      return (await bot.rest.snake.getGuildStickers(guildId)).map((res) => bot.transformers.sticker(bot, res));
     },
     getGuildTemplate: async (templateCode) => {
-      return bot.transformers.template(bot, snakelize(await bot.rest.getGuildTemplate(templateCode)));
+      return bot.transformers.template(bot, await bot.rest.snake.getGuildTemplate(templateCode));
     },
     getGuildTemplates: async (guildId) => {
-      return (await bot.rest.getGuildTemplates(guildId)).map((res) => bot.transformers.template(bot, snakelize(res)));
+      return (await bot.rest.snake.getGuildTemplates(guildId)).map((res) => bot.transformers.template(bot, res));
     },
     getGuildWebhooks: async (guildId) => {
-      return (await bot.rest.getGuildWebhooks(guildId)).map((res) => bot.transformers.webhook(bot, snakelize(res)));
+      return (await bot.rest.snake.getGuildWebhooks(guildId)).map((res) => bot.transformers.webhook(bot, res));
     },
     getIntegrations: async (guildId) => {
-      return (await bot.rest.getIntegrations(guildId)).map((res) =>
-        bot.transformers.integration(bot, snakelize({ ...res, guildId: guildId.toString() })),
+      return (await bot.rest.snake.getIntegrations(guildId)).map((res) =>
+        bot.transformers.integration(bot, { ...res, guild_id: guildId.toString() }),
       );
     },
     getInvite: async (inviteCode, options) => {
-      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)));
+      return bot.transformers.invite(bot, await bot.rest.snake.getInvite(inviteCode, options));
     },
     getInvites: async (guildId) => {
-      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)));
+      return (await bot.rest.snake.getInvites(guildId)).map((res) => bot.transformers.invite(bot, res));
     },
     getMessage: async (channelId, messageId) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)));
+      return bot.transformers.message(bot, await bot.rest.snake.getMessage(channelId, messageId));
     },
     getMessages: async (channelId, options) => {
-      return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)));
+      return (await bot.rest.snake.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, res));
     },
     getStickerPack: async (stickerPackId) => {
-      return bot.transformers.stickerPack(bot, snakelize(await bot.rest.getStickerPack(stickerPackId)));
+      return bot.transformers.stickerPack(bot, await bot.rest.snake.getStickerPack(stickerPackId));
     },
     getStickerPacks: async () => {
-      return (await bot.rest.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)));
+      return (await bot.rest.snake.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, res));
     },
     getOriginalInteractionResponse: async (token) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getOriginalInteractionResponse(token)));
+      return bot.transformers.message(bot, await bot.rest.snake.getOriginalInteractionResponse(token));
     },
     getChannelPins: async (channelId, options) => {
-      const res = snakelize(await bot.rest.getChannelPins(channelId, options));
+      const res = await bot.rest.snake.getChannelPins(channelId, options);
 
       return {
         hasMore: res.has_more,
@@ -448,7 +447,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       };
     },
     getPinnedMessages: async (channelId) => {
-      return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, snakelize(res)));
+      return (await bot.rest.snake.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, res));
     },
     getPrivateArchivedThreads: async (channelId, options) => {
       return await bot.rest.getPrivateArchivedThreads(channelId, options);
@@ -457,60 +456,60 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.getPrivateJoinedArchivedThreads(channelId, options);
     },
     getPruneCount: async (guildId, options) => {
-      return await bot.rest.getPruneCount(guildId, options);
+      return await bot.rest.snake.getPruneCount(guildId, options);
     },
     getPublicArchivedThreads: async (channelId, options) => {
       return await bot.rest.getPublicArchivedThreads(channelId, options);
     },
     getRoles: async (guildId) => {
-      return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, role, { guildId }));
+      return (await bot.rest.snake.getRoles(guildId)).map((role) => bot.transformers.role(bot, role, { guildId }));
     },
     getRole: async (guildId, roleId) => {
-      return bot.transformers.role(bot, snakelize(await bot.rest.getRole(guildId, roleId)), { guildId });
+      return bot.transformers.role(bot, await bot.rest.snake.getRole(guildId, roleId), { guildId });
     },
     getScheduledEvent: async (guildId, eventId, options) => {
-      return bot.transformers.scheduledEvent(bot, snakelize(await bot.rest.getScheduledEvent(guildId, eventId, options)));
+      return bot.transformers.scheduledEvent(bot, await bot.rest.snake.getScheduledEvent(guildId, eventId, options));
     },
     getScheduledEvents: async (guildId, options) => {
-      return (await bot.rest.getScheduledEvents(guildId, options)).map((res) => bot.transformers.scheduledEvent(bot, snakelize(res)));
+      return (await bot.rest.snake.getScheduledEvents(guildId, options)).map((res) => bot.transformers.scheduledEvent(bot, res));
     },
     getScheduledEventUsers: async (guildId, eventId, options) => {
-      return (await bot.rest.getScheduledEventUsers(guildId, eventId, options)).map((u) => {
+      return (await bot.rest.snake.getScheduledEventUsers(guildId, eventId, options)).map((u) => {
         return {
-          user: bot.transformers.user(bot, snakelize(u.user)),
-          member: u.member && bot.transformers.member(bot, snakelize(u.member), { guildId, userId: bot.transformers.snowflake(u.user.id) }),
+          user: bot.transformers.user(bot, u.user),
+          member: u.member && bot.transformers.member(bot, u.member, { guildId, userId: bot.transformers.snowflake(u.user.id) }),
         };
       });
     },
     getSessionInfo: async () => {
-      return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getSessionInfo()));
+      return bot.transformers.gatewayBot(bot, await bot.rest.snake.getSessionInfo());
     },
     getStageInstance: async (channelId) => {
-      return bot.transformers.stageInstance(bot, snakelize(await bot.rest.getStageInstance(channelId)));
+      return bot.transformers.stageInstance(bot, await bot.rest.snake.getStageInstance(channelId));
     },
     getOwnVoiceState: async (guildId) => {
-      return bot.transformers.voiceState(bot, snakelize(await bot.rest.getOwnVoiceState(guildId)), { guildId });
+      return bot.transformers.voiceState(bot, await bot.rest.snake.getOwnVoiceState(guildId), { guildId });
     },
     getUserVoiceState: async (guildId, userId) => {
-      return bot.transformers.voiceState(bot, snakelize(await bot.rest.getUserVoiceState(guildId, userId)), { guildId });
+      return bot.transformers.voiceState(bot, await bot.rest.snake.getUserVoiceState(guildId, userId), { guildId });
     },
     getSticker: async (stickerId) => {
-      return bot.transformers.sticker(bot, snakelize(await bot.rest.getSticker(stickerId)));
+      return bot.transformers.sticker(bot, await bot.rest.snake.getSticker(stickerId));
     },
     getThreadMember: async (channelId, userId, options, extra) => {
-      return bot.transformers.threadMember(bot, snakelize(await bot.rest.getThreadMember(channelId, userId, options)), extra);
+      return bot.transformers.threadMember(bot, await bot.rest.snake.getThreadMember(channelId, userId, options), extra);
     },
     getThreadMembers: async (channelId, options, extra) => {
-      return (await bot.rest.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, snakelize(res), extra));
+      return (await bot.rest.snake.getThreadMembers(channelId, options)).map((res) => bot.transformers.threadMember(bot, res, extra));
     },
     getReactions: async (channelId, messageId, reaction, options) => {
-      return (await bot.rest.getReactions(channelId, messageId, reaction, options)).map((res) => bot.transformers.user(bot, snakelize(res)));
+      return (await bot.rest.snake.getReactions(channelId, messageId, reaction, options)).map((res) => bot.transformers.user(bot, res));
     },
     getUser: async (id) => {
-      return bot.transformers.user(bot, snakelize(await bot.rest.getUser(id)));
+      return bot.transformers.user(bot, await bot.rest.snake.getUser(id));
     },
     getCurrentUser: async (bearerToken) => {
-      return bot.transformers.user(bot, snakelize(await bot.rest.getCurrentUser(bearerToken)));
+      return bot.transformers.user(bot, await bot.rest.snake.getCurrentUser(bearerToken));
     },
     getUserConnections: async (bearerToken) => {
       return await bot.rest.getUserConnections(bearerToken);
@@ -522,88 +521,87 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.getVanityUrl(guildId);
     },
     getVoiceRegions: async (guildId) => {
-      return (await bot.rest.getVoiceRegions(guildId)).map((res) => bot.transformers.voiceRegion(bot, snakelize(res)));
+      return (await bot.rest.snake.getVoiceRegions(guildId)).map((res) => bot.transformers.voiceRegion(bot, res));
     },
     getWebhook: async (webhookId) => {
-      return bot.transformers.webhook(bot, snakelize(await bot.rest.getWebhook(webhookId)));
+      return bot.transformers.webhook(bot, await bot.rest.snake.getWebhook(webhookId));
     },
     getWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.getWebhookMessage(webhookId, token, messageId, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.getWebhookMessage(webhookId, token, messageId, options));
     },
     getWebhookWithToken: async (webhookId, token) => {
-      return bot.transformers.webhook(bot, snakelize(await bot.rest.getWebhookWithToken(webhookId, token)));
+      return bot.transformers.webhook(bot, await bot.rest.snake.getWebhookWithToken(webhookId, token));
     },
     getWelcomeScreen: async (guildId) => {
-      return bot.transformers.welcomeScreen(bot, snakelize(await bot.rest.getWelcomeScreen(guildId)));
+      return bot.transformers.welcomeScreen(bot, await bot.rest.snake.getWelcomeScreen(guildId));
     },
     getWidget: async (guildId) => {
-      return bot.transformers.widget(bot, snakelize(await bot.rest.getWidget(guildId)));
+      return bot.transformers.widget(bot, await bot.rest.snake.getWidget(guildId));
     },
     getWidgetSettings: async (guildId) => {
-      return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)));
+      return bot.transformers.widgetSettings(bot, await bot.rest.snake.getWidgetSettings(guildId));
     },
     publishMessage: async (channelId, messageId) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)));
+      return bot.transformers.message(bot, await bot.rest.snake.publishMessage(channelId, messageId));
     },
     searchGuildMessages: async (guildId, options) => {
-      const result = await bot.rest.searchGuildMessages(guildId, options);
-      if ('code' in result) return result;
+      const result = await bot.rest.snake.searchGuildMessages(guildId, options);
+      if ('code' in result) return camelize(result);
       return {
-        ...result,
-        messages: result.messages.map((messages) => messages.map((message) => bot.transformers.message(bot, snakelize(message)))),
-        threads: result.threads?.map((thread) => bot.transformers.channel(bot, snakelize(thread), { guildId })),
-        members: result.members?.map((member) => bot.transformers.threadMember(bot, snakelize(member), { guildId })),
+        // We would waste time and memory camelizing the entire result object, so we only camelize the parts we need to. The rest of the data is converted below
+        ...camelize({ ...result, messages: undefined, threads: undefined, members: undefined }),
+        messages: result.messages.map((messages) => messages.map((message) => bot.transformers.message(bot, message))),
+        threads: result.threads?.map((thread) => bot.transformers.channel(bot, thread, { guildId })),
+        members: result.members?.map((member) => bot.transformers.threadMember(bot, member, { guildId })),
       };
     },
     sendMessage: async (channelId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.sendMessage(channelId, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.sendMessage(channelId, options));
     },
     sendFollowupMessage: async (token, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.sendFollowupMessage(token, options)));
+      return bot.transformers.message(bot, await bot.rest.snake.sendFollowupMessage(token, options));
     },
     startThreadWithMessage: async (channelId, messageId, options, reason) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.startThreadWithMessage(channelId, messageId, options, reason)));
+      return bot.transformers.channel(bot, await bot.rest.snake.startThreadWithMessage(channelId, messageId, options, reason));
     },
     startThreadWithoutMessage: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, snakelize(await bot.rest.startThreadWithoutMessage(channelId, options, reason)));
+      return bot.transformers.channel(bot, await bot.rest.snake.startThreadWithoutMessage(channelId, options, reason));
     },
     syncGuildTemplate: async (guildId) => {
-      return bot.transformers.template(bot, snakelize(await bot.rest.syncGuildTemplate(guildId)));
+      return bot.transformers.template(bot, await bot.rest.snake.syncGuildTemplate(guildId));
     },
     upsertGlobalApplicationCommands: async (commands, options) => {
-      return (await bot.rest.upsertGlobalApplicationCommands(commands, options)).map((res) =>
-        bot.transformers.applicationCommand(bot, snakelize(res)),
-      );
+      return (await bot.rest.snake.upsertGlobalApplicationCommands(commands, options)).map((res) => bot.transformers.applicationCommand(bot, res));
     },
     upsertGuildApplicationCommands: async (guildId, commands, options) => {
-      return (await bot.rest.upsertGuildApplicationCommands(guildId, commands, options)).map((res) =>
-        bot.transformers.applicationCommand(bot, snakelize(res)),
+      return (await bot.rest.snake.upsertGuildApplicationCommands(guildId, commands, options)).map((res) =>
+        bot.transformers.applicationCommand(bot, res),
       );
     },
     editCurrentMember: async (guildId, options, reason) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.editCurrentMember(guildId, options, reason)), { guildId, userId: bot.id });
+      return bot.transformers.member(bot, await bot.rest.snake.editCurrentMember(guildId, options, reason), { guildId, userId: bot.id });
     },
     editMember: async (guildId, userId, options, reason) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.editMember(guildId, userId, options, reason)), { guildId, userId });
+      return bot.transformers.member(bot, await bot.rest.snake.editMember(guildId, userId, options, reason), { guildId, userId });
     },
     getCurrentMember: async (guildId, bearerToken) => {
-      const res = await bot.rest.getCurrentMember(guildId, bearerToken);
-      return bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) });
+      const res = await bot.rest.snake.getCurrentMember(guildId, bearerToken);
+      return bot.transformers.member(bot, res, { guildId, userId: bot.transformers.snowflake(res.user.id) });
     },
     getMember: async (guildId, userId) => {
-      return bot.transformers.member(bot, snakelize(await bot.rest.getMember(guildId, userId)), { guildId, userId });
+      return bot.transformers.member(bot, await bot.rest.snake.getMember(guildId, userId), { guildId, userId });
     },
     getMembers: async (guildId, options) => {
-      return (await bot.rest.getMembers(guildId, options)).map((res) =>
-        bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) }),
+      return (await bot.rest.snake.getMembers(guildId, options)).map((res) =>
+        bot.transformers.member(bot, res, { guildId, userId: bot.transformers.snowflake(res.user.id) }),
       );
     },
     pruneMembers: async (guildId, options, reason) => {
-      return await bot.rest.pruneMembers(guildId, options, reason);
+      return await bot.rest.snake.pruneMembers(guildId, options, reason);
     },
     searchMembers: async (guildId, query, options) => {
-      return (await bot.rest.searchMembers(guildId, query, options)).map((res) =>
-        bot.transformers.member(bot, snakelize(res), { guildId, userId: bot.transformers.snowflake(res.user.id) }),
+      return (await bot.rest.snake.searchMembers(guildId, query, options)).map((res) =>
+        bot.transformers.member(bot, res, { guildId, userId: bot.transformers.snowflake(res.user.id) }),
       );
     },
     bulkBanMembers: async (guildId, options, reason) => {
@@ -624,271 +622,268 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.updateApplicationRoleConnectionsMetadataRecords(applicationId, options);
     },
     createLobby: async (options) => {
-      return bot.transformers.lobby(bot, snakelize(await bot.rest.createLobby(options)));
+      return bot.transformers.lobby(bot, await bot.rest.snake.createLobby(options));
     },
     createOrJoinLobby: async (options) => {
-      return bot.transformers.lobby(bot, snakelize(await bot.rest.createOrJoinLobby(options)));
+      return bot.transformers.lobby(bot, await bot.rest.snake.createOrJoinLobby(options));
     },
     getLobby: async (lobbyId) => {
-      return bot.transformers.lobby(bot, snakelize(await bot.rest.getLobby(lobbyId)));
+      return bot.transformers.lobby(bot, await bot.rest.snake.getLobby(lobbyId));
     },
     modifyLobby: async (lobbyId, options) => {
-      return bot.transformers.lobby(bot, snakelize(await bot.rest.modifyLobby(lobbyId, options)));
+      return bot.transformers.lobby(bot, await bot.rest.snake.modifyLobby(lobbyId, options));
     },
     addMemberToLobby: async (lobbyId, userId, options) => {
-      return bot.transformers.lobbyMember(bot, snakelize(await bot.rest.addMemberToLobby(lobbyId, userId, options)));
+      return bot.transformers.lobbyMember(bot, await bot.rest.snake.addMemberToLobby(lobbyId, userId, options));
     },
     bulkUpdateLobbyMembers: async (lobbyId, options) => {
-      return (await bot.rest.bulkUpdateLobbyMembers(lobbyId, options)).map((res) => bot.transformers.lobbyMember(bot, snakelize(res)));
+      return (await bot.rest.snake.bulkUpdateLobbyMembers(lobbyId, options)).map((res) => bot.transformers.lobbyMember(bot, res));
     },
     linkChannelToLobby: async (lobbyId, bearerToken, options) => {
-      return bot.transformers.lobby(bot, snakelize(await bot.rest.linkChannelToLobby(lobbyId, bearerToken, options)));
+      return bot.transformers.lobby(bot, await bot.rest.snake.linkChannelToLobby(lobbyId, bearerToken, options));
     },
     unlinkChannelToLobby: async (lobbyId, bearerToken) => {
-      return bot.transformers.lobby(bot, snakelize(await bot.rest.unlinkChannelToLobby(lobbyId, bearerToken)));
+      return bot.transformers.lobby(bot, await bot.rest.snake.unlinkChannelToLobby(lobbyId, bearerToken));
     },
     updateLobbyMessageModerationMetadata: async (lobbyId, messageId, options) => {
-      return await bot.rest.updateLobbyMessageModerationMetadata(lobbyId, messageId, options);
+      return await bot.rest.snake.updateLobbyMessageModerationMetadata(lobbyId, messageId, options);
     },
     sendLobbyMessage: async (bearerToken, lobbyId, options) => {
-      return bot.transformers.lobbyMessage(bot, snakelize(await bot.rest.sendLobbyMessage(bearerToken, lobbyId, options)));
+      return bot.transformers.lobbyMessage(bot, await bot.rest.snake.sendLobbyMessage(bearerToken, lobbyId, options));
     },
     getLobbyMessages: async (bearerToken, lobbyId, options) => {
-      return (await bot.rest.getLobbyMessages(bearerToken, lobbyId, options)).map((res) => bot.transformers.lobbyMessage(bot, snakelize(res)));
+      return (await bot.rest.snake.getLobbyMessages(bearerToken, lobbyId, options)).map((res) => bot.transformers.lobbyMessage(bot, res));
     },
     createLobbyChannelInviteForSelf: async (bearerToken, lobbyId) => {
-      return bot.transformers.lobbyInvite(bot, snakelize(await bot.rest.createLobbyChannelInviteForSelf(bearerToken, lobbyId)));
+      return bot.transformers.lobbyInvite(bot, await bot.rest.snake.createLobbyChannelInviteForSelf(bearerToken, lobbyId));
     },
     createLobbyChannelInviteForUser: async (lobbyId, userId) => {
-      return bot.transformers.lobbyInvite(bot, snakelize(await bot.rest.createLobbyChannelInviteForUser(lobbyId, userId)));
+      return bot.transformers.lobbyInvite(bot, await bot.rest.snake.createLobbyChannelInviteForUser(lobbyId, userId));
     },
     getTargetUsers: async (inviteCode) => {
-      return await bot.rest.getTargetUsers(inviteCode);
+      return await bot.rest.snake.getTargetUsers(inviteCode);
     },
     updateTargetUsers: async (inviteCode, targetUsersFile) => {
-      await bot.rest.updateTargetUsers(inviteCode, targetUsersFile);
+      await bot.rest.snake.updateTargetUsers(inviteCode, targetUsersFile);
     },
     getTargetUsersJobStatus: async (inviteCode) => {
       return await bot.rest.getTargetUsersJobStatus(inviteCode);
     },
-    // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
-      return await bot.rest.addReaction(channelId, messageId, reaction);
+      return await bot.rest.snake.addReaction(channelId, messageId, reaction);
     },
     addReactions: async (channelId, messageId, reactions, ordered) => {
-      return await bot.rest.addReactions(channelId, messageId, reactions, ordered);
+      return await bot.rest.snake.addReactions(channelId, messageId, reactions, ordered);
     },
     addRole: async (guildId, userId, roleId, reason) => {
-      return await bot.rest.addRole(guildId, userId, roleId, reason);
+      return await bot.rest.snake.addRole(guildId, userId, roleId, reason);
     },
     addThreadMember: async (channelId, userId) => {
-      return await bot.rest.addThreadMember(channelId, userId);
+      return await bot.rest.snake.addThreadMember(channelId, userId);
     },
     addDmRecipient: async (channelId, userId, options) => {
-      return await bot.rest.addDmRecipient(channelId, userId, options);
+      return await bot.rest.snake.addDmRecipient(channelId, userId, options);
     },
     addGuildMember: async (guildId, userId, options) => {
-      return await bot.rest.addGuildMember(guildId, userId, options);
+      return await bot.rest.snake.addGuildMember(guildId, userId, options);
     },
     deleteAutomodRule: async (guildId, ruleId, reason) => {
-      return await bot.rest.deleteAutomodRule(guildId, ruleId, reason);
+      return await bot.rest.snake.deleteAutomodRule(guildId, ruleId, reason);
     },
     deleteChannel: async (channelId, reason) => {
-      return await bot.rest.deleteChannel(channelId, reason);
+      return await bot.rest.snake.deleteChannel(channelId, reason);
     },
     deleteChannelPermissionOverride: async (channelId, overwriteId, reason) => {
-      return await bot.rest.deleteChannelPermissionOverride(channelId, overwriteId, reason);
+      return await bot.rest.snake.deleteChannelPermissionOverride(channelId, overwriteId, reason);
     },
     deleteEmoji: async (guildId, id, reason) => {
-      return await bot.rest.deleteEmoji(guildId, id, reason);
+      return await bot.rest.snake.deleteEmoji(guildId, id, reason);
     },
     deleteApplicationEmoji: async (id) => {
-      return await bot.rest.deleteApplicationEmoji(id);
+      return await bot.rest.snake.deleteApplicationEmoji(id);
     },
     deleteFollowupMessage: async (token, messageId) => {
-      return await bot.rest.deleteFollowupMessage(token, messageId);
+      return await bot.rest.snake.deleteFollowupMessage(token, messageId);
     },
     deleteGlobalApplicationCommand: async (commandId) => {
-      return await bot.rest.deleteGlobalApplicationCommand(commandId);
+      return await bot.rest.snake.deleteGlobalApplicationCommand(commandId);
     },
     deleteGuildApplicationCommand: async (commandId, guildId) => {
-      return await bot.rest.deleteGuildApplicationCommand(commandId, guildId);
+      return await bot.rest.snake.deleteGuildApplicationCommand(commandId, guildId);
     },
     deleteGuildSticker: async (guildId, stickerId, reason) => {
-      return await bot.rest.deleteGuildSticker(guildId, stickerId, reason);
+      return await bot.rest.snake.deleteGuildSticker(guildId, stickerId, reason);
     },
     deleteGuildTemplate: async (guildId, templateCode) => {
-      return await bot.rest.deleteGuildTemplate(guildId, templateCode);
+      return await bot.rest.snake.deleteGuildTemplate(guildId, templateCode);
     },
     deleteIntegration: async (guildId, integrationId, reason) => {
-      return await bot.rest.deleteIntegration(guildId, integrationId, reason);
+      return await bot.rest.snake.deleteIntegration(guildId, integrationId, reason);
     },
     deleteInvite: async (inviteCode, reason) => {
-      return await bot.rest.deleteInvite(inviteCode, reason);
+      return await bot.rest.snake.deleteInvite(inviteCode, reason);
     },
     deleteMessage: async (channelId, messageId, reason) => {
-      return await bot.rest.deleteMessage(channelId, messageId, reason);
+      return await bot.rest.snake.deleteMessage(channelId, messageId, reason);
     },
     deleteMessages: async (channelId, messageIds, reason) => {
-      return await bot.rest.deleteMessages(channelId, messageIds, reason);
+      return await bot.rest.snake.deleteMessages(channelId, messageIds, reason);
     },
     deleteOriginalInteractionResponse: async (token) => {
-      return await bot.rest.deleteOriginalInteractionResponse(token);
+      return await bot.rest.snake.deleteOriginalInteractionResponse(token);
     },
     deleteOwnReaction: async (channelId, messageId, reaction) => {
-      return await bot.rest.deleteOwnReaction(channelId, messageId, reaction);
+      return await bot.rest.snake.deleteOwnReaction(channelId, messageId, reaction);
     },
     deleteReactionsAll: async (channelId, messageId) => {
-      return await bot.rest.deleteReactionsAll(channelId, messageId);
+      return await bot.rest.snake.deleteReactionsAll(channelId, messageId);
     },
     deleteReactionsEmoji: async (channelId, messageId, reaction) => {
-      return await bot.rest.deleteReactionsEmoji(channelId, messageId, reaction);
+      return await bot.rest.snake.deleteReactionsEmoji(channelId, messageId, reaction);
     },
     deleteRole: async (guildId, roleId, reason) => {
-      return await bot.rest.deleteRole(guildId, roleId, reason);
+      return await bot.rest.snake.deleteRole(guildId, roleId, reason);
     },
     deleteScheduledEvent: async (guildId, eventId) => {
-      return await bot.rest.deleteScheduledEvent(guildId, eventId);
+      return await bot.rest.snake.deleteScheduledEvent(guildId, eventId);
     },
     deleteStageInstance: async (channelId, reason) => {
-      return await bot.rest.deleteStageInstance(channelId, reason);
+      return await bot.rest.snake.deleteStageInstance(channelId, reason);
     },
     deleteUserReaction: async (channelId, messageId, userId, reaction) => {
-      return await bot.rest.deleteUserReaction(channelId, messageId, userId, reaction);
+      return await bot.rest.snake.deleteUserReaction(channelId, messageId, userId, reaction);
     },
     deleteWebhook: async (webhookId, reason) => {
-      return await bot.rest.deleteWebhook(webhookId, reason);
+      return await bot.rest.snake.deleteWebhook(webhookId, reason);
     },
     deleteWebhookMessage: async (webhookId, token, messageId, options) => {
-      return await bot.rest.deleteWebhookMessage(webhookId, token, messageId, options);
+      return await bot.rest.snake.deleteWebhookMessage(webhookId, token, messageId, options);
     },
     deleteWebhookWithToken: async (webhookId, token) => {
-      return await bot.rest.deleteWebhookWithToken(webhookId, token);
+      return await bot.rest.snake.deleteWebhookWithToken(webhookId, token);
     },
     editChannelPermissionOverrides: async (channelId, options, reason) => {
-      return await bot.rest.editChannelPermissionOverrides(channelId, options, reason);
+      return await bot.rest.snake.editChannelPermissionOverrides(channelId, options, reason);
     },
     editChannelPositions: async (guildId, channelPositions) => {
-      return await bot.rest.editChannelPositions(guildId, channelPositions);
+      return await bot.rest.snake.editChannelPositions(guildId, channelPositions);
     },
     editOwnVoiceState: async (guildId, options) => {
-      return await bot.rest.editOwnVoiceState(guildId, options);
+      return await bot.rest.snake.editOwnVoiceState(guildId, options);
     },
     editUserVoiceState: async (guildId, options) => {
-      return await bot.rest.editUserVoiceState(guildId, options);
+      return await bot.rest.snake.editUserVoiceState(guildId, options);
     },
     editUserApplicationRoleConnection: async (bearerToken, applicationId, options) => {
       return await bot.rest.editUserApplicationRoleConnection(bearerToken, applicationId, options);
     },
     deleteCurrentUserApplicationRoleConnection: async (bearerToken, applicationId) => {
-      return await bot.rest.deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId);
+      return await bot.rest.snake.deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId);
     },
     joinThread: async (channelId) => {
-      return await bot.rest.joinThread(channelId);
+      return await bot.rest.snake.joinThread(channelId);
     },
     leaveGuild: async (guildId) => {
-      return await bot.rest.leaveGuild(guildId);
+      return await bot.rest.snake.leaveGuild(guildId);
     },
     leaveThread: async (channelId) => {
-      return await bot.rest.leaveThread(channelId);
+      return await bot.rest.snake.leaveThread(channelId);
     },
     removeRole: async (guildId, userId, roleId, reason) => {
-      return await bot.rest.removeRole(guildId, userId, roleId, reason);
+      return await bot.rest.snake.removeRole(guildId, userId, roleId, reason);
     },
     removeThreadMember: async (channelId, userId) => {
-      return await bot.rest.removeThreadMember(channelId, userId);
+      return await bot.rest.snake.removeThreadMember(channelId, userId);
     },
     removeDmRecipient: async (channelId, userId) => {
-      return await bot.rest.removeDmRecipient(channelId, userId);
+      return await bot.rest.snake.removeDmRecipient(channelId, userId);
     },
     sendInteractionResponse: async (interactionId, token, options, params) => {
-      const response = await bot.rest.sendInteractionResponse(interactionId, token, options, params);
+      const response = await bot.rest.snake.sendInteractionResponse(interactionId, token, options, params);
 
       if (!response) return;
 
-      return bot.transformers.interactionCallbackResponse(bot, snakelize(response));
+      return bot.transformers.interactionCallbackResponse(bot, response);
     },
     triggerTypingIndicator: async (channelId) => {
-      return await bot.rest.triggerTypingIndicator(channelId);
+      return await bot.rest.snake.triggerTypingIndicator(channelId);
     },
     banMember: async (guildId, userId, options, reason) => {
-      return await bot.rest.banMember(guildId, userId, options, reason);
+      return await bot.rest.snake.banMember(guildId, userId, options, reason);
     },
 
     kickMember: async (guildId, userId, reason) => {
-      return await bot.rest.kickMember(guildId, userId, reason);
+      return await bot.rest.snake.kickMember(guildId, userId, reason);
     },
     pinMessage: async (channelId, messageId, reason) => {
-      return await bot.rest.pinMessage(channelId, messageId, reason);
+      return await bot.rest.snake.pinMessage(channelId, messageId, reason);
     },
     unbanMember: async (guildId, userId, reason) => {
-      return await bot.rest.unbanMember(guildId, userId, reason);
+      return await bot.rest.snake.unbanMember(guildId, userId, reason);
     },
     unpinMessage: async (channelId, messageId, reason) => {
-      return await bot.rest.unpinMessage(channelId, messageId, reason);
+      return await bot.rest.snake.unpinMessage(channelId, messageId, reason);
     },
     getGuildOnboarding: async (guildId) => {
-      return bot.transformers.guildOnboarding(bot, snakelize(await bot.rest.getGuildOnboarding(guildId)));
+      return bot.transformers.guildOnboarding(bot, await bot.rest.snake.getGuildOnboarding(guildId));
     },
     editGuildOnboarding: async (guildId, options, reason) => {
-      return bot.transformers.guildOnboarding(bot, snakelize(await bot.rest.editGuildOnboarding(guildId, options, reason)));
+      return bot.transformers.guildOnboarding(bot, await bot.rest.snake.editGuildOnboarding(guildId, options, reason));
     },
     listEntitlements: async (applicationId, options) => {
-      return (await bot.rest.listEntitlements(applicationId, options)).map((entitlement) =>
-        bot.transformers.entitlement(bot, snakelize(entitlement)),
-      );
+      return (await bot.rest.snake.listEntitlements(applicationId, options)).map((entitlement) => bot.transformers.entitlement(bot, entitlement));
     },
     getEntitlement: async (applicationId, entitlementId) => {
-      return bot.transformers.entitlement(bot, snakelize(await bot.rest.getEntitlement(applicationId, entitlementId)));
+      return bot.transformers.entitlement(bot, await bot.rest.snake.getEntitlement(applicationId, entitlementId));
     },
     createTestEntitlement: async (applicationId, body) => {
-      return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body)), { partial: true });
+      return bot.transformers.entitlement(bot, await bot.rest.snake.createTestEntitlement(applicationId, body), { partial: true });
     },
     deleteTestEntitlement: async (applicationId, entitlementId) => {
-      await bot.rest.deleteTestEntitlement(applicationId, entitlementId);
+      await bot.rest.snake.deleteTestEntitlement(applicationId, entitlementId);
     },
     listSkus: async (applicationId) => {
-      return (await bot.rest.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, snakelize(sku)));
+      return (await bot.rest.snake.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, sku));
     },
     getSubscription: async (skuId, subscriptionId) => {
-      return bot.transformers.subscription(bot, snakelize(await bot.rest.getSubscription(skuId, subscriptionId)));
+      return bot.transformers.subscription(bot, await bot.rest.snake.getSubscription(skuId, subscriptionId));
     },
     listSubscriptions: async (skuId, options) => {
-      return (await bot.rest.listSubscriptions(skuId, options)).map((subscription) => bot.transformers.subscription(bot, snakelize(subscription)));
+      return (await bot.rest.snake.listSubscriptions(skuId, options)).map((subscription) => bot.transformers.subscription(bot, subscription));
     },
     sendSoundboardSound: async (channelId, options) => {
-      await bot.rest.sendSoundboardSound(channelId, options);
+      await bot.rest.snake.sendSoundboardSound(channelId, options);
     },
     listDefaultSoundboardSounds: async () => {
-      return (await bot.rest.listDefaultSoundboardSounds()).map((sound) => bot.transformers.soundboardSound(bot, snakelize(sound)));
+      return (await bot.rest.snake.listDefaultSoundboardSounds()).map((sound) => bot.transformers.soundboardSound(bot, sound));
     },
     listGuildSoundboardSounds: async (guildId) => {
-      const res = await bot.rest.listGuildSoundboardSounds(guildId);
+      const res = await bot.rest.snake.listGuildSoundboardSounds(guildId);
 
       return {
-        items: res.items.map((sound) => bot.transformers.soundboardSound(bot, snakelize(sound))),
+        items: res.items.map((sound) => bot.transformers.soundboardSound(bot, sound)),
       };
     },
     getGuildSoundboardSound: async (guildId, soundId) => {
-      return bot.transformers.soundboardSound(bot, snakelize(await bot.rest.getGuildSoundboardSound(guildId, soundId)));
+      return bot.transformers.soundboardSound(bot, await bot.rest.snake.getGuildSoundboardSound(guildId, soundId));
     },
     createGuildSoundboardSound: async (guildId, options, reason) => {
-      return bot.transformers.soundboardSound(bot, snakelize(await bot.rest.createGuildSoundboardSound(guildId, options, reason)));
+      return bot.transformers.soundboardSound(bot, await bot.rest.snake.createGuildSoundboardSound(guildId, options, reason));
     },
     modifyGuildSoundboardSound: async (guildId, soundId, options, reason) => {
-      return bot.transformers.soundboardSound(bot, snakelize(await bot.rest.modifyGuildSoundboardSound(guildId, soundId, options, reason)));
+      return bot.transformers.soundboardSound(bot, await bot.rest.snake.modifyGuildSoundboardSound(guildId, soundId, options, reason));
     },
     deleteGuildSoundboardSound: async (guildId, soundId, reason) => {
-      await bot.rest.deleteGuildSoundboardSound(guildId, soundId, reason);
+      await bot.rest.snake.deleteGuildSoundboardSound(guildId, soundId, reason);
     },
     deleteLobby: async (lobbyId) => {
-      await bot.rest.deleteLobby(lobbyId);
+      await bot.rest.snake.deleteLobby(lobbyId);
     },
     removeMemberFromLobby: async (lobbyId, userId) => {
-      await bot.rest.removeMemberFromLobby(lobbyId, userId);
+      await bot.rest.snake.removeMemberFromLobby(lobbyId, userId);
     },
     leaveLobby: async (lobbyId, bearerToken) => {
-      await bot.rest.leaveLobby(lobbyId, bearerToken);
+      await bot.rest.snake.leaveLobby(lobbyId, bearerToken);
     },
   };
 }
@@ -1231,7 +1226,6 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   ) => Promise<SetupDesiredProps<LobbyMessage, TProps, TBehavior>[]>;
   createLobbyChannelInviteForSelf: (bearerToken: string, lobbyId: BigString) => Promise<SetupDesiredProps<LobbyInvite, TProps, TBehavior>>;
   createLobbyChannelInviteForUser: (lobbyId: BigString, userId: BigString) => Promise<SetupDesiredProps<LobbyInvite, TProps, TBehavior>>;
-  // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>;
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>;
   addRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>;
