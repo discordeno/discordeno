@@ -2290,7 +2290,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/user#get-current-user-guilds}
    */
-  async getGuilds(rest: RestManager, bearerToken?: string, options?: GetUserGuilds): Promise<Camelize<Partial<DiscordGuild[]>>> {
+  async getGuilds(rest: RestManager, bearerToken?: string, options?: GetUserGuilds): Promise<Camelize<Partial<DiscordGuild>[]>> {
     const makeRequestOptions: MakeRequestOptions | undefined = bearerToken
       ? {
           headers: {
@@ -2300,7 +2300,7 @@ export const restEndpoints = {
         }
       : undefined;
 
-    return await rest.get<Partial<DiscordGuild[]>>(rest.routes.guilds.userGuilds(options), makeRequestOptions);
+    return await rest.get<Partial<DiscordGuild>[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions);
   },
   /**
    * Gets a guild application command by its ID.
