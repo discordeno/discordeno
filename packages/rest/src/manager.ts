@@ -815,7 +815,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     snake: Object.fromEntries(
       Object.entries(restEndpoints).map(([key, endpointFunc]) => {
         const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
-        return [key, func.bind(undefined, rest)];
+        return [key, async (...args: unknown[]) => await func(rest, ...args)];
       }),
     ) as RestEndpoints,
 
