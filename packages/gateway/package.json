@@ -29,21 +29,21 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.7",
+    "@biomejs/biome": "2.5.8",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.47",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^26.1.2",
-    "@types/sinon": "^21.0.1",
+    "@types/node": "^26.2.0",
+    "@types/sinon": "^22.0.0",
     "@types/ws": "^8.18.1",
     "c8": "^12.0.0",
     "chai": "^6.2.2",
     "mocha": "^11.8.0",
-    "sinon": "^22.0.0",
+    "sinon": "^22.1.0",
     "tsconfig": "*",
-    "tsx": "^4.23.9",
-    "typescript": "^6.0.3",
-    "ws": "^8.21.2"
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "ws": "^8.21.3"
   }
 }
