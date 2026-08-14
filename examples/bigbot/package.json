@@ -19,17 +19,17 @@
   },
   "dependencies": {
     "@discordeno/bot": "21.0.0",
-    "@fastify/multipart": "^9.0.3",
+    "@fastify/multipart": "^10.1.0",
     "@influxdata/influxdb-client": "^1.35.0",
-    "amqplib": "^0.10.5",
-    "chalk": "^5.4.1",
-    "dotenv": "^16.4.7",
-    "fastify": "^5.8.5"
+    "amqplib": "^2.0.1",
+    "chalk": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.11.3"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.6",
-    "@types/node": "^22.10.2",
-    "chokidar": "^3.6.0",
-    "typescript": "^5.7.2"
+    "@types/amqplib": "^0.10.8",
+    "@types/node": "^26.2.0",
+    "chokidar": "^5.0.0",
+    "typescript": "^7.0.2"
   }
 }
