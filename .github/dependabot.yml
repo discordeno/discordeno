@@ -7,7 +7,7 @@ updates:
       interval: 'weekly'
     groups:
       library-bumps:
-        group-by: '*'
+        patterns: '*'
   - package-ecosystem: 'github-actions'
     directory: '/'
     labels: ['dependencies', 't-ci']
@@ -15,7 +15,7 @@ updates:
       interval: 'weekly'
     groups:
       ci-bumps:
-        group-by: '*'
+        patterns: '*'
   - package-ecosystem: 'npm'
     directory: '/website'
     labels: ['dependencies', 't-build', 'website']
@@ -23,7 +23,7 @@ updates:
       interval: 'weekly'
     groups:
       website-bumps:
-        group-by: '*'
+        patterns: '*'
   - package-ecosystem: 'npm'
     directories: ['examples/*']
     labels: ['dependencies', 't-build', 'template']
@@ -31,4 +31,4 @@ updates:
       interval: 'monthly'
     groups:
       example-deps:
-        group-by: '*'
+        patterns: '*'
