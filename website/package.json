@@ -31,12 +31,12 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.7",
+    "@biomejs/biome": "2.5.8",
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
     "@types/react": "^19.2.18",
-    "turbo": "^2.10.8",
+    "turbo": "^2.10.9",
     "typescript": "7.0.2",
     "webpack": "5.109.2"
   },
