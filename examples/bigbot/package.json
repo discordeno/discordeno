@@ -18,7 +18,7 @@
     "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js"
   },
   "dependencies": {
-    "@discordeno/bot": "21.0.0",
+    "@discordeno/bot": "22.0.1-next.8caf1b4",
     "@fastify/multipart": "^10.1.0",
     "@influxdata/influxdb-client": "^1.35.0",
     "amqplib": "^2.0.1",
