@@ -18,6 +18,7 @@ export function transformApplicationCommandOption(bot: Bot, payload: DiscordAppl
     minLength: payload.min_length,
     maxLength: payload.max_length,
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
+    fileTypes: payload.file_types,
   } as ApplicationCommandOption;
 
   return bot.transformers.customizers.applicationCommandOption(bot, payload, applicationCommandOption);
