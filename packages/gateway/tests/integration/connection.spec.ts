@@ -3,7 +3,9 @@ import { createGatewayManager, type GatewayManager } from '../../src/manager.js'
 import { ShardSocketCloseCodes } from '../../src/types.js';
 import { creatWSServer, heartbeatInterval } from './websocket.js';
 
-describe('Gateway Integration', () => {
+describe('Gateway Integration', function () {
+  this.slow('1s');
+
   it('Can connect to server', async () => {
     const { promise: connected, resolve: resolveConnected } = promiseWithResolvers<void>();
 
