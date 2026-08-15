@@ -11,7 +11,11 @@ import type { FileContent } from './reference.js';
 export interface CreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string;
-  /** Image url for the default webhook avatar */
+  /**
+   * Image data for the default webhook avatar
+   *
+   * This needs to be a Data URI scheme.
+   */
   avatar?: string | null;
 }
 
