@@ -73,7 +73,6 @@ import {
   logger,
   processReactionString,
   snowflakeToTimestamp,
-  urlToBase64,
 } from '@discordeno/utils';
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
@@ -992,10 +991,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async createWebhook(channelId, options, reason) {
       return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
-        body: {
-          name: options.name,
-          avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-        },
+        body: options,
         reason,
       });
     },
@@ -1147,15 +1143,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editBotProfile(options) {
-      const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
-      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL;
-
       return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
-        body: {
-          username: options.username?.trim(),
-          avatar,
-          banner,
-        },
+        body: options,
       });
     },
 
