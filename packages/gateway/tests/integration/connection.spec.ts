@@ -17,10 +17,7 @@ describe('Gateway Integration', () => {
 
     await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished');
 
-    // To avoid needing to wait 1m to get the bucket refil timer to fire we cancel it
-    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId);
-
-    close();
+    await close();
   });
 
   it('Can heartbeat', async () => {
@@ -47,9 +44,6 @@ describe('Gateway Integration', () => {
 
     await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished');
 
-    // To avoid needing to wait 1m to get the bucket refil timer to fire we cancel it
-    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId);
-
     close();
   });
 });
@@ -69,6 +63,8 @@ function createGatewayManagerWithPort(port: number): GatewayManager {
     token: '',
     url: `ws://localhost:${port}`,
     intents: Intents.Guilds,
+    // we will never spawn more shards
+    spawnShardDelay: 0,
     resharding: {
       enabled: false,
       checkInterval: 0,
