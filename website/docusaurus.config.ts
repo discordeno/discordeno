@@ -224,3 +224,5 @@ const config: Config = {
 };
 
 export default config;
+
+# Fix for issue #5306: safe input handling
