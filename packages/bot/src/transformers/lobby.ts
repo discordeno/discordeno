@@ -1,9 +1,9 @@
-import type { DiscordLobby, DiscordLobbyInvite, DiscordLobbyMember, DiscordLobbyMessage } from '@discordeno/types';
+import type { DiscordLobby, DiscordLobbyInvite, DiscordLobbyMember, DiscordLobbyMessage, DiscordLobbyMessageLobbyMember } from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
-import type { Lobby, LobbyInvite, LobbyMember, LobbyMessage } from './types.js';
+import type { Lobby, LobbyInvite, LobbyMember, LobbyMessage, LobbyMessageLobbyMember } from './types.js';
 
 export function transformLobby(bot: Bot, payload: Partial<DiscordLobby>, extra?: { partial?: boolean }) {
   const props = bot.transformers.desiredProperties.lobby;
@@ -27,6 +27,7 @@ export function transformLobbyMember(bot: Bot, payload: Partial<DiscordLobbyMemb
   if (props.id && payload.id) lobbyMember.id = bot.transformers.snowflake(payload.id);
   if (props.metadata && payload.metadata) lobbyMember.metadata = payload.metadata;
   if (props.flags && payload.flags) lobbyMember.flags = new ToggleBitfield(payload.flags);
+  if (props.additionalName && payload.additional_name) lobbyMember.additionalName = payload.additional_name;
 
   return callCustomizer('lobbyMember', bot, payload, lobbyMember, {
     partial: extra?.partial ?? false,
@@ -43,12 +44,24 @@ export function transformLobbyMessage(bot: Bot, payload: Partial<DiscordLobbyMes
   if (props.lobbyId && payload.lobby_id) lobbyMessage.lobbyId = bot.transformers.snowflake(payload.lobby_id);
   if (props.channelId && payload.channel_id) lobbyMessage.channelId = bot.transformers.snowflake(payload.channel_id);
   if (props.author && payload.author) lobbyMessage.author = bot.transformers.user(bot, payload.author);
+  if (props.lobbyMember && payload.lobby_member) lobbyMessage.lobbyMember = bot.transformers.lobbyMessageLobbyMember(bot, payload.lobby_member);
   if (props.metadata && payload.metadata) lobbyMessage.metadata = payload.metadata;
   if (props.moderationMetadata && payload.moderation_metadata) lobbyMessage.moderationMetadata = payload.moderation_metadata;
   if (props.flags && payload.flags) lobbyMessage.flags = new ToggleBitfield(payload.flags);
   if (props.applicationId && payload.application_id) lobbyMessage.applicationId = bot.transformers.snowflake(payload.application_id);
 
   return callCustomizer('lobbyMessage', bot, payload, lobbyMessage, {
+    partial: extra?.partial ?? false,
+  });
+}
+
+export function transformLobbyMessageLobbyMember(bot: Bot, payload: Partial<DiscordLobbyMessageLobbyMember>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.lobbyMessageLobbyMember;
+  const lobbyMessageLobbyMember = {} as SetupDesiredProps<LobbyMessageLobbyMember, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.additionalName && payload?.additional_name) lobbyMessageLobbyMember.additionalName = payload.additional_name;
+
+  return callCustomizer('lobbyMessageLobbyMember', bot, payload, lobbyMessageLobbyMember, {
     partial: extra?.partial ?? false,
   });
 }
