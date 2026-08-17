@@ -96,6 +96,8 @@ export const BitwisePermissionFlags = {
   USE_EXTERNAL_SOUNDS: 1n << 45n,
   /** Allows sending voice messages */
   SEND_VOICE_MESSAGES: 1n << 46n,
+  /** Allows setting voice channel status */
+  SET_VOICE_CHANNEL_STATUS: 1n << 48n,
   /** Allows sending polls */
   SEND_POLLS: 1n << 49n,
   /** Allows user-installed apps to send public responses. When disabled, users will still be allowed to use their apps but the responses will be ephemeral. This only applies to apps not also installed to the server. */
