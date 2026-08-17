@@ -526,4 +526,61 @@ describe('[rest] manager', () => {
       expect(error.message).to.be.equal('[999] The request was aborted.');
     });
   });
+
+  // A queue spends a rate limit slot before it sends, and the only thing that hands one back is the rate limit headers of a response, plus the
+  // timer that needs an `interval` those same headers teach it. A queue that has not had a response yet has neither, so an attempt ending
+  // without one used to leave the slot spent for good and nothing routed through that queue was ever sent again.
+  describe('rest.makeRequest when an attempt ends without a response', () => {
+    let fetchStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      fetchStub = sinon.stub(globalThis, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchStub.restore();
+    });
+
+    it('Will keep the queue going after an attempt is aborted', async () => {
+      const rest = createRestManager({ token });
+      // Behave like real fetch: never settle until the signal on the request aborts
+      fetchStub.onFirstCall().callsFake(
+        async (request: Request) =>
+          await new Promise<Response>((_resolve, reject) => {
+            request.signal.addEventListener('abort', () => reject(request.signal.reason), { once: true });
+          }),
+      );
+      fetchStub.onSecondCall().resolves(new Response('{}', { headers: { 'Content-Type': 'application/json' } }));
+
+      const controller = new AbortController();
+      const aborted = rest.makeRequest('GET', '/gateway/bot', { signal: controller.signal });
+      // Let the request go out before aborting
+      await new Promise((resolve) => setImmediate(resolve));
+      controller.abort();
+
+      await expect(aborted).to.eventually.be.rejected;
+      // The slot that attempt spent is back, so the queue is able to send again
+      expect([...rest.queues.values()][0].remaining).to.be.equal(1);
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.fulfilled;
+      expect(fetchStub.callCount).to.be.equal(2);
+    });
+
+    it('Will keep the queue going after an attempt times out', async () => {
+      const rest = createRestManager({ token });
+      // A single re-send, so the request gives up rather than timing out over and over
+      rest.maxRetryCount = 1;
+      const timeoutError = new DOMException('The operation timed out.', 'TimeoutError');
+      fetchStub.onFirstCall().rejects(timeoutError);
+      fetchStub.onSecondCall().rejects(timeoutError);
+      fetchStub.onThirdCall().resolves(new Response('{}', { headers: { 'Content-Type': 'application/json' } }));
+
+      // The re-send goes back through the queue, so it can only go out if the attempt it is replacing gave its slot back first
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(2);
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.fulfilled;
+      expect(fetchStub.callCount).to.be.equal(3);
+    });
+  });
 });
