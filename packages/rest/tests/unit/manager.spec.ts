@@ -526,4 +526,60 @@ describe('[rest] manager', () => {
       expect(error.message).to.be.equal('[999] The request was aborted.');
     });
   });
+
+  describe('rest.sendRequest with a server error', () => {
+    let rest: RestManager;
+    let fetchStub: sinon.SinonStub;
+
+    const jsonHeaders = { 'Content-Type': 'application/json' };
+    const gatewayResponse = () => new Response(JSON.stringify({ url: 'wss://gateway.discord.gg' }), { headers: jsonHeaders });
+
+    beforeEach(() => {
+      rest = createRestManager({ token });
+      // Re-sending is checked by counting the calls to fetch, never by timing, so the backoff between them is turned off to keep the suite fast
+      // and free of a wait that could get flaky under load.
+      rest.serverErrorRetryDelayStep = 0;
+      fetchStub = sinon.stub(globalThis, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchStub.restore();
+    });
+
+    for (const status of [502, 503]) {
+      it(`Will re-send the request when a gateway in front of the api answered (${status})`, async () => {
+        fetchStub.onFirstCall().resolves(new Response('{}', { status, headers: jsonHeaders }));
+        fetchStub.onSecondCall().resolves(gatewayResponse());
+
+        expect(await rest.makeRequest('GET', '/gateway/bot')).to.be.deep.equal({ url: 'wss://gateway.discord.gg' });
+        expect(fetchStub.callCount).to.be.equal(2);
+      });
+    }
+
+    // These two reached the api, so it may have carried the request out before it failed or ran out of time
+    for (const status of [500, 504]) {
+      it(`Will not re-send the request when the api itself answered (${status})`, async () => {
+        fetchStub.resolves(new Response('{}', { status, headers: jsonHeaders }));
+
+        await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+        expect(fetchStub.callCount).to.be.equal(1);
+      });
+    }
+
+    it('Will stop re-sending once maxRetryCount is exhausted', async () => {
+      rest.maxRetryCount = 0;
+      fetchStub.resolves(new Response('{}', { status: 502, headers: jsonHeaders }));
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(1);
+    });
+
+    it('Will stop re-sending once maxServerErrorRetryCount is exhausted', async () => {
+      rest.maxServerErrorRetryCount = 2;
+      fetchStub.resolves(new Response('{}', { status: 502, headers: jsonHeaders }));
+
+      await expect(rest.makeRequest('GET', '/gateway/bot')).to.eventually.be.rejectedWith(Error);
+      expect(fetchStub.callCount).to.be.equal(3);
+    });
+  });
 });

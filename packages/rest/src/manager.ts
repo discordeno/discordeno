@@ -90,6 +90,19 @@ export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
+/**
+ * The server errors a request is re-sent on.
+ *
+ * @remarks
+ * Both of these come from a gateway sitting in front of the api rather than from the api itself, so the request never reached anything that
+ * could act on it and re-sending it cannot execute it twice.
+ *
+ * `500` and `504` are deliberately not here. A `500` came from the api, which means it did get the request and may have carried part of it
+ * out before failing, and a `504` means the api was handed the request and did not answer in time, so it may well have run. Re-sending
+ * either could create a second channel for one call.
+ */
+export const RETRYABLE_SERVER_ERRORS: ReadonlySet<number> = new Set([502, 503]);
+
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
@@ -120,6 +133,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     maxRetryCount: Infinity,
     maxProxyRetryCount: 15,
     proxyRetryDelayStep: 250,
+    maxServerErrorRetryCount: 3,
+    serverErrorRetryDelayStep: 1000,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -572,6 +587,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} failed.`);
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
+          // A gateway in front of the api answered instead of the api itself, so the request never got to run and re-sending it cannot
+          // execute anything twice. `retryCount` is shared with the rate limit path below, and the extra cap keeps a Discord outage from
+          // keeping every request alive, since `maxRetryCount` is Infinity by default.
+          if (
+            RETRYABLE_SERVER_ERRORS.has(response.status) &&
+            options.retryCount < rest.maxRetryCount &&
+            options.retryCount < rest.maxServerErrorRetryCount
+          ) {
+            options.retryCount += 1;
+            rest.logger.debug(`Request to ${url} got a ${response.status}, retrying.`);
+            // Discord sends no retry-after with these, so back off a little further on every attempt.
+            await delay(rest.serverErrorRetryDelayStep * options.retryCount);
+
+            return await options.retryRequest?.(options);
+          }
+
           options.reject({ ok: false, status: response.status, statusText: response.statusText, body });
           return;
         }
