@@ -313,7 +313,7 @@ export const restEndpoints = {
     guildId: BigString,
     options: CreateAutoModerationRuleOptions,
     reason?: string,
-  ): Promise<Camelize<DiscordAutoModerationRule>> {
+  ): Promise<DiscordAutoModerationRule> {
     return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body: options, reason });
   },
   /**
@@ -335,7 +335,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#create-guild-channel}
    */
-  async createChannel(rest: RestManager, guildId: BigString, options: CreateGuildChannel, reason?: string): Promise<Camelize<DiscordChannel>> {
+  async createChannel(rest: RestManager, guildId: BigString, options: CreateGuildChannel, reason?: string): Promise<DiscordChannel> {
     return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body: options, reason });
   },
   /**
@@ -355,7 +355,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#create-guild-emoji}
    */
-  async createEmoji(rest: RestManager, guildId: BigString, options: CreateGuildEmoji, reason?: string): Promise<Camelize<DiscordEmoji>> {
+  async createEmoji(rest: RestManager, guildId: BigString, options: CreateGuildEmoji, reason?: string): Promise<DiscordEmoji> {
     return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body: options, reason });
   },
   /**
@@ -366,7 +366,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#create-application-emoji}
    */
-  async createApplicationEmoji(rest: RestManager, options: CreateApplicationEmoji): Promise<Camelize<DiscordEmoji>> {
+  async createApplicationEmoji(rest: RestManager, options: CreateApplicationEmoji): Promise<DiscordEmoji> {
     return await rest.post<DiscordEmoji>(rest.routes.applicationEmojis(rest.applicationId), { body: options });
   },
   /**
@@ -385,12 +385,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#start-thread-in-forum-or-media-channel}
    */
-  async createForumThread(
-    rest: RestManager,
-    channelId: BigString,
-    options: CreateForumPostWithMessage,
-    reason?: string,
-  ): Promise<Camelize<DiscordChannel>> {
+  async createForumThread(rest: RestManager, channelId: BigString, options: CreateForumPostWithMessage, reason?: string): Promise<DiscordChannel> {
     return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body: options, files: options.files, reason });
   },
   /**
@@ -414,7 +409,7 @@ export const restEndpoints = {
     rest: RestManager,
     command: CreateApplicationCommand,
     options?: CreateGlobalApplicationCommandOptions,
-  ): Promise<Camelize<DiscordApplicationCommand>> {
+  ): Promise<DiscordApplicationCommand> {
     const restOptions: MakeRequestOptions = { body: command };
 
     if (options?.bearerToken) {
@@ -448,7 +443,7 @@ export const restEndpoints = {
     command: CreateApplicationCommand,
     guildId: BigString,
     options?: CreateGuildApplicationCommandOptions,
-  ): Promise<Camelize<DiscordApplicationCommand>> {
+  ): Promise<DiscordApplicationCommand> {
     const restOptions: MakeRequestOptions = { body: command };
 
     if (options?.bearerToken) {
@@ -475,12 +470,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/sticker#create-guild-sticker}
    */
-  async createGuildSticker(
-    rest: RestManager,
-    guildId: BigString,
-    options: CreateGuildStickerOptions,
-    reason?: string,
-  ): Promise<Camelize<DiscordSticker>> {
+  async createGuildSticker(rest: RestManager, guildId: BigString, options: CreateGuildStickerOptions, reason?: string): Promise<DiscordSticker> {
     const form = new FormData();
     form.append('file', options.file.blob, options.file.name);
     form.append('name', options.name);
@@ -503,7 +493,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-template#create-guild-template}
    */
-  async createGuildTemplate(rest: RestManager, guildId: BigString, options: CreateTemplate): Promise<Camelize<DiscordTemplate>> {
+  async createGuildTemplate(rest: RestManager, guildId: BigString, options: CreateTemplate): Promise<DiscordTemplate> {
     return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), { body: options });
   },
   /**
@@ -524,7 +514,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#create-channel-invite}
    */
-  async createInvite(rest: RestManager, channelId: BigString, options?: CreateChannelInvite, reason?: string): Promise<Camelize<DiscordInvite>> {
+  async createInvite(rest: RestManager, channelId: BigString, options?: CreateChannelInvite, reason?: string): Promise<DiscordInvite> {
     options ??= {};
 
     if (!options.targetUsersFile) {
@@ -566,7 +556,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#create-guild-role}
    */
-  async createRole(rest: RestManager, guildId: BigString, options: CreateGuildRole, reason?: string): Promise<Camelize<DiscordRole>> {
+  async createRole(rest: RestManager, guildId: BigString, options: CreateGuildRole, reason?: string): Promise<DiscordRole> {
     return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), { body: options, reason });
   },
   /**
@@ -586,12 +576,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-scheduled-event#create-guild-scheduled-event}
    */
-  async createScheduledEvent(
-    rest: RestManager,
-    guildId: BigString,
-    options: CreateScheduledEvent,
-    reason?: string,
-  ): Promise<Camelize<DiscordScheduledEvent>> {
+  async createScheduledEvent(rest: RestManager, guildId: BigString, options: CreateScheduledEvent, reason?: string): Promise<DiscordScheduledEvent> {
     return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), { body: options, reason });
   },
   /**
@@ -608,7 +593,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/stage-instance#create-stage-instance}
    */
-  async createStageInstance(rest: RestManager, options: CreateStageInstance, reason?: string): Promise<Camelize<DiscordStageInstance>> {
+  async createStageInstance(rest: RestManager, options: CreateStageInstance, reason?: string): Promise<DiscordStageInstance> {
     return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), { body: options, reason });
   },
   /**
@@ -628,7 +613,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#create-webhook}
    */
-  async createWebhook(rest: RestManager, channelId: BigString, options: CreateWebhook, reason?: string): Promise<Camelize<DiscordWebhook>> {
+  async createWebhook(rest: RestManager, channelId: BigString, options: CreateWebhook, reason?: string): Promise<DiscordWebhook> {
     return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
       body: options,
       reason,
@@ -878,7 +863,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/invite#get-target-users-job-status}
    */
-  async getTargetUsersJobStatus(rest: RestManager, inviteCode: string): Promise<Camelize<DiscordTargetUsersJobStatus>> {
+  async getTargetUsersJobStatus(rest: RestManager, inviteCode: string): Promise<DiscordTargetUsersJobStatus> {
     return await rest.get<DiscordTargetUsersJobStatus>(rest.routes.guilds.inviteTargetUsersJobStatus(inviteCode));
   },
   /**
@@ -1140,7 +1125,7 @@ export const restEndpoints = {
     commandId: BigString,
     bearerToken: string,
     options: Camelize<DiscordApplicationCommandPermissions[]>,
-  ): Promise<Camelize<DiscordGuildApplicationCommandPermissions>> {
+  ): Promise<DiscordGuildApplicationCommandPermissions> {
     return await rest.put<DiscordGuildApplicationCommandPermissions>(
       rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
       {
@@ -1173,7 +1158,7 @@ export const restEndpoints = {
     ruleId: BigString,
     options: Partial<EditAutoModerationRuleOptions>,
     reason?: string,
-  ): Promise<Camelize<DiscordAutoModerationRule>> {
+  ): Promise<DiscordAutoModerationRule> {
     return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), { body: options, reason });
   },
   /**
@@ -1192,7 +1177,7 @@ export const restEndpoints = {
   async editBotProfile(
     rest: RestManager,
     options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null },
-  ): Promise<Camelize<DiscordUser>> {
+  ): Promise<DiscordUser> {
     return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
       body: options,
     });
@@ -1227,7 +1212,7 @@ export const restEndpoints = {
    * - Otherwise:
    *     - Fires a _Channel Update_ gateway event.
    */
-  async editChannel(rest: RestManager, channelId: BigString, options: ModifyChannel, reason?: string): Promise<Camelize<DiscordChannel>> {
+  async editChannel(rest: RestManager, channelId: BigString, options: ModifyChannel, reason?: string): Promise<DiscordChannel> {
     return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), { body: options, reason });
   },
   /**
@@ -1293,7 +1278,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#modify-guild-emoji}
    */
-  async editEmoji(rest: RestManager, guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string): Promise<Camelize<DiscordEmoji>> {
+  async editEmoji(rest: RestManager, guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string): Promise<DiscordEmoji> {
     return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body: options, reason });
   },
   /**
@@ -1305,7 +1290,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#modify-application-emoji}
    */
-  async editApplicationEmoji(rest: RestManager, id: BigString, options: ModifyApplicationEmoji): Promise<Camelize<DiscordEmoji>> {
+  async editApplicationEmoji(rest: RestManager, id: BigString, options: ModifyApplicationEmoji): Promise<DiscordEmoji> {
     return await rest.patch<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, id), { body: options });
   },
   /**
@@ -1325,12 +1310,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/receiving-and-responding#edit-followup-message}
    */
-  async editFollowupMessage(
-    rest: RestManager,
-    token: string,
-    messageId: BigString,
-    options: InteractionCallbackData,
-  ): Promise<Camelize<DiscordMessage>> {
+  async editFollowupMessage(rest: RestManager, token: string, messageId: BigString, options: InteractionCallbackData): Promise<DiscordMessage> {
     return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), {
       body: options,
       files: options.files,
@@ -1346,11 +1326,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/application-commands#edit-global-application-command}
    */
-  async editGlobalApplicationCommand(
-    rest: RestManager,
-    commandId: BigString,
-    options: CreateApplicationCommand,
-  ): Promise<Camelize<DiscordApplicationCommand>> {
+  async editGlobalApplicationCommand(rest: RestManager, commandId: BigString, options: CreateApplicationCommand): Promise<DiscordApplicationCommand> {
     return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), { body: options });
   },
   /**
@@ -1371,7 +1347,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild}
    */
-  async editGuild(rest: RestManager, guildId: BigString, options: ModifyGuild, reason?: string): Promise<Camelize<DiscordGuild>> {
+  async editGuild(rest: RestManager, guildId: BigString, options: ModifyGuild, reason?: string): Promise<DiscordGuild> {
     return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), { body: options, reason });
   },
   /**
@@ -1389,7 +1365,7 @@ export const restEndpoints = {
     commandId: BigString,
     guildId: BigString,
     options: CreateApplicationCommand,
-  ): Promise<Camelize<DiscordApplicationCommand>> {
+  ): Promise<DiscordApplicationCommand> {
     return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId), {
       body: options,
     });
@@ -1414,7 +1390,7 @@ export const restEndpoints = {
     stickerId: BigString,
     options: AtLeastOne<EditGuildStickerOptions>,
     reason?: string,
-  ): Promise<Camelize<DiscordSticker>> {
+  ): Promise<DiscordSticker> {
     return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), { body: options, reason });
   },
   /**
@@ -1432,12 +1408,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-template#modify-guild-template}
    */
-  async editGuildTemplate(
-    rest: RestManager,
-    guildId: BigString,
-    templateCode: string,
-    options: ModifyGuildTemplate,
-  ): Promise<Camelize<DiscordTemplate>> {
+  async editGuildTemplate(rest: RestManager, guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<DiscordTemplate> {
     return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), { body: options });
   },
   /**
@@ -1457,7 +1428,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#edit-message}
    */
-  async editMessage(rest: RestManager, channelId: BigString, messageId: BigString, options: EditMessage): Promise<Camelize<DiscordMessage>> {
+  async editMessage(rest: RestManager, channelId: BigString, messageId: BigString, options: EditMessage): Promise<DiscordMessage> {
     return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body: options, files: options.files });
   },
   /**
@@ -1476,7 +1447,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/receiving-and-responding#edit-original-interaction-response}
    */
-  async editOriginalInteractionResponse(rest: RestManager, token: string, options: InteractionCallbackData): Promise<Camelize<DiscordMessage>> {
+  async editOriginalInteractionResponse(rest: RestManager, token: string, options: InteractionCallbackData): Promise<DiscordMessage> {
     return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
       body: options,
       files: options.files,
@@ -1526,7 +1497,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-role}
    */
-  async editRole(rest: RestManager, guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string): Promise<Camelize<DiscordRole>> {
+  async editRole(rest: RestManager, guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string): Promise<DiscordRole> {
     return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), { body: options, reason });
   },
   /**
@@ -1544,7 +1515,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-role-positions}
    */
-  async editRolePositions(rest: RestManager, guildId: BigString, options: ModifyRolePositions[], reason?: string): Promise<Camelize<DiscordRole[]>> {
+  async editRolePositions(rest: RestManager, guildId: BigString, options: ModifyRolePositions[], reason?: string): Promise<DiscordRole[]> {
     return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), { body: options, reason });
   },
   /**
@@ -1572,7 +1543,7 @@ export const restEndpoints = {
     eventId: BigString,
     options: Partial<EditScheduledEvent>,
     reason?: string,
-  ): Promise<Camelize<DiscordScheduledEvent>> {
+  ): Promise<DiscordScheduledEvent> {
     return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), { body: options, reason });
   },
   /**
@@ -1590,7 +1561,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/stage-instance#modify-stage-instance}
    */
-  async editStageInstance(rest: RestManager, channelId: BigString, topic: string, reason?: string): Promise<Camelize<DiscordStageInstance>> {
+  async editStageInstance(rest: RestManager, channelId: BigString, topic: string, reason?: string): Promise<DiscordStageInstance> {
     return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { body: { topic }, reason });
   },
   /**
@@ -1627,7 +1598,7 @@ export const restEndpoints = {
     bearerToken: string,
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnection>,
-  ): Promise<Camelize<DiscordApplicationRoleConnection>> {
+  ): Promise<DiscordApplicationRoleConnection> {
     return await rest.put<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
       body: options,
       headers: {
@@ -1669,7 +1640,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#edit-webhook}
    */
-  async editWebhook(rest: RestManager, webhookId: BigString, options: ModifyWebhook, reason?: string): Promise<Camelize<DiscordWebhook>> {
+  async editWebhook(rest: RestManager, webhookId: BigString, options: ModifyWebhook, reason?: string): Promise<DiscordWebhook> {
     return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body: options, reason });
   },
   /**
@@ -1692,7 +1663,7 @@ export const restEndpoints = {
     token: string,
     messageId: BigString,
     options: EditWebhookMessageOptions,
-  ): Promise<Camelize<DiscordMessage>> {
+  ): Promise<DiscordMessage> {
     return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
       body: options,
       files: options.files,
@@ -1718,7 +1689,7 @@ export const restEndpoints = {
     webhookId: BigString,
     token: string,
     options: Omit<ModifyWebhook, 'channelId'>,
-  ): Promise<Camelize<DiscordWebhook>> {
+  ): Promise<DiscordWebhook> {
     return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
       body: options,
       unauthorized: true,
@@ -1739,12 +1710,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-welcome-screen}
    */
-  async editWelcomeScreen(
-    rest: RestManager,
-    guildId: BigString,
-    options: ModifyGuildWelcomeScreen,
-    reason?: string,
-  ): Promise<Camelize<DiscordWelcomeScreen>> {
+  async editWelcomeScreen(rest: RestManager, guildId: BigString, options: ModifyGuildWelcomeScreen, reason?: string): Promise<DiscordWelcomeScreen> {
     return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), { body: options, reason });
   },
   /**
@@ -1766,7 +1732,7 @@ export const restEndpoints = {
     guildId: BigString,
     options: Camelize<DiscordGuildWidgetSettings>,
     reason?: string,
-  ): Promise<Camelize<DiscordGuildWidgetSettings>> {
+  ): Promise<DiscordGuildWidgetSettings> {
     return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), { body: options, reason });
   },
   /**
@@ -1782,12 +1748,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#execute-webhook}
    */
-  async executeWebhook(
-    rest: RestManager,
-    webhookId: BigString,
-    token: string,
-    options: ExecuteWebhook,
-  ): Promise<Camelize<DiscordMessage> | undefined> {
+  async executeWebhook(rest: RestManager, webhookId: BigString, token: string, options: ExecuteWebhook): Promise<DiscordMessage | undefined> {
     return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
       body: options,
       unauthorized: true,
@@ -1813,7 +1774,7 @@ export const restEndpoints = {
     sourceChannelId: BigString,
     targetChannelId: BigString,
     reason?: string,
-  ): Promise<Camelize<DiscordFollowedChannel>> {
+  ): Promise<DiscordFollowedChannel> {
     return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
       body: {
         webhookChannelId: targetChannelId,
@@ -1834,11 +1795,11 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#list-active-guild-threads}
    */
-  async getActiveThreads(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordListActiveThreads>> {
+  async getActiveThreads(rest: RestManager, guildId: BigString): Promise<DiscordListActiveThreads> {
     return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId));
   },
   /** Get the applications info */
-  async getApplicationInfo(rest: RestManager): Promise<Camelize<DiscordApplication>> {
+  async getApplicationInfo(rest: RestManager): Promise<DiscordApplication> {
     return await rest.get<DiscordApplication>(rest.routes.oauth2.application());
   },
   /**
@@ -1847,7 +1808,7 @@ export const restEndpoints = {
    * @remarks
    * Only properties that are passed will be updated.
    */
-  async editApplicationInfo(rest: RestManager, body: EditApplication): Promise<Camelize<DiscordApplication>> {
+  async editApplicationInfo(rest: RestManager, body: EditApplication): Promise<DiscordApplication> {
     return await rest.patch<DiscordApplication>(rest.routes.application(), {
       body,
     });
@@ -1862,7 +1823,7 @@ export const restEndpoints = {
    * The user object is not defined if the scopes do not include `identify`.
    * In the user object, if defined, the email is not included if the scopes do not include `email`
    */
-  async getCurrentAuthenticationInfo(rest: RestManager, bearerToken: string): Promise<Camelize<DiscordCurrentAuthorization>> {
+  async getCurrentAuthenticationInfo(rest: RestManager, bearerToken: string): Promise<DiscordCurrentAuthorization> {
     return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization(), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -1882,7 +1843,7 @@ export const restEndpoints = {
     clientId: BigString,
     clientSecret: string,
     options: Camelize<DiscordTokenExchange>,
-  ): Promise<Camelize<DiscordAccessTokenResponse>> {
+  ): Promise<DiscordAccessTokenResponse> {
     const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`);
 
     const restOptions: MakeRequestOptions = {
@@ -1938,7 +1899,7 @@ export const restEndpoints = {
     guildId: BigString,
     commandId: BigString,
     options?: GetApplicationCommandPermissionOptions,
-  ): Promise<Camelize<DiscordGuildApplicationCommandPermissions>> {
+  ): Promise<DiscordGuildApplicationCommandPermissions> {
     const restOptions: Omit<MakeRequestOptions, 'body'> = {};
 
     if (options?.accessToken) {
@@ -1969,7 +1930,7 @@ export const restEndpoints = {
     rest: RestManager,
     guildId: BigString,
     options?: GetApplicationCommandPermissionOptions,
-  ): Promise<Camelize<DiscordGuildApplicationCommandPermissions[]>> {
+  ): Promise<DiscordGuildApplicationCommandPermissions[]> {
     const restOptions: Omit<MakeRequestOptions, 'body'> = {};
 
     if (options?.accessToken) {
@@ -1996,7 +1957,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/audit-log#get-guild-audit-log}
    */
-  async getAuditLog(rest: RestManager, guildId: BigString, options?: GetGuildAuditLog): Promise<Camelize<DiscordAuditLog>> {
+  async getAuditLog(rest: RestManager, guildId: BigString, options?: GetGuildAuditLog): Promise<DiscordAuditLog> {
     return await rest.get<DiscordAuditLog>(rest.routes.guilds.auditlogs(guildId, options));
   },
   /**
@@ -2011,7 +1972,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/auto-moderation#get-auto-moderation-rule}
    */
-  async getAutomodRule(rest: RestManager, guildId: BigString, ruleId: BigString): Promise<Camelize<DiscordAutoModerationRule>> {
+  async getAutomodRule(rest: RestManager, guildId: BigString, ruleId: BigString): Promise<DiscordAutoModerationRule> {
     return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId));
   },
   /**
@@ -2025,7 +1986,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    */
-  async getAutomodRules(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordAutoModerationRule[]>> {
+  async getAutomodRules(rest: RestManager, guildId: BigString): Promise<DiscordAutoModerationRule[]> {
     return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId));
   },
   /**
@@ -2033,7 +1994,7 @@ export const restEndpoints = {
    *
    * @returns A collection of {@link DiscordVoiceRegion} objects assorted by voice region ID.
    */
-  async getAvailableVoiceRegions(rest: RestManager): Promise<Camelize<DiscordVoiceRegion[]>> {
+  async getAvailableVoiceRegions(rest: RestManager): Promise<DiscordVoiceRegion[]> {
     return await rest.get<DiscordVoiceRegion[]>(rest.routes.regions());
   },
   /**
@@ -2048,7 +2009,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-ban}
    */
-  async getBan(rest: RestManager, guildId: BigString, userId: BigString): Promise<Camelize<DiscordBan>> {
+  async getBan(rest: RestManager, guildId: BigString, userId: BigString): Promise<DiscordBan> {
     return await rest.get<DiscordBan>(rest.routes.guilds.members.ban(guildId, userId));
   },
   /**
@@ -2065,7 +2026,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-bans}
    */
-  async getBans(rest: RestManager, guildId: BigString, options?: GetBans): Promise<Camelize<DiscordBan[]>> {
+  async getBans(rest: RestManager, guildId: BigString, options?: GetBans): Promise<DiscordBan[]> {
     return await rest.get<DiscordBan[]>(rest.routes.guilds.members.bans(guildId, options));
   },
   /**
@@ -2079,7 +2040,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#get-channel}
    */
-  async getChannel(rest: RestManager, channelId: BigString): Promise<Camelize<DiscordChannel>> {
+  async getChannel(rest: RestManager, channelId: BigString): Promise<DiscordChannel> {
     return await rest.get<DiscordChannel>(rest.routes.channels.channel(channelId));
   },
   /**
@@ -2095,7 +2056,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-invites}
    */
-  async getChannelInvites(rest: RestManager, channelId: BigString): Promise<Camelize<DiscordInviteMetadata[]>> {
+  async getChannelInvites(rest: RestManager, channelId: BigString): Promise<DiscordInviteMetadata[]> {
     return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId));
   },
   /**
@@ -2109,7 +2070,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-channels}
    */
-  async getChannels(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordChannel[]>> {
+  async getChannels(rest: RestManager, guildId: BigString): Promise<DiscordChannel[]> {
     return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId));
   },
   /**
@@ -2123,7 +2084,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#get-channel-webhooks}
    */
-  async getChannelWebhooks(rest: RestManager, channelId: BigString): Promise<Camelize<DiscordWebhook[]>> {
+  async getChannelWebhooks(rest: RestManager, channelId: BigString): Promise<DiscordWebhook[]> {
     return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId));
   },
   /**
@@ -2134,7 +2095,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/user#create-dm}
    */
-  async getDmChannel(rest: RestManager, userId: BigString): Promise<Camelize<DiscordChannel>> {
+  async getDmChannel(rest: RestManager, userId: BigString): Promise<DiscordChannel> {
     return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
       body: { recipientId: userId },
     });
@@ -2154,7 +2115,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/user#create-group-dm}
    */
-  async getGroupDmChannel(rest: RestManager, options: CreateGroupDmOptions): Promise<Camelize<DiscordChannel>> {
+  async getGroupDmChannel(rest: RestManager, options: CreateGroupDmOptions): Promise<DiscordChannel> {
     return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
       body: options,
     });
@@ -2172,7 +2133,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#get-guild-emoji}
    */
-  async getEmoji(rest: RestManager, guildId: BigString, emojiId: BigString): Promise<Camelize<DiscordEmoji>> {
+  async getEmoji(rest: RestManager, guildId: BigString, emojiId: BigString): Promise<DiscordEmoji> {
     return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId));
   },
   /**
@@ -2186,7 +2147,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#get-application-emoji}
    */
-  async getApplicationEmoji(rest: RestManager, emojiId: BigString): Promise<Camelize<DiscordEmoji>> {
+  async getApplicationEmoji(rest: RestManager, emojiId: BigString): Promise<DiscordEmoji> {
     return await rest.get<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, emojiId));
   },
   /**
@@ -2200,7 +2161,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#list-guild-emojis}
    */
-  async getEmojis(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordEmoji[]>> {
+  async getEmojis(rest: RestManager, guildId: BigString): Promise<DiscordEmoji[]> {
     return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId));
   },
   /**
@@ -2213,7 +2174,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/emoji#list-application-emojis}
    */
-  async getApplicationEmojis(rest: RestManager): Promise<Camelize<{ items: DiscordEmoji[] }>> {
+  async getApplicationEmojis(rest: RestManager): Promise<{ items: DiscordEmoji[] }> {
     return await rest.get<{ items: DiscordEmoji[] }>(rest.routes.applicationEmojis(rest.applicationId));
   },
   /**
@@ -2232,11 +2193,11 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/receiving-and-responding#get-followup-message}
    */
-  async getFollowupMessage(rest: RestManager, token: string, messageId: BigString): Promise<Camelize<DiscordMessage>> {
+  async getFollowupMessage(rest: RestManager, token: string, messageId: BigString): Promise<DiscordMessage> {
     return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true });
   },
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
-  async getGatewayBot(rest: RestManager): Promise<Camelize<DiscordGetGatewayBot>> {
+  async getGatewayBot(rest: RestManager): Promise<DiscordGetGatewayBot> {
     return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot());
   },
   /**
@@ -2247,7 +2208,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/application-commands#get-global-application-command}
    */
-  async getGlobalApplicationCommand(rest: RestManager, commandId: BigString): Promise<Camelize<DiscordApplicationCommand>> {
+  async getGlobalApplicationCommand(rest: RestManager, commandId: BigString): Promise<DiscordApplicationCommand> {
     return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId));
   },
   /**
@@ -2258,10 +2219,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/application-commands#get-global-application-commands}
    */
-  async getGlobalApplicationCommands(
-    rest: RestManager,
-    options?: GetGlobalApplicationCommandsOptions,
-  ): Promise<Camelize<DiscordApplicationCommand[]>> {
+  async getGlobalApplicationCommands(rest: RestManager, options?: GetGlobalApplicationCommandsOptions): Promise<DiscordApplicationCommand[]> {
     return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId, options?.withLocalizations));
   },
   /**
@@ -2273,7 +2231,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild}
    */
-  async getGuild(rest: RestManager, guildId: BigString, options?: { counts?: boolean }): Promise<Camelize<DiscordGuild>> {
+  async getGuild(rest: RestManager, guildId: BigString, options?: { counts?: boolean }): Promise<DiscordGuild> {
     options ??= { counts: true };
 
     return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts));
@@ -2290,7 +2248,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/user#get-current-user-guilds}
    */
-  async getGuilds(rest: RestManager, bearerToken?: string, options?: GetUserGuilds): Promise<Camelize<Partial<DiscordGuild>[]>> {
+  async getGuilds(rest: RestManager, bearerToken?: string, options?: GetUserGuilds): Promise<Partial<DiscordGuild>[]> {
     const makeRequestOptions: MakeRequestOptions | undefined = bearerToken
       ? {
           headers: {
@@ -2311,7 +2269,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/application-commands#get-guild-application-command}
    */
-  async getGuildApplicationCommand(rest: RestManager, commandId: BigString, guildId: BigString): Promise<Camelize<DiscordApplicationCommand>> {
+  async getGuildApplicationCommand(rest: RestManager, commandId: BigString, guildId: BigString): Promise<DiscordApplicationCommand> {
     return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId));
   },
   /**
@@ -2327,7 +2285,7 @@ export const restEndpoints = {
     rest: RestManager,
     guildId: BigString,
     options?: GetGuildApplicationCommandsOptions,
-  ): Promise<Camelize<DiscordApplicationCommand[]>> {
+  ): Promise<DiscordApplicationCommand[]> {
     return await rest.get<DiscordApplicationCommand[]>(
       rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId, options?.withLocalizations),
     );
@@ -2343,7 +2301,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-preview}
    */
-  async getGuildPreview(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordGuildPreview>> {
+  async getGuildPreview(rest: RestManager, guildId: BigString): Promise<DiscordGuildPreview> {
     return await rest.get<DiscordGuildPreview>(rest.routes.guilds.preview(guildId));
   },
   /**
@@ -2357,7 +2315,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/sticker#get-guild-sticker}
    */
-  async getGuildSticker(rest: RestManager, guildId: BigString, stickerId: BigString): Promise<Camelize<DiscordSticker>> {
+  async getGuildSticker(rest: RestManager, guildId: BigString, stickerId: BigString): Promise<DiscordSticker> {
     return await rest.get<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId));
   },
   /**
@@ -2370,7 +2328,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/sticker#list-guild-stickers}
    */
-  async getGuildStickers(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordSticker[]>> {
+  async getGuildStickers(rest: RestManager, guildId: BigString): Promise<DiscordSticker[]> {
     return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId));
   },
   /**
@@ -2384,7 +2342,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-template#get-guild-template}
    */
-  async getGuildTemplate(rest: RestManager, templateCode: string): Promise<Camelize<DiscordTemplate>> {
+  async getGuildTemplate(rest: RestManager, templateCode: string): Promise<DiscordTemplate> {
     return await rest.get<DiscordTemplate>(rest.routes.guilds.templates.code(templateCode));
   },
   /**
@@ -2398,7 +2356,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-template#get-guild-templates}
    */
-  async getGuildTemplates(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordTemplate[]>> {
+  async getGuildTemplates(rest: RestManager, guildId: BigString): Promise<DiscordTemplate[]> {
     return await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates.all(guildId));
   },
   /**
@@ -2412,7 +2370,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#get-guild-webhooks}
    */
-  async getGuildWebhooks(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordWebhook[]>> {
+  async getGuildWebhooks(rest: RestManager, guildId: BigString): Promise<DiscordWebhook[]> {
     return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId));
   },
   /**
@@ -2426,7 +2384,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-integrations}
    */
-  async getIntegrations(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordIntegration[]>> {
+  async getIntegrations(rest: RestManager, guildId: BigString): Promise<DiscordIntegration[]> {
     return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId));
   },
   /**
@@ -2438,7 +2396,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/invite#get-invite}
    */
-  async getInvite(rest: RestManager, inviteCode: string, options?: GetInvite): Promise<Camelize<DiscordInviteMetadata>> {
+  async getInvite(rest: RestManager, inviteCode: string, options?: GetInvite): Promise<DiscordInviteMetadata> {
     return await rest.get<DiscordInviteMetadata>(rest.routes.guilds.invite(inviteCode, options));
   },
   /**
@@ -2452,7 +2410,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/invite#get-invites}
    */
-  async getInvites(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordInviteMetadata[]>> {
+  async getInvites(rest: RestManager, guildId: BigString): Promise<DiscordInviteMetadata[]> {
     return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId));
   },
   /**
@@ -2470,7 +2428,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-message}
    */
-  async getMessage(rest: RestManager, channelId: BigString, messageId: BigString): Promise<Camelize<DiscordMessage>> {
+  async getMessage(rest: RestManager, channelId: BigString, messageId: BigString): Promise<DiscordMessage> {
     return await rest.get<DiscordMessage>(rest.routes.channels.message(channelId, messageId));
   },
   /**
@@ -2488,7 +2446,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-messages}
    */
-  async getMessages(rest: RestManager, channelId: BigString, options?: GetMessagesOptions): Promise<Camelize<DiscordMessage[]>> {
+  async getMessages(rest: RestManager, channelId: BigString, options?: GetMessagesOptions): Promise<DiscordMessage[]> {
     return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options));
   },
   /**
@@ -2503,7 +2461,7 @@ export const restEndpoints = {
     rest: RestManager,
     guildId: BigString,
     options?: SearchGuildMessagesOptions,
-  ): Promise<Camelize<DiscordSearchGuildMessages | DiscordSearchGuildMessagesIndexing>> {
+  ): Promise<DiscordSearchGuildMessages | DiscordSearchGuildMessagesIndexing> {
     return await rest.get<DiscordSearchGuildMessages | DiscordSearchGuildMessagesIndexing>(rest.routes.guilds.messagesSearch(guildId, options));
   },
   /**
@@ -2513,7 +2471,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/sticker#get-sticker-pack}
    */
-  async getStickerPack(rest: RestManager, stickerPackId: BigString): Promise<Camelize<DiscordStickerPack>> {
+  async getStickerPack(rest: RestManager, stickerPackId: BigString): Promise<DiscordStickerPack> {
     return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId));
   },
   /**
@@ -2523,7 +2481,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/sticker#list-sticker-packs}
    */
-  async getStickerPacks(rest: RestManager): Promise<Camelize<DiscordStickerPack[]>> {
+  async getStickerPacks(rest: RestManager): Promise<DiscordStickerPack[]> {
     return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks());
   },
   /**
@@ -2541,7 +2499,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/receiving-and-responding#get-original-interaction-response}
    */
-  async getOriginalInteractionResponse(rest: RestManager, token: string): Promise<Camelize<DiscordMessage>> {
+  async getOriginalInteractionResponse(rest: RestManager, token: string): Promise<DiscordMessage> {
     return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true });
   },
   /**
@@ -2558,7 +2516,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/message#get-channel-pins}
    */
-  async getChannelPins(rest: RestManager, channelId: BigString, options?: GetChannelPinsOptions): Promise<Camelize<DiscordGetChannelPins>> {
+  async getChannelPins(rest: RestManager, channelId: BigString, options?: GetChannelPinsOptions): Promise<DiscordGetChannelPins> {
     return await rest.get(rest.routes.channels.messagePins(channelId, options));
   },
   /**
@@ -2576,7 +2534,7 @@ export const restEndpoints = {
    * @see {@link https://docs.discord.com/developers/resources/message#get-pinned-messages-deprecated}
    * @deprecated Use {@link getChannelPins} instead.
    */
-  async getPinnedMessages(rest: RestManager, channelId: BigString): Promise<Camelize<DiscordMessage[]>> {
+  async getPinnedMessages(rest: RestManager, channelId: BigString): Promise<DiscordMessage[]> {
     return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId));
   },
   /**
@@ -2596,11 +2554,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#list-private-archived-threads}
    */
-  async getPrivateArchivedThreads(
-    rest: RestManager,
-    channelId: BigString,
-    options?: ListArchivedThreads,
-  ): Promise<Camelize<DiscordListArchivedThreads>> {
+  async getPrivateArchivedThreads(rest: RestManager, channelId: BigString, options?: ListArchivedThreads): Promise<DiscordListArchivedThreads> {
     return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options));
   },
   /**
@@ -2619,11 +2573,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#list-joined-private-archived-threads}
    */
-  async getPrivateJoinedArchivedThreads(
-    rest: RestManager,
-    channelId: BigString,
-    options?: ListArchivedThreads,
-  ): Promise<Camelize<DiscordListArchivedThreads>> {
+  async getPrivateJoinedArchivedThreads(rest: RestManager, channelId: BigString, options?: ListArchivedThreads): Promise<DiscordListArchivedThreads> {
     return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options));
   },
   /**
@@ -2638,7 +2588,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-prune-count}
    */
-  async getPruneCount(rest: RestManager, guildId: BigString, options?: GetGuildPruneCountQuery): Promise<Camelize<DiscordPrunedCount>> {
+  async getPruneCount(rest: RestManager, guildId: BigString, options?: GetGuildPruneCountQuery): Promise<DiscordPrunedCount> {
     return await rest.get<DiscordPrunedCount>(rest.routes.guilds.prune(guildId, options));
   },
   /**
@@ -2658,11 +2608,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#list-public-archived-threads}
    */
-  async getPublicArchivedThreads(
-    rest: RestManager,
-    channelId: BigString,
-    options?: ListArchivedThreads,
-  ): Promise<Camelize<DiscordListArchivedThreads>> {
+  async getPublicArchivedThreads(rest: RestManager, channelId: BigString, options?: ListArchivedThreads): Promise<DiscordListArchivedThreads> {
     return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options));
   },
   /**
@@ -2676,7 +2622,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-roles}
    */
-  async getRoles(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordRole[]>> {
+  async getRoles(rest: RestManager, guildId: BigString): Promise<DiscordRole[]> {
     return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId));
   },
   /**
@@ -2688,7 +2634,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-role}
    */
-  async getRole(rest: RestManager, guildId: BigString, roleId: BigString): Promise<Camelize<DiscordRole>> {
+  async getRole(rest: RestManager, guildId: BigString, roleId: BigString): Promise<DiscordRole> {
     return await rest.get<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId));
   },
   /**
@@ -2706,7 +2652,7 @@ export const restEndpoints = {
     guildId: BigString,
     eventId: BigString,
     options?: { withUserCount?: boolean },
-  ): Promise<Camelize<DiscordScheduledEvent>> {
+  ): Promise<DiscordScheduledEvent> {
     return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount));
   },
   /**
@@ -2718,7 +2664,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-scheduled-event#list-scheduled-events-for-guild}
    */
-  async getScheduledEvents(rest: RestManager, guildId: BigString, options?: GetScheduledEvents): Promise<Camelize<DiscordScheduledEvent[]>> {
+  async getScheduledEvents(rest: RestManager, guildId: BigString, options?: GetScheduledEvents): Promise<DiscordScheduledEvent[]> {
     return await rest.get<DiscordScheduledEvent[]>(rest.routes.guilds.events.events(guildId, options?.withUserCount));
   },
   /**
@@ -2741,11 +2687,11 @@ export const restEndpoints = {
     guildId: BigString,
     eventId: BigString,
     options?: GetScheduledEventUsers,
-  ): Promise<Camelize<{ user: DiscordUser; member?: DiscordMember }[]>> {
+  ): Promise<{ user: DiscordUser; member?: DiscordMember }[]> {
     return await rest.get<Array<{ user: DiscordUser; member?: DiscordMember }>>(rest.routes.guilds.events.users(guildId, eventId, options));
   },
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
-  async getSessionInfo(rest: RestManager): Promise<Camelize<DiscordGetGatewayBot>> {
+  async getSessionInfo(rest: RestManager): Promise<DiscordGetGatewayBot> {
     return await restEndpoints.getGatewayBot(rest);
   },
   /**
@@ -2756,7 +2702,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/stage-instance#get-stage-instance}
    */
-  async getStageInstance(rest: RestManager, channelId: BigString): Promise<Camelize<DiscordStageInstance>> {
+  async getStageInstance(rest: RestManager, channelId: BigString): Promise<DiscordStageInstance> {
     return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId));
   },
   /**
@@ -2767,7 +2713,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/voice#get-current-user-voice-state}
    */
-  async getOwnVoiceState(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordVoiceState>> {
+  async getOwnVoiceState(rest: RestManager, guildId: BigString): Promise<DiscordVoiceState> {
     return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId));
   },
   /**
@@ -2782,7 +2728,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/voice#get-user-voice-state}
    */
-  async getUserVoiceState(rest: RestManager, guildId: BigString, userId: BigString): Promise<Camelize<DiscordVoiceState>> {
+  async getUserVoiceState(rest: RestManager, guildId: BigString, userId: BigString): Promise<DiscordVoiceState> {
     return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId, userId));
   },
   /**
@@ -2793,7 +2739,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/sticker#get-sticker}
    */
-  async getSticker(rest: RestManager, stickerId: BigString): Promise<Camelize<DiscordSticker>> {
+  async getSticker(rest: RestManager, stickerId: BigString): Promise<DiscordSticker> {
     return await rest.get<DiscordSticker>(rest.routes.sticker(stickerId));
   },
   /**
@@ -2806,12 +2752,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#get-thread-member}
    */
-  async getThreadMember(
-    rest: RestManager,
-    channelId: BigString,
-    userId: BigString,
-    options?: GetThreadMember,
-  ): Promise<Camelize<DiscordThreadMember>> {
+  async getThreadMember(rest: RestManager, channelId: BigString, userId: BigString, options?: GetThreadMember): Promise<DiscordThreadMember> {
     return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.getUser(channelId, userId, options));
   },
   /**
@@ -2826,7 +2767,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#list-thread-members}
    */
-  async getThreadMembers(rest: RestManager, channelId: BigString, options?: ListThreadMembers): Promise<Camelize<DiscordThreadMember[]>> {
+  async getThreadMembers(rest: RestManager, channelId: BigString, options?: ListThreadMembers): Promise<DiscordThreadMember[]> {
     return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId, options));
   },
   /**
@@ -2846,7 +2787,7 @@ export const restEndpoints = {
     messageId: BigString,
     reaction: string,
     options?: GetReactions,
-  ): Promise<Camelize<DiscordUser[]>> {
+  ): Promise<DiscordUser[]> {
     return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options));
   },
   /**
@@ -2855,7 +2796,7 @@ export const restEndpoints = {
    * @param id The user's id
    * @returns {DiscordUser}
    */
-  async getUser(rest: RestManager, id: BigString): Promise<Camelize<DiscordUser>> {
+  async getUser(rest: RestManager, id: BigString): Promise<DiscordUser> {
     return await rest.get<DiscordUser>(rest.routes.user(id));
   },
   /**
@@ -2869,7 +2810,7 @@ export const restEndpoints = {
    *
    * To get the mail this also requires the `email` scope
    */
-  async getCurrentUser(rest: RestManager, bearerToken: string): Promise<Camelize<DiscordUser>> {
+  async getCurrentUser(rest: RestManager, bearerToken: string): Promise<DiscordUser> {
     return await rest.get<DiscordUser>(rest.routes.currentUser(), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -2886,7 +2827,7 @@ export const restEndpoints = {
    * @remarks
    * This requires the `connections` scope.
    */
-  async getUserConnections(rest: RestManager, bearerToken: string): Promise<Camelize<DiscordConnection[]>> {
+  async getUserConnections(rest: RestManager, bearerToken: string): Promise<DiscordConnection[]> {
     return await rest.get<DiscordConnection[]>(rest.routes.oauth2.connections(), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -2910,7 +2851,7 @@ export const restEndpoints = {
     rest: RestManager,
     bearerToken: string,
     applicationId: BigString,
-  ): Promise<Camelize<DiscordApplicationRoleConnection>> {
+  ): Promise<DiscordApplicationRoleConnection> {
     return await rest.get<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -2931,7 +2872,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-vanity-url}
    */
-  async getVanityUrl(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordVanityUrl>> {
+  async getVanityUrl(rest: RestManager, guildId: BigString): Promise<DiscordVanityUrl> {
     return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId));
   },
   /**
@@ -2942,7 +2883,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-voice-regions}
    */
-  async getVoiceRegions(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordVoiceRegion[]>> {
+  async getVoiceRegions(rest: RestManager, guildId: BigString): Promise<DiscordVoiceRegion[]> {
     return await rest.get<DiscordVoiceRegion[]>(rest.routes.guilds.regions(guildId));
   },
   /**
@@ -2956,7 +2897,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#get-webhook}
    */
-  async getWebhook(rest: RestManager, webhookId: BigString): Promise<Camelize<DiscordWebhook>> {
+  async getWebhook(rest: RestManager, webhookId: BigString): Promise<DiscordWebhook> {
     return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId));
   },
   /**
@@ -2976,7 +2917,7 @@ export const restEndpoints = {
     token: string,
     messageId: BigString,
     options?: GetWebhookMessageOptions,
-  ): Promise<Camelize<DiscordMessage>> {
+  ): Promise<DiscordMessage> {
     return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
       unauthorized: true,
     });
@@ -2990,7 +2931,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/webhook#get-webhook-with-token}
    */
-  async getWebhookWithToken(rest: RestManager, webhookId: BigString, token: string): Promise<Camelize<DiscordWebhook>> {
+  async getWebhookWithToken(rest: RestManager, webhookId: BigString, token: string): Promise<DiscordWebhook> {
     return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
       unauthorized: true,
     });
@@ -3007,7 +2948,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-welcome-screen}
    */
-  async getWelcomeScreen(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordWelcomeScreen>> {
+  async getWelcomeScreen(rest: RestManager, guildId: BigString): Promise<DiscordWelcomeScreen> {
     return await rest.get<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId));
   },
   /**
@@ -3021,7 +2962,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-widget}
    */
-  async getWidget(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordGuildWidget>> {
+  async getWidget(rest: RestManager, guildId: BigString): Promise<DiscordGuildWidget> {
     return await rest.get<DiscordGuildWidget>(rest.routes.guilds.widgetJson(guildId));
   },
   /**
@@ -3035,7 +2976,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-widget-settings}
    */
-  async getWidgetSettings(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordGuildWidgetSettings>> {
+  async getWidgetSettings(rest: RestManager, guildId: BigString): Promise<DiscordGuildWidgetSettings> {
     return await rest.get<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId));
   },
   /**
@@ -3098,7 +3039,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#crosspost-message}
    */
-  async publishMessage(rest: RestManager, channelId: BigString, messageId: BigString): Promise<Camelize<DiscordMessage>> {
+  async publishMessage(rest: RestManager, channelId: BigString, messageId: BigString): Promise<DiscordMessage> {
     return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId));
   },
   /**
@@ -3175,7 +3116,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#create-message}
    */
-  async sendMessage(rest: RestManager, channelId: BigString, options: CreateMessageOptions): Promise<Camelize<DiscordMessage>> {
+  async sendMessage(rest: RestManager, channelId: BigString, options: CreateMessageOptions): Promise<DiscordMessage> {
     return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body: options, files: options.files });
   },
   /**
@@ -3201,7 +3142,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/interactions/receiving-and-responding#create-followup-message}
    */
-  async sendFollowupMessage(rest: RestManager, token: string, options: InteractionCallbackData): Promise<Camelize<DiscordMessage>> {
+  async sendFollowupMessage(rest: RestManager, token: string, options: InteractionCallbackData): Promise<DiscordMessage> {
     return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
       body: options,
       files: options.files,
@@ -3236,7 +3177,7 @@ export const restEndpoints = {
     token: string,
     options: InteractionResponse,
     params?: InteractionCallbackOptions,
-  ): Promise<void | Camelize<DiscordInteractionCallbackResponse>> {
+  ): Promise<void | DiscordInteractionCallbackResponse> {
     return await rest.post<void | DiscordInteractionCallbackResponse>(rest.routes.interactions.responses.callback(interactionId, token, params), {
       body: options,
       files: options.data?.files,
@@ -3270,7 +3211,7 @@ export const restEndpoints = {
     messageId: BigString,
     options: StartThreadWithMessage,
     reason?: string,
-  ): Promise<Camelize<DiscordChannel>> {
+  ): Promise<DiscordChannel> {
     return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), { body: options, reason });
   },
   /**
@@ -3293,7 +3234,7 @@ export const restEndpoints = {
     channelId: BigString,
     options: StartThreadWithoutMessage,
     reason?: string,
-  ): Promise<Camelize<DiscordChannel>> {
+  ): Promise<DiscordChannel> {
     return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body: options, reason });
   },
   /**
@@ -3311,7 +3252,7 @@ export const restEndpoints = {
     messageId: BigString,
     answerId: number,
     options?: GetPollAnswerVotes,
-  ): Promise<Camelize<DiscordGetAnswerVotesResponse>> {
+  ): Promise<DiscordGetAnswerVotesResponse> {
     return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options));
   },
   /**
@@ -3326,7 +3267,7 @@ export const restEndpoints = {
    *
    * Fires a _Message Update_ gateway event
    */
-  async endPoll(rest: RestManager, channelId: BigString, messageId: BigString): Promise<Camelize<DiscordMessage>> {
+  async endPoll(rest: RestManager, channelId: BigString, messageId: BigString): Promise<DiscordMessage> {
     return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId));
   },
   /**
@@ -3342,7 +3283,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild-template#get-guild-templates}
    */
-  async syncGuildTemplate(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordTemplate>> {
+  async syncGuildTemplate(rest: RestManager, guildId: BigString): Promise<DiscordTemplate> {
     return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId));
   },
   /**
@@ -3383,7 +3324,7 @@ export const restEndpoints = {
     rest: RestManager,
     commands: CreateApplicationCommand[],
     options?: UpsertGlobalApplicationCommandOptions,
-  ): Promise<Camelize<DiscordApplicationCommand[]>> {
+  ): Promise<DiscordApplicationCommand[]> {
     const restOptions: MakeRequestOptions = { body: commands };
 
     if (options?.bearerToken) {
@@ -3418,7 +3359,7 @@ export const restEndpoints = {
     guildId: BigString,
     commands: CreateApplicationCommand[],
     options?: UpsertGuildApplicationCommandOptions,
-  ): Promise<Camelize<DiscordApplicationCommand[]>> {
+  ): Promise<DiscordApplicationCommand[]> {
     const restOptions: MakeRequestOptions = { body: commands };
 
     if (options?.bearerToken) {
@@ -3464,7 +3405,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#bulk-guild-ban}
    */
-  async bulkBanMembers(rest: RestManager, guildId: BigString, options: CreateGuildBulkBan, reason?: string): Promise<Camelize<DiscordBulkBan>> {
+  async bulkBanMembers(rest: RestManager, guildId: BigString, options: CreateGuildBulkBan, reason?: string): Promise<DiscordBulkBan> {
     return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason });
   },
   /**
@@ -3480,7 +3421,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-current-member}
    */
-  async editCurrentMember(rest: RestManager, guildId: BigString, options: ModifyCurrentMember, reason?: string): Promise<Camelize<DiscordMember>> {
+  async editCurrentMember(rest: RestManager, guildId: BigString, options: ModifyCurrentMember, reason?: string): Promise<DiscordMember> {
     return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body: options, reason });
   },
   /**
@@ -3499,13 +3440,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-member}
    */
-  async editMember(
-    rest: RestManager,
-    guildId: BigString,
-    userId: BigString,
-    options: ModifyGuildMember,
-    reason?: string,
-  ): Promise<Camelize<DiscordMember>> {
+  async editMember(rest: RestManager, guildId: BigString, userId: BigString, options: ModifyGuildMember, reason?: string): Promise<DiscordMember> {
     return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body: options, reason });
   },
   /**
@@ -3520,7 +3455,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/user#get-current-user-guild-member}
    */
-  async getCurrentMember(rest: RestManager, guildId: BigString, bearerToken: string): Promise<Camelize<DiscordMemberWithUser>> {
+  async getCurrentMember(rest: RestManager, guildId: BigString, bearerToken: string): Promise<DiscordMemberWithUser> {
     return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.currentMember(guildId), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -3538,7 +3473,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-member}
    */
-  async getMember(rest: RestManager, guildId: BigString, userId: BigString): Promise<Camelize<DiscordMemberWithUser>> {
+  async getMember(rest: RestManager, guildId: BigString, userId: BigString): Promise<DiscordMemberWithUser> {
     return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
   },
   /**
@@ -3559,7 +3494,7 @@ export const restEndpoints = {
    * @see {@link https://docs.discord.com/developers/events/gateway-events#request-guild-members}
    * @see {@link https://docs.discord.com/developers/topics/rate-limits#rate-limits}
    */
-  async getMembers(rest: RestManager, guildId: BigString, options: ListGuildMembers): Promise<Camelize<DiscordMemberWithUser[]>> {
+  async getMembers(rest: RestManager, guildId: BigString, options: ListGuildMembers): Promise<DiscordMemberWithUser[]> {
     return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options));
   },
   /**
@@ -3568,7 +3503,7 @@ export const restEndpoints = {
    * @param applicationId - The ID of the application
    * @param instanceId - The ID of the activity instance
    */
-  async getApplicationActivityInstance(rest: RestManager, applicationId: BigString, instanceId: string): Promise<Camelize<DiscordActivityInstance>> {
+  async getApplicationActivityInstance(rest: RestManager, applicationId: BigString, instanceId: string): Promise<DiscordActivityInstance> {
     return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId));
   },
   /**
@@ -3647,7 +3582,7 @@ export const restEndpoints = {
     guildId: BigString,
     query: string,
     options?: Omit<SearchMembers, 'query'>,
-  ): Promise<Camelize<DiscordMemberWithUser[]>> {
+  ): Promise<DiscordMemberWithUser[]> {
     return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.search(guildId, query, options));
   },
   /**
@@ -3689,7 +3624,7 @@ export const restEndpoints = {
    *
    * @param guildId - The guild to get the onboarding from
    */
-  async getGuildOnboarding(rest: RestManager, guildId: BigString): Promise<Camelize<DiscordGuildOnboarding>> {
+  async getGuildOnboarding(rest: RestManager, guildId: BigString): Promise<DiscordGuildOnboarding> {
     return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId));
   },
   /**
@@ -3707,12 +3642,7 @@ export const restEndpoints = {
    *
    * The `mode` field modifies what is considered when enforcing these constraints.
    */
-  async editGuildOnboarding(
-    rest: RestManager,
-    guildId: BigString,
-    options: EditGuildOnboarding,
-    reason?: string,
-  ): Promise<Camelize<DiscordGuildOnboarding>> {
+  async editGuildOnboarding(rest: RestManager, guildId: BigString, options: EditGuildOnboarding, reason?: string): Promise<DiscordGuildOnboarding> {
     return await rest.put<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId), {
       body: options,
       reason,
@@ -3727,11 +3657,7 @@ export const restEndpoints = {
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
    */
-  async modifyGuildIncidentActions(
-    rest: RestManager,
-    guildId: BigString,
-    options: ModifyGuildIncidentActions,
-  ): Promise<Camelize<DiscordIncidentsData>> {
+  async modifyGuildIncidentActions(rest: RestManager, guildId: BigString, options: ModifyGuildIncidentActions): Promise<DiscordIncidentsData> {
     return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options });
   },
   /**
@@ -3740,7 +3666,7 @@ export const restEndpoints = {
    * @param applicationId - The id of the application to get the entitlements
    * @param {GetEntitlements} [options] - The optional query params for the endpoint
    */
-  async listEntitlements(rest: RestManager, applicationId: BigString, options?: GetEntitlements): Promise<Camelize<DiscordEntitlement[]>> {
+  async listEntitlements(rest: RestManager, applicationId: BigString, options?: GetEntitlements): Promise<DiscordEntitlement[]> {
     return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options));
   },
   /**
@@ -3749,7 +3675,7 @@ export const restEndpoints = {
    * @param applicationId - The id of the application to get the entitlement
    * @param entitlementId - The id of the entitlement to get
    */
-  async getEntitlement(rest: RestManager, applicationId: BigString, entitlementId: BigString): Promise<Camelize<DiscordEntitlement>> {
+  async getEntitlement(rest: RestManager, applicationId: BigString, entitlementId: BigString): Promise<DiscordEntitlement> {
     return await rest.get<DiscordEntitlement>(rest.routes.monetization.entitlement(applicationId, entitlementId));
   },
   /**
@@ -3794,7 +3720,7 @@ export const restEndpoints = {
    *
    * @param applicationId - The id of the application to get the SKUs
    */
-  async listSkus(rest: RestManager, applicationId: BigString): Promise<Camelize<DiscordSku[]>> {
+  async listSkus(rest: RestManager, applicationId: BigString): Promise<DiscordSku[]> {
     return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId));
   },
   /**
@@ -3802,7 +3728,7 @@ export const restEndpoints = {
    *
    * @param skuId - The id of the sku of get the subscriptions for
    */
-  async listSubscriptions(rest: RestManager, skuId: BigString, options?: ListSkuSubscriptionsOptions): Promise<Camelize<DiscordSubscription[]>> {
+  async listSubscriptions(rest: RestManager, skuId: BigString, options?: ListSkuSubscriptionsOptions): Promise<DiscordSubscription[]> {
     return await rest.get<DiscordSubscription[]>(rest.routes.monetization.subscriptions(skuId, options));
   },
   /**
@@ -3810,7 +3736,7 @@ export const restEndpoints = {
    *
    * @param skuId - The id of the sku of get the subscriptions for
    */
-  async getSubscription(rest: RestManager, skuId: BigString, subscriptionId: BigString): Promise<Camelize<DiscordSubscription>> {
+  async getSubscription(rest: RestManager, skuId: BigString, subscriptionId: BigString): Promise<DiscordSubscription> {
     return await rest.get<DiscordSubscription>(rest.routes.monetization.subscription(skuId, subscriptionId));
   },
   /**
@@ -3830,7 +3756,7 @@ export const restEndpoints = {
     });
   },
   /** Returns an array of soundboard sound objects that can be used by all users. */
-  async listDefaultSoundboardSounds(rest: RestManager): Promise<Camelize<DiscordSoundboardSound[]>> {
+  async listDefaultSoundboardSounds(rest: RestManager): Promise<DiscordSoundboardSound[]> {
     return await rest.get<DiscordSoundboardSound[]>(rest.routes.soundboard.listDefault());
   },
   /**
@@ -3841,7 +3767,7 @@ export const restEndpoints = {
    * @remarks
    * Includes `user` fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    */
-  async listGuildSoundboardSounds(rest: RestManager, guildId: BigString): Promise<Camelize<{ items: DiscordSoundboardSound[] }>> {
+  async listGuildSoundboardSounds(rest: RestManager, guildId: BigString): Promise<{ items: DiscordSoundboardSound[] }> {
     return await rest.get<{ items: DiscordSoundboardSound[] }>(rest.routes.soundboard.guildSounds(guildId));
   },
   /**
@@ -3853,7 +3779,7 @@ export const restEndpoints = {
    * @remarks
    * Includes `user` fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    */
-  async getGuildSoundboardSound(rest: RestManager, guildId: BigString, soundId: BigString): Promise<Camelize<DiscordSoundboardSound>> {
+  async getGuildSoundboardSound(rest: RestManager, guildId: BigString, soundId: BigString): Promise<DiscordSoundboardSound> {
     return await rest.get<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId));
   },
   /**
@@ -3873,7 +3799,7 @@ export const restEndpoints = {
     guildId: BigString,
     options: CreateGuildSoundboardSound,
     reason?: string,
-  ): Promise<Camelize<DiscordSoundboardSound>> {
+  ): Promise<DiscordSoundboardSound> {
     return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSounds(guildId), {
       body: options,
       reason,
@@ -3899,7 +3825,7 @@ export const restEndpoints = {
     soundId: BigString,
     options: ModifyGuildSoundboardSound,
     reason?: string,
-  ): Promise<Camelize<DiscordSoundboardSound>> {
+  ): Promise<DiscordSoundboardSound> {
     return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
       body: options,
       reason,
@@ -3932,7 +3858,7 @@ export const restEndpoints = {
   async listApplicationRoleConnectionsMetadataRecords(
     rest: RestManager,
     applicationId: BigString,
-  ): Promise<Camelize<DiscordApplicationRoleConnectionMetadata[]>> {
+  ): Promise<DiscordApplicationRoleConnectionMetadata[]> {
     return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId));
   },
   /**
@@ -3949,7 +3875,7 @@ export const restEndpoints = {
     rest: RestManager,
     applicationId: BigString,
     options: Camelize<DiscordApplicationRoleConnectionMetadata[]>,
-  ): Promise<Camelize<DiscordApplicationRoleConnectionMetadata[]>> {
+  ): Promise<DiscordApplicationRoleConnectionMetadata[]> {
     return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
       body: options,
     });
@@ -3960,7 +3886,7 @@ export const restEndpoints = {
    * @param options - The options to create the lobby
    * @returns The created lobby
    */
-  async createLobby(rest: RestManager, options: CreateLobby): Promise<Camelize<DiscordLobby>> {
+  async createLobby(rest: RestManager, options: CreateLobby): Promise<DiscordLobby> {
     return await rest.post<DiscordLobby>(rest.routes.lobby.create(), {
       body: options,
     });
@@ -3976,7 +3902,7 @@ export const restEndpoints = {
    * @remarks
    * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
    */
-  async createOrJoinLobby(rest: RestManager, options: CreateOrJoinLobby): Promise<Camelize<DiscordLobby>> {
+  async createOrJoinLobby(rest: RestManager, options: CreateOrJoinLobby): Promise<DiscordLobby> {
     return await rest.put<DiscordLobby>(rest.routes.lobby.create(), {
       body: options,
     });
@@ -3987,7 +3913,7 @@ export const restEndpoints = {
    * @param lobbyId - The ID of the lobby to get
    * @returns The lobby object
    */
-  async getLobby(rest: RestManager, lobbyId: BigString): Promise<Camelize<DiscordLobby>> {
+  async getLobby(rest: RestManager, lobbyId: BigString): Promise<DiscordLobby> {
     return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId));
   },
   /**
@@ -3997,7 +3923,7 @@ export const restEndpoints = {
    * @param options - The options to modify the lobby
    * @returns The modified lobby
    */
-  async modifyLobby(rest: RestManager, lobbyId: BigString, options: ModifyLobby): Promise<Camelize<DiscordLobby>> {
+  async modifyLobby(rest: RestManager, lobbyId: BigString, options: ModifyLobby): Promise<DiscordLobby> {
     return await rest.patch<DiscordLobby>(rest.routes.lobby.lobby(lobbyId), {
       body: options,
     });
@@ -4021,7 +3947,7 @@ export const restEndpoints = {
    * @param options - The options to add the user to the lobby
    * @returns The lobby member object
    */
-  async addMemberToLobby(rest: RestManager, lobbyId: BigString, userId: BigString, options: AddLobbyMember): Promise<Camelize<DiscordLobbyMember>> {
+  async addMemberToLobby(rest: RestManager, lobbyId: BigString, userId: BigString, options: AddLobbyMember): Promise<DiscordLobbyMember> {
     return await rest.put<DiscordLobbyMember>(rest.routes.lobby.member(lobbyId, userId), {
       body: options,
     });
@@ -4041,7 +3967,7 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/lobby#bulk-update-lobby-members}
    */
-  async bulkUpdateLobbyMembers(rest: RestManager, lobbyId: BigString, options: BulkUpdateLobbyMember[]): Promise<Camelize<DiscordLobbyMember[]>> {
+  async bulkUpdateLobbyMembers(rest: RestManager, lobbyId: BigString, options: BulkUpdateLobbyMember[]): Promise<DiscordLobbyMember[]> {
     return await rest.post<DiscordLobbyMember[]>(rest.routes.lobby.membersBulk(lobbyId), {
       body: options,
     });
@@ -4085,7 +4011,7 @@ export const restEndpoints = {
    * @remarks
    * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
    */
-  async linkChannelToLobby(rest: RestManager, lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby): Promise<Camelize<DiscordLobby>> {
+  async linkChannelToLobby(rest: RestManager, lobbyId: BigString, bearerToken: string, options: LinkChannelToLobby): Promise<DiscordLobby> {
     return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
       body: options,
       headers: {
@@ -4104,7 +4030,7 @@ export const restEndpoints = {
    * @remarks
    * Uses bearer token for authorization and the user must be a lobby member with the CanLinkLobby lobby member flag.
    */
-  async unlinkChannelToLobby(rest: RestManager, lobbyId: BigString, bearerToken: string): Promise<Camelize<DiscordLobby>> {
+  async unlinkChannelToLobby(rest: RestManager, lobbyId: BigString, bearerToken: string): Promise<DiscordLobby> {
     return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -4150,12 +4076,7 @@ export const restEndpoints = {
    * If the lobby has a linked channel, the message is also forwarded to that channel.
    * If forwarding fails (for example, due to AutoMod), the lobby message is still delivered to other lobby members.
    */
-  async sendLobbyMessage(
-    rest: RestManager,
-    bearerToken: string,
-    lobbyId: BigString,
-    options: SendLobbyMessage,
-  ): Promise<Camelize<DiscordLobbyMessage>> {
+  async sendLobbyMessage(rest: RestManager, bearerToken: string, lobbyId: BigString, options: SendLobbyMessage): Promise<DiscordLobbyMessage> {
     return await rest.post<DiscordLobbyMessage>(rest.routes.lobby.messages(lobbyId), {
       body: options,
       headers: {
@@ -4175,12 +4096,7 @@ export const restEndpoints = {
    * @remarks
    * Uses `Bearer` token for authorization with the `sdk.social_layer` scope.
    */
-  async getLobbyMessages(
-    rest: RestManager,
-    bearerToken: string,
-    lobbyId: BigString,
-    options?: GetLobbyMessages,
-  ): Promise<Camelize<DiscordLobbyMessage[]>> {
+  async getLobbyMessages(rest: RestManager, bearerToken: string, lobbyId: BigString, options?: GetLobbyMessages): Promise<DiscordLobbyMessage[]> {
     return await rest.get<DiscordLobbyMessage[]>(rest.routes.lobby.messages(lobbyId, options), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -4202,7 +4118,7 @@ export const restEndpoints = {
    * The lobby must have a linked channel and the caller must be a member of the lobby.
    * The invite expires after one hour.
    */
-  async createLobbyChannelInviteForSelf(rest: RestManager, bearerToken: string, lobbyId: BigString): Promise<Camelize<DiscordLobbyInvite>> {
+  async createLobbyChannelInviteForSelf(rest: RestManager, bearerToken: string, lobbyId: BigString): Promise<DiscordLobbyInvite> {
     return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteSelf(lobbyId), {
       headers: {
         authorization: `Bearer ${bearerToken}`,
@@ -4223,7 +4139,7 @@ export const restEndpoints = {
    * The lobby must have a linked channel.
    * The invite expires after one hour.
    */
-  async createLobbyChannelInviteForUser(rest: RestManager, lobbyId: BigString, userId: BigString): Promise<Camelize<DiscordLobbyInvite>> {
+  async createLobbyChannelInviteForUser(rest: RestManager, lobbyId: BigString, userId: BigString): Promise<DiscordLobbyInvite> {
     return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteUser(lobbyId, userId));
   },
 };
@@ -4231,4 +4147,8 @@ export const restEndpoints = {
 // We remove the rest parameter as it shouldn't be in the final function signature and is injected by the RestManager when calling the endpoint function.
 export type RestEndpoints = {
   [K in keyof typeof restEndpoints]: (typeof restEndpoints)[K] extends (...args: [RestManager, ...infer B]) => infer R ? (...args: B) => R : never;
+};
+
+export type CamelizedRestEndpoints = {
+  [K in keyof RestEndpoints]: RestEndpoints[K] extends (...args: infer A) => Promise<infer R> ? (...args: A) => Promise<Camelize<R>> : never;
 };
