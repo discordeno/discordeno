@@ -1,3 +1,4 @@
+import type { RestEndpoints } from '@discordeno/rest';
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
@@ -41,6 +42,7 @@ import type {
   DiscordConnection,
   DiscordCurrentAuthorization,
   DiscordFollowedChannel,
+  DiscordGetAnswerVotesResponse,
   DiscordGuildPreview,
   DiscordGuildWidgetSettings,
   DiscordInvite,
@@ -75,6 +77,7 @@ import type {
   GetInvite,
   GetLobbyMessages,
   GetMessagesOptions,
+  GetPollAnswerVotes,
   GetReactions,
   GetScheduledEvents,
   GetScheduledEventUsers,
@@ -95,6 +98,7 @@ import type {
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
+  ModifyGuildIncidentActions,
   ModifyGuildMember,
   ModifyGuildSoundboardSound,
   ModifyGuildTemplate,
@@ -128,6 +132,7 @@ import type {
   GuildOnboarding,
   GuildWidget,
   GuildWidgetSettings,
+  IncidentsData,
   Integration,
   InteractionCallbackResponse,
   Invite,
@@ -567,6 +572,12 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     startThreadWithoutMessage: async (channelId, options, reason) => {
       return bot.transformers.channel(bot, await bot.rest.snake.startThreadWithoutMessage(channelId, options, reason));
     },
+    getPollAnswerVoters: async (channelId, messageId, answerId, options) => {
+      return await bot.rest.getPollAnswerVoters(channelId, messageId, answerId, options);
+    },
+    endPoll: async (channelId, messageId) => {
+      return bot.transformers.message(bot, await bot.rest.snake.endPoll(channelId, messageId));
+    },
     syncGuildTemplate: async (guildId) => {
       return bot.transformers.template(bot, await bot.rest.snake.syncGuildTemplate(guildId));
     },
@@ -830,6 +841,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editGuildOnboarding: async (guildId, options, reason) => {
       return bot.transformers.guildOnboarding(bot, await bot.rest.snake.editGuildOnboarding(guildId, options, reason));
     },
+    modifyGuildIncidentActions: async (guildId, options) => {
+      return bot.transformers.incidentsData(bot, await bot.rest.snake.modifyGuildIncidentActions(guildId, options));
+    },
     listEntitlements: async (applicationId, options) => {
       return (await bot.rest.snake.listEntitlements(applicationId, options)).map((entitlement) => bot.transformers.entitlement(bot, entitlement));
     },
@@ -841,6 +855,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     },
     deleteTestEntitlement: async (applicationId, entitlementId) => {
       await bot.rest.snake.deleteTestEntitlement(applicationId, entitlementId);
+    },
+    consumeEntitlement: async (applicationId, entitlementId) => {
+      await bot.rest.snake.consumeEntitlement(applicationId, entitlementId);
     },
     listSkus: async (applicationId) => {
       return (await bot.rest.snake.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, sku));
@@ -885,7 +902,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     leaveLobby: async (lobbyId, bearerToken) => {
       await bot.rest.snake.leaveLobby(lobbyId, bearerToken);
     },
-  };
+    // The satisfies with the record is used to ensure that all Restendpoints have a matching helper. It can't be done in BotHelpers itself as types don't support that.
+  } satisfies BotHelpers<TProps, TBehavior> satisfies Record<keyof RestEndpoints, unknown>;
 }
 
 export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = {
@@ -1169,6 +1187,13 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: StartThreadWithoutMessage,
     reason?: string,
   ) => Promise<SetupDesiredProps<Channel, TProps, TBehavior>>;
+  getPollAnswerVoters: (
+    channelId: BigString,
+    messageId: BigString,
+    answerId: number,
+    options?: GetPollAnswerVotes,
+  ) => Promise<Camelize<DiscordGetAnswerVotesResponse>>;
+  endPoll: (channelId: BigString, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   syncGuildTemplate: (guildId: BigString) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
   upsertGlobalApplicationCommands: (
     commands: CreateApplicationCommand[],
@@ -1285,6 +1310,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     options: EditGuildOnboarding,
     reason?: string,
   ) => Promise<SetupDesiredProps<GuildOnboarding, TProps, TBehavior>>;
+  modifyGuildIncidentActions: (
+    guildId: BigString,
+    options: ModifyGuildIncidentActions,
+  ) => Promise<SetupDesiredProps<IncidentsData, TProps, TBehavior>>;
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>[]>;
   getEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<SetupDesiredProps<Entitlement, TProps, TBehavior>>;
   createTestEntitlement: (
@@ -1292,6 +1321,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     body: CreateTestEntitlement,
   ) => Promise<Partial<SetupDesiredProps<Entitlement, TProps, TBehavior>>>;
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>;
+  consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>;
   listSkus: (applicationId: BigString) => Promise<SetupDesiredProps<Sku, TProps, TBehavior>[]>;
   listSubscriptions: (skuId: BigString, options?: ListSkuSubscriptionsOptions) => Promise<SetupDesiredProps<Subscription, TProps, TBehavior>[]>;
   getSubscription: (skuId: BigString, subscriptionId: BigString) => Promise<SetupDesiredProps<Subscription, TProps, TBehavior>>;
