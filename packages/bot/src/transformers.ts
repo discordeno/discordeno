@@ -40,6 +40,8 @@ import type {
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIncidentsData,
+  DiscordIntegrationAccount,
+  DiscordIntegrationApplication,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionCallback,
@@ -129,7 +131,7 @@ import { transformEntitlement } from './transformers/entitlement.js';
 import { transformGatewayBot, transformSessionStartLimit } from './transformers/gatewayBot.js';
 import { transformGuild } from './transformers/guild.js';
 import { transformIncidentsData } from './transformers/incidentsData.js';
-import { transformIntegration } from './transformers/integration.js';
+import { transformIntegration, transformIntegrationAccount, transformIntegrationApplication } from './transformers/integration.js';
 import {
   transformInteraction,
   transformInteractionCallback,
@@ -220,6 +222,8 @@ import type {
   GuildWidgetSettings,
   IncidentsData,
   Integration,
+  IntegrationAccount,
+  IntegrationApplication,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
@@ -314,7 +318,9 @@ export type TransformerInformations = {
   guildOnboardingPrompt: TransformerInformation<DiscordGuildOnboardingPrompt, GuildOnboardingPrompt, true>;
   guildOnboardingPromptOption: TransformerInformation<DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption, true>;
   incidentsData: TransformerInformation<DiscordIncidentsData, IncidentsData, true>;
-  integration: TransformerInformation<DiscordIntegrationCreateUpdate, Integration, false>;
+  integration: TransformerInformation<DiscordIntegrationCreateUpdate, Integration, true>;
+  integrationAccount: TransformerInformation<DiscordIntegrationAccount, IntegrationAccount, true>;
+  integrationApplication: TransformerInformation<DiscordIntegrationApplication, IntegrationApplication, true>;
   interaction: TransformerInformation<DiscordInteraction, Interaction, true, { shardId?: number }>;
   interactionCallback: TransformerInformation<DiscordInteractionCallback, InteractionCallback, true>;
   interactionCallbackResponse: TransformerInformation<DiscordInteractionCallbackResponse, InteractionCallbackResponse, true, { shardId?: number }>;
@@ -447,6 +453,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       guildOnboardingPromptOption: _options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       incidentsData: _options.customizers?.incidentsData ?? defaultCustomizer,
       integration: _options.customizers?.integration ?? defaultCustomizer,
+      integrationAccount: _options.customizers?.integrationAccount ?? defaultCustomizer,
+      integrationApplication: _options.customizers?.integrationApplication ?? defaultCustomizer,
       interaction: _options.customizers?.interaction ?? defaultCustomizer,
       interactionCallback: _options.customizers?.interactionCallback ?? defaultCustomizer,
       interactionCallbackResponse: _options.customizers?.interactionCallbackResponse ?? defaultCustomizer,
@@ -557,6 +565,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     guildOnboardingPromptOption: _options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     incidentsData: _options.incidentsData ?? transformIncidentsData,
     integration: _options.integration ?? transformIntegration,
+    integrationAccount: _options.integrationAccount ?? transformIntegrationAccount,
+    integrationApplication: _options.integrationApplication ?? transformIntegrationApplication,
     interaction: _options.interaction ?? transformInteraction,
     interactionCallback: _options.interactionCallback ?? transformInteractionCallback,
     interactionCallbackResponse: _options.interactionCallbackResponse ?? transformInteractionCallbackResponse,
