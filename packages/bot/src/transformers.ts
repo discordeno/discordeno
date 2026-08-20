@@ -254,7 +254,7 @@ import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerInformations = {
   activity: TransformerInformation<DiscordActivity, Activity, true>;
-  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets, false>;
+  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets, true>;
   activityEmoji: TransformerInformation<DiscordActivityEmoji, ActivityEmoji, true>;
   activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance, true>;
   activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation, true>;
