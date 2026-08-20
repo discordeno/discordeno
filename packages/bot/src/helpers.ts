@@ -274,7 +274,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.welcomeScreen(bot, snakelize(await bot.rest.editWelcomeScreen(guildId, options, reason)));
     },
     editWidgetSettings: async (guildId, options, reason) => {
-      return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.editWidgetSettings(guildId, options, reason)));
+      return bot.transformers.guildWidgetSettings(bot, snakelize(await bot.rest.editWidgetSettings(guildId, options, reason)));
     },
     executeWebhook: async (webhookId, token, options) => {
       const result = await bot.rest.executeWebhook(webhookId, token, options);
@@ -540,7 +540,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.guildWidget(bot, snakelize(await bot.rest.getWidget(guildId)));
     },
     getWidgetSettings: async (guildId) => {
-      return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)));
+      return bot.transformers.guildWidgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)));
     },
     publishMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)));
