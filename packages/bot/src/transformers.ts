@@ -24,6 +24,10 @@ import type {
   DiscordCollectibles,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
+  DiscordEmbedAuthor,
+  DiscordEmbedFooter,
+  DiscordEmbedImage,
+  DiscordEmbedVideo,
   DiscordEmoji,
   DiscordEntitlement,
   DiscordForumTag,
@@ -118,7 +122,7 @@ import { transformAutoModerationRule, transformautoModerationRuleTriggerMetadata
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformForumTag } from './transformers/channel.js';
 import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
-import { transformEmbed } from './transformers/embed.js';
+import { transformEmbed, transformEmbedAuthor, transformEmbedFooter, transformEmbedImage, transformEmbedVideo } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
 import { transformEntitlement } from './transformers/entitlement.js';
 import { transformGatewayBot } from './transformers/gatewayBot.js';
@@ -198,6 +202,10 @@ import type {
   Component,
   DefaultReactionEmoji,
   Embed,
+  EmbedAuthor,
+  EmbedFooter,
+  EmbedImage,
+  EmbedVideo,
   Emoji,
   Entitlement,
   ForumTag,
@@ -289,7 +297,11 @@ export type TransformerInformations = {
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
   component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component, true>;
   defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji, true>;
-  embed: TransformerInformation<DiscordEmbed, Embed, false>;
+  embed: TransformerInformation<DiscordEmbed, Embed, true>;
+  embedAuthor: TransformerInformation<DiscordEmbedAuthor, EmbedAuthor, true>;
+  embedFooter: TransformerInformation<DiscordEmbedFooter, EmbedFooter, true>;
+  embedImage: TransformerInformation<DiscordEmbedImage, EmbedImage, true>;
+  embedVideo: TransformerInformation<DiscordEmbedVideo, EmbedVideo, true>;
   emoji: TransformerInformation<DiscordEmoji, Emoji, true>;
   entitlement: TransformerInformation<DiscordEntitlement, Entitlement, true>;
   forumTag: TransformerInformation<DiscordForumTag, ForumTag, true>;
@@ -417,6 +429,10 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       component: _options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: _options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       embed: _options.customizers?.embed ?? defaultCustomizer,
+      embedAuthor: _options.customizers?.embedAuthor ?? defaultCustomizer,
+      embedFooter: _options.customizers?.embedFooter ?? defaultCustomizer,
+      embedImage: _options.customizers?.embedImage ?? defaultCustomizer,
+      embedVideo: _options.customizers?.embedVideo ?? defaultCustomizer,
       emoji: _options.customizers?.emoji ?? defaultCustomizer,
       entitlement: _options.customizers?.entitlement ?? defaultCustomizer,
       forumTag: _options.customizers?.forumTag ?? defaultCustomizer,
@@ -522,6 +538,10 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     component: _options.component ?? transformComponent,
     defaultReactionEmoji: _options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     embed: _options.embed ?? transformEmbed,
+    embedAuthor: _options.embedAuthor ?? transformEmbedAuthor,
+    embedFooter: _options.embedFooter ?? transformEmbedFooter,
+    embedImage: _options.embedImage ?? transformEmbedImage,
+    embedVideo: _options.embedVideo ?? transformEmbedVideo,
     emoji: _options.emoji ?? transformEmoji,
     entitlement: _options.entitlement ?? transformEntitlement,
     forumTag: _options.forumTag ?? transformForumTag,
