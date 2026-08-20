@@ -66,18 +66,20 @@ export function transformActivityLocation(bot: Bot, payload: Partial<DiscordActi
   });
 }
 
-export function transformActivityAssets(bot: Bot, payload: DiscordActivityAssets): ActivityAssets {
-  const activityAssets = {
-    inviteCoverImage: payload.invite_cover_image,
-    largeImage: payload.large_image,
-    largeText: payload.large_text,
-    largeUrl: payload.large_url,
-    smallImage: payload.small_image,
-    smallText: payload.small_text,
-    smallUrl: payload.small_url,
-  } satisfies ActivityAssets;
+export function transformActivityAssets(bot: Bot, payload: Partial<DiscordActivityAssets>, extra?: { partial?: boolean }): ActivityAssets {
+  const activityAssets = {} as SetupDesiredProps<ActivityAssets, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  return bot.transformers.customizers.activityAssets(bot, payload, activityAssets);
+  if (payload.invite_cover_image) activityAssets.inviteCoverImage = payload.invite_cover_image;
+  if (payload.large_image) activityAssets.largeImage = payload.large_image;
+  if (payload.large_text) activityAssets.largeText = payload.large_text;
+  if (payload.large_url) activityAssets.largeUrl = payload.large_url;
+  if (payload.small_image) activityAssets.smallImage = payload.small_image;
+  if (payload.small_text) activityAssets.smallText = payload.small_text;
+  if (payload.small_url) activityAssets.smallUrl = payload.small_url;
+
+  return callCustomizer('activityAssets', bot, payload, activityAssets, {
+    partial: extra?.partial ?? false,
+  });
 }
 
 export function transformActivityEmoji(bot: Bot, payload: Partial<DiscordActivityEmoji>, extra?: { partial?: boolean }): ActivityEmoji {
