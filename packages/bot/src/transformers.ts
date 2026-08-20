@@ -372,7 +372,7 @@ export type TransformerInformations = {
   unfurledMediaItem: TransformerInformation<DiscordUnfurledMediaItem, UnfurledMediaItem, true>;
   user: TransformerInformation<DiscordUser, User, true>;
   userPrimaryGuild: TransformerInformation<DiscordUserPrimaryGuild, UserPrimaryGuild, true>;
-  voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion, false>;
+  voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion, true>;
   voiceState: TransformerInformation<DiscordVoiceState, VoiceState, true, { guildId?: BigString }>;
   webhook: TransformerInformation<DiscordWebhook, Webhook, true>;
   welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen, false>;
