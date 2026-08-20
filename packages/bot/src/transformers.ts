@@ -368,7 +368,7 @@ export type TransformerInformations = {
   teamMember: TransformerInformation<DiscordTeamMember, TeamMember, true>;
   template: TransformerInformation<DiscordTemplate, Template, true>;
   threadMember: TransformerInformation<DiscordThreadMember, ThreadMember, true, ThreadMemberTransformerExtra>;
-  threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate, false>;
+  threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate, true>;
   unfurledMediaItem: TransformerInformation<DiscordUnfurledMediaItem, UnfurledMediaItem, true>;
   user: TransformerInformation<DiscordUser, User, true>;
   userPrimaryGuild: TransformerInformation<DiscordUserPrimaryGuild, UserPrimaryGuild, true>;
