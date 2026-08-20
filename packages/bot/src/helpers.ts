@@ -160,7 +160,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 ): BotHelpers<TProps, TBehavior> {
   return {
     createAutomodRule: async (guildId, options, reason) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.createAutomodRule(guildId, options, reason)));
+      return bot.transformers.autoModerationRule(bot, snakelize(await bot.rest.createAutomodRule(guildId, options, reason)));
     },
     createChannel: async (guildId, options, reason) => {
       return bot.transformers.channel(bot, snakelize(await bot.rest.createChannel(guildId, options, reason)), { guildId });
@@ -211,7 +211,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       );
     },
     editAutomodRule: async (guildId, ruleId, options, reason) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.editAutomodRule(guildId, ruleId, options, reason)));
+      return bot.transformers.autoModerationRule(bot, snakelize(await bot.rest.editAutomodRule(guildId, ruleId, options, reason)));
     },
     editBotProfile: async (options) => {
       return bot.transformers.user(bot, snakelize(await bot.rest.editBotProfile(options)));
@@ -322,10 +322,10 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.getAuditLog(guildId, options);
     },
     getAutomodRule: async (guildId, ruleId) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.getAutomodRule(guildId, ruleId)));
+      return bot.transformers.autoModerationRule(bot, snakelize(await bot.rest.getAutomodRule(guildId, ruleId)));
     },
     getAutomodRules: async (guildId) => {
-      return (await bot.rest.getAutomodRules(guildId)).map((res) => bot.transformers.automodRule(bot, snakelize(res)));
+      return (await bot.rest.getAutomodRules(guildId)).map((res) => bot.transformers.autoModerationRule(bot, snakelize(res)));
     },
     getAvailableVoiceRegions: async () => {
       return (await bot.rest.getAvailableVoiceRegions()).map((res) => bot.transformers.voiceRegion(bot, snakelize(res)));
