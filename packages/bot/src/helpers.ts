@@ -537,7 +537,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.welcomeScreen(bot, snakelize(await bot.rest.getWelcomeScreen(guildId)));
     },
     getWidget: async (guildId) => {
-      return bot.transformers.widget(bot, snakelize(await bot.rest.getWidget(guildId)));
+      return bot.transformers.guildWidget(bot, snakelize(await bot.rest.getWidget(guildId)));
     },
     getWidgetSettings: async (guildId) => {
       return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)));
