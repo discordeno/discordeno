@@ -1,23 +1,26 @@
 import type { BigString, DiscordThreadMember, DiscordThreadMemberGuildCreate } from '@discordeno/types';
 import type { Bot } from '../bot.js';
+import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
+import { callCustomizer } from '../transformers.js';
 import type { ThreadMember, ThreadMemberGuildCreate } from './types.js';
 
-export function transformThreadMember(bot: Bot, payload: DiscordThreadMember, extra?: ThreadMemberTransformerExtra) {
-  const threadMember = {
-    id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
-    userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
-    joinTimestamp: Date.parse(payload.join_timestamp),
-    flags: payload.flags,
-    member: payload.member
-      ? bot.transformers.member(bot, payload.member, {
-          guildId: extra?.guildId,
-          userId: payload.user_id,
-        })
-      : undefined,
-  } as ThreadMember;
+export function transformThreadMember(bot: Bot, payload: Partial<DiscordThreadMember>, extra?: ThreadMemberTransformerExtra & { partial?: boolean }) {
+  const threadMember = {} as SetupDesiredProps<ThreadMember, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  return bot.transformers.customizers.threadMember(bot, payload, threadMember, {
+  if (payload.id) threadMember.id = bot.transformers.snowflake(payload.id);
+  if (payload.user_id) threadMember.userId = bot.transformers.snowflake(payload.user_id);
+  if (payload.join_timestamp) threadMember.joinTimestamp = Date.parse(payload.join_timestamp);
+  if (payload.flags !== undefined) threadMember.flags = payload.flags;
+  if (payload.member) {
+    threadMember.member = bot.transformers.member(bot, payload.member, {
+      guildId: extra?.guildId,
+      userId: payload.user_id,
+    });
+  }
+
+  return callCustomizer('threadMember', bot, payload, threadMember, {
     guildId: extra?.guildId ? bot.transformers.snowflake(extra?.guildId) : undefined,
+    partial: extra?.partial ?? false,
   });
 }
 
