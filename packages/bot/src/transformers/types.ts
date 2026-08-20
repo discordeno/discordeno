@@ -1048,7 +1048,7 @@ export interface Integration {
   id: bigint;
   name: string;
   guildId: bigint;
-  type: 'twitch' | 'youtube' | 'discord';
+  type: 'twitch' | 'youtube' | 'discord' | 'guild_subscription';
   account: IntegrationAccount;
   scopes: OAuth2Scope[];
 }
