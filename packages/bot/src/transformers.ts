@@ -3,6 +3,7 @@ import type {
   BigString,
   DiscordActivity,
   DiscordActivityAssets,
+  DiscordActivityEmoji,
   DiscordActivityInstance,
   DiscordActivityLocation,
   DiscordAllowedMentions,
@@ -89,7 +90,13 @@ import {
   type SetupDesiredProps,
   type TransformersDesiredProperties,
 } from './desiredProperties.js';
-import { transformActivity, transformActivityAssets, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
+import {
+  transformActivity,
+  transformActivityAssets,
+  transformActivityEmoji,
+  transformActivityInstance,
+  transformActivityLocation,
+} from './transformers/activity.js';
 import { transformApplication } from './transformers/application.js';
 import { transformApplicationCommand } from './transformers/applicationCommand.js';
 import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js';
@@ -161,6 +168,7 @@ import { type ThreadMemberTransformerExtra, transformThreadMember, transformThre
 import type {
   Activity,
   ActivityAssets,
+  ActivityEmoji,
   ActivityInstance,
   ActivityLocation,
   Application,
@@ -245,8 +253,9 @@ import { transformWidget } from './transformers/widget.js';
 import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerInformations = {
-  activity: TransformerInformation<DiscordActivity, Activity, false>;
+  activity: TransformerInformation<DiscordActivity, Activity, true>;
   activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets, false>;
+  activityEmoji: TransformerInformation<DiscordActivityEmoji, ActivityEmoji, true>;
   activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance, true>;
   activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation, true>;
   application: TransformerInformation<DiscordApplication, Application, true, { shardId?: number }>;
@@ -368,6 +377,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     customizers: {
       activity: _options.customizers?.activity ?? defaultCustomizer,
       activityAssets: _options.customizers?.activityAssets ?? defaultCustomizer,
+      activityEmoji: _options.customizers?.activityEmoji ?? defaultCustomizer,
       activityInstance: _options.customizers?.activityInstance ?? defaultCustomizer,
       activityLocation: _options.customizers?.activityLocation ?? defaultCustomizer,
       application: _options.customizers?.application ?? defaultCustomizer,
@@ -467,6 +477,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     },
     activity: _options.activity ?? transformActivity,
     activityAssets: _options.activityAssets ?? transformActivityAssets,
+    activityEmoji: _options.activityEmoji ?? transformActivityEmoji,
     activityInstance: _options.activityInstance ?? transformActivityInstance,
     activityLocation: _options.activityLocation ?? transformActivityLocation,
     application: _options.application ?? transformApplication,
