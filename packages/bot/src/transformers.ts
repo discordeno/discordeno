@@ -56,6 +56,7 @@ import type {
   DiscordMessagePin,
   DiscordMessageSnapshot,
   DiscordNameplate,
+  DiscordOptionalAuditEntryInfo,
   DiscordPoll,
   DiscordPollMedia,
   DiscordPresenceUpdate,
@@ -104,7 +105,7 @@ import { transformApplicationCommandOption } from './transformers/applicationCom
 import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js';
 import { transformApplicationCommandPermissions, transformGuildApplicationCommandPermissions } from './transformers/applicationCommandPermission.js';
 import { transformAttachment } from './transformers/attachment.js';
-import { transformAuditLogEntry } from './transformers/auditLogEntry.js';
+import { transformAuditLogEntry, transformOptionalAuditEntryInfo } from './transformers/auditLogEntry.js';
 import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
 import { transformAutoModerationRule } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
@@ -220,6 +221,7 @@ import type {
   MessagePin,
   MessageSnapshot,
   Nameplate,
+  OptionalAuditEntryInfo,
   Poll,
   PollMedia,
   PresenceUpdate,
@@ -266,7 +268,7 @@ export type TransformerInformations = {
   applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice, true>;
   applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions, true>;
   attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
-  auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, false>;
+  auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, true>;
   automodActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, false>;
   automodRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, false>;
   avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
@@ -311,6 +313,7 @@ export type TransformerInformations = {
   messagePin: TransformerInformation<DiscordMessagePin, MessagePin, true, { shardId?: number }>;
   messageSnapshot: TransformerInformation<DiscordMessageSnapshot, MessageSnapshot, true, { shardId?: number }>;
   nameplate: TransformerInformation<DiscordNameplate, Nameplate, true>;
+  optionalAuditEntryInfo: TransformerInformation<DiscordOptionalAuditEntryInfo, OptionalAuditEntryInfo, true>;
   poll: TransformerInformation<DiscordPoll, Poll, true>;
   pollMedia: TransformerInformation<DiscordPollMedia, PollMedia, true>;
   presence: TransformerInformation<DiscordPresenceUpdate, PresenceUpdate, true>;
@@ -429,6 +432,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       messagePin: _options.customizers?.messagePin ?? defaultCustomizer,
       messageSnapshot: _options.customizers?.messageSnapshot ?? defaultCustomizer,
       nameplate: _options.customizers?.nameplate ?? defaultCustomizer,
+      optionalAuditEntryInfo: _options.customizers?.optionalAuditEntryInfo ?? defaultCustomizer,
       poll: _options.customizers?.poll ?? defaultCustomizer,
       pollMedia: _options.customizers?.pollMedia ?? defaultCustomizer,
       presence: _options.customizers?.presence ?? defaultCustomizer,
@@ -530,6 +534,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     messagePin: _options.messagePin ?? transformMessagePin,
     messageSnapshot: _options.messageSnapshot ?? transformMessageSnapshot,
     nameplate: _options.nameplate ?? transformNameplate,
+    optionalAuditEntryInfo: _options.optionalAuditEntryInfo ?? transformOptionalAuditEntryInfo,
     poll: _options.poll ?? transformPoll,
     pollMedia: _options.pollMedia ?? transformPollMedia,
     presence: _options.presence ?? transformPresence,
