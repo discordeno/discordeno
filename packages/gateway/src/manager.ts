@@ -1,19 +1,22 @@
 import { randomBytes } from 'node:crypto';
 import {
-  type AtLeastOne,
   type BigString,
   type Camelize,
   type DiscordGetGatewayBot,
   type DiscordMemberWithUser,
   type DiscordReady,
+  type DiscordRequestGuildMembers,
+  type DiscordRequestSoundboardSounds,
   type DiscordUpdatePresence,
+  type DiscordVoiceStateUpdate,
   GatewayIntents,
   GatewayOpcodes,
   type RequestGuildMembers,
+  type TransportCompression,
 } from '@discordeno/types';
 import { Collection, jsonSafeReplacer, LeakyBucket, logger } from '@discordeno/utils';
 import Shard from './Shard.js';
-import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest, type TransportCompression, type UpdateVoiceState } from './types.js';
+import { type ShardEvents, ShardSocketCloseCodes, type ShardSocketRequest } from './types.js';
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   const connectionOptions = options.connection ?? {
@@ -419,7 +422,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           channel_id: channelId.toString(),
           self_mute: options?.selfMute ?? false,
           self_deaf: options?.selfDeaf ?? true,
-        },
+        } satisfies DiscordVoiceStateUpdate,
       });
     },
 
@@ -443,7 +446,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           afk: false,
           activities: data.activities,
           status: data.status,
-        },
+        } satisfies DiscordUpdatePresence,
       });
     },
 
@@ -498,7 +501,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           presences: options?.presences ?? false,
           user_ids: options?.userIds?.map((id) => id.toString()),
           nonce: options?.nonce,
-        },
+        } satisfies DiscordRequestGuildMembers,
       });
 
       return await members;
@@ -516,7 +519,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           channel_id: null,
           self_mute: false,
           self_deaf: false,
-        },
+        } satisfies DiscordVoiceStateUpdate,
       });
     },
 
@@ -542,8 +545,8 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           gateway.sendPayload(shardId, {
             op: GatewayOpcodes.RequestSoundboardSounds,
             d: {
-              guild_ids: ids,
-            },
+              guild_ids: ids.map((x) => x.toString()),
+            } satisfies DiscordRequestSoundboardSounds,
           }),
         ),
       );
@@ -784,7 +787,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   joinVoiceChannel: (
     guildId: BigString,
     channelId: BigString,
-    options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
+    options?: Camelize<Omit<DiscordVoiceStateUpdate, 'guild_id' | 'channel_id'>>,
   ) => Promise<void>;
   /**
    * Edits the bot status in all shards that this gateway manages.

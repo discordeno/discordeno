@@ -1,4 +1,10 @@
-import type { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types';
+import type {
+  Camelize,
+  DiscordGatewayPayload,
+  DiscordIntentifyConnectionProperties,
+  DiscordVoiceStateUpdate,
+  TransportCompression,
+} from '@discordeno/types';
 import type Shard from './Shard.js';
 
 export enum ShardState {
@@ -18,35 +24,12 @@ export enum ShardState {
   Offline = 6,
 }
 
-export enum TransportCompression {
-  /**
-   * ZLib-Stream Transport Compression.
-   *
-   * @remarks
-   * Uses `node:zlib` to decompress the payloads
-   *
-   * @see https://docs.discord.com/developers/events/gateway#zlib-stream
-   */
-  zlib = 'zlib-stream',
-  /**
-   * ZStd-Stream Transport Compression.
-   *
-   * @remarks
-   * This will use `node:zlib` zstd implementation if available (node v22.15+ or node v23.8+) or `fzstd` otherwise.
-   *
-   * `fzstd` is an optional dependency. You will need to install it to be able to use it.
-   *
-   * @see https://docs.discord.com/developers/events/gateway#zstd-stream
-   */
-  zstd = 'zstd-stream',
-}
-
 export interface ShardGatewayConfig {
   /**
    * Whatever to enable Payload compression.
    *
    * @remarks
-   * This is compatible with {@link transportCompression}
+   * This is incompatible with {@link transportCompression}
    *
    * @default false
    *
@@ -58,6 +41,12 @@ export interface ShardGatewayConfig {
    *
    * @default null
    *
+   * @remarks
+   * This is incompatible with {@link compress}
+   *
+   * {@link TransportCompression.zlib} uses node:zlib Inflate to decompress, while
+   * {@link TransportCompression.zstd} uses node:zlib ZstdDecompress to decompress
+   *
    * @see https://docs.discord.com/developers/events/gateway#transport-compression
    */
   transportCompression: TransportCompression | null;
@@ -67,23 +56,7 @@ export interface ShardGatewayConfig {
    */
   intents: number;
   /** Identify properties to use */
-  properties: {
-    /** Operating system the shard runs on.
-     *
-     * @default "darwin" | "linux" | "windows"
-     */
-    os: string;
-    /** The "browser" where this shard is running on.
-     *
-     * @default "Discordeno"
-     */
-    browser: string;
-    /** The device on which the shard is running.
-     *
-     * @default "Discordeno"
-     */
-    device: string;
-  };
+  properties: DiscordIntentifyConnectionProperties;
   /** Bot token which is used to connect to Discord */
   token: string;
   /** The URL of the gateway which should be connected to.
@@ -170,21 +143,7 @@ export enum ShardSocketCloseCodes {
   ReIdentifying = 3066,
 }
 
-export interface ShardSocketRequest {
-  /** The OP-Code for the payload to send. */
-  op: GatewayOpcodes;
-  /** Payload data. */
-  d: unknown;
-}
+export interface ShardSocketRequest extends Omit<DiscordGatewayPayload, 's' | 't'> {}
 
 /** https://docs.discord.com/developers/events/gateway-events#update-voice-state */
-export interface UpdateVoiceState {
-  /** id of the guild */
-  guildId: string;
-  /** id of the voice channel client wants to join (null if disconnecting) */
-  channelId: string | null;
-  /** Is the client muted */
-  selfMute: boolean;
-  /** Is the client deafened */
-  selfDeaf: boolean;
-}
+export interface UpdateVoiceState extends Camelize<DiscordVoiceStateUpdate> {}
