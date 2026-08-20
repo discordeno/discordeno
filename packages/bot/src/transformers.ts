@@ -82,6 +82,7 @@ import type {
   DiscordStickerPack,
   DiscordSubscription,
   DiscordTeam,
+  DiscordTeamMember,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordThreadMemberGuildCreate,
@@ -178,7 +179,7 @@ import { transformStageInstance } from './transformers/stageInstance.js';
 import { transformInviteStageInstance } from './transformers/stageInviteInstance.js';
 import { transformSticker, transformStickerPack } from './transformers/sticker.js';
 import { transformSubscription } from './transformers/subscription.js';
-import { transformTeam } from './transformers/team.js';
+import { transformTeam, transformTeamMember } from './transformers/team.js';
 import { transformTemplate } from './transformers/template.js';
 import { type ThreadMemberTransformerExtra, transformThreadMember, transformThreadMemberGuildCreate } from './transformers/threadMember.js';
 import type {
@@ -261,6 +262,7 @@ import type {
   StickerPack,
   Subscription,
   Team,
+  TeamMember,
   Template,
   ThreadMember,
   ThreadMemberGuildCreate,
@@ -362,7 +364,8 @@ export type TransformerInformations = {
   sticker: TransformerInformation<DiscordSticker, Sticker, true>;
   stickerPack: TransformerInformation<DiscordStickerPack, StickerPack, true>;
   subscription: TransformerInformation<DiscordSubscription, Subscription, true>;
-  team: TransformerInformation<DiscordTeam, Team, false>;
+  team: TransformerInformation<DiscordTeam, Team, true>;
+  teamMember: TransformerInformation<DiscordTeamMember, TeamMember, true>;
   template: TransformerInformation<DiscordTemplate, Template, false>;
   threadMember: TransformerInformation<DiscordThreadMember, ThreadMember, false, ThreadMemberTransformerExtra>;
   threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate, false>;
@@ -492,6 +495,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       stickerPack: _options.customizers?.stickerPack ?? defaultCustomizer,
       subscription: _options.customizers?.subscription ?? defaultCustomizer,
       team: _options.customizers?.team ?? defaultCustomizer,
+      teamMember: _options.customizers?.teamMember ?? defaultCustomizer,
       template: _options.customizers?.template ?? defaultCustomizer,
       threadMember: _options.customizers?.threadMember ?? defaultCustomizer,
       threadMemberGuildCreate: _options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
@@ -605,6 +609,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     stickerPack: _options.stickerPack ?? transformStickerPack,
     subscription: _options.subscription ?? transformSubscription,
     team: _options.team ?? transformTeam,
+    teamMember: _options.teamMember ?? transformTeamMember,
     template: _options.template ?? transformTemplate,
     threadMember: _options.threadMember ?? transformThreadMember,
     threadMemberGuildCreate: _options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
