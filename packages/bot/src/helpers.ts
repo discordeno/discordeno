@@ -205,7 +205,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.webhook(bot, snakelize(await bot.rest.createWebhook(channelId, options, reason)));
     },
     editApplicationCommandPermissions: async (guildId, commandId, bearerToken, options) => {
-      return bot.transformers.applicationCommandPermission(
+      return bot.transformers.guildApplicationCommandPermissions(
         bot,
         snakelize(await bot.rest.editApplicationCommandPermissions(guildId, commandId, bearerToken, options)),
       );
@@ -311,11 +311,11 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       const res = await bot.rest.getApplicationCommandPermission(guildId, commandId, options);
       const snakedRes = snakelize(res);
 
-      return bot.transformers.applicationCommandPermission(bot, snakedRes);
+      return bot.transformers.guildApplicationCommandPermissions(bot, snakedRes);
     },
     getApplicationCommandPermissions: async (guildId, options) => {
       return (await bot.rest.getApplicationCommandPermissions(guildId, options)).map((res) =>
-        bot.transformers.applicationCommandPermission(bot, snakelize(res)),
+        bot.transformers.guildApplicationCommandPermissions(bot, snakelize(res)),
       );
     },
     getAuditLog: async (guildId, options) => {
