@@ -360,7 +360,7 @@ export type TransformerInformations = {
   soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound, true>;
   stageInstance: TransformerInformation<DiscordStageInstance, StageInstance, true>;
   sticker: TransformerInformation<DiscordSticker, Sticker, true>;
-  stickerPack: TransformerInformation<DiscordStickerPack, StickerPack, false>;
+  stickerPack: TransformerInformation<DiscordStickerPack, StickerPack, true>;
   subscription: TransformerInformation<DiscordSubscription, Subscription, true>;
   team: TransformerInformation<DiscordTeam, Team, false>;
   template: TransformerInformation<DiscordTemplate, Template, false>;
