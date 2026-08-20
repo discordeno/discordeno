@@ -285,102 +285,97 @@ import { transformGuildWidget } from './transformers/widget.js';
 import { transformGuildWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerInformations = {
-  activity: TransformerInformation<DiscordActivity, Activity, true>;
-  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets, true>;
-  activityEmoji: TransformerInformation<DiscordActivityEmoji, ActivityEmoji, true>;
-  activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance, true>;
-  activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation, true>;
-  application: TransformerInformation<DiscordApplication, Application, true, { shardId?: number }>;
-  applicationCommand: TransformerInformation<DiscordApplicationCommand, ApplicationCommand, true>;
-  applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption, true>;
-  applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice, true>;
-  applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions, true>;
-  attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
-  auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, true>;
-  autoModerationAction: TransformerInformation<DiscordAutoModerationAction, AutoModerationAction, true>;
-  autoModerationActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, true>;
-  autoModerationActionMetadata: TransformerInformation<DiscordAutoModerationActionMetadata, AutoModerationActionMetadata, true>;
-  autoModerationRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, true>;
-  autoModerationRuleTriggerMetadata: TransformerInformation<DiscordAutoModerationRuleTriggerMetadata, AutoModerationRuleTriggerMetadata, true>;
-  avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
-  channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
-  collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
-  component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component, true>;
-  defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji, true>;
-  embed: TransformerInformation<DiscordEmbed, Embed, true>;
-  embedAuthor: TransformerInformation<DiscordEmbedAuthor, EmbedAuthor, true>;
-  embedFooter: TransformerInformation<DiscordEmbedFooter, EmbedFooter, true>;
-  embedImage: TransformerInformation<DiscordEmbedImage, EmbedImage, true>;
-  embedVideo: TransformerInformation<DiscordEmbedVideo, EmbedVideo, true>;
-  emoji: TransformerInformation<DiscordEmoji, Emoji, true>;
-  entitlement: TransformerInformation<DiscordEntitlement, Entitlement, true>;
-  forumTag: TransformerInformation<DiscordForumTag, ForumTag, true>;
-  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, true>;
-  guild: TransformerInformation<DiscordGuild, Guild, true, { shardId?: number }>;
-  guildApplicationCommandPermissions: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, true>;
-  guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding, true>;
-  guildOnboardingPrompt: TransformerInformation<DiscordGuildOnboardingPrompt, GuildOnboardingPrompt, true>;
-  guildOnboardingPromptOption: TransformerInformation<DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption, true>;
-  incidentsData: TransformerInformation<DiscordIncidentsData, IncidentsData, true>;
-  integration: TransformerInformation<DiscordIntegrationCreateUpdate, Integration, true>;
-  integrationAccount: TransformerInformation<DiscordIntegrationAccount, IntegrationAccount, true>;
-  integrationApplication: TransformerInformation<DiscordIntegrationApplication, IntegrationApplication, true>;
-  interaction: TransformerInformation<DiscordInteraction, Interaction, true, { shardId?: number }>;
-  interactionCallback: TransformerInformation<DiscordInteractionCallback, InteractionCallback, true>;
-  interactionCallbackResponse: TransformerInformation<DiscordInteractionCallbackResponse, InteractionCallbackResponse, true, { shardId?: number }>;
-  interactionDataOption: TransformerInformation<DiscordInteractionDataOption, InteractionDataOption, true>;
-  interactionDataResolved: TransformerInformation<
-    DiscordInteractionDataResolved,
-    InteractionDataResolved,
-    true,
-    { shardId?: number; guildId?: BigString }
-  >;
-  interactionResource: TransformerInformation<DiscordInteractionResource, InteractionResource, true, { shardId?: number }>;
-  invite: TransformerInformation<DiscordInviteMetadata, Invite, true, { shardId?: number }>;
-  inviteStageInstance: TransformerInformation<DiscordInviteStageInstance, InviteStageInstance, true, { guildId?: BigString }>;
-  lobby: TransformerInformation<DiscordLobby, Lobby, true>;
-  lobbyMember: TransformerInformation<DiscordLobbyMember, LobbyMember, true>;
-  lobbyMessage: TransformerInformation<DiscordLobbyMessage, LobbyMessage, true>;
-  lobbyInvite: TransformerInformation<DiscordLobbyInvite, LobbyInvite, true>;
-  mediaGalleryItem: TransformerInformation<DiscordMediaGalleryItem, MediaGalleryItem, true>;
-  member: TransformerInformation<DiscordMember, Member, true, { guildId?: BigString; userId?: BigString }>;
-  message: TransformerInformation<DiscordMessage, Message, true, { shardId?: number }>;
-  messageCall: TransformerInformation<DiscordMessageCall, MessageCall, true>;
-  messageInteractionMetadata: TransformerInformation<DiscordMessageInteractionMetadata, MessageInteractionMetadata, true>;
-  messagePin: TransformerInformation<DiscordMessagePin, MessagePin, true, { shardId?: number }>;
-  messageSnapshot: TransformerInformation<DiscordMessageSnapshot, MessageSnapshot, true, { shardId?: number }>;
-  nameplate: TransformerInformation<DiscordNameplate, Nameplate, true>;
-  optionalAuditEntryInfo: TransformerInformation<DiscordOptionalAuditEntryInfo, OptionalAuditEntryInfo, true>;
-  poll: TransformerInformation<DiscordPoll, Poll, true>;
-  pollMedia: TransformerInformation<DiscordPollMedia, PollMedia, true>;
-  presence: TransformerInformation<DiscordPresenceUpdate, PresenceUpdate, true>;
-  role: TransformerInformation<DiscordRole, Role, true, { guildId?: BigString }>;
-  roleColors: TransformerInformation<DiscordRoleColors, RoleColors, true>;
-  scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent, true>;
-  scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule, true>;
-  sessionStartLimit: TransformerInformation<DiscordSessionStartLimit, SessionStartLimit, true>;
-  sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme, true>;
-  sku: TransformerInformation<DiscordSku, Sku, true>;
-  soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound, true>;
-  stageInstance: TransformerInformation<DiscordStageInstance, StageInstance, true>;
-  sticker: TransformerInformation<DiscordSticker, Sticker, true>;
-  stickerPack: TransformerInformation<DiscordStickerPack, StickerPack, true>;
-  subscription: TransformerInformation<DiscordSubscription, Subscription, true>;
-  team: TransformerInformation<DiscordTeam, Team, true>;
-  teamMember: TransformerInformation<DiscordTeamMember, TeamMember, true>;
-  template: TransformerInformation<DiscordTemplate, Template, true>;
-  threadMember: TransformerInformation<DiscordThreadMember, ThreadMember, true, ThreadMemberTransformerExtra>;
-  threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate, true>;
-  unfurledMediaItem: TransformerInformation<DiscordUnfurledMediaItem, UnfurledMediaItem, true>;
-  user: TransformerInformation<DiscordUser, User, true>;
-  userPrimaryGuild: TransformerInformation<DiscordUserPrimaryGuild, UserPrimaryGuild, true>;
-  voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion, true>;
-  voiceState: TransformerInformation<DiscordVoiceState, VoiceState, true, { guildId?: BigString }>;
-  webhook: TransformerInformation<DiscordWebhook, Webhook, true>;
-  welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen, true>;
-  welcomeScreenChannel: TransformerInformation<DiscordWelcomeScreenChannel, WelcomeScreenChannel, true>;
-  guildWidget: TransformerInformation<DiscordGuildWidget, GuildWidget, true>;
-  guildWidgetSettings: TransformerInformation<DiscordGuildWidgetSettings, GuildWidgetSettings, true>;
+  activity: TransformerInformation<DiscordActivity, Activity>;
+  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets>;
+  activityEmoji: TransformerInformation<DiscordActivityEmoji, ActivityEmoji>;
+  activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance>;
+  activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation>;
+  application: TransformerInformation<DiscordApplication, Application, { shardId?: number }>;
+  applicationCommand: TransformerInformation<DiscordApplicationCommand, ApplicationCommand>;
+  applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption>;
+  applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice>;
+  applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions>;
+  attachment: TransformerInformation<DiscordAttachment, Attachment>;
+  auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry>;
+  autoModerationAction: TransformerInformation<DiscordAutoModerationAction, AutoModerationAction>;
+  autoModerationActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution>;
+  autoModerationActionMetadata: TransformerInformation<DiscordAutoModerationActionMetadata, AutoModerationActionMetadata>;
+  autoModerationRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule>;
+  autoModerationRuleTriggerMetadata: TransformerInformation<DiscordAutoModerationRuleTriggerMetadata, AutoModerationRuleTriggerMetadata>;
+  avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData>;
+  channel: TransformerInformation<DiscordChannel, Channel, { guildId?: BigString }>;
+  collectibles: TransformerInformation<DiscordCollectibles, Collectibles>;
+  component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>;
+  defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji>;
+  embed: TransformerInformation<DiscordEmbed, Embed>;
+  embedAuthor: TransformerInformation<DiscordEmbedAuthor, EmbedAuthor>;
+  embedFooter: TransformerInformation<DiscordEmbedFooter, EmbedFooter>;
+  embedImage: TransformerInformation<DiscordEmbedImage, EmbedImage>;
+  embedVideo: TransformerInformation<DiscordEmbedVideo, EmbedVideo>;
+  emoji: TransformerInformation<DiscordEmoji, Emoji>;
+  entitlement: TransformerInformation<DiscordEntitlement, Entitlement>;
+  forumTag: TransformerInformation<DiscordForumTag, ForumTag>;
+  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot>;
+  guild: TransformerInformation<DiscordGuild, Guild, { shardId?: number }>;
+  guildApplicationCommandPermissions: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions>;
+  guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding>;
+  guildOnboardingPrompt: TransformerInformation<DiscordGuildOnboardingPrompt, GuildOnboardingPrompt>;
+  guildOnboardingPromptOption: TransformerInformation<DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption>;
+  guildWidget: TransformerInformation<DiscordGuildWidget, GuildWidget>;
+  guildWidgetSettings: TransformerInformation<DiscordGuildWidgetSettings, GuildWidgetSettings>;
+  incidentsData: TransformerInformation<DiscordIncidentsData, IncidentsData>;
+  integration: TransformerInformation<DiscordIntegrationCreateUpdate, Integration>;
+  integrationAccount: TransformerInformation<DiscordIntegrationAccount, IntegrationAccount>;
+  integrationApplication: TransformerInformation<DiscordIntegrationApplication, IntegrationApplication>;
+  interaction: TransformerInformation<DiscordInteraction, Interaction, { shardId?: number }>;
+  interactionCallback: TransformerInformation<DiscordInteractionCallback, InteractionCallback>;
+  interactionCallbackResponse: TransformerInformation<DiscordInteractionCallbackResponse, InteractionCallbackResponse, { shardId?: number }>;
+  interactionDataOption: TransformerInformation<DiscordInteractionDataOption, InteractionDataOption>;
+  interactionDataResolved: TransformerInformation<DiscordInteractionDataResolved, InteractionDataResolved, { shardId?: number; guildId?: BigString }>;
+  interactionResource: TransformerInformation<DiscordInteractionResource, InteractionResource, { shardId?: number }>;
+  invite: TransformerInformation<DiscordInviteMetadata, Invite, { shardId?: number }>;
+  inviteStageInstance: TransformerInformation<DiscordInviteStageInstance, InviteStageInstance, { guildId?: BigString }>;
+  lobby: TransformerInformation<DiscordLobby, Lobby>;
+  lobbyInvite: TransformerInformation<DiscordLobbyInvite, LobbyInvite>;
+  lobbyMember: TransformerInformation<DiscordLobbyMember, LobbyMember>;
+  lobbyMessage: TransformerInformation<DiscordLobbyMessage, LobbyMessage>;
+  mediaGalleryItem: TransformerInformation<DiscordMediaGalleryItem, MediaGalleryItem>;
+  member: TransformerInformation<DiscordMember, Member, { guildId?: BigString; userId?: BigString }>;
+  message: TransformerInformation<DiscordMessage, Message, { shardId?: number }>;
+  messageCall: TransformerInformation<DiscordMessageCall, MessageCall>;
+  messageInteractionMetadata: TransformerInformation<DiscordMessageInteractionMetadata, MessageInteractionMetadata>;
+  messagePin: TransformerInformation<DiscordMessagePin, MessagePin, { shardId?: number }>;
+  messageSnapshot: TransformerInformation<DiscordMessageSnapshot, MessageSnapshot, { shardId?: number }>;
+  nameplate: TransformerInformation<DiscordNameplate, Nameplate>;
+  optionalAuditEntryInfo: TransformerInformation<DiscordOptionalAuditEntryInfo, OptionalAuditEntryInfo>;
+  poll: TransformerInformation<DiscordPoll, Poll>;
+  pollMedia: TransformerInformation<DiscordPollMedia, PollMedia>;
+  presence: TransformerInformation<DiscordPresenceUpdate, PresenceUpdate>;
+  role: TransformerInformation<DiscordRole, Role, { guildId?: BigString }>;
+  roleColors: TransformerInformation<DiscordRoleColors, RoleColors>;
+  scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent>;
+  scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule>;
+  sessionStartLimit: TransformerInformation<DiscordSessionStartLimit, SessionStartLimit>;
+  sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme>;
+  sku: TransformerInformation<DiscordSku, Sku>;
+  soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound>;
+  stageInstance: TransformerInformation<DiscordStageInstance, StageInstance>;
+  sticker: TransformerInformation<DiscordSticker, Sticker>;
+  stickerPack: TransformerInformation<DiscordStickerPack, StickerPack>;
+  subscription: TransformerInformation<DiscordSubscription, Subscription>;
+  team: TransformerInformation<DiscordTeam, Team>;
+  teamMember: TransformerInformation<DiscordTeamMember, TeamMember>;
+  template: TransformerInformation<DiscordTemplate, Template>;
+  threadMember: TransformerInformation<DiscordThreadMember, ThreadMember, ThreadMemberTransformerExtra>;
+  threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate>;
+  unfurledMediaItem: TransformerInformation<DiscordUnfurledMediaItem, UnfurledMediaItem>;
+  user: TransformerInformation<DiscordUser, User>;
+  userPrimaryGuild: TransformerInformation<DiscordUserPrimaryGuild, UserPrimaryGuild>;
+  voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion>;
+  voiceState: TransformerInformation<DiscordVoiceState, VoiceState, { guildId?: BigString }>;
+  webhook: TransformerInformation<DiscordWebhook, Webhook>;
+  welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen>;
+  welcomeScreenChannel: TransformerInformation<DiscordWelcomeScreenChannel, WelcomeScreenChannel>;
 };
 
 export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = TransformerFunctions<
@@ -635,14 +630,12 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
  *
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
- * @template TPartial - Indicates if the transformer supports partial payloads.
  * @template TExtra - Additional extra information that might be needed for transformation.
  */
-export type TransformerInformation<TPayload, TTransformed, TPartial extends boolean, TExtra = {}> = {
+export type TransformerInformation<TPayload, TTransformed, TExtra = {}> = {
   payload: TPayload;
   transformed: TTransformed;
   extra: TExtra;
-  partial: TPartial;
 };
 
 /**
@@ -653,7 +646,6 @@ export type TransformerInformation<TPayload, TTransformed, TPartial extends bool
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
  * @template TExtra - Additional extra information that might be needed for transformation.
- * @template TPartial - Indicates if the transformer supports partial payloads.
  */
 export type TransformerFunction<
   TProps extends TransformersDesiredProperties,
@@ -661,19 +653,16 @@ export type TransformerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-  TPartial extends boolean = false,
-> = TPartial extends true
-  ? // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
-    {
-      (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra & { partial?: false }): SetupDesiredProps<TTransformed, TProps, TBehavior>;
-      (
-        bot: Bot<TProps, TBehavior>,
-        payload: Partial<TPayload>,
-        extra: TExtra & { partial: true },
-      ): Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>;
-    }
-  : // Even if we don't need to overload, since the 2 syntaxes have slightly different semantics, we use the method syntax in here as well
-    { (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra): SetupDesiredProps<TTransformed, TProps, TBehavior> };
+> =
+  // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
+  {
+    (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra & { partial?: false }): SetupDesiredProps<TTransformed, TProps, TBehavior>;
+    (
+      bot: Bot<TProps, TBehavior>,
+      payload: Partial<TPayload>,
+      extra: TExtra & { partial: true },
+    ): Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>;
+  };
 
 /**
  * A collection of transformer functions for various Discord entities.
@@ -687,8 +676,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
     TBehavior,
     TransformerInformations[K]['payload'],
     TransformerInformations[K]['transformed'],
-    TransformerInformations[K]['extra'],
-    TransformerInformations[K]['partial']
+    TransformerInformations[K]['extra']
   >;
 };
 
@@ -700,7 +688,6 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
  * @template TExtra - Additional extra information that might be needed for customization.
- * @template TPartial - Indicates if the transformer supports partial payloads.
  */
 export type TransformerCustomizerFunction<
   TProps extends TransformersDesiredProperties,
@@ -708,27 +695,22 @@ export type TransformerCustomizerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-  TPartial extends boolean = false,
-> = TPartial extends true
-  ? // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
-    {
-      (
-        bot: Bot<TProps, TBehavior>,
-        payload: TPayload,
-        transformed: SetupDesiredProps<TTransformed, TProps, TBehavior>,
-        extra: TExtra & { partial: false },
-      ): any;
-      (
-        bot: Bot<TProps, TBehavior>,
-        payload: Partial<TPayload>,
-        transformed: Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>,
-        extra: TExtra & { partial: true },
-      ): any;
-    }
-  : // Even if we don't need to overload, since the 2 syntaxes have slightly different semantics, we use the method syntax in here as well
-    {
-      (bot: Bot<TProps, TBehavior>, payload: TPayload, transformed: SetupDesiredProps<TTransformed, TProps, TBehavior>, extra?: TExtra): any;
-    };
+> =
+  // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
+  {
+    (
+      bot: Bot<TProps, TBehavior>,
+      payload: TPayload,
+      transformed: SetupDesiredProps<TTransformed, TProps, TBehavior>,
+      extra: TExtra & { partial: false },
+    ): any;
+    (
+      bot: Bot<TProps, TBehavior>,
+      payload: Partial<TPayload>,
+      transformed: Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>,
+      extra: TExtra & { partial: true },
+    ): any;
+  };
 
 /**
  * A collection of transformer customizer functions for various Discord entities.
@@ -742,8 +724,7 @@ export type TransformerCustomizers<TProps extends TransformersDesiredProperties,
     TBehavior,
     TransformerInformations[K]['payload'],
     TransformerInformations[K]['transformed'],
-    BigStringsToBigints<TransformerInformations[K]['extra']>,
-    TransformerInformations[K]['partial']
+    BigStringsToBigints<TransformerInformations[K]['extra']>
   >;
 };
 
