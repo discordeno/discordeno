@@ -1,44 +1,40 @@
-import type { DiscordActivity, DiscordActivityAssets, DiscordActivityInstance, DiscordActivityLocation } from '@discordeno/types';
+import type {
+  DiscordActivity,
+  DiscordActivityAssets,
+  DiscordActivityEmoji,
+  DiscordActivityInstance,
+  DiscordActivityLocation,
+} from '@discordeno/types';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
-import type { Activity, ActivityAssets, ActivityInstance, ActivityLocation } from './types.js';
+import type { Activity, ActivityAssets, ActivityEmoji, ActivityInstance, ActivityLocation } from './types.js';
 
-export function transformActivity(bot: Bot, payload: DiscordActivity) {
-  const activity = {
-    name: payload.name,
-    type: payload.type,
-    url: payload.url ?? undefined,
-    createdAt: payload.created_at,
-    applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
-    details: payload.details ?? undefined,
-    state: payload.state ?? undefined,
-    emoji: payload.emoji
-      ? {
-          name: payload.emoji.name,
-          animated: payload.emoji.animated,
-          id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
-        }
-      : undefined,
-    instance: payload.instance,
-    flags: payload.flags,
-    buttons: payload.buttons,
-    assets: payload.assets ? bot.transformers.activityAssets(bot, payload.assets) : undefined,
-    detailsUrl: payload.details_url ?? undefined,
-    stateUrl: payload.state_url ?? undefined,
-    party: payload.party,
-    timestamps: payload.timestamps,
-    statusDisplayType: payload.status_display_type ?? undefined,
-    secrets: payload.secrets
-      ? {
-          join: payload.secrets.join ?? undefined,
-          spectate: payload.secrets.spectate ?? undefined,
-          match: payload.secrets.match ?? undefined,
-        }
-      : undefined,
-  } satisfies Activity;
+export function transformActivity(bot: Bot, payload: Partial<DiscordActivity>, extra?: { partial?: boolean }) {
+  const activity = {} as SetupDesiredProps<Activity, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  return bot.transformers.customizers.activity(bot, payload, activity);
+  if (payload.name) activity.name = payload.name;
+  if (payload.type) activity.type = payload.type;
+  if (payload.url) activity.url = payload.url;
+  if (payload.created_at) activity.createdAt = payload.created_at;
+  if (payload.application_id) activity.applicationId = bot.transformers.snowflake(payload.application_id);
+  if (payload.status_display_type) activity.statusDisplayType = payload.status_display_type;
+  if (payload.details) activity.details = payload.details;
+  if (payload.details_url) activity.detailsUrl = payload.details_url;
+  if (payload.state) activity.state = payload.state;
+  if (payload.state_url) activity.stateUrl = payload.state_url;
+  if (payload.emoji) activity.emoji = bot.transformers.activityEmoji(bot, payload.emoji);
+  if (payload.party) activity.party = payload.party;
+  if (payload.assets) activity.assets = bot.transformers.activityAssets(bot, payload.assets);
+  if (payload.secrets) activity.secrets = payload.secrets;
+  if (payload.instance) activity.instance = payload.instance;
+  if (payload.flags) activity.flags = payload.flags;
+  if (payload.buttons) activity.buttons = payload.buttons;
+  if (payload.timestamps) activity.timestamps = payload.timestamps;
+
+  return callCustomizer('activity', bot, payload, activity, {
+    partial: extra?.partial ?? false,
+  });
 }
 
 export function transformActivityInstance(bot: Bot, payload: Partial<DiscordActivityInstance>, extra?: { partial?: boolean }) {
@@ -82,4 +78,16 @@ export function transformActivityAssets(bot: Bot, payload: DiscordActivityAssets
   } satisfies ActivityAssets;
 
   return bot.transformers.customizers.activityAssets(bot, payload, activityAssets);
+}
+
+export function transformActivityEmoji(bot: Bot, payload: Partial<DiscordActivityEmoji>, extra?: { partial?: boolean }): ActivityEmoji {
+  const activityEmoji = {} as SetupDesiredProps<ActivityEmoji, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (payload.id) activityEmoji.id = bot.transformers.snowflake(payload.id);
+  if (payload.animated) activityEmoji.animated = payload.animated;
+  if (payload.name) activityEmoji.name = payload.name;
+
+  return callCustomizer('activityEmoji', bot, payload, activityEmoji, {
+    partial: extra?.partial ?? false,
+  });
 }
