@@ -281,7 +281,7 @@ import { transformVoiceRegion } from './transformers/voiceRegion.js';
 import { transformVoiceState } from './transformers/voiceState.js';
 import { transformWebhook } from './transformers/webhook.js';
 import { transformWelcomeScreen, transformWelcomeScreenChannel } from './transformers/welcomeScreen.js';
-import { transformWidget } from './transformers/widget.js';
+import { transformGuildWidget } from './transformers/widget.js';
 import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerInformations = {
@@ -379,7 +379,7 @@ export type TransformerInformations = {
   webhook: TransformerInformation<DiscordWebhook, Webhook, true>;
   welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen, true>;
   welcomeScreenChannel: TransformerInformation<DiscordWelcomeScreenChannel, WelcomeScreenChannel, true>;
-  widget: TransformerInformation<DiscordGuildWidget, GuildWidget, false>;
+  guildWidget: TransformerInformation<DiscordGuildWidget, GuildWidget, true>;
   widgetSettings: TransformerInformation<DiscordGuildWidgetSettings, GuildWidgetSettings, false>;
 };
 
@@ -510,7 +510,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       webhook: _options.customizers?.webhook ?? defaultCustomizer,
       welcomeScreen: _options.customizers?.welcomeScreen ?? defaultCustomizer,
       welcomeScreenChannel: _options.customizers?.welcomeScreenChannel ?? defaultCustomizer,
-      widget: _options.customizers?.widget ?? defaultCustomizer,
+      guildWidget: _options.customizers?.guildWidget ?? defaultCustomizer,
       widgetSettings: _options.customizers?.widgetSettings ?? defaultCustomizer,
     },
     desiredProperties: createDesiredPropertiesObject(_options.desiredProperties ?? {}),
@@ -625,7 +625,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     webhook: _options.webhook ?? transformWebhook,
     welcomeScreen: _options.welcomeScreen ?? transformWelcomeScreen,
     welcomeScreenChannel: _options.welcomeScreenChannel ?? transformWelcomeScreenChannel,
-    widget: _options.widget ?? transformWidget,
+    guildWidget: _options.guildWidget ?? transformGuildWidget,
     widgetSettings: _options.widgetSettings ?? transformWidgetSettings,
   } satisfies Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as Transformers<TProps, TBehavior>;
 }
