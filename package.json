@@ -1,6 +1,6 @@
 {
   "name": "discordeno-monorepo",
-  "version": "22.0.0-beta.1",
+  "version": "22.0.0-beta.2",
   "private": true,
   "type": "module",
   "packageManager": "yarn@4.17.1",
