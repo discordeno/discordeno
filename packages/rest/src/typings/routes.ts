@@ -331,6 +331,21 @@ export interface RestRoutes {
     /** Route to invite a specific user to the lobby's linked channel */
     inviteUser: (lobbyId: BigString, userId: BigString) => string;
   };
+  applicationIdentityProfile: {
+    /** Get and update the application identity profile */
+    profile: (applicationId: BigString, userId: BigString, providerIssuedUserId: string) => string;
+    /** Get the application identities for a user */
+    applicationIdentitiesForUser: (userId: BigString, applicationId: BigString) => string;
+    /** Get the application identities for the provider issued user id */
+    applicationIdentitiesForExternalId: (
+      applicationId: BigString,
+      providerType: string,
+      providerIssuedUserId: string,
+      options?: { providerId?: string },
+    ) => string;
+    /** Delete application identity for user */
+    delete: (userId: BigString, applicationId: BigString, providerType: string, providerIssuedUserId: string) => string;
+  };
   /** Route to list / create an application emoji */
   applicationEmojis: (applicationId: BigString) => string;
   /** Route to list / update application role connection metadata records */
