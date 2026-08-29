@@ -1770,6 +1770,7 @@ export const restEndpoints = {
   async executeWebhook(rest: RestManager, webhookId: BigString, token: string, options: ExecuteWebhook): Promise<DiscordMessage | undefined> {
     return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
       body: options,
+      files: options.files,
       unauthorized: true,
     });
   },
@@ -2807,6 +2808,8 @@ export const restEndpoints = {
     reaction: string,
     options?: GetReactions,
   ): Promise<DiscordUser[]> {
+    reaction = processReactionString(reaction);
+
     return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options));
   },
   /**
@@ -3841,7 +3844,7 @@ export const restEndpoints = {
     options: ModifyGuildSoundboardSound,
     reason?: string,
   ): Promise<DiscordSoundboardSound> {
-    return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
+    return await rest.patch<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
       body: options,
       reason,
     });
