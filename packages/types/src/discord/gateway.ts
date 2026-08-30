@@ -172,7 +172,21 @@ export enum GatewayIntents {
 
 export { GatewayIntents as Intents };
 
-// TODO: Add TransportCompression: https://docs.discord.com/developers/events/gateway#transport-compression
+/** https://docs.discord.com/developers/events/gateway#transport-compression */
+export enum TransportCompression {
+  /**
+   * ZLib-Stream Transport Compression.
+   *
+   * @see https://docs.discord.com/developers/events/gateway#zlib-stream
+   */
+  zlib = 'zlib-stream',
+  /**
+   * ZStd-Stream Transport Compression.
+   *
+   * @see https://docs.discord.com/developers/events/gateway#zstd-stream
+   */
+  zstd = 'zstd-stream',
+}
 
 /** https://docs.discord.com/developers/events/gateway#get-gateway-bot */
 export interface DiscordGetGatewayBot {
@@ -290,12 +304,91 @@ export interface DiscordGatewayPayload {
   t: GatewayEventNames | null;
 }
 
-// TODO: Add Identify: https://docs.discord.com/developers/events/gateway-events#identify-identify-structure
-// TODO: Add Identify Connection Properties: https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties
-// TODO: Add Resume: https://docs.discord.com/developers/events/gateway-events#resume-resume-structure
-// TODO: Add Request Guild Members: https://docs.discord.com/developers/events/gateway-events#request-guild-members-request-guild-members-structure
-// TODO: Add Request Soundboard Sounds: https://docs.discord.com/developers/events/gateway-events#request-soundboard-sounds-request-soundboard-sounds-structure
-// TODO: Add Voice State Update: https://docs.discord.com/developers/events/gateway-events#update-voice-state-gateway-voice-state-update-structure
+/** https://docs.discord.com/developers/events/gateway-events#identify-identify-structure */
+export interface DiscordIdentify {
+  /** Authentication token */
+  token: string;
+  /** Connection properties */
+  properties: DiscordIntentifyConnectionProperties;
+  /**
+   * Whether this connection supports compression of packets
+   *
+   * @default false
+   */
+  compress?: boolean;
+  /**
+   * Value between 50 and 250, total number of members where the gateway will stop sending offline members in the guild member list
+   *
+   * @default 50
+   */
+  large_threshold?: number;
+  /** Used for Guild Sharding */
+  shard?: [shardId: number, numShards: number];
+  /** Presence structure for initial presence information */
+  presence?: DiscordUpdatePresence;
+  /** Gateway Intents you wish to receive */
+  intents: number;
+  /**
+   * Bitfield representing capabilities of your gateway client
+   *
+   * @default 0
+   */
+  capabilities?: number;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties */
+export interface DiscordIntentifyConnectionProperties {
+  /** Your operating system */
+  os: string;
+  /** Your library name */
+  browser: string;
+  /** Your library name */
+  device: string;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#resume-resume-structure */
+export interface DiscordResume {
+  /** Session token */
+  token: string;
+  /** Session ID */
+  session_id: string;
+  /** Last sequence number received */
+  seq: number;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#request-guild-members-request-guild-members-structure */
+export interface DiscordRequestGuildMembers {
+  /** ID of the guild to get members for */
+  guild_id: string;
+  /** string that username starts with, or an empty string to return all members */
+  query?: string;
+  /** maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
+  limit: number;
+  /** used to specify if we want the presences of the matched members */
+  presences?: boolean;
+  /** used to specify which users you wish to fetch */
+  user_ids?: string | string[];
+  /** nonce to identify the Guild Members Chunk response */
+  nonce?: string;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#request-soundboard-sounds-request-soundboard-sounds-structure */
+export interface DiscordRequestSoundboardSounds {
+  /** IDs of the guilds to get soundboard sounds for */
+  guild_ids: string[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#update-voice-state-gateway-voice-state-update-structure */
+export interface DiscordVoiceStateUpdate {
+  /** ID of the guild */
+  guild_id: string;
+  /** ID of the voice channel client wants to join (null if disconnecting) */
+  channel_id: string | null;
+  /** Whether the client is muted */
+  self_mute: boolean;
+  /** Whether the client deafened */
+  self_deaf: boolean;
+}
 
 /** https://docs.discord.com/developers/events/gateway-events#update-presence-gateway-presence-update-structure */
 export interface DiscordUpdatePresence {
