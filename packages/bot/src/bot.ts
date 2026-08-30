@@ -80,7 +80,9 @@ export function createBot<
 
         if (!options.gateway?.totalShards) bot.gateway.totalShards = bot.gateway.connection.shards;
 
-        if (!options.gateway?.lastShardId && !options.gateway?.totalShards) bot.gateway.lastShardId = bot.gateway.connection.shards - 1;
+        // `lastShardId: 0` is a valid single shard configuration, so an explicit id may not be treated as an absent one.
+        if (options.gateway?.lastShardId === undefined && options.gateway?.totalShards === undefined)
+          bot.gateway.lastShardId = bot.gateway.connection.shards - 1;
       }
 
       if (!bot.gateway.resharding.getSessionInfo) {
