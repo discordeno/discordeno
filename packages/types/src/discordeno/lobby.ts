@@ -60,6 +60,12 @@ export interface CreateLobbyMember {
    * @see {@link DiscordLobbyMemberFlags}
    */
   flags?: number;
+  /**
+   * Additional display name for the member, such as an in-game character name. 1-80 characters.
+   *
+   * When updating an existing member, omit the field to preserve their current value, or send `null` to clear it.
+   */
+  additionalName?: string | null;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#add-a-member-to-a-lobby */
