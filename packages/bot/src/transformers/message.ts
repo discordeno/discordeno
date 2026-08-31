@@ -10,7 +10,6 @@ import {
 } from '@discordeno/types';
 import { snowflakeToTimestamp } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
-import { CHANNEL_MENTION_REGEX } from '../constants.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
 import { ToggleBitfield } from './toggles/ToggleBitfield.js';
@@ -192,17 +191,8 @@ export function transformMessage(bot: Bot, payload: Partial<DiscordMessage>, ext
   if (props.member && guildId && userId && payload.member)
     message.member = bot.transformers.member(bot, payload.member, { guildId, userId, partial: true });
   if (payload.mention_everyone) message.mentionEveryone = true;
-  if (props.mentionedChannelIds && payload.mention_channels?.length) {
-    message.mentionedChannelIds = [
-      // Keep any ids tht discord sends
-      ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
-      // Add any other ids that can be validated in a channel mention format
-      ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
-        // converts the <#123> into 123
-        bot.transformers.snowflake(text.substring(2, text.length - 1)),
-      ),
-    ];
-  }
+  if (props.mentionChannels && payload.mention_channels?.length)
+    message.mentionChannels = payload.mention_channels.map((channel) => bot.transformers.channelMention(bot, channel));
   if (props.mentionedRoleIds && payload.mention_roles?.length)
     message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id));
   if (props.mentions && payload.mentions?.length) message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user));

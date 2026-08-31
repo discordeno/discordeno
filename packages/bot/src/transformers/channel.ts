@@ -1,11 +1,11 @@
-import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types';
+import type { BigString, DiscordChannel, DiscordChannelMention, DiscordForumTag } from '@discordeno/types';
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
 import { ChannelToggles } from './toggles/channel.js';
 import { Permissions } from './toggles/Permissions.js';
-import type { Channel, ForumTag } from './types.js';
+import type { Channel, ChannelMention, ForumTag } from './types.js';
 
 const Mask = (1n << 64n) - 1n;
 
@@ -141,6 +141,20 @@ export function transformForumTag(bot: Bot, payload: Partial<DiscordForumTag>, e
   if (props.emojiName && payload.emoji_name) forumTag.emojiName = payload.emoji_name;
 
   return callCustomizer('forumTag', bot, payload, forumTag, {
+    partial: extra?.partial ?? false,
+  });
+}
+
+export function transformChannelMention(bot: Bot, payload: Partial<DiscordChannelMention>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.channelMention;
+  const channelMention = {} as SetupDesiredProps<ChannelMention, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.id && payload.id) channelMention.id = bot.transformers.snowflake(payload.id);
+  if (props.guildId && payload.guild_id) channelMention.guildId = bot.transformers.snowflake(payload.guild_id);
+  if (props.type && payload.type !== undefined) channelMention.type = payload.type;
+  if (props.name && payload.name) channelMention.name = payload.name;
+
+  return callCustomizer('channelMention', bot, payload, channelMention, {
     partial: extra?.partial ?? false,
   });
 }
