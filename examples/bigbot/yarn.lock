@@ -5,51 +5,56 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"@discordeno/bot@npm:22.0.1-next.8caf1b4":
-  version: 22.0.1-next.8caf1b4
-  resolution: "@discordeno/bot@npm:22.0.1-next.8caf1b4"
+"@discordeno/bot@npm:22.0.1-next.9832342":
+  version: 22.0.1-next.9832342
+  resolution: "@discordeno/bot@npm:22.0.1-next.9832342"
   dependencies:
-    "@discordeno/gateway": "npm:22.0.1-next.8caf1b4"
-    "@discordeno/rest": "npm:22.0.1-next.8caf1b4"
-    "@discordeno/types": "npm:22.0.1-next.8caf1b4"
-    "@discordeno/utils": "npm:22.0.1-next.8caf1b4"
-  checksum: 10c0/f1e4e0039719e0515623fbdb3dac8ef3df7a4fc33758b1f748e5e42d235687515f45b8630052fb1380855c89d15c73b867fccbf33f5fde786759caf4ccfdbb52
+    "@discordeno/gateway": "npm:22.0.1-next.9832342"
+    "@discordeno/rest": "npm:22.0.1-next.9832342"
+    "@discordeno/types": "npm:22.0.1-next.9832342"
+    "@discordeno/utils": "npm:22.0.1-next.9832342"
+  checksum: 10c0/908bb04ea9d067a9e6773ebc3b4a23db0798ecb79d4820d8d3c2b009ce8333c364668e13c0a90b625fe53dcf25c1127248acacc6ed670e1aa7e44df611603c63
   languageName: node
   linkType: hard
 
-"@discordeno/gateway@npm:22.0.1-next.8caf1b4":
-  version: 22.0.1-next.8caf1b4
-  resolution: "@discordeno/gateway@npm:22.0.1-next.8caf1b4"
+"@discordeno/gateway@npm:22.0.1-next.9832342":
+  version: 22.0.1-next.9832342
+  resolution: "@discordeno/gateway@npm:22.0.1-next.9832342"
   dependencies:
-    "@discordeno/types": "npm:22.0.1-next.8caf1b4"
-    "@discordeno/utils": "npm:22.0.1-next.8caf1b4"
-  checksum: 10c0/b5ee598c2bee6b010179611c0c97c5b59e8a62f5a7f155fdd4aee74bbb9dcbbef451c411d766e6eade8470a4e849c1942052e3203be05c1022a718abd00d07f3
+    "@discordeno/types": "npm:22.0.1-next.9832342"
+    "@discordeno/utils": "npm:22.0.1-next.9832342"
+    fzstd: "npm:^0.1.1"
+    ws: "npm:^8.21.0"
+  dependenciesMeta:
+    fzstd:
+      optional: true
+  checksum: 10c0/ade48e2ae83384e585b934b140c4d2dbd4ec38dfb624804f7741e979484bb84e0ffb2974c3af147f1c558d8482590340a32d611fa907686a984a81fee0b9b1b9
   languageName: node
   linkType: hard
 
-"@discordeno/rest@npm:22.0.1-next.8caf1b4":
-  version: 22.0.1-next.8caf1b4
-  resolution: "@discordeno/rest@npm:22.0.1-next.8caf1b4"
+"@discordeno/rest@npm:22.0.1-next.9832342":
+  version: 22.0.1-next.9832342
+  resolution: "@discordeno/rest@npm:22.0.1-next.9832342"
   dependencies:
-    "@discordeno/types": "npm:22.0.1-next.8caf1b4"
-    "@discordeno/utils": "npm:22.0.1-next.8caf1b4"
-  checksum: 10c0/885ffe8f0b537f3d3d689dccfe884bac2f2a1cc390c2c3e18c2404f9b7d2c026d1655576ca3387b47c044e61c721dc543e720eba0aab30ed52c1b412fa55b465
+    "@discordeno/types": "npm:22.0.1-next.9832342"
+    "@discordeno/utils": "npm:22.0.1-next.9832342"
+  checksum: 10c0/7e50c6da18a8c1218a2320f802944527144dba92cfa7b549eadc44b28e481a1e998874c786a54ab3ff7a63a0cfedf2ebfb76575de4ee293bd2b7f398dbd7e653
   languageName: node
   linkType: hard
 
-"@discordeno/types@npm:22.0.1-next.8caf1b4":
-  version: 22.0.1-next.8caf1b4
-  resolution: "@discordeno/types@npm:22.0.1-next.8caf1b4"
-  checksum: 10c0/9cb3abfa74347d2f416db0c04dc058094c4f22730a7937fef647e272356dda59a6e9183816e2b6f38f3444437a8683111ae8855a09b493cfa63c94427fe587ba
+"@discordeno/types@npm:22.0.1-next.9832342":
+  version: 22.0.1-next.9832342
+  resolution: "@discordeno/types@npm:22.0.1-next.9832342"
+  checksum: 10c0/9f9ab53ee662750f27a919ba6da87615a631ef33c92250b94d565ab9b2ee9e0efc5085f33d0fbc6cc3c4852e0685fdb93840812e8ed6b5351d680056a2ac7dcf
   languageName: node
   linkType: hard
 
-"@discordeno/utils@npm:22.0.1-next.8caf1b4":
-  version: 22.0.1-next.8caf1b4
-  resolution: "@discordeno/utils@npm:22.0.1-next.8caf1b4"
+"@discordeno/utils@npm:22.0.1-next.9832342":
+  version: 22.0.1-next.9832342
+  resolution: "@discordeno/utils@npm:22.0.1-next.9832342"
   dependencies:
-    "@discordeno/types": "npm:22.0.1-next.8caf1b4"
-  checksum: 10c0/bdda2e34480c0dc231cdec5dca7e169ba6e3f8c546afddce0c3a0a03040d9add37c75dfc6278548a4d77aae9ff90fd78272e263820f288dda8e699aa7bd54442
+    "@discordeno/types": "npm:22.0.1-next.9832342"
+  checksum: 10c0/529c9fdf45c6bebef8c2b6a564bd7f713a9a4812c0c4a262fa37c2921e29a8b55497004d7f09d2dd73e00e406306ff857130ccf788684b023aae96b6998e019f
   languageName: node
   linkType: hard
 
@@ -119,16 +124,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^10.1.0":
-  version: 10.1.0
-  resolution: "@fastify/multipart@npm:10.1.0"
+"@fastify/multipart@npm:^10.1.1":
+  version: 10.1.1
+  resolution: "@fastify/multipart@npm:10.1.1"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
     "@fastify/deepmerge": "npm:^3.0.0"
     "@fastify/error": "npm:^4.0.0"
     fastify-plugin: "npm:^6.0.0"
     secure-json-parse: "npm:^4.0.0"
-  checksum: 10c0/c305393cb53f673c8a12cd7439a1028dda7ae9f4c7c75aba45f3721df5f746651e2670bcd1b5c84544e6bc032b6f8251203c4a8f0153983e992d56dc97c170a1
+  checksum: 10c0/25b551a0794798b05af689f2cd5532ba85d9e4f19c40e09f84db5013826d939ee0c0ec3f2fbcbb130d1d84d9f729b84d692aafd0bc34931e87f282eb85465272
   languageName: node
   linkType: hard
 
@@ -174,12 +179,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.2.0":
-  version: 26.2.0
-  resolution: "@types/node@npm:26.2.0"
+"@types/node@npm:^26.4.0":
+  version: 26.4.0
+  resolution: "@types/node@npm:26.4.0"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10c0/f8566d88162241eb55a46f7e4ea097188eab0aaafefea7a58e63adab8c4144eb98c08b7911452c846104c339a0f82282f5e1ed4b26b578d60709614fe2843f4d
+  checksum: 10c0/e6fc94ea3b58fb8040b38c465dec1c53c1fd9d2c092c81f699d28799726baf59f12e1600318e79e8e6f985bb919dab6ae820180b942b8e38c51acaad63e8aada
   languageName: node
   linkType: hard
 
@@ -407,16 +412,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dd-bigbot@workspace:."
   dependencies:
-    "@discordeno/bot": "npm:22.0.1-next.8caf1b4"
-    "@fastify/multipart": "npm:^10.1.0"
+    "@discordeno/bot": "npm:22.0.1-next.9832342"
+    "@fastify/multipart": "npm:^10.1.1"
     "@influxdata/influxdb-client": "npm:^1.35.0"
     "@types/amqplib": "npm:^0.10.8"
-    "@types/node": "npm:^26.2.0"
+    "@types/node": "npm:^26.4.0"
     amqplib: "npm:^2.0.1"
     chalk: "npm:^6.0.0"
     chokidar: "npm:^5.0.0"
     dotenv: "npm:^17.4.2"
-    fastify: "npm:^5.11.3"
+    fastify: "npm:^5.12.1"
     typescript: "npm:^7.0.2"
   languageName: unknown
   linkType: soft
@@ -515,9 +520,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^5.11.3":
-  version: 5.11.3
-  resolution: "fastify@npm:5.11.3"
+"fastify@npm:^5.12.1":
+  version: 5.12.1
+  resolution: "fastify@npm:5.12.1"
   dependencies:
     "@fastify/ajv-compiler": "npm:^4.0.5"
     "@fastify/error": "npm:^4.0.0"
@@ -529,12 +534,12 @@ __metadata:
     find-my-way: "npm:^9.6.0"
     light-my-request: "npm:^6.0.0"
     pino: "npm:^9.14.0 || ^10.1.0"
-    process-warning: "npm:^5.0.0"
+    process-warning: "npm:^5.1.0"
     rfdc: "npm:^1.3.1"
     secure-json-parse: "npm:^4.0.0"
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
-  checksum: 10c0/a48aeb99e3dd5fe932400d5610f7cf7d4b3c9915f231090a598d469564e21c7fe0513e8e49bbc713a2a9e8f882960bfea295c30f7af61feb32b1f9a7277c16d1
+  checksum: 10c0/07e2219db3d7d522519fe16bfefa1768d3bbcb80a161762131db7315812af3f7a4cd131358985a9aeb84ab24c069a362ec3ef592a3a29eb4fa3446e77bbf6678
   languageName: node
   linkType: hard
 
@@ -555,6 +560,13 @@ __metadata:
     fast-querystring: "npm:^1.0.0"
     safe-regex2: "npm:^5.0.0"
   checksum: 10c0/0c7c15397075fe916ea11bb42e3464aec9025dfec01aef515e2fc70c362e662c4a8626e27cebe263fe5c31cfed7ce792a2a6b411b73dac996d0c2b2202af4a88
+  languageName: node
+  linkType: hard
+
+"fzstd@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "fzstd@npm:0.1.1"
+  checksum: 10c0/c4ae25a4b9e7ac58e9716fcb0c4ec19f3e678d90a67a59e97ce361beb27e4aa4b8666b58b4dc2d715e92db4b65b189c978186a5fedba6fccb5ec9765717dd1cd
   languageName: node
   linkType: hard
 
@@ -656,6 +668,13 @@ __metadata:
   version: 5.0.0
   resolution: "process-warning@npm:5.0.0"
   checksum: 10c0/941f48863d368ec161e0b5890ba0c6af94170078f3d6b5e915c19b36fb59edb0dc2f8e834d25e0d375a8bf368a49d490f080508842168832b93489d17843ec29
+  languageName: node
+  linkType: hard
+
+"process-warning@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "process-warning@npm:5.1.0"
+  checksum: 10c0/2a48d48b575f4e7888fd4735a6604acd89914efa909f3db5dd20ae56e8a8cdd3c32a3c738bba539b46d1c5096630e15286bcb7c7fca18dfbf04cc7d00fe34a0f
   languageName: node
   linkType: hard
 
@@ -941,5 +960,20 @@ __metadata:
   version: 8.3.0
   resolution: "undici-types@npm:8.3.0"
   checksum: 10c0/c8aa7e2fbebfce519654dafadc0ece59be888d2ccaf180fb4495da875e7b536d2456345c384069c7e6f3e9c9ab7435f074957da306f142343eee86ff8048855a
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.21.0":
+  version: 8.21.3
+  resolution: "ws@npm:8.21.3"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 10c0/7b28dc2863ea0e2cece68d142a3eee90361021b73f750431e6d8076bb7dede5fdfdb75b3d29534b62f411261147b76b1bc80fb5cc63ab0aabd467280e85b22e0
   languageName: node
   linkType: hard
