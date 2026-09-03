@@ -552,20 +552,16 @@ export class DiscordenoShard {
         this.logger.debug(`[Shard] Shard #${this.id} received Hello`);
         this.startHeartbeating(interval);
 
+        // We need to recalculate the safe requests here, since the heartbeat interval could have changed
+        this.bucket.max = this.calculateSafeRequests();
+        this.bucket.refillAmount = this.calculateSafeRequests();
+
         if (this.state !== ShardState.Resuming) {
-          const currentQueue = [...this.bucket.queue];
           // HELLO has been send on a non resume action.
           // This means that the shard starts a new session,
           // therefore the rate limit interval has been reset too.
-          this.bucket = new LeakyBucket({
-            max: this.calculateSafeRequests(),
-            refillInterval: 60000,
-            refillAmount: this.calculateSafeRequests(),
-            logger: this.logger,
-          });
-
-          // Queue should not be lost on a re-identify.
-          this.bucket.queue.unshift(...currentQueue);
+          this.bucket.used = 0;
+          this.bucket.refillBucket();
         }
 
         this.events.hello?.(this);
