@@ -1,6 +1,6 @@
-import type { BigString, Camelize, FileContent } from '@discordeno/types';
+import type { BigString, FileContent } from '@discordeno/types';
 import type { logger } from '@discordeno/utils';
-import type { RestEndpoints } from './endpoints.js';
+import type { CamelizedRestEndpoints } from './endpoints.js';
 import type { InvalidRequestBucket } from './invalidBucket.js';
 import type { Queue } from './queue.js';
 import type { RestRoutes } from './typings/routes.js';
@@ -97,7 +97,7 @@ export interface CreateRestManagerOptions {
   requestTimeout?: number;
 }
 
-export interface RestManager extends RestEndpoints {
+export interface RestManager extends CamelizedRestEndpoints {
   /** The bot token which will be used to make requests. */
   token: string;
   /** The application id. Normally this is not required for recent bots but old bot's application id is sometimes different from the bot id so it is required for those bots. */
@@ -198,15 +198,15 @@ export interface RestManager extends RestEndpoints {
   /** Takes a request and processes it into a queue. */
   processRequest: (request: SendRequestOptions) => Promise<void>;
   /** Make a get request to the api */
-  get: <T = void>(url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<Camelize<T>>;
+  get: <T = void>(url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<T>;
   /** Make a post request to the api. */
-  post: <T = void>(url: string, options?: MakeRequestOptions) => Promise<Camelize<T>>;
+  post: <T = void>(url: string, options?: MakeRequestOptions) => Promise<T>;
   /** Make a put request to the api. */
-  put: <T = void>(url: string, options?: MakeRequestOptions) => Promise<Camelize<T>>;
+  put: <T = void>(url: string, options?: MakeRequestOptions) => Promise<T>;
   /** Make a delete request to the api. */
   delete: (url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<void>;
   /** Make a patch request to the api. */
-  patch: <T = void>(url: string, options?: MakeRequestOptions) => Promise<Camelize<T>>;
+  patch: <T = void>(url: string, options?: MakeRequestOptions) => Promise<T>;
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
