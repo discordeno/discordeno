@@ -817,32 +817,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return [key, async (...args: unknown[]) => await func(rest, ...args)];
       }),
     ) as RestEndpoints,
-
-    preferSnakeCase(enabled: boolean) {
-      const camelizer = enabled ? (x: any) => x : camelize;
-
-      rest.get = async (url, options) => {
-        return camelizer(await rest.makeRequest('GET', url, options));
-      };
-
-      rest.post = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('POST', url, options));
-      };
-
-      rest.delete = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        camelizer(await rest.makeRequest('DELETE', url, options));
-      };
-
-      rest.patch = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('PATCH', url, options));
-      };
-
-      rest.put = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('PUT', url, options));
-      };
-
-      return rest;
-    },
   } satisfies RestManager;
 
   return rest;
