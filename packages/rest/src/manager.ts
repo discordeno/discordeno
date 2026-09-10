@@ -9,7 +9,7 @@ import {
   logger,
   snowflakeToTimestamp,
 } from '@discordeno/utils';
-import { type CamelizedRestEndpoints, restEndpoints } from './endpoints.js';
+import { type CamelizedRestEndpoints, type RestEndpoints, restEndpoints } from './endpoints.js';
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
 import { createRoutes } from './routes.js';
@@ -809,6 +809,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return [key, async (...args: unknown[]) => camelize(await func(rest, ...args))];
       }),
     ) as CamelizedRestEndpoints),
+
+    // Same as above
+    snake: Object.fromEntries(
+      Object.entries(restEndpoints).map(([key, endpointFunc]) => {
+        const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
+        return [key, async (...args: unknown[]) => await func(rest, ...args)];
+      }),
+    ) as RestEndpoints,
 
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
