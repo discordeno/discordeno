@@ -64,7 +64,7 @@ export function createBotGatewayHandlers<TProps extends TransformersDesiredPrope
     THREAD_DELETE: _options.THREAD_DELETE ?? handlers.handleThreadDelete,
     THREAD_UPDATE: _options.THREAD_UPDATE ?? handlers.handleThreadUpdate,
     THREAD_LIST_SYNC: _options.THREAD_LIST_SYNC ?? handlers.handleThreadListSync,
-    THREAD_MEMBER_UPDATE: _options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
+    THREAD_MEMBER_UPDATE: _options.THREAD_MEMBER_UPDATE ?? handlers.handleThreadMemberUpdate,
     THREAD_MEMBERS_UPDATE: _options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
     TYPING_START: _options.TYPING_START ?? handlers.handleTypingStart,
     USER_UPDATE: _options.USER_UPDATE ?? handlers.handleUserUpdate,
