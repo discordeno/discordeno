@@ -579,7 +579,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} was ratelimited.`);
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
-          rest.logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload);
+          rest.logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', { ...payload, headers: loggingHeaders });
           // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
           options.reject({
             ok: false,
