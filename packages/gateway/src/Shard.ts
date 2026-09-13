@@ -498,7 +498,12 @@ export class DiscordenoShard {
         this.inflate!.write(compressedData, 'binary', (error) => (error ? reject(error) : resolve()));
       });
 
-      if (this.gatewayConfig.transportCompression === TransportCompression.zlib && !endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) return null;
+      if (this.gatewayConfig.transportCompression === TransportCompression.zlib && !endsWithMarker(compressedData, ZLIB_SYNC_FLUSH)) {
+        // The promise is abandoned here, so it has to handle its own errors, otherwise a failed write takes the process down.
+        writePromise.catch((error) => this.logger.error('[Shard] There was an error writing to the decompression stream', error));
+
+        return null;
+      }
 
       await writePromise;
 
