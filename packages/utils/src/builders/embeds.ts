@@ -340,7 +340,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
             throw new Error(`Name of field ${fieldIndex} on embed ${index} can not be longer than 256 characters.`);
           }
 
-          if (trimmedValue.length > 4096) {
+          if (trimmedValue.length > 1024) {
             throw new Error(`Value of field ${fieldIndex} on embed ${index} can not be longer than 1024 characters.`);
           }
 
