@@ -1,4 +1,5 @@
 import {
+  type BigString,
   type DiscordActionRow,
   type DiscordButtonComponent,
   type DiscordChannelSelectComponent,
@@ -46,7 +47,7 @@ import type { Component, MediaGalleryItem, UnfurledMediaItem } from './types.js'
 export function transformComponent(
   bot: Bot,
   payload: Partial<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse>,
-  extra?: { partial?: boolean },
+  extra?: ComponentTransformerExtra & { partial?: boolean },
 ) {
   let component: SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -58,13 +59,13 @@ export function transformComponent(
   // This switch is exhaustive, so we dont need the default case and TS does not error out for the un-initialized component variable
   switch (payload.type) {
     case MessageComponentTypes.ActionRow:
-      component = transformActionRow(bot, payload);
+      component = transformActionRow(bot, payload, extra);
       break;
     case MessageComponentTypes.Button:
       component = transformButtonComponent(bot, payload);
       break;
     case MessageComponentTypes.Container:
-      component = transformContainerComponent(bot, payload);
+      component = transformContainerComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.TextInput:
       component = transformInputTextComponent(bot, payload);
@@ -73,19 +74,19 @@ export function transformComponent(
       component = transformStringSelectMenuComponent(bot, payload);
       break;
     case MessageComponentTypes.UserSelect:
-      component = transformUserSelectMenuComponent(bot, payload);
+      component = transformUserSelectMenuComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.RoleSelect:
-      component = transformRoleSelectMenuComponent(bot, payload);
+      component = transformRoleSelectMenuComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.MentionableSelect:
-      component = transformMentionableSelectMenuComponent(bot, payload);
+      component = transformMentionableSelectMenuComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.ChannelSelect:
-      component = transformChannelSelectMenuComponent(bot, payload);
+      component = transformChannelSelectMenuComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.Section:
-      component = transformSectionComponent(bot, payload);
+      component = transformSectionComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.Thumbnail:
       component = transformThumbnailComponent(bot, payload);
@@ -103,7 +104,7 @@ export function transformComponent(
       component = transformTextDisplayComponent(bot, payload);
       break;
     case MessageComponentTypes.Label:
-      component = transformLabelComponent(bot, payload);
+      component = transformLabelComponent(bot, payload, extra);
       break;
     case MessageComponentTypes.FileUpload:
       component = transformFileUploadComponent(bot, payload);
@@ -122,6 +123,14 @@ export function transformComponent(
   return callCustomizer('component', bot, payload, component, {
     partial: extra?.partial ?? false,
   });
+}
+
+export interface ComponentTransformerExtra {
+  /**
+   * Provide this parameter if you want the `resolved` data of a select menu to include the `members` and `roles` collections,
+   * since Discord does not include a `guildId` in the payload of a component.
+   */
+  guildId?: BigString;
 }
 
 export function transformUnfurledMediaItem(bot: Bot, payload: Partial<DiscordUnfurledMediaItem>, extra?: { partial?: boolean }) {
@@ -156,19 +165,19 @@ export function transformMediaGalleryItem(bot: Bot, payload: Partial<DiscordMedi
   });
 }
 
-function transformActionRow(bot: Bot, payload: Partial<DiscordActionRow>) {
+function transformActionRow(bot: Bot, payload: Partial<DiscordActionRow>, extra?: ComponentTransformerExtra) {
   const props = bot.transformers.desiredProperties.component;
   const actionRow = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.type && payload.type) actionRow.type = payload.type;
   if (props.id && payload.id) actionRow.id = payload.id;
   if (props.components && payload.components)
-    actionRow.components = payload.components.map((component) => bot.transformers.component(bot, component));
+    actionRow.components = payload.components.map((component) => bot.transformers.component(bot, component, { guildId: extra?.guildId }));
 
   return actionRow;
 }
 
-function transformContainerComponent(bot: Bot, payload: Partial<DiscordContainerComponent>) {
+function transformContainerComponent(bot: Bot, payload: Partial<DiscordContainerComponent>, extra?: ComponentTransformerExtra) {
   const props = bot.transformers.desiredProperties.component;
   const container = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -177,7 +186,7 @@ function transformContainerComponent(bot: Bot, payload: Partial<DiscordContainer
   if (props.accentColor && payload.accent_color) container.accentColor = payload.accent_color;
   if (props.spoiler && payload.spoiler) container.spoiler = payload.spoiler;
   if (props.components && payload.components)
-    container.components = payload.components.map((component) => bot.transformers.component(bot, component));
+    container.components = payload.components.map((component) => bot.transformers.component(bot, component, { guildId: extra?.guildId }));
 
   return container;
 }
@@ -261,7 +270,11 @@ function transformStringSelectMenuComponent(
   return select;
 }
 
-function transformUserSelectMenuComponent(bot: Bot, payload: Partial<DiscordUserSelectComponent | DiscordUserSelectInteractionResponseFromModal>) {
+function transformUserSelectMenuComponent(
+  bot: Bot,
+  payload: Partial<DiscordUserSelectComponent | DiscordUserSelectInteractionResponseFromModal>,
+  extra?: ComponentTransformerExtra,
+) {
   const props = bot.transformers.desiredProperties.component;
   const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -272,7 +285,8 @@ function transformUserSelectMenuComponent(bot: Bot, payload: Partial<DiscordUser
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+    if (props.resolved && payload.resolved)
+      select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved, { guildId: extra?.guildId });
   } else {
     const _payload = payload as Partial<DiscordUserSelectComponent>;
 
@@ -290,7 +304,11 @@ function transformUserSelectMenuComponent(bot: Bot, payload: Partial<DiscordUser
   return select;
 }
 
-function transformRoleSelectMenuComponent(bot: Bot, payload: Partial<DiscordRoleSelectComponent | DiscordRoleSelectInteractionResponseFromModal>) {
+function transformRoleSelectMenuComponent(
+  bot: Bot,
+  payload: Partial<DiscordRoleSelectComponent | DiscordRoleSelectInteractionResponseFromModal>,
+  extra?: ComponentTransformerExtra,
+) {
   const props = bot.transformers.desiredProperties.component;
   const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -301,7 +319,8 @@ function transformRoleSelectMenuComponent(bot: Bot, payload: Partial<DiscordRole
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+    if (props.resolved && payload.resolved)
+      select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved, { guildId: extra?.guildId });
   } else {
     const _payload = payload as Partial<DiscordRoleSelectComponent>;
 
@@ -322,6 +341,7 @@ function transformRoleSelectMenuComponent(bot: Bot, payload: Partial<DiscordRole
 function transformMentionableSelectMenuComponent(
   bot: Bot,
   payload: Partial<DiscordMentionableSelectComponent | DiscordMentionableSelectInteractionResponseFromModal>,
+  extra?: ComponentTransformerExtra,
 ) {
   const props = bot.transformers.desiredProperties.component;
   const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
@@ -333,7 +353,8 @@ function transformMentionableSelectMenuComponent(
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+    if (props.resolved && payload.resolved)
+      select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved, { guildId: extra?.guildId });
   } else {
     const _payload = payload as Partial<DiscordMentionableSelectComponent>;
 
@@ -354,6 +375,7 @@ function transformMentionableSelectMenuComponent(
 function transformChannelSelectMenuComponent(
   bot: Bot,
   payload: Partial<DiscordChannelSelectComponent | DiscordChannelSelectInteractionResponseFromModal>,
+  extra?: ComponentTransformerExtra,
 ) {
   const props = bot.transformers.desiredProperties.component;
   const select = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
@@ -365,7 +387,8 @@ function transformChannelSelectMenuComponent(
   // We assume that if we find 'values' it is the interaction response
   if ('values' in payload) {
     if (props.values && payload.values) select.values = payload.values;
-    if (props.resolved && payload.resolved) select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved);
+    if (props.resolved && payload.resolved)
+      select.resolved = bot.transformers.interactionDataResolved(bot, payload.resolved, { guildId: extra?.guildId });
   } else {
     const _payload = payload as Partial<DiscordChannelSelectComponent>;
 
@@ -384,14 +407,15 @@ function transformChannelSelectMenuComponent(
   return select;
 }
 
-function transformSectionComponent(bot: Bot, payload: Partial<DiscordSectionComponent>) {
+function transformSectionComponent(bot: Bot, payload: Partial<DiscordSectionComponent>, extra?: ComponentTransformerExtra) {
   const props = bot.transformers.desiredProperties.component;
   const section = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (props.type && payload.type) section.type = payload.type;
   if (props.id && payload.id) section.id = payload.id;
-  if (props.components && payload.components) section.components = payload.components.map((component) => bot.transformers.component(bot, component));
-  if (props.accessory && payload.accessory) section.accessory = bot.transformers.component(bot, payload.accessory);
+  if (props.components && payload.components)
+    section.components = payload.components.map((component) => bot.transformers.component(bot, component, { guildId: extra?.guildId }));
+  if (props.accessory && payload.accessory) section.accessory = bot.transformers.component(bot, payload.accessory, { guildId: extra?.guildId });
 
   return section;
 }
@@ -460,7 +484,11 @@ function transformSeparatorComponent(bot: Bot, payload: Partial<DiscordSeparator
   return separator;
 }
 
-function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponent | DiscordLabelInteractionResponse>) {
+function transformLabelComponent(
+  bot: Bot,
+  payload: Partial<DiscordLabelComponent | DiscordLabelInteractionResponse>,
+  extra?: ComponentTransformerExtra,
+) {
   const props = bot.transformers.desiredProperties.component;
   const label = {} as SetupDesiredProps<Component, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
@@ -471,7 +499,7 @@ function transformLabelComponent(bot: Bot, payload: Partial<DiscordLabelComponen
     if (props.label && payload.label) label.label = payload.label;
     if (props.description && payload.description) label.description = payload.description;
   }
-  if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component);
+  if (props.component && payload.component) label.component = bot.transformers.component(bot, payload.component, { guildId: extra?.guildId });
 
   return label;
 }

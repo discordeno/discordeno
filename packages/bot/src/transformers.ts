@@ -101,7 +101,12 @@ import { transformAutoModerationActionExecution } from './transformers/automodAc
 import { transformAutoModerationRule } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformForumTag } from './transformers/channel.js';
-import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
+import {
+  type ComponentTransformerExtra,
+  transformComponent,
+  transformMediaGalleryItem,
+  transformUnfurledMediaItem,
+} from './transformers/component.js';
 import { transformEmbed } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
 import { transformEntitlement } from './transformers/entitlement.js';
@@ -261,7 +266,12 @@ export type TransformerInformations = {
   avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
   channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
-  component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component, true>;
+  component: TransformerInformation<
+    DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse,
+    Component,
+    true,
+    ComponentTransformerExtra
+  >;
   defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji, true>;
   embed: TransformerInformation<DiscordEmbed, Embed, false>;
   emoji: TransformerInformation<DiscordEmoji, Emoji, true>;
