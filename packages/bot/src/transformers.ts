@@ -93,6 +93,7 @@ import type {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
+  DiscordWelcomeScreenChannel,
   RecursivePartial,
 } from '@discordeno/types';
 import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils';
@@ -273,12 +274,13 @@ import type {
   VoiceState,
   Webhook,
   WelcomeScreen,
+  WelcomeScreenChannel,
 } from './transformers/types.js';
 import { transformCollectibles, transformNameplate, transformUser, transformUserPrimaryGuild } from './transformers/user.js';
 import { transformVoiceRegion } from './transformers/voiceRegion.js';
 import { transformVoiceState } from './transformers/voiceState.js';
 import { transformWebhook } from './transformers/webhook.js';
-import { transformWelcomeScreen } from './transformers/welcomeScreen.js';
+import { transformWelcomeScreen, transformWelcomeScreenChannel } from './transformers/welcomeScreen.js';
 import { transformWidget } from './transformers/widget.js';
 import { transformWidgetSettings } from './transformers/widgetSettings.js';
 
@@ -375,7 +377,8 @@ export type TransformerInformations = {
   voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion, true>;
   voiceState: TransformerInformation<DiscordVoiceState, VoiceState, true, { guildId?: BigString }>;
   webhook: TransformerInformation<DiscordWebhook, Webhook, true>;
-  welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen, false>;
+  welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen, true>;
+  welcomeScreenChannel: TransformerInformation<DiscordWelcomeScreenChannel, WelcomeScreenChannel, true>;
   widget: TransformerInformation<DiscordGuildWidget, GuildWidget, false>;
   widgetSettings: TransformerInformation<DiscordGuildWidgetSettings, GuildWidgetSettings, false>;
 };
@@ -506,6 +509,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       voiceState: _options.customizers?.voiceState ?? defaultCustomizer,
       webhook: _options.customizers?.webhook ?? defaultCustomizer,
       welcomeScreen: _options.customizers?.welcomeScreen ?? defaultCustomizer,
+      welcomeScreenChannel: _options.customizers?.welcomeScreenChannel ?? defaultCustomizer,
       widget: _options.customizers?.widget ?? defaultCustomizer,
       widgetSettings: _options.customizers?.widgetSettings ?? defaultCustomizer,
     },
@@ -620,6 +624,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     voiceState: _options.voiceState ?? transformVoiceState,
     webhook: _options.webhook ?? transformWebhook,
     welcomeScreen: _options.welcomeScreen ?? transformWelcomeScreen,
+    welcomeScreenChannel: _options.welcomeScreenChannel ?? transformWelcomeScreenChannel,
     widget: _options.widget ?? transformWidget,
     widgetSettings: _options.widgetSettings ?? transformWidgetSettings,
   } satisfies Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as Transformers<TProps, TBehavior>;
