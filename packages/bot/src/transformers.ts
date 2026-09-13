@@ -18,6 +18,7 @@ import type {
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationActionMetadata,
   DiscordAutoModerationRule,
+  DiscordAutoModerationRuleTriggerMetadata,
   DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordCollectibles,
@@ -113,7 +114,7 @@ import {
   transformAutoModerationActionExecution,
   transformAutoModerationActionMetadata,
 } from './transformers/automodActionExecution.js';
-import { transformAutoModerationRule } from './transformers/automodRule.js';
+import { transformAutoModerationRule, transformautoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformForumTag } from './transformers/channel.js';
 import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
@@ -190,6 +191,7 @@ import type {
   AutoModerationActionExecution,
   AutoModerationActionMetadata,
   AutoModerationRule,
+  AutoModerationRuleTriggerMetadata,
   AvatarDecorationData,
   Channel,
   Collectibles,
@@ -280,7 +282,8 @@ export type TransformerInformations = {
   autoModerationAction: TransformerInformation<DiscordAutoModerationAction, AutoModerationAction, true>;
   autoModerationActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, true>;
   autoModerationActionMetadata: TransformerInformation<DiscordAutoModerationActionMetadata, AutoModerationActionMetadata, true>;
-  automodRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, false>;
+  autoModerationRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, true>;
+  autoModerationRuleTriggerMetadata: TransformerInformation<DiscordAutoModerationRuleTriggerMetadata, AutoModerationRuleTriggerMetadata, true>;
   avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
   channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
@@ -406,7 +409,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       autoModerationAction: _options.customizers?.autoModerationAction ?? defaultCustomizer,
       autoModerationActionExecution: _options.customizers?.autoModerationActionExecution ?? defaultCustomizer,
       autoModerationActionMetadata: _options.customizers?.autoModerationActionMetadata ?? defaultCustomizer,
-      automodRule: _options.customizers?.automodRule ?? defaultCustomizer,
+      autoModerationRule: _options.customizers?.autoModerationRule ?? defaultCustomizer,
+      autoModerationRuleTriggerMetadata: _options.customizers?.autoModerationRuleTriggerMetadata ?? defaultCustomizer,
       avatarDecorationData: _options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: _options.customizers?.channel ?? defaultCustomizer,
       collectibles: _options.customizers?.collectibles ?? defaultCustomizer,
@@ -510,7 +514,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     autoModerationAction: _options.autoModerationAction ?? transformAutoModerationAction,
     autoModerationActionExecution: _options.autoModerationActionExecution ?? transformAutoModerationActionExecution,
     autoModerationActionMetadata: _options.autoModerationActionMetadata ?? transformAutoModerationActionMetadata,
-    automodRule: _options.automodRule ?? transformAutoModerationRule,
+    autoModerationRule: _options.autoModerationRule ?? transformAutoModerationRule,
+    autoModerationRuleTriggerMetadata: _options.autoModerationRuleTriggerMetadata ?? transformautoModerationRuleTriggerMetadata,
     avatarDecorationData: _options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: _options.channel ?? transformChannel,
     collectibles: _options.collectibles ?? transformCollectibles,
