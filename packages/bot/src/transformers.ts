@@ -324,7 +324,7 @@ export type TransformerInformations = {
   interaction: TransformerInformation<DiscordInteraction, Interaction, true, { shardId?: number }>;
   interactionCallback: TransformerInformation<DiscordInteractionCallback, InteractionCallback, true>;
   interactionCallbackResponse: TransformerInformation<DiscordInteractionCallbackResponse, InteractionCallbackResponse, true, { shardId?: number }>;
-  interactionDataOptions: TransformerInformation<DiscordInteractionDataOption, InteractionDataOption, false>;
+  interactionDataOption: TransformerInformation<DiscordInteractionDataOption, InteractionDataOption, true>;
   interactionDataResolved: TransformerInformation<
     DiscordInteractionDataResolved,
     InteractionDataResolved,
@@ -458,7 +458,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       interaction: _options.customizers?.interaction ?? defaultCustomizer,
       interactionCallback: _options.customizers?.interactionCallback ?? defaultCustomizer,
       interactionCallbackResponse: _options.customizers?.interactionCallbackResponse ?? defaultCustomizer,
-      interactionDataOptions: _options.customizers?.interactionDataOptions ?? defaultCustomizer,
+      interactionDataOption: _options.customizers?.interactionDataOption ?? defaultCustomizer,
       interactionDataResolved: _options.customizers?.interactionDataResolved ?? defaultCustomizer,
       interactionResource: _options.customizers?.interactionResource ?? defaultCustomizer,
       invite: _options.customizers?.invite ?? defaultCustomizer,
@@ -570,7 +570,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     interaction: _options.interaction ?? transformInteraction,
     interactionCallback: _options.interactionCallback ?? transformInteractionCallback,
     interactionCallbackResponse: _options.interactionCallbackResponse ?? transformInteractionCallbackResponse,
-    interactionDataOptions: _options.interactionDataOptions ?? transformInteractionDataOption,
+    interactionDataOption: _options.interactionDataOption ?? transformInteractionDataOption,
     interactionDataResolved: _options.interactionDataResolved ?? transformInteractionDataResolved,
     interactionResource: _options.interactionResource ?? transformInteractionResource,
     invite: _options.invite ?? transformInvite,

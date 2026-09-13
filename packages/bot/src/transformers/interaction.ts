@@ -196,7 +196,7 @@ export function transformInteraction(bot: Bot, payload: Partial<DiscordInteracti
       resolved: payload.data.resolved
         ? bot.transformers.interactionDataResolved(bot, payload.data.resolved, { shardId: extra?.shardId, guildId })
         : undefined,
-      options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
+      options: payload.data.options?.map((opt) => bot.transformers.interactionDataOption(bot, opt)),
       targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
     };
   }
@@ -207,16 +207,18 @@ export function transformInteraction(bot: Bot, payload: Partial<DiscordInteracti
   });
 }
 
-export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
-  const opt = {
-    name: option.name,
-    type: option.type,
-    value: option.value,
-    options: option.options,
-    focused: option.focused,
-  } as InteractionDataOption;
+export function transformInteractionDataOption(bot: Bot, option: Partial<DiscordInteractionDataOption>, extra?: { partial?: boolean }) {
+  const interactionDataOption = {} as SetupDesiredProps<InteractionDataOption, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  return bot.transformers.customizers.interactionDataOptions(bot, option, opt);
+  if (option.name) interactionDataOption.name = option.name;
+  if (option.type) interactionDataOption.type = option.type;
+  if (option.value !== undefined) interactionDataOption.value = option.value;
+  if (option.options) interactionDataOption.options = option.options.map((opt) => bot.transformers.interactionDataOption(bot, opt));
+  if (option.focused !== undefined) interactionDataOption.focused = option.focused;
+
+  return callCustomizer('interactionDataOption', bot, option, interactionDataOption, {
+    partial: extra?.partial ?? false,
+  });
 }
 
 export function transformInteractionDataResolved(
