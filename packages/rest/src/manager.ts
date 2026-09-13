@@ -667,7 +667,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = rest.simplifyUrl(request.route, request.method);
 
       if (request.runThroughQueue === false) {
-        await rest.sendRequest(request);
+        // This never reaches a queue, so this is the only place the invalid request bucket can be told about the request. `sendRequest` reports
+        // it as completed either way, and without this that report has nothing to match it: the bucket's count of active requests drifts one
+        // lower with every one of these, which raises the invalid request ceiling it exists to enforce.
+        await rest.invalidBucket.waitUntilRequestAvailable();
+
+        try {
+          await rest.sendRequest(request);
+        } catch (error) {
+          rest.invalidBucket.handleCompletedRequest(999, false);
+          throw error;
+        }
 
         return;
       }
@@ -801,7 +811,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
       }
 
-      return await new Promise(async (resolve, reject) => {
+      return await new Promise((resolve, reject) => {
         const signal = options?.signal;
         const abortListener = () => {
           // Reject right away instead of waiting for the queue to reach the request. The signal is attached to the fetch itself as well, so an
@@ -842,7 +852,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         signal?.addEventListener('abort', abortListener, { once: true });
 
-        await rest.processRequest(payload);
+        // The executor is not async on purpose: a promise returned from it is dropped, so a throw in here would leave the caller waiting forever
+        // on a promise that never settles, on top of the unhandled rejection it raises.
+        rest.processRequest(payload).catch((requestError) => {
+          payload.reject({ ok: false, status: 999, error: 'The request encountered an unexpected error.', errorObject: requestError });
+        });
       });
     },
 
