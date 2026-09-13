@@ -113,6 +113,8 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       },
       async reshard(info) {
         gateway.logger.info(`[Resharding] Starting the reshard process. Previous total shards: ${gateway.totalShards}`);
+        // The information which has just been fetched holds the current session start limit, which the total shards and the buckets are based on.
+        gateway.connection.sessionStartLimit = info.sessionStartLimit;
         // Set values on gateway
         gateway.totalShards = info.shards;
         // Handles preparing mid sized bots for LBS
@@ -439,8 +441,8 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       await gateway.sendPayload(shardId, {
         op: GatewayOpcodes.PresenceUpdate,
         d: {
-          since: null,
-          afk: false,
+          since: data.since,
+          afk: data.afk,
           activities: data.activities,
           status: data.status,
         },
@@ -450,16 +452,17 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async requestMembers(guildId, options) {
       const shardId = gateway.calculateShardId(guildId);
 
-      if ((!options?.limit || options.limit > 1) && (gateway.intents & GatewayIntents.GuildMembers) === 0)
-        throw new Error('Cannot fetch more then 1 member without the GUILD_MEMBERS intent');
-
-      gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> data: ${JSON.stringify(options)}`);
-
       if (options?.userIds?.length) {
         gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`);
 
         options.limit = options.userIds.length;
       }
+
+      // Discord only requires the GUILD_MEMBERS intent to request the entire member list, which is what is requested when neither user ids, a query nor a limit are provided.
+      if (!options?.userIds?.length && !options?.query && !options?.limit && (gateway.intents & GatewayIntents.GuildMembers) === 0)
+        throw new Error('Cannot fetch the entire member list without the GUILD_MEMBERS intent');
+
+      gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> data: ${JSON.stringify(options, jsonSafeReplacer)}`);
 
       if (!options?.nonce) {
         let nonce = '';
@@ -470,6 +473,11 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         options ??= { limit: 0 };
         options.nonce = nonce;
+      }
+
+      // Overwriting the entry of an already pending request would leave its caller waiting forever.
+      if (gateway.cache.requestMembers.enabled && options?.nonce && gateway.cache.requestMembers.pending.has(options.nonce)) {
+        throw new Error(`A member request with the nonce '${options.nonce}' is already pending.`);
       }
 
       const members = !gateway.cache.requestMembers.enabled
@@ -488,18 +496,25 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             });
           });
 
-      await gateway.sendPayload(shardId, {
-        op: GatewayOpcodes.RequestGuildMembers,
-        d: {
-          guild_id: guildId.toString(),
-          // If a query is provided use it, OR if a limit is NOT provided use ""
-          query: options?.query ?? (options?.limit ? undefined : ''),
-          limit: options?.limit ?? 0,
-          presences: options?.presences ?? false,
-          user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce: options?.nonce,
-        },
-      });
+      try {
+        await gateway.sendPayload(shardId, {
+          op: GatewayOpcodes.RequestGuildMembers,
+          d: {
+            guild_id: guildId.toString(),
+            // If a query is provided use it, OR if a limit is NOT provided use ""
+            query: options?.query ?? (options?.limit ? undefined : ''),
+            limit: options?.limit ?? 0,
+            presences: options?.presences ?? false,
+            user_ids: options?.userIds?.map((id) => id.toString()),
+            nonce: options?.nonce,
+          },
+        });
+      } catch (error) {
+        // The members will never arrive, so the request may not be kept around.
+        if (options?.nonce) gateway.cache.requestMembers.pending.delete(options.nonce);
+
+        throw error;
+      }
 
       return await members;
     },
@@ -526,7 +541,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
        * For this reason we need to group the ids with the shard the calculateShardId method gives
        */
 
-      const map = new Map<number, BigString[]>();
+      const map = new Map<number, string[]>();
 
       for (const guildId of guildIds) {
         const shardId = gateway.calculateShardId(guildId);
@@ -534,7 +549,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         const ids = map.get(shardId) ?? [];
         map.set(shardId, ids);
 
-        ids.push(guildId);
+        ids.push(guildId.toString());
       }
 
       await Promise.all(
