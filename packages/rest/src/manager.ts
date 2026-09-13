@@ -1271,6 +1271,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async executeWebhook(webhookId, token, options) {
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
         body: options,
+        files: options.files,
         unauthorized: true,
       });
     },
@@ -1615,6 +1616,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getReactions(channelId, messageId, reaction, options) {
+      reaction = processReactionString(reaction);
+
       return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options));
     },
 
@@ -1947,7 +1950,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async modifyGuildSoundboardSound(guildId, soundId, options, reason) {
-      return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
+      return await rest.patch<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
         body: options,
         reason,
       });
