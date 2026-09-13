@@ -34,10 +34,12 @@ export interface ThreadMemberTransformerExtra {
   guildId?: BigString;
 }
 
-export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate) {
-  const threadMember = {
-    joinTimestamp: Date.parse(payload.join_timestamp),
-  } as ThreadMemberGuildCreate;
+export function transformThreadMemberGuildCreate(bot: Bot, payload: Partial<DiscordThreadMemberGuildCreate>, extra?: { partial?: boolean }) {
+  const threadMember = {} as SetupDesiredProps<ThreadMemberGuildCreate, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  return bot.transformers.customizers.threadMemberGuildCreate(bot, payload, threadMember);
+  if (payload.join_timestamp) threadMember.joinTimestamp = Date.parse(payload.join_timestamp);
+
+  return callCustomizer('threadMemberGuildCreate', bot, payload, threadMember, {
+    partial: extra?.partial ?? false,
+  });
 }
