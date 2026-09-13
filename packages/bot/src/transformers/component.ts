@@ -246,13 +246,7 @@ function transformStringSelectMenuComponent(
         label: option.label,
         value: option.value,
         description: option.description,
-        emoji: option.emoji
-          ? {
-              id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
-              name: option.emoji.name ?? undefined,
-              animated: option.emoji.animated,
-            }
-          : undefined,
+        emoji: option.emoji ? bot.transformers.emoji(bot, option.emoji, { partial: true }) : undefined,
         default: option.default,
       }));
     if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
