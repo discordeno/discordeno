@@ -30,10 +30,13 @@ import type {
   CreateTemplate,
   CreateTestEntitlement,
   CreateWebhook,
+  DeleteApplicationIdentityProfile,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
   DiscordActivityInstance,
   DiscordApplicationCommandPermissions,
+  DiscordApplicationIdentity,
+  DiscordApplicationIdentityProfile,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
   DiscordAuditLog,
@@ -108,6 +111,7 @@ import type {
   SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
+  UpdateApplicationIdentityProfile,
   UpsertGlobalApplicationCommandOptions,
   UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types';
@@ -890,6 +894,21 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     leaveLobby: async (lobbyId, bearerToken) => {
       await bot.rest.leaveLobby(lobbyId, bearerToken);
     },
+    updateApplicationIdentityProfile: async (applicationId, userId, providerIssuedUserId, options) => {
+      return await bot.rest.updateApplicationIdentityProfile(applicationId, userId, providerIssuedUserId, options);
+    },
+    getApplicationIdentityProfile: async (applicationId, userId, providerIssuedUserId) => {
+      return await bot.rest.getApplicationIdentityProfile(applicationId, userId, providerIssuedUserId);
+    },
+    getApplicationIdentityByUserId: async (userId, applicationId) => {
+      return await bot.rest.getApplicationIdentityByUserId(userId, applicationId);
+    },
+    getApplicationIdentityByExternalId: async (externalId, applicationId, providerType) => {
+      return await bot.rest.getApplicationIdentityByExternalId(externalId, applicationId, providerType);
+    },
+    deleteApplicationIdentity: async (userId, applicationId, providerType, providerIssuedUserId, options) => {
+      return await bot.rest.deleteApplicationIdentity(userId, applicationId, providerType, providerIssuedUserId, options);
+    },
   };
 }
 
@@ -1320,4 +1339,29 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteLobby: (lobbyId: BigString) => Promise<void>;
   removeMemberFromLobby: (lobbyId: BigString, userId: BigString) => Promise<void>;
   leaveLobby: (lobbyId: BigString, bearerToken: string) => Promise<void>;
+  updateApplicationIdentityProfile: (
+    applicationId: BigString,
+    userId: BigString,
+    providerIssuedUserId: string,
+    options: UpdateApplicationIdentityProfile,
+  ) => Promise<Camelize<DiscordApplicationIdentityProfile> | void>;
+  getApplicationIdentityProfile: (
+    applicationId: BigString,
+    userId: BigString,
+    providerIssuedUserId: string,
+  ) => Promise<Camelize<DiscordApplicationIdentityProfile>>;
+  getApplicationIdentityByUserId: (userId: BigString, applicationId: BigString) => Promise<Camelize<{ identities: DiscordApplicationIdentity[] }>>;
+  getApplicationIdentityByExternalId: (
+    applicationId: BigString,
+    providerType: string,
+    providerIssuedUserId: string,
+    options?: { providerId?: string },
+  ) => Promise<Camelize<{ identities: DiscordApplicationIdentity[] }>>;
+  deleteApplicationIdentity: (
+    userId: BigString,
+    applicationId: BigString,
+    providerType: string,
+    providerIssuedUserId: string,
+    options?: DeleteApplicationIdentityProfile,
+  ) => Promise<void>;
 };

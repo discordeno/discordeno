@@ -1,4 +1,5 @@
 export * from './discord/application.js';
+export * from './discord/applicationIdentityProfile.js';
 export * from './discord/applicationRoleConnectionMetadata.js';
 export * from './discord/auditLog.js';
 export * from './discord/autoModeration.js';
@@ -30,6 +31,7 @@ export * from './discord/voice.js';
 export * from './discord/webhook.js';
 export * from './discord/webhookEvents.js';
 export * from './discordeno/application.js';
+export * from './discordeno/applicationIdentityProfile.js';
 export * from './discordeno/auditLog.js';
 export * from './discordeno/autoModeration.js';
 export * from './discordeno/channel.js';

@@ -31,12 +31,15 @@ import type {
   CreateTemplate,
   CreateTestEntitlement,
   CreateWebhook,
+  DeleteApplicationIdentityProfile,
   DeleteWebhookMessageOptions,
   DiscordAccessTokenResponse,
   DiscordActivityInstance,
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
+  DiscordApplicationIdentity,
+  DiscordApplicationIdentityProfile,
   DiscordApplicationIntegrationType,
   DiscordApplicationRoleConnection,
   DiscordApplicationRoleConnectionMetadata,
@@ -158,6 +161,7 @@ import type {
   SendSoundboardSound,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
+  UpdateApplicationIdentityProfile,
   UpsertGlobalApplicationCommandOptions,
   UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types';
@@ -3481,6 +3485,116 @@ export interface RestManager {
    * The invite expires after one hour.
    */
   createLobbyChannelInviteForUser: (lobbyId: BigString, userId: BigString) => Promise<Camelize<DiscordLobbyInvite>>;
+  /**
+   * Updates the profile data on the user’s matching Application Identity record.
+   *
+   * @param applicationId - The ID of the application to update the profile for
+   * @param userId - The ID of the user to update the profile for
+   * @param providerIssuedUserId - The provider-issued user ID to update the profile for
+   * @param options - The options to update the profile with
+   * @returns An Application Identity Profile object on first write
+   *
+   * @remarks
+   * If the user does not have an Application Identity for your application yet, the first successful update creates a profile-only Application Identity with provider type NONE and the provider_issued_user_id from the path.
+   * If the user already has an Application Identity for your application, the provider_issued_user_id in the path must match an existing Application Identity.
+   *
+   * Requires a bot token for authorization.
+   *
+   * The target user must have authorized the application via OAuth2 with the `application_identities.write` scope.
+   * If you are building a Social SDK integration, this scope is included in the Social SDK scopes.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/application-identity-profile#update-application-identity-profile}
+   */
+  updateApplicationIdentityProfile: (
+    applicationId: BigString,
+    userId: BigString,
+    providerIssuedUserId: string,
+    options: UpdateApplicationIdentityProfile,
+  ) => Promise<Camelize<DiscordApplicationIdentityProfile> | void>;
+  /**
+   * Returns the Application Identity Profile object stored on the matching Application Identity for the specified user and application.
+   *
+   * @param applicationId - The ID of the application to get the profile for
+   * @param userId - The ID of the user to get the profile for
+   * @param providerIssuedUserId - The provider-issued user ID to get the profile for
+   * @returns An Application Identity Profile object
+   *
+   * @remarks
+   * Requires a bot token for authorization.
+   *
+   * The target user must have authorized the application via OAuth2 with the `application_identities.write` scope.
+   * If you are building a Social SDK integration, this scope is included in the Social SDK scopes.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/application-identity-profile#get-application-identity-profile}
+   */
+  getApplicationIdentityProfile: (
+    applicationId: BigString,
+    userId: BigString,
+    providerIssuedUserId: string,
+  ) => Promise<Camelize<DiscordApplicationIdentityProfile>>;
+  /**
+   * Returns the application identities for the specified user and application.
+   * Use this endpoint to discover the exact external ID values (`provider_type`, `provider_issued_user_id`, and optional `provider_id`) for a user’s application identities.
+   *
+   * @param userId - The ID of the user to get the identities for
+   * @param applicationId - The ID of the application to get the identities for
+   * @returns A wrapped list of Application Identity objects. `provider_id` is omitted from an identity when it is absent or empty.
+   *
+   * @remarks
+   * This endpoint does not return profile data. To read game stats for a specific identity, use Get Application Identity Profile.
+   *
+   * To delete an identity, use the returned values with Delete Application Identity.
+   *
+   * Requires a bot token for authorization. The caller must authenticate as the bot for {application_id} and can only fetch identities for its own application.
+   * The target user must have authorized the application via OAuth2 with the `application_identities.write` scope.
+   * If you are building a Social SDK integration, this scope is included in the Social SDK scopes.
+   */
+  getApplicationIdentityByUserId: (userId: BigString, applicationId: BigString) => Promise<Camelize<{ identities: DiscordApplicationIdentity[] }>>;
+  /**
+   * Returns the application identities for the user/application record currently associated with the specified external ID
+   * (combination of `provider_type`, `provider_issued_user_id`, and optional `provider_id`).
+   * Use this endpoint when you need to resolve the Discord user_id for an Application Identity but only know the external ID fields.
+
+   *
+   * @param userId - The ID of the user to get the identities for
+   * @param applicationId - The ID of the application to get the identities for
+   * @returns A wrapped list of Application Identity objects. `provider_id` is omitted from an identity when it is absent or empty.
+   *
+   * @remarks
+   * This endpoint does not return profile data. To read game stats for a specific identity, use Get Application Identity Profile.
+   *
+   * To delete an identity, use the returned values with Delete Application Identity.
+   *
+   * Requires a bot token for authorization. The caller must authenticate as the bot for {application_id} and can only fetch identities for its own application.
+   * The target user must have authorized the application via OAuth2 with the `application_identities.write` scope.
+   * If you are building a Social SDK integration, this scope is included in the Social SDK scopes.
+   */
+  getApplicationIdentityByExternalId: (
+    applicationId: BigString,
+    providerType: string,
+    providerIssuedUserId: string,
+    options?: { providerId?: string },
+  ) => Promise<Camelize<{ identities: DiscordApplicationIdentity[] }>>;
+  /**
+   * Deletes one Application Identity and its associated profile data for the specified user and application. Use this endpoint when a stale provider-issued user ID prevents you from writing profile data for the user’s current identity.
+   *
+   * @param userId The Discord user ID
+   * @param applicationId The ID of your application
+   * @param providerType The external account provider type
+   * @param providerIssuedUserId The user’s ID in the external system
+   * @param options The body parameters for the request
+   * @returns Nothing®
+   *
+   * @remarks
+   * Uses the same bot/application authorization and OAuth2 authorization checks as Get Application Identities.
+   */
+  deleteApplicationIdentity: (
+    userId: BigString,
+    applicationId: BigString,
+    providerType: string,
+    providerIssuedUserId: string,
+    options?: DeleteApplicationIdentityProfile,
+  ) => Promise<void>;
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
