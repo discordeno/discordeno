@@ -33,7 +33,7 @@ export function transformMemberToDiscordMember(bot: Bot, payload: typeof bot.tra
     joined_at: _payload.joinedAt ? new Date(_payload.joinedAt).toISOString() : null,
     premium_since: _payload.premiumSince ? new Date(_payload.premiumSince).toISOString() : undefined,
     avatar: _payload.avatar ? iconBigintToHash(_payload.avatar) : undefined,
-    permissions: _payload.permissions?.toString(),
+    permissions: _payload.permissions?.toJSON(),
     communication_disabled_until: _payload.communicationDisabledUntil ? new Date(_payload.communicationDisabledUntil).toISOString() : undefined,
     deaf: _payload.toggles?.deaf ?? false,
     mute: _payload.toggles?.mute ?? false,
