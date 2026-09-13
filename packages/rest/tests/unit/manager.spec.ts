@@ -169,7 +169,7 @@ describe('[rest] manager', () => {
     });
 
     describe('With both URL and Global rateLimitedPath', () => {
-      it('Will return URL time first if before resetTimestamp', () => {
+      it('Will return the global time when it is the longer of the two', () => {
         rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 6541,
@@ -178,7 +178,7 @@ describe('[rest] manager', () => {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 9849,
         });
-        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(6541);
+        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(9849);
       });
     });
   });

@@ -3528,6 +3528,14 @@ export interface SendRequestOptions {
   reject: (value: RestRequestRejection) => void;
   /** If this request has a bucket id which it falls under for rate limit */
   bucketId?: string;
+  /**
+   * The simplified url of this request, as `rest.simplifyUrl` returned it when the request was first handled.
+   *
+   * @remarks
+   * The simplified url of a message delete depends on how old the message is, so it has to be kept instead of being worked out again later,
+   * or the key the queue was found under and the key its response is credited to stop matching once the message crosses one of those ages.
+   */
+  simplifiedUrl?: string;
   /** Additional request options, used for things like overriding authorization header. */
   requestBodyOptions?: CreateRequestBodyOptions;
   /**

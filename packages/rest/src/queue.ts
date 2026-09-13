@@ -133,7 +133,7 @@ export class Queue {
 
       const request = this.pending[0];
       if (request) {
-        const basicURL = this.rest.simplifyUrl(request.route, request.method);
+        const basicURL = request.simplifiedUrl ?? this.rest.simplifyUrl(request.route, request.method);
 
         // If this url is still rate limited, try again
         const urlResetIn = this.rest.checkRateLimits(basicURL, this.identifier);
@@ -202,8 +202,12 @@ export class Queue {
       return;
     }
 
-    this.pending.push(options);
-    this.processPending();
+    // `updateTokenQueues` may have re-keyed this queue while the request was waiting, which leaves this instance detached from the manager and
+    // unable to ever be given a rate limit slot back, so the request goes to whichever queue holds the key now.
+    const owner = this.rest.queues.get(`${this.identifier}${this.url}`) ?? this;
+
+    owner.pending.push(options);
+    owner.processPending();
   }
 
   /** Cleans up the queue by checking if there is nothing left and removing it. */
@@ -228,8 +232,10 @@ export class Queue {
 
       if (this.timeoutId) clearTimeout(this.timeoutId);
 
-      // No requests have been requested for this queue so we nuke this queue
-      this.rest.queues.delete(`${this.identifier}${this.url}`);
+      // `updateTokenQueues` can point this queue's key at another queue that is very much alive, so only the queue the manager actually holds
+      // under that key may delete it.
+      const key = `${this.identifier}${this.url}`;
+      if (this.rest.queues.get(key) === this) this.rest.queues.delete(key);
       this.rest.logger.debug(
         `[Queue] ${this.queueType} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
         [...this.rest.queues.values()].map((queue) => `${queue.queueType}${queue.url}`),
