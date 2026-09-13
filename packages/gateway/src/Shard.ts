@@ -63,12 +63,12 @@ export class DiscordenoShard {
   /** zlib inflate/zstd buffer. */
   inflateBuffer: Uint8Array | null = null;
   /**
-   * A function that will be called once the socket is closed and handleClose() has finished updating internal states.
+   * A function that will be called once the socket is closed and the internal states have been updated.
    *
    * @private
    * This is for internal purposes only, and subject to breaking changes.
    */
-  resolveAfterClose?: (close: CloseEvent) => void;
+  resolveAfterClose?: () => void;
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id;
@@ -125,15 +125,20 @@ export class DiscordenoShard {
   async close(code: number, reason: string): Promise<void> {
     this.logger.debug(`[Shard] Request for Shard #${this.id} to close the socket with code ${code}.`);
 
-    if (this.socket?.readyState !== WebSocket.OPEN) {
+    // A socket which is still connecting has to be closed as well, otherwise the shard finishes the handshake and identifies itself after it has
+    // been asked to close.
+    if (this.socket?.readyState !== WebSocket.OPEN && this.socket?.readyState !== WebSocket.CONNECTING) {
       this.logger.debug(`[Shard] Shard #${this.id}'s ready state is ${this.socket?.readyState}, Unable to close.`);
       return;
     }
 
-    this.goingOffline = code === GatewayCloseEventCodes.NormalClosure || code === GatewayCloseEventCodes.GoingAway;
+    // Closing a socket which is still connecting aborts the handshake, which is reported with a close code chosen by the runtime rather than the
+    // one asked for here, so the closure is marked as intentional to keep handleClose() from taking it for an unexpected one and reconnecting.
+    this.goingOffline =
+      this.socket.readyState === WebSocket.CONNECTING || code === GatewayCloseEventCodes.NormalClosure || code === GatewayCloseEventCodes.GoingAway;
 
     // This has to be created before the actual call to socket.close as for example Bun calls socket.onclose immediately on the .close() call instead of waiting for the connection to end
-    const promise = new Promise((resolve) => {
+    const promise = new Promise<void>((resolve) => {
       this.resolveAfterClose = resolve;
     });
 
@@ -215,12 +220,43 @@ export class DiscordenoShard {
     // By default WebSocket will give us a Blob, this changes it so that it gives us an ArrayBuffer
     socket.binaryType = 'arraybuffer';
 
-    socket.onerror = (event) => this.handleError(event);
-    socket.onclose = (closeEvent) => this.handleClose(closeEvent);
     socket.onmessage = (messageEvent) => this.handleMessage(messageEvent);
 
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
+      // Whether the socket reached the open state, and whether the shard has already been torn down for it. A handshake which never completes is
+      // not reported the same way everywhere: it can be an error followed by a close event, more than one close event when the handshake is
+      // aborted, or only an error, so both handlers below go through the same guard.
+      let opened = false;
+      let closed = false;
+
+      socket.onerror = (event) => {
+        this.handleError(event);
+
+        // An error on a socket which is open is followed by a close event which takes care of the rest.
+        if (opened) return;
+
+        // onopen is never called for a handshake which failed, so the connection request is settled here. Doing so a second time is a no-op,
+        // which is what happens when the runtime reports the failure as an error and a close event both.
+        reject(new Error(`[Shard] Shard #${this.id} could not connect, the socket errored before the handshake completed.`));
+
+        // Not every runtime fires a close event for a handshake which never completed, so the shard is put offline here when the close handler
+        // has not already done it.
+        if (closed) return;
+        closed = true;
+
+        this.handleFailedHandshake();
+      };
+
+      socket.onclose = (closeEvent) => {
+        if (closed) return;
+        closed = true;
+
+        void this.handleClose(closeEvent);
+      };
+
       socket.onopen = () => {
+        opened = true;
+
         // Only set the shard to `Unidentified` state if the connection request does not come from an identify or resume action.
         if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified;
@@ -369,6 +405,29 @@ export class DiscordenoShard {
     this.state = ShardState.Offline;
   }
 
+  /**
+   * Put the shard offline after its opening handshake failed.
+   *
+   * @remarks
+   * A socket which never opened does not always report a close event, so the shard cannot rely on {@link handleClose} to be called for it. There
+   * is no session and no heartbeat to clean up at this point, and no reconnect is attempted: the caller of {@link connect} is told the connection
+   * failed and decides itself whether to try again.
+   *
+   * @private
+   * This is for internal purposes only, and subject to breaking changes.
+   */
+  handleFailedHandshake(): void {
+    this.socket = undefined;
+    this.inflate = undefined;
+    this.inflateBuffer = null;
+
+    this.state = ShardState.Disconnected;
+    this.goingOffline = false;
+
+    this.resolveAfterClose?.();
+    this.events.disconnected?.(this);
+  }
+
   /** Handle a gateway connection error */
   handleError(error: Event): void {
     this.logger.error(`[Shard] There was an error connecting Shard #${this.id}.`, error);
@@ -386,7 +445,18 @@ export class DiscordenoShard {
     this.logger.debug(`[Shard] Shard #${this.id} closed with code ${close.code}${close.reason ? `, and reason: ${close.reason}` : ''}.`);
 
     // Resolve the close promise if it exists
-    this.resolveAfterClose?.(close);
+    this.resolveAfterClose?.();
+
+    // The socket has been closed on purpose, so the shard stays disconnected whichever code the closure was reported with. This cannot live in
+    // the NormalClosure/GoingAway case below, as aborting a handshake is reported with a code the shard did not ask for.
+    if (this.goingOffline) {
+      this.state = ShardState.Disconnected;
+      this.events.disconnected?.(this);
+
+      this.goingOffline = false;
+
+      return;
+    }
 
     switch (close.code) {
       case ShardSocketCloseCodes.TestingFinished: {
@@ -430,20 +500,10 @@ export class DiscordenoShard {
         return;
       }
       // NOTE: This case must always be right above the cases that runs with default case because of how switch works when you don't break / return, more info below.
+      // A closure which the shard did not ask for goes through the default case where it gets resumed, as it might be an unexpected closure from
+      // Discord or Cloudflare for example, so we don't use break / return here.
       case GatewayCloseEventCodes.NormalClosure:
-      case GatewayCloseEventCodes.GoingAway: {
-        // If the shard is marked as goingOffline, it stays disconnected.
-        if (this.goingOffline) {
-          this.state = ShardState.Disconnected;
-          this.events.disconnected?.(this);
-
-          this.goingOffline = false;
-
-          return;
-        }
-
-        // Otherwise, we want the shard to go through the default case where it gets resumed, as it might be an unexpected closure from Discord or Cloudflare for example, so we don't use break / return here.
-      }
+      case GatewayCloseEventCodes.GoingAway:
       // Gateway connection closes on which a resume is allowed.
       case GatewayCloseEventCodes.UnknownError:
       case GatewayCloseEventCodes.UnknownOpcode:
