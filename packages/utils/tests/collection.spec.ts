@@ -65,6 +65,16 @@ describe('collection.ts', () => {
           collection.set('this', 'not');
           expect(collection.size).to.be.equal(2);
         });
+
+        it('will update an existing key when at max size', () => {
+          collection.set('foo', 'bar');
+          collection.set('me', 'you');
+          expect(collection.size).to.be.equal(2);
+
+          collection.set('foo', 'baz');
+          expect(collection.size).to.be.equal(2);
+          expect(collection.get('foo')).to.be.equal('baz');
+        });
       });
     });
 
@@ -186,11 +196,46 @@ describe('collection.ts', () => {
         sweeperCollection.stopSweeper();
       });
 
+      it('will not keep a timer alive when two collections share one sweeper options object', async () => {
+        const options = { filter: () => true, interval: 50 };
+        const first = new Collection([['a', 1]]);
+        const second = new Collection([['b', 2]]);
+
+        first.startSweeper(options);
+        second.startSweeper(options);
+        first.stopSweeper();
+        second.stopSweeper();
+
+        await clock.tickAsync(100);
+
+        expect(first.size).to.be.equal(1);
+        expect(second.size).to.be.equal(1);
+      });
+
       describe('.changeSweeperInterval() method', () => {
         it('will call startSweeper with new interval', () => {
           collection.startSweeper({ filter: () => false, interval: 1000 });
           collection.changeSweeperInterval(20000);
           expect(collection.sweeper?.interval).to.equal(20000);
+        });
+
+        it('will keep passing the bot to the filter', async () => {
+          const bot = {};
+          let observed: unknown = 'filter was never called';
+
+          collection.startSweeper({
+            bot,
+            filter: (_value, _key, sweeperBot) => {
+              observed = sweeperBot;
+              return false;
+            },
+            interval: 1000,
+          });
+          collection.changeSweeperInterval(50);
+          await clock.tickAsync(50);
+          collection.stopSweeper();
+
+          expect(observed).to.be.equal(bot);
         });
 
         it('will not startsweeper if not started', () => {
@@ -205,6 +250,21 @@ describe('collection.ts', () => {
           collection.startSweeper({ filter: () => false, interval: 1000 });
           collection.changeSweeperFilter(newFilter);
           expect(collection.sweeper?.filter).to.equal(newFilter);
+        });
+
+        it('will keep passing the bot to the new filter', async () => {
+          const bot = {};
+          let observed: unknown = 'filter was never called';
+
+          collection.startSweeper({ bot, filter: () => false, interval: 50 });
+          collection.changeSweeperFilter((_value, _key, sweeperBot) => {
+            observed = sweeperBot;
+            return false;
+          });
+          await clock.tickAsync(50);
+          collection.stopSweeper();
+
+          expect(observed).to.be.equal(bot);
         });
 
         it('will not startsweeper if not started', () => {
