@@ -32,7 +32,7 @@ export interface DiscordInteraction {
   /** The guild it was sent from */
   guild_id?: string;
   /** The channel it was sent from */
-  channel: Partial<DiscordChannel>;
+  channel?: Partial<DiscordChannel>;
   /**
    * The ID of channel it was sent from
    *

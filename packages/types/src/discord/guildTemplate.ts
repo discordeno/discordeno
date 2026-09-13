@@ -75,7 +75,7 @@ export type DiscordTemplateSerializedSourceGuild = Omit<
       'id' | 'permission_overwrites' | 'parent_id'
     > & {
       id: number;
-      permission_overwrites: DiscordOverwrite & { id: number };
+      permission_overwrites: Array<Omit<DiscordOverwrite, 'id'> & { id: number }>;
       parent_id: number | null;
     }
   >;

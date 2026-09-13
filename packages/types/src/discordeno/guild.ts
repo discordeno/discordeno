@@ -352,7 +352,7 @@ export interface ModifyGuildWelcomeScreen {
   /** Whether the welcome screen is enabled */
   enabled?: boolean | null;
   /** Channels linked in the welcome screen and their display options */
-  welcome_screen?: DiscordWelcomeScreenChannel[] | null;
+  welcomeChannels?: DiscordWelcomeScreenChannel[] | null;
   /** The server description to show in the welcome screen */
   description?: string | null;
 }
