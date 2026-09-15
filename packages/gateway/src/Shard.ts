@@ -273,6 +273,7 @@ export class DiscordenoShard {
           intents: this.gatewayConfig.intents,
           shard: [this.id, this.gatewayConfig.totalShards],
           presence: await this.makePresence(),
+          capabilities: this.gatewayConfig.capabilities,
         },
       },
       true,
