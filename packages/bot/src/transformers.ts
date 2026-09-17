@@ -16,6 +16,8 @@ import type {
   DiscordAutoModerationRule,
   DiscordAvatarDecorationData,
   DiscordChannel,
+  DiscordChannelInfo,
+  DiscordChannelInfoData,
   DiscordCollectibles,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
@@ -100,7 +102,7 @@ import { transformAuditLogEntry } from './transformers/auditLogEntry.js';
 import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
 import { transformAutoModerationRule } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
-import { transformChannel, transformForumTag } from './transformers/channel.js';
+import { transformChannel, transformChannelInfo, transformChannelInfoData, transformForumTag } from './transformers/channel.js';
 import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
 import { transformEmbed } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
@@ -173,6 +175,8 @@ import type {
   AutoModerationRule,
   AvatarDecorationData,
   Channel,
+  ChannelInfo,
+  ChannelInfoData,
   Collectibles,
   Component,
   DefaultReactionEmoji,
@@ -260,6 +264,8 @@ export type TransformerInformations = {
   automodRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, false>;
   avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
   channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
+  channelInfo: TransformerInformation<DiscordChannelInfo, ChannelInfo, true>;
+  channelInfoData: TransformerInformation<DiscordChannelInfoData, ChannelInfoData, true>;
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
   component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component, true>;
   defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji, true>;
@@ -381,6 +387,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       automodRule: _options.customizers?.automodRule ?? defaultCustomizer,
       avatarDecorationData: _options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: _options.customizers?.channel ?? defaultCustomizer,
+      channelInfo: _options.customizers?.channelInfo ?? defaultCustomizer,
+      channelInfoData: _options.customizers?.channelInfoData ?? defaultCustomizer,
       collectibles: _options.customizers?.collectibles ?? defaultCustomizer,
       component: _options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: _options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
@@ -480,6 +488,8 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     automodRule: _options.automodRule ?? transformAutoModerationRule,
     avatarDecorationData: _options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: _options.channel ?? transformChannel,
+    channelInfo: _options.channelInfo ?? transformChannelInfo,
+    channelInfoData: _options.channelInfoData ?? transformChannelInfoData,
     collectibles: _options.collectibles ?? transformCollectibles,
     component: _options.component ?? transformComponent,
     defaultReactionEmoji: _options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
