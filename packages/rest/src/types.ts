@@ -1,6 +1,6 @@
 import type { BigString, FileContent } from '@discordeno/types';
 import type { logger } from '@discordeno/utils';
-import type { CamelizedRestEndpoints } from './endpoints.js';
+import type { CamelizedRestEndpoints, RestEndpoints } from './endpoints.js';
 import type { InvalidRequestBucket } from './invalidBucket.js';
 import type { Queue } from './queue.js';
 import type { RestRoutes } from './typings/routes.js';
@@ -207,6 +207,8 @@ export interface RestManager extends CamelizedRestEndpoints {
   delete: (url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<void>;
   /** Make a patch request to the api. */
   patch: <T = void>(url: string, options?: MakeRequestOptions) => Promise<T>;
+  /** The functions to call the endpoints but without the response body being camelized. */
+  snake: RestEndpoints;
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
