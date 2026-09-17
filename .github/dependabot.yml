@@ -8,6 +8,9 @@ updates:
     groups:
       library-bumps:
         patterns: ['*']
+        exclude-patterns: ['@biomejs/*']
+      biome-bump:
+        patterns: ['@biomejs/*']
   - package-ecosystem: 'github-actions'
     directory: '/'
     labels: ['dependencies', 't-ci']
@@ -24,6 +27,9 @@ updates:
     groups:
       website-bumps:
         patterns: ['*']
+        exclude-patterns: ['@biomejs/*']
+      biome-bump:
+        patterns: ['@biomejs/*']
   - package-ecosystem: 'npm'
     directories: ['examples/*']
     labels: ['dependencies', 't-build', 'template']
