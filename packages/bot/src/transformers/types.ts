@@ -2185,6 +2185,12 @@ export interface LobbyMember {
   metadata?: Record<string, string>;
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
+  /**
+   * An additional 1-80 character display name for the member, such as an in-game character name.
+   *
+   * Can only be set via Add a Member to a Lobby or Bulk Update Lobby Members.
+   */
+  additionalName?: string;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-message-object */
@@ -2201,6 +2207,8 @@ export interface LobbyMessage {
   channelId: bigint;
   /** The user who sent the message */
   author: User;
+  /** Additional informations about the lobby member */
+  lobbyMember?: LobbyMessageLobbyMember;
   /** Dispatch-only metadata sent with the message */
   metadata?: Record<string, string>;
   /** Moderation metadata set via Update Lobby Message Moderation Metadata */
@@ -2213,6 +2221,15 @@ export interface LobbyMessage {
   flags: ToggleBitfield;
   /** The application that sent the message */
   applicationId: bigint;
+}
+
+export interface LobbyMessageLobbyMember {
+  /**
+   * The author's lobby member additional display name, captured when the message was sent.
+   *
+   * Omitted if the author had no `additional_name` set.
+   */
+  additionalName?: string;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */
