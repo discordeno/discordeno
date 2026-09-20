@@ -31,14 +31,14 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.13",
+    "@biomejs/biome": "2.5.14",
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
     "@types/react": "^19.3.0",
-    "turbo": "^2.10.12",
+    "turbo": "^2.10.13",
     "typescript": "7.0.2",
-    "webpack": "5.110.3"
+    "webpack": "5.111.0"
   },
   "browserslist": {
     "production": [
