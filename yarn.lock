@@ -12,18 +12,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@biomejs/biome@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/biome@npm:2.5.13"
+"@biomejs/biome@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/biome@npm:2.5.14"
   dependencies:
-    "@biomejs/cli-darwin-arm64": "npm:2.5.13"
-    "@biomejs/cli-darwin-x64": "npm:2.5.13"
-    "@biomejs/cli-linux-arm64": "npm:2.5.13"
-    "@biomejs/cli-linux-arm64-musl": "npm:2.5.13"
-    "@biomejs/cli-linux-x64": "npm:2.5.13"
-    "@biomejs/cli-linux-x64-musl": "npm:2.5.13"
-    "@biomejs/cli-win32-arm64": "npm:2.5.13"
-    "@biomejs/cli-win32-x64": "npm:2.5.13"
+    "@biomejs/cli-darwin-arm64": "npm:2.5.14"
+    "@biomejs/cli-darwin-x64": "npm:2.5.14"
+    "@biomejs/cli-linux-arm64": "npm:2.5.14"
+    "@biomejs/cli-linux-arm64-musl": "npm:2.5.14"
+    "@biomejs/cli-linux-x64": "npm:2.5.14"
+    "@biomejs/cli-linux-x64-musl": "npm:2.5.14"
+    "@biomejs/cli-win32-arm64": "npm:2.5.14"
+    "@biomejs/cli-win32-x64": "npm:2.5.14"
   dependenciesMeta:
     "@biomejs/cli-darwin-arm64":
       optional: true
@@ -43,62 +43,62 @@ __metadata:
       optional: true
   bin:
     biome: bin/biome
-  checksum: 10c0/3a6267f4610aa94b16ab03e49e0921e219b5de449b6bc4cefe414e100bc83b12b9223407eb2b08dab47faed8782204a638cc149bbc577fa66cba7a7aab3e7d71
+  checksum: 10c0/db612f71783a33a11666d09febe8310993474671ca41191ae9c0fa7bfe96f7f6814a5f57dea445e70a88991d8d09a6c5212135aa2950158f320824e4f48ec0a4
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-arm64@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-darwin-arm64@npm:2.5.13"
+"@biomejs/cli-darwin-arm64@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-darwin-arm64@npm:2.5.14"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-x64@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-darwin-x64@npm:2.5.13"
+"@biomejs/cli-darwin-x64@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-darwin-x64@npm:2.5.14"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64-musl@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.5.13"
+"@biomejs/cli-linux-arm64-musl@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.5.14"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-linux-arm64@npm:2.5.13"
+"@biomejs/cli-linux-arm64@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-linux-arm64@npm:2.5.14"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64-musl@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-linux-x64-musl@npm:2.5.13"
+"@biomejs/cli-linux-x64-musl@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-linux-x64-musl@npm:2.5.14"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-linux-x64@npm:2.5.13"
+"@biomejs/cli-linux-x64@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-linux-x64@npm:2.5.14"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-arm64@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-win32-arm64@npm:2.5.13"
+"@biomejs/cli-win32-arm64@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-win32-arm64@npm:2.5.14"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-x64@npm:2.5.13":
-  version: 2.5.13
-  resolution: "@biomejs/cli-win32-x64@npm:2.5.13"
+"@biomejs/cli-win32-x64@npm:2.5.14":
+  version: 2.5.14
+  resolution: "@biomejs/cli-win32-x64@npm:2.5.14"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -114,7 +114,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@discordeno/bot@workspace:packages/bot"
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     "@discordeno/gateway": "workspace:^"
     "@discordeno/rest": "workspace:^"
     "@discordeno/types": "workspace:^"
@@ -123,14 +123,14 @@ __metadata:
     "@swc/core": "npm:^1.16.2"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.5.1"
+    "@types/node": "npm:^26.6.2"
     "@types/sinon": "npm:^22.0.0"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
-    mocha: "npm:^12.0.0"
+    mocha: "npm:^12.0.2"
     sinon: "npm:^22.1.0"
     tsconfig: "npm:*"
-    tsx: "npm:^4.23.13"
+    tsx: "npm:^4.23.15"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -139,22 +139,22 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@discordeno/gateway@workspace:packages/gateway"
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
     "@swc/cli": "npm:^0.8.1"
     "@swc/core": "npm:^1.16.2"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.5.1"
+    "@types/node": "npm:^26.6.2"
     "@types/sinon": "npm:^22.0.0"
     "@types/ws": "npm:^8.18.1"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
-    mocha: "npm:^12.0.0"
+    mocha: "npm:^12.0.2"
     sinon: "npm:^22.1.0"
     tsconfig: "npm:*"
-    tsx: "npm:^4.23.13"
+    tsx: "npm:^4.23.15"
     typescript: "npm:^6.0.3"
     ws: "npm:^8.21.3"
   languageName: unknown
@@ -164,7 +164,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@discordeno/rest@workspace:packages/rest"
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     "@discordeno/types": "workspace:^"
     "@discordeno/utils": "workspace:^"
     "@swc/cli": "npm:^0.8.1"
@@ -172,15 +172,15 @@ __metadata:
     "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.5.1"
+    "@types/node": "npm:^26.6.2"
     "@types/sinon": "npm:^22.0.0"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
     chai-as-promised: "npm:^8.0.2"
-    mocha: "npm:^12.0.0"
+    mocha: "npm:^12.0.2"
     sinon: "npm:^22.1.0"
     tsconfig: "npm:*"
-    tsx: "npm:^4.23.13"
+    tsx: "npm:^4.23.15"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -189,15 +189,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@discordeno/types@workspace:packages/types"
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     "@swc/cli": "npm:^0.8.1"
     "@swc/core": "npm:^1.16.2"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.5.1"
+    "@types/node": "npm:^26.6.2"
     c8: "npm:^12.0.0"
-    mocha: "npm:^12.0.0"
+    mocha: "npm:^12.0.2"
     tsconfig: "npm:*"
-    tsx: "npm:^4.23.13"
+    tsx: "npm:^4.23.15"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -206,20 +206,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@discordeno/utils@workspace:packages/utils"
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     "@discordeno/types": "workspace:^"
     "@swc/cli": "npm:^0.8.1"
     "@swc/core": "npm:^1.16.2"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.5.1"
+    "@types/node": "npm:^26.6.2"
     "@types/sinon": "npm:^22.0.0"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
-    mocha: "npm:^12.0.0"
+    mocha: "npm:^12.0.2"
     sinon: "npm:^22.1.0"
     tsconfig: "npm:*"
-    tsx: "npm:^4.23.13"
+    tsx: "npm:^4.23.15"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -925,44 +925,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turbo/darwin-64@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@turbo/darwin-64@npm:2.10.12"
+"@turbo/darwin-64@npm:2.11.3":
+  version: 2.11.3
+  resolution: "@turbo/darwin-64@npm:2.11.3"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@turbo/darwin-arm64@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@turbo/darwin-arm64@npm:2.10.12"
+"@turbo/darwin-arm64@npm:2.11.3":
+  version: 2.11.3
+  resolution: "@turbo/darwin-arm64@npm:2.11.3"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@turbo/linux-64@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@turbo/linux-64@npm:2.10.12"
+"@turbo/linux-64@npm:2.11.3":
+  version: 2.11.3
+  resolution: "@turbo/linux-64@npm:2.11.3"
   conditions: (os=android | os=linux) & cpu=x64
   languageName: node
   linkType: hard
 
-"@turbo/linux-arm64@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@turbo/linux-arm64@npm:2.10.12"
+"@turbo/linux-arm64@npm:2.11.3":
+  version: 2.11.3
+  resolution: "@turbo/linux-arm64@npm:2.11.3"
   conditions: (os=android | os=linux) & cpu=arm64
   languageName: node
   linkType: hard
 
-"@turbo/windows-64@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@turbo/windows-64@npm:2.10.12"
+"@turbo/windows-64@npm:2.11.3":
+  version: 2.11.3
+  resolution: "@turbo/windows-64@npm:2.11.3"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@turbo/windows-arm64@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@turbo/windows-arm64@npm:2.10.12"
+"@turbo/windows-arm64@npm:2.11.3":
+  version: 2.11.3
+  resolution: "@turbo/windows-arm64@npm:2.11.3"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -1032,12 +1032,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.5.1":
-  version: 26.5.1
-  resolution: "@types/node@npm:26.5.1"
+"@types/node@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "@types/node@npm:26.6.2"
   dependencies:
     undici-types: "npm:~8.9.0"
-  checksum: 10c0/40aa7aa4c099c8a08bf39b5bcb15eaf2cc073666c2191b1d9ac8243ce6b68b23ace904a044c521f6d310b70e94514b531be5f4fc184f141a7ce7f0679ebc7bb3
+  checksum: 10c0/bb411ff5863a79a28ffa4ebadf2499d44046aa114d25a7a6c78f57def118123a0a7dea99e8fe38849099e9dba2b41b8853a7a282037618559f58653c35e7c5c5
   languageName: node
   linkType: hard
 
@@ -1515,12 +1515,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discordeno-monorepo@workspace:."
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^17.5.1"
-    turbo: "npm:^2.10.12"
+    turbo: "npm:^2.11.3"
     typedoc: "npm:^0.28.20"
-    typedoc-plugin-markdown: "npm:^4.13.0"
+    typedoc-plugin-markdown: "npm:^4.13.1"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -1529,7 +1529,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discordeno@workspace:packages/discordeno"
   dependencies:
-    "@biomejs/biome": "npm:2.5.13"
+    "@biomejs/biome": "npm:2.5.14"
     "@discordeno/bot": "workspace:^"
     "@discordeno/gateway": "workspace:^"
     "@discordeno/rest": "workspace:^"
@@ -1539,12 +1539,12 @@ __metadata:
     "@swc/core": "npm:^1.16.2"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^26.5.1"
+    "@types/node": "npm:^26.6.2"
     c8: "npm:^12.0.0"
     chai: "npm:^6.2.2"
-    mocha: "npm:^12.0.0"
+    mocha: "npm:^12.0.2"
     tsconfig: "npm:*"
-    tsx: "npm:^4.23.13"
+    tsx: "npm:^4.23.15"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -1785,6 +1785,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"find-up-simple@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "find-up-simple@npm:1.0.1"
+  checksum: 10c0/ad34de157b7db925d50ff78302fefb28e309f3bc947c93ffca0f9b0bccf9cf1a2dc57d805d5c94ec9fc60f4838f5dbdfd2a48ecd77c23015fa44c6dd5f60bc40
+  languageName: node
+  linkType: hard
+
 "find-up@npm:^5.0.0":
   version: 5.0.0
   resolution: "find-up@npm:5.0.0"
@@ -1987,10 +1994,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-path-inside@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "is-path-inside@npm:3.0.3"
-  checksum: 10c0/cf7d4ac35fb96bab6a1d2c3598fe5ebb29aafb52c0aaa482b5a3ed9d8ba3edc11631e3ec2637660c44b3ce0e61a08d54946e8af30dec0b60a7c27296c68ffd05
+"is-path-inside@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "is-path-inside@npm:4.0.0"
+  checksum: 10c0/51188d7e2b1d907a9a5f7c18d99a90b60870b951ed87cf97595d9aaa429d4c010652c3350bcbf31182e7f4b0eab9a1860b43e16729b13cb1a44baaa6cdb64c46
   languageName: node
   linkType: hard
 
@@ -2266,29 +2273,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^12.0.0":
-  version: 12.0.0
-  resolution: "mocha@npm:12.0.0"
+"mocha@npm:^12.0.2":
+  version: 12.0.2
+  resolution: "mocha@npm:12.0.2"
   dependencies:
     browser-stdout: "npm:^1.3.1"
     chokidar: "npm:^5.0.0"
     debug: "npm:^4.3.5"
     diff: "npm:^9.0.0"
-    find-up: "npm:^5.0.0"
+    find-up-simple: "npm:^1.0.1"
     glob: "npm:^13.0.0"
-    is-path-inside: "npm:^3.0.3"
+    is-path-inside: "npm:^4.0.0"
     is-unicode-supported: "npm:^0.1.0"
     js-yaml: "npm:^5.0.0"
     minimatch: "npm:^10.2.2"
     ms: "npm:^2.1.3"
     picocolors: "npm:^1.1.1"
-    serialize-javascript: "npm:^7.0.2"
+    serialize-javascript: "npm:^7.1.1"
     strip-json-comments: "npm:^5.0.3"
     supports-color: "npm:^8.1.1"
     workerpool: "npm:^10.0.0"
   bin:
     mocha: bin/mocha.js
-  checksum: 10c0/d8b747da804d17db2a53cce0dc496b520ff1526fb41691bf5e751399a28a9ce105ffaf9580e2f594077c9dd56a1ebb1695ada26a6b4ca51e14e26beb1d172ed5
+  checksum: 10c0/11bf7ff6691b3f287b7e9e1cd35389add5d2ad4c5f6cdd66938fcbaed6caaa63025e341bd5971223c7e3a988dbf505e374ac1628c612ad9c9fb35bd837095c02
   languageName: node
   linkType: hard
 
@@ -2581,10 +2588,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serialize-javascript@npm:^7.0.2":
-  version: 7.1.1
-  resolution: "serialize-javascript@npm:7.1.1"
-  checksum: 10c0/a9209f0c3e946cc4421b705cfa502a28a7a5fed65eee22cb66b4200f374b2c3b8c9d0fadb6a00c75d7c0cd09c2780d1e0f390c75dce9d6dfb171f0b63c85014a
+"serialize-javascript@npm:^7.1.1":
+  version: 7.1.2
+  resolution: "serialize-javascript@npm:7.1.2"
+  checksum: 10c0/568ea22e16893a26cd2506433b8d98bb82f4af37e149330a3deb042bd417516988e6ca9a5010739e1a8dc4866caae320f582dfd2a1a0f0ab69ba3c03f1e155ba
   languageName: node
   linkType: hard
 
@@ -2858,9 +2865,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"tsx@npm:^4.23.13":
-  version: 4.23.13
-  resolution: "tsx@npm:4.23.13"
+"tsx@npm:^4.23.15":
+  version: 4.23.15
+  resolution: "tsx@npm:4.23.15"
   dependencies:
     esbuild: "npm:~0.28.0"
     fsevents: "npm:~2.3.3"
@@ -2869,20 +2876,20 @@ __metadata:
       optional: true
   bin:
     tsx: dist/cli.mjs
-  checksum: 10c0/dc99c8988b42ec2443963a0b9051f42d068bc7e2a44e82f3b94b40539a991c5c01ea3ee049cf317d1040b2245711dd4c64ace9ac875f3b07edee29f610702e3c
+  checksum: 10c0/3c5fc53e578da87d3a63565286b1ecbb0e01b9bb646daec1957294ef890d14f22cc67bb4b09b5daffab0e7ce0217b1e7645393feb0f524b1ddf26ae9595d7e75
   languageName: node
   linkType: hard
 
-"turbo@npm:^2.10.12":
-  version: 2.10.12
-  resolution: "turbo@npm:2.10.12"
+"turbo@npm:^2.11.3":
+  version: 2.11.3
+  resolution: "turbo@npm:2.11.3"
   dependencies:
-    "@turbo/darwin-64": "npm:2.10.12"
-    "@turbo/darwin-arm64": "npm:2.10.12"
-    "@turbo/linux-64": "npm:2.10.12"
-    "@turbo/linux-arm64": "npm:2.10.12"
-    "@turbo/windows-64": "npm:2.10.12"
-    "@turbo/windows-arm64": "npm:2.10.12"
+    "@turbo/darwin-64": "npm:2.11.3"
+    "@turbo/darwin-arm64": "npm:2.11.3"
+    "@turbo/linux-64": "npm:2.11.3"
+    "@turbo/linux-arm64": "npm:2.11.3"
+    "@turbo/windows-64": "npm:2.11.3"
+    "@turbo/windows-arm64": "npm:2.11.3"
   dependenciesMeta:
     "@turbo/darwin-64":
       optional: true
@@ -2898,7 +2905,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 10c0/bc912180b8c00f88be0672223c6cf8b61e05f113a93574d3bcb7343f9391ee03c115afc4468c76c4dfcbd9ee4a6564b025762dad9aefe53a91e02ff62613d9be
+  checksum: 10c0/31e78d37f044b25227cdb0b947073e0b5f662946e9911868438f0c0690ebe3f39a5e5b1cfce72b17cac28b0b71ab711a831c53ce72e66ee54690b4aa71e766f9
   languageName: node
   linkType: hard
 
@@ -2923,12 +2930,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc-plugin-markdown@npm:^4.13.0":
-  version: 4.13.0
-  resolution: "typedoc-plugin-markdown@npm:4.13.0"
+"typedoc-plugin-markdown@npm:^4.13.1":
+  version: 4.13.1
+  resolution: "typedoc-plugin-markdown@npm:4.13.1"
   peerDependencies:
     typedoc: 0.28.x
-  checksum: 10c0/a75f7e4ce164444b1046dcd55bd90ef3bffc41d5902ce7e05c1c3aece031e22374148fdfdae59a5f3b0f73c55aefb27675fd1768e0564db165707152c7f24745
+  checksum: 10c0/1c4ddd18f916a9fad4430bfdc63fd9869312748eb516427ca30d78ac306b417bc79ff04a243c4c788ec1d69bda5fba75f0ba45144ce1f0d26e7e766fdfc7b1c4
   languageName: node
   linkType: hard
 
