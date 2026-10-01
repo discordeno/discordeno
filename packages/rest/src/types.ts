@@ -312,6 +312,26 @@ export interface RestManager {
    * Only used when {@link RestManager.retryProxiedRequests} is enabled.
    */
   proxyRetryDelayStep: number;
+  /**
+   * The maximum amount of times a request should be re-sent after a server error. Defaults to 3.
+   *
+   * @remarks
+   * Only the statuses in `RETRYABLE_SERVER_ERRORS` are re-sent, the ones a gateway in front of the api answers with rather than the api
+   * itself.
+   *
+   * This has its own limit because {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as
+   * long as a Discord outage lasts.
+   *
+   * Whichever of the two is lower applies.
+   */
+  maxServerErrorRetryCount: number;
+  /**
+   * How much longer to wait before each further re-send after a server error, in milliseconds. Defaults to 1000.
+   *
+   * @remarks
+   * Discord sends no `retry-after` with a server error, so the nth attempt waits n times this (1s, then 2s, then 3s, ...) instead.
+   */
+  serverErrorRetryDelayStep: number;
   /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequests` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
   requestTimeout: number;
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
