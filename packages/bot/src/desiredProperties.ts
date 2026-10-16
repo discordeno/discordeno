@@ -8,6 +8,7 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  ChannelMention,
   Collectibles,
   Component,
   DefaultReactionEmoji,
@@ -72,6 +73,7 @@ export interface TransformersObjects {
   attachment: Attachment;
   avatarDecorationData: AvatarDecorationData;
   channel: Channel;
+  channelMention: ChannelMention;
   collectibles: Collectibles;
   component: Component;
   defaultReactionEmoji: DefaultReactionEmoji;
@@ -327,6 +329,13 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
     },
+    channelMention: {
+      id: defaultValue,
+      guildId: defaultValue,
+      type: defaultValue,
+      name: defaultValue,
+      ...desiredProperties.channelMention,
+    },
     collectibles: {
       nameplate: defaultValue,
       ...desiredProperties.collectibles,
@@ -552,7 +561,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       interactionMetadata: defaultValue,
       interaction: defaultValue,
       member: defaultValue,
-      mentionedChannelIds: defaultValue,
+      mentionChannels: defaultValue,
       mentionedRoleIds: defaultValue,
       mentions: defaultValue,
       channelType: defaultValue,
