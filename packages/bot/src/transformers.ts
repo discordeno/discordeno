@@ -114,7 +114,7 @@ import {
   transformAutoModerationActionExecution,
   transformAutoModerationActionMetadata,
 } from './transformers/automodActionExecution.js';
-import { transformAutoModerationRule, transformautoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
+import { transformAutoModerationRule, transformAutoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformForumTag } from './transformers/channel.js';
 import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
