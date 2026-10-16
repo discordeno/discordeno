@@ -71,6 +71,7 @@ import type {
   DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
+  DiscordSessionStartLimit,
   DiscordSharedClientTheme,
   DiscordSku,
   DiscordSoundboardSound,
@@ -125,7 +126,7 @@ import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaIt
 import { transformEmbed, transformEmbedAuthor, transformEmbedFooter, transformEmbedImage, transformEmbedVideo } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
 import { transformEntitlement } from './transformers/entitlement.js';
-import { transformGatewayBot } from './transformers/gatewayBot.js';
+import { transformGatewayBot, transformSessionStartLimit } from './transformers/gatewayBot.js';
 import { transformGuild } from './transformers/guild.js';
 import { transformIncidentsData } from './transformers/incidentsData.js';
 import { transformIntegration } from './transformers/integration.js';
@@ -247,6 +248,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SessionStartLimit,
   SharedClientTheme,
   Sku,
   SoundboardSound,
@@ -305,7 +307,7 @@ export type TransformerInformations = {
   emoji: TransformerInformation<DiscordEmoji, Emoji, true>;
   entitlement: TransformerInformation<DiscordEntitlement, Entitlement, true>;
   forumTag: TransformerInformation<DiscordForumTag, ForumTag, true>;
-  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, false>;
+  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, true>;
   guild: TransformerInformation<DiscordGuild, Guild, true, { shardId?: number }>;
   guildApplicationCommandPermissions: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, true>;
   guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding, true>;
@@ -346,6 +348,7 @@ export type TransformerInformations = {
   roleColors: TransformerInformation<DiscordRoleColors, RoleColors, true>;
   scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent, true>;
   scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule, true>;
+  sessionStartLimit: TransformerInformation<DiscordSessionStartLimit, SessionStartLimit, true>;
   sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme, true>;
   sku: TransformerInformation<DiscordSku, Sku, true>;
   soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound, true>;
@@ -472,6 +475,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       roleColors: _options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: _options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: _options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sessionStartLimit: _options.customizers?.sessionStartLimit ?? defaultCustomizer,
       sharedClientTheme: _options.customizers?.sharedClientTheme ?? defaultCustomizer,
       sku: _options.customizers?.sku ?? defaultCustomizer,
       soundboardSound: _options.customizers?.soundboardSound ?? defaultCustomizer,
@@ -581,6 +585,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     roleColors: _options.roleColors ?? transformRoleColors,
     scheduledEvent: _options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: _options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sessionStartLimit: _options.sessionStartLimit ?? transformSessionStartLimit,
     sharedClientTheme: _options.sharedClientTheme ?? transformSharedClientTheme,
     sku: _options.sku ?? transformSku,
     soundboardSound: _options.soundboardSound ?? transformSoundboardSound,
