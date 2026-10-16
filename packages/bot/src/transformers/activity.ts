@@ -14,7 +14,7 @@ export function transformActivity(bot: Bot, payload: Partial<DiscordActivity>, e
   const activity = {} as SetupDesiredProps<Activity, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
   if (payload.name) activity.name = payload.name;
-  if (payload.type) activity.type = payload.type;
+  if (payload.type !== undefined) activity.type = payload.type;
   if (payload.url) activity.url = payload.url;
   if (payload.created_at) activity.createdAt = payload.created_at;
   if (payload.application_id) activity.applicationId = bot.transformers.snowflake(payload.application_id);
