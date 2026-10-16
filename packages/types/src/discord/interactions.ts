@@ -32,7 +32,7 @@ export interface DiscordInteraction {
   /** The guild it was sent from */
   guild_id?: string;
   /** The channel it was sent from */
-  channel: Partial<DiscordChannel>;
+  channel?: Partial<DiscordChannel>;
   /**
    * The ID of channel it was sent from
    *
@@ -303,7 +303,7 @@ export interface DiscordApplicationCommand {
   name: string;
   /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
-  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. */
+  /** Description for `ApplicationCommandTypes.ChatInput` and `ApplicationCommandTypes.PrimaryEntryPoint` commands, 1-100 characters. */
   description: string;
   /** Localization object for `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null;
