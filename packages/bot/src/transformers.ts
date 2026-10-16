@@ -11,6 +11,7 @@ import type {
   DiscordApplicationCommand,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationCommandPermissions,
   DiscordAttachment,
   DiscordAuditLogEntry,
   DiscordAutoModerationActionExecution,
@@ -101,7 +102,7 @@ import { transformApplication } from './transformers/application.js';
 import { transformApplicationCommand } from './transformers/applicationCommand.js';
 import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js';
 import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js';
-import { transformApplicationCommandPermission } from './transformers/applicationCommandPermission.js';
+import { transformApplicationCommandPermissions, transformGuildApplicationCommandPermissions } from './transformers/applicationCommandPermission.js';
 import { transformAttachment } from './transformers/attachment.js';
 import { transformAuditLogEntry } from './transformers/auditLogEntry.js';
 import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
@@ -175,6 +176,7 @@ import type {
   ApplicationCommand,
   ApplicationCommandOption,
   ApplicationCommandOptionChoice,
+  ApplicationCommandPermissions,
   Attachment,
   AuditLogEntry,
   AutoModerationActionExecution,
@@ -262,7 +264,7 @@ export type TransformerInformations = {
   applicationCommand: TransformerInformation<DiscordApplicationCommand, ApplicationCommand, true>;
   applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption, true>;
   applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice, true>;
-  applicationCommandPermission: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, false>;
+  applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions, true>;
   attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
   auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, false>;
   automodActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, false>;
@@ -278,6 +280,7 @@ export type TransformerInformations = {
   forumTag: TransformerInformation<DiscordForumTag, ForumTag, true>;
   gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, false>;
   guild: TransformerInformation<DiscordGuild, Guild, true, { shardId?: number }>;
+  guildApplicationCommandPermissions: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, true>;
   guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding, true>;
   guildOnboardingPrompt: TransformerInformation<DiscordGuildOnboardingPrompt, GuildOnboardingPrompt, true>;
   guildOnboardingPromptOption: TransformerInformation<DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption, true>;
@@ -384,7 +387,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       applicationCommand: _options.customizers?.applicationCommand ?? defaultCustomizer,
       applicationCommandOption: _options.customizers?.applicationCommandOption ?? defaultCustomizer,
       applicationCommandOptionChoice: _options.customizers?.applicationCommandOptionChoice ?? defaultCustomizer,
-      applicationCommandPermission: _options.customizers?.applicationCommandPermission ?? defaultCustomizer,
+      applicationCommandPermissions: _options.customizers?.applicationCommandPermissions ?? defaultCustomizer,
       attachment: _options.customizers?.attachment ?? defaultCustomizer,
       auditLogEntry: _options.customizers?.auditLogEntry ?? defaultCustomizer,
       automodActionExecution: _options.customizers?.automodActionExecution ?? defaultCustomizer,
@@ -400,6 +403,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       forumTag: _options.customizers?.forumTag ?? defaultCustomizer,
       gatewayBot: _options.customizers?.gatewayBot ?? defaultCustomizer,
       guild: _options.customizers?.guild ?? defaultCustomizer,
+      guildApplicationCommandPermissions: _options.customizers?.guildApplicationCommandPermissions ?? defaultCustomizer,
       guildOnboarding: _options.customizers?.guildOnboarding ?? defaultCustomizer,
       guildOnboardingPrompt: _options.customizers?.guildOnboardingPrompt ?? defaultCustomizer,
       guildOnboardingPromptOption: _options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
@@ -484,7 +488,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     applicationCommand: _options.applicationCommand ?? transformApplicationCommand,
     applicationCommandOption: _options.applicationCommandOption ?? transformApplicationCommandOption,
     applicationCommandOptionChoice: _options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
-    applicationCommandPermission: _options.applicationCommandPermission ?? transformApplicationCommandPermission,
+    applicationCommandPermissions: _options.applicationCommandPermissions ?? transformApplicationCommandPermissions,
     attachment: _options.attachment ?? transformAttachment,
     auditLogEntry: _options.auditLogEntry ?? transformAuditLogEntry,
     automodActionExecution: _options.automodActionExecution ?? transformAutoModerationActionExecution,
@@ -500,6 +504,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     forumTag: _options.forumTag ?? transformForumTag,
     gatewayBot: _options.gatewayBot ?? transformGatewayBot,
     guild: _options.guild ?? transformGuild,
+    guildApplicationCommandPermissions: _options.guildApplicationCommandPermissions ?? transformGuildApplicationCommandPermissions,
     guildOnboarding: _options.guildOnboarding ?? transformGuildOnboarding,
     guildOnboardingPrompt: _options.guildOnboardingPrompt ?? transformGuildOnboardingPrompt,
     guildOnboardingPromptOption: _options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
