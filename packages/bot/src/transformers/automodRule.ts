@@ -25,7 +25,7 @@ export function transformAutoModerationRule(bot: Bot, payload: Partial<DiscordAu
   });
 }
 
-export function transformautoModerationRuleTriggerMetadata(
+export function transformAutoModerationRuleTriggerMetadata(
   bot: Bot,
   payload: Partial<DiscordAutoModerationRuleTriggerMetadata>,
   extra?: { partial?: boolean },
