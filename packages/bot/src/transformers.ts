@@ -14,7 +14,9 @@ import type {
   DiscordApplicationCommandPermissions,
   DiscordAttachment,
   DiscordAuditLogEntry,
+  DiscordAutoModerationAction,
   DiscordAutoModerationActionExecution,
+  DiscordAutoModerationActionMetadata,
   DiscordAutoModerationRule,
   DiscordAvatarDecorationData,
   DiscordChannel,
@@ -106,7 +108,11 @@ import { transformApplicationCommandOptionChoice } from './transformers/applicat
 import { transformApplicationCommandPermissions, transformGuildApplicationCommandPermissions } from './transformers/applicationCommandPermission.js';
 import { transformAttachment } from './transformers/attachment.js';
 import { transformAuditLogEntry, transformOptionalAuditEntryInfo } from './transformers/auditLogEntry.js';
-import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
+import {
+  transformAutoModerationAction,
+  transformAutoModerationActionExecution,
+  transformAutoModerationActionMetadata,
+} from './transformers/automodActionExecution.js';
 import { transformAutoModerationRule } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformForumTag } from './transformers/channel.js';
@@ -180,7 +186,9 @@ import type {
   ApplicationCommandPermissions,
   Attachment,
   AuditLogEntry,
+  AutoModerationAction,
   AutoModerationActionExecution,
+  AutoModerationActionMetadata,
   AutoModerationRule,
   AvatarDecorationData,
   Channel,
@@ -269,7 +277,9 @@ export type TransformerInformations = {
   applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions, true>;
   attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
   auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, true>;
-  automodActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, false>;
+  autoModerationAction: TransformerInformation<DiscordAutoModerationAction, AutoModerationAction, true>;
+  autoModerationActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, true>;
+  autoModerationActionMetadata: TransformerInformation<DiscordAutoModerationActionMetadata, AutoModerationActionMetadata, true>;
   automodRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, false>;
   avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
   channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
@@ -393,7 +403,9 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       applicationCommandPermissions: _options.customizers?.applicationCommandPermissions ?? defaultCustomizer,
       attachment: _options.customizers?.attachment ?? defaultCustomizer,
       auditLogEntry: _options.customizers?.auditLogEntry ?? defaultCustomizer,
-      automodActionExecution: _options.customizers?.automodActionExecution ?? defaultCustomizer,
+      autoModerationAction: _options.customizers?.autoModerationAction ?? defaultCustomizer,
+      autoModerationActionExecution: _options.customizers?.autoModerationActionExecution ?? defaultCustomizer,
+      autoModerationActionMetadata: _options.customizers?.autoModerationActionMetadata ?? defaultCustomizer,
       automodRule: _options.customizers?.automodRule ?? defaultCustomizer,
       avatarDecorationData: _options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: _options.customizers?.channel ?? defaultCustomizer,
@@ -495,7 +507,9 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     applicationCommandPermissions: _options.applicationCommandPermissions ?? transformApplicationCommandPermissions,
     attachment: _options.attachment ?? transformAttachment,
     auditLogEntry: _options.auditLogEntry ?? transformAuditLogEntry,
-    automodActionExecution: _options.automodActionExecution ?? transformAutoModerationActionExecution,
+    autoModerationAction: _options.autoModerationAction ?? transformAutoModerationAction,
+    autoModerationActionExecution: _options.autoModerationActionExecution ?? transformAutoModerationActionExecution,
+    autoModerationActionMetadata: _options.autoModerationActionMetadata ?? transformAutoModerationActionMetadata,
     automodRule: _options.automodRule ?? transformAutoModerationRule,
     avatarDecorationData: _options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: _options.channel ?? transformChannel,
