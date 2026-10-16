@@ -260,7 +260,7 @@ export type TransformerInformations = {
   activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation, true>;
   application: TransformerInformation<DiscordApplication, Application, true, { shardId?: number }>;
   applicationCommand: TransformerInformation<DiscordApplicationCommand, ApplicationCommand, true>;
-  applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption, false>;
+  applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption, true>;
   applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice, false>;
   applicationCommandPermission: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, false>;
   attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
