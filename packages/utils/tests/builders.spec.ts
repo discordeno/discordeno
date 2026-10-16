@@ -84,4 +84,16 @@ describe('builders/embeds.ts', () => {
   it('should set the url in the embed JSON', () => {
     expect(new EmbedsBuilder().setUrl('https://google.com')).to.eql([{ url: 'https://google.com' }]);
   });
+
+  it('should throw when a field value is longer than 1024 characters', () => {
+    const embeds = new EmbedsBuilder().addField('name', 'a'.repeat(1025));
+
+    expect(() => embeds.validate()).to.throw('Value of field 0 on embed 0 can not be longer than 1024 characters.');
+  });
+
+  it('should not throw when a field value is exactly 1024 characters', () => {
+    const embeds = new EmbedsBuilder().addField('name', 'a'.repeat(1024));
+
+    expect(() => embeds.validate()).to.not.throw();
+  });
 });
