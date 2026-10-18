@@ -160,7 +160,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 ): BotHelpers<TProps, TBehavior> {
   return {
     createAutomodRule: async (guildId, options, reason) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.createAutomodRule(guildId, options, reason)));
+      return bot.transformers.autoModerationRule(bot, snakelize(await bot.rest.createAutomodRule(guildId, options, reason)));
     },
     createChannel: async (guildId, options, reason) => {
       return bot.transformers.channel(bot, snakelize(await bot.rest.createChannel(guildId, options, reason)), { guildId });
@@ -205,13 +205,13 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.webhook(bot, snakelize(await bot.rest.createWebhook(channelId, options, reason)));
     },
     editApplicationCommandPermissions: async (guildId, commandId, bearerToken, options) => {
-      return bot.transformers.applicationCommandPermission(
+      return bot.transformers.guildApplicationCommandPermissions(
         bot,
         snakelize(await bot.rest.editApplicationCommandPermissions(guildId, commandId, bearerToken, options)),
       );
     },
     editAutomodRule: async (guildId, ruleId, options, reason) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.editAutomodRule(guildId, ruleId, options, reason)));
+      return bot.transformers.autoModerationRule(bot, snakelize(await bot.rest.editAutomodRule(guildId, ruleId, options, reason)));
     },
     editBotProfile: async (options) => {
       return bot.transformers.user(bot, snakelize(await bot.rest.editBotProfile(options)));
@@ -274,7 +274,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.welcomeScreen(bot, snakelize(await bot.rest.editWelcomeScreen(guildId, options, reason)));
     },
     editWidgetSettings: async (guildId, options, reason) => {
-      return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.editWidgetSettings(guildId, options, reason)));
+      return bot.transformers.guildWidgetSettings(bot, snakelize(await bot.rest.editWidgetSettings(guildId, options, reason)));
     },
     executeWebhook: async (webhookId, token, options) => {
       const result = await bot.rest.executeWebhook(webhookId, token, options);
@@ -311,21 +311,21 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       const res = await bot.rest.getApplicationCommandPermission(guildId, commandId, options);
       const snakedRes = snakelize(res);
 
-      return bot.transformers.applicationCommandPermission(bot, snakedRes);
+      return bot.transformers.guildApplicationCommandPermissions(bot, snakedRes);
     },
     getApplicationCommandPermissions: async (guildId, options) => {
       return (await bot.rest.getApplicationCommandPermissions(guildId, options)).map((res) =>
-        bot.transformers.applicationCommandPermission(bot, snakelize(res)),
+        bot.transformers.guildApplicationCommandPermissions(bot, snakelize(res)),
       );
     },
     getAuditLog: async (guildId, options) => {
       return await bot.rest.getAuditLog(guildId, options);
     },
     getAutomodRule: async (guildId, ruleId) => {
-      return bot.transformers.automodRule(bot, snakelize(await bot.rest.getAutomodRule(guildId, ruleId)));
+      return bot.transformers.autoModerationRule(bot, snakelize(await bot.rest.getAutomodRule(guildId, ruleId)));
     },
     getAutomodRules: async (guildId) => {
-      return (await bot.rest.getAutomodRules(guildId)).map((res) => bot.transformers.automodRule(bot, snakelize(res)));
+      return (await bot.rest.getAutomodRules(guildId)).map((res) => bot.transformers.autoModerationRule(bot, snakelize(res)));
     },
     getAvailableVoiceRegions: async () => {
       return (await bot.rest.getAvailableVoiceRegions()).map((res) => bot.transformers.voiceRegion(bot, snakelize(res)));
@@ -537,10 +537,10 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.welcomeScreen(bot, snakelize(await bot.rest.getWelcomeScreen(guildId)));
     },
     getWidget: async (guildId) => {
-      return bot.transformers.widget(bot, snakelize(await bot.rest.getWidget(guildId)));
+      return bot.transformers.guildWidget(bot, snakelize(await bot.rest.getWidget(guildId)));
     },
     getWidgetSettings: async (guildId) => {
-      return bot.transformers.widgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)));
+      return bot.transformers.guildWidgetSettings(bot, snakelize(await bot.rest.getWidgetSettings(guildId)));
     },
     publishMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.publishMessage(channelId, messageId)));

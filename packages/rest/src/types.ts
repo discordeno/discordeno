@@ -161,7 +161,7 @@ import type {
   UpsertGlobalApplicationCommandOptions,
   UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types';
-import type { logger } from '@discordeno/utils';
+import type { logger, urlToBase64 } from '@discordeno/utils';
 import type { InvalidRequestBucket } from './invalidBucket.js';
 import type { Queue } from './queue.js';
 import type { RestRoutes } from './typings/routes.js';
@@ -1166,9 +1166,18 @@ export interface RestManager {
   ) => Promise<Camelize<DiscordAutoModerationRule>>;
   /**
    * Modifies the bot's username, avatar or banner.
-   * NOTE: username: if changed may cause the bot's discriminator to be randomized.
+   *
+   * @param options - The parameters for the edit of the bot's profile.
+   * @returns An instance of the edited {@link DiscordUser}.
+   *
+   * @remarks
+   * Editing the `username` may cause the bot's discriminator to be randomized.
+   *
+   * `avatar` and `banner` must to be a Data URI scheme. {@link urlToBase64} from `@discordeno/utils` can be used to convert a URL to a Data URI scheme.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/user#modify-current-user}
    */
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null }) => Promise<Camelize<DiscordUser>>;
+  editBotProfile: (options: { username?: string; avatar?: string | null; banner?: string | null }) => Promise<Camelize<DiscordUser>>;
   /**
    * Edits a channel's settings.
    *

@@ -818,6 +818,24 @@ export interface DiscordFileUploadComponent extends DiscordBaseComponent {
    * @default true
    */
   required?: boolean;
+  /**
+   * The accepted file types for the file upload
+   *
+   * @remarks
+   * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
+   *
+   * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
+   *
+   * Discord recommends using the provided file groups rather than listing extensions individually.
+   * If you do list extensions individually, include `.jpg` for image uploads and both `.mp4` and `.mov` for video uploads,
+   * as some mobile clients rely on those extensions.
+   *
+   * This feature only checks the file extension against the filename and does not inspect the file contents.
+   * You are still responsible for validating the actual contents of the file.
+   *
+   * Up to 10 file types.
+   */
+  file_types?: string[];
 }
 
 /** https://docs.discord.com/developers/components/reference#file-upload-file-upload-interaction-response-structure */
