@@ -9,7 +9,7 @@ import {
   logger,
   snowflakeToTimestamp,
 } from '@discordeno/utils';
-import { type CamelizedRestEndpoints, restEndpoints } from './endpoints.js';
+import { type CamelizedRestEndpoints, type RestEndpoints, restEndpoints } from './endpoints.js';
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
 import { createRoutes } from './routes.js';
@@ -810,11 +810,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     // We need to wrap all the functions to pass the rest manager as the first argument, so we can use it in the endpoints
-    ...(Object.fromEntries(
+    snake: Object.fromEntries(
       Object.entries(restEndpoints).map(([key, endpointFunc]) => {
         const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
-        return [key, async (...args: unknown[]) => camelize(await func(rest, ...args))];
+        return [key, async (...args: unknown[]) => await func(rest, ...args)];
       }),
+    ) as RestEndpoints,
+
+    // The camelCase versions call rest.snake at call time, so overriding rest.snake.x also changes rest.x
+    ...(Object.fromEntries(
+      Object.keys(restEndpoints).map((key) => [
+        key,
+        async (...args: unknown[]) =>
+          camelize(await (rest.snake as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[key](...args)),
+      ]),
     ) as CamelizedRestEndpoints),
 
     preferSnakeCase(enabled: boolean) {
