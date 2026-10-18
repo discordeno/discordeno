@@ -213,14 +213,14 @@ export const restEndpoints = {
     if (!ordered) {
       await Promise.all(
         reactions.map(async (reaction) => {
-          await restEndpoints.addReaction(rest, channelId, messageId, reaction);
+          await rest.snake.addReaction(channelId, messageId, reaction);
         }),
       );
       return;
     }
 
     for (const reaction of reactions) {
-      await restEndpoints.addReaction(rest, channelId, messageId, reaction);
+      await rest.snake.addReaction(channelId, messageId, reaction);
     }
   },
   /**
@@ -2584,7 +2584,7 @@ export const restEndpoints = {
    * @returns A number indicating the number of members that would be kicked.
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions.
+   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions, unless the guild has the `PRUNE_REQUIRES_ADMIN` guild feature, in which case it requires the `ADMINISTRATOR` permission.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-prune-count}
    */
@@ -2692,7 +2692,7 @@ export const restEndpoints = {
   },
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   async getSessionInfo(rest: RestManager): Promise<DiscordGetGatewayBot> {
-    return await restEndpoints.getGatewayBot(rest);
+    return await rest.snake.getGatewayBot();
   },
   /**
    * Gets the stage instance associated with a stage channel, if one exists.
@@ -3553,7 +3553,7 @@ export const restEndpoints = {
    * @returns A number indicating how many members were pruned.
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions.
+   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions, unless the guild has the `PRUNE_REQUIRES_ADMIN` guild feature, in which case it requires the `ADMINISTRATOR` permission.
    *
    * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the options object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
    *
@@ -3688,11 +3688,7 @@ export const restEndpoints = {
    * This endpoint returns a partial entitlement object.
    * It will not contain subscription_id, starts_at, or ends_at, as it's valid in perpetuity.
    */
-  async createTestEntitlement(
-    rest: RestManager,
-    applicationId: BigString,
-    body: CreateTestEntitlement,
-  ): Promise<Partial<Camelize<DiscordEntitlement>>> {
+  async createTestEntitlement(rest: RestManager, applicationId: BigString, body: CreateTestEntitlement): Promise<Partial<DiscordEntitlement>> {
     return await rest.post<DiscordEntitlement>(rest.routes.monetization.entitlements(applicationId), {
       body,
     });

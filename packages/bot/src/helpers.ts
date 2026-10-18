@@ -42,7 +42,6 @@ import type {
   DiscordConnection,
   DiscordCurrentAuthorization,
   DiscordFollowedChannel,
-  DiscordGetAnswerVotesResponse,
   DiscordGuildPreview,
   DiscordGuildWidgetSettings,
   DiscordInvite,
@@ -165,7 +164,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
 ): BotHelpers<TProps, TBehavior> {
   return {
     createAutomodRule: async (guildId, options, reason) => {
-      return bot.transformers.automodRule(bot, await bot.rest.snake.createAutomodRule(guildId, options, reason));
+      return bot.transformers.autoModerationRule(bot, await bot.rest.snake.createAutomodRule(guildId, options, reason));
     },
     createChannel: async (guildId, options, reason) => {
       return bot.transformers.channel(bot, await bot.rest.snake.createChannel(guildId, options, reason), { guildId });
@@ -210,13 +209,13 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.webhook(bot, await bot.rest.snake.createWebhook(channelId, options, reason));
     },
     editApplicationCommandPermissions: async (guildId, commandId, bearerToken, options) => {
-      return bot.transformers.applicationCommandPermission(
+      return bot.transformers.guildApplicationCommandPermissions(
         bot,
         await bot.rest.snake.editApplicationCommandPermissions(guildId, commandId, bearerToken, options),
       );
     },
     editAutomodRule: async (guildId, ruleId, options, reason) => {
-      return bot.transformers.automodRule(bot, await bot.rest.snake.editAutomodRule(guildId, ruleId, options, reason));
+      return bot.transformers.autoModerationRule(bot, await bot.rest.snake.editAutomodRule(guildId, ruleId, options, reason));
     },
     editBotProfile: async (options) => {
       return bot.transformers.user(bot, await bot.rest.snake.editBotProfile(options));
@@ -279,7 +278,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.welcomeScreen(bot, await bot.rest.snake.editWelcomeScreen(guildId, options, reason));
     },
     editWidgetSettings: async (guildId, options, reason) => {
-      return bot.transformers.widgetSettings(bot, await bot.rest.snake.editWidgetSettings(guildId, options, reason));
+      return bot.transformers.guildWidgetSettings(bot, await bot.rest.snake.editWidgetSettings(guildId, options, reason));
     },
     executeWebhook: async (webhookId, token, options) => {
       const result = await bot.rest.snake.executeWebhook(webhookId, token, options);
@@ -313,24 +312,24 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.snake.revokeToken(clientId, clientSecret, options);
     },
     getApplicationCommandPermission: async (guildId, commandId, options) => {
-      const res = await bot.rest.snake.getApplicationCommandPermission(guildId, commandId, options);
-      const snakedRes = res;
-
-      return bot.transformers.applicationCommandPermission(bot, snakedRes);
+      return bot.transformers.guildApplicationCommandPermissions(
+        bot,
+        await bot.rest.snake.getApplicationCommandPermission(guildId, commandId, options),
+      );
     },
     getApplicationCommandPermissions: async (guildId, options) => {
       return (await bot.rest.snake.getApplicationCommandPermissions(guildId, options)).map((res) =>
-        bot.transformers.applicationCommandPermission(bot, res),
+        bot.transformers.guildApplicationCommandPermissions(bot, res),
       );
     },
     getAuditLog: async (guildId, options) => {
       return await bot.rest.getAuditLog(guildId, options);
     },
     getAutomodRule: async (guildId, ruleId) => {
-      return bot.transformers.automodRule(bot, await bot.rest.snake.getAutomodRule(guildId, ruleId));
+      return bot.transformers.autoModerationRule(bot, await bot.rest.snake.getAutomodRule(guildId, ruleId));
     },
     getAutomodRules: async (guildId) => {
-      return (await bot.rest.snake.getAutomodRules(guildId)).map((res) => bot.transformers.automodRule(bot, res));
+      return (await bot.rest.snake.getAutomodRules(guildId)).map((res) => bot.transformers.autoModerationRule(bot, res));
     },
     getAvailableVoiceRegions: async () => {
       return (await bot.rest.snake.getAvailableVoiceRegions()).map((res) => bot.transformers.voiceRegion(bot, res));
@@ -541,10 +540,10 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.welcomeScreen(bot, await bot.rest.snake.getWelcomeScreen(guildId));
     },
     getWidget: async (guildId) => {
-      return bot.transformers.widget(bot, await bot.rest.snake.getWidget(guildId));
+      return bot.transformers.guildWidget(bot, await bot.rest.snake.getWidget(guildId));
     },
     getWidgetSettings: async (guildId) => {
-      return bot.transformers.widgetSettings(bot, await bot.rest.snake.getWidgetSettings(guildId));
+      return bot.transformers.guildWidgetSettings(bot, await bot.rest.snake.getWidgetSettings(guildId));
     },
     publishMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, await bot.rest.snake.publishMessage(channelId, messageId));
@@ -573,7 +572,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.channel(bot, await bot.rest.snake.startThreadWithoutMessage(channelId, options, reason));
     },
     getPollAnswerVoters: async (channelId, messageId, answerId, options) => {
-      return await bot.rest.getPollAnswerVoters(channelId, messageId, answerId, options);
+      const res = await bot.rest.snake.getPollAnswerVoters(channelId, messageId, answerId, options);
+
+      return { users: res.users.map((user) => bot.transformers.user(bot, user)) };
     },
     endPoll: async (channelId, messageId) => {
       return bot.transformers.message(bot, await bot.rest.snake.endPoll(channelId, messageId));
@@ -1192,7 +1193,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     messageId: BigString,
     answerId: number,
     options?: GetPollAnswerVotes,
-  ) => Promise<Camelize<DiscordGetAnswerVotesResponse>>;
+  ) => Promise<{ users: SetupDesiredProps<User, TProps, TBehavior>[] }>;
   endPoll: (channelId: BigString, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   syncGuildTemplate: (guildId: BigString) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
   upsertGlobalApplicationCommands: (

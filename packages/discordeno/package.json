@@ -1,6 +1,6 @@
 {
   "name": "discordeno",
-  "version": "22.0.0-beta.1",
+  "version": "22.0.0-beta.2",
   "exports": "./dist/index.js",
   "type": "module",
   "license": "Apache-2.0",
@@ -31,17 +31,17 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.8",
+    "@biomejs/biome": "2.5.15",
     "@swc/cli": "^0.8.1",
-    "@swc/core": "^1.15.47",
+    "@swc/core": "^1.16.18",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.6.5",
     "c8": "^12.0.0",
-    "chai": "^6.2.2",
-    "mocha": "^11.8.0",
+    "chai": "^6.3.0",
+    "mocha": "^12.0.3",
     "tsconfig": "*",
-    "tsx": "^4.23.12",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3"
   }
 }
