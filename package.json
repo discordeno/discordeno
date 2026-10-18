@@ -28,9 +28,9 @@
     "@biomejs/biome": "2.5.15",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
-    "turbo": "^2.11.7",
+    "turbo": "^2.11.8",
     "typedoc": "^0.28.20",
-    "typedoc-plugin-markdown": "^4.13.1",
+    "typedoc-plugin-markdown": "^4.14.0",
     "typescript": "^6.0.3"
   },
   "engines": {
