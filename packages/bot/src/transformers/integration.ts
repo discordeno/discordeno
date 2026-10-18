@@ -16,7 +16,7 @@ export function transformIntegration(bot: Bot, payload: Partial<DiscordIntegrati
   if (payload.syncing) integration.syncing = payload.syncing;
   if (payload.role_id) integration.roleId = bot.transformers.snowflake(payload.role_id);
   if (payload.enable_emoticons) integration.enableEmoticons = payload.enable_emoticons;
-  if (payload.expire_behavior) integration.expireBehavior = payload.expire_behavior;
+  if (payload.expire_behavior !== undefined) integration.expireBehavior = payload.expire_behavior;
   if (payload.expire_grace_period) integration.expireGracePeriod = payload.expire_grace_period;
   if (payload.user) integration.user = bot.transformers.user(bot, payload.user);
   if (payload.account) integration.account = bot.transformers.integrationAccount(bot, payload.account);
