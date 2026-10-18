@@ -42,7 +42,6 @@ import type {
   DiscordConnection,
   DiscordCurrentAuthorization,
   DiscordFollowedChannel,
-  DiscordGetAnswerVotesResponse,
   DiscordGuildPreview,
   DiscordGuildWidgetSettings,
   DiscordInvite,
@@ -573,7 +572,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return bot.transformers.channel(bot, await bot.rest.snake.startThreadWithoutMessage(channelId, options, reason));
     },
     getPollAnswerVoters: async (channelId, messageId, answerId, options) => {
-      return await bot.rest.getPollAnswerVoters(channelId, messageId, answerId, options);
+      const res = await bot.rest.snake.getPollAnswerVoters(channelId, messageId, answerId, options);
+
+      return { users: res.users.map((user) => bot.transformers.user(bot, user)) };
     },
     endPoll: async (channelId, messageId) => {
       return bot.transformers.message(bot, await bot.rest.snake.endPoll(channelId, messageId));
@@ -1192,7 +1193,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     messageId: BigString,
     answerId: number,
     options?: GetPollAnswerVotes,
-  ) => Promise<Camelize<DiscordGetAnswerVotesResponse>>;
+  ) => Promise<{ users: SetupDesiredProps<User, TProps, TBehavior>[] }>;
   endPoll: (channelId: BigString, messageId: BigString) => Promise<SetupDesiredProps<Message, TProps, TBehavior>>;
   syncGuildTemplate: (guildId: BigString) => Promise<SetupDesiredProps<Template, TProps, TBehavior>>;
   upsertGlobalApplicationCommands: (
