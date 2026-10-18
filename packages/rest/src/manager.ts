@@ -2077,6 +2077,32 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteUser(lobbyId, userId));
     },
 
+    async updateApplicationIdentityProfile(applicationId, userId, providerIssuedUserId, options) {
+      return await rest.patch(rest.routes.applicationIdentityProfile.profile(applicationId, userId, providerIssuedUserId), {
+        body: options,
+      });
+    },
+
+    async getApplicationIdentityProfile(applicationId, userId, providerIssuedUserId) {
+      return await rest.get(rest.routes.applicationIdentityProfile.profile(applicationId, userId, providerIssuedUserId));
+    },
+
+    async getApplicationIdentityByUserId(userId, applicationId) {
+      return await rest.get(rest.routes.applicationIdentityProfile.applicationIdentitiesForUser(userId, applicationId));
+    },
+
+    async getApplicationIdentityByExternalId(applicationId, providerType, providerIssuedUserId, options) {
+      return await rest.get(
+        rest.routes.applicationIdentityProfile.applicationIdentitiesForExternalId(applicationId, providerType, providerIssuedUserId, options),
+      );
+    },
+
+    async deleteApplicationIdentity(userId, applicationId, providerType, providerIssuedUserId, options) {
+      return await rest.post(rest.routes.applicationIdentityProfile.delete(userId, applicationId, providerType, providerIssuedUserId), {
+        body: options,
+      });
+    },
+
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
 

@@ -735,6 +735,30 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       },
     },
 
+    applicationIdentityProfile: {
+      profile: (applicationId, userId, providerIssuedUserId) => {
+        return `/applications/${encode(applicationId)}/users/${encode(userId)}/identities/${encode(providerIssuedUserId)}/profile`;
+      },
+
+      applicationIdentitiesForUser: (userId, applicationId) => {
+        return `/users/${encode(userId)}/application-identities/${encode(applicationId)}`;
+      },
+
+      applicationIdentitiesForExternalId: (applicationId, providerType, providerIssuedUserId, options) => {
+        let url = `/applications/${encode(applicationId)}/application-identities/${encode(providerType)}/${encode(providerIssuedUserId)}`;
+
+        if (options) {
+          if (options.providerId) url += `?provider_id=${encode(options.providerId)}`;
+        }
+
+        return url;
+      },
+
+      delete: (userId, applicationId, providerType, providerIssuedUserId) => {
+        return `/users/${encode(userId)}/application-identities/${encode(applicationId)}/${encode(providerType)}/${encode(providerIssuedUserId)}/delete`;
+      },
+    },
+
     applicationEmoji(applicationId, emojiId) {
       return `/applications/${encode(applicationId)}/emojis/${encode(emojiId)}`;
     },
