@@ -357,7 +357,7 @@ export interface DiscordReady {
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** Contains id and flags */
-  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags'>;
+  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags' | 'flags_new'>;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#auto-moderation-action-execution-auto-moderation-action-execution-event-fields */
@@ -902,6 +902,8 @@ export interface DiscordClientStatus {
   mobile?: string;
   /** The user's status set for an active web (browser, bot account) application session */
   web?: string;
+  /** User's status set for an active virtual reality application session */
+  vr?: string;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#activity-object */

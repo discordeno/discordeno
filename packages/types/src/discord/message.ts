@@ -11,6 +11,7 @@ import type {
   DiscordMessageInteraction,
   InteractionTypes,
 } from './interactions.js';
+import type { HTTPJsonErrorCodes } from './opcodes.js';
 import type { DiscordPoll } from './poll.js';
 import type { DiscordSticker, DiscordStickerItem } from './sticker.js';
 import type { DiscordUser } from './user.js';
@@ -115,6 +116,30 @@ export interface DiscordMessage extends Partial<DiscordMessageCreateExtra> {
   shared_client_theme?: DiscordSharedClientTheme;
 }
 
+/** https://docs.discord.com/developers/resources/message#search-guild-messages-response-body */
+export interface DiscordSearchGuildMessages {
+  /** Whether the guild is undergoing a deep historical indexing operation */
+  doing_deep_historical_index: boolean;
+  /** The number of documents indexed during the current index operation, if any */
+  documents_indexed?: number;
+  /** The total number of results that match the query */
+  total_results: number;
+  /** Nested messages that match the query; surrounding context is no longer returned */
+  messages: DiscordMessage[][];
+  /** The threads that contain the returned messages */
+  threads?: DiscordChannel[];
+  /** A thread member object for each returned thread the current user has joined */
+  members?: DiscordThreadMember[];
+}
+
+/** https://docs.discord.com/developers/resources/message#search-guild-messages */
+export interface DiscordSearchGuildMessagesIndexing {
+  message: string;
+  code: HTTPJsonErrorCodes.IndexNotAvailable;
+  documents_indexed: number;
+  retry_after: number;
+}
+
 /** https://docs.discord.com/developers/resources/message#message-object-message-types */
 export enum MessageTypes {
   Default,
@@ -170,6 +195,7 @@ export enum MessageActivityTypes {
   Spectate = 2,
   Listen = 3,
   JoinRequest = 5,
+  StreamRequest = 6,
 }
 
 /** https://docs.discord.com/developers/resources/message#message-object-message-flags */
@@ -604,7 +630,7 @@ export interface DiscordRoleSubscriptionData {
   is_renewal: boolean;
 }
 
-/** https://docs.discord.com/developers/resources/message#message-pin-object-message-pin-object-struture */
+/** https://docs.discord.com/developers/resources/message#message-pin-object-message-pin-object-structure */
 export interface DiscordMessagePin {
   /** the time the message was pinned */
   pinned_at: string;

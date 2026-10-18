@@ -14,6 +14,7 @@ export function transformPresence(bot: Bot, payload: Partial<DiscordPresenceUpda
   if (payload.client_status?.desktop) presence.desktop = payload.client_status.desktop;
   if (payload.client_status?.mobile) presence.mobile = payload.client_status.mobile;
   if (payload.client_status?.web) presence.web = payload.client_status.web;
+  if (payload.client_status?.vr) presence.vr = payload.client_status.vr;
 
   return callCustomizer('presence', bot, payload, presence, {
     partial: extra?.partial ?? false,

@@ -25,9 +25,5 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["${configDir}/src"],
-  "ts-node": {
-    "swc": true,
-    "esm": true
-  }
+  "include": ["${configDir}/src"]
 }

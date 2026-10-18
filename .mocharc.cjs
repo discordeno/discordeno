@@ -11,13 +11,8 @@ const mochaConfig = {
 };
 
 if (!supportsTypescript) {
-  mochaConfig.require = ['ts-node/register'];
-
-  // Node options
-  mochaConfig.loader = ['ts-node/esm'];
-  // Node will output a ExperimentalWarning about --loader (--experimental-loader) and a DeprecationWarning because ts-node uses fs.Stat
-  mochaConfig['no-warnings'] = true;
-  mochaConfig['enable-source-maps'] = true;
+  // --import=tsx
+  mochaConfig.import = ['tsx'];
 }
 
 module.exports = mochaConfig;

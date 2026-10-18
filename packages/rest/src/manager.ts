@@ -1,66 +1,4 @@
-import { Buffer } from 'node:buffer';
 import { type InspectOptions, inspect } from 'node:util';
-import type {
-  BigString,
-  Camelize,
-  DiscordAccessTokenResponse,
-  DiscordActivityInstance,
-  DiscordApplication,
-  DiscordApplicationCommand,
-  DiscordApplicationRoleConnection,
-  DiscordApplicationRoleConnectionMetadata,
-  DiscordAuditLog,
-  DiscordAutoModerationRule,
-  DiscordBan,
-  DiscordBulkBan,
-  DiscordChannel,
-  DiscordConnection,
-  DiscordCurrentAuthorization,
-  DiscordEmoji,
-  DiscordEntitlement,
-  DiscordFollowedChannel,
-  DiscordGetAnswerVotesResponse,
-  DiscordGetGatewayBot,
-  DiscordGuild,
-  DiscordGuildApplicationCommandPermissions,
-  DiscordGuildOnboarding,
-  DiscordGuildPreview,
-  DiscordGuildWidget,
-  DiscordGuildWidgetSettings,
-  DiscordIncidentsData,
-  DiscordIntegration,
-  DiscordInteractionCallbackResponse,
-  DiscordInvite,
-  DiscordInviteMetadata,
-  DiscordListActiveThreads,
-  DiscordListArchivedThreads,
-  DiscordLobby,
-  DiscordLobbyInvite,
-  DiscordLobbyMember,
-  DiscordLobbyMessage,
-  DiscordMember,
-  DiscordMemberWithUser,
-  DiscordMessage,
-  DiscordPrunedCount,
-  DiscordRole,
-  DiscordScheduledEvent,
-  DiscordSku,
-  DiscordSoundboardSound,
-  DiscordStageInstance,
-  DiscordSticker,
-  DiscordStickerPack,
-  DiscordSubscription,
-  DiscordTargetUsersJobStatus,
-  DiscordTemplate,
-  DiscordThreadMember,
-  DiscordUser,
-  DiscordVanityUrl,
-  DiscordVoiceRegion,
-  DiscordVoiceState,
-  DiscordWebhook,
-  DiscordWelcomeScreen,
-  ModifyGuildTemplate,
-} from '@discordeno/types';
 import {
   camelize,
   camelToSnakeCase,
@@ -69,14 +7,13 @@ import {
   getBotIdFromToken,
   hasProperty,
   logger,
-  processReactionString,
   snowflakeToTimestamp,
-  urlToBase64,
 } from '@discordeno/utils';
+import { type CamelizedRestEndpoints, type RestEndpoints, restEndpoints } from './endpoints.js';
 import { createInvalidRequestBucket } from './invalidBucket.js';
 import { Queue } from './queue.js';
 import { createRoutes } from './routes.js';
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js';
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js';
 
 export const DISCORD_API_VERSION = 10;
 export const DISCORD_API_URL = 'https://discord.com/api';
@@ -115,7 +52,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     invalidBucket: createInvalidRequestBucket({ logger: options.logger }),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
+    retryProxiedRequests: options.proxy?.retryRequests ?? false,
     maxRetryCount: Infinity,
+    maxProxyRetryCount: 15,
+    proxyRetryDelayStep: 250,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -144,15 +84,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const global = rest.rateLimitedPaths.get('global');
       const now = Date.now();
 
-      if (ratelimited && now < ratelimited.resetTimestamp) {
-        return ratelimited.resetTimestamp - now;
-      }
+      // Whichever of the two lasts longer is the one that decides when this request may go out, a shorter per url limit does not make it
+      // alright to send while the global one is still running.
+      const urlWait = ratelimited && now < ratelimited.resetTimestamp ? ratelimited.resetTimestamp - now : 0;
+      const globalWait = global && now < global.resetTimestamp ? global.resetTimestamp - now : 0;
+      const wait = Math.max(urlWait, globalWait);
 
-      if (global && now < global.resetTimestamp) {
-        return global.resetTimestamp - now;
-      }
-
-      return false;
+      return wait > 0 ? wait : false;
     },
 
     async updateTokenQueues(oldToken, newToken) {
@@ -202,6 +140,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
           queue.waiting = [];
           queue.pending = [];
+
+          // The merged queue is not processing anything of its own, so nothing would ever look at what it was just handed.
+          newQueue.processWaiting();
+          newQueue.processPending();
 
           queue.cleanup();
         } else {
@@ -316,6 +258,48 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         headers,
         method,
       };
+    },
+
+    createRequestError(error, reason) {
+      let errorText: string;
+
+      switch (reason.status) {
+        case 400:
+          errorText = "The options was improperly formatted, or the server couldn't understand it.";
+          break;
+        case 401:
+          errorText = 'The Authorization header was missing or invalid.';
+          break;
+        case 403:
+          errorText = 'The Authorization token you passed did not have permission to the resource.';
+          break;
+        case 404:
+          errorText = "The resource at the location specified doesn't exist.";
+          break;
+        case 405:
+          errorText = 'The HTTP method used is not valid for the location specified.';
+          break;
+        case 429:
+          errorText = "You're being ratelimited.";
+          break;
+        case 502:
+          errorText = 'There was not a gateway available to process your options. Wait a bit and retry.';
+          break;
+        default:
+          errorText = reason.statusText ?? reason.error ?? 'Unknown error';
+      }
+
+      error.message = `[${reason.status}] ${errorText}`;
+
+      // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
+      // https://docs.discord.com/developers/reference#error-messages
+      if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
+        error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
+      }
+
+      error.cause = Object.assign(Object.create(baseErrorPrototype), reason);
+
+      return error;
     },
 
     processRateLimitedPaths() {
@@ -460,7 +444,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Give this attempt a hard deadline. `AbortSignal.timeout` aborts the fetch (and any in-progress body
       // read) once it fires, which makes the awaited fetch reject so a stalled connection can never keep this
       // queue's `processPending` loop (and therefore the whole queue) wedged forever. Omitted when disabled.
-      const request = new Request(url, { ...payload, signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined });
+      // The caller's signal is handed to fetch too: fetch refuses to send a request whose signal is already aborted, so a queue entry that got
+      // aborted while waiting never goes out, and aborting mid-request tears down the connection.
+      const signals: AbortSignal[] = [];
+      if (options.requestBodyOptions?.signal) signals.push(options.requestBodyOptions.signal);
+      if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
+
+      const request = new Request(url, { ...payload, signal: signals.length > 0 ? AbortSignal.any(signals) : undefined });
       rest.events.request(request, {
         body: options.requestBodyOptions?.body,
       });
@@ -470,6 +460,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+
+        // The caller aborted the request, never re-send it, Discord may have received it already. The caller was rejected the moment the signal fired.
+        if (options.requestBodyOptions?.signal?.aborted) {
+          options.reject({
+            ok: false,
+            status: 999,
+            error: 'The request was aborted.',
+            errorObject: error,
+          });
+          return;
+        }
 
         // The attempt hit `rest.requestTimeout` and was aborted. Treat it like a transient failure and retry
         // it through the queue, so a single stalled connection doesn't permanently fail the request.
@@ -501,7 +502,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared');
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers, payload.headers.authorization);
+      const bucketId = rest.processHeaders(
+        options.simplifiedUrl ?? rest.simplifyUrl(options.route, options.method),
+        response.headers,
+        payload.headers.authorization,
+      );
 
       if (bucketId) options.bucketId = bucketId;
 
@@ -601,7 +606,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
-      const url = rest.simplifyUrl(request.route, request.method);
+      request.simplifiedUrl ??= rest.simplifyUrl(request.route, request.method);
+      const url = request.simplifiedUrl;
 
       if (request.runThroughQueue === false) {
         await rest.sendRequest(request);
@@ -642,49 +648,96 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         const url = `${rest.baseUrl}/v${rest.version}${route}`;
 
-        // Retry on timeout up to `maxRetryCount`, mirroring the queued `sendRequest` path, so a stalled proxy
-        // connection doesn't permanently fail the request (and can never hang the caller forever).
-        for (let retryCount = 0; ; retryCount++) {
-          // Give the request to the proxy a hard deadline too via `AbortSignal.timeout` (omitted when disabled).
+        // An attempt that failed without a response is not re-sent by default. Whatever it failed on, the proxy may already have the request
+        // (a timeout only aborts our side of the connection, and a socket that dies once the request is on the wire may still have delivered
+        // it), so re-sending it would execute non-idempotent requests twice. `fetch` gives no way to tell the two apart, so the caller is the
+        // one who decides: `proxy.retryRequests` says re-sending against this proxy is safe. Retrying towards Discord is the proxy's job, it
+        // is the one talking to Discord.
+        let retryCount = 0;
+
+        for (;;) {
+          // The request may have been aborted while the previous attempt was timing out, never send it in that case.
+          if (options?.signal?.aborted) {
+            throw rest.createRequestError(error, { ok: false, status: 999, error: 'The request was aborted.', errorObject: options.signal.reason });
+          }
+
+          // Give the attempt a deadline (omitted when disabled) so a stalled connection can't hang the caller forever, and hand the caller's
+          // signal to fetch so aborting tears down a request that is already on the wire.
+          const signals: AbortSignal[] = [];
+          if (options?.signal) signals.push(options.signal);
+          if (rest.requestTimeout > 0) signals.push(AbortSignal.timeout(rest.requestTimeout));
+
           const request = new Request(url, {
             ...rest.createRequestBody(method, options),
-            signal: rest.requestTimeout > 0 ? AbortSignal.timeout(rest.requestTimeout) : undefined,
+            signal: signals.length > 0 ? AbortSignal.any(signals) : undefined,
           });
           rest.events.request(request, {
             body: options?.body,
           });
 
-          const result = await fetch(request).catch((fetchError) => {
+          const result = await fetch(request).catch(async (fetchError) => {
             rest.events.requestError(request, fetchError, { body: options?.body });
 
-            // The attempt hit `rest.requestTimeout` and was aborted; retry it until the budget is exhausted.
-            if (isTimeoutError(fetchError) && retryCount < rest.maxRetryCount) {
-              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms, retrying.`, fetchError);
+            // The caller aborted the request, never re-send it, the proxy may have received it already.
+            if (options?.signal?.aborted) {
+              throw rest.createRequestError(error, { ok: false, status: 999, error: 'The request was aborted.', errorObject: fetchError });
+            }
+
+            const timedOut = isTimeoutError(fetchError);
+
+            if (rest.retryProxiedRequests && retryCount < rest.maxRetryCount && retryCount < rest.maxProxyRetryCount) {
+              retryCount++;
+              rest.logger.debug(`request to proxy ${url} failed without a response, retrying.`, fetchError);
+              // Wait a little longer before each further attempt so a proxy that is down isn't hammered in a tight loop, while staying
+              // frequent enough to notice it coming back. A timed out attempt already sat out `requestTimeout`, so it goes again right away.
+              if (!timedOut) await delay(rest.proxyRetryDelayStep * retryCount);
               return undefined;
             }
 
-            throw fetchError;
+            if (timedOut) {
+              rest.logger.debug(`request to proxy ${url} timed out after ${rest.requestTimeout}ms.`);
+              throw rest.createRequestError(error, {
+                ok: false,
+                status: 999,
+                error: 'The request timed out and it maxed out the retries limit.',
+                errorObject: fetchError,
+              });
+            }
+
+            rest.logger.debug(`request fetch to proxy ${url} failed.`, fetchError);
+            throw rest.createRequestError(error, {
+              ok: false,
+              status: 999,
+              error:
+                'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
+              errorObject: fetchError,
+            });
           });
 
-          // If result is undefined, the attempt timed out and is being retried.
+          // If result is undefined, the attempt failed in a way that is safe to re-send and is being retried.
           if (!result) continue;
 
           // Sometimes the Content-Type may be "application/json; charset=utf-8", for this reason, we need to check the start of the header
-          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => null);
+          let bodyReadFailed = false;
+          const body = await (result.headers.get('Content-Type')?.startsWith('application/json') ? result.json() : result.text()).catch(() => {
+            bodyReadFailed = true;
+            return null;
+          });
 
           rest.events.response(request, result, {
             requestBody: options?.body,
             responseBody: body,
           });
 
-          if (!result.ok) {
-            error.cause = Object.assign(Object.create(baseErrorPrototype), {
-              ok: false,
-              status: result.status,
-              body,
-            });
+          // `fetch` resolves once the headers are in, so an abort can land while the body above is still being read. That read rejects, the
+          // fallback turns it into a `null` body and the caller gets it back as a successful empty response. A read that did finish is kept,
+          // the same way the queued path hands back a result that arrived before the signal fired.
+          if (bodyReadFailed && options?.signal?.aborted) {
+            throw rest.createRequestError(error, { ok: false, status: 999, error: 'The request was aborted.', errorObject: options.signal.reason });
+          }
 
-            throw error;
+          if (!result.ok) {
+            throw rest.createRequestError(error, { ok: false, status: result.status, statusText: result.statusText, body });
           }
 
           return result.status !== 204 ? (typeof body === 'string' ? JSON.parse(body) : body) : undefined;
@@ -692,6 +745,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       return await new Promise(async (resolve, reject) => {
+        const signal = options?.signal;
+        const abortListener = () => {
+          // Reject right away instead of waiting for the queue to reach the request. The signal is attached to the fetch itself as well, so an
+          // attempt that is already in flight gets its connection torn down too.
+          payload.reject({
+            ok: false,
+            status: 999,
+            error: 'The request was aborted.',
+            errorObject: signal?.reason,
+          });
+        };
+
         const payload: SendRequestOptions = {
           route,
           method,
@@ -701,1323 +766,66 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             await rest.processRequest(payload);
           },
           resolve: (data) => {
+            signal?.removeEventListener('abort', abortListener);
             resolve(data.status !== 204 ? (data.body as Parameters<typeof resolve>[0]) : undefined!);
           },
           reject: (reason) => {
-            let errorText: string;
-
-            switch (reason.status) {
-              case 400:
-                errorText = "The options was improperly formatted, or the server couldn't understand it.";
-                break;
-              case 401:
-                errorText = 'The Authorization header was missing or invalid.';
-                break;
-              case 403:
-                errorText = 'The Authorization token you passed did not have permission to the resource.';
-                break;
-              case 404:
-                errorText = "The resource at the location specified doesn't exist.";
-                break;
-              case 405:
-                errorText = 'The HTTP method used is not valid for the location specified.';
-                break;
-              case 429:
-                errorText = "You're being ratelimited.";
-                break;
-              case 502:
-                errorText = 'There was not a gateway available to process your options. Wait a bit and retry.';
-                break;
-              default:
-                errorText = reason.statusText ?? 'Unknown error';
-            }
-
-            error.message = `[${reason.status}] ${errorText}`;
-
-            // If discord sent us JSON, it is probably going to be an error message from which we can get and add some information about the error to the error message, the full body will be in the error.cause
-            // https://docs.discord.com/developers/reference#error-messages
-            if (typeof reason.body === 'object' && hasProperty(reason.body, 'code') && hasProperty(reason.body, 'message')) {
-              error.message += `\nDiscord error: [${reason.body.code}] ${reason.body.message}`;
-            }
-
-            error.cause = Object.assign(Object.create(baseErrorPrototype), reason);
-            reject(error);
+            signal?.removeEventListener('abort', abortListener);
+            reject(rest.createRequestError(error, reason));
           },
           runThroughQueue: options?.runThroughQueue,
         };
+
+        // Reject a queued request as soon as its signal aborts instead of when the queue reaches it, so a caller enforcing a deadline gets its
+        // answer right away. Fetch refusing to send an already aborted request is what guarantees the stale queue entry never goes out.
+        if (signal?.aborted) {
+          abortListener();
+          return;
+        }
+
+        signal?.addEventListener('abort', abortListener, { once: true });
 
         await rest.processRequest(payload);
       });
     },
 
-    async get<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('GET', url, options)) as Camelize<T>;
+    async get(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('GET', url, options);
     },
 
-    async post<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('POST', url, options)) as Camelize<T>;
+    async post(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('POST', url, options);
     },
 
     async delete(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      camelize(await rest.makeRequest('DELETE', url, options));
+      await rest.makeRequest('DELETE', url, options);
     },
 
-    async patch<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PATCH', url, options)) as Camelize<T>;
+    async patch(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('PATCH', url, options);
     },
 
-    async put<T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PUT', url, options)) as Camelize<T>;
+    async put(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return await rest.makeRequest('PUT', url, options);
     },
 
-    async addReaction(channelId, messageId, reaction) {
-      reaction = processReactionString(reaction);
+    // We need to wrap all the functions to pass the rest manager as the first argument, so we can use it in the endpoints
+    snake: Object.fromEntries(
+      Object.entries(restEndpoints).map(([key, endpointFunc]) => {
+        const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
+        return [key, async (...args: unknown[]) => await func(rest, ...args)];
+      }),
+    ) as RestEndpoints,
 
-      await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction));
-    },
-
-    async addReactions(channelId, messageId, reactions, ordered = false) {
-      if (!ordered) {
-        await Promise.all(
-          reactions.map(async (reaction) => {
-            await rest.addReaction(channelId, messageId, reaction);
-          }),
-        );
-        return;
-      }
-
-      for (const reaction of reactions) {
-        await rest.addReaction(channelId, messageId, reaction);
-      }
-    },
-
-    async addRole(guildId, userId, roleId, reason) {
-      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason });
-    },
-
-    async addThreadMember(channelId, userId) {
-      await rest.put(rest.routes.channels.threads.user(channelId, userId));
-    },
-
-    async addDmRecipient(channelId, userId, body) {
-      await rest.put(rest.routes.channels.dmRecipient(channelId, userId), { body });
-    },
-
-    async createAutomodRule(guildId, body, reason) {
-      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body, reason });
-    },
-
-    async createChannel(guildId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body, reason });
-    },
-
-    async createEmoji(guildId, body, reason) {
-      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason });
-    },
-
-    async createApplicationEmoji(body) {
-      return await rest.post<DiscordEmoji>(rest.routes.applicationEmojis(rest.applicationId), { body });
-    },
-
-    async createGlobalApplicationCommand(body, options) {
-      const restOptions: MakeRequestOptions = { body };
-
-      if (options?.bearerToken) {
-        restOptions.unauthorized = true;
-        restOptions.headers = {
-          authorization: `Bearer ${options.bearerToken}`,
-        };
-      }
-
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions);
-    },
-
-    async createGuildApplicationCommand(body, guildId, options) {
-      const restOptions: MakeRequestOptions = { body };
-
-      if (options?.bearerToken) {
-        restOptions.unauthorized = true;
-        restOptions.headers = {
-          authorization: `Bearer ${options.bearerToken}`,
-        };
-      }
-
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions);
-    },
-
-    async createGuildSticker(guildId, options, reason) {
-      const form = new FormData();
-      form.append('file', options.file.blob, options.file.name);
-      form.append('name', options.name);
-      form.append('description', options.description);
-      form.append('tags', options.tags);
-
-      return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), { body: form, reason });
-    },
-
-    async createGuildTemplate(guildId, body) {
-      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), { body });
-    },
-
-    async createForumThread(channelId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body, files: body.files, reason });
-    },
-
-    async createInvite(channelId, body = {}, reason) {
-      if (!body.targetUsersFile) {
-        return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body, reason });
-      }
-
-      // When we have to upload a file, we need to use FormData, and all other fields need to be part of the payload_json field.
-      const form = new FormData();
-
-      form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...body, targetUsersFile: undefined })));
-      form.append('target_users_file', body.targetUsersFile);
-
-      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body: form, reason });
-    },
-
-    async getGuildRoleMemberCounts(guildId) {
-      return await rest.get<Record<string, number>>(rest.routes.guilds.roles.memberCounts(guildId));
-    },
-
-    async createRole(guildId, body, reason) {
-      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), { body, reason });
-    },
-
-    async createScheduledEvent(guildId, body, reason) {
-      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), { body, reason });
-    },
-
-    async createStageInstance(body, reason) {
-      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), { body, reason });
-    },
-
-    async createWebhook(channelId, options, reason) {
-      return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
-        body: {
-          name: options.name,
-          avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-        },
-        reason,
-      });
-    },
-
-    async deleteAutomodRule(guildId, ruleId, reason) {
-      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason });
-    },
-
-    async setVoiceChannelStatus(channelId, options, reason) {
-      await rest.put(rest.routes.channels.voiceStatus(channelId), { body: options, reason });
-    },
-
-    async deleteChannel(channelId, reason) {
-      await rest.delete(rest.routes.channels.channel(channelId), {
-        reason,
-      });
-    },
-
-    async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
-      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), { reason });
-    },
-
-    async deleteEmoji(guildId, id, reason) {
-      await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason });
-    },
-
-    async deleteApplicationEmoji(id) {
-      await rest.delete(rest.routes.applicationEmoji(rest.applicationId, id));
-    },
-
-    async deleteFollowupMessage(token, messageId) {
-      await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true });
-    },
-
-    async deleteGlobalApplicationCommand(commandId) {
-      await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId));
-    },
-
-    async deleteGuildApplicationCommand(commandId, guildId) {
-      await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId));
-    },
-
-    async deleteGuildSticker(guildId, stickerId, reason) {
-      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), { reason });
-    },
-
-    async deleteGuildTemplate(guildId, templateCode) {
-      await rest.delete(rest.routes.guilds.templates.guild(guildId, templateCode));
-    },
-
-    async deleteIntegration(guildId, integrationId, reason) {
-      await rest.delete(rest.routes.guilds.integration(guildId, integrationId), { reason });
-    },
-
-    async deleteInvite(inviteCode, reason) {
-      await rest.delete(rest.routes.guilds.invite(inviteCode), { reason });
-    },
-
-    async getTargetUsers(inviteCode) {
-      return await rest.get<string>(rest.routes.guilds.inviteTargetUsers(inviteCode));
-    },
-
-    async updateTargetUsers(inviteCode, targetUsersFile) {
-      const form = new FormData();
-      form.append('target_users_file', targetUsersFile);
-
-      await rest.put(rest.routes.guilds.inviteTargetUsers(inviteCode), { body: form });
-    },
-
-    async getTargetUsersJobStatus(inviteCode) {
-      return await rest.get<DiscordTargetUsersJobStatus>(rest.routes.guilds.inviteTargetUsersJobStatus(inviteCode));
-    },
-
-    async deleteMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.message(channelId, messageId), { reason });
-    },
-
-    async deleteMessages(channelId, messageIds, reason) {
-      await rest.post(rest.routes.channels.bulk(channelId), {
-        body: {
-          messages: messageIds.slice(0, 100).map((id) => id.toString()),
-        },
-        reason,
-      });
-    },
-
-    async deleteOriginalInteractionResponse(token) {
-      await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true });
-    },
-
-    async deleteOwnReaction(channelId, messageId, reaction) {
-      reaction = processReactionString(reaction);
-
-      await rest.delete(rest.routes.channels.reactions.bot(channelId, messageId, reaction));
-    },
-
-    async deleteReactionsAll(channelId, messageId) {
-      await rest.delete(rest.routes.channels.reactions.all(channelId, messageId));
-    },
-
-    async deleteReactionsEmoji(channelId, messageId, reaction) {
-      reaction = processReactionString(reaction);
-
-      await rest.delete(rest.routes.channels.reactions.emoji(channelId, messageId, reaction));
-    },
-
-    async deleteRole(guildId, roleId, reason) {
-      await rest.delete(rest.routes.guilds.roles.one(guildId, roleId), { reason });
-    },
-
-    async deleteScheduledEvent(guildId, eventId) {
-      await rest.delete(rest.routes.guilds.events.event(guildId, eventId));
-    },
-
-    async deleteStageInstance(channelId, reason) {
-      await rest.delete(rest.routes.channels.stage(channelId), { reason });
-    },
-
-    async deleteUserReaction(channelId, messageId, userId, reaction) {
-      reaction = processReactionString(reaction);
-
-      await rest.delete(rest.routes.channels.reactions.user(channelId, messageId, reaction, userId));
-    },
-
-    async deleteWebhook(webhookId, reason) {
-      await rest.delete(rest.routes.webhooks.id(webhookId), { reason });
-    },
-
-    async deleteWebhookMessage(webhookId, token, messageId, options) {
-      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options), { unauthorized: true });
-    },
-
-    async deleteWebhookWithToken(webhookId, token) {
-      await rest.delete(rest.routes.webhooks.webhook(webhookId, token), {
-        unauthorized: true,
-      });
-    },
-
-    async editApplicationCommandPermissions(guildId, commandId, bearerToken, permissions) {
-      return await rest.put<DiscordGuildApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
-        {
-          body: {
-            permissions,
-          },
-          headers: { authorization: `Bearer ${bearerToken}` },
-        },
-      );
-    },
-
-    async editAutomodRule(guildId, ruleId, body, reason) {
-      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), { body, reason });
-    },
-
-    async editBotProfile(options) {
-      const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
-      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL;
-
-      return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
-        body: {
-          username: options.username?.trim(),
-          avatar,
-          banner,
-        },
-      });
-    },
-
-    async editChannel(channelId, body, reason) {
-      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), { body, reason });
-    },
-
-    async editChannelPermissionOverrides(channelId, body, reason) {
-      await rest.put(rest.routes.channels.overwrite(channelId, body.id), { body, reason });
-    },
-
-    async editChannelPositions(guildId, body) {
-      await rest.patch(rest.routes.guilds.channels(guildId), { body });
-    },
-
-    async editEmoji(guildId, id, body, reason) {
-      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body, reason });
-    },
-
-    async editApplicationEmoji(id, body) {
-      return await rest.patch<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, id), { body });
-    },
-
-    async editFollowupMessage(token, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), {
-        body,
-        files: body.files,
-        unauthorized: true,
-      });
-    },
-
-    async editGlobalApplicationCommand(commandId, body) {
-      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), { body });
-    },
-
-    async editGuild(guildId, body, reason) {
-      return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), { body, reason });
-    },
-
-    async editGuildApplicationCommand(commandId, guildId, body) {
-      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId), {
-        body,
-      });
-    },
-
-    async editGuildSticker(guildId, stickerId, body, reason) {
-      return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), { body, reason });
-    },
-
-    async editGuildTemplate(guildId, templateCode: string, body: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
-      return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), { body });
-    },
-
-    async editMessage(channelId, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body, files: body.files });
-    },
-
-    async editOriginalInteractionResponse(token, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
-        body,
-        files: body.files,
-        unauthorized: true,
-      });
-    },
-
-    async editOwnVoiceState(guildId, options) {
-      await rest.patch(rest.routes.guilds.voice(guildId), {
-        body: {
-          ...options,
-          requestToSpeakTimestamp: options.requestToSpeakTimestamp
-            ? new Date(options.requestToSpeakTimestamp).toISOString()
-            : options.requestToSpeakTimestamp,
-        },
-      });
-    },
-
-    async editScheduledEvent(guildId, eventId, body, reason) {
-      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), { body, reason });
-    },
-
-    async editRole(guildId, roleId, body, reason) {
-      return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), { body, reason });
-    },
-
-    async editRolePositions(guildId, body, reason) {
-      return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), { body, reason });
-    },
-
-    async editStageInstance(channelId, topic, reason?: string) {
-      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { body: { topic }, reason });
-    },
-
-    async editUserVoiceState(guildId, options) {
-      await rest.patch(rest.routes.guilds.voice(guildId, options.userId), { body: options });
-    },
-
-    async editWebhook(webhookId, body, reason) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body, reason });
-    },
-
-    async editWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
-        body: options,
-        files: options.files,
-        unauthorized: true,
-      });
-    },
-
-    async editWebhookWithToken(webhookId, token, body) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
-        body,
-        unauthorized: true,
-      });
-    },
-
-    async editWelcomeScreen(guildId, body, reason) {
-      return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), { body, reason });
-    },
-
-    async editWidgetSettings(guildId, body, reason) {
-      return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), { body, reason });
-    },
-
-    async executeWebhook(webhookId, token, options) {
-      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), {
-        body: options,
-        unauthorized: true,
-      });
-    },
-
-    async followAnnouncement(sourceChannelId, targetChannelId, reason) {
-      return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
-        body: {
-          webhookChannelId: targetChannelId,
-        },
-        reason,
-      });
-    },
-
-    async getActiveThreads(guildId) {
-      return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId));
-    },
-
-    async getApplicationCommandPermission(guildId, commandId, options) {
-      const restOptions: Omit<MakeRequestOptions, 'body'> = {};
-
-      if (options?.accessToken) {
-        restOptions.unauthorized = true;
-        restOptions.headers = {
-          authorization: `Bearer ${options.accessToken}`,
-        };
-      }
-
-      return await rest.get<DiscordGuildApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(options?.applicationId ?? rest.applicationId, guildId, commandId),
-        restOptions,
-      );
-    },
-
-    async getApplicationCommandPermissions(guildId, options) {
-      const restOptions: Omit<MakeRequestOptions, 'body'> = {};
-
-      if (options?.accessToken) {
-        restOptions.unauthorized = true;
-        restOptions.headers = {
-          authorization: `Bearer ${options.accessToken}`,
-        };
-      }
-
-      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(
-        rest.routes.interactions.commands.permissions(options?.applicationId ?? rest.applicationId, guildId),
-        restOptions,
-      );
-    },
-
-    async getApplicationInfo() {
-      return await rest.get<DiscordApplication>(rest.routes.oauth2.application());
-    },
-
-    async editApplicationInfo(body) {
-      return await rest.patch<DiscordApplication>(rest.routes.application(), {
-        body,
-      });
-    },
-
-    async getCurrentAuthenticationInfo(token) {
-      return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization(), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async exchangeToken(clientId, clientSecret, body) {
-      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`);
-
-      const restOptions: MakeRequestOptions = {
-        body,
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-          authorization: `Basic ${basicCredentials.toString('base64')}`,
-        },
-        runThroughQueue: false,
-        unauthorized: true,
-      };
-
-      if (body.grantType === 'client_credentials') {
-        restOptions.body.scope = body.scope.join(' ');
-      }
-
-      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions);
-    },
-
-    async revokeToken(clientId, clientSecret, body) {
-      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`);
-
-      await rest.post(rest.routes.oauth2.tokenRevoke(), {
-        body,
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-          authorization: `Basic ${basicCredentials.toString('base64')}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async getAuditLog(guildId, options) {
-      return await rest.get<DiscordAuditLog>(rest.routes.guilds.auditlogs(guildId, options));
-    },
-
-    async getAutomodRule(guildId, ruleId) {
-      return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId));
-    },
-
-    async getAutomodRules(guildId) {
-      return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId));
-    },
-
-    async getAvailableVoiceRegions() {
-      return await rest.get<DiscordVoiceRegion[]>(rest.routes.regions());
-    },
-
-    async getBan(guildId, userId) {
-      return await rest.get<DiscordBan>(rest.routes.guilds.members.ban(guildId, userId));
-    },
-
-    async getBans(guildId, options) {
-      return await rest.get<DiscordBan[]>(rest.routes.guilds.members.bans(guildId, options));
-    },
-
-    async getChannel(id) {
-      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id));
-    },
-
-    async getChannelInvites(channelId) {
-      return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId));
-    },
-
-    async getChannels(guildId) {
-      return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId));
-    },
-
-    async getChannelWebhooks(channelId) {
-      return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId));
-    },
-
-    async getDmChannel(userId) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
-        body: { recipientId: userId },
-      });
-    },
-
-    async getGroupDmChannel(body) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
-        body,
-      });
-    },
-
-    async getEmoji(guildId, emojiId) {
-      return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId));
-    },
-
-    async getApplicationEmoji(emojiId) {
-      return await rest.get<DiscordEmoji>(rest.routes.applicationEmoji(rest.applicationId, emojiId));
-    },
-
-    async getEmojis(guildId) {
-      return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId));
-    },
-
-    async getApplicationEmojis() {
-      return await rest.get<{ items: DiscordEmoji[] }>(rest.routes.applicationEmojis(rest.applicationId));
-    },
-
-    async getFollowupMessage(token, messageId) {
-      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true });
-    },
-
-    async getGatewayBot() {
-      return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot());
-    },
-
-    async getGlobalApplicationCommand(commandId) {
-      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId));
-    },
-
-    async getGlobalApplicationCommands(options) {
-      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId, options?.withLocalizations));
-    },
-
-    async getGuild(guildId, options = { counts: true }) {
-      return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts));
-    },
-
-    async getGuilds(token, options) {
-      const makeRequestOptions: MakeRequestOptions | undefined = token
-        ? {
-            headers: {
-              authorization: `Bearer ${token}`,
-            },
-            unauthorized: true,
-          }
-        : undefined;
-
-      return await rest.get<Partial<DiscordGuild>[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions);
-    },
-
-    async getGuildApplicationCommand(commandId, guildId) {
-      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId));
-    },
-
-    async getGuildApplicationCommands(guildId, options) {
-      return await rest.get<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId, options?.withLocalizations),
-      );
-    },
-
-    async getGuildPreview(guildId) {
-      return await rest.get<DiscordGuildPreview>(rest.routes.guilds.preview(guildId));
-    },
-
-    async getGuildTemplate(templateCode) {
-      return await rest.get<DiscordTemplate>(rest.routes.guilds.templates.code(templateCode));
-    },
-
-    async getGuildTemplates(guildId) {
-      return await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates.all(guildId));
-    },
-
-    async getGuildWebhooks(guildId) {
-      return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId));
-    },
-
-    async getIntegrations(guildId) {
-      return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId));
-    },
-
-    async getInvite(inviteCode, options) {
-      return await rest.get<DiscordInviteMetadata>(rest.routes.guilds.invite(inviteCode, options));
-    },
-
-    async getInvites(guildId) {
-      return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId));
-    },
-
-    async getMessage(channelId, messageId) {
-      return await rest.get<DiscordMessage>(rest.routes.channels.message(channelId, messageId));
-    },
-
-    async getMessages(channelId, options) {
-      return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options));
-    },
-
-    async getStickerPack(stickerPackId) {
-      return await rest.get<DiscordStickerPack>(rest.routes.stickerPack(stickerPackId));
-    },
-
-    async getStickerPacks() {
-      return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks());
-    },
-
-    async getOriginalInteractionResponse(token) {
-      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true });
-    },
-
-    async getChannelPins(channelId, options) {
-      return await rest.get(rest.routes.channels.messagePins(channelId, options));
-    },
-
-    async getPinnedMessages(channelId) {
-      return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId));
-    },
-
-    async getPrivateArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options));
-    },
-
-    async getPrivateJoinedArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options));
-    },
-
-    async getPruneCount(guildId, options) {
-      return await rest.get<DiscordPrunedCount>(rest.routes.guilds.prune(guildId, options));
-    },
-
-    async getPublicArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options));
-    },
-
-    async getRoles(guildId) {
-      return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId));
-    },
-
-    async getRole(guildId, roleId) {
-      return await rest.get<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId));
-    },
-
-    async getScheduledEvent(guildId, eventId, options) {
-      return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount));
-    },
-
-    async getScheduledEvents(guildId, options) {
-      return await rest.get<DiscordScheduledEvent[]>(rest.routes.guilds.events.events(guildId, options?.withUserCount));
-    },
-
-    async getScheduledEventUsers(guildId, eventId, options) {
-      return await rest.get<Array<{ user: DiscordUser; member?: DiscordMember }>>(rest.routes.guilds.events.users(guildId, eventId, options));
-    },
-
-    async getSessionInfo() {
-      return await rest.getGatewayBot();
-    },
-
-    async getStageInstance(channelId) {
-      return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId));
-    },
-
-    async getOwnVoiceState(guildId) {
-      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId));
-    },
-
-    async getUserVoiceState(guildId, userId) {
-      return await rest.get<DiscordVoiceState>(rest.routes.guilds.voice(guildId, userId));
-    },
-
-    async getSticker(stickerId: BigString) {
-      return await rest.get<DiscordSticker>(rest.routes.sticker(stickerId));
-    },
-
-    async getGuildSticker(guildId, stickerId) {
-      return await rest.get<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId));
-    },
-
-    async getGuildStickers(guildId) {
-      return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId));
-    },
-
-    async getThreadMember(channelId, userId, options) {
-      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.getUser(channelId, userId, options));
-    },
-
-    async getThreadMembers(channelId, options) {
-      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId, options));
-    },
-
-    async getReactions(channelId, messageId, reaction, options) {
-      return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options));
-    },
-
-    async getUser(id) {
-      return await rest.get<DiscordUser>(rest.routes.user(id));
-    },
-
-    async getCurrentUser(token) {
-      return await rest.get<DiscordUser>(rest.routes.currentUser(), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async getUserConnections(token) {
-      return await rest.get<DiscordConnection[]>(rest.routes.oauth2.connections(), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async getUserApplicationRoleConnection(token, applicationId) {
-      return await rest.get<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async getVanityUrl(guildId) {
-      return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId));
-    },
-
-    async getVoiceRegions(guildId) {
-      return await rest.get<DiscordVoiceRegion[]>(rest.routes.guilds.regions(guildId));
-    },
-
-    async getWebhook(webhookId) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId));
-    },
-
-    async getWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
-        unauthorized: true,
-      });
-    },
-
-    async getWebhookWithToken(webhookId, token) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), {
-        unauthorized: true,
-      });
-    },
-
-    async getWelcomeScreen(guildId) {
-      return await rest.get<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId));
-    },
-
-    async getWidget(guildId) {
-      return await rest.get<DiscordGuildWidget>(rest.routes.guilds.widgetJson(guildId));
-    },
-
-    async getWidgetSettings(guildId) {
-      return await rest.get<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId));
-    },
-
-    async joinThread(channelId) {
-      await rest.put(rest.routes.channels.threads.me(channelId));
-    },
-
-    async leaveGuild(guildId) {
-      await rest.delete(rest.routes.guilds.leave(guildId));
-    },
-
-    async leaveThread(channelId) {
-      await rest.delete(rest.routes.channels.threads.me(channelId));
-    },
-
-    async publishMessage(channelId, messageId) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId));
-    },
-
-    async removeRole(guildId, userId, roleId, reason) {
-      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason });
-    },
-
-    async removeThreadMember(channelId, userId) {
-      await rest.delete(rest.routes.channels.threads.user(channelId, userId));
-    },
-
-    async removeDmRecipient(channelId, userId) {
-      await rest.delete(rest.routes.channels.dmRecipient(channelId, userId));
-    },
-
-    async sendFollowupMessage(token, options) {
-      return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
-        body: options,
-        files: options.files,
-        unauthorized: true,
-      });
-    },
-
-    async sendInteractionResponse(interactionId, token, options, params) {
-      return await rest.post<void | DiscordInteractionCallbackResponse>(rest.routes.interactions.responses.callback(interactionId, token, params), {
-        body: options,
-        files: options.data?.files,
-        runThroughQueue: false,
-        unauthorized: true,
-      });
-    },
-
-    async sendMessage(channelId, body) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body, files: body.files });
-    },
-
-    async startThreadWithMessage(channelId, messageId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), { body, reason });
-    },
-
-    async startThreadWithoutMessage(channelId, body, reason) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body, reason });
-    },
-
-    async getPollAnswerVoters(channelId, messageId, answerId, options) {
-      return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options));
-    },
-
-    async endPoll(channelId, messageId) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId));
-    },
-
-    async syncGuildTemplate(guildId) {
-      return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId));
-    },
-
-    async banMember(guildId, userId, body, reason) {
-      await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason });
-    },
-
-    async bulkBanMembers(guildId, options, reason) {
-      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason });
-    },
-
-    async editCurrentMember(guildId, body, reason) {
-      return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body, reason });
-    },
-
-    async editMember(guildId, userId, body, reason) {
-      return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body, reason });
-    },
-
-    async getCurrentMember(guildId, token) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.currentMember(guildId), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async getMember(guildId, userId) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId));
-    },
-
-    async getMembers(guildId, options) {
-      return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options));
-    },
-
-    async getApplicationActivityInstance(applicationId, instanceId) {
-      return await rest.get<DiscordActivityInstance>(rest.routes.applicationActivityInstance(applicationId, instanceId));
-    },
-
-    async kickMember(guildId, userId, reason) {
-      await rest.delete(rest.routes.guilds.members.member(guildId, userId), {
-        reason,
-      });
-    },
-
-    async pinMessage(channelId, messageId, reason) {
-      await rest.put(rest.routes.channels.messagePin(channelId, messageId), { reason });
-    },
-
-    async pruneMembers(guildId, body, reason) {
-      return await rest.post<{ pruned: number | null }>(rest.routes.guilds.members.prune(guildId), { body, reason });
-    },
-
-    async searchMembers(guildId, query, options) {
-      return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.search(guildId, query, options));
-    },
-
-    async getGuildOnboarding(guildId) {
-      return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId));
-    },
-
-    async editGuildOnboarding(guildId, options, reason) {
-      return await rest.put<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId), {
-        body: options,
-        reason,
-      });
-    },
-
-    async modifyGuildIncidentActions(guildId, options) {
-      return await rest.put<DiscordIncidentsData>(rest.routes.guilds.incidentActions(guildId), { body: options });
-    },
-
-    async unbanMember(guildId, userId, reason) {
-      await rest.delete(rest.routes.guilds.members.ban(guildId, userId), { reason });
-    },
-
-    async unpinMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.messagePin(channelId, messageId), { reason });
-    },
-
-    async triggerTypingIndicator(channelId) {
-      await rest.post(rest.routes.channels.typing(channelId));
-    },
-
-    async upsertGlobalApplicationCommands(body, options) {
-      const restOptions: MakeRequestOptions = { body };
-
-      if (options?.bearerToken) {
-        restOptions.unauthorized = true;
-        restOptions.headers = {
-          authorization: `Bearer ${options.bearerToken}`,
-        };
-      }
-
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions);
-    },
-
-    async upsertGuildApplicationCommands(guildId, body, options) {
-      const restOptions: MakeRequestOptions = { body };
-
-      if (options?.bearerToken) {
-        restOptions.unauthorized = true;
-        restOptions.headers = {
-          authorization: `Bearer ${options.bearerToken}`,
-        };
-      }
-
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions);
-    },
-
-    async editUserApplicationRoleConnection(token, applicationId, body) {
-      return await rest.put<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
-        body,
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async deleteCurrentUserApplicationRoleConnection(bearerToken, applicationId) {
-      return await rest.delete(rest.routes.oauth2.roleConnections(applicationId), {
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async addGuildMember(guildId, userId, body) {
-      return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
-        body,
-      });
-    },
-
-    async createTestEntitlement(applicationId, body) {
-      return await rest.post<DiscordEntitlement>(rest.routes.monetization.entitlements(applicationId), {
-        body,
-      });
-    },
-
-    async listEntitlements(applicationId, options) {
-      return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options));
-    },
-
-    async getEntitlement(applicationId, entitlementId) {
-      return await rest.get<DiscordEntitlement>(rest.routes.monetization.entitlement(applicationId, entitlementId));
-    },
-
-    async deleteTestEntitlement(applicationId, entitlementId) {
-      await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId));
-    },
-
-    async consumeEntitlement(applicationId, entitlementId) {
-      await rest.post(rest.routes.monetization.consumeEntitlement(applicationId, entitlementId));
-    },
-
-    async listSkus(applicationId) {
-      return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId));
-    },
-
-    async listSubscriptions(skuId, options) {
-      return await rest.get<DiscordSubscription[]>(rest.routes.monetization.subscriptions(skuId, options));
-    },
-
-    async getSubscription(skuId, subscriptionId) {
-      return await rest.get<DiscordSubscription>(rest.routes.monetization.subscription(skuId, subscriptionId));
-    },
-
-    async sendSoundboardSound(channelId, options) {
-      await rest.post(rest.routes.soundboard.sendSound(channelId), {
-        body: options,
-      });
-    },
-
-    async listDefaultSoundboardSounds() {
-      return await rest.get<DiscordSoundboardSound[]>(rest.routes.soundboard.listDefault());
-    },
-
-    async listGuildSoundboardSounds(guildId) {
-      return await rest.get<{ items: DiscordSoundboardSound[] }>(rest.routes.soundboard.guildSounds(guildId));
-    },
-
-    async getGuildSoundboardSound(guildId, soundId) {
-      return await rest.get<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId));
-    },
-
-    async createGuildSoundboardSound(guildId, options, reason) {
-      return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSounds(guildId), {
-        body: options,
-        reason,
-      });
-    },
-
-    async modifyGuildSoundboardSound(guildId, soundId, options, reason) {
-      return await rest.post<DiscordSoundboardSound>(rest.routes.soundboard.guildSound(guildId, soundId), {
-        body: options,
-        reason,
-      });
-    },
-
-    async deleteGuildSoundboardSound(guildId, soundId, reason) {
-      return await rest.delete(rest.routes.soundboard.guildSound(guildId, soundId), {
-        reason,
-      });
-    },
-
-    async listApplicationRoleConnectionsMetadataRecords(applicationId) {
-      return await rest.get<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId));
-    },
-
-    async updateApplicationRoleConnectionsMetadataRecords(applicationId, options) {
-      return await rest.put<DiscordApplicationRoleConnectionMetadata[]>(rest.routes.applicationRoleConnectionMetadata(applicationId), {
-        body: options,
-      });
-    },
-
-    async createLobby(options) {
-      return await rest.post<DiscordLobby>(rest.routes.lobby.create(), {
-        body: options,
-      });
-    },
-
-    async getLobby(lobbyId) {
-      return await rest.get<DiscordLobby>(rest.routes.lobby.lobby(lobbyId));
-    },
-
-    async modifyLobby(lobbyId, options) {
-      return await rest.patch<DiscordLobby>(rest.routes.lobby.lobby(lobbyId), {
-        body: options,
-      });
-    },
-
-    async deleteLobby(lobbyId) {
-      return await rest.delete(rest.routes.lobby.lobby(lobbyId));
-    },
-
-    async addMemberToLobby(lobbyId, userId, options) {
-      return await rest.put<DiscordLobbyMember>(rest.routes.lobby.member(lobbyId, userId), {
-        body: options,
-      });
-    },
-
-    async bulkUpdateLobbyMembers(lobbyId, options) {
-      return await rest.post<DiscordLobbyMember[]>(rest.routes.lobby.membersBulk(lobbyId), {
-        body: options,
-      });
-    },
-
-    async removeMemberFromLobby(lobbyId, userId) {
-      return await rest.delete(rest.routes.lobby.member(lobbyId, userId));
-    },
-
-    async leaveLobby(lobbyId, bearerToken) {
-      return await rest.delete(rest.routes.lobby.leave(lobbyId), {
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async linkChannelToLobby(lobbyId, bearerToken, options) {
-      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
-        body: options,
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async unlinkChannelToLobby(lobbyId, bearerToken) {
-      return await rest.patch<DiscordLobby>(rest.routes.lobby.link(lobbyId), {
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    async updateLobbyMessageModerationMetadata(lobbyId, messageId, options) {
-      await rest.put(rest.routes.lobby.moderationMetadata(lobbyId, messageId), {
-        body: options,
-      });
-    },
-
-    createOrJoinLobby(options) {
-      return rest.put<DiscordLobby>(rest.routes.lobby.create(), {
-        body: options,
-      });
-    },
-
-    sendLobbyMessage(bearerToken, lobbyId, options) {
-      return rest.post<DiscordLobbyMessage>(rest.routes.lobby.messages(lobbyId), {
-        body: options,
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    getLobbyMessages(bearerToken, lobbyId, options) {
-      return rest.get<DiscordLobbyMessage[]>(rest.routes.lobby.messages(lobbyId, options), {
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    createLobbyChannelInviteForSelf(bearerToken, lobbyId) {
-      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteSelf(lobbyId), {
-        headers: {
-          authorization: `Bearer ${bearerToken}`,
-        },
-        unauthorized: true,
-      });
-    },
-
-    createLobbyChannelInviteForUser(lobbyId, userId) {
-      return rest.post<DiscordLobbyInvite>(rest.routes.lobby.inviteUser(lobbyId, userId));
-    },
-
-    preferSnakeCase(enabled: boolean) {
-      const camelizer = enabled ? (x: any) => x : camelize;
-
-      rest.get = async (url, options) => {
-        return camelizer(await rest.makeRequest('GET', url, options));
-      };
-
-      rest.post = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('POST', url, options));
-      };
-
-      rest.delete = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        camelizer(await rest.makeRequest('DELETE', url, options));
-      };
-
-      rest.patch = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('PATCH', url, options));
-      };
-
-      rest.put = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
-        return camelizer(await rest.makeRequest('PUT', url, options));
-      };
-
-      return rest;
-    },
-  };
+    // The camelCase versions call rest.snake at call time, so overriding rest.snake.x also changes rest.x
+    ...(Object.fromEntries(
+      Object.keys(restEndpoints).map((key) => [
+        key,
+        async (...args: unknown[]) =>
+          camelize(await (rest.snake as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[key](...args)),
+      ]),
+    ) as CamelizedRestEndpoints),
+  } satisfies RestManager;
 
   return rest;
 }
