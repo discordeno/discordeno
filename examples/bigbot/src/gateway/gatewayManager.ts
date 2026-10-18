@@ -26,6 +26,9 @@ const gatewayManager = createGatewayManager({
   totalShards: TOTAL_SHARDS,
   totalWorkers: TOTAL_WORKERS,
   resharding: {
+    enabled: true,
+    checkInterval: 28800000,
+    shardsFullPercentage: 80,
     getSessionInfo: restManager.getGatewayBot,
   },
 });
