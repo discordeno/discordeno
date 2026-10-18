@@ -704,7 +704,7 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.snake.deleteAutomodRule(guildId, ruleId, reason);
     },
     setVoiceChannelStatus: async (channelId, options, reason) => {
-      return await bot.rest.setVoiceChannelStatus(channelId, options, reason);
+      return await bot.rest.snake.setVoiceChannelStatus(channelId, options, reason);
     },
     deleteChannel: async (channelId, reason) => {
       return await bot.rest.snake.deleteChannel(channelId, reason);
