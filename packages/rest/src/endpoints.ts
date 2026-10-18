@@ -2584,8 +2584,7 @@ export const restEndpoints = {
    * @returns A number indicating the number of members that would be kicked.
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions, unless the guild has the `PRUNE_REQUIRES_ADMIN` guild feature,
-   * in which case it requires the `ADMINISTRATOR` permission.
+   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions, unless the guild has the `PRUNE_REQUIRES_ADMIN` guild feature, in which case it requires the `ADMINISTRATOR` permission.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-prune-count}
    */
@@ -3554,8 +3553,7 @@ export const restEndpoints = {
    * @returns A number indicating how many members were pruned.
    *
    * @remarks
-   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions, unless the guild has the `PRUNE_REQUIRES_ADMIN` guild feature,
-   * in which case it requires the `ADMINISTRATOR` permission.
+   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions, unless the guild has the `PRUNE_REQUIRES_ADMIN` guild feature, in which case it requires the `ADMINISTRATOR` permission.
    *
    * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the options object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
    *
