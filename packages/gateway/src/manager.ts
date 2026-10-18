@@ -847,8 +847,10 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @param guildId - The ID of the guild to get the ephemeral channel data for.
    * @param options - The parameters for the fetching of the ephemeral channel data.
    * @returns - This method returns nothing. The server will send a CHANNEL_INFO event
+   *
+   * @see {@link https://docs.discord.com/developers/events/gateway-events#request-channel-info}
    */
-  requestChannelInfo: (guildId: BigString, options: RequestChannelInfo) => Promise<void>;
+  requestChannelInfo: (guildId: BigString, options: Omit<RequestChannelInfo, 'guildId'>) => Promise<void>;
   /**
    * Leaves the voice channel the bot user is currently in.
    *
