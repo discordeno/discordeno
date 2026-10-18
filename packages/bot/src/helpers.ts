@@ -308,7 +308,10 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.snake.revokeToken(clientId, clientSecret, options);
     },
     getApplicationCommandPermission: async (guildId, commandId, options) => {
-      return bot.transformers.guildApplicationCommandPermissions(bot, await bot.rest.snake.getApplicationCommandPermission(guildId, commandId, options));
+      return bot.transformers.guildApplicationCommandPermissions(
+        bot,
+        await bot.rest.snake.getApplicationCommandPermission(guildId, commandId, options),
+      );
     },
     getApplicationCommandPermissions: async (guildId, options) => {
       return (await bot.rest.snake.getApplicationCommandPermissions(guildId, options)).map((res) =>
