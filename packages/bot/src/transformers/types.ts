@@ -385,6 +385,7 @@ export interface OptionalAuditEntryInfo {
   roleName?: string;
   type?: number;
   integrationType?: string;
+  status?: string;
 }
 
 export interface AutoModerationActionExecution {

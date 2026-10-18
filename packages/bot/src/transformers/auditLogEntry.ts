@@ -36,6 +36,7 @@ export function transformOptionalAuditEntryInfo(bot: Bot, payload: Partial<Disco
   if (payload.role_name) optionalAuditEntryInfo.roleName = payload.role_name;
   if (payload.type) optionalAuditEntryInfo.type = Number(payload.type);
   if (payload.integration_type) optionalAuditEntryInfo.integrationType = payload.integration_type;
+  if (payload.status) optionalAuditEntryInfo.status = payload.status;
 
   return callCustomizer('optionalAuditEntryInfo', bot, payload, optionalAuditEntryInfo, {
     partial: extra?.partial ?? false,
