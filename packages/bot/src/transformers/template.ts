@@ -9,7 +9,7 @@ export function transformTemplate(bot: Bot, payload: Partial<DiscordTemplate>, e
   if (payload.code) template.code = payload.code;
   if (payload.name) template.name = payload.name;
   if (payload.description) template.description = payload.description;
-  if (payload.usage_count) template.usageCount = payload.usage_count;
+  if (payload.usage_count !== undefined) template.usageCount = payload.usage_count;
   if (payload.creator_id) template.creatorId = bot.transformers.snowflake(payload.creator_id);
   if (payload.creator) template.creator = bot.transformers.user(bot, payload.creator);
   if (payload.created_at) template.createdAt = Date.parse(payload.created_at);
