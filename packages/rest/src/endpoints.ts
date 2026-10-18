@@ -156,6 +156,7 @@ import type {
   SearchMembers,
   SendLobbyMessage,
   SendSoundboardSound,
+  SetVoiceChannelStatus,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   UpsertGlobalApplicationCommandOptions,
@@ -635,6 +636,24 @@ export const restEndpoints = {
    */
   async deleteAutomodRule(rest: RestManager, guildId: BigString, ruleId: BigString, reason?: string): Promise<void> {
     await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason });
+  },
+  /**
+   * Set a voice channel’s status
+   *
+   * @param channelId - The ID of the channel to set the status of.
+   * @param options - The parameters for the status of the voice channel.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @returns Nothing
+   *
+   * @remarks
+   * Requires the `SET_VOICE_CHANNEL_STATUS` permission, and additionally the `MANAGE_CHANNELS` permission if the current user is not connected to the voice channel.
+   *
+   * Fires a _Voice Channel Status Update_ Gateway event.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/channel#set-voice-channel-status}
+   */
+  async setVoiceChannelStatus(rest: RestManager, channelId: BigString, options: SetVoiceChannelStatus, reason?: string): Promise<void> {
+    await rest.put(rest.routes.channels.voiceStatus(channelId), { body: options, reason });
   },
   /**
    * Deletes a channel from within a guild.

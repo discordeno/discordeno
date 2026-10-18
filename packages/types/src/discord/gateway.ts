@@ -42,6 +42,8 @@ export enum GatewayIntents {
    * - STAGE_INSTANCE_CREATE
    * - STAGE_INSTANCE_UPDATE
    * - STAGE_INSTANCE_DELETE
+   * - VOICE_CHANNEL_STATUS_UPDATE
+   * - VOICE_CHANNEL_START_TIME_UPDATE
    */
   Guilds = 1 << 0,
   /**
@@ -209,6 +211,7 @@ export type GatewayDispatchEventNames =
   | 'CHANNEL_CREATE'
   | 'CHANNEL_UPDATE'
   | 'CHANNEL_DELETE'
+  | 'CHANNEL_INFO'
   | 'CHANNEL_PINS_UPDATE'
   | 'THREAD_CREATE'
   | 'THREAD_UPDATE'
@@ -263,6 +266,8 @@ export type GatewayDispatchEventNames =
   | 'TYPING_START'
   | 'USER_UPDATE'
   | 'VOICE_CHANNEL_EFFECT_SEND'
+  | 'VOICE_CHANNEL_START_TIME_UPDATE'
+  | 'VOICE_CHANNEL_STATUS_UPDATE'
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
@@ -295,6 +300,19 @@ export interface DiscordGatewayPayload {
 // TODO: Add Resume: https://docs.discord.com/developers/events/gateway-events#resume-resume-structure
 // TODO: Add Request Guild Members: https://docs.discord.com/developers/events/gateway-events#request-guild-members-request-guild-members-structure
 // TODO: Add Request Soundboard Sounds: https://docs.discord.com/developers/events/gateway-events#request-soundboard-sounds-request-soundboard-sounds-structure
+
+/** https://docs.discord.com/developers/events/gateway-events#request-channel-info-request-channel-info-structure */
+export interface DiscordRequestChannelInfo {
+  /** The guild id to request channel info for */
+  guild_id: string;
+  /** The fields to request
+   *
+   * @remarks
+   * The current available fields are `status` and `voice_start_time`.
+   */
+  fields: Array<'status' | 'voice_start_time'>;
+}
+
 // TODO: Add Voice State Update: https://docs.discord.com/developers/events/gateway-events#update-voice-state-gateway-voice-state-update-structure
 
 /** https://docs.discord.com/developers/events/gateway-events#update-presence-gateway-presence-update-structure */
@@ -366,6 +384,44 @@ export interface DiscordAutoModerationActionExecution {
   matched_keyword: string | null;
   /** The substring in content that triggered the rule */
   matched_content: string | null;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-structure */
+export interface DiscordChannelInfo {
+  /** The guild id */
+  guild_id: string;
+  /** Ephemeral data for channels in the guild */
+  channels: DiscordChannelInfoData[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-channel-structure */
+export interface DiscordChannelInfoData {
+  /** The channel id */
+  id: string;
+  /** The voice channel status */
+  status?: string | null;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voice_start_time?: number | null;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#voice-channel-status-update */
+export interface DiscordVoiceChannelStatusUpdate {
+  /** The channel id */
+  id: string;
+  /** The guild id */
+  guild_id: string;
+  /** The voice channel status */
+  status: string | null;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#voice-channel-start-time-update */
+export interface DiscordVoiceChannelStartTimeUpdate {
+  /** The channel id */
+  id: string;
+  /** The guild id */
+  guild_id: string;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voice_start_time?: number | null;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#thread-create */

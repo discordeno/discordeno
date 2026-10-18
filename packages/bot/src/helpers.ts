@@ -109,6 +109,7 @@ import type {
   SearchMembers,
   SendLobbyMessage,
   SendSoundboardSound,
+  SetVoiceChannelStatus,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   UpsertGlobalApplicationCommandOptions,
@@ -702,6 +703,9 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     deleteAutomodRule: async (guildId, ruleId, reason) => {
       return await bot.rest.snake.deleteAutomodRule(guildId, ruleId, reason);
     },
+    setVoiceChannelStatus: async (channelId, options, reason) => {
+      return await bot.rest.snake.setVoiceChannelStatus(channelId, options, reason);
+    },
     deleteChannel: async (channelId, reason) => {
       return await bot.rest.snake.deleteChannel(channelId, reason);
     },
@@ -1259,6 +1263,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   addDmRecipient: (channelId: BigString, userId: BigString, options: AddDmRecipientOptions) => Promise<void>;
   addGuildMember: (guildId: BigString, userId: BigString, options: AddGuildMemberOptions) => Promise<void>;
   deleteAutomodRule: (guildId: BigString, ruleId: BigString, reason?: string) => Promise<void>;
+  setVoiceChannelStatus: (channelId: BigString, options: SetVoiceChannelStatus, reason?: string) => Promise<void>;
   deleteChannel: (channelId: BigString, reason?: string) => Promise<void>;
   deleteChannelPermissionOverride: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>;
   deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>;
