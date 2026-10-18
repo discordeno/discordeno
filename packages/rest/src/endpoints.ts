@@ -213,14 +213,14 @@ export const restEndpoints = {
     if (!ordered) {
       await Promise.all(
         reactions.map(async (reaction) => {
-          await restEndpoints.addReaction(rest, channelId, messageId, reaction);
+          await rest.addReaction(channelId, messageId, reaction);
         }),
       );
       return;
     }
 
     for (const reaction of reactions) {
-      await restEndpoints.addReaction(rest, channelId, messageId, reaction);
+      await rest.addReaction(channelId, messageId, reaction);
     }
   },
   /**
@@ -2747,7 +2747,7 @@ export const restEndpoints = {
   },
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   async getSessionInfo(rest: RestManager): Promise<Camelize<DiscordGetGatewayBot>> {
-    return await restEndpoints.getGatewayBot(rest);
+    return await rest.getGatewayBot();
   },
   /**
    * Gets the stage instance associated with a stage channel, if one exists.
