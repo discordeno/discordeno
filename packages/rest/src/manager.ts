@@ -810,20 +810,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     // We need to wrap all the functions to pass the rest manager as the first argument, so we can use it in the endpoints
-    ...(Object.fromEntries(
-      Object.entries(restEndpoints).map(([key, endpointFunc]) => {
-        const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
-        return [key, async (...args: unknown[]) => camelize(await func(rest, ...args))];
-      }),
-    ) as CamelizedRestEndpoints),
-
-    // Same as above
     snake: Object.fromEntries(
       Object.entries(restEndpoints).map(([key, endpointFunc]) => {
         const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
         return [key, async (...args: unknown[]) => await func(rest, ...args)];
       }),
     ) as RestEndpoints,
+
+    // The camelCase versions call rest.snake at call time, so overriding rest.snake.x also changes rest.x
+    ...(Object.fromEntries(
+      Object.keys(restEndpoints).map((key) => [
+        key,
+        async (...args: unknown[]) =>
+          camelize(await (rest.snake as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[key](...args)),
+      ]),
+    ) as CamelizedRestEndpoints),
 
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
