@@ -8,6 +8,8 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  ChannelInfo,
+  ChannelInfoData,
   Collectibles,
   Component,
   DefaultReactionEmoji,
@@ -73,6 +75,8 @@ export interface TransformersObjects {
   attachment: Attachment;
   avatarDecorationData: AvatarDecorationData;
   channel: Channel;
+  channelInfo: ChannelInfo;
+  channelInfoData: ChannelInfoData;
   collectibles: Collectibles;
   component: Component;
   defaultReactionEmoji: DefaultReactionEmoji;
@@ -329,6 +333,17 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
     },
+    channelInfo: {
+      guildId: defaultValue,
+      channels: defaultValue,
+      ...desiredProperties.channelInfo,
+    },
+    channelInfoData: {
+      id: defaultValue,
+      voiceStartTime: defaultValue,
+      status: defaultValue,
+      ...desiredProperties.channelInfoData,
+    },
     collectibles: {
       nameplate: defaultValue,
       ...desiredProperties.collectibles,
@@ -370,6 +385,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       component: defaultValue,
       values: defaultValue,
       resolved: defaultValue,
+      fileTypes: defaultValue,
       ...desiredProperties.component,
     },
     forumTag: {

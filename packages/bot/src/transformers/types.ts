@@ -279,6 +279,24 @@ export interface ApplicationCommandOption {
   maxLength?: number;
   /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
   autocomplete?: boolean;
+  /**
+   * The accepted file types for the file upload
+   *
+   * @remarks
+   * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
+   *
+   * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
+   *
+   * Discord recommends using the provided file groups rather than listing extensions individually.
+   * If you do list extensions individually, include `.jpg` for image uploads and both `.mp4` and `.mov` for video uploads,
+   * as some mobile clients rely on those extensions.
+   *
+   * This feature only checks the file extension against the filename and does not inspect the file contents.
+   * You are still responsible for validating the actual contents of the file.
+   *
+   * Up to 10 file types.
+   */
+  fileTypes?: string[];
 }
 
 export interface ApplicationCommandOptionChoice {
@@ -367,6 +385,7 @@ export interface OptionalAuditEntryInfo {
   roleName?: string;
   type?: number;
   integrationType?: string;
+  status?: string;
 }
 
 export interface AutoModerationActionExecution {
@@ -690,6 +709,24 @@ export interface Component {
   default?: boolean;
   /** Resolved entities from selected options */
   resolved?: InteractionDataResolved;
+  /**
+   * The accepted file types for the file upload
+   *
+   * @remarks
+   * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
+   *
+   * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
+   *
+   * Discord recommends using the provided file groups rather than listing extensions individually.
+   * If you do list extensions individually, include `.jpg` for image uploads and both `.mp4` and `.mov` for video uploads,
+   * as some mobile clients rely on those extensions.
+   *
+   * This feature only checks the file extension against the filename and does not inspect the file contents.
+   * You are still responsible for validating the actual contents of the file.
+   *
+   * Up to 10 file types.
+   */
+  fileTypes?: string[];
 }
 
 export interface UnfurledMediaItem {
@@ -1012,7 +1049,7 @@ export interface Integration {
   id: bigint;
   name: string;
   guildId: bigint;
-  type: 'twitch' | 'youtube' | 'discord';
+  type: 'twitch' | 'youtube' | 'discord' | 'guild_subscription';
   account: IntegrationAccount;
   scopes: OAuth2Scope[];
 }
@@ -1647,6 +1684,7 @@ export interface PresenceUpdate {
   desktop?: string;
   mobile?: string;
   web?: string;
+  vr?: string;
   user: User;
   guildId: bigint;
   status: PresenceStatus;
@@ -2154,6 +2192,24 @@ export interface LobbyMember {
    * Can only be set via Add a Member to a Lobby or Bulk Update Lobby Members.
    */
   additionalName?: string;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-structure */
+export interface ChannelInfo {
+  /** The guild id */
+  guildId: bigint;
+  /** Ephemeral data for channels in the guild */
+  channels: ChannelInfoData[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-channel-structure */
+export interface ChannelInfoData {
+  /** The channel id */
+  id: bigint;
+  /** The voice channel status */
+  status?: string;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voiceStartTime?: number;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-message-object */

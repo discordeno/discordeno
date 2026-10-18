@@ -246,13 +246,7 @@ function transformStringSelectMenuComponent(
         label: option.label,
         value: option.value,
         description: option.description,
-        emoji: option.emoji
-          ? {
-              id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
-              name: option.emoji.name ?? undefined,
-              animated: option.emoji.animated,
-            }
-          : undefined,
+        emoji: option.emoji ? bot.transformers.emoji(bot, option.emoji, { partial: true }) : undefined,
         default: option.default,
       }));
     if (props.disabled && _payload.disabled) select.disabled = _payload.disabled;
@@ -493,6 +487,7 @@ function transformFileUploadComponent(bot: Bot, payload: Partial<DiscordFileUplo
     if (props.minValues && _payload.min_values) fileUpload.minValues = _payload.min_values;
     if (props.maxValues && _payload.max_values) fileUpload.maxValues = _payload.max_values;
     if (props.required && _payload.required) fileUpload.required = _payload.required;
+    if (props.fileTypes && _payload.file_types) fileUpload.fileTypes = _payload.file_types;
   }
 
   return fileUpload;

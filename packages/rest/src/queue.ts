@@ -56,15 +56,27 @@ export class Queue {
     return this.remaining > 0;
   }
 
-  /** Pauses the execution until a request is allowed to be made. */
-  async waitUntilRequestAvailable(): Promise<void> {
+  /** Pauses the execution until a request is allowed to be made, or until the given signal aborts. */
+  async waitUntilRequestAvailable(signal?: AbortSignal): Promise<void> {
     return await new Promise(async (resolve) => {
       // If whatever amount of requests is left is more than the safety margin, allow the request
       if (this.isRequestAllowed()) {
         // this.remaining++;
         resolve();
       } else {
-        this.waiting.push(resolve);
+        const stopWaiting = () => {
+          signal?.removeEventListener('abort', onAbort);
+          resolve();
+        };
+        // A caller that gives up is taken back out of the queue right away, so its request and body aren't kept alive until the queue resumes.
+        const onAbort = () => {
+          const index = this.waiting.indexOf(stopWaiting);
+          if (index !== -1) this.waiting.splice(index, 1);
+          stopWaiting();
+        };
+
+        this.waiting.push(stopWaiting);
+        signal?.addEventListener('abort', onAbort, { once: true });
         await this.processWaiting();
       }
     });
@@ -89,6 +101,9 @@ export class Queue {
 
     // Mark as false so next pending request can be triggered by new loop.
     this.processing = false;
+    // The waiting list can empty out without anything moving on to the pending one, when every request in it was cancelled, and nothing would
+    // look at this queue again.
+    this.cleanup();
   }
 
   /** Process the queue of all requests pending to be sent. */
@@ -101,6 +116,14 @@ export class Queue {
 
     while (this.pending.length > 0) {
       this.rest.logger.debug(`Queue ${this.queueType} ${this.url} process pending while loop ran with ${this.pending.length}.`);
+
+      // Drop the requests whose caller gave up, they were rejected the moment their signal fired. This happens before anything is spent on
+      // them: sending them would use up a rate limit slot and delay the requests that are still wanted, and fetch refuses them anyway.
+      if (this.pending[0]?.requestBodyOptions?.signal?.aborted) {
+        this.pending.shift();
+        continue;
+      }
+
       if (!this.firstRequest && !this.isRequestAllowed()) {
         const now = Date.now();
         const future = this.frozenAt + this.interval;
@@ -110,7 +133,7 @@ export class Queue {
 
       const request = this.pending[0];
       if (request) {
-        const basicURL = this.rest.simplifyUrl(request.route, request.method);
+        const basicURL = request.simplifiedUrl ?? this.rest.simplifyUrl(request.route, request.method);
 
         // If this url is still rate limited, try again
         const urlResetIn = this.rest.checkRateLimits(basicURL, this.identifier);
@@ -169,9 +192,22 @@ export class Queue {
 
   /** Checks if a request is available and adds it to the queue. Also triggers queue processing if not already processing. */
   async makeRequest(options: SendRequestOptions): Promise<void> {
-    await this.waitUntilRequestAvailable();
-    this.pending.push(options);
-    this.processPending();
+    const signal = options.requestBodyOptions?.signal;
+
+    await this.waitUntilRequestAvailable(signal);
+
+    // The caller gave up while this was waiting for a slot, it has already been rejected and there is nothing left to send.
+    if (signal?.aborted) {
+      this.cleanup();
+      return;
+    }
+
+    // `updateTokenQueues` may have re-keyed this queue while the request was waiting, which leaves this instance detached from the manager and
+    // unable to ever be given a rate limit slot back, so the request goes to whichever queue holds the key now.
+    const owner = this.rest.queues.get(`${this.identifier}${this.url}`) ?? this;
+
+    owner.pending.push(options);
+    owner.processPending();
   }
 
   /** Cleans up the queue by checking if there is nothing left and removing it. */
@@ -196,8 +232,10 @@ export class Queue {
 
       if (this.timeoutId) clearTimeout(this.timeoutId);
 
-      // No requests have been requested for this queue so we nuke this queue
-      this.rest.queues.delete(`${this.identifier}${this.url}`);
+      // `updateTokenQueues` can point this queue's key at another queue that is very much alive, so only the queue the manager actually holds
+      // under that key may delete it.
+      const key = `${this.identifier}${this.url}`;
+      if (this.rest.queues.get(key) === this) this.rest.queues.delete(key);
       this.rest.logger.debug(
         `[Queue] ${this.queueType} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
         [...this.rest.queues.values()].map((queue) => `${queue.queueType}${queue.url}`),

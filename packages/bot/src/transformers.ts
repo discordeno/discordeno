@@ -3,6 +3,7 @@ import type {
   BigString,
   DiscordActivity,
   DiscordActivityAssets,
+  DiscordActivityEmoji,
   DiscordActivityInstance,
   DiscordActivityLocation,
   DiscordAllowedMentions,
@@ -10,15 +11,25 @@ import type {
   DiscordApplicationCommand,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationCommandPermissions,
   DiscordAttachment,
   DiscordAuditLogEntry,
+  DiscordAutoModerationAction,
   DiscordAutoModerationActionExecution,
+  DiscordAutoModerationActionMetadata,
   DiscordAutoModerationRule,
+  DiscordAutoModerationRuleTriggerMetadata,
   DiscordAvatarDecorationData,
   DiscordChannel,
+  DiscordChannelInfo,
+  DiscordChannelInfoData,
   DiscordCollectibles,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
+  DiscordEmbedAuthor,
+  DiscordEmbedFooter,
+  DiscordEmbedImage,
+  DiscordEmbedVideo,
   DiscordEmoji,
   DiscordEntitlement,
   DiscordForumTag,
@@ -31,6 +42,8 @@ import type {
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIncidentsData,
+  DiscordIntegrationAccount,
+  DiscordIntegrationApplication,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionCallback,
@@ -55,6 +68,7 @@ import type {
   DiscordMessagePin,
   DiscordMessageSnapshot,
   DiscordNameplate,
+  DiscordOptionalAuditEntryInfo,
   DiscordPoll,
   DiscordPollMedia,
   DiscordPresenceUpdate,
@@ -62,6 +76,7 @@ import type {
   DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
+  DiscordSessionStartLimit,
   DiscordSharedClientTheme,
   DiscordSku,
   DiscordSoundboardSound,
@@ -70,6 +85,7 @@ import type {
   DiscordStickerPack,
   DiscordSubscription,
   DiscordTeam,
+  DiscordTeamMember,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordThreadMemberGuildCreate,
@@ -80,6 +96,7 @@ import type {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
+  DiscordWelcomeScreenChannel,
   RecursivePartial,
 } from '@discordeno/types';
 import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils';
@@ -90,26 +107,36 @@ import {
   type SetupDesiredProps,
   type TransformersDesiredProperties,
 } from './desiredProperties.js';
-import { transformActivity, transformActivityAssets, transformActivityInstance, transformActivityLocation } from './transformers/activity.js';
+import {
+  transformActivity,
+  transformActivityAssets,
+  transformActivityEmoji,
+  transformActivityInstance,
+  transformActivityLocation,
+} from './transformers/activity.js';
 import { transformApplication } from './transformers/application.js';
 import { transformApplicationCommand } from './transformers/applicationCommand.js';
 import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js';
 import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js';
-import { transformApplicationCommandPermission } from './transformers/applicationCommandPermission.js';
+import { transformApplicationCommandPermissions, transformGuildApplicationCommandPermissions } from './transformers/applicationCommandPermission.js';
 import { transformAttachment } from './transformers/attachment.js';
-import { transformAuditLogEntry } from './transformers/auditLogEntry.js';
-import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
-import { transformAutoModerationRule } from './transformers/automodRule.js';
+import { transformAuditLogEntry, transformOptionalAuditEntryInfo } from './transformers/auditLogEntry.js';
+import {
+  transformAutoModerationAction,
+  transformAutoModerationActionExecution,
+  transformAutoModerationActionMetadata,
+} from './transformers/automodActionExecution.js';
+import { transformAutoModerationRule, transformAutoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
-import { transformChannel, transformForumTag } from './transformers/channel.js';
+import { transformChannel, transformChannelInfo, transformChannelInfoData, transformForumTag } from './transformers/channel.js';
 import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
-import { transformEmbed } from './transformers/embed.js';
+import { transformEmbed, transformEmbedAuthor, transformEmbedFooter, transformEmbedImage, transformEmbedVideo } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
 import { transformEntitlement } from './transformers/entitlement.js';
-import { transformGatewayBot } from './transformers/gatewayBot.js';
+import { transformGatewayBot, transformSessionStartLimit } from './transformers/gatewayBot.js';
 import { transformGuild } from './transformers/guild.js';
 import { transformIncidentsData } from './transformers/incidentsData.js';
-import { transformIntegration } from './transformers/integration.js';
+import { transformIntegration, transformIntegrationAccount, transformIntegrationApplication } from './transformers/integration.js';
 import {
   transformInteraction,
   transformInteractionCallback,
@@ -162,28 +189,39 @@ import { transformStageInstance } from './transformers/stageInstance.js';
 import { transformInviteStageInstance } from './transformers/stageInviteInstance.js';
 import { transformSticker, transformStickerPack } from './transformers/sticker.js';
 import { transformSubscription } from './transformers/subscription.js';
-import { transformTeam } from './transformers/team.js';
+import { transformTeam, transformTeamMember } from './transformers/team.js';
 import { transformTemplate } from './transformers/template.js';
 import { type ThreadMemberTransformerExtra, transformThreadMember, transformThreadMemberGuildCreate } from './transformers/threadMember.js';
 import type {
   Activity,
   ActivityAssets,
+  ActivityEmoji,
   ActivityInstance,
   ActivityLocation,
   Application,
   ApplicationCommand,
   ApplicationCommandOption,
   ApplicationCommandOptionChoice,
+  ApplicationCommandPermissions,
   Attachment,
   AuditLogEntry,
+  AutoModerationAction,
   AutoModerationActionExecution,
+  AutoModerationActionMetadata,
   AutoModerationRule,
+  AutoModerationRuleTriggerMetadata,
   AvatarDecorationData,
   Channel,
+  ChannelInfo,
+  ChannelInfoData,
   Collectibles,
   Component,
   DefaultReactionEmoji,
   Embed,
+  EmbedAuthor,
+  EmbedFooter,
+  EmbedImage,
+  EmbedVideo,
   Emoji,
   Entitlement,
   ForumTag,
@@ -197,6 +235,8 @@ import type {
   GuildWidgetSettings,
   IncidentsData,
   Integration,
+  IntegrationAccount,
+  IntegrationApplication,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
@@ -218,6 +258,7 @@ import type {
   MessagePin,
   MessageSnapshot,
   Nameplate,
+  OptionalAuditEntryInfo,
   Poll,
   PollMedia,
   PresenceUpdate,
@@ -225,6 +266,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SessionStartLimit,
   SharedClientTheme,
   Sku,
   SoundboardSound,
@@ -233,6 +275,7 @@ import type {
   StickerPack,
   Subscription,
   Team,
+  TeamMember,
   Template,
   ThreadMember,
   ThreadMemberGuildCreate,
@@ -243,98 +286,111 @@ import type {
   VoiceState,
   Webhook,
   WelcomeScreen,
+  WelcomeScreenChannel,
 } from './transformers/types.js';
 import { transformCollectibles, transformNameplate, transformUser, transformUserPrimaryGuild } from './transformers/user.js';
 import { transformVoiceRegion } from './transformers/voiceRegion.js';
 import { transformVoiceState } from './transformers/voiceState.js';
 import { transformWebhook } from './transformers/webhook.js';
-import { transformWelcomeScreen } from './transformers/welcomeScreen.js';
-import { transformWidget } from './transformers/widget.js';
-import { transformWidgetSettings } from './transformers/widgetSettings.js';
+import { transformWelcomeScreen, transformWelcomeScreenChannel } from './transformers/welcomeScreen.js';
+import { transformGuildWidget } from './transformers/widget.js';
+import { transformGuildWidgetSettings } from './transformers/widgetSettings.js';
 
 export type TransformerInformations = {
-  activity: TransformerInformation<DiscordActivity, Activity, false>;
-  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets, false>;
-  activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance, true>;
-  activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation, true>;
-  application: TransformerInformation<DiscordApplication, Application, true, { shardId?: number }>;
-  applicationCommand: TransformerInformation<DiscordApplicationCommand, ApplicationCommand, false>;
-  applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption, false>;
-  applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice, false>;
-  applicationCommandPermission: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, false>;
-  attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
-  auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, false>;
-  automodActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, false>;
-  automodRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, false>;
-  avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
-  channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
-  collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
-  component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component, true>;
-  defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji, true>;
-  embed: TransformerInformation<DiscordEmbed, Embed, false>;
-  emoji: TransformerInformation<DiscordEmoji, Emoji, true>;
-  entitlement: TransformerInformation<DiscordEntitlement, Entitlement, true>;
-  forumTag: TransformerInformation<DiscordForumTag, ForumTag, true>;
-  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, false>;
-  guild: TransformerInformation<DiscordGuild, Guild, true, { shardId?: number }>;
-  guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding, true>;
-  guildOnboardingPrompt: TransformerInformation<DiscordGuildOnboardingPrompt, GuildOnboardingPrompt, true>;
-  guildOnboardingPromptOption: TransformerInformation<DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption, true>;
-  incidentsData: TransformerInformation<DiscordIncidentsData, IncidentsData, true>;
-  integration: TransformerInformation<DiscordIntegrationCreateUpdate, Integration, false>;
-  interaction: TransformerInformation<DiscordInteraction, Interaction, true, { shardId?: number }>;
-  interactionCallback: TransformerInformation<DiscordInteractionCallback, InteractionCallback, true>;
-  interactionCallbackResponse: TransformerInformation<DiscordInteractionCallbackResponse, InteractionCallbackResponse, true, { shardId?: number }>;
-  interactionDataOptions: TransformerInformation<DiscordInteractionDataOption, InteractionDataOption, false>;
-  interactionDataResolved: TransformerInformation<
-    DiscordInteractionDataResolved,
-    InteractionDataResolved,
-    true,
-    { shardId?: number; guildId?: BigString }
-  >;
-  interactionResource: TransformerInformation<DiscordInteractionResource, InteractionResource, true, { shardId?: number }>;
-  invite: TransformerInformation<DiscordInviteMetadata, Invite, true, { shardId?: number }>;
-  inviteStageInstance: TransformerInformation<DiscordInviteStageInstance, InviteStageInstance, true, { guildId?: BigString }>;
-  lobby: TransformerInformation<DiscordLobby, Lobby, true>;
-  lobbyMember: TransformerInformation<DiscordLobbyMember, LobbyMember, true>;
-  lobbyMessage: TransformerInformation<DiscordLobbyMessage, LobbyMessage, true>;
-  lobbyMessageLobbyMember: TransformerInformation<DiscordLobbyMessageLobbyMember, LobbyMessageLobbyMember, true>;
-  lobbyInvite: TransformerInformation<DiscordLobbyInvite, LobbyInvite, true>;
-  mediaGalleryItem: TransformerInformation<DiscordMediaGalleryItem, MediaGalleryItem, true>;
-  member: TransformerInformation<DiscordMember, Member, true, { guildId?: BigString; userId?: BigString }>;
-  message: TransformerInformation<DiscordMessage, Message, true, { shardId?: number }>;
-  messageCall: TransformerInformation<DiscordMessageCall, MessageCall, true>;
-  messageInteractionMetadata: TransformerInformation<DiscordMessageInteractionMetadata, MessageInteractionMetadata, true>;
-  messagePin: TransformerInformation<DiscordMessagePin, MessagePin, true, { shardId?: number }>;
-  messageSnapshot: TransformerInformation<DiscordMessageSnapshot, MessageSnapshot, true, { shardId?: number }>;
-  nameplate: TransformerInformation<DiscordNameplate, Nameplate, true>;
-  poll: TransformerInformation<DiscordPoll, Poll, true>;
-  pollMedia: TransformerInformation<DiscordPollMedia, PollMedia, true>;
-  presence: TransformerInformation<DiscordPresenceUpdate, PresenceUpdate, true>;
-  role: TransformerInformation<DiscordRole, Role, true, { guildId?: BigString }>;
-  roleColors: TransformerInformation<DiscordRoleColors, RoleColors, true>;
-  scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent, true>;
-  scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule, true>;
-  sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme, true>;
-  sku: TransformerInformation<DiscordSku, Sku, true>;
-  soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound, true>;
-  stageInstance: TransformerInformation<DiscordStageInstance, StageInstance, true>;
-  sticker: TransformerInformation<DiscordSticker, Sticker, true>;
-  stickerPack: TransformerInformation<DiscordStickerPack, StickerPack, false>;
-  subscription: TransformerInformation<DiscordSubscription, Subscription, true>;
-  team: TransformerInformation<DiscordTeam, Team, false>;
-  template: TransformerInformation<DiscordTemplate, Template, false>;
-  threadMember: TransformerInformation<DiscordThreadMember, ThreadMember, false, ThreadMemberTransformerExtra>;
-  threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate, false>;
-  unfurledMediaItem: TransformerInformation<DiscordUnfurledMediaItem, UnfurledMediaItem, true>;
-  user: TransformerInformation<DiscordUser, User, true>;
-  userPrimaryGuild: TransformerInformation<DiscordUserPrimaryGuild, UserPrimaryGuild, true>;
-  voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion, false>;
-  voiceState: TransformerInformation<DiscordVoiceState, VoiceState, true, { guildId?: BigString }>;
-  webhook: TransformerInformation<DiscordWebhook, Webhook, true>;
-  welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen, false>;
-  widget: TransformerInformation<DiscordGuildWidget, GuildWidget, false>;
-  widgetSettings: TransformerInformation<DiscordGuildWidgetSettings, GuildWidgetSettings, false>;
+  activity: TransformerInformation<DiscordActivity, Activity>;
+  activityAssets: TransformerInformation<DiscordActivityAssets, ActivityAssets>;
+  activityEmoji: TransformerInformation<DiscordActivityEmoji, ActivityEmoji>;
+  activityInstance: TransformerInformation<DiscordActivityInstance, ActivityInstance>;
+  activityLocation: TransformerInformation<DiscordActivityLocation, ActivityLocation>;
+  application: TransformerInformation<DiscordApplication, Application, { shardId?: number }>;
+  applicationCommand: TransformerInformation<DiscordApplicationCommand, ApplicationCommand>;
+  applicationCommandOption: TransformerInformation<DiscordApplicationCommandOption, ApplicationCommandOption>;
+  applicationCommandOptionChoice: TransformerInformation<DiscordApplicationCommandOptionChoice, ApplicationCommandOptionChoice>;
+  applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions>;
+  attachment: TransformerInformation<DiscordAttachment, Attachment>;
+  auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry>;
+  autoModerationAction: TransformerInformation<DiscordAutoModerationAction, AutoModerationAction>;
+  autoModerationActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution>;
+  autoModerationActionMetadata: TransformerInformation<DiscordAutoModerationActionMetadata, AutoModerationActionMetadata>;
+  autoModerationRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule>;
+  autoModerationRuleTriggerMetadata: TransformerInformation<DiscordAutoModerationRuleTriggerMetadata, AutoModerationRuleTriggerMetadata>;
+  avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData>;
+  channel: TransformerInformation<DiscordChannel, Channel, { guildId?: BigString }>;
+  channelInfo: TransformerInformation<DiscordChannelInfo, ChannelInfo>;
+  channelInfoData: TransformerInformation<DiscordChannelInfoData, ChannelInfoData>;
+  collectibles: TransformerInformation<DiscordCollectibles, Collectibles>;
+  component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>;
+  defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji>;
+  embed: TransformerInformation<DiscordEmbed, Embed>;
+  embedAuthor: TransformerInformation<DiscordEmbedAuthor, EmbedAuthor>;
+  embedFooter: TransformerInformation<DiscordEmbedFooter, EmbedFooter>;
+  embedImage: TransformerInformation<DiscordEmbedImage, EmbedImage>;
+  embedVideo: TransformerInformation<DiscordEmbedVideo, EmbedVideo>;
+  emoji: TransformerInformation<DiscordEmoji, Emoji>;
+  entitlement: TransformerInformation<DiscordEntitlement, Entitlement>;
+  forumTag: TransformerInformation<DiscordForumTag, ForumTag>;
+  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot>;
+  guild: TransformerInformation<DiscordGuild, Guild, { shardId?: number }>;
+  guildApplicationCommandPermissions: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions>;
+  guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding>;
+  guildOnboardingPrompt: TransformerInformation<DiscordGuildOnboardingPrompt, GuildOnboardingPrompt>;
+  guildOnboardingPromptOption: TransformerInformation<DiscordGuildOnboardingPromptOption, GuildOnboardingPromptOption>;
+  guildWidget: TransformerInformation<DiscordGuildWidget, GuildWidget>;
+  guildWidgetSettings: TransformerInformation<DiscordGuildWidgetSettings, GuildWidgetSettings>;
+  incidentsData: TransformerInformation<DiscordIncidentsData, IncidentsData>;
+  integration: TransformerInformation<DiscordIntegrationCreateUpdate, Integration>;
+  integrationAccount: TransformerInformation<DiscordIntegrationAccount, IntegrationAccount>;
+  integrationApplication: TransformerInformation<DiscordIntegrationApplication, IntegrationApplication>;
+  interaction: TransformerInformation<DiscordInteraction, Interaction, { shardId?: number }>;
+  interactionCallback: TransformerInformation<DiscordInteractionCallback, InteractionCallback>;
+  interactionCallbackResponse: TransformerInformation<DiscordInteractionCallbackResponse, InteractionCallbackResponse, { shardId?: number }>;
+  interactionDataOption: TransformerInformation<DiscordInteractionDataOption, InteractionDataOption>;
+  interactionDataResolved: TransformerInformation<DiscordInteractionDataResolved, InteractionDataResolved, { shardId?: number; guildId?: BigString }>;
+  interactionResource: TransformerInformation<DiscordInteractionResource, InteractionResource, { shardId?: number }>;
+  invite: TransformerInformation<DiscordInviteMetadata, Invite, { shardId?: number }>;
+  inviteStageInstance: TransformerInformation<DiscordInviteStageInstance, InviteStageInstance, { guildId?: BigString }>;
+  lobby: TransformerInformation<DiscordLobby, Lobby>;
+  lobbyInvite: TransformerInformation<DiscordLobbyInvite, LobbyInvite>;
+  lobbyMember: TransformerInformation<DiscordLobbyMember, LobbyMember>;
+  lobbyMessage: TransformerInformation<DiscordLobbyMessage, LobbyMessage>;
+  lobbyMessageLobbyMember: TransformerInformation<DiscordLobbyMessageLobbyMember, LobbyMessageLobbyMember>;
+  mediaGalleryItem: TransformerInformation<DiscordMediaGalleryItem, MediaGalleryItem>;
+  member: TransformerInformation<DiscordMember, Member, { guildId?: BigString; userId?: BigString }>;
+  message: TransformerInformation<DiscordMessage, Message, { shardId?: number }>;
+  messageCall: TransformerInformation<DiscordMessageCall, MessageCall>;
+  messageInteractionMetadata: TransformerInformation<DiscordMessageInteractionMetadata, MessageInteractionMetadata>;
+  messagePin: TransformerInformation<DiscordMessagePin, MessagePin, { shardId?: number }>;
+  messageSnapshot: TransformerInformation<DiscordMessageSnapshot, MessageSnapshot, { shardId?: number }>;
+  nameplate: TransformerInformation<DiscordNameplate, Nameplate>;
+  optionalAuditEntryInfo: TransformerInformation<DiscordOptionalAuditEntryInfo, OptionalAuditEntryInfo>;
+  poll: TransformerInformation<DiscordPoll, Poll>;
+  pollMedia: TransformerInformation<DiscordPollMedia, PollMedia>;
+  presence: TransformerInformation<DiscordPresenceUpdate, PresenceUpdate>;
+  role: TransformerInformation<DiscordRole, Role, { guildId?: BigString }>;
+  roleColors: TransformerInformation<DiscordRoleColors, RoleColors>;
+  scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent>;
+  scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule>;
+  sessionStartLimit: TransformerInformation<DiscordSessionStartLimit, SessionStartLimit>;
+  sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme>;
+  sku: TransformerInformation<DiscordSku, Sku>;
+  soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound>;
+  stageInstance: TransformerInformation<DiscordStageInstance, StageInstance>;
+  sticker: TransformerInformation<DiscordSticker, Sticker>;
+  stickerPack: TransformerInformation<DiscordStickerPack, StickerPack>;
+  subscription: TransformerInformation<DiscordSubscription, Subscription>;
+  team: TransformerInformation<DiscordTeam, Team>;
+  teamMember: TransformerInformation<DiscordTeamMember, TeamMember>;
+  template: TransformerInformation<DiscordTemplate, Template>;
+  threadMember: TransformerInformation<DiscordThreadMember, ThreadMember, ThreadMemberTransformerExtra>;
+  threadMemberGuildCreate: TransformerInformation<DiscordThreadMemberGuildCreate, ThreadMemberGuildCreate>;
+  unfurledMediaItem: TransformerInformation<DiscordUnfurledMediaItem, UnfurledMediaItem>;
+  user: TransformerInformation<DiscordUser, User>;
+  userPrimaryGuild: TransformerInformation<DiscordUserPrimaryGuild, UserPrimaryGuild>;
+  voiceRegion: TransformerInformation<DiscordVoiceRegion, VoiceRegion>;
+  voiceState: TransformerInformation<DiscordVoiceState, VoiceState, { guildId?: BigString }>;
+  webhook: TransformerInformation<DiscordWebhook, Webhook>;
+  welcomeScreen: TransformerInformation<DiscordWelcomeScreen, WelcomeScreen>;
+  welcomeScreenChannel: TransformerInformation<DiscordWelcomeScreenChannel, WelcomeScreenChannel>;
 };
 
 export type Transformers<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = TransformerFunctions<
@@ -377,37 +433,50 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     customizers: {
       activity: _options.customizers?.activity ?? defaultCustomizer,
       activityAssets: _options.customizers?.activityAssets ?? defaultCustomizer,
+      activityEmoji: _options.customizers?.activityEmoji ?? defaultCustomizer,
       activityInstance: _options.customizers?.activityInstance ?? defaultCustomizer,
       activityLocation: _options.customizers?.activityLocation ?? defaultCustomizer,
       application: _options.customizers?.application ?? defaultCustomizer,
       applicationCommand: _options.customizers?.applicationCommand ?? defaultCustomizer,
       applicationCommandOption: _options.customizers?.applicationCommandOption ?? defaultCustomizer,
       applicationCommandOptionChoice: _options.customizers?.applicationCommandOptionChoice ?? defaultCustomizer,
-      applicationCommandPermission: _options.customizers?.applicationCommandPermission ?? defaultCustomizer,
+      applicationCommandPermissions: _options.customizers?.applicationCommandPermissions ?? defaultCustomizer,
       attachment: _options.customizers?.attachment ?? defaultCustomizer,
       auditLogEntry: _options.customizers?.auditLogEntry ?? defaultCustomizer,
-      automodActionExecution: _options.customizers?.automodActionExecution ?? defaultCustomizer,
-      automodRule: _options.customizers?.automodRule ?? defaultCustomizer,
+      autoModerationAction: _options.customizers?.autoModerationAction ?? defaultCustomizer,
+      autoModerationActionExecution: _options.customizers?.autoModerationActionExecution ?? defaultCustomizer,
+      autoModerationActionMetadata: _options.customizers?.autoModerationActionMetadata ?? defaultCustomizer,
+      autoModerationRule: _options.customizers?.autoModerationRule ?? defaultCustomizer,
+      autoModerationRuleTriggerMetadata: _options.customizers?.autoModerationRuleTriggerMetadata ?? defaultCustomizer,
       avatarDecorationData: _options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: _options.customizers?.channel ?? defaultCustomizer,
+      channelInfo: _options.customizers?.channelInfo ?? defaultCustomizer,
+      channelInfoData: _options.customizers?.channelInfoData ?? defaultCustomizer,
       collectibles: _options.customizers?.collectibles ?? defaultCustomizer,
       component: _options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: _options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       embed: _options.customizers?.embed ?? defaultCustomizer,
+      embedAuthor: _options.customizers?.embedAuthor ?? defaultCustomizer,
+      embedFooter: _options.customizers?.embedFooter ?? defaultCustomizer,
+      embedImage: _options.customizers?.embedImage ?? defaultCustomizer,
+      embedVideo: _options.customizers?.embedVideo ?? defaultCustomizer,
       emoji: _options.customizers?.emoji ?? defaultCustomizer,
       entitlement: _options.customizers?.entitlement ?? defaultCustomizer,
       forumTag: _options.customizers?.forumTag ?? defaultCustomizer,
       gatewayBot: _options.customizers?.gatewayBot ?? defaultCustomizer,
       guild: _options.customizers?.guild ?? defaultCustomizer,
+      guildApplicationCommandPermissions: _options.customizers?.guildApplicationCommandPermissions ?? defaultCustomizer,
       guildOnboarding: _options.customizers?.guildOnboarding ?? defaultCustomizer,
       guildOnboardingPrompt: _options.customizers?.guildOnboardingPrompt ?? defaultCustomizer,
       guildOnboardingPromptOption: _options.customizers?.guildOnboardingPromptOption ?? defaultCustomizer,
       incidentsData: _options.customizers?.incidentsData ?? defaultCustomizer,
       integration: _options.customizers?.integration ?? defaultCustomizer,
+      integrationAccount: _options.customizers?.integrationAccount ?? defaultCustomizer,
+      integrationApplication: _options.customizers?.integrationApplication ?? defaultCustomizer,
       interaction: _options.customizers?.interaction ?? defaultCustomizer,
       interactionCallback: _options.customizers?.interactionCallback ?? defaultCustomizer,
       interactionCallbackResponse: _options.customizers?.interactionCallbackResponse ?? defaultCustomizer,
-      interactionDataOptions: _options.customizers?.interactionDataOptions ?? defaultCustomizer,
+      interactionDataOption: _options.customizers?.interactionDataOption ?? defaultCustomizer,
       interactionDataResolved: _options.customizers?.interactionDataResolved ?? defaultCustomizer,
       interactionResource: _options.customizers?.interactionResource ?? defaultCustomizer,
       invite: _options.customizers?.invite ?? defaultCustomizer,
@@ -425,6 +494,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       messagePin: _options.customizers?.messagePin ?? defaultCustomizer,
       messageSnapshot: _options.customizers?.messageSnapshot ?? defaultCustomizer,
       nameplate: _options.customizers?.nameplate ?? defaultCustomizer,
+      optionalAuditEntryInfo: _options.customizers?.optionalAuditEntryInfo ?? defaultCustomizer,
       poll: _options.customizers?.poll ?? defaultCustomizer,
       pollMedia: _options.customizers?.pollMedia ?? defaultCustomizer,
       presence: _options.customizers?.presence ?? defaultCustomizer,
@@ -432,6 +502,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       roleColors: _options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: _options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: _options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sessionStartLimit: _options.customizers?.sessionStartLimit ?? defaultCustomizer,
       sharedClientTheme: _options.customizers?.sharedClientTheme ?? defaultCustomizer,
       sku: _options.customizers?.sku ?? defaultCustomizer,
       soundboardSound: _options.customizers?.soundboardSound ?? defaultCustomizer,
@@ -440,6 +511,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       stickerPack: _options.customizers?.stickerPack ?? defaultCustomizer,
       subscription: _options.customizers?.subscription ?? defaultCustomizer,
       team: _options.customizers?.team ?? defaultCustomizer,
+      teamMember: _options.customizers?.teamMember ?? defaultCustomizer,
       template: _options.customizers?.template ?? defaultCustomizer,
       threadMember: _options.customizers?.threadMember ?? defaultCustomizer,
       threadMemberGuildCreate: _options.customizers?.threadMemberGuildCreate ?? defaultCustomizer,
@@ -450,8 +522,9 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       voiceState: _options.customizers?.voiceState ?? defaultCustomizer,
       webhook: _options.customizers?.webhook ?? defaultCustomizer,
       welcomeScreen: _options.customizers?.welcomeScreen ?? defaultCustomizer,
-      widget: _options.customizers?.widget ?? defaultCustomizer,
-      widgetSettings: _options.customizers?.widgetSettings ?? defaultCustomizer,
+      welcomeScreenChannel: _options.customizers?.welcomeScreenChannel ?? defaultCustomizer,
+      guildWidget: _options.customizers?.guildWidget ?? defaultCustomizer,
+      guildWidgetSettings: _options.customizers?.guildWidgetSettings ?? defaultCustomizer,
     },
     desiredProperties: createDesiredPropertiesObject(_options.desiredProperties ?? {}),
     reverse: {
@@ -477,37 +550,50 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     },
     activity: _options.activity ?? transformActivity,
     activityAssets: _options.activityAssets ?? transformActivityAssets,
+    activityEmoji: _options.activityEmoji ?? transformActivityEmoji,
     activityInstance: _options.activityInstance ?? transformActivityInstance,
     activityLocation: _options.activityLocation ?? transformActivityLocation,
     application: _options.application ?? transformApplication,
     applicationCommand: _options.applicationCommand ?? transformApplicationCommand,
     applicationCommandOption: _options.applicationCommandOption ?? transformApplicationCommandOption,
     applicationCommandOptionChoice: _options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
-    applicationCommandPermission: _options.applicationCommandPermission ?? transformApplicationCommandPermission,
+    applicationCommandPermissions: _options.applicationCommandPermissions ?? transformApplicationCommandPermissions,
     attachment: _options.attachment ?? transformAttachment,
     auditLogEntry: _options.auditLogEntry ?? transformAuditLogEntry,
-    automodActionExecution: _options.automodActionExecution ?? transformAutoModerationActionExecution,
-    automodRule: _options.automodRule ?? transformAutoModerationRule,
+    autoModerationAction: _options.autoModerationAction ?? transformAutoModerationAction,
+    autoModerationActionExecution: _options.autoModerationActionExecution ?? transformAutoModerationActionExecution,
+    autoModerationActionMetadata: _options.autoModerationActionMetadata ?? transformAutoModerationActionMetadata,
+    autoModerationRule: _options.autoModerationRule ?? transformAutoModerationRule,
+    autoModerationRuleTriggerMetadata: _options.autoModerationRuleTriggerMetadata ?? transformAutoModerationRuleTriggerMetadata,
     avatarDecorationData: _options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: _options.channel ?? transformChannel,
+    channelInfo: _options.channelInfo ?? transformChannelInfo,
+    channelInfoData: _options.channelInfoData ?? transformChannelInfoData,
     collectibles: _options.collectibles ?? transformCollectibles,
     component: _options.component ?? transformComponent,
     defaultReactionEmoji: _options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     embed: _options.embed ?? transformEmbed,
+    embedAuthor: _options.embedAuthor ?? transformEmbedAuthor,
+    embedFooter: _options.embedFooter ?? transformEmbedFooter,
+    embedImage: _options.embedImage ?? transformEmbedImage,
+    embedVideo: _options.embedVideo ?? transformEmbedVideo,
     emoji: _options.emoji ?? transformEmoji,
     entitlement: _options.entitlement ?? transformEntitlement,
     forumTag: _options.forumTag ?? transformForumTag,
     gatewayBot: _options.gatewayBot ?? transformGatewayBot,
     guild: _options.guild ?? transformGuild,
+    guildApplicationCommandPermissions: _options.guildApplicationCommandPermissions ?? transformGuildApplicationCommandPermissions,
     guildOnboarding: _options.guildOnboarding ?? transformGuildOnboarding,
     guildOnboardingPrompt: _options.guildOnboardingPrompt ?? transformGuildOnboardingPrompt,
     guildOnboardingPromptOption: _options.guildOnboardingPromptOption ?? transformGuildOnboardingPromptOption,
     incidentsData: _options.incidentsData ?? transformIncidentsData,
     integration: _options.integration ?? transformIntegration,
+    integrationAccount: _options.integrationAccount ?? transformIntegrationAccount,
+    integrationApplication: _options.integrationApplication ?? transformIntegrationApplication,
     interaction: _options.interaction ?? transformInteraction,
     interactionCallback: _options.interactionCallback ?? transformInteractionCallback,
     interactionCallbackResponse: _options.interactionCallbackResponse ?? transformInteractionCallbackResponse,
-    interactionDataOptions: _options.interactionDataOptions ?? transformInteractionDataOption,
+    interactionDataOption: _options.interactionDataOption ?? transformInteractionDataOption,
     interactionDataResolved: _options.interactionDataResolved ?? transformInteractionDataResolved,
     interactionResource: _options.interactionResource ?? transformInteractionResource,
     invite: _options.invite ?? transformInvite,
@@ -525,6 +611,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     messagePin: _options.messagePin ?? transformMessagePin,
     messageSnapshot: _options.messageSnapshot ?? transformMessageSnapshot,
     nameplate: _options.nameplate ?? transformNameplate,
+    optionalAuditEntryInfo: _options.optionalAuditEntryInfo ?? transformOptionalAuditEntryInfo,
     poll: _options.poll ?? transformPoll,
     pollMedia: _options.pollMedia ?? transformPollMedia,
     presence: _options.presence ?? transformPresence,
@@ -532,6 +619,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     roleColors: _options.roleColors ?? transformRoleColors,
     scheduledEvent: _options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: _options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sessionStartLimit: _options.sessionStartLimit ?? transformSessionStartLimit,
     sharedClientTheme: _options.sharedClientTheme ?? transformSharedClientTheme,
     sku: _options.sku ?? transformSku,
     soundboardSound: _options.soundboardSound ?? transformSoundboardSound,
@@ -541,6 +629,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     stickerPack: _options.stickerPack ?? transformStickerPack,
     subscription: _options.subscription ?? transformSubscription,
     team: _options.team ?? transformTeam,
+    teamMember: _options.teamMember ?? transformTeamMember,
     template: _options.template ?? transformTemplate,
     threadMember: _options.threadMember ?? transformThreadMember,
     threadMemberGuildCreate: _options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
@@ -551,8 +640,9 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     voiceState: _options.voiceState ?? transformVoiceState,
     webhook: _options.webhook ?? transformWebhook,
     welcomeScreen: _options.welcomeScreen ?? transformWelcomeScreen,
-    widget: _options.widget ?? transformWidget,
-    widgetSettings: _options.widgetSettings ?? transformWidgetSettings,
+    welcomeScreenChannel: _options.welcomeScreenChannel ?? transformWelcomeScreenChannel,
+    guildWidget: _options.guildWidget ?? transformGuildWidget,
+    guildWidgetSettings: _options.guildWidgetSettings ?? transformGuildWidgetSettings,
   } satisfies Transformers<TransformersDesiredProperties, DesiredPropertiesBehavior.RemoveKey> as unknown as Transformers<TProps, TBehavior>;
 }
 
@@ -561,14 +651,12 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
  *
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
- * @template TPartial - Indicates if the transformer supports partial payloads.
  * @template TExtra - Additional extra information that might be needed for transformation.
  */
-export type TransformerInformation<TPayload, TTransformed, TPartial extends boolean, TExtra = {}> = {
+export type TransformerInformation<TPayload, TTransformed, TExtra = {}> = {
   payload: TPayload;
   transformed: TTransformed;
   extra: TExtra;
-  partial: TPartial;
 };
 
 /**
@@ -579,7 +667,6 @@ export type TransformerInformation<TPayload, TTransformed, TPartial extends bool
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
  * @template TExtra - Additional extra information that might be needed for transformation.
- * @template TPartial - Indicates if the transformer supports partial payloads.
  */
 export type TransformerFunction<
   TProps extends TransformersDesiredProperties,
@@ -587,19 +674,16 @@ export type TransformerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-  TPartial extends boolean = false,
-> = TPartial extends true
-  ? // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
-    {
-      (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra & { partial?: false }): SetupDesiredProps<TTransformed, TProps, TBehavior>;
-      (
-        bot: Bot<TProps, TBehavior>,
-        payload: Partial<TPayload>,
-        extra: TExtra & { partial: true },
-      ): Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>;
-    }
-  : // Even if we don't need to overload, since the 2 syntaxes have slightly different semantics, we use the method syntax in here as well
-    { (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra): SetupDesiredProps<TTransformed, TProps, TBehavior> };
+> =
+  // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
+  {
+    (bot: Bot<TProps, TBehavior>, payload: TPayload, extra?: TExtra & { partial?: false }): SetupDesiredProps<TTransformed, TProps, TBehavior>;
+    (
+      bot: Bot<TProps, TBehavior>,
+      payload: Partial<TPayload>,
+      extra: TExtra & { partial: true },
+    ): Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>;
+  };
 
 /**
  * A collection of transformer functions for various Discord entities.
@@ -613,8 +697,7 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
     TBehavior,
     TransformerInformations[K]['payload'],
     TransformerInformations[K]['transformed'],
-    TransformerInformations[K]['extra'],
-    TransformerInformations[K]['partial']
+    TransformerInformations[K]['extra']
   >;
 };
 
@@ -626,7 +709,6 @@ export type TransformerFunctions<TProps extends TransformersDesiredProperties, T
  * @template TPayload - The type of the payload received from Discord.
  * @template TTransformed - The type of the transformed object returned by the transformer.
  * @template TExtra - Additional extra information that might be needed for customization.
- * @template TPartial - Indicates if the transformer supports partial payloads.
  */
 export type TransformerCustomizerFunction<
   TProps extends TransformersDesiredProperties,
@@ -634,27 +716,22 @@ export type TransformerCustomizerFunction<
   TPayload,
   TTransformed,
   TExtra = {},
-  TPartial extends boolean = false,
-> = TPartial extends true
-  ? // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
-    {
-      (
-        bot: Bot<TProps, TBehavior>,
-        payload: TPayload,
-        transformed: SetupDesiredProps<TTransformed, TProps, TBehavior>,
-        extra: TExtra & { partial: false },
-      ): any;
-      (
-        bot: Bot<TProps, TBehavior>,
-        payload: Partial<TPayload>,
-        transformed: Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>,
-        extra: TExtra & { partial: true },
-      ): any;
-    }
-  : // Even if we don't need to overload, since the 2 syntaxes have slightly different semantics, we use the method syntax in here as well
-    {
-      (bot: Bot<TProps, TBehavior>, payload: TPayload, transformed: SetupDesiredProps<TTransformed, TProps, TBehavior>, extra?: TExtra): any;
-    };
+> =
+  // We use the method syntax for functions (...Params): ReturnType instead of the arrow syntax because it allows us to have overloads in the type
+  {
+    (
+      bot: Bot<TProps, TBehavior>,
+      payload: TPayload,
+      transformed: SetupDesiredProps<TTransformed, TProps, TBehavior>,
+      extra: TExtra & { partial: false },
+    ): any;
+    (
+      bot: Bot<TProps, TBehavior>,
+      payload: Partial<TPayload>,
+      transformed: Partial<SetupDesiredProps<TTransformed, TProps, TBehavior>>,
+      extra: TExtra & { partial: true },
+    ): any;
+  };
 
 /**
  * A collection of transformer customizer functions for various Discord entities.
@@ -668,8 +745,7 @@ export type TransformerCustomizers<TProps extends TransformersDesiredProperties,
     TBehavior,
     TransformerInformations[K]['payload'],
     TransformerInformations[K]['transformed'],
-    BigStringsToBigints<TransformerInformations[K]['extra']>,
-    TransformerInformations[K]['partial']
+    BigStringsToBigints<TransformerInformations[K]['extra']>
   >;
 };
 
