@@ -84,15 +84,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const global = rest.rateLimitedPaths.get('global');
       const now = Date.now();
 
-      if (ratelimited && now < ratelimited.resetTimestamp) {
-        return ratelimited.resetTimestamp - now;
-      }
+      // Whichever of the two lasts longer is the one that decides when this request may go out, a shorter per url limit does not make it
+      // alright to send while the global one is still running.
+      const urlWait = ratelimited && now < ratelimited.resetTimestamp ? ratelimited.resetTimestamp - now : 0;
+      const globalWait = global && now < global.resetTimestamp ? global.resetTimestamp - now : 0;
+      const wait = Math.max(urlWait, globalWait);
 
-      if (global && now < global.resetTimestamp) {
-        return global.resetTimestamp - now;
-      }
-
-      return false;
+      return wait > 0 ? wait : false;
     },
 
     async updateTokenQueues(oldToken, newToken) {
@@ -142,6 +140,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
           queue.waiting = [];
           queue.pending = [];
+
+          // The merged queue is not processing anything of its own, so nothing would ever look at what it was just handed.
+          newQueue.processWaiting();
+          newQueue.processPending();
 
           queue.cleanup();
         } else {
@@ -500,7 +502,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared');
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers, payload.headers.authorization);
+      const bucketId = rest.processHeaders(
+        options.simplifiedUrl ?? rest.simplifyUrl(options.route, options.method),
+        response.headers,
+        payload.headers.authorization,
+      );
 
       if (bucketId) options.bucketId = bucketId;
 
@@ -600,7 +606,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
-      const url = rest.simplifyUrl(request.route, request.method);
+      request.simplifiedUrl ??= rest.simplifyUrl(request.route, request.method);
+      const url = request.simplifiedUrl;
 
       if (request.runThroughQueue === false) {
         await rest.sendRequest(request);
@@ -791,7 +798,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async delete(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      camelize(await rest.makeRequest('DELETE', url, options));
+      await rest.makeRequest('DELETE', url, options);
     },
 
     async patch(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
@@ -803,20 +810,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     // We need to wrap all the functions to pass the rest manager as the first argument, so we can use it in the endpoints
-    ...(Object.fromEntries(
-      Object.entries(restEndpoints).map(([key, endpointFunc]) => {
-        const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
-        return [key, async (...args: unknown[]) => camelize(await func(rest, ...args))];
-      }),
-    ) as CamelizedRestEndpoints),
-
-    // Same as above
     snake: Object.fromEntries(
       Object.entries(restEndpoints).map(([key, endpointFunc]) => {
         const func = endpointFunc as (rest: RestManager, ...args: unknown[]) => unknown;
         return [key, async (...args: unknown[]) => await func(rest, ...args)];
       }),
     ) as RestEndpoints,
+
+    // The camelCase versions call rest.snake at call time, so overriding rest.snake.x also changes rest.x
+    ...(Object.fromEntries(
+      Object.keys(restEndpoints).map((key) => [
+        key,
+        async (...args: unknown[]) =>
+          camelize(await (rest.snake as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[key](...args)),
+      ]),
+    ) as CamelizedRestEndpoints),
 
     preferSnakeCase(enabled: boolean) {
       const camelizer = enabled ? (x: any) => x : camelize;
