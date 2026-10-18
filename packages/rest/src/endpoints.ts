@@ -3688,11 +3688,7 @@ export const restEndpoints = {
    * This endpoint returns a partial entitlement object.
    * It will not contain subscription_id, starts_at, or ends_at, as it's valid in perpetuity.
    */
-  async createTestEntitlement(
-    rest: RestManager,
-    applicationId: BigString,
-    body: CreateTestEntitlement,
-  ): Promise<Partial<Camelize<DiscordEntitlement>>> {
+  async createTestEntitlement(rest: RestManager, applicationId: BigString, body: CreateTestEntitlement): Promise<Partial<DiscordEntitlement>> {
     return await rest.post<DiscordEntitlement>(rest.routes.monetization.entitlements(applicationId), {
       body,
     });
