@@ -798,7 +798,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async delete(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      camelize(await rest.makeRequest('DELETE', url, options));
+      await rest.makeRequest('DELETE', url, options);
     },
 
     async patch(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
