@@ -593,6 +593,17 @@ export interface Channel {
   }[];
 }
 
+export interface ChannelMention {
+  /** id of the channel */
+  id: bigint;
+  /** id of the guild containing the channel */
+  guildId: bigint;
+  /** The type of channel */
+  type: number;
+  /** The name of the channel */
+  name: string;
+}
+
 export interface ForumTag {
   /** The id of the tag */
   id: bigint;
@@ -1360,8 +1371,18 @@ export interface Message {
   mentions?: User[];
   /** The type of channel the message was sent in. Only present when received from the gateway MESSAGE_CREATE event */
   channelType?: ChannelTypes;
-  /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
-  mentionedChannelIds?: bigint[];
+  /**
+   * Channels specifically mentioned in this message
+   *
+   * @renarks
+   * Note: Not all channel mentions in a message will appear in `mention_channels`.
+   *
+   * Only textual channels that are visible to everyone in a discoverable guild will ever be included.
+   * Only crossposted messages (via Channel Following) currently include mention_channels at all.
+   *
+   * If no mentions in the message meet these requirements, this field will not be sent.
+   */
+  mentionChannels?: ChannelMention[];
   /** Roles specifically mentioned in this message */
   mentionedRoleIds?: bigint[];
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
