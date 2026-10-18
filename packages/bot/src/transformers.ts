@@ -14,13 +14,20 @@ import type {
   DiscordApplicationCommandPermissions,
   DiscordAttachment,
   DiscordAuditLogEntry,
+  DiscordAutoModerationAction,
   DiscordAutoModerationActionExecution,
+  DiscordAutoModerationActionMetadata,
   DiscordAutoModerationRule,
+  DiscordAutoModerationRuleTriggerMetadata,
   DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordCollectibles,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
+  DiscordEmbedAuthor,
+  DiscordEmbedFooter,
+  DiscordEmbedImage,
+  DiscordEmbedVideo,
   DiscordEmoji,
   DiscordEntitlement,
   DiscordForumTag,
@@ -64,6 +71,7 @@ import type {
   DiscordRoleColors,
   DiscordScheduledEvent,
   DiscordScheduledEventRecurrenceRule,
+  DiscordSessionStartLimit,
   DiscordSharedClientTheme,
   DiscordSku,
   DiscordSoundboardSound,
@@ -106,15 +114,19 @@ import { transformApplicationCommandOptionChoice } from './transformers/applicat
 import { transformApplicationCommandPermissions, transformGuildApplicationCommandPermissions } from './transformers/applicationCommandPermission.js';
 import { transformAttachment } from './transformers/attachment.js';
 import { transformAuditLogEntry, transformOptionalAuditEntryInfo } from './transformers/auditLogEntry.js';
-import { transformAutoModerationActionExecution } from './transformers/automodActionExecution.js';
-import { transformAutoModerationRule } from './transformers/automodRule.js';
+import {
+  transformAutoModerationAction,
+  transformAutoModerationActionExecution,
+  transformAutoModerationActionMetadata,
+} from './transformers/automodActionExecution.js';
+import { transformAutoModerationRule, transformAutoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformForumTag } from './transformers/channel.js';
 import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
-import { transformEmbed } from './transformers/embed.js';
+import { transformEmbed, transformEmbedAuthor, transformEmbedFooter, transformEmbedImage, transformEmbedVideo } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
 import { transformEntitlement } from './transformers/entitlement.js';
-import { transformGatewayBot } from './transformers/gatewayBot.js';
+import { transformGatewayBot, transformSessionStartLimit } from './transformers/gatewayBot.js';
 import { transformGuild } from './transformers/guild.js';
 import { transformIncidentsData } from './transformers/incidentsData.js';
 import { transformIntegration } from './transformers/integration.js';
@@ -180,14 +192,21 @@ import type {
   ApplicationCommandPermissions,
   Attachment,
   AuditLogEntry,
+  AutoModerationAction,
   AutoModerationActionExecution,
+  AutoModerationActionMetadata,
   AutoModerationRule,
+  AutoModerationRuleTriggerMetadata,
   AvatarDecorationData,
   Channel,
   Collectibles,
   Component,
   DefaultReactionEmoji,
   Embed,
+  EmbedAuthor,
+  EmbedFooter,
+  EmbedImage,
+  EmbedVideo,
   Emoji,
   Entitlement,
   ForumTag,
@@ -229,6 +248,7 @@ import type {
   RoleColors,
   ScheduledEvent,
   ScheduledEventRecurrenceRule,
+  SessionStartLimit,
   SharedClientTheme,
   Sku,
   SoundboardSound,
@@ -269,18 +289,25 @@ export type TransformerInformations = {
   applicationCommandPermissions: TransformerInformation<DiscordApplicationCommandPermissions, ApplicationCommandPermissions, true>;
   attachment: TransformerInformation<DiscordAttachment, Attachment, true>;
   auditLogEntry: TransformerInformation<DiscordAuditLogEntry, AuditLogEntry, true>;
-  automodActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, false>;
-  automodRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, false>;
+  autoModerationAction: TransformerInformation<DiscordAutoModerationAction, AutoModerationAction, true>;
+  autoModerationActionExecution: TransformerInformation<DiscordAutoModerationActionExecution, AutoModerationActionExecution, true>;
+  autoModerationActionMetadata: TransformerInformation<DiscordAutoModerationActionMetadata, AutoModerationActionMetadata, true>;
+  autoModerationRule: TransformerInformation<DiscordAutoModerationRule, AutoModerationRule, true>;
+  autoModerationRuleTriggerMetadata: TransformerInformation<DiscordAutoModerationRuleTriggerMetadata, AutoModerationRuleTriggerMetadata, true>;
   avatarDecorationData: TransformerInformation<DiscordAvatarDecorationData, AvatarDecorationData, true>;
   channel: TransformerInformation<DiscordChannel, Channel, true, { guildId?: BigString }>;
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles, true>;
   component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component, true>;
   defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji, true>;
-  embed: TransformerInformation<DiscordEmbed, Embed, false>;
+  embed: TransformerInformation<DiscordEmbed, Embed, true>;
+  embedAuthor: TransformerInformation<DiscordEmbedAuthor, EmbedAuthor, true>;
+  embedFooter: TransformerInformation<DiscordEmbedFooter, EmbedFooter, true>;
+  embedImage: TransformerInformation<DiscordEmbedImage, EmbedImage, true>;
+  embedVideo: TransformerInformation<DiscordEmbedVideo, EmbedVideo, true>;
   emoji: TransformerInformation<DiscordEmoji, Emoji, true>;
   entitlement: TransformerInformation<DiscordEntitlement, Entitlement, true>;
   forumTag: TransformerInformation<DiscordForumTag, ForumTag, true>;
-  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, false>;
+  gatewayBot: TransformerInformation<DiscordGetGatewayBot, GetGatewayBot, true>;
   guild: TransformerInformation<DiscordGuild, Guild, true, { shardId?: number }>;
   guildApplicationCommandPermissions: TransformerInformation<DiscordGuildApplicationCommandPermissions, GuildApplicationCommandPermissions, true>;
   guildOnboarding: TransformerInformation<DiscordGuildOnboarding, GuildOnboarding, true>;
@@ -321,6 +348,7 @@ export type TransformerInformations = {
   roleColors: TransformerInformation<DiscordRoleColors, RoleColors, true>;
   scheduledEvent: TransformerInformation<DiscordScheduledEvent, ScheduledEvent, true>;
   scheduledEventRecurrenceRule: TransformerInformation<DiscordScheduledEventRecurrenceRule, ScheduledEventRecurrenceRule, true>;
+  sessionStartLimit: TransformerInformation<DiscordSessionStartLimit, SessionStartLimit, true>;
   sharedClientTheme: TransformerInformation<DiscordSharedClientTheme, SharedClientTheme, true>;
   sku: TransformerInformation<DiscordSku, Sku, true>;
   soundboardSound: TransformerInformation<DiscordSoundboardSound, SoundboardSound, true>;
@@ -393,14 +421,21 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       applicationCommandPermissions: _options.customizers?.applicationCommandPermissions ?? defaultCustomizer,
       attachment: _options.customizers?.attachment ?? defaultCustomizer,
       auditLogEntry: _options.customizers?.auditLogEntry ?? defaultCustomizer,
-      automodActionExecution: _options.customizers?.automodActionExecution ?? defaultCustomizer,
-      automodRule: _options.customizers?.automodRule ?? defaultCustomizer,
+      autoModerationAction: _options.customizers?.autoModerationAction ?? defaultCustomizer,
+      autoModerationActionExecution: _options.customizers?.autoModerationActionExecution ?? defaultCustomizer,
+      autoModerationActionMetadata: _options.customizers?.autoModerationActionMetadata ?? defaultCustomizer,
+      autoModerationRule: _options.customizers?.autoModerationRule ?? defaultCustomizer,
+      autoModerationRuleTriggerMetadata: _options.customizers?.autoModerationRuleTriggerMetadata ?? defaultCustomizer,
       avatarDecorationData: _options.customizers?.avatarDecorationData ?? defaultCustomizer,
       channel: _options.customizers?.channel ?? defaultCustomizer,
       collectibles: _options.customizers?.collectibles ?? defaultCustomizer,
       component: _options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: _options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
       embed: _options.customizers?.embed ?? defaultCustomizer,
+      embedAuthor: _options.customizers?.embedAuthor ?? defaultCustomizer,
+      embedFooter: _options.customizers?.embedFooter ?? defaultCustomizer,
+      embedImage: _options.customizers?.embedImage ?? defaultCustomizer,
+      embedVideo: _options.customizers?.embedVideo ?? defaultCustomizer,
       emoji: _options.customizers?.emoji ?? defaultCustomizer,
       entitlement: _options.customizers?.entitlement ?? defaultCustomizer,
       forumTag: _options.customizers?.forumTag ?? defaultCustomizer,
@@ -440,6 +475,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       roleColors: _options.customizers?.roleColors ?? defaultCustomizer,
       scheduledEvent: _options.customizers?.scheduledEvent ?? defaultCustomizer,
       scheduledEventRecurrenceRule: _options.customizers?.scheduledEventRecurrenceRule ?? defaultCustomizer,
+      sessionStartLimit: _options.customizers?.sessionStartLimit ?? defaultCustomizer,
       sharedClientTheme: _options.customizers?.sharedClientTheme ?? defaultCustomizer,
       sku: _options.customizers?.sku ?? defaultCustomizer,
       soundboardSound: _options.customizers?.soundboardSound ?? defaultCustomizer,
@@ -495,14 +531,21 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     applicationCommandPermissions: _options.applicationCommandPermissions ?? transformApplicationCommandPermissions,
     attachment: _options.attachment ?? transformAttachment,
     auditLogEntry: _options.auditLogEntry ?? transformAuditLogEntry,
-    automodActionExecution: _options.automodActionExecution ?? transformAutoModerationActionExecution,
-    automodRule: _options.automodRule ?? transformAutoModerationRule,
+    autoModerationAction: _options.autoModerationAction ?? transformAutoModerationAction,
+    autoModerationActionExecution: _options.autoModerationActionExecution ?? transformAutoModerationActionExecution,
+    autoModerationActionMetadata: _options.autoModerationActionMetadata ?? transformAutoModerationActionMetadata,
+    autoModerationRule: _options.autoModerationRule ?? transformAutoModerationRule,
+    autoModerationRuleTriggerMetadata: _options.autoModerationRuleTriggerMetadata ?? transformAutoModerationRuleTriggerMetadata,
     avatarDecorationData: _options.avatarDecorationData ?? transformAvatarDecorationData,
     channel: _options.channel ?? transformChannel,
     collectibles: _options.collectibles ?? transformCollectibles,
     component: _options.component ?? transformComponent,
     defaultReactionEmoji: _options.defaultReactionEmoji ?? transformDefaultReactionEmoji,
     embed: _options.embed ?? transformEmbed,
+    embedAuthor: _options.embedAuthor ?? transformEmbedAuthor,
+    embedFooter: _options.embedFooter ?? transformEmbedFooter,
+    embedImage: _options.embedImage ?? transformEmbedImage,
+    embedVideo: _options.embedVideo ?? transformEmbedVideo,
     emoji: _options.emoji ?? transformEmoji,
     entitlement: _options.entitlement ?? transformEntitlement,
     forumTag: _options.forumTag ?? transformForumTag,
@@ -542,6 +585,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     roleColors: _options.roleColors ?? transformRoleColors,
     scheduledEvent: _options.scheduledEvent ?? transformScheduledEvent,
     scheduledEventRecurrenceRule: _options.scheduledEventRecurrenceRule ?? transformScheduledEventRecurrenceRule,
+    sessionStartLimit: _options.sessionStartLimit ?? transformSessionStartLimit,
     sharedClientTheme: _options.sharedClientTheme ?? transformSharedClientTheme,
     sku: _options.sku ?? transformSku,
     soundboardSound: _options.soundboardSound ?? transformSoundboardSound,
