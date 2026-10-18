@@ -15,7 +15,7 @@ export interface DiscordEventWebhookEvent {
   /** ID of your app */
   application_id: string;
   /** Type of webhook, either 0 for PING or 1 for webhook events */
-  type: DiscordWebhookEventType;
+  type: DiscordEventWebhookType;
   /** Event data payload */
   event?: DiscordEventWebhookEventBody;
 }
