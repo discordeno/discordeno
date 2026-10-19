@@ -1,4 +1,4 @@
-import type { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types';
+import type { DiscordGatewayPayload, GatewayCapabilities, GatewayOpcodes } from '@discordeno/types';
 import type Shard from './Shard.js';
 
 export enum ShardState {
@@ -101,6 +101,14 @@ export interface ShardGatewayConfig {
    * @default 1
    */
   totalShards: number;
+  /**
+   * Bitfield rapresenting the capabilities of the client.
+   *
+   * @default 0
+   *
+   * @see {@link GatewayCapabilities}
+   */
+  capabilities?: number;
 }
 
 export interface ShardHeart {
