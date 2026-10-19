@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { createInflate, createZstdDecompress, type Inflate, inflateSync, type ZstdDecompress, constants as zlibConstants } from 'node:zlib';
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types';
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types';
@@ -468,16 +467,13 @@ export class DiscordenoShard {
   }
 
   /** Handle an incoming gateway message. */
-  async handleMessage(message: MessageEvent): Promise<void> {
-    // The ws npm package will use a Buffer, while the global built-in will use ArrayBuffer
-    const isCompressed = message.data instanceof ArrayBuffer || message.data instanceof Buffer;
-
-    const data = isCompressed ? await this.decompressPacket(message.data) : (JSON.parse(message.data) as DiscordGatewayPayload);
+  async handleMessage(message: MessageEvent<ArrayBuffer | string>): Promise<void> {
+    const data = message.data instanceof ArrayBuffer ? await this.decompressPacket(message.data) : message.data;
 
     // Check if the decompression was not successful
     if (!data) return;
 
-    await this.handleDiscordPacket(data);
+    await this.handleDiscordPacket(JSON.parse(data));
   }
 
   /**
@@ -485,9 +481,8 @@ export class DiscordenoShard {
    *
    * @private
    */
-  async decompressPacket(data: ArrayBuffer | Buffer): Promise<DiscordGatewayPayload | null> {
-    // A buffer is a Uint8Array under the hood. An ArrayBuffer is generic, so we need to create the Uint8Array that uses the whole ArrayBuffer
-    const compressedData: Uint8Array = data instanceof Buffer ? data : new Uint8Array(data);
+  async decompressPacket(data: ArrayBuffer): Promise<string | null> {
+    const compressedData = new Uint8Array(data);
 
     if (this.gatewayConfig.transportCompression) {
       if (!this.inflate) {
@@ -511,14 +506,14 @@ export class DiscordenoShard {
       const decodedData = this.textDecoder.decode(this.inflateBuffer);
       this.inflateBuffer = null;
 
-      return JSON.parse(decodedData);
+      return decodedData;
     }
 
     if (this.gatewayConfig.compress) {
       const decompressed = inflateSync(compressedData);
       const decodedData = this.textDecoder.decode(decompressed);
 
-      return JSON.parse(decodedData);
+      return decodedData;
     }
 
     return null;
@@ -553,20 +548,16 @@ export class DiscordenoShard {
         this.logger.debug(`[Shard] Shard #${this.id} received Hello`);
         this.startHeartbeating(interval);
 
+        // We need to recalculate the safe requests here, since the heartbeat interval could have changed
+        this.bucket.max = this.calculateSafeRequests();
+        this.bucket.refillAmount = this.calculateSafeRequests();
+
         if (this.state !== ShardState.Resuming) {
-          const currentQueue = [...this.bucket.queue];
           // HELLO has been send on a non resume action.
           // This means that the shard starts a new session,
           // therefore the rate limit interval has been reset too.
-          this.bucket = new LeakyBucket({
-            max: this.calculateSafeRequests(),
-            refillInterval: 60000,
-            refillAmount: this.calculateSafeRequests(),
-            logger: this.logger,
-          });
-
-          // Queue should not be lost on a re-identify.
-          this.bucket.queue.unshift(...currentQueue);
+          this.bucket.used = 0;
+          this.bucket.refillBucket();
         }
 
         this.events.hello?.(this);
