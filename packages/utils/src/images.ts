@@ -319,16 +319,20 @@ export function stickerPackBannerUrl(bannerAssetId: BigString | undefined, optio
  * @param stickerId - The ID of the sticker to get the icon of
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
+ *
+ * @remarks
+ * Stickers are only available as `png`, `json` (Lottie) and `gif`.
  */
 export function stickerUrl(stickerId: BigString | number, options?: ImageOptions & { type?: StickerFormatTypes }): string | undefined {
   if (!stickerId) return;
 
-  const url =
-    options?.type === StickerFormatTypes.Gif
-      ? `https://media.discordapp.net/stickers/${stickerId}`
-      : `https://cdn.discordapp.com/stickers/${stickerId}`;
+  if (options?.type === StickerFormatTypes.Gif) return `https://media.discordapp.net/stickers/${stickerId}.gif`;
 
-  return formatImageUrl(url, options?.size ?? 128, options?.format);
+  return formatImageUrl(
+    `https://cdn.discordapp.com/stickers/${stickerId}`,
+    options?.size ?? 128,
+    options?.format ?? (options?.type === StickerFormatTypes.Lottie ? 'json' : 'png'),
+  );
 }
 
 /**
@@ -378,5 +382,9 @@ export function roleIconUrl(roleId: BigString, iconHash: BigString | undefined, 
 export function guildTagBadgeUrl(guildId: BigString, badgeHash: BigString | undefined, options?: ImageOptions): string | undefined {
   if (badgeHash === undefined) return undefined;
 
-  return formatImageUrl(`https://cdn.discordapp.com/guild-tag-badges/${guildId}/${badgeHash}`, options?.size ?? 128, options?.format);
+  return formatImageUrl(
+    `https://cdn.discordapp.com/guild-tag-badges/${guildId}/${typeof badgeHash === 'string' ? badgeHash : iconBigintToHash(badgeHash)}`,
+    options?.size ?? 128,
+    options?.format,
+  );
 }
