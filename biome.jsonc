@@ -52,6 +52,11 @@
       "enabled": false
     }
   },
+  "yaml": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
   "files": {
     "includes": [
       "**",

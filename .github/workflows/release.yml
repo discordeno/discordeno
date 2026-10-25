@@ -20,15 +20,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ["gateway", "rest", "types", "utils", "bot", "discordeno"]
+        package: ['gateway', 'rest', 'types', 'utils', 'bot', 'discordeno']
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: yarn
-          registry-url: "https://registry.npmjs.org"
-          scope: "@discordeno"
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@discordeno'
       - run: yarn install --immutable
       - name: build Package
         run: yarn release-build --filter=./packages/${{ matrix.package }}

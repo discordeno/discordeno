@@ -1,82 +1,82 @@
 version: v1
 
 labels:
-  - label: "website"
+  - label: 'website'
     sync: true
     matcher:
-      files: "website/**/*"
+      files: 'website/**/*'
 
-  - label: "pkg-all"
+  - label: 'pkg-all'
     matcher:
-      files: "*"
+      files: '*'
 
-  - label: "pkg-bot"
+  - label: 'pkg-bot'
     sync: true
     matcher:
-      files: "packages/bot/**/*"
+      files: 'packages/bot/**/*'
 
-  - label: "pkg-client"
+  - label: 'pkg-client'
     sync: true
     matcher:
-      files: "packages/client/**/*"
+      files: 'packages/client/**/*'
 
-  - label: "pkg-gateway"
+  - label: 'pkg-gateway'
     sync: true
     matcher:
-      files: "packages/gateway/**/*"
+      files: 'packages/gateway/**/*'
 
-  - label: "pkg-rest"
+  - label: 'pkg-rest'
     sync: true
     matcher:
-      files: "packages/rest/**/*"
+      files: 'packages/rest/**/*'
 
-  - label: "pkg-types"
+  - label: 'pkg-types'
     sync: true
     matcher:
-      files: "packages/types/**/*"
+      files: 'packages/types/**/*'
 
-  - label: "pkg-utils"
+  - label: 'pkg-utils'
     sync: true
     matcher:
-      files: "packages/utils/**/*"
+      files: 'packages/utils/**/*'
 
-  - label: "t-breaking"
+  - label: 't-breaking'
     matcher:
       title: "^[a-z]+(\\(.+\\))?!: .*"
 
-  - label: "t-build"
+  - label: 't-build'
     matcher:
       title: "^build(\\(.+\\))?!?: .*"
 
-  - label: "t-ci"
+  - label: 't-ci'
     matcher:
-      files: ".github/workflows/*"
-      title: "^ci: .*"
+      files: '.github/workflows/*'
+      title: '^ci: .*'
 
-  - label: "t-docs"
+  - label: 't-docs'
     matcher:
       title: "^docs(\\(.+\\))?!?: .*"
 
-  - label: "t-feat"
+  - label: 't-feat'
     matcher:
       title: "^feat(\\(.+\\))?!?: .*"
 
-  - label: "t-fix"
+  - label: 't-fix'
     matcher:
       title: "^fix(\\(.+\\))?!?: .*"
 
-  - label: "t-perf"
+  - label: 't-perf'
     matcher:
       title: "^perf(\\(.+\\))?!?: .*"
 
-  - label: "t-refactor"
+  - label: 't-refactor'
     matcher:
       title: "^refactor(\\(.+\\))?!?: .*"
 
-  - label: "t-style"
+  - label: 't-style'
     matcher:
       title: "^style(\\(.+\\))?!?: .*"
 
-  - label: "t-test"
+  - label: 't-test'
     matcher:
       title: "^test(\\(.+\\))?!?: .*"
