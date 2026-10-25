@@ -493,9 +493,9 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^2.3.0":
-  version: 2.4.6
-  resolution: "fast-uri@npm:2.4.6"
-  checksum: 10c0/8e146a1acee8449c34314bbd17cf9a23510dd44c07e4338f640ac221174ee5c8ef3d14fee9a5250403cca3afda304aa2ac9df9017e771321d9b2480efc880999
+  version: 2.4.8
+  resolution: "fast-uri@npm:2.4.8"
+  checksum: 10c0/3a5592bbdccbad70a6cc65e38af5ca9c30a77c2f19145d443d1bcac4b98f0be4f57d0965e256685f9d11ec18fc09753da6a32ab9facd44c6d8679dac309cd55e
   languageName: node
   linkType: hard
 
