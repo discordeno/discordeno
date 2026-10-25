@@ -142,7 +142,6 @@ export interface SelectOption {
   value: string;
   /** An additional description of the option. Maximum 50 characters. */
   description?: string;
-  // TODO: Make an alias for this type since it is used a few times
   /** The id, name, and animated properties of an emoji. */
   emoji?: {
     /** Emoji id */

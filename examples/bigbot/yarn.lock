@@ -421,7 +421,7 @@ __metadata:
     chalk: "npm:^6.0.0"
     chokidar: "npm:^5.0.0"
     dotenv: "npm:^17.4.2"
-    fastify: "npm:^5.12.5"
+    fastify: "npm:^5.12.6"
     typescript: "npm:^7.0.2"
   languageName: unknown
   linkType: soft
@@ -493,9 +493,9 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^2.3.0":
-  version: 2.4.6
-  resolution: "fast-uri@npm:2.4.6"
-  checksum: 10c0/8e146a1acee8449c34314bbd17cf9a23510dd44c07e4338f640ac221174ee5c8ef3d14fee9a5250403cca3afda304aa2ac9df9017e771321d9b2480efc880999
+  version: 2.4.8
+  resolution: "fast-uri@npm:2.4.8"
+  checksum: 10c0/3a5592bbdccbad70a6cc65e38af5ca9c30a77c2f19145d443d1bcac4b98f0be4f57d0965e256685f9d11ec18fc09753da6a32ab9facd44c6d8679dac309cd55e
   languageName: node
   linkType: hard
 
@@ -520,9 +520,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^5.12.5":
-  version: 5.12.5
-  resolution: "fastify@npm:5.12.5"
+"fastify@npm:^5.12.6":
+  version: 5.12.6
+  resolution: "fastify@npm:5.12.6"
   dependencies:
     "@fastify/ajv-compiler": "npm:^4.0.5"
     "@fastify/error": "npm:^4.0.0"
@@ -539,7 +539,7 @@ __metadata:
     secure-json-parse: "npm:^4.0.0"
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
-  checksum: 10c0/ed18ec344f8a007fb6aea1ad25924076334fab53f2403178d1db56e1f80a5da0f3db4c3a309ef1ae834fc3f20be2444dcc746ce3944093f95e827f66b1e2fbd5
+  checksum: 10c0/ada988854402952f7deb9725ebb3813f739d532fd1009690217f9499f4424575ae1cd0ffcebde21dafe6aa619b96885302e8d9578133e1d569712c9c3be8e77d
   languageName: node
   linkType: hard
 
