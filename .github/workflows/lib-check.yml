@@ -168,7 +168,7 @@ jobs:
           cache: yarn
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: 'v2.9.x'
+          deno-version: "v2.9.x"
       - run: yarn install --immutable
       - name: Cache for Turbo
         uses: rharkor/caching-for-turbo@v2.5.2
@@ -188,7 +188,7 @@ jobs:
           cache: yarn
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: '1.3.14'
+          bun-version: "1.3.14"
       - run: yarn install --immutable
       - name: Cache for Turbo
         uses: rharkor/caching-for-turbo@v2.5.2

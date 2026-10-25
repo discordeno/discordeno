@@ -4,9 +4,9 @@ permissions:
   pull-requests: write
 on:
   pull_request_target:
-    types: ['edited', 'opened', 'reopened', 'synchronize']
+    types: ["edited", "opened", "reopened", "synchronize"]
   issues:
-    types: ['opened', 'reopened']
+    types: ["opened", "reopened"]
 
 jobs:
   labeler:

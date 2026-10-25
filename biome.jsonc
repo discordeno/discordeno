@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.2/schema.json",
   "root": true,
   "formatter": {
     "enabled": true,
@@ -47,6 +47,11 @@
       "allowTrailingCommas": true
     }
   },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
   "files": {
     "includes": [
       "**",
@@ -61,7 +66,8 @@
       // Ignore build outputs
       "!**/build",
       "!**/coverage",
-      "!**/dist"
+      "!**/dist",
+      "!**/website/api_reference"
     ],
     "ignoreUnknown": true
   }
