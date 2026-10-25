@@ -22,7 +22,7 @@ export function commandOptionsParser<
     switch (option.type) {
       case ApplicationCommandOptionTypes.SubCommandGroup:
       case ApplicationCommandOptionTypes.SubCommand:
-        args[option.name] = commandOptionsParser(interaction, option.options) as InteractionResolvedData<TProps, TBehavior>;
+        args[option.name] = commandOptionsParser(interaction, option.options ?? []) as InteractionResolvedData<TProps, TBehavior>;
         break;
       case ApplicationCommandOptionTypes.Channel:
         args[option.name] = interaction.data.resolved?.channels?.get(BigInt(option.value!)) as InteractionResolvedData<TProps, TBehavior>;
@@ -70,7 +70,7 @@ export type InteractionResolvedData<TProps extends TransformersDesiredProperties
 
 export interface InteractionResolvedDataUser<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> {
   user: SetupDesiredProps<User, TProps, TBehavior>;
-  member: InteractionResolvedDataMember<TProps, TBehavior>;
+  member?: InteractionResolvedDataMember<TProps, TBehavior>;
 }
 
 export type InteractionResolvedDataChannel<TProps extends TransformersDesiredProperties, TBehavior extends DesiredPropertiesBehavior> = Pick<
