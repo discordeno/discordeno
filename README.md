@@ -77,7 +77,8 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
       reach 80% of your maximum servers allowed by your shards. For example, since 375,000 was the max, at 300,000 we
       would begin re-sharding behind the scenes with ZERO DOWNTIME.
       - 80% of maximum servers reached (The % of 80% is customizable.)
-      - Identify limits have room to allow re-sharding. (Also customizable) - Manual: You can also trigger this manually should you choose.
+      - Identify limits have room to allow re-sharding. (Also customizable)
+    - Manual: You can also trigger this manually should you choose.
       - When discord releases a new API version, updates your gateways to new version with no downtime.
 - **Horizontal Scaling:**
   - When your bot grows a lot, you have
