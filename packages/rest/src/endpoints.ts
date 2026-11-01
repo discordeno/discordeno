@@ -2025,7 +2025,7 @@ export const restEndpoints = {
    * @returns An instance of {@link DiscordBan}.
    *
    * @remarks
-   * Requires the `BAN_MEMBERS` permission.
+   * Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-ban}
    */
@@ -2040,7 +2040,7 @@ export const restEndpoints = {
    * @returns A collection of {@link DiscordBan} objects assorted by user ID.
    *
    * @remarks
-   * Requires the `BAN_MEMBERS` permission.
+   * Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
    *
    * Users are ordered by their IDs in _ascending_ order.
    *
