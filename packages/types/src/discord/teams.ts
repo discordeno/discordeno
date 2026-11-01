@@ -46,7 +46,7 @@ export interface DiscordTeamMember {
   /** The id of the parent team of which they are a member */
   team_id: string;
   /** The avatar, discriminator, id, username, and global_name of the user */
-  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>;
+  user: DiscordUser;
   /** Role of the team member */
   role: DiscordTeamMemberRole;
 }
