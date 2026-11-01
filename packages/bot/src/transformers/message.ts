@@ -194,13 +194,15 @@ export function transformMessage(bot: Bot, payload: Partial<DiscordMessage>, ext
   if (payload.mention_everyone) message.mentionEveryone = true;
   if (props.mentionedChannelIds && payload.mention_channels?.length) {
     message.mentionedChannelIds = [
-      // Keep any ids tht discord sends
-      ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
-      // Add any other ids that can be validated in a channel mention format
-      ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
-        // converts the <#123> into 123
-        bot.transformers.snowflake(text.substring(2, text.length - 1)),
-      ),
+      ...new Set([
+        // Keep any ids tht discord sends
+        ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
+        // Add any other ids that can be validated in a channel mention format
+        ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
+          // converts the <#123> into 123
+          bot.transformers.snowflake(text.substring(2, text.length - 1)),
+        ),
+      ]),
     ];
   }
   if (props.mentionedRoleIds && payload.mention_roles?.length)
