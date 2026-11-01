@@ -490,6 +490,10 @@ export enum HTTPJsonErrorCodes {
   MaxActiveThreads = 160006,
   /** Maximum number of active announcement threads reached */
   MaxActiveAnnouncementThreads = 160007,
+  /** Cannot reference a message without permission to read message */
+  CannotReferenceNoHistory = 160009,
+  /** NSFW channel message reference not allowed */
+  NSFWReferenceNotAllowed = 160010,
   /** You cannot forward a message whose content you cannot read */
   CannotForwardUnreadableMessage = 160014,
 
