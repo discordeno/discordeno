@@ -141,7 +141,6 @@ export interface DiscordConnection {
 /** https://docs.discord.com/developers/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
   AmazonMusic = 'amazon-music',
-  BattleNet = 'battlenet',
   Bungie = 'bungie',
   Bluesky = 'bluesky',
   Crunchyroll = 'crunchyroll',
