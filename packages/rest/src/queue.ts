@@ -160,6 +160,11 @@ export class Queue {
 
         await this.rest.sendRequest(request).catch((e) => {
           this.rest.logger.debug(`Queue ${this.queueType} ${this.url} encountered an error when sending a request.`, e);
+          // A throw skipped the bookkeeping `sendRequest` does once it has a response, so both slots this attempt spent have to be handed back
+          // here. The rate limit slot is otherwise only restored by the rate limit headers of a response this queue will now never send, which
+          // leaves it unable to send anything again, and the invalid request bucket keeps one of its own for the life of the process.
+          this.remaining++;
+          this.rest.invalidBucket.handleCompletedRequest(999, false);
           request.reject({ ok: false, status: 999, error: 'The queue encontered an unexpected error sending a request.', errorObject: e });
         });
       }
