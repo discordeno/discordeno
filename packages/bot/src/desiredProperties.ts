@@ -741,6 +741,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       flags: defaultValue,
       placeholder: defaultValue,
       placeholderVersion: defaultValue,
+      contentScanMetadata: defaultValue,
       ...desiredProperties.unfurledMediaItem,
     },
     user: {
