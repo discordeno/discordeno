@@ -1263,6 +1263,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild in which to edit the positions of the channels.
    * @param channelPositions - A set of objects defining the updated positions of the channels.
+   * @param reason - The audit log reason
    *
    * @remarks
    * Requires the `MANAGE_CHANNELS` permission.
@@ -1277,8 +1278,8 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-channel-positions}
    */
-  async editChannelPositions(rest: RestManager, guildId: BigString, channelPositions: ModifyGuildChannelPositions[]): Promise<void> {
-    await rest.patch(rest.routes.guilds.channels(guildId), { body: channelPositions });
+  async editChannelPositions(rest: RestManager, guildId: BigString, channelPositions: ModifyGuildChannelPositions[], reason?: string): Promise<void> {
+    await rest.patch(rest.routes.guilds.channels(guildId), { body: channelPositions, reason });
   },
   /**
    * Edits an emoji.
