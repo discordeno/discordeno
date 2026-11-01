@@ -58,12 +58,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.4.0":
-  version: 26.4.0
-  resolution: "@types/node@npm:26.4.0"
+"@types/node@npm:^26.6.6":
+  version: 26.6.6
+  resolution: "@types/node@npm:26.6.6"
   dependencies:
-    undici-types: "npm:~8.3.0"
-  checksum: 10c0/e6fc94ea3b58fb8040b38c465dec1c53c1fd9d2c092c81f699d28799726baf59f12e1600318e79e8e6f985bb919dab6ae820180b942b8e38c51acaad63e8aada
+    undici-types: "npm:~8.9.0"
+  checksum: 10c0/5cb63f644f6e85a257a9cd2403cbcbe196760e2a35fd3ec9fb8b5cff663e14cc832b198cc17b53f870a2e30900ed45a1fb3f53e6589aba26b8e8c484aa672053
   languageName: node
   linkType: hard
 
@@ -207,10 +207,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "chalk@npm:6.0.0"
-  checksum: 10c0/47fd9028aa66fa532295525fe3ac5aec5e467e0d86847d4b5f6e01f9c9bb70b6fd1edca79cddc78a0f31a357baa65cc752d30c6557d025904207d113c82d8962
+"chalk@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "chalk@npm:6.0.1"
+  checksum: 10c0/4c58238fa874f531b5201bf99ebd374742be31f8e306c7783d930856aec305f2dea3e07531a8805b2a7ba92807296e39ced52e9f673703e0264d96e83998a429
   languageName: node
   linkType: hard
 
@@ -219,10 +219,10 @@ __metadata:
   resolution: "dd-beginner-bot@workspace:."
   dependencies:
     "@discordeno/bot": "npm:21.0.0"
-    "@types/node": "npm:^26.4.0"
-    chalk: "npm:^6.0.0"
+    "@types/node": "npm:^26.6.6"
+    chalk: "npm:^6.0.1"
     dd-cache-proxy: "npm:^2.9.0"
-    dotenv: "npm:^17.4.2"
+    dotenv: "npm:^18.0.9"
     typescript: "npm:^7.0.2"
   languageName: unknown
   linkType: soft
@@ -236,10 +236,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^17.4.2":
-  version: 17.4.2
-  resolution: "dotenv@npm:17.4.2"
-  checksum: 10c0/164f8e77a646c8446867d5b588d26ea6005c8ea7c5eb41cf926f6113d23f2191355f6e0cfd95ea9bab98394a5b0a3f1e51a8399711b666fe55cc7b0bd745f942
+"dotenv@npm:^18.0.9":
+  version: 18.0.9
+  resolution: "dotenv@npm:18.0.9"
+  bin:
+    dotenv: dist/index.cjs
+  checksum: 10c0/62a70960e611f1d26bf5ade0e0baa7850513f65d56789ba282c8ae7f690411d364457d33d4302b2611cc18157d03dea589ac7e33f1aa85b8f69737b8c05cf726
   languageName: node
   linkType: hard
 
@@ -392,10 +394,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~8.3.0":
-  version: 8.3.0
-  resolution: "undici-types@npm:8.3.0"
-  checksum: 10c0/c8aa7e2fbebfce519654dafadc0ece59be888d2ccaf180fb4495da875e7b536d2456345c384069c7e6f3e9c9ab7435f074957da306f142343eee86ff8048855a
+"undici-types@npm:~8.9.0":
+  version: 8.9.0
+  resolution: "undici-types@npm:8.9.0"
+  checksum: 10c0/51c712c20c087368f62c6fc0f2bc49fa76bfe5dec28ff01584bb677ff29b0622569783c02d43e151143808c48c0503f804093bd2c491b10f2a830138034cb451
   languageName: node
   linkType: hard
 
