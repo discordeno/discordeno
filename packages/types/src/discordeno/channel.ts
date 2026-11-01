@@ -420,3 +420,23 @@ export interface ListArchivedThreads {
   /** Optional maximum number of threads to return */
   limit?: number;
 }
+
+/** https://docs.discord.com/developers/resources/channel#get-channel-member-permissions-query-string-params */
+export interface GetChannelMemberPermissions {
+  /**
+   * Whether to apply implicit permission masking for missing `VIEW_CHANNEL` or voice/stage `CONNECT`. Not applied when the target member is a bot
+   *
+   * @default true
+   */
+  implicit?: boolean;
+}
+
+/** https://docs.discord.com/developers/resources/channel#get-channel-role-permissions-query-string-params */
+export interface GetChannelRolePermissions {
+  /**
+   * Whether to apply implicit permission masking for missing `VIEW_CHANNEL` or voice/stage `CONNECT`
+   *
+   * @default true
+   */
+  implicit?: boolean;
+}

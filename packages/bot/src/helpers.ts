@@ -46,6 +46,7 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordInvite,
   DiscordListArchivedThreads,
+  DiscordPermissionsResponse,
   DiscordPrunedCount,
   DiscordSearchGuildMessages,
   DiscordSearchGuildMessagesIndexing,
@@ -67,7 +68,9 @@ import type {
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetChannelMemberPermissions,
   GetChannelPinsOptions,
+  GetChannelRolePermissions,
   GetEntitlements,
   GetGlobalApplicationCommandsOptions,
   GetGuildApplicationCommandsOptions,
@@ -781,6 +784,18 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editChannelPermissionOverrides: async (channelId, options, reason) => {
       return await bot.rest.snake.editChannelPermissionOverrides(channelId, options, reason);
     },
+    getChannelMemberPermissions: async (channelId, userId, options) => {
+      return await bot.rest.getChannelMemberPermissions(channelId, userId, options);
+    },
+    getChannelRolePermissions: async (channelId, roleId, options) => {
+      return await bot.rest.getChannelRolePermissions(channelId, roleId, options);
+    },
+    getGuildMemberPermissions: async (guildId, userId) => {
+      return await bot.rest.getGuildMemberPermissions(guildId, userId);
+    },
+    getGuildRolePermissions: async (guildId, roleId) => {
+      return await bot.rest.getGuildRolePermissions(guildId, roleId);
+    },
     editChannelPositions: async (guildId, channelPositions) => {
       return await bot.rest.snake.editChannelPositions(guildId, channelPositions);
     },
@@ -1289,6 +1304,18 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>;
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>;
   editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>;
+  getChannelMemberPermissions: (
+    channelId: BigString,
+    userId: BigString,
+    options?: GetChannelMemberPermissions,
+  ) => Promise<Camelize<DiscordPermissionsResponse>>;
+  getChannelRolePermissions: (
+    channelId: BigString,
+    roleId: BigString,
+    options?: GetChannelRolePermissions,
+  ) => Promise<Camelize<DiscordPermissionsResponse>>;
+  getGuildMemberPermissions: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordPermissionsResponse>>;
+  getGuildRolePermissions: (guildId: BigString, roleId: BigString) => Promise<Camelize<DiscordPermissionsResponse>>;
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>;
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>;
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>;
