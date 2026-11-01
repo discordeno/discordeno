@@ -261,6 +261,8 @@ export enum HTTPJsonErrorCodes {
   MaxChannelPermissionOverwritesReached = 30060,
   /** The channels for this guild are too large */
   ChannelsTooLarge = 30061,
+  /** Target users limit for this guild reached */
+  TargetUsersLimitReached = 30084,
 
   /** Unauthorized. Provide a valid token and try again */
   Unauthorized = 40001,
@@ -308,6 +310,10 @@ export enum HTTPJsonErrorCodes {
   EntitlementAlreadyGranted = 40074,
   /** This interaction has hit the maximum number of follow up messages */
   MaxFollowUpMessages = 40094,
+  /** Target users are already being processed for this invite */
+  TargetUsersAlreadyBeingProcessed = 40114,
+  /** Target users file has not been processed */
+  TargetUsersFileNotProcessed = 40115,
   /** Cloudflare is blocking your request. This can often be resolved by setting a proper User Agent */
   CloudflareBlocked = 40333,
 

@@ -378,8 +378,17 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
         return url;
       },
+      inviteTargetUser(inviteCode, userId) {
+        return `/invites/${encode(inviteCode)}/target-users/${encode(userId)}`;
+      },
       inviteTargetUsers(inviteCode) {
         return `/invites/${encode(inviteCode)}/target-users`;
+      },
+      inviteTargetUsersBulkAdd(inviteCode) {
+        return `/invites/${encode(inviteCode)}/target-users/bulk-add`;
+      },
+      inviteTargetUsersBulkDelete(inviteCode) {
+        return `/invites/${encode(inviteCode)}/target-users/bulk-delete`;
       },
       inviteTargetUsersJobStatus(inviteCode) {
         return `/invites/${encode(inviteCode)}/target-users/job-status`;
