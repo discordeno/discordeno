@@ -1,8 +1,8 @@
-import type { DiscordEmbed } from '@discordeno/types';
+import type { DiscordEmbed, DiscordMessageComponent } from '@discordeno/types';
 import type { Bot } from '../../bot.js';
 import type { Embed } from '../types.js';
 
-export function transformEmbedToDiscordEmbed(_bot: Bot, payload: Embed): DiscordEmbed {
+export function transformEmbedToDiscordEmbed(bot: Bot, payload: Embed): DiscordEmbed {
   return {
     title: payload.title,
     type: payload.type,
@@ -65,6 +65,8 @@ export function transformEmbedToDiscordEmbed(_bot: Bot, payload: Embed): Discord
           proxy_icon_url: payload.author.proxyIconUrl,
         }
       : undefined,
+    components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component) as DiscordMessageComponent),
+    flags: payload.flags?.bitfield,
     fields: payload.fields,
   };
 }
