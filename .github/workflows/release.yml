@@ -11,7 +11,7 @@ on:
       - packages/**
       - .github/**
   release:
-      types: [published]
+    types: [published]
   workflow_dispatch:
 
 jobs:

@@ -21,3 +21,15 @@ export interface RequestGuildMembers {
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string;
 }
+
+/** https://docs.discord.com/developers/events/gateway-events#request-channel-info-request-channel-info-structure */
+export interface RequestChannelInfo {
+  /** The guild id to request channel info for */
+  guildId: BigString;
+  /** The fields to request
+   *
+   * @remarks
+   * The current available fields are `status` and `voice_start_time`.
+   */
+  fields: Array<'status' | 'voice_start_time'>;
+}

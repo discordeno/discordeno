@@ -36,7 +36,6 @@ More details are available in the [documentation](https://discordeno.js.org/docs
 ## Features
 
 Discordeno is actively maintained to guarantee **excellent performance, latest features, and ease of use.**
-
 - **Simple, Efficient, and Lightweight**: Discordeno is lightweight, simple to use, and adaptable.
   - By default: No caching.
 - **Functional API**:

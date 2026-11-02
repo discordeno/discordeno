@@ -16,11 +16,7 @@ describe('urlToBase64.ts', () => {
 
   describe('urlToBase64 function', () => {
     it('Will convert a png image to base64', async () => {
-      const mockArrayBuffer = new ArrayBuffer(8);
-
-      fetchStub.resolves({
-        arrayBuffer: () => Promise.resolve(mockArrayBuffer),
-      });
+      fetchStub.resolves(new Response(new ArrayBuffer(8)));
 
       const url = await urlToBase64('https://example.com/image.png');
 

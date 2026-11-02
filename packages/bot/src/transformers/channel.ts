@@ -1,11 +1,11 @@
-import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types';
+import type { BigString, DiscordChannel, DiscordChannelInfo, DiscordChannelInfoData, DiscordForumTag } from '@discordeno/types';
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
 import { ChannelToggles } from './toggles/channel.js';
 import { Permissions } from './toggles/Permissions.js';
-import type { Channel, ForumTag } from './types.js';
+import type { Channel, ChannelInfo, ChannelInfoData, ForumTag } from './types.js';
 
 const Mask = (1n << 64n) - 1n;
 
@@ -141,6 +141,31 @@ export function transformForumTag(bot: Bot, payload: Partial<DiscordForumTag>, e
   if (props.emojiName && payload.emoji_name) forumTag.emojiName = payload.emoji_name;
 
   return callCustomizer('forumTag', bot, payload, forumTag, {
+    partial: extra?.partial ?? false,
+  });
+}
+
+export function transformChannelInfo(bot: Bot, payload: Partial<DiscordChannelInfo>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.channelInfo;
+  const channelInfo = {} as SetupDesiredProps<ChannelInfo, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.guildId && payload.guild_id) channelInfo.guildId = bot.transformers.snowflake(payload.guild_id);
+  if (props.channels && payload.channels) channelInfo.channels = payload.channels.map((x) => bot.transformers.channelInfoData(bot, x));
+
+  return callCustomizer('channelInfo', bot, payload, channelInfo, {
+    partial: extra?.partial ?? false,
+  });
+}
+
+export function transformChannelInfoData(bot: Bot, payload: Partial<DiscordChannelInfoData>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.channelInfoData;
+  const channelInfoData = {} as SetupDesiredProps<ChannelInfoData, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.id && payload.id) channelInfoData.id = bot.transformers.snowflake(payload.id);
+  if (props.status && payload.status) channelInfoData.status = payload.status;
+  if (props.voiceStartTime && payload.voice_start_time) channelInfoData.voiceStartTime = payload.voice_start_time;
+
+  return callCustomizer('channelInfoData', bot, payload, channelInfoData, {
     partial: extra?.partial ?? false,
   });
 }

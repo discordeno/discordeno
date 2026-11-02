@@ -59,7 +59,7 @@ export interface AttachmentRequest {
    * @remarks
    * Required for voice messages
    */
-  waweform?: string;
+  waveform?: string;
   /**
    * Whether the attachment should be marked as a spoiler and blurred until clicked, this sets the `IS_SPOILER` attachment flag
    */

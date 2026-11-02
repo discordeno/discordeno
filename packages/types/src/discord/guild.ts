@@ -224,8 +224,14 @@ export enum GuildFeatures {
    * This value is mutable
    */
   Discoverable = 'DISCOVERABLE',
+  /** Guild is able to set gradient colors to roles */
+  EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
   /** Guild is able to be featured in the directory */
   Featurable = 'FEATURABLE',
+  /** Guild has access to set guild tags */
+  GuildTags = 'GUILD_TAGS',
+  /** Guild has access to guest invites */
+  GuestsEnabled = 'GUESTS_ENABLED',
   /**
    * Guild has paused invites, preventing new users from joining
    *
@@ -247,6 +253,8 @@ export enum GuildFeatures {
   Partnered = 'PARTNERED',
   /** Guild can be previewed before joining via Membership Screening or the directory */
   PreviewEnabled = 'PREVIEW_ENABLED',
+  /** Guild has enabled requiring admin to prune members */
+  PruneRequiresAdmin = 'PRUNE_REQUIRES_ADMIN',
   /**
    * Guild has disabled alerts for join raids in the configured safety alerts channel
    *
@@ -272,12 +280,6 @@ export enum GuildFeatures {
   VipRegions = 'VIP_REGIONS',
   /** Guild has enabled the welcome screen */
   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
-  /** Guild has access to guest invites */
-  GuestsEnabled = 'GUESTS_ENABLED',
-  /** Guild has access to set guild tags */
-  GuildTags = 'GUILD_TAGS',
-  /** Guild is able to set gradient colors to roles */
-  EnhancedRoleColors = 'ENHANCED_ROLE_COLORS',
 }
 
 /** https://docs.discord.com/developers/resources/guild#unavailable-guild-object */

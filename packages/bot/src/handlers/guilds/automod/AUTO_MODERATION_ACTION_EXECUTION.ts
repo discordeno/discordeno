@@ -6,5 +6,5 @@ export async function handleAutoModerationActionExecution(bot: Bot, data: Discor
   if (!bot.events.automodActionExecution) return;
 
   const payload = data.d as DiscordAutoModerationActionExecution;
-  bot.events.automodActionExecution(bot.transformers.automodActionExecution(bot, payload));
+  bot.events.automodActionExecution(bot.transformers.autoModerationActionExecution(bot, payload));
 }

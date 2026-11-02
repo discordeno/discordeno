@@ -6,5 +6,5 @@ export async function handleAutoModerationRuleUpdate(bot: Bot, data: DiscordGate
   if (!bot.events.automodRuleUpdate) return;
 
   const payload = data.d as DiscordAutoModerationRule;
-  bot.events.automodRuleUpdate(bot.transformers.automodRule(bot, payload));
+  bot.events.automodRuleUpdate(bot.transformers.autoModerationRule(bot, payload));
 }

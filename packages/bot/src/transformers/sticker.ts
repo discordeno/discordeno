@@ -25,16 +25,18 @@ export function transformSticker(bot: Bot, payload: Partial<DiscordSticker>, ext
   });
 }
 
-export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
-  const pack = {
-    id: bot.transformers.snowflake(payload.id),
-    stickers: payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),
-    name: payload.name,
-    skuId: bot.transformers.snowflake(payload.sku_id),
-    coverStickerId: payload.cover_sticker_id ? bot.transformers.snowflake(payload.cover_sticker_id) : undefined,
-    description: payload.description,
-    bannerAssetId: payload.banner_asset_id ? bot.transformers.snowflake(payload.banner_asset_id) : undefined,
-  } as StickerPack;
+export function transformStickerPack(bot: Bot, payload: Partial<DiscordStickerPack>, extra?: { partial?: boolean }) {
+  const stickerPack = {} as SetupDesiredProps<StickerPack, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  return bot.transformers.customizers.stickerPack(bot, payload, pack);
+  if (payload.id) stickerPack.id = bot.transformers.snowflake(payload.id);
+  if (payload.stickers) stickerPack.stickers = payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker));
+  if (payload.name) stickerPack.name = payload.name;
+  if (payload.sku_id) stickerPack.skuId = bot.transformers.snowflake(payload.sku_id);
+  if (payload.cover_sticker_id) stickerPack.coverStickerId = bot.transformers.snowflake(payload.cover_sticker_id);
+  if (payload.description) stickerPack.description = payload.description;
+  if (payload.banner_asset_id) stickerPack.bannerAssetId = bot.transformers.snowflake(payload.banner_asset_id);
+
+  return callCustomizer('stickerPack', bot, payload, stickerPack, {
+    partial: extra?.partial ?? false,
+  });
 }

@@ -26,6 +26,12 @@ export interface DiscordLobbyMember {
   metadata?: Record<string, string> | null;
   /** lobby member flags combined as as bitfield */
   flags?: number;
+  /**
+   * An additional 1-80 character display name for the member, such as an in-game character name.
+   *
+   * Can only be set via Add a Member to a Lobby or Bulk Update Lobby Members.
+   */
+  additional_name?: string | null;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-member-object-lobby-member-flags */
@@ -48,6 +54,8 @@ export interface DiscordLobbyMessage {
   channel_id: string;
   /** The user who sent the message */
   author: DiscordUser;
+  /** Additional informations about the lobby member */
+  lobby_member?: DiscordLobbyMessageLobbyMember;
   /** Dispatch-only metadata sent with the message */
   metadata?: Record<string, string> | null;
   /** Moderation metadata set via Update Lobby Message Moderation Metadata */
@@ -60,6 +68,15 @@ export interface DiscordLobbyMessage {
   flags: number;
   /** The application that sent the message */
   application_id: string;
+}
+
+export interface DiscordLobbyMessageLobbyMember {
+  /**
+   * The author's lobby member additional display name, captured when the message was sent.
+   *
+   * Omitted if the author had no `additional_name` set.
+   */
+  additional_name?: string;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */

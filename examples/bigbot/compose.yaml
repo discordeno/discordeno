@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: "curl -f http://localhost:8086/ping"
+      test: 'curl -f http://localhost:8086/ping'
       interval: 5s
       timeout: 10s
       retries: 5

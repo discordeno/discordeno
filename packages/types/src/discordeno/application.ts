@@ -4,6 +4,7 @@ import type {
   ApplicationFlags,
   DiscordApplicationEventWebhookStatus,
   DiscordApplicationIntegrationType,
+  DiscordApplicationIntegrationTypeConfiguration,
   DiscordInstallParams,
 } from '../discord/application.js';
 import type { DiscordWebhookEventType } from '../discord/webhookEvents.js';
@@ -19,7 +20,7 @@ export interface EditApplication {
   /** Settings for the app's default in-app authorization link, if enabled */
   installParams?: DiscordInstallParams;
   /** Default scopes and permissions for each supported installation context. */
-  integrationTypesConfig?: DiscordApplicationIntegrationType;
+  integrationTypesConfig?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>;
   /**
    * App's public flags
    *
@@ -39,7 +40,7 @@ export interface EditApplication {
    * @remarks
    * To update an Interactions endpoint URL via the API, the URL must be valid
    */
-  interactionEndpointUrl?: string;
+  interactionsEndpointUrl?: string;
   /**
    * List of tags describing the content and functionality of the app (max of 20 characters per tag)
    *

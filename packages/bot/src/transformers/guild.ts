@@ -107,16 +107,7 @@ export function transformGuild(bot: Bot, payload: Partial<DiscordGuild>, extra?:
   if (props.systemChannelFlags && payload.system_channel_flags) guild.systemChannelFlags = payload.system_channel_flags;
   if (props.vanityUrlCode && payload.vanity_url_code) guild.vanityUrlCode = payload.vanity_url_code;
   if (props.verificationLevel && payload.verification_level !== undefined) guild.verificationLevel = payload.verification_level;
-  if (props.welcomeScreen && payload.welcome_screen)
-    guild.welcomeScreen = {
-      description: payload.welcome_screen.description ?? undefined,
-      welcomeChannels: payload.welcome_screen.welcome_channels.map((wc) => ({
-        channelId: bot.transformers.snowflake(wc.channel_id),
-        description: wc.description,
-        emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
-        emojiName: wc.emoji_name ?? undefined,
-      })),
-    };
+  if (props.welcomeScreen && payload.welcome_screen) guild.welcomeScreen = bot.transformers.welcomeScreen(bot, payload.welcome_screen);
   if (props.discoverySplash && payload.discovery_splash) guild.discoverySplash = iconHashToBigInt(payload.discovery_splash);
   if (props.joinedAt && payload.joined_at) guild.joinedAt = Date.parse(payload.joined_at);
   if (props.memberCount && payload.member_count) guild.memberCount = payload.member_count ?? 0;
