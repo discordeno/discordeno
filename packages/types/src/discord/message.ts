@@ -409,6 +409,12 @@ export interface DiscordEmbed {
   /** Fields information */
   fields?: DiscordEmbedField[];
   /**
+   * Components that make up the embed
+   *
+   * @remarks Only present on `components` type embeds.
+   */
+  components?: DiscordMessageComponents;
+  /**
    * Embed flags combined as a bitfield
    *
    * @see {@link DiscordEmbedFlags}
@@ -417,7 +423,7 @@ export interface DiscordEmbed {
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-types */
-export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result';
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result' | 'components';
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-flags */
 export enum DiscordEmbedFlags {
