@@ -75,6 +75,7 @@ import type {
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
+  DiscordPermissionsResponse,
   DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
@@ -111,7 +112,9 @@ import type {
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetChannelMemberPermissions,
   GetChannelPinsOptions,
+  GetChannelRolePermissions,
   GetEntitlements,
   GetGlobalApplicationCommandsOptions,
   GetGuildApplicationCommandsOptions,
@@ -1257,6 +1260,72 @@ export const restEndpoints = {
     reason?: string,
   ): Promise<void> {
     await rest.put(rest.routes.channels.overwrite(channelId, options.id), { body: options, reason });
+  },
+  /**
+   * Returns the member's computed permissions in the channel, including their roles and member-specific overwrites.
+   *
+   * @param channelId - The ID of the channel to get permissions for.
+   * @param userId - The ID of the user to get permissions for.
+   * @param options - The query parameters for the request.
+   * @returns An instance of {@link DiscordPermissionsResponse}.
+   *
+   * @remarks
+   * Requires the `VIEW_CHANNEL` permission, and additionally `CONNECT` for voice and stage channels.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-member-permissions}
+   */
+  async getChannelMemberPermissions(
+    rest: RestManager,
+    channelId: BigString,
+    userId: BigString,
+    options?: GetChannelMemberPermissions,
+  ): Promise<DiscordPermissionsResponse> {
+    return await rest.get<DiscordPermissionsResponse>(rest.routes.channels.permissions.member(channelId, userId, options));
+  },
+  /**
+   * Returns the permissions granted by the specified role together with \@everyone, applying their channel overwrites.
+   *
+   * @param channelId - The ID of the channel to get permissions for.
+   * @param roleId - The ID of the role to get permissions for.
+   * @param options - The query parameters for the request.
+   * @returns An instance of {@link DiscordPermissionsResponse}.
+   *
+   * @remarks
+   * Requires the `VIEW_CHANNEL` permission, and additionally `CONNECT` for voice and stage channels.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/channel#get-channel-role-permissions}
+   */
+  async getChannelRolePermissions(
+    rest: RestManager,
+    channelId: BigString,
+    roleId: BigString,
+    options?: GetChannelRolePermissions,
+  ): Promise<DiscordPermissionsResponse> {
+    return await rest.get<DiscordPermissionsResponse>(rest.routes.channels.permissions.role(channelId, roleId, options));
+  },
+  /**
+   * Returns the member's computed guild permissions, combining their roles with \@everyone.
+   *
+   * @param guildId - The ID of the guild to get permissions for.
+   * @param userId - The ID of the user to get permissions for.
+   * @returns An instance of {@link DiscordPermissionsResponse}.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-member-permissions}
+   */
+  async getGuildMemberPermissions(rest: RestManager, guildId: BigString, userId: BigString): Promise<DiscordPermissionsResponse> {
+    return await rest.get<DiscordPermissionsResponse>(rest.routes.guilds.permissions.member(guildId, userId));
+  },
+  /**
+   * Returns the combined guild permissions of the specified role and \@everyone.
+   *
+   * @param guildId - The ID of the guild to get permissions for.
+   * @param roleId - The ID of the role to get permissions for.
+   * @returns An instance of {@link DiscordPermissionsResponse}.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-role-permissions}
+   */
+  async getGuildRolePermissions(rest: RestManager, guildId: BigString, roleId: BigString): Promise<DiscordPermissionsResponse> {
+    return await rest.get<DiscordPermissionsResponse>(rest.routes.guilds.permissions.role(guildId, roleId));
   },
   /**
    * Edits the positions of a set of channels in a guild.
