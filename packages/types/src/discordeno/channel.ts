@@ -315,6 +315,13 @@ export interface CreateChannelInvite {
    */
   targetUsersFile?: Blob;
   /**
+   * An array of IDs of all users able to see and accept this invite. Max of 1000 IDs
+   *
+   * @remarks
+   * `targetUserIds` and `targetUsersFile` are mutually exclusive, only one can be sent at a time.
+   */
+  targetUserIds?: BigString[];
+  /**
    * The role ID(s) for roles in the guild given to the users that accept this invite
    *
    * @remarks
