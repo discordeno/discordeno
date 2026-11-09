@@ -30,6 +30,7 @@ export const guildFeatureNames = [
   'roleIcons',
   'roleSubscriptionsAvailableForPurchase',
   'roleSubscriptionsEnabled',
+  'soundboard',
   'ticketedEventsEnabled',
   'vanityUrl',
   'verified',
