@@ -51,7 +51,7 @@ export interface DiscordenoAutoModerationActionMetadata {
    *
    * Maximum of 150 characters.
    */
-  customMessage?: string;
+  customMessage?: string | null;
 }
 
 /** https://docs.discord.com/developers/resources/auto-moderation#create-auto-moderation-rule-json-params */

@@ -952,7 +952,6 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to delete the message from.
    * @param messageId - The ID of the message to delete from the channel.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * If not deleting own message:
@@ -962,8 +961,8 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#delete-message}
    */
-  async deleteMessage(rest: RestManager, channelId: BigString, messageId: BigString, reason?: string): Promise<void> {
-    await rest.delete(rest.routes.channels.message(channelId, messageId), { reason });
+  async deleteMessage(rest: RestManager, channelId: BigString, messageId: BigString): Promise<void> {
+    await rest.delete(rest.routes.channels.message(channelId, messageId));
   },
   /**
    * Deletes multiple messages from a channel.
@@ -2087,7 +2086,7 @@ export const restEndpoints = {
    * @returns An instance of {@link DiscordBan}.
    *
    * @remarks
-   * Requires the `BAN_MEMBERS` permission.
+   * Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-ban}
    */
@@ -2102,7 +2101,7 @@ export const restEndpoints = {
    * @returns A collection of {@link DiscordBan} objects assorted by user ID.
    *
    * @remarks
-   * Requires the `BAN_MEMBERS` permission.
+   * Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
    *
    * Users are ordered by their IDs in _ascending_ order.
    *

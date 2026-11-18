@@ -121,12 +121,6 @@ export interface ModifyGuildChannelPositions {
   lockPermissions?: boolean | null;
   /** The new parent ID for the channel that is moved */
   parentId?: BigString | null;
-  /**
-   * Channel flags combined as a bitfield.
-   *
-   * @see {@link ChannelFlags}
-   */
-  flags?: number | null;
 }
 
 /** https://docs.discord.com/developers/resources/guild#list-guild-members-query-string-params */
