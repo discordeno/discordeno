@@ -267,6 +267,27 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       voiceStatus: (channelId) => {
         return `/channels/${encode(channelId)}/voice-status`;
       },
+
+      permissions: {
+        member: (channelId, userId, options) => {
+          let url = `/channels/${encode(channelId)}/permissions/member/${encode(userId)}?`;
+
+          if (options) {
+            if (options.implicit !== undefined) url += `implicit=${encode(options.implicit)}`;
+          }
+
+          return url;
+        },
+        role: (channelId, roleId, options) => {
+          let url = `/channels/${encode(channelId)}/permissions/role/${encode(roleId)}?`;
+
+          if (options) {
+            if (options.implicit !== undefined) url += `implicit=${encode(options.implicit)}`;
+          }
+
+          return url;
+        },
+      },
     },
 
     // Guild Endpoints
@@ -538,6 +559,14 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       },
       incidentActions: (guildId) => {
         return `/guilds/${encode(guildId)}/incident-actions`;
+      },
+      permissions: {
+        member: (guildId, userId) => {
+          return `/guilds/${encode(guildId)}/permissions/member/${encode(userId)}`;
+        },
+        role: (guildId, roleId) => {
+          return `/guilds/${encode(guildId)}/permissions/role/${encode(roleId)}`;
+        },
       },
     },
 
