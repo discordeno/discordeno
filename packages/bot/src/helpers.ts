@@ -739,8 +739,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     deleteInvite: async (inviteCode, reason) => {
       return await bot.rest.snake.deleteInvite(inviteCode, reason);
     },
-    deleteMessage: async (channelId, messageId, reason) => {
-      return await bot.rest.snake.deleteMessage(channelId, messageId, reason);
+    deleteMessage: async (channelId, messageId) => {
+      return await bot.rest.snake.deleteMessage(channelId, messageId);
     },
     deleteMessages: async (channelId, messageIds, reason) => {
       return await bot.rest.snake.deleteMessages(channelId, messageIds, reason);
@@ -1275,7 +1275,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>;
   deleteIntegration: (guildId: BigString, integrationId: BigString, reason?: string) => Promise<void>;
   deleteInvite: (inviteCode: string, reason?: string) => Promise<void>;
-  deleteMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>;
+  deleteMessage: (channelId: BigString, messageId: BigString) => Promise<void>;
   deleteMessages: (channelId: BigString, messageIds: BigString[], reason?: string) => Promise<void>;
   deleteOriginalInteractionResponse: (token: string) => Promise<void>;
   deleteOwnReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>;

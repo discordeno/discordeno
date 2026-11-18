@@ -57,6 +57,7 @@ import type {
   DiscordLobbyInvite,
   DiscordLobbyMember,
   DiscordLobbyMessage,
+  DiscordLobbyMessageLobbyMember,
   DiscordMediaGalleryItem,
   DiscordMember,
   DiscordMessage,
@@ -145,7 +146,13 @@ import {
   transformInteractionResource,
 } from './transformers/interaction.js';
 import { transformInvite } from './transformers/invite.js';
-import { transformLobby, transformLobbyInvite, transformLobbyMember, transformLobbyMessage } from './transformers/lobby.js';
+import {
+  transformLobby,
+  transformLobbyInvite,
+  transformLobbyMember,
+  transformLobbyMessage,
+  transformLobbyMessageLobbyMember,
+} from './transformers/lobby.js';
 import { transformMember } from './transformers/member.js';
 import {
   transformMessage,
@@ -242,6 +249,7 @@ import type {
   LobbyInvite,
   LobbyMember,
   LobbyMessage,
+  LobbyMessageLobbyMember,
   MediaGalleryItem,
   Member,
   Message,
@@ -345,6 +353,7 @@ export type TransformerInformations = {
   lobbyInvite: TransformerInformation<DiscordLobbyInvite, LobbyInvite>;
   lobbyMember: TransformerInformation<DiscordLobbyMember, LobbyMember>;
   lobbyMessage: TransformerInformation<DiscordLobbyMessage, LobbyMessage>;
+  lobbyMessageLobbyMember: TransformerInformation<DiscordLobbyMessageLobbyMember, LobbyMessageLobbyMember>;
   mediaGalleryItem: TransformerInformation<DiscordMediaGalleryItem, MediaGalleryItem>;
   member: TransformerInformation<DiscordMember, Member, { guildId?: BigString; userId?: BigString }>;
   message: TransformerInformation<DiscordMessage, Message, { shardId?: number }>;
@@ -475,6 +484,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       lobby: _options.customizers?.lobby ?? defaultCustomizer,
       lobbyMember: _options.customizers?.lobbyMember ?? defaultCustomizer,
       lobbyMessage: _options.customizers?.lobbyMessage ?? defaultCustomizer,
+      lobbyMessageLobbyMember: _options.customizers?.lobbyMessageLobbyMember ?? defaultCustomizer,
       lobbyInvite: _options.customizers?.lobbyInvite ?? defaultCustomizer,
       mediaGalleryItem: _options.customizers?.mediaGalleryItem ?? defaultCustomizer,
       member: _options.customizers?.member ?? defaultCustomizer,
@@ -591,6 +601,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     lobby: _options.lobby ?? transformLobby,
     lobbyMember: _options.lobbyMember ?? transformLobbyMember,
     lobbyMessage: _options.lobbyMessage ?? transformLobbyMessage,
+    lobbyMessageLobbyMember: _options.lobbyMessageLobbyMember ?? transformLobbyMessageLobbyMember,
     lobbyInvite: _options.lobbyInvite ?? transformLobbyInvite,
     mediaGalleryItem: _options.mediaGalleryItem ?? transformMediaGalleryItem,
     member: _options.member ?? transformMember,
