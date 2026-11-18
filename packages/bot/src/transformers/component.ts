@@ -136,6 +136,7 @@ export function transformUnfurledMediaItem(bot: Bot, payload: Partial<DiscordUnf
   if (props.placeholderVersion && payload.placeholder_version) mediaItem.placeholderVersion = payload.placeholder_version;
   if (props.contentType && payload.content_type) mediaItem.contentType = payload.content_type;
   if (props.flags && payload.flags) mediaItem.flags = new ToggleBitfield(payload.flags);
+  if (props.contentScanMetadata && payload.content_scan_metadata) mediaItem.contentScanMetadata = payload.content_scan_metadata;
   if (props.attachmentId && payload.attachment_id) mediaItem.attachmentId = bot.transformers.snowflake(payload.attachment_id);
 
   return callCustomizer('unfurledMediaItem', bot, payload, mediaItem, {
