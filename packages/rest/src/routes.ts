@@ -95,7 +95,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
           if (options) {
             if (options.type) url += `type=${encode(options.type)}`;
-            if (options.after) url += `after=${encode(options.after)}`;
+            if (options.after) url += `&after=${encode(options.after)}`;
             if (options.limit) url += `&limit=${encode(options.limit)}`;
           }
 
@@ -263,6 +263,10 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           return `/channels/${encode(channelId)}/polls/${encode(messageId)}/expire`;
         },
       },
+
+      voiceStatus: (channelId) => {
+        return `/channels/${encode(channelId)}/voice-status`;
+      },
     },
 
     // Guild Endpoints
@@ -322,7 +326,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           return url;
         },
         event: (guildId, eventId, withUserCount?: boolean) => {
-          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}`;
+          let url = `/guilds/${encode(guildId)}/scheduled-events/${encode(eventId)}?`;
 
           if (withUserCount !== undefined) {
             url += `with_user_count=${encode(withUserCount)}`;
@@ -488,7 +492,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           return `/guilds/${encode(guildId)}/members/${encode(memberId)}/roles/${encode(roleId)}`;
         },
         memberCounts: (guildId) => {
-          return `/guilds/${guildId}/roles/member-counts`;
+          return `/guilds/${encode(guildId)}/roles/member-counts`;
         },
       },
       stickers: (guildId) => {
@@ -674,7 +678,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
     soundboard: {
       sendSound: (channelId) => {
-        return `/channels/${encode(channelId)}`;
+        return `/channels/${encode(channelId)}/send-soundboard-sound`;
       },
       listDefault: () => {
         return `/soundboard-default-sounds`;
