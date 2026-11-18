@@ -797,6 +797,7 @@ export interface Embed {
   provider?: EmbedProvider;
   author?: EmbedAuthor;
   fields?: EmbedField[];
+  components?: Component[];
   /** @see {@link DiscordEmbedFlags} */
   flags?: ToggleBitfield;
 }
