@@ -16,7 +16,7 @@ export function transformTemplate(bot: Bot, payload: Partial<DiscordTemplate>, e
   if (payload.updated_at) template.updatedAt = Date.parse(payload.updated_at);
   if (payload.source_guild_id) template.sourceGuildId = bot.transformers.snowflake(payload.source_guild_id);
   if (payload.serialized_source_guild) template.serializedSourceGuild = payload.serialized_source_guild;
-  if (payload.is_dirty) template.isDirty = payload.is_dirty;
+  if (typeof payload.is_dirty === 'boolean') template.isDirty = payload.is_dirty;
 
   return callCustomizer('template', bot, payload, template, {
     partial: extra?.partial ?? false,
