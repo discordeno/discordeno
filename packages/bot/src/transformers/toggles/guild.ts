@@ -13,7 +13,10 @@ export const guildFeatureNames = [
   'creatorStorePage',
   'developerSupportServer',
   'discoverable',
+  'enhancedRoleColors',
   'featurable',
+  'guildTags',
+  'guestsEnabled',
   'invitesDisabled',
   'inviteSplash',
   'memberVerificationGateEnabled',
@@ -22,6 +25,7 @@ export const guildFeatureNames = [
   'news',
   'partnered',
   'previewEnabled',
+  'pruneRequiresAdmin',
   'raidAlertsDisabled',
   'roleIcons',
   'roleSubscriptionsAvailableForPurchase',
@@ -31,9 +35,6 @@ export const guildFeatureNames = [
   'verified',
   'vipRegions',
   'welcomeScreenEnabled',
-  'guestsEnabled',
-  'guildTags',
-  'enhancedRoleColors',
 ] as const;
 
 export const GuildToggle = {
@@ -70,8 +71,14 @@ export const GuildToggle = {
   developerSupportServer: 1n << 30n,
   /** Whether the guild is able to be discovered in the directory */
   discoverable: 1n << 13n,
+  /** Whether the guild is able to set gradient colors to roles */
+  enhancedRoleColors: 1n << 35n,
   /** Whether the guild is able to be featured in the directory */
   featurable: 1n << 15n,
+  /** Whether the guild has access to set guild tags */
+  guildTags: 1n << 36n,
+  /** Whether the guild has access to guest invites */
+  guestsEnabled: 1n << 26n,
   /** Whether the guild has paused invites, preventing new users from joining */
   invitesDisabled: 1n << 29n,
   /** Whether the guild has access to set an invite splash background */
@@ -88,6 +95,8 @@ export const GuildToggle = {
   partnered: 1n << 9n,
   /** Whether the guild can be previewed before joining via Membership Screening or the directory */
   previewEnabled: 1n << 20n,
+  /** Whether the guild has enabled requiring admin to prune members */
+  pruneRequiresAdmin: 1n << 37n,
   /** Whether the guild has disabled alerts for join raids in the configured safety alerts channel */
   raidAlertsDisabled: 1n << 22n,
   /** Whether the guild is able to set role icons */
@@ -108,12 +117,6 @@ export const GuildToggle = {
   vipRegions: 1n << 6n,
   /** Whether the guild has enabled the welcome screen */
   welcomeScreenEnabled: 1n << 18n,
-  /** Whether the guild has access to guest invites */
-  guestsEnabled: 1n << 26n,
-  /** Whether the guild has access to set guild tags */
-  guildTags: 1n << 36n,
-  /** Whether the guild is able to set gradient colors to roles */
-  enhancedRoleColors: 1n << 35n,
 };
 
 export class GuildToggles extends ToggleBitfieldBigint {
@@ -142,7 +145,10 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.CreatorStorePage)) this.add(GuildToggle.creatorStorePage);
       if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) this.add(GuildToggle.developerSupportServer);
       if (guild.features.includes(GuildFeatures.Discoverable)) this.add(GuildToggle.discoverable);
+      if (guild.features.includes(GuildFeatures.EnhancedRoleColors)) this.add(GuildToggle.enhancedRoleColors);
       if (guild.features.includes(GuildFeatures.Featurable)) this.add(GuildToggle.featurable);
+      if (guild.features.includes(GuildFeatures.GuildTags)) this.add(GuildToggle.guildTags);
+      if (guild.features.includes(GuildFeatures.GuestsEnabled)) this.add(GuildToggle.guestsEnabled);
       if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled);
       if (guild.features.includes(GuildFeatures.InviteSplash)) this.add(GuildToggle.inviteSplash);
       if (guild.features.includes(GuildFeatures.MemberVerificationGateEnabled)) this.add(GuildToggle.memberVerificationGateEnabled);
@@ -151,6 +157,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.News)) this.add(GuildToggle.news);
       if (guild.features.includes(GuildFeatures.Partnered)) this.add(GuildToggle.partnered);
       if (guild.features.includes(GuildFeatures.PreviewEnabled)) this.add(GuildToggle.previewEnabled);
+      if (guild.features.includes(GuildFeatures.PruneRequiresAdmin)) this.add(GuildToggle.pruneRequiresAdmin);
       if (guild.features.includes(GuildFeatures.RaidAlertsDisabled)) this.add(GuildToggle.raidAlertsDisabled);
       if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons);
       if (guild.features.includes(GuildFeatures.RoleSubscriptionsAvailableForPurchase)) this.add(GuildToggle.roleSubscriptionsAvailableForPurchase);
@@ -161,9 +168,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified);
       if (guild.features.includes(GuildFeatures.VipRegions)) this.add(GuildToggle.vipRegions);
       if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) this.add(GuildToggle.welcomeScreenEnabled);
-      if (guild.features.includes(GuildFeatures.GuestsEnabled)) this.add(GuildToggle.guestsEnabled);
-      if (guild.features.includes(GuildFeatures.GuildTags)) this.add(GuildToggle.guildTags);
-      if (guild.features.includes(GuildFeatures.EnhancedRoleColors)) this.add(GuildToggle.enhancedRoleColors);
     }
   }
 
@@ -254,9 +258,24 @@ export class GuildToggles extends ToggleBitfieldBigint {
     return this.has('discoverable');
   }
 
+  /** Whether the guild is able to set gradient colors to roles */
+  get enhancedRoleColors(): boolean {
+    return this.has('enhancedRoleColors');
+  }
+
   /** Whether the guild is able to be featured in the directory */
   get featurable(): boolean {
     return this.has('featurable');
+  }
+
+  /** Whether the guild has access to set guild tags */
+  get guildTags(): boolean {
+    return this.has('guildTags');
+  }
+
+  /** Whether the guild has access to guest invites */
+  get guestsEnabled(): boolean {
+    return this.has('guestsEnabled');
   }
 
   /** Whether the guild has access to set an animated guild icon */
@@ -287,6 +306,10 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild can be previewed before joining via Membership Screening or the directory */
   get previewEnabled(): boolean {
     return this.has('previewEnabled');
+  }
+
+  get pruneRequiresAdmin(): boolean {
+    return this.has('pruneRequiresAdmin');
   }
 
   /** Whether the guild has enabled ticketed events */
@@ -347,21 +370,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild has created soundboard sounds. */
   get soundboard(): boolean {
     return this.has('soundboard');
-  }
-
-  /** Whether the guild has access to guest invites */
-  get guestsEnabled(): boolean {
-    return this.has('guestsEnabled');
-  }
-
-  /** Whether the guild has access to set guild tags */
-  get guildTags(): boolean {
-    return this.has('guildTags');
-  }
-
-  /** Whether the guild is able to set gradient colors to roles */
-  get enhancedRoleColors(): boolean {
-    return this.has('enhancedRoleColors');
   }
 
   /** Checks whether or not the permissions exist in this */
