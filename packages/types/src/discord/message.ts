@@ -539,7 +539,12 @@ export interface DiscordAttachment {
   size: number;
   /** Source url of file */
   url: string;
-  /** A proxied url of file */
+  /**
+   * A proxied url of file
+   *
+   * @remarks
+   * The proxy url supports images and videos (which have a defined `width` and `height`) as well as audio files, which are passed through unmodified. For all other attachment types, the proxy returns a `415: Unsupported Media Type` error.
+   */
   proxy_url: string;
   /** Height of file (if image or video) */
   height?: number | null;
@@ -549,7 +554,12 @@ export interface DiscordAttachment {
   placeholder?: string;
   /** Version of the placeholder (if image or video) */
   placeholder_version?: number;
-  /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
+  /**
+   * Whether this attachment is ephemeral.
+   *
+   * @remarks
+   * Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
+   */
   ephemeral?: boolean;
   /** The duration of the audio or video file */
   duration_secs?: number;
