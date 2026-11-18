@@ -190,6 +190,18 @@ export class Queue {
     }
   }
 
+  /**
+   * Gives back the slot an attempt spent when that attempt ended without a response.
+   *
+   * `remaining` is otherwise only restored by the rate limit headers of a response, and by the timer `processPending` arms when it runs out of
+   * slots, which needs an `interval` that only such a response can teach it. A queue that has not had one yet has neither, so a slot spent on an
+   * attempt that fails without a response would stay spent: nothing is ever sent again, so no response can arrive to restore it, and
+   * `isQueueClearable` keeps saying no, so the queue is never deleted either. Everything routed through it after that waits forever.
+   */
+  handleFailedRequest(): void {
+    this.remaining++;
+  }
+
   /** Checks if a request is available and adds it to the queue. Also triggers queue processing if not already processing. */
   async makeRequest(options: SendRequestOptions): Promise<void> {
     const signal = options.requestBodyOptions?.signal;
