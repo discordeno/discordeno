@@ -332,7 +332,12 @@ export interface Attachment {
   size: number;
   /** Source url of file */
   url: string;
-  /** A proxied url of file */
+  /**
+   * A proxied url of file
+   *
+   * @remarks
+   * The proxy url supports images and videos (which have a defined `width` and `height`) as well as audio files, which are passed through unmodified. For all other attachment types, the proxy returns a `415: Unsupported Media Type` error.
+   */
   proxyUrl: string;
   /** Attachment id */
   id: bigint;
@@ -346,7 +351,12 @@ export interface Attachment {
   placeholder?: string;
   /** Version of the placeholder (if image or video) */
   placeholderVersion?: number;
-  /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
+  /**
+   * Whether this attachment is ephemeral.
+   *
+   * @remarks
+   * Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
+   */
   ephemeral?: boolean;
   /** The duration of the audio file for a voice message */
   duration_secs?: number;

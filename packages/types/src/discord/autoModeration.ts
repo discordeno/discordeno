@@ -168,5 +168,5 @@ export interface DiscordAutoModerationActionMetadata {
    *
    * Maximum of 150 characters.
    */
-  custom_message?: string;
+  custom_message?: string | null;
 }
