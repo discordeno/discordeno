@@ -21,6 +21,7 @@ export function transformEmbed(bot: Bot, payload: Partial<DiscordEmbed>, extra?:
   if (payload.provider) embed.provider = payload.provider;
   if (payload.author) embed.author = bot.transformers.embedAuthor(bot, payload.author);
   if (payload.fields) embed.fields = payload.fields;
+  if (payload.components) embed.components = payload.components.map((c) => bot.transformers.component(bot, c));
   if (payload.flags !== undefined) embed.flags = new ToggleBitfield(payload.flags);
 
   return callCustomizer('embed', bot, payload, embed, {
