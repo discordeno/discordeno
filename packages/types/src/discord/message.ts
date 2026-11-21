@@ -422,13 +422,13 @@ export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-flags */
 export enum DiscordEmbedFlags {
   /** This media was flagged as explicit by Discord's content scanning */
-  IsExplicitContent = 1 << 4,
+  ContainsExplicitContent = 1 << 4,
   /** This embed is a fallback for a reply to an activity card */
   IsContentInventoryEntry = 1 << 5,
   /** This media was flagged as gore by Discord's content scanning */
-  IsGoreContent = 1 << 6,
+  ContainsGoreContent = 1 << 6,
   /** This media was flagged as self-harm by Discord's content scanning */
-  IsSelfHarmContent = 1 << 7,
+  ContainsSelfHarmContent = 1 << 7,
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-video-structure */
@@ -587,13 +587,13 @@ export enum AttachmentFlags {
   /** This attachment was marked as a spoiler and is blurred until clicked */
   IsSpoiler = 1 << 3,
   /** This media was flagged as explicit by Discord's content scanning */
-  IsExplicitContent = 1 << 4,
+  ContainsExplicitContent = 1 << 4,
   /** This attachment is an animated image */
   IsAnimated = 1 << 5,
   /** This media was flagged as gore by Discord's content scanning */
-  IsGoreContent = 1 << 6,
+  ContainsGoreContent = 1 << 6,
   /** This media was flagged as self-harm by Discord's content scanning */
-  IsSelfHarmContent = 1 << 7,
+  ContainsSelfHarmContent = 1 << 7,
 }
 
 /** https://docs.discord.com/developers/resources/message#channel-mention-object-channel-mention-structure */
