@@ -191,6 +191,13 @@ export enum ChannelFlags {
   /** When set hides the embedded media download options. Available only for media channels. */
   HideMediaDownloadOptions = 1 << 15,
   /**
+   * This channel's metadata has been obfuscated because the current user cannot view it.
+   *
+   * @remarks
+   * Only ever set on channels received over the Gateway; the HTTP API never sets this flag.
+   */
+  ChannelObfuscated = 1 << 17,
+  /**
    * This channel is a Spoiler Channel i.e. users must opt in to view its contents.
    *
    * @remarks
