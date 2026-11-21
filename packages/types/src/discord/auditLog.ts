@@ -73,6 +73,8 @@ export enum AuditLogEvents {
   ChannelOverwriteUpdate,
   /** Permission overwrite was deleted from a channel */
   ChannelOverwriteDelete,
+  /** Channels were reordered */
+  ChannelPositionUpdate,
   /** Member was removed from server */
   MemberKick = 20,
   /** Members were pruned from server */
@@ -97,6 +99,8 @@ export enum AuditLogEvents {
   RoleUpdate,
   /** Role was deleted */
   RoleDelete,
+  /** Roles were reordered */
+  RolePositionUpdate,
   /** Server invite was created */
   InviteCreate = 40,
   /** Server invite was updated */
@@ -253,10 +257,10 @@ export interface DiscordOptionalAuditEntryInfo {
    */
   channel_id?: string;
   /**
-   * Number of entities that were targeted.
+   * Number of entities that were targeted, or number of position updates.
    *
    * @remarks
-   * Only present on event of types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
+   * Only present on event of types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`, `CHANNEL_POSITION_UPDATE`, `ROLE_POSITION_UPDATE`
    */
   count?: string;
   /**
