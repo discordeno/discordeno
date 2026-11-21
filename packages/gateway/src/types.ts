@@ -102,7 +102,7 @@ export interface ShardGatewayConfig {
    */
   totalShards: number;
   /**
-   * Bitfield rapresenting the capabilities of the client.
+   * Bitfield representing the capabilities of the client.
    *
    * @default 0
    *

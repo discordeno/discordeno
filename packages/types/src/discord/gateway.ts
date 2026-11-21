@@ -312,7 +312,7 @@ export enum GatewayCapabilities {
    *
    * As this is temporary, removing this won't be followed by a semver major when discord deprecates it.
    */
-  ChannelObfuscasation = 1 << 15,
+  ChannelObfuscation = 1 << 15,
 }
 
 // TODO: Add Identify Connection Properties: https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties
