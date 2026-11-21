@@ -120,6 +120,7 @@ export interface RestRoutes {
       votes: (channelId: BigString, messageId: BigString, answerId: number, options?: GetPollAnswerVotes) => string;
       expire: (channelId: BigString, messageId: BigString) => string;
     };
+    voiceStatus: (channelId: BigString) => string;
   };
   /** Routes for guild related endpoints. */
   guilds: {
@@ -159,8 +160,14 @@ export interface RestRoutes {
     integrations: (guildId: BigString) => string;
     /** Route for handling a specific guild invite. */
     invite: (inviteCode: string, options?: GetInvite) => string;
+    /** Route for a specific invite's target user */
+    inviteTargetUser: (inviteCode: string, userId: BigString) => string;
     /** Route for a specific invite's target users  */
     inviteTargetUsers: (inviteCode: string) => string;
+    /** Route for bulk adding a specific invite's target users */
+    inviteTargetUsersBulkAdd: (inviteCode: string) => string;
+    /** Route for bulk deleting a specific invite's target users */
+    inviteTargetUsersBulkDelete: (inviteCode: string) => string;
     /** Route for a specific invite's target users  */
     inviteTargetUsersJobStatus: (inviteCode: string) => string;
     /** Route for handling non-specific invites in a guild. */
