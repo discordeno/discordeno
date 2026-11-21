@@ -102,7 +102,7 @@ export function transformUserPrimaryGuild(bot: Bot, payload: Partial<DiscordUser
   const props = bot.transformers.desiredProperties.userPrimaryGuild;
 
   if (props.identityGuildId && payload.identity_guild_id) userPrimaryGuild.identityGuildId = bot.transformers.snowflake(payload.identity_guild_id);
-  if (props.identityEnabled && payload.identity_enabled) userPrimaryGuild.identityEnabled = payload.identity_enabled;
+  if (props.identityEnabled && typeof payload.identity_enabled === 'boolean') userPrimaryGuild.identityEnabled = payload.identity_enabled;
   if (props.tag && payload.tag) userPrimaryGuild.tag = payload.tag;
   if (props.badge && payload.badge) userPrimaryGuild.badge = iconHashToBigInt(payload.badge);
 

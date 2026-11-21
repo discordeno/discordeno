@@ -90,12 +90,12 @@ export const baseMessage: Message = {
     else this.bitfield.remove(2);
   },
   get pinned() {
-    return this.bitfield?.contains(3) ?? false;
+    return this.bitfield?.contains(4) ?? false;
   },
   set pinned(value: boolean) {
     if (!this.bitfield) return;
-    if (value) this.bitfield.add(3);
-    else this.bitfield.remove(3);
+    if (value) this.bitfield.add(4);
+    else this.bitfield.remove(4);
   },
   get sourceMessageDeleted() {
     return this.flags?.contains(MessageFlags.SourceMessageDeleted) ?? false;
