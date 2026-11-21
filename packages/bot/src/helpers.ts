@@ -48,7 +48,6 @@ import type {
   DiscordGuildWidgetSettings,
   DiscordInvite,
   DiscordListArchivedThreads,
-  DiscordPermissionsResponse,
   DiscordPrunedCount,
   DiscordSearchGuildMessages,
   DiscordSearchGuildMessagesIndexing,
@@ -124,6 +123,7 @@ import { camelize } from '@discordeno/utils';
 import type { Bot } from './bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js';
 import type { ThreadMemberTransformerExtra } from './transformers/threadMember.js';
+import { Permissions } from './transformers/toggles/Permissions.js';
 import type {
   Application,
   ApplicationCommand,
@@ -799,16 +799,16 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
       return await bot.rest.snake.editChannelPermissionOverrides(channelId, options, reason);
     },
     getChannelMemberPermissions: async (channelId, userId, options) => {
-      return await bot.rest.getChannelMemberPermissions(channelId, userId, options);
+      return { permissions: new Permissions((await bot.rest.getChannelMemberPermissions(channelId, userId, options)).permissions) };
     },
     getChannelRolePermissions: async (channelId, roleId, options) => {
-      return await bot.rest.getChannelRolePermissions(channelId, roleId, options);
+      return { permissions: new Permissions((await bot.rest.getChannelRolePermissions(channelId, roleId, options)).permissions) };
     },
     getGuildMemberPermissions: async (guildId, userId) => {
-      return await bot.rest.getGuildMemberPermissions(guildId, userId);
+      return { permissions: new Permissions((await bot.rest.getGuildMemberPermissions(guildId, userId)).permissions) };
     },
     getGuildRolePermissions: async (guildId, roleId) => {
-      return await bot.rest.getGuildRolePermissions(guildId, roleId);
+      return { permissions: new Permissions((await bot.rest.getGuildRolePermissions(guildId, roleId)).permissions) };
     },
     editChannelPositions: async (guildId, channelPositions, reason) => {
       return await bot.rest.snake.editChannelPositions(guildId, channelPositions, reason);
@@ -1326,14 +1326,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
     channelId: BigString,
     userId: BigString,
     options?: GetChannelMemberPermissions,
-  ) => Promise<Camelize<DiscordPermissionsResponse>>;
-  getChannelRolePermissions: (
-    channelId: BigString,
-    roleId: BigString,
-    options?: GetChannelRolePermissions,
-  ) => Promise<Camelize<DiscordPermissionsResponse>>;
-  getGuildMemberPermissions: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordPermissionsResponse>>;
-  getGuildRolePermissions: (guildId: BigString, roleId: BigString) => Promise<Camelize<DiscordPermissionsResponse>>;
+  ) => Promise<{ permissions: Permissions }>;
+  getChannelRolePermissions: (channelId: BigString, roleId: BigString, options?: GetChannelRolePermissions) => Promise<{ permissions: Permissions }>;
+  getGuildMemberPermissions: (guildId: BigString, userId: BigString) => Promise<{ permissions: Permissions }>;
+  getGuildRolePermissions: (guildId: BigString, roleId: BigString) => Promise<{ permissions: Permissions }>;
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[], reason?: string) => Promise<void>;
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>;
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>;
