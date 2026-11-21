@@ -795,8 +795,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editChannelPermissionOverrides: async (channelId, options, reason) => {
       return await bot.rest.snake.editChannelPermissionOverrides(channelId, options, reason);
     },
-    editChannelPositions: async (guildId, channelPositions) => {
-      return await bot.rest.snake.editChannelPositions(guildId, channelPositions);
+    editChannelPositions: async (guildId, channelPositions, reason) => {
+      return await bot.rest.snake.editChannelPositions(guildId, channelPositions, reason);
     },
     editOwnVoiceState: async (guildId, options) => {
       return await bot.rest.snake.editOwnVoiceState(guildId, options);
@@ -1307,7 +1307,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>;
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>;
   editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>;
-  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>;
+  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[], reason?: string) => Promise<void>;
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>;
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>;
   joinThread: (channelId: BigString) => Promise<void>;

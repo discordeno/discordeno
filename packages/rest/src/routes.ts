@@ -282,6 +282,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           if (options.before) url += `&before=${encode(options.before)}`;
           if (options.limit) url += `&limit=${encode(options.limit)}`;
           if (options.withCounts) url += `&with_counts=${encode(options.withCounts)}`;
+          if (options.shard !== undefined) url += `&shard=${encode(options.shard)}`;
         }
 
         return url;
