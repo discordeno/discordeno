@@ -22,5 +22,28 @@ describe('urlToBase64.ts', () => {
 
       expect(url).equal('data:image/png;base64,AAAAAAAAAAA=');
     });
+
+    it('Will not include the query string in the type', async () => {
+      fetchStub.resolves(new Response(new ArrayBuffer(8)));
+
+      const url = await urlToBase64('https://example.com/image.png?size=128');
+
+      expect(url).equal('data:image/png;base64,AAAAAAAAAAA=');
+    });
+
+    it('Will throw on a non ok response', async () => {
+      fetchStub.resolves(new Response(null, { status: 404, statusText: 'Not Found' }));
+
+      let error: unknown;
+
+      try {
+        await urlToBase64('https://example.com/image.png');
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.instanceOf(Error);
+      expect((error as Error).message).to.equal('Failed to fetch https://example.com/image.png: 404 Not Found');
+    });
   });
 });
