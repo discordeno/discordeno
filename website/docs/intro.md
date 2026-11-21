@@ -9,7 +9,6 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 ## Features
 
 Discordeno is actively maintained to guarantee **excellent performance, latest features, and ease of use.**
-
 - **Simple, Efficient, and Lightweight**: Discordeno is lightweight, simple to use, and adaptable.
   - By default: No caching.
 - **Functional API**:
