@@ -6,6 +6,8 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkAddInviteTargetUsers,
+  BulkDeleteInviteTargetUsers,
   BulkUpdateLobbyMember,
   Camelize,
   CreateApplicationCommand,
@@ -676,6 +678,18 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     getTargetUsers: async (inviteCode) => {
       return await bot.rest.snake.getTargetUsers(inviteCode);
     },
+    addTargetUser: async (inviteCode, userId) => {
+      await bot.rest.snake.addTargetUser(inviteCode, userId);
+    },
+    removeTargetUser: async (inviteCode, userId) => {
+      await bot.rest.snake.removeTargetUser(inviteCode, userId);
+    },
+    bulkAddTargetUsers: async (inviteCode, options) => {
+      await bot.rest.snake.bulkAddTargetUsers(inviteCode, options);
+    },
+    bulkDeleteTargetUsers: async (inviteCode, options) => {
+      await bot.rest.snake.bulkDeleteTargetUsers(inviteCode, options);
+    },
     updateTargetUsers: async (inviteCode, targetUsersFile) => {
       await bot.rest.snake.updateTargetUsers(inviteCode, targetUsersFile);
     },
@@ -739,8 +753,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     deleteInvite: async (inviteCode, reason) => {
       return await bot.rest.snake.deleteInvite(inviteCode, reason);
     },
-    deleteMessage: async (channelId, messageId, reason) => {
-      return await bot.rest.snake.deleteMessage(channelId, messageId, reason);
+    deleteMessage: async (channelId, messageId) => {
+      return await bot.rest.snake.deleteMessage(channelId, messageId);
     },
     deleteMessages: async (channelId, messageIds, reason) => {
       return await bot.rest.snake.deleteMessages(channelId, messageIds, reason);
@@ -781,8 +795,8 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editChannelPermissionOverrides: async (channelId, options, reason) => {
       return await bot.rest.snake.editChannelPermissionOverrides(channelId, options, reason);
     },
-    editChannelPositions: async (guildId, channelPositions) => {
-      return await bot.rest.snake.editChannelPositions(guildId, channelPositions);
+    editChannelPositions: async (guildId, channelPositions, reason) => {
+      return await bot.rest.snake.editChannelPositions(guildId, channelPositions, reason);
     },
     editOwnVoiceState: async (guildId, options) => {
       return await bot.rest.snake.editOwnVoiceState(guildId, options);
@@ -1242,6 +1256,10 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   unlinkChannelToLobby: (lobbyId: BigString, bearerToken: string) => Promise<SetupDesiredProps<Lobby, TProps, TBehavior>>;
   updateLobbyMessageModerationMetadata: (lobbyId: BigString, messageId: BigString, options: Record<string, string>) => Promise<void>;
   getTargetUsers: (inviteCode: string) => Promise<string>;
+  addTargetUser: (inviteCode: string, userId: BigString) => Promise<void>;
+  removeTargetUser: (inviteCode: string, userId: BigString) => Promise<void>;
+  bulkAddTargetUsers: (inviteCode: string, options: BulkAddInviteTargetUsers) => Promise<void>;
+  bulkDeleteTargetUsers: (inviteCode: string, options: BulkDeleteInviteTargetUsers) => Promise<void>;
   updateTargetUsers: (inviteCode: string, targetUsersFile: Blob) => Promise<void>;
   getTargetUsersJobStatus: (inviteCode: string) => Promise<Camelize<DiscordTargetUsersJobStatus>>;
   sendLobbyMessage: (
@@ -1275,7 +1293,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>;
   deleteIntegration: (guildId: BigString, integrationId: BigString, reason?: string) => Promise<void>;
   deleteInvite: (inviteCode: string, reason?: string) => Promise<void>;
-  deleteMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>;
+  deleteMessage: (channelId: BigString, messageId: BigString) => Promise<void>;
   deleteMessages: (channelId: BigString, messageIds: BigString[], reason?: string) => Promise<void>;
   deleteOriginalInteractionResponse: (token: string) => Promise<void>;
   deleteOwnReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>;
@@ -1289,7 +1307,7 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>;
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>;
   editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>;
-  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>;
+  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[], reason?: string) => Promise<void>;
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>;
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>;
   joinThread: (channelId: BigString) => Promise<void>;

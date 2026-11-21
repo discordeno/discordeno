@@ -211,9 +211,9 @@ export enum InteractionResponseTypes {
   ChannelMessageWithSource = 4,
   /** ACK an interaction and edit a response later, the user sees a loading state */
   DeferredChannelMessageWithSource = 5,
-  /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
+  /** For components and modal submits, ACK an interaction and edit the original message later; the user does not see a loading state */
   DeferredUpdateMessage = 6,
-  /** For components, edit the message the component was attached to */
+  /** For components and modal submits, edit the message the component was attached to */
   UpdateMessage = 7,
   /** For Application Command Options, send an autocomplete result */
   ApplicationCommandAutocompleteResult = 8,

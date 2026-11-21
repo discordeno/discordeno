@@ -160,6 +160,11 @@ export class Queue {
 
         await this.rest.sendRequest(request).catch((e) => {
           this.rest.logger.debug(`Queue ${this.queueType} ${this.url} encountered an error when sending a request.`, e);
+          // A throw skipped the bookkeeping `sendRequest` does once it has a response, so both slots this attempt spent have to be handed back
+          // here. The rate limit slot is otherwise only restored by the rate limit headers of a response this queue will now never send, which
+          // leaves it unable to send anything again, and the invalid request bucket keeps one of its own for the life of the process.
+          this.remaining++;
+          this.rest.invalidBucket.handleCompletedRequest(999, false);
           request.reject({ ok: false, status: 999, error: 'The queue encontered an unexpected error sending a request.', errorObject: e });
         });
       }
@@ -188,6 +193,18 @@ export class Queue {
         this.timeoutId = undefined;
       }, headers.interval).unref();
     }
+  }
+
+  /**
+   * Gives back the slot an attempt spent when that attempt ended without a response.
+   *
+   * `remaining` is otherwise only restored by the rate limit headers of a response, and by the timer `processPending` arms when it runs out of
+   * slots, which needs an `interval` that only such a response can teach it. A queue that has not had one yet has neither, so a slot spent on an
+   * attempt that fails without a response would stay spent: nothing is ever sent again, so no response can arrive to restore it, and
+   * `isQueueClearable` keeps saying no, so the queue is never deleted either. Everything routed through it after that waits forever.
+   */
+  handleFailedRequest(): void {
+    this.remaining++;
   }
 
   /** Checks if a request is available and adds it to the queue. Also triggers queue processing if not already processing. */
