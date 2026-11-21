@@ -49,6 +49,31 @@ describe('Gateway requests', () => {
     cleanup();
   });
 
+  it('Requires the GUILD_MEMBERS intent for an empty query whatever the limit is', async () => {
+    const { gateway, payloads, cleanup } = createGatewayManagerWithShard();
+
+    await assert.rejects(gateway.requestMembers(869934315011870750n, { query: '', limit: 50 }), /GUILD_MEMBERS intent/);
+    await assert.rejects(gateway.requestMembers(869934315011870750n, { limit: 50 }), /GUILD_MEMBERS intent/);
+
+    assert.equal(payloads.length, 0);
+
+    cleanup();
+  });
+
+  it('Sends an empty query when only a limit is provided', async () => {
+    const { gateway, payloads, cleanup } = createGatewayManagerWithShard();
+    gateway.intents |= Intents.GuildMembers;
+
+    await gateway.requestMembers(869934315011870750n, { limit: 50 });
+
+    const data = payloads[0]?.d as { query: string; limit: number };
+
+    assert.equal(data.query, '');
+    assert.equal(data.limit, 50);
+
+    cleanup();
+  });
+
   it('Does not keep a pending member request of a payload which could not be sent', async () => {
     const gateway = createGatewayManagerWithCache();
 

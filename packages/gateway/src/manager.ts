@@ -458,8 +458,11 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         options.limit = options.userIds.length;
       }
 
-      // Discord only requires the GUILD_MEMBERS intent to request the entire member list, which is what is requested when neither user ids, a query nor a limit are provided.
-      if (!options?.userIds?.length && !options?.query && !options?.limit && (gateway.intents & GatewayIntents.GuildMembers) === 0)
+      // Without user ids, an empty query is sent, which asks for the entire member list whatever the limit is.
+      const query = options?.query ?? (options?.userIds?.length ? undefined : '');
+
+      // Discord requires the GUILD_MEMBERS intent to request the entire member list.
+      if (!options?.userIds?.length && query === '' && (gateway.intents & GatewayIntents.GuildMembers) === 0)
         throw new Error('Cannot fetch the entire member list without the GUILD_MEMBERS intent');
 
       gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> data: ${JSON.stringify(options, jsonSafeReplacer)}`);
@@ -501,8 +504,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           op: GatewayOpcodes.RequestGuildMembers,
           d: {
             guild_id: guildId.toString(),
-            // If a query is provided use it, OR if a limit is NOT provided use ""
-            query: options?.query ?? (options?.limit ? undefined : ''),
+            query,
             limit: options?.limit ?? 0,
             presences: options?.presences ?? false,
             user_ids: options?.userIds?.map((id) => id.toString()),
