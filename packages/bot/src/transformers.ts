@@ -129,7 +129,12 @@ import {
 import { transformAutoModerationRule, transformAutoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
 import { transformChannel, transformChannelInfo, transformChannelInfoData, transformForumTag } from './transformers/channel.js';
-import { transformComponent, transformMediaGalleryItem, transformUnfurledMediaItem } from './transformers/component.js';
+import {
+  type ComponentTransformerExtra,
+  transformComponent,
+  transformMediaGalleryItem,
+  transformUnfurledMediaItem,
+} from './transformers/component.js';
 import { transformEmbed, transformEmbedAuthor, transformEmbedFooter, transformEmbedImage, transformEmbedVideo } from './transformers/embed.js';
 import { transformDefaultReactionEmoji, transformEmoji } from './transformers/emoji.js';
 import { transformEntitlement } from './transformers/entitlement.js';
@@ -319,7 +324,11 @@ export type TransformerInformations = {
   channelInfo: TransformerInformation<DiscordChannelInfo, ChannelInfo>;
   channelInfoData: TransformerInformation<DiscordChannelInfoData, ChannelInfoData>;
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles>;
-  component: TransformerInformation<DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse, Component>;
+  component: TransformerInformation<
+    DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse,
+    Component,
+    ComponentTransformerExtra
+  >;
   defaultReactionEmoji: TransformerInformation<DiscordDefaultReactionEmoji, DefaultReactionEmoji>;
   embed: TransformerInformation<DiscordEmbed, Embed>;
   embedAuthor: TransformerInformation<DiscordEmbedAuthor, EmbedAuthor>;
