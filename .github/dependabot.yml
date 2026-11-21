@@ -1,21 +1,34 @@
-# Basic `dependabot.yml` file with
-# minimum configuration for two package managers
-
 version: 2
 updates:
-  # Enable version updates for npm
   - package-ecosystem: 'npm'
-    # Look for `package.json` and `lock` files in the `root` directory
     directory: '/'
-    # Check the npm registry for updates every month
+    labels: ['dependencies', 't-build']
     schedule:
       interval: 'weekly'
+    groups:
+      library-bumps:
+        patterns: ['*']
   - package-ecosystem: 'github-actions'
     directory: '/'
+    labels: ['dependencies', 't-ci']
     schedule:
-      # Check for updates to GitHub Actions every month
       interval: 'weekly'
+    groups:
+      ci-bumps:
+        patterns: ['*']
   - package-ecosystem: 'npm'
     directory: '/website'
+    labels: ['dependencies', 't-build', 'website']
     schedule:
       interval: 'weekly'
+    groups:
+      website-bumps:
+        patterns: ['*']
+  - package-ecosystem: 'npm'
+    directories: ['examples/*']
+    labels: ['dependencies', 't-build', 'template']
+    schedule:
+      interval: 'monthly'
+    groups:
+      example-deps:
+        patterns: ['*']

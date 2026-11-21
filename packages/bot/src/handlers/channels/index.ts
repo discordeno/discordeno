@@ -1,5 +1,6 @@
 export * from './CHANNEL_CREATE.js';
 export * from './CHANNEL_DELETE.js';
+export * from './CHANNEL_INFO.js';
 export * from './CHANNEL_PINS_UPDATE.js';
 export * from './CHANNEL_UPDATE.js';
 export * from './STAGE_INSTANCE_CREATE.js';

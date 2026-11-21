@@ -5,11 +5,13 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "moduleResolution": "node",
+    "rootDir": "src",
     "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "strict": true,
-    "incremental": true
+    "incremental": true,
+    "types": ["node"]
   }
 }
