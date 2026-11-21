@@ -90,12 +90,12 @@ export const baseMessage: Message = {
     else this.bitfield.remove(2);
   },
   get pinned() {
-    return this.bitfield?.contains(3) ?? false;
+    return this.bitfield?.contains(4) ?? false;
   },
   set pinned(value: boolean) {
     if (!this.bitfield) return;
-    if (value) this.bitfield.add(3);
-    else this.bitfield.remove(3);
+    if (value) this.bitfield.add(4);
+    else this.bitfield.remove(4);
   },
   get sourceMessageDeleted() {
     return this.flags?.contains(MessageFlags.SourceMessageDeleted) ?? false;
@@ -194,13 +194,15 @@ export function transformMessage(bot: Bot, payload: Partial<DiscordMessage>, ext
   if (payload.mention_everyone) message.mentionEveryone = true;
   if (props.mentionedChannelIds && payload.mention_channels?.length) {
     message.mentionedChannelIds = [
-      // Keep any ids tht discord sends
-      ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
-      // Add any other ids that can be validated in a channel mention format
-      ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
-        // converts the <#123> into 123
-        bot.transformers.snowflake(text.substring(2, text.length - 1)),
-      ),
+      ...new Set([
+        // Keep any ids tht discord sends
+        ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
+        // Add any other ids that can be validated in a channel mention format
+        ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
+          // converts the <#123> into 123
+          bot.transformers.snowflake(text.substring(2, text.length - 1)),
+        ),
+      ]),
     ];
   }
   if (props.mentionedRoleIds && payload.mention_roles?.length)

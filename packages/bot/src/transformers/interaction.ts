@@ -189,7 +189,7 @@ export function transformInteraction(bot: Bot, payload: Partial<DiscordInteracti
       type: payload.data.type,
       componentType: payload.data.component_type,
       customId: payload.data.custom_id,
-      components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
+      components: payload.data.components?.map((component) => bot.transformers.component(bot, component, { guildId })),
       values: payload.data.values,
       id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
       name: payload.data.name,

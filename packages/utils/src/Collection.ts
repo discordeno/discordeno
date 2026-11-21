@@ -22,10 +22,12 @@ export class Collection<K, V> extends Map<K, V> {
   startSweeper(options: CollectionSweeper<K, V>): NodeJS.Timeout {
     if (this.sweeper?.intervalId) clearInterval(this.sweeper.intervalId);
 
-    this.sweeper = options;
+    const sweeper = { ...options };
+
+    this.sweeper = sweeper;
     this.sweeper.intervalId = setInterval(() => {
       this.forEach((value, key) => {
-        if (!this.sweeper?.filter(value, key, options.bot)) return;
+        if (!this.sweeper?.filter(value, key, sweeper.bot)) return;
 
         this.delete(key);
         return key;
@@ -36,25 +38,28 @@ export class Collection<K, V> extends Map<K, V> {
   }
 
   stopSweeper(): void {
-    return clearInterval(this.sweeper?.intervalId);
+    if (!this.sweeper) return;
+
+    clearInterval(this.sweeper.intervalId);
+    this.sweeper.intervalId = undefined;
   }
 
   changeSweeperInterval(newInterval: number): void {
     if (this.sweeper == null) return;
 
-    this.startSweeper({ filter: this.sweeper.filter, interval: newInterval });
+    this.startSweeper({ ...this.sweeper, interval: newInterval });
   }
 
   changeSweeperFilter(newFilter: (value: V, key: K, bot: PlaceHolderBot) => boolean): void {
     if (this.sweeper == null) return;
 
-    this.startSweeper({ filter: newFilter, interval: this.sweeper.interval });
+    this.startSweeper({ ...this.sweeper, filter: newFilter });
   }
 
   /** Add an item to the collection. Makes sure not to go above the maxSize. */
   set(key: K, value: V): this {
     // When this collection is maxSized make sure we can add first
-    if ((this.maxSize !== undefined || this.maxSize === 0) && this.size >= this.maxSize) {
+    if (this.maxSize !== undefined && this.size >= this.maxSize && !this.has(key)) {
       return this;
     }
 

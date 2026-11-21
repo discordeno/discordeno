@@ -6,6 +6,8 @@ import type {
   AtLeastOne,
   BeginGuildPrune,
   BigString,
+  BulkAddInviteTargetUsers,
+  BulkDeleteInviteTargetUsers,
   BulkUpdateLobbyMember,
   Camelize,
   ChannelTypes,
@@ -856,6 +858,66 @@ export const restEndpoints = {
     return await rest.get<string>(rest.routes.guilds.inviteTargetUsers(inviteCode));
   },
   /**
+   * Adds a target user to an existing invite.
+   *
+   * @param inviteCode - The invite code of the invite to add the target user to.
+   * @param userId - The ID of the user to add as a target user.
+   *
+   * @remarks
+   * Requires the caller to be the inviter or have the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/invite#add-target-user}
+   */
+  async addTargetUser(rest: RestManager, inviteCode: string, userId: BigString): Promise<void> {
+    await rest.put(rest.routes.guilds.inviteTargetUser(inviteCode, userId));
+  },
+  /**
+   * Removes a target user from an existing invite.
+   *
+   * @param inviteCode - The invite code of the invite to remove the target user from.
+   * @param userId - The ID of the user to remove from target users.
+   *
+   * @remarks
+   * Requires the caller to be the inviter or have the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/invite#remove-target-user}
+   */
+  async removeTargetUser(rest: RestManager, inviteCode: string, userId: BigString): Promise<void> {
+    await rest.delete(rest.routes.guilds.inviteTargetUser(inviteCode, userId));
+  },
+  /**
+   * Adds multiple target users to an existing invite.
+   *
+   * @param inviteCode - The invite code of the invite to add target users to.
+   * @param options - The options for adding target users
+   *
+   * @remarks
+   * Requires the caller to be the inviter or have the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/invite#bulk-add-target-users}
+   */
+  async bulkAddTargetUsers(rest: RestManager, inviteCode: string, options: BulkAddInviteTargetUsers): Promise<void> {
+    await rest.post(rest.routes.guilds.inviteTargetUsersBulkAdd(inviteCode), {
+      body: options,
+    });
+  },
+  /**
+   * Removes multiple target users from an existing invite.
+   *
+   * @param inviteCode - The invite code of the invite to remove target users from.
+   * @param options - The options for removing target users
+   *
+   * @remarks
+   * Requires the caller to be the inviter or have the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://docs.discord.com/developers/resources/invite#bulk-delete-target-users}
+   */
+  async bulkDeleteTargetUsers(rest: RestManager, inviteCode: string, options: BulkDeleteInviteTargetUsers): Promise<void> {
+    await rest.post(rest.routes.guilds.inviteTargetUsersBulkDelete(inviteCode), {
+      body: options,
+    });
+  },
+  /**
    * Updates the users allowed to see and accept this invite.
    *
    * @param inviteCode - The invite code of the invite to update.
@@ -893,7 +955,6 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to delete the message from.
    * @param messageId - The ID of the message to delete from the channel.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * If not deleting own message:
@@ -903,8 +964,8 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/channel#delete-message}
    */
-  async deleteMessage(rest: RestManager, channelId: BigString, messageId: BigString, reason?: string): Promise<void> {
-    await rest.delete(rest.routes.channels.message(channelId, messageId), { reason });
+  async deleteMessage(rest: RestManager, channelId: BigString, messageId: BigString): Promise<void> {
+    await rest.delete(rest.routes.channels.message(channelId, messageId));
   },
   /**
    * Deletes multiple messages from a channel.
@@ -1332,6 +1393,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild in which to edit the positions of the channels.
    * @param channelPositions - A set of objects defining the updated positions of the channels.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_CHANNELS` permission.
@@ -1346,8 +1408,8 @@ export const restEndpoints = {
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#modify-guild-channel-positions}
    */
-  async editChannelPositions(rest: RestManager, guildId: BigString, channelPositions: ModifyGuildChannelPositions[]): Promise<void> {
-    await rest.patch(rest.routes.guilds.channels(guildId), { body: channelPositions });
+  async editChannelPositions(rest: RestManager, guildId: BigString, channelPositions: ModifyGuildChannelPositions[], reason?: string): Promise<void> {
+    await rest.patch(rest.routes.guilds.channels(guildId), { body: channelPositions, reason });
   },
   /**
    * Edits an emoji.
@@ -2094,7 +2156,7 @@ export const restEndpoints = {
    * @returns An instance of {@link DiscordBan}.
    *
    * @remarks
-   * Requires the `BAN_MEMBERS` permission.
+   * Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-ban}
    */
@@ -2109,7 +2171,7 @@ export const restEndpoints = {
    * @returns A collection of {@link DiscordBan} objects assorted by user ID.
    *
    * @remarks
-   * Requires the `BAN_MEMBERS` permission.
+   * Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
    *
    * Users are ordered by their IDs in _ascending_ order.
    *
