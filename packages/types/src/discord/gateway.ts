@@ -301,19 +301,11 @@ export interface DiscordGatewayPayload {
  * https://docs.discord.com/developers/events/gateway-events#identify-gateway-capabilities
  *
  * This differs from intents in that intents control which events your bot client receives, while capabilities affects gateway behaviors.
+ *
+ * @remarks
+ * There are currently no capabilities available to modify gateway behavior.
  */
-export enum GatewayCapabilities {
-  /**
-   * Opts the client into receiving obfuscated channel metadata over the Gateway for channels it can't view
-   *
-   * @experimental
-   * This is a temporary flag for opt-in testing for channel obfuscation. This opt-in mechanism will change before the feature reaches general availability.
-   * Obfuscation is then planned to apply to all bots automatically, even when they don't provide this capability.
-   *
-   * As this is temporary, removing this won't be followed by a semver major when discord deprecates it.
-   */
-  ChannelObfuscation = 1 << 15,
-}
+export enum GatewayCapabilities {}
 
 // TODO: Add Identify Connection Properties: https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties
 // TODO: Add Resume: https://docs.discord.com/developers/events/gateway-events#resume-resume-structure

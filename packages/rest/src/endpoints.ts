@@ -2148,7 +2148,7 @@ export const restEndpoints = {
    * @returns A collection of {@link DiscordChannel} objects assorted by channel ID.
    *
    * @remarks
-   * Excludes threads.
+   * Excludes threads and any channel your bot doesn't have permission to view.
    *
    * @see {@link https://docs.discord.com/developers/resources/guild#get-guild-channels}
    */
