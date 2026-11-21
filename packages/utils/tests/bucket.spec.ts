@@ -183,6 +183,13 @@ describe('bucket.ts', () => {
       });
     });
 
+    it('will not allow a max lower than 1', () => {
+      const bucket = new LeakyBucket({ max: 0 });
+
+      expect(bucket.max).to.equal(1);
+      expect(bucket.remaining).to.equal(1);
+    });
+
     it("Don't process queue twice", () => {
       const bucket = new LeakyBucket({
         max: 1,
