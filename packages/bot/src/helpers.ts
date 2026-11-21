@@ -69,7 +69,9 @@ import type {
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetChannelMemberPermissions,
   GetChannelPinsOptions,
+  GetChannelRolePermissions,
   GetEntitlements,
   GetGlobalApplicationCommandsOptions,
   GetGuildApplicationCommandsOptions,
@@ -121,6 +123,7 @@ import { camelize } from '@discordeno/utils';
 import type { Bot } from './bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from './desiredProperties.js';
 import type { ThreadMemberTransformerExtra } from './transformers/threadMember.js';
+import { Permissions } from './transformers/toggles/Permissions.js';
 import type {
   Application,
   ApplicationCommand,
@@ -795,6 +798,18 @@ export function createBotHelpers<TProps extends TransformersDesiredProperties, T
     editChannelPermissionOverrides: async (channelId, options, reason) => {
       return await bot.rest.snake.editChannelPermissionOverrides(channelId, options, reason);
     },
+    getChannelMemberPermissions: async (channelId, userId, options) => {
+      return { permissions: new Permissions((await bot.rest.getChannelMemberPermissions(channelId, userId, options)).permissions) };
+    },
+    getChannelRolePermissions: async (channelId, roleId, options) => {
+      return { permissions: new Permissions((await bot.rest.getChannelRolePermissions(channelId, roleId, options)).permissions) };
+    },
+    getGuildMemberPermissions: async (guildId, userId) => {
+      return { permissions: new Permissions((await bot.rest.getGuildMemberPermissions(guildId, userId)).permissions) };
+    },
+    getGuildRolePermissions: async (guildId, roleId) => {
+      return { permissions: new Permissions((await bot.rest.getGuildRolePermissions(guildId, roleId)).permissions) };
+    },
     editChannelPositions: async (guildId, channelPositions, reason) => {
       return await bot.rest.snake.editChannelPositions(guildId, channelPositions, reason);
     },
@@ -1307,6 +1322,14 @@ export type BotHelpers<TProps extends TransformersDesiredProperties, TBehavior e
   deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>;
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>;
   editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>;
+  getChannelMemberPermissions: (
+    channelId: BigString,
+    userId: BigString,
+    options?: GetChannelMemberPermissions,
+  ) => Promise<{ permissions: Permissions }>;
+  getChannelRolePermissions: (channelId: BigString, roleId: BigString, options?: GetChannelRolePermissions) => Promise<{ permissions: Permissions }>;
+  getGuildMemberPermissions: (guildId: BigString, userId: BigString) => Promise<{ permissions: Permissions }>;
+  getGuildRolePermissions: (guildId: BigString, roleId: BigString) => Promise<{ permissions: Permissions }>;
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[], reason?: string) => Promise<void>;
   editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>;
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>;
