@@ -479,7 +479,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // handed back to it. It has to happen before a timeout is retried as well, because that retry goes back through the queue and would end
         // up waiting on the very slot it is holding.
         const queueIdentifier = payload.headers.authorization ?? `Bot ${rest.token}`;
-        rest.queues.get(`${queueIdentifier}${rest.simplifyUrl(options.route, options.method)}`)?.handleFailedRequest();
+        rest.queues.get(`${queueIdentifier}${options.simplifiedUrl ?? rest.simplifyUrl(options.route, options.method)}`)?.handleFailedRequest();
 
         // The caller aborted the request, never re-send it, Discord may have received it already. The caller was rejected the moment the signal fired.
         if (options.requestBodyOptions?.signal?.aborted) {
