@@ -77,7 +77,7 @@ export function creatWSServer(options: CreateWsServerOptions) {
 
   return {
     port: address.port,
-    close: () => server.close(),
+    close: () => new Promise<void>((res, rej) => server.close((e) => (e ? rej(e) : res()))),
   };
 }
 
