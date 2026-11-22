@@ -20,7 +20,7 @@ export class LeakyBucket implements LeakyBucketOptions {
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>;
 
   constructor(options?: LeakyBucketOptions) {
-    this.max = options?.max ?? 1;
+    this.max = Math.max(1, options?.max ?? 1);
     this.refillAmount = options?.refillAmount ? (options.refillAmount > this.max ? this.max : options.refillAmount) : 1;
     this.refillInterval = options?.refillInterval ?? 5000;
     this.logger = options?.logger ?? logger;

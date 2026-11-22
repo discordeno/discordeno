@@ -296,6 +296,17 @@ export interface DiscordGatewayPayload {
 }
 
 // TODO: Add Identify: https://docs.discord.com/developers/events/gateway-events#identify-identify-structure
+
+/**
+ * https://docs.discord.com/developers/events/gateway-events#identify-gateway-capabilities
+ *
+ * This differs from intents in that intents control which events your bot client receives, while capabilities affects gateway behaviors.
+ *
+ * @remarks
+ * There are currently no capabilities available to modify gateway behavior.
+ */
+export enum GatewayCapabilities {}
+
 // TODO: Add Identify Connection Properties: https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties
 // TODO: Add Resume: https://docs.discord.com/developers/events/gateway-events#resume-resume-structure
 // TODO: Add Request Guild Members: https://docs.discord.com/developers/events/gateway-events#request-guild-members-request-guild-members-structure

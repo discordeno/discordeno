@@ -1,7 +1,9 @@
 import type {
   BigString,
   GetBans,
+  GetChannelMemberPermissions,
   GetChannelPinsOptions,
+  GetChannelRolePermissions,
   GetEntitlements,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -121,6 +123,13 @@ export interface RestRoutes {
       expire: (channelId: BigString, messageId: BigString) => string;
     };
     voiceStatus: (channelId: BigString) => string;
+    /** Routes for handling channel permissions. */
+    permissions: {
+      /** Route for getting a member's computed permissions in a channel. */
+      member: (channelId: BigString, userId: BigString, options?: GetChannelMemberPermissions) => string;
+      /** Route for getting a role's computed permissions in a channel. */
+      role: (channelId: BigString, roleId: BigString, options?: GetChannelRolePermissions) => string;
+    };
   };
   /** Routes for guild related endpoints. */
   guilds: {
@@ -160,8 +169,14 @@ export interface RestRoutes {
     integrations: (guildId: BigString) => string;
     /** Route for handling a specific guild invite. */
     invite: (inviteCode: string, options?: GetInvite) => string;
+    /** Route for a specific invite's target user */
+    inviteTargetUser: (inviteCode: string, userId: BigString) => string;
     /** Route for a specific invite's target users  */
     inviteTargetUsers: (inviteCode: string) => string;
+    /** Route for bulk adding a specific invite's target users */
+    inviteTargetUsersBulkAdd: (inviteCode: string) => string;
+    /** Route for bulk deleting a specific invite's target users */
+    inviteTargetUsersBulkDelete: (inviteCode: string) => string;
     /** Route for a specific invite's target users  */
     inviteTargetUsersJobStatus: (inviteCode: string) => string;
     /** Route for handling non-specific invites in a guild. */
@@ -237,6 +252,13 @@ export interface RestRoutes {
     onboarding: (guildId: BigString) => string;
     /** Route for guild incident actions */
     incidentActions: (guildId: BigString) => string;
+    /** Routes for handling guild permissions. */
+    permissions: {
+      /** Route for getting a member's computed guild permissions. */
+      member: (guildId: BigString, userId: BigString) => string;
+      /** Route for getting a role's computed guild permissions. */
+      role: (guildId: BigString, roleId: BigString) => string;
+    };
   };
   /** Routes for interaction related endpoints. */
   interactions: {

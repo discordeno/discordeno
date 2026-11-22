@@ -261,6 +261,8 @@ export enum HTTPJsonErrorCodes {
   MaxChannelPermissionOverwritesReached = 30060,
   /** The channels for this guild are too large */
   ChannelsTooLarge = 30061,
+  /** Target users limit for this guild reached */
+  TargetUsersLimitReached = 30084,
 
   /** Unauthorized. Provide a valid token and try again */
   Unauthorized = 40001,
@@ -308,6 +310,10 @@ export enum HTTPJsonErrorCodes {
   EntitlementAlreadyGranted = 40074,
   /** This interaction has hit the maximum number of follow up messages */
   MaxFollowUpMessages = 40094,
+  /** Target users are already being processed for this invite */
+  TargetUsersAlreadyBeingProcessed = 40114,
+  /** Target users file has not been processed */
+  TargetUsersFileNotProcessed = 40115,
   /** Cloudflare is blocking your request. This can often be resolved by setting a proper User Agent */
   CloudflareBlocked = 40333,
 
@@ -453,6 +459,8 @@ export enum HTTPJsonErrorCodes {
   AccountNotVerified = 50178,
   /** The provided file does not have a valid duration. */
   InvalidFileDuration = 50192,
+  /** Invite is expired. */
+  ExpiredInvite = 50270,
   /** Cannot send messages to this user due to having no mutual guilds */
   CantMessageUserNoMutualGuilds = 50278,
   /** You do not have permission to send this sticker. */
@@ -490,6 +498,10 @@ export enum HTTPJsonErrorCodes {
   MaxActiveThreads = 160006,
   /** Maximum number of active announcement threads reached */
   MaxActiveAnnouncementThreads = 160007,
+  /** Cannot reference a message without permission to read message history */
+  CannotReferenceNoHistory = 160009,
+  /** NSFW channel message reference not allowed */
+  NSFWReferenceNotAllowed = 160010,
   /** You cannot forward a message whose content you cannot read */
   CannotForwardUnreadableMessage = 160014,
 

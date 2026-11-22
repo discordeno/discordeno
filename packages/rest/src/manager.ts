@@ -26,6 +26,19 @@ export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket';
 export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit';
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope';
 
+/**
+ * The server errors a request is re-sent on.
+ *
+ * @remarks
+ * Both of these come from a gateway sitting in front of the api rather than from the api itself, so the request never reached anything that
+ * could act on it and re-sending it cannot execute it twice.
+ *
+ * `500` and `504` are deliberately not here. A `500` came from the api, which means it did get the request and may have carried part of it
+ * out before failing, and a `504` means the api was handed the request and did not answer in time, so it may well have run. Re-sending
+ * either could create a second channel for one call.
+ */
+export const RETRYABLE_SERVER_ERRORS: ReadonlySet<number> = new Set([502, 503]);
+
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token);
 
@@ -56,6 +69,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     maxRetryCount: Infinity,
     maxProxyRetryCount: 15,
     proxyRetryDelayStep: 250,
+    maxServerErrorRetryCount: 3,
+    serverErrorRetryDelayStep: 1000,
     requestTimeout: options.requestTimeout ?? 30000,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -460,6 +475,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.events.requestError(request, error, { body: options.requestBodyOptions?.body });
         // Mark request as completed
         rest.invalidBucket.handleCompletedRequest(999, false);
+        // Nothing below this reaches `processHeaders`, so this is the only chance the queue gets to have the rate limit slot this attempt spent
+        // handed back to it. It has to happen before a timeout is retried as well, because that retry goes back through the queue and would end
+        // up waiting on the very slot it is holding.
+        const queueIdentifier = payload.headers.authorization ?? `Bot ${rest.token}`;
+        rest.queues.get(`${queueIdentifier}${options.simplifiedUrl ?? rest.simplifyUrl(options.route, options.method)}`)?.handleFailedRequest();
 
         // The caller aborted the request, never re-send it, Discord may have received it already. The caller was rejected the moment the signal fired.
         if (options.requestBodyOptions?.signal?.aborted) {
@@ -514,6 +534,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.logger.debug(`Request to ${url} failed.`);
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
+          // A gateway in front of the api answered instead of the api itself, so the request never got to run and re-sending it cannot
+          // execute anything twice. `retryCount` is shared with the rate limit path below, and the extra cap keeps a Discord outage from
+          // keeping every request alive, since `maxRetryCount` is Infinity by default.
+          if (
+            RETRYABLE_SERVER_ERRORS.has(response.status) &&
+            options.retryCount < rest.maxRetryCount &&
+            options.retryCount < rest.maxServerErrorRetryCount
+          ) {
+            options.retryCount += 1;
+            rest.logger.debug(`Request to ${url} got a ${response.status}, retrying.`);
+            // Discord sends no retry-after with these, so back off a little further on every attempt.
+            await delay(rest.serverErrorRetryDelayStep * options.retryCount);
+
+            return await options.retryRequest?.(options);
+          }
+
           options.reject({ ok: false, status: response.status, statusText: response.statusText, body });
           return;
         }
@@ -610,7 +646,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = request.simplifiedUrl;
 
       if (request.runThroughQueue === false) {
-        await rest.sendRequest(request);
+        // This never reaches a queue, so this is the only place the invalid request bucket can be told about the request. `sendRequest` reports
+        // it as completed either way, and without this that report has nothing to match it: the bucket's count of active requests drifts one
+        // lower with every one of these, which raises the invalid request ceiling it exists to enforce.
+        await rest.invalidBucket.waitUntilRequestAvailable();
+
+        try {
+          await rest.sendRequest(request);
+        } catch (error) {
+          rest.invalidBucket.handleCompletedRequest(999, false);
+          throw error;
+        }
 
         return;
       }
@@ -744,7 +790,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
       }
 
-      return await new Promise(async (resolve, reject) => {
+      return await new Promise((resolve, reject) => {
         const signal = options?.signal;
         const abortListener = () => {
           // Reject right away instead of waiting for the queue to reach the request. The signal is attached to the fetch itself as well, so an
@@ -785,7 +831,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         signal?.addEventListener('abort', abortListener, { once: true });
 
-        await rest.processRequest(payload);
+        // The executor is not async on purpose: a promise returned from it is dropped, so a throw in here would leave the caller waiting forever
+        // on a promise that never settles, on top of the unhandled rejection it raises.
+        rest.processRequest(payload).catch((requestError) => {
+          payload.reject({ ok: false, status: 999, error: 'The request encountered an unexpected error.', errorObject: requestError });
+        });
       });
     },
 

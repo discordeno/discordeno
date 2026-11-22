@@ -267,6 +267,27 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       voiceStatus: (channelId) => {
         return `/channels/${encode(channelId)}/voice-status`;
       },
+
+      permissions: {
+        member: (channelId, userId, options) => {
+          let url = `/channels/${encode(channelId)}/permissions/member/${encode(userId)}?`;
+
+          if (options) {
+            if (options.implicit !== undefined) url += `implicit=${encode(options.implicit)}`;
+          }
+
+          return url;
+        },
+        role: (channelId, roleId, options) => {
+          let url = `/channels/${encode(channelId)}/permissions/role/${encode(roleId)}?`;
+
+          if (options) {
+            if (options.implicit !== undefined) url += `implicit=${encode(options.implicit)}`;
+          }
+
+          return url;
+        },
+      },
     },
 
     // Guild Endpoints
@@ -282,6 +303,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           if (options.before) url += `&before=${encode(options.before)}`;
           if (options.limit) url += `&limit=${encode(options.limit)}`;
           if (options.withCounts) url += `&with_counts=${encode(options.withCounts)}`;
+          if (options.shard !== undefined) url += `&shard=${encode(options.shard)}`;
         }
 
         return url;
@@ -378,8 +400,17 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 
         return url;
       },
+      inviteTargetUser(inviteCode, userId) {
+        return `/invites/${encode(inviteCode)}/target-users/${encode(userId)}`;
+      },
       inviteTargetUsers(inviteCode) {
         return `/invites/${encode(inviteCode)}/target-users`;
+      },
+      inviteTargetUsersBulkAdd(inviteCode) {
+        return `/invites/${encode(inviteCode)}/target-users/bulk-add`;
+      },
+      inviteTargetUsersBulkDelete(inviteCode) {
+        return `/invites/${encode(inviteCode)}/target-users/bulk-delete`;
       },
       inviteTargetUsersJobStatus(inviteCode) {
         return `/invites/${encode(inviteCode)}/target-users/job-status`;
@@ -538,6 +569,14 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       },
       incidentActions: (guildId) => {
         return `/guilds/${encode(guildId)}/incident-actions`;
+      },
+      permissions: {
+        member: (guildId, userId) => {
+          return `/guilds/${encode(guildId)}/permissions/member/${encode(userId)}`;
+        },
+        role: (guildId, roleId) => {
+          return `/guilds/${encode(guildId)}/permissions/role/${encode(roleId)}`;
+        },
       },
     },
 

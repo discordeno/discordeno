@@ -176,3 +176,14 @@ export enum RoleFlags {
   /** Role can be selected by members in an onboarding prompt */
   InPrompt = 1 << 0,
 }
+
+/**
+ * https://docs.discord.com/developers/resources/channel#get-channel-member-permissions-permissions-response
+ * https://docs.discord.com/developers/resources/channel#get-channel-role-permissions-permissions-response
+ * https://docs.discord.com/developers/resources/guild#get-guild-member-permissions-permissions-response
+ * https://docs.discord.com/developers/resources/guild#get-guild-role-permissions-permissions-response
+ */
+export interface DiscordPermissionsResponse {
+  /** The computed permissions as a stringified bitfield */
+  permissions: string;
+}
