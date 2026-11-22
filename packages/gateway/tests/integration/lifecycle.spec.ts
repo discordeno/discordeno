@@ -119,6 +119,58 @@ describe('Gateway Shard lifecycle', () => {
     expect(attempts).to.equal(1);
     expect(shard.socket).to.equal(undefined);
   });
+
+  it('Stops an older connection attempt when a new one starts', async () => {
+    let attempts = 0;
+    const server = creatWSServer({ verifyClient: () => (++attempts, false) });
+    teardown.push(() => void server.close());
+
+    const shard = createShard(`ws://localhost:${server.port}`);
+    teardown.push(() => clearTimeout(shard.bucket.timeoutId));
+
+    // With a session id, resume() keeps trying to resume instead of identifying.
+    shard.sessionId = '0';
+    const resuming = shard.resume();
+
+    while (attempts === 0 || shard.socket) await delay(10);
+
+    const identifying = shard.identify();
+
+    while (attempts === 1 || shard.socket) await delay(10);
+
+    await shard.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down while waiting to reconnect.');
+    await Promise.all([resuming, identifying]);
+
+    // The resume would try again a second after its failed attempt if close() could not reach it anymore.
+    await delay(1500);
+    expect(attempts).to.equal(2);
+    expect(shard.socket).to.equal(undefined);
+  });
+
+  it('Does not identify once shut down while waiting for its turn', async () => {
+    const shard = createShard('ws://127.0.0.1:1');
+
+    let giveTurn!: () => void;
+    const turn = new Promise<void>((resolve) => {
+      giveTurn = resolve;
+    });
+    shard.requestIdentify = async () => await turn;
+
+    let identifyingFired = false;
+    shard.events.identifying = () => {
+      identifyingFired = true;
+    };
+
+    const identifying = shard.identify();
+
+    await shard.shutdown();
+    giveTurn();
+    await identifying;
+
+    expect(shard.state).to.equal(ShardState.Offline);
+    expect(identifyingFired).to.equal(false);
+    expect(shard.socket).to.equal(undefined);
+  });
 });
 
 function createShard(url: string): Shard {
