@@ -1,5 +1,5 @@
 import { type DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types';
-import { type WebSocket, WebSocketServer } from 'ws';
+import { type ServerOptions, type WebSocket, WebSocketServer } from 'ws';
 
 /**
  * This value needs to be AT LEAST `1017`
@@ -11,7 +11,7 @@ export const heartbeatInterval = 1017;
 
 export function creatWSServer(options: CreateWsServerOptions) {
   // Port 0 according to the node:http docs is for requesting the OS a random unused port
-  const server = new WebSocketServer({ port: 0 });
+  const server = new WebSocketServer({ port: 0, verifyClient: options.verifyClient });
 
   const address = server.address();
   if (typeof address !== 'object' || !address) {
@@ -84,6 +84,8 @@ export function creatWSServer(options: CreateWsServerOptions) {
 export interface CreateWsServerOptions {
   onOpen?: () => any;
   onMessage?: (message: DiscordGatewayPayload) => any;
+  /** Decides whether an upgrade request is accepted, a rejected one fails the opening handshake of the client. */
+  verifyClient?: ServerOptions['verifyClient'];
 }
 
 function send(ws: WebSocket, payload: object) {
