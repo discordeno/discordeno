@@ -3,9 +3,23 @@ import type { Collection } from '@discordeno/utils';
 import type { Bot } from './bot.js';
 import type { InteractionResolvedDataChannel, InteractionResolvedDataMember } from './commandOptionsParser.js';
 import type {
+  Activity,
+  ActivityAssets,
+  ActivityEmoji,
   ActivityInstance,
   ActivityLocation,
+  Application,
+  ApplicationCommand,
+  ApplicationCommandOption,
+  ApplicationCommandOptionChoice,
+  ApplicationCommandPermissions,
   Attachment,
+  AuditLogEntry,
+  AutoModerationAction,
+  AutoModerationActionExecution,
+  AutoModerationActionMetadata,
+  AutoModerationRule,
+  AutoModerationRuleTriggerMetadata,
   AvatarDecorationData,
   Channel,
   ChannelInfo,
@@ -13,14 +27,24 @@ import type {
   Collectibles,
   Component,
   DefaultReactionEmoji,
+  Embed,
+  EmbedAuthor,
+  EmbedFooter,
+  EmbedImage,
   Emoji,
   Entitlement,
   ForumTag,
   Guild,
+  GuildApplicationCommandPermissions,
   GuildOnboarding,
   GuildOnboardingPrompt,
   GuildOnboardingPromptOption,
+  GuildWidget,
+  GuildWidgetSettings,
   IncidentsData,
+  Integration,
+  IntegrationAccount,
+  IntegrationApplication,
   Interaction,
   InteractionCallback,
   InteractionCallbackResponse,
@@ -42,11 +66,13 @@ import type {
   MessageReference,
   MessageSnapshot,
   Nameplate,
+  OptionalAuditEntryInfo,
   Poll,
   PollAnswer,
   PollAnswerCount,
   PollMedia,
   PollResult,
+  PresenceUpdate,
   Role,
   RoleColors,
   ScheduledEvent,
@@ -56,12 +82,21 @@ import type {
   SoundboardSound,
   StageInstance,
   Sticker,
+  StickerPack,
   Subscription,
+  Team,
+  TeamMember,
+  Template,
+  ThreadMember,
+  ThreadMemberGuildCreate,
   UnfurledMediaItem,
   User,
   UserPrimaryGuild,
+  VoiceRegion,
   VoiceState,
   Webhook,
+  WelcomeScreen,
+  WelcomeScreenChannel,
 } from './transformers/types.js';
 
 /**
@@ -70,9 +105,23 @@ import type {
  * @private This is subject to breaking changes at any time
  */
 export interface TransformersObjects {
+  activity: Activity;
+  activityAssets: ActivityAssets;
+  activityEmoji: ActivityEmoji;
   activityInstance: ActivityInstance;
   activityLocation: ActivityLocation;
+  application: Application;
+  applicationCommand: ApplicationCommand;
+  applicationCommandOption: ApplicationCommandOption;
+  applicationCommandOptionChoice: ApplicationCommandOptionChoice;
+  applicationCommandPermissions: ApplicationCommandPermissions;
   attachment: Attachment;
+  auditLogEntry: AuditLogEntry;
+  autoModerationAction: AutoModerationAction;
+  autoModerationActionExecution: AutoModerationActionExecution;
+  autoModerationActionMetadata: AutoModerationActionMetadata;
+  autoModerationRule: AutoModerationRule;
+  autoModerationRuleTriggerMetadata: AutoModerationRuleTriggerMetadata;
   avatarDecorationData: AvatarDecorationData;
   channel: Channel;
   channelInfo: ChannelInfo;
@@ -80,14 +129,24 @@ export interface TransformersObjects {
   collectibles: Collectibles;
   component: Component;
   defaultReactionEmoji: DefaultReactionEmoji;
+  embed: Embed;
+  embedAuthor: EmbedAuthor;
+  embedFooter: EmbedFooter;
+  embedMedia: EmbedImage;
   emoji: Emoji;
   entitlement: Entitlement;
   forumTag: ForumTag;
   guild: Guild;
+  guildApplicationCommandPermissions: GuildApplicationCommandPermissions;
   guildOnboarding: GuildOnboarding;
   guildOnboardingPrompt: GuildOnboardingPrompt;
   guildOnboardingPromptOption: GuildOnboardingPromptOption;
+  guildWidget: GuildWidget;
+  guildWidgetSettings: GuildWidgetSettings;
   incidentsData: IncidentsData;
+  integration: Integration;
+  integrationAccount: IntegrationAccount;
+  integrationApplication: IntegrationApplication;
   interaction: Interaction;
   interactionCallback: InteractionCallback;
   interactionCallbackResponse: InteractionCallbackResponse;
@@ -95,10 +154,10 @@ export interface TransformersObjects {
   invite: Invite;
   inviteStageInstance: InviteStageInstance;
   lobby: Lobby;
+  lobbyInvite: LobbyInvite;
   lobbyMember: LobbyMember;
   lobbyMessage: LobbyMessage;
   lobbyMessageLobbyMember: LobbyMessageLobbyMember;
-  lobbyInvite: LobbyInvite;
   mediaGalleryItem: MediaGalleryItem;
   member: Member;
   message: Message;
@@ -109,11 +168,13 @@ export interface TransformersObjects {
   messageReference: MessageReference;
   messageSnapshot: MessageSnapshot;
   nameplate: Nameplate;
+  optionalAuditEntryInfo: OptionalAuditEntryInfo;
   poll: Poll;
   pollAnswer: PollAnswer;
   pollAnswerCount: PollAnswerCount;
   pollMedia: PollMedia;
   pollResult: PollResult;
+  presence: PresenceUpdate;
   role: Role;
   roleColors: RoleColors;
   scheduledEvent: ScheduledEvent;
@@ -123,12 +184,21 @@ export interface TransformersObjects {
   soundboardSound: SoundboardSound;
   stageInstance: StageInstance;
   sticker: Sticker;
+  stickerPack: StickerPack;
   subscription: Subscription;
+  team: Team;
+  teamMember: TeamMember;
+  template: Template;
+  threadMember: ThreadMember;
+  threadMemberGuildCreate: ThreadMemberGuildCreate;
   unfurledMediaItem: UnfurledMediaItem;
   user: User;
   userPrimaryGuild: UserPrimaryGuild;
+  voiceRegion: VoiceRegion;
   voiceState: VoiceState;
   webhook: Webhook;
+  welcomeScreen: WelcomeScreen;
+  welcomeScreenChannel: WelcomeScreenChannel;
 }
 
 /**
@@ -259,6 +329,43 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
   defaultValue: TDefault = false as TDefault,
 ): CompleteDesiredProperties<T, TDefault> {
   return {
+    activity: {
+      name: defaultValue,
+      type: defaultValue,
+      url: defaultValue,
+      createdAt: defaultValue,
+      timestamps: defaultValue,
+      applicationId: defaultValue,
+      statusDisplayType: defaultValue,
+      details: defaultValue,
+      detailsUrl: defaultValue,
+      state: defaultValue,
+      stateUrl: defaultValue,
+      emoji: defaultValue,
+      party: defaultValue,
+      assets: defaultValue,
+      secrets: defaultValue,
+      instance: defaultValue,
+      flags: defaultValue,
+      buttons: defaultValue,
+      ...desiredProperties.activity,
+    },
+    activityAssets: {
+      largeImage: defaultValue,
+      largeText: defaultValue,
+      largeUrl: defaultValue,
+      smallImage: defaultValue,
+      smallText: defaultValue,
+      smallUrl: defaultValue,
+      inviteCoverImage: defaultValue,
+      ...desiredProperties.activityAssets,
+    },
+    activityEmoji: {
+      id: defaultValue,
+      animated: defaultValue,
+      name: defaultValue,
+      ...desiredProperties.activityEmoji,
+    },
     activityInstance: {
       applicationId: defaultValue,
       instanceId: defaultValue,
@@ -273,6 +380,87 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       id: defaultValue,
       kind: defaultValue,
       ...desiredProperties.activityLocation,
+    },
+    application: {
+      flags: defaultValue,
+      flagsNew: defaultValue,
+      icon: defaultValue,
+      rpcOrigins: defaultValue,
+      termsOfServiceUrl: defaultValue,
+      privacyPolicyUrl: defaultValue,
+      primarySkuId: defaultValue,
+      slug: defaultValue,
+      coverImage: defaultValue,
+      owner: defaultValue,
+      team: defaultValue,
+      guildId: defaultValue,
+      guild: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      description: defaultValue,
+      botPublic: defaultValue,
+      botRequireCodeGrant: defaultValue,
+      verifyKey: defaultValue,
+      customInstallUrl: defaultValue,
+      approximateGuildCount: defaultValue,
+      approximateUserInstallCount: defaultValue,
+      approximateUserAuthorizationCount: defaultValue,
+      installParams: defaultValue,
+      bot: defaultValue,
+      redirectUris: defaultValue,
+      interactionsEndpointUrl: defaultValue,
+      integrationTypesConfig: defaultValue,
+      roleConnectionsVerificationUrl: defaultValue,
+      tags: defaultValue,
+      eventWebhooksUrl: defaultValue,
+      eventWebhooksStatus: defaultValue,
+      eventWebhooksTypes: defaultValue,
+      ...desiredProperties.application,
+    },
+    applicationCommand: {
+      options: defaultValue,
+      description: defaultValue,
+      guildId: defaultValue,
+      nameLocalizations: defaultValue,
+      descriptionLocalizations: defaultValue,
+      defaultMemberPermissions: defaultValue,
+      type: defaultValue,
+      version: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      applicationId: defaultValue,
+      dmPermission: defaultValue,
+      ...desiredProperties.applicationCommand,
+    },
+    applicationCommandOption: {
+      type: defaultValue,
+      name: defaultValue,
+      nameLocalizations: defaultValue,
+      description: defaultValue,
+      descriptionLocalizations: defaultValue,
+      required: defaultValue,
+      choices: defaultValue,
+      options: defaultValue,
+      channelTypes: defaultValue,
+      minValue: defaultValue,
+      maxValue: defaultValue,
+      minLength: defaultValue,
+      maxLength: defaultValue,
+      autocomplete: defaultValue,
+      fileTypes: defaultValue,
+      ...desiredProperties.applicationCommandOption,
+    },
+    applicationCommandOptionChoice: {
+      nameLocalizations: defaultValue,
+      name: defaultValue,
+      value: defaultValue,
+      ...desiredProperties.applicationCommandOptionChoice,
+    },
+    applicationCommandPermissions: {
+      id: defaultValue,
+      type: defaultValue,
+      permission: defaultValue,
+      ...desiredProperties.applicationCommandPermissions,
     },
     attachment: {
       id: defaultValue,
@@ -295,6 +483,64 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       placeholder: defaultValue,
       placeholderVersion: defaultValue,
       ...desiredProperties.attachment,
+    },
+    auditLogEntry: {
+      id: defaultValue,
+      userId: defaultValue,
+      reason: defaultValue,
+      changes: defaultValue,
+      targetId: defaultValue,
+      actionType: defaultValue,
+      options: defaultValue,
+      ...desiredProperties.auditLogEntry,
+    },
+    autoModerationAction: {
+      type: defaultValue,
+      metadata: defaultValue,
+      ...desiredProperties.autoModerationAction,
+    },
+    autoModerationActionExecution: {
+      channelId: defaultValue,
+      messageId: defaultValue,
+      alertSystemMessageId: defaultValue,
+      guildId: defaultValue,
+      userId: defaultValue,
+      content: defaultValue,
+      action: defaultValue,
+      ruleTriggerType: defaultValue,
+      ruleId: defaultValue,
+      matchedKeyword: defaultValue,
+      matchedContent: defaultValue,
+      ...desiredProperties.autoModerationActionExecution,
+    },
+    autoModerationActionMetadata: {
+      customMessage: defaultValue,
+      durationSeconds: defaultValue,
+      channelId: defaultValue,
+      ...desiredProperties.autoModerationActionMetadata,
+    },
+    autoModerationRule: {
+      triggerMetadata: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      guildId: defaultValue,
+      eventType: defaultValue,
+      triggerType: defaultValue,
+      enabled: defaultValue,
+      creatorId: defaultValue,
+      exemptRoles: defaultValue,
+      exemptChannels: defaultValue,
+      actions: defaultValue,
+      ...desiredProperties.autoModerationRule,
+    },
+    autoModerationRuleTriggerMetadata: {
+      keywordFilter: defaultValue,
+      regexPatterns: defaultValue,
+      presets: defaultValue,
+      allowList: defaultValue,
+      mentionTotalLimit: defaultValue,
+      mentionRaidProtectionEnabled: defaultValue,
+      ...desiredProperties.autoModerationRuleTriggerMetadata,
     },
     channel: {
       type: defaultValue,
@@ -388,6 +634,49 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       fileTypes: defaultValue,
       ...desiredProperties.component,
     },
+    embed: {
+      description: defaultValue,
+      type: defaultValue,
+      url: defaultValue,
+      image: defaultValue,
+      video: defaultValue,
+      title: defaultValue,
+      timestamp: defaultValue,
+      color: defaultValue,
+      footer: defaultValue,
+      thumbnail: defaultValue,
+      provider: defaultValue,
+      author: defaultValue,
+      fields: defaultValue,
+      components: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.embed,
+    },
+    embedAuthor: {
+      url: defaultValue,
+      iconUrl: defaultValue,
+      proxyIconUrl: defaultValue,
+      name: defaultValue,
+      ...desiredProperties.embedAuthor,
+    },
+    embedFooter: {
+      iconUrl: defaultValue,
+      proxyIconUrl: defaultValue,
+      text: defaultValue,
+      ...desiredProperties.embedFooter,
+    },
+    embedMedia: {
+      proxyUrl: defaultValue,
+      height: defaultValue,
+      width: defaultValue,
+      url: defaultValue,
+      contentType: defaultValue,
+      placeholder: defaultValue,
+      placeholderVersion: defaultValue,
+      description: defaultValue,
+      flags: defaultValue,
+      ...desiredProperties.embedMedia,
+    },
     forumTag: {
       emojiId: defaultValue,
       emojiName: defaultValue,
@@ -464,12 +753,66 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       incidentsData: defaultValue,
       ...desiredProperties.guild,
     },
+    guildApplicationCommandPermissions: {
+      id: defaultValue,
+      guildId: defaultValue,
+      applicationId: defaultValue,
+      permissions: defaultValue,
+      ...desiredProperties.guildApplicationCommandPermissions,
+    },
+    guildWidget: {
+      id: defaultValue,
+      name: defaultValue,
+      members: defaultValue,
+      channels: defaultValue,
+      instantInvite: defaultValue,
+      presenceCount: defaultValue,
+      ...desiredProperties.guildWidget,
+    },
+    guildWidgetSettings: {
+      channelId: defaultValue,
+      enabled: defaultValue,
+      ...desiredProperties.guildWidgetSettings,
+    },
     incidentsData: {
       dmSpamDetectedAt: defaultValue,
       dmsDisabledUntil: defaultValue,
       invitesDisabledUntil: defaultValue,
       raidDetectedAt: defaultValue,
       ...desiredProperties.incidentsData,
+    },
+    integration: {
+      user: defaultValue,
+      enabled: defaultValue,
+      syncing: defaultValue,
+      roleId: defaultValue,
+      enableEmoticons: defaultValue,
+      expireBehavior: defaultValue,
+      expireGracePeriod: defaultValue,
+      syncedAt: defaultValue,
+      subscriberCount: defaultValue,
+      revoked: defaultValue,
+      application: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      guildId: defaultValue,
+      type: defaultValue,
+      account: defaultValue,
+      scopes: defaultValue,
+      ...desiredProperties.integration,
+    },
+    integrationAccount: {
+      id: defaultValue,
+      name: defaultValue,
+      ...desiredProperties.integrationAccount,
+    },
+    integrationApplication: {
+      bot: defaultValue,
+      icon: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      description: defaultValue,
+      ...desiredProperties.integrationApplication,
     },
     interaction: {
       id: defaultValue,
@@ -635,6 +978,33 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       palette: defaultValue,
       ...desiredProperties.nameplate,
     },
+    optionalAuditEntryInfo: {
+      applicationId: defaultValue,
+      autoModerationRuleName: defaultValue,
+      autoModerationRuleTriggerType: defaultValue,
+      channelId: defaultValue,
+      count: defaultValue,
+      deleteMemberDays: defaultValue,
+      id: defaultValue,
+      membersRemoved: defaultValue,
+      messageId: defaultValue,
+      roleName: defaultValue,
+      type: defaultValue,
+      integrationType: defaultValue,
+      status: defaultValue,
+      ...desiredProperties.optionalAuditEntryInfo,
+    },
+    presence: {
+      desktop: defaultValue,
+      mobile: defaultValue,
+      web: defaultValue,
+      vr: defaultValue,
+      user: defaultValue,
+      guildId: defaultValue,
+      status: defaultValue,
+      activities: defaultValue,
+      ...desiredProperties.presence,
+    },
     role: {
       name: defaultValue,
       guildId: defaultValue,
@@ -731,6 +1101,57 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       sortValue: defaultValue,
       ...desiredProperties.sticker,
     },
+    stickerPack: {
+      coverStickerId: defaultValue,
+      bannerAssetId: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      description: defaultValue,
+      stickers: defaultValue,
+      skuId: defaultValue,
+      ...desiredProperties.stickerPack,
+    },
+    team: {
+      icon: defaultValue,
+      id: defaultValue,
+      name: defaultValue,
+      ownerUserId: defaultValue,
+      members: defaultValue,
+      ...desiredProperties.team,
+    },
+    teamMember: {
+      membershipState: defaultValue,
+      teamId: defaultValue,
+      user: defaultValue,
+      role: defaultValue,
+      ...desiredProperties.teamMember,
+    },
+    template: {
+      description: defaultValue,
+      isDirty: defaultValue,
+      name: defaultValue,
+      creatorId: defaultValue,
+      createdAt: defaultValue,
+      code: defaultValue,
+      usageCount: defaultValue,
+      creator: defaultValue,
+      updatedAt: defaultValue,
+      sourceGuildId: defaultValue,
+      serializedSourceGuild: defaultValue,
+      ...desiredProperties.template,
+    },
+    threadMember: {
+      flags: defaultValue,
+      id: defaultValue,
+      userId: defaultValue,
+      joinTimestamp: defaultValue,
+      member: defaultValue,
+      ...desiredProperties.threadMember,
+    },
+    threadMemberGuildCreate: {
+      joinTimestamp: defaultValue,
+      ...desiredProperties.threadMemberGuildCreate,
+    },
     unfurledMediaItem: {
       url: defaultValue,
       proxyUrl: defaultValue,
@@ -774,6 +1195,14 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       asset: defaultValue,
       skuId: defaultValue,
       ...desiredProperties.avatarDecorationData,
+    },
+    voiceRegion: {
+      id: defaultValue,
+      name: defaultValue,
+      custom: defaultValue,
+      optimal: defaultValue,
+      deprecated: defaultValue,
+      ...desiredProperties.voiceRegion,
     },
     webhook: {
       id: defaultValue,
@@ -939,6 +1368,18 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       code: defaultValue,
       ...desiredProperties.lobbyInvite,
     },
+    welcomeScreen: {
+      description: defaultValue,
+      welcomeChannels: defaultValue,
+      ...desiredProperties.welcomeScreen,
+    },
+    welcomeScreenChannel: {
+      channelId: defaultValue,
+      description: defaultValue,
+      emojiId: defaultValue,
+      emojiName: defaultValue,
+      ...desiredProperties.welcomeScreenChannel,
+    },
   } satisfies TransformersDesiredProperties as CompleteDesiredProperties<T, TDefault>;
 }
 
@@ -1064,6 +1505,7 @@ export type IsObject<T> = T extends object ? (T extends Function ? false : true)
 //      - Is it an array?
 //      - Is it a collection?
 //      - Is it a bot?
+//      - Is it a function? (before the transformed object check, since a function can structurally match a transformed object, e.g. `Function.name` matches `{ name: string }`)
 //      - Is it a transformed object?
 //      - Is it an interaction resolved data member?
 //      - Is it an interaction resolved data channel?
@@ -1085,28 +1527,32 @@ export type TransformProperty<T, TProps extends TransformersDesiredProperties, T
         Equals<T, Bot> extends true
         ? // Yes, return a bot with the correct set of props & behavior
           Bot<TProps, TBehavior>
-        : // No, is it a transformed object?
-          T extends TransformersObjects[keyof TransformersObjects]
-          ? // Yes, apply the desired props
-            SetupDesiredProps<T, TProps, TBehavior>
-          : // No, is it an interaction resolved data member? | We need to check this here because the type itself has not way of getting the desired props
-            Equals<T, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
-            ? // Yes, apply the desired props
-              InteractionResolvedDataMember<TProps, TBehavior>
-            : // No, is it an interaction resolved data channel? | We need to check this here because the type itself has not way of getting the desired props
-              Equals<T, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
-              ? // Yes, apply the desired props
-                InteractionResolvedDataChannel<TProps, TBehavior>
-              : // Is it a function?
-                T extends (...args: infer P) => Promise<infer R>
-                ? // Yes, we need to ensure we transform the return type as well
-                  (...args: P) => Promise<TransformProperty<R, TProps, TBehavior>>
-                : // Is it an object?
-                  IsObject<T> extends true
-                  ? // Yes, we need to ensure we transform the nested properties as well
-                    { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
-                  : // No, this is a normal value such as string / bigint / number
-                    T;
+        : // No, is it an async function?
+          T extends (...args: infer P) => Promise<infer R>
+          ? // Yes, we need to ensure we transform the return type as well
+            (...args: P) => Promise<TransformProperty<R, TProps, TBehavior>>
+          : // No, is it any other function?
+            T extends Function
+            ? // Yes, keep it as is
+              T
+            : // No, is it a transformed object? | This needs to be an exact match, a structural `extends` would also match unrelated objects (e.g. any object sharing a key with an all-optional transformed object like `Embed`)
+              [KeyByValue<TransformersObjects, T>] extends [never]
+              ? // No, is it an interaction resolved data member? | We need to check this here because the type itself has not way of getting the desired props
+                Equals<T, InteractionResolvedDataMember<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
+                ? // Yes, apply the desired props
+                  InteractionResolvedDataMember<TProps, TBehavior>
+                : // No, is it an interaction resolved data channel? | We need to check this here because the type itself has not way of getting the desired props
+                  Equals<T, InteractionResolvedDataChannel<TransformersDesiredProperties, DesiredPropertiesBehavior>> extends true
+                  ? // Yes, apply the desired props
+                    InteractionResolvedDataChannel<TProps, TBehavior>
+                  : // Is it an object?
+                    IsObject<T> extends true
+                    ? // Yes, we need to ensure we transform the nested properties as well
+                      { [K in keyof T]: TransformProperty<T[K], TProps, TBehavior> }
+                    : // No, this is a normal value such as string / bigint / number
+                      T
+              : // Yes, apply the desired props
+                SetupDesiredProps<T, TProps, TBehavior>;
 
 /**
  * Apply desired properties to an object.
