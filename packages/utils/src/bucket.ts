@@ -1,3 +1,4 @@
+import { setTimeout } from 'node:timers';
 import logger from './logger.js';
 import { delay } from './utils.js';
 
