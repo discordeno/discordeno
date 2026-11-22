@@ -3,7 +3,9 @@ import { createGatewayManager, type GatewayManager } from '../../src/manager.js'
 import { ShardSocketCloseCodes } from '../../src/types.js';
 import { creatWSServer, heartbeatInterval } from './websocket.js';
 
-describe('Gateway Integration', () => {
+describe('Gateway Integration', function () {
+  this.slow('1s');
+
   it('Can connect to server', async () => {
     const { promise: connected, resolve: resolveConnected } = promiseWithResolvers<void>();
 
@@ -17,10 +19,7 @@ describe('Gateway Integration', () => {
 
     await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished');
 
-    // To avoid needing to wait 1m to get the bucket refil timer to fire we cancel it
-    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId);
-
-    close();
+    await close();
   });
 
   it('Can heartbeat', async () => {
@@ -47,9 +46,6 @@ describe('Gateway Integration', () => {
 
     await gateway.shutdown(ShardSocketCloseCodes.TestingFinished, 'Testing finished');
 
-    // To avoid needing to wait 1m to get the bucket refil timer to fire we cancel it
-    clearTimeout(gateway.shards.get(0)?.bucket.timeoutId);
-
     close();
   });
 });
@@ -69,6 +65,8 @@ function createGatewayManagerWithPort(port: number): GatewayManager {
     token: '',
     url: `ws://localhost:${port}`,
     intents: Intents.Guilds,
+    // we will never spawn more shards
+    spawnShardDelay: 0,
     resharding: {
       enabled: false,
       checkInterval: 0,

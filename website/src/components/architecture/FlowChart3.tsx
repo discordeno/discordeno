@@ -440,7 +440,7 @@ export default function FlowChart() {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          colorMode={color.colorMode === 'dark' ? 'dark' : 'light'}
+          forceColorMode={color.colorMode === 'dark' ? 'dark' : 'light'}
           defaultEdgeOptions={{ focusable: false }}
           onNodeDoubleClick={nodeMouseHandler}
           onNodeClick={nodeMouseHandler}

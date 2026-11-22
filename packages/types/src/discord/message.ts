@@ -409,6 +409,12 @@ export interface DiscordEmbed {
   /** Fields information */
   fields?: DiscordEmbedField[];
   /**
+   * Components that make up the embed
+   *
+   * @remarks Only present on `components` type embeds.
+   */
+  components?: DiscordMessageComponents;
+  /**
    * Embed flags combined as a bitfield
    *
    * @see {@link DiscordEmbedFlags}
@@ -417,12 +423,18 @@ export interface DiscordEmbed {
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-types */
-export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result';
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link' | 'poll_result' | 'components';
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-flags */
 export enum DiscordEmbedFlags {
+  /** This media was flagged as explicit by Discord's content scanning */
+  ContainsExplicitContent = 1 << 4,
   /** This embed is a fallback for a reply to an activity card */
   IsContentInventoryEntry = 1 << 5,
+  /** This media was flagged as gore by Discord's content scanning */
+  ContainsGoreContent = 1 << 6,
+  /** This media was flagged as self-harm by Discord's content scanning */
+  ContainsSelfHarmContent = 1 << 7,
 }
 
 /** https://docs.discord.com/developers/resources/message#embed-object-embed-video-structure */
@@ -539,7 +551,12 @@ export interface DiscordAttachment {
   size: number;
   /** Source url of file */
   url: string;
-  /** A proxied url of file */
+  /**
+   * A proxied url of file
+   *
+   * @remarks
+   * The proxy url supports images and videos (which have a defined `width` and `height`) as well as audio files, which are passed through unmodified. For all other attachment types, the proxy returns a `415: Unsupported Media Type` error.
+   */
   proxy_url: string;
   /** Height of file (if image or video) */
   height?: number | null;
@@ -549,7 +566,12 @@ export interface DiscordAttachment {
   placeholder?: string;
   /** Version of the placeholder (if image or video) */
   placeholder_version?: number;
-  /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
+  /**
+   * Whether this attachment is ephemeral.
+   *
+   * @remarks
+   * Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
+   */
   ephemeral?: boolean;
   /** The duration of the audio or video file */
   duration_secs?: number;
@@ -580,8 +602,14 @@ export enum AttachmentFlags {
   IsRemix = 1 << 2,
   /** This attachment was marked as a spoiler and is blurred until clicked */
   IsSpoiler = 1 << 3,
+  /** This media was flagged as explicit by Discord's content scanning */
+  ContainsExplicitContent = 1 << 4,
   /** This attachment is an animated image */
   IsAnimated = 1 << 5,
+  /** This media was flagged as gore by Discord's content scanning */
+  ContainsGoreContent = 1 << 6,
+  /** This media was flagged as self-harm by Discord's content scanning */
+  ContainsSelfHarmContent = 1 << 7,
 }
 
 /** https://docs.discord.com/developers/resources/message#channel-mention-object-channel-mention-structure */
