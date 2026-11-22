@@ -5,6 +5,7 @@ import { delay } from '@discordeno/utils';
 import { expect } from 'chai';
 import Shard from '../../src/Shard.js';
 import { ShardSocketCloseCodes, ShardState } from '../../src/types.js';
+import { creatWSServer } from './websocket.js';
 
 describe('Gateway Shard lifecycle', () => {
   // Mocha does not abort the body of a test which times out, so a server left behind by one would keep the runner alive forever. Everything which
@@ -77,6 +78,45 @@ describe('Gateway Shard lifecycle', () => {
 
     // The aborted handshake may not be treated as an unexpected closure, so the shard may not reconnect on its own.
     await delay(100);
+    expect(shard.socket).to.equal(undefined);
+  });
+
+  it('Keeps trying to identify until the opening handshake succeeds', async () => {
+    // Rejecting the first upgrade request fails the opening handshake once.
+    let attempts = 0;
+    const server = creatWSServer({ verifyClient: () => ++attempts > 1 });
+    teardown.push(() => void server.close());
+
+    const shard = createShard(`ws://localhost:${server.port}`);
+    teardown.push(() => clearTimeout(shard.bucket.timeoutId));
+
+    await shard.identify();
+
+    expect(attempts).to.equal(2);
+    expect(shard.state).to.equal(ShardState.Connected);
+
+    await shard.shutdown();
+  });
+
+  it('Stops trying to connect once the shard is closed', async () => {
+    let attempts = 0;
+    const server = creatWSServer({ verifyClient: () => (++attempts, false) });
+    teardown.push(() => void server.close());
+
+    const shard = createShard(`ws://localhost:${server.port}`);
+    teardown.push(() => clearTimeout(shard.bucket.timeoutId));
+
+    const identifying = shard.identify();
+
+    // Wait for the first attempt to fail, the shard is then waiting for its next attempt and has no socket.
+    while (attempts === 0 || shard.socket) await delay(10);
+
+    await shard.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down while waiting to reconnect.');
+    await identifying;
+
+    // The first retry would happen a second after the failed attempt.
+    await delay(1500);
+    expect(attempts).to.equal(1);
     expect(shard.socket).to.equal(undefined);
   });
 });
