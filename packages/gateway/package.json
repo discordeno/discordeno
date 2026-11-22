@@ -35,7 +35,7 @@
     "@discordeno/utils": "workspace:^"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.7",
+    "@biomejs/biome": "2.6.8",
     "@swc/cli": "^0.8.2",
     "@swc/core": "^1.16.22",
     "@types/chai": "^5.2.3",
@@ -50,6 +50,6 @@
     "tsconfig": "*",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
-    "ws": "^8.22.2"
+    "ws": "^8.23.0"
   }
 }
