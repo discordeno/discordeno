@@ -2,9 +2,13 @@ import type { DiscordGatewayPayload, DiscordReady } from '@discordeno/types';
 import type { Bot } from '../../bot.js';
 
 export async function handleReady(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
+  const payload = data.d as DiscordReady;
+
+  bot.id = bot.transformers.snowflake(payload.user.id);
+  bot.applicationId = bot.transformers.snowflake(payload.application.id);
+
   if (!bot.events.ready) return;
 
-  const payload = data.d as DiscordReady;
   // Triggered on each shard
   bot.events.ready(
     {
@@ -18,7 +22,4 @@ export async function handleReady(bot: Bot, data: DiscordGatewayPayload, shardId
     },
     payload,
   );
-
-  bot.id = bot.transformers.snowflake(payload.user.id);
-  bot.applicationId = bot.transformers.snowflake(payload.application.id);
 }

@@ -32,7 +32,7 @@ export interface DiscordInteraction {
   /** The guild it was sent from */
   guild_id?: string;
   /** The channel it was sent from */
-  channel: Partial<DiscordChannel>;
+  channel?: Partial<DiscordChannel>;
   /**
    * The ID of channel it was sent from
    *
@@ -211,9 +211,9 @@ export enum InteractionResponseTypes {
   ChannelMessageWithSource = 4,
   /** ACK an interaction and edit a response later, the user sees a loading state */
   DeferredChannelMessageWithSource = 5,
-  /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
+  /** For components and modal submits, ACK an interaction and edit the original message later; the user does not see a loading state */
   DeferredUpdateMessage = 6,
-  /** For components, edit the message the component was attached to */
+  /** For components and modal submits, edit the message the component was attached to */
   UpdateMessage = 7,
   /** For Application Command Options, send an autocomplete result */
   ApplicationCommandAutocompleteResult = 8,
@@ -295,7 +295,7 @@ export interface DiscordApplicationCommand {
   guild_id?: string;
   /**
    * Name of command, 1-32 characters.
-   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\u02BC\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
@@ -376,7 +376,7 @@ export interface DiscordApplicationCommandOption {
    * @remarks
    * This value should be unique within an array of {@link DiscordApplicationCommandOption}
    *
-   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_ʼ\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_\u02BC\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
    *

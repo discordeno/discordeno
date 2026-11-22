@@ -8,6 +8,8 @@ import type {
   Attachment,
   AvatarDecorationData,
   Channel,
+  ChannelInfo,
+  ChannelInfoData,
   ChannelMention,
   Collectibles,
   Component,
@@ -30,6 +32,7 @@ import type {
   LobbyInvite,
   LobbyMember,
   LobbyMessage,
+  LobbyMessageLobbyMember,
   MediaGalleryItem,
   Member,
   Message,
@@ -73,6 +76,8 @@ export interface TransformersObjects {
   attachment: Attachment;
   avatarDecorationData: AvatarDecorationData;
   channel: Channel;
+  channelInfo: ChannelInfo;
+  channelInfoData: ChannelInfoData;
   channelMention: ChannelMention;
   collectibles: Collectibles;
   component: Component;
@@ -94,6 +99,7 @@ export interface TransformersObjects {
   lobby: Lobby;
   lobbyMember: LobbyMember;
   lobbyMessage: LobbyMessage;
+  lobbyMessageLobbyMember: LobbyMessageLobbyMember;
   lobbyInvite: LobbyInvite;
   mediaGalleryItem: MediaGalleryItem;
   member: Member;
@@ -328,6 +334,17 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       totalMessageSent: defaultValue,
       threadMetadata: defaultValue,
       ...desiredProperties.channel,
+    },
+    channelInfo: {
+      guildId: defaultValue,
+      channels: defaultValue,
+      ...desiredProperties.channelInfo,
+    },
+    channelInfoData: {
+      id: defaultValue,
+      voiceStartTime: defaultValue,
+      status: defaultValue,
+      ...desiredProperties.channelInfoData,
     },
     channelMention: {
       id: defaultValue,
@@ -733,6 +750,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       flags: defaultValue,
       placeholder: defaultValue,
       placeholderVersion: defaultValue,
+      contentScanMetadata: defaultValue,
       ...desiredProperties.unfurledMediaItem,
     },
     user: {
@@ -905,6 +923,7 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       id: defaultValue,
       metadata: defaultValue,
       flags: defaultValue,
+      additionalName: defaultValue,
       ...desiredProperties.lobbyMember,
     },
     lobbyMessage: {
@@ -913,12 +932,17 @@ export function createDesiredPropertiesObject<T extends RecursivePartial<Transfo
       applicationId: defaultValue,
       flags: defaultValue,
       author: defaultValue,
+      lobbyMember: defaultValue,
       channelId: defaultValue,
       lobbyId: defaultValue,
       metadata: defaultValue,
       moderationMetadata: defaultValue,
       type: defaultValue,
       ...desiredProperties.lobbyMessage,
+    },
+    lobbyMessageLobbyMember: {
+      additionalName: defaultValue,
+      ...desiredProperties.lobbyMessageLobbyMember,
     },
     lobbyInvite: {
       code: defaultValue,

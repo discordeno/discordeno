@@ -58,7 +58,7 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   /** Id of the creator of the group DM or the thread */
   owner_id?: string;
   /** Application id of the group DM creator if it is bot-created */
-  application_id?: string;
+  application_id?: string | null;
   /** For group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope. */
   managed?: boolean;
   /**
@@ -190,6 +190,13 @@ export enum ChannelFlags {
   RequireTag = 1 << 4,
   /** When set hides the embedded media download options. Available only for media channels. */
   HideMediaDownloadOptions = 1 << 15,
+  /**
+   * This channel's metadata has been obfuscated because the current user cannot view it.
+   *
+   * @remarks
+   * Only ever set on channels received over the Gateway; the HTTP API never sets this flag.
+   */
+  ChannelObfuscated = 1 << 17,
   /**
    * This channel is a Spoiler Channel i.e. users must opt in to view its contents.
    *
