@@ -27,7 +27,11 @@ export interface DiscordenoMessageReference {
   channelId?: BigString;
   /** id of the originating message's guild */
   guildId?: BigString;
-  /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+  /**
+   * When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message
+   *
+   * @default true
+   */
   failIfNotExists?: boolean;
 }
 
@@ -70,21 +74,50 @@ export interface AttachmentRequest {
 export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
   parse?: AllowedMentionsTypes[];
-  /** For replies, whether to mention the author of the message being replied to (default false) */
+  /**
+   * For replies, whether to mention the author of the message being replied to
+   *
+   * @default false
+   */
   repliedUser?: boolean;
-  /** Array of role_ids to mention (Max size of 100) */
+  /**
+   * Array of role_ids to mention
+   *
+   * @remarks
+   * Maximum size of 100.
+   */
   roles?: bigint[];
-  /** Array of user_ids to mention (Max size of 100) */
+  /**
+   * Array of user_ids to mention
+   *
+   * @remarks
+   * Maximum size of 100.
+   */
   users?: bigint[];
 }
 
 /** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
 export interface DiscordenoSharedClientTheme {
-  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  /**
+   * The hexadecimal-encoded colors of the theme
+   *
+   * @remarks
+   * Maximum 5.
+   */
   colors: string[];
-  /** The direction of the theme's colors (max of 360) */
+  /**
+   * The direction of the theme's colors
+   *
+   * @remarks
+   * Maximum 360.
+   */
   gradientAngle: number;
-  /** The intensity of the theme's colors (max of 100) */
+  /**
+   * The intensity of the theme's colors
+   *
+   * @remarks
+   * Maximum 100.
+   */
   baseMix: number;
   /** The mode of the theme */
   baseTheme?: DiscordBaseTheme | null;
@@ -92,7 +125,14 @@ export interface DiscordenoSharedClientTheme {
 
 /** https://docs.discord.com/developers/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesLimit {
-  /** Max number of messages to return (1-100) default 50 */
+  /**
+   * Max number of messages to return
+   *
+   * @remarks
+   * Between 1-100.
+   *
+   * @default 50
+   */
   limit?: number;
 }
 
@@ -197,33 +237,87 @@ export enum SearchGuildMessagesSortBy {
 
 /** https://docs.discord.com/developers/resources/message#search-guild-messages-query-string-params */
 export interface SearchGuildMessagesOptions {
-  /** Max number of messages to return (1-25, default 25) */
+  /**
+   * Max number of messages to return
+   *
+   * @remarks
+   * Between 1-25.
+   *
+   * @default 25
+   */
   limit?: number;
-  /** Number to offset the returned messages by (max 9975) */
+  /**
+   * Number to offset the returned messages by
+   *
+   * @remarks
+   * Maximum 9975.
+   */
   offset?: number;
   /** Get messages before this message ID */
   maxId?: BigString;
   /** Get messages after this message ID */
   minId?: BigString;
-  /** Max number of words to skip between matching tokens in the search content (max 100, default 2) */
+  /**
+   * Max number of words to skip between matching tokens in the search content
+   *
+   * @remarks
+   * Maximum 100.
+   *
+   * @default 2
+   */
   slop?: number;
-  /** Filter messages by content (max 1024 characters) */
+  /**
+   * Filter messages by content
+   *
+   * @remarks
+   * Maximum 1024 characters.
+   */
   content?: string;
-  /** Filter messages by these channels (max 500) */
+  /**
+   * Filter messages by these channels
+   *
+   * @remarks
+   * Maximum 500.
+   */
   channelId?: BigString[];
   /** Filter messages by author type */
   authorType?: SearchGuildMessagesAuthorType[];
-  /** Filter messages by these authors (max 100) */
+  /**
+   * Filter messages by these authors
+   *
+   * @remarks
+   * Maximum 100.
+   */
   authorId?: BigString[];
-  /** Filter messages that mention these users (max 100) */
+  /**
+   * Filter messages that mention these users
+   *
+   * @remarks
+   * Maximum 100.
+   */
   mentions?: BigString[];
-  /** Filter messages that mention these roles (max 100) */
+  /**
+   * Filter messages that mention these roles
+   *
+   * @remarks
+   * Maximum 100.
+   */
   mentionsRoleId?: BigString[];
   /** Filter messages by whether they do or do not mention @everyone */
   mentionEveryone?: boolean;
-  /** Filter messages that reply to these users (max 100) */
+  /**
+   * Filter messages that reply to these users
+   *
+   * @remarks
+   * Maximum 100.
+   */
   repliedToUserId?: BigString[];
-  /** Filter messages that reply to these messages (max 100) */
+  /**
+   * Filter messages that reply to these messages
+   *
+   * @remarks
+   * Maximum 100.
+   */
   repliedToMessageId?: BigString[];
   /** Filter messages by whether they are or are not pinned */
   pinned?: boolean;
@@ -231,31 +325,74 @@ export interface SearchGuildMessagesOptions {
   has?: SearchGuildMessagesHas[];
   /** Filter messages by embed type */
   embedType?: SearchGuildMessagesEmbedType[];
-  /** Filter messages by embed provider (case-sensitive, max 256 characters, max 100) */
+  /**
+   * Filter messages by embed provider (case-sensitive)
+   *
+   * @remarks
+   * Maximum 100 values, each up to 256 characters.
+   */
   embedProvider?: string[];
-  /** Filter messages by link hostname (max 256 characters, max 100) */
+  /**
+   * Filter messages by link hostname
+   *
+   * @remarks
+   * Maximum 100 values, each up to 256 characters.
+   */
   linkHostname?: string[];
-  /** Filter messages by attachment filename (max 1024 characters, max 100) */
+  /**
+   * Filter messages by attachment filename
+   *
+   * @remarks
+   * Maximum 100 values, each up to 1024 characters.
+   */
   attachmentFilename?: string[];
-  /** Filter messages by attachment extension (max 256 characters, max 100) */
+  /**
+   * Filter messages by attachment extension
+   *
+   * @remarks
+   * Maximum 100 values, each up to 256 characters.
+   */
   attachmentExtension?: string[];
   /** The sorting algorithm to use */
   sortBy?: SearchGuildMessagesSortBy;
-  /** The direction to sort (default desc); ignored when sorting by relevance */
+  /**
+   * The direction to sort; ignored when sorting by relevance
+   *
+   * @default desc
+   */
   sortOrder?: 'asc' | 'desc';
-  /** Whether to include results from age-restricted channels (default false) */
+  /**
+   * Whether to include results from age-restricted channels
+   *
+   * @default false
+   */
   includeNsfw?: boolean;
 }
 
 /** https://docs.discord.com/developers/resources/message#create-message-json/form-params */
 export interface CreateMessageOptions {
-  /** The message contents (up to 2000 characters) */
+  /**
+   * The message contents
+   *
+   * @remarks
+   * Maximum 2000 characters.
+   */
   content?: string;
-  /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
+  /**
+   * Can be used to verify a message was sent. Value will appear in the Message Create event.
+   *
+   * @remarks
+   * Maximum 25 characters.
+   */
   nonce?: string | number;
   /** true if this is a TTS message */
   tts?: boolean;
-  /** Embedded `rich` content (up to 6000 characters) */
+  /**
+   * Embedded `rich` content
+   *
+   * @remarks
+   * Maximum 6000 characters.
+   */
   embeds?: Camelize<DiscordEmbed>[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions;
@@ -263,7 +400,12 @@ export interface CreateMessageOptions {
   messageReference?: DiscordenoMessageReference;
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-  /** IDs of up to 3 stickers in the server to send in the message */
+  /**
+   * IDs of stickers in the server to send in the message
+   *
+   * @remarks
+   * Maximum 3.
+   */
   stickerIds?: BigString[];
   /** The contents of the files being sent */
   files?: FileContent[];
@@ -292,15 +434,30 @@ export interface GetReactions {
   type?: DiscordReactionType;
   /** Get users after this user Id */
   after?: string;
-  /** Max number of users to return (1-100) */
+  /**
+   * Max number of users to return
+   *
+   * @remarks
+   * Between 1-100.
+   */
   limit?: number;
 }
 
 /** https://docs.discord.com/developers/resources/channel#edit-message-json/form-params */
 export interface EditMessage {
-  /** The new message contents (up to 2000 characters) */
+  /**
+   * The new message contents
+   *
+   * @remarks
+   * Maximum 2000 characters.
+   */
   content?: string | null;
-  /** Embedded `rich` content (up to 6000 characters) */
+  /**
+   * Embedded `rich` content
+   *
+   * @remarks
+   * Maximum 6000 characters.
+   */
   embeds?: Camelize<DiscordEmbed>[] | null;
   /**
    * Edit the flags of the message
@@ -325,6 +482,13 @@ export interface EditMessage {
 export interface GetChannelPinsOptions {
   /** Get messages pinned before this timestamp */
   before?: string;
-  /** Max number of pins to return (1-50), defaults to 50 */
+  /**
+   * Max number of pins to return
+   *
+   * @remarks
+   * Between 1-50.
+   *
+   * @default 50
+   */
   limit?: number;
 }

@@ -5,11 +5,23 @@ import type { RestManager, SendRequestOptions } from './types.js';
 export class Queue {
   /** The rest manager */
   rest: RestManager;
-  /** Amount of requests that have are remaining. Defaults to 1. */
+  /**
+   * Amount of requests that are remaining.
+   *
+   * @default 1
+   */
   remaining: number = 1;
-  /** Max requests for this this. Defaults to 1. */
+  /**
+   * Max requests for this queue.
+   *
+   * @default 1
+   */
   max: number = 1;
-  /** The time that discord allows to make the max number of requests. Defaults to 0 */
+  /**
+   * The time that discord allows to make the max number of requests.
+   *
+   * @default 0
+   */
   interval: number = 0;
   /** timer to reset to 0 */
   timeoutId: NodeJS.Timeout | undefined;
@@ -27,7 +39,11 @@ export class Queue {
   url: string;
   /** When requests started being made to determine when the interval will reset it. */
   frozenAt: number = 0;
-  /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
+  /**
+   * The time in milliseconds to wait before deleting this queue if it is empty.
+   *
+   * @default 60000 (one minute)
+   */
   deleteQueueDelay: number = 60000;
   /** The timeout for the deletion of this queue */
   deleteQueueTimeout?: NodeJS.Timeout;
@@ -277,17 +293,33 @@ export class Queue {
 }
 
 export interface QueueOptions {
-  /** How many requests are remaining. Defaults to 1 */
+  /**
+   * How many requests are remaining.
+   *
+   * @default 1
+   */
   remaining?: number;
-  /** Max number of requests allowed in this this. Defaults to 1. */
+  /**
+   * Max number of requests allowed in this queue.
+   *
+   * @default 1
+   */
   max?: number;
-  /** The time in milliseconds that discord allows to make the max number of invalid requests. Defaults to 0 */
+  /**
+   * The time in milliseconds that discord allows to make the max number of invalid requests.
+   *
+   * @default 0
+   */
   interval?: number;
   /** timer to reset to 0 */
   timeoutId?: NodeJS.Timeout;
   /** The url this queue will be handling. */
   url: string;
-  /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
+  /**
+   * The time in milliseconds to wait before deleting this queue if it is empty.
+   *
+   * @default 60000 (one minute)
+   */
   deleteQueueDelay?: number;
   /** The base key that identifies this queue in the rest manager */
   identifier: string;

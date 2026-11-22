@@ -10,7 +10,12 @@ export interface DiscordLobby {
   id: string;
   /** application that created the lobby */
   application_id: string;
-  /** dictionary of string key/value pairs. The max total length is 1000. */
+  /**
+   * Dictionary of string key/value pairs.
+   *
+   * @remarks
+   * Maximum total length 1000.
+   */
   metadata: Record<string, string> | null;
   /** members of the lobby */
   members: DiscordLobbyMember[];
@@ -22,12 +27,20 @@ export interface DiscordLobby {
 export interface DiscordLobbyMember {
   /** The id of the user */
   id: string;
-  /** dictionary of string key/value pairs. The max total length is 1000. */
+  /**
+   * Dictionary of string key/value pairs.
+   *
+   * @remarks
+   * Maximum total length 1000.
+   */
   metadata?: Record<string, string> | null;
   /** lobby member flags combined as as bitfield */
   flags?: number;
   /**
-   * An additional 1-80 character display name for the member, such as an in-game character name.
+   * An additional display name for the member, such as an in-game character name.
+   *
+   * @remarks
+   * Between 1-80 characters.
    *
    * Can only be set via Add a Member to a Lobby or Bulk Update Lobby Members.
    */

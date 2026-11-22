@@ -74,7 +74,12 @@ export interface DiscordApplication {
   event_webhooks_status?: DiscordApplicationEventWebhookStatus;
   /** List of Webhook event types the app subscribes to */
   event_webhooks_types?: DiscordWebhookEventType[];
-  /** up to 5 tags describing the content and functionality of the application */
+  /**
+   * Tags describing the content and functionality of the application
+   *
+   * @remarks
+   * Maximum 5.
+   */
   tags?: string[];
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams;

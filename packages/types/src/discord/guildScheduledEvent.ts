@@ -90,13 +90,23 @@ export interface DiscordScheduledEventRecurrenceRule {
   interval: number;
   /** Set of specific days within a week for the event to recur on */
   by_weekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null;
-  /** List of specific days within a specific week (1-5) to recur on */
+  /**
+   * List of specific days within a specific week to recur on
+   *
+   * @remarks
+   * Between 1-5.
+   */
   by_n_weekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null;
   /** Set of specific months to recur on */
   by_month: DiscordScheduledEventRecurrenceRuleMonth[] | null;
   /** Set of specific dates within a month to recur on */
   by_month_day: number[] | null;
-  /** Set of days within a year to recur on (1-364) */
+  /**
+   * Set of days within a year to recur on
+   *
+   * @remarks
+   * Between 1-364.
+   */
   by_year_day: number[] | null;
   /** The total amount of times that the event is allowed to recur before stopping */
   count: number | null;

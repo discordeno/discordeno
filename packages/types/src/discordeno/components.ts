@@ -50,7 +50,7 @@ export interface ActionRow extends BaseComponent {
    * The components in this row
    *
    * @remarks
-   * Up to 5 button components, a single select component or a single text input component
+   * Maximum 5 button components, a single select component or a single text input component.
    *
    * Using a {@link TextInputComponent} inside the Action Row is deprecated,
    * use a {@link LabelComponent} for modals
@@ -72,7 +72,12 @@ export interface ButtonComponent extends BaseComponent {
 
   /** For different styles/colors of the buttons */
   style: ButtonStyles;
-  /** for what the button says (max 80 characters) */
+  /**
+   * For what the button says
+   *
+   * @remarks
+   * Maximum 80 characters.
+   */
   label?: string;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: {
@@ -83,7 +88,14 @@ export interface ButtonComponent extends BaseComponent {
     /** Whether this emoji is animated */
     animated?: boolean;
   };
-  /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
+  /**
+   * A dev-defined unique string sent on click.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   *
+   * Type 5 Link buttons can not have a custom_id.
+   */
   customId?: string;
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: BigString;
@@ -91,9 +103,9 @@ export interface ButtonComponent extends BaseComponent {
    * optional url for link-style buttons that can navigate a user to the web.
    *
    * @remarks
-   * Only {@link ButtonStyles.Link | Link} buttons can have a url.
-   *
    * Maximum 512 characters.
+   *
+   * Only {@link ButtonStyles.Link | Link} buttons can have a url.
    */
   url?: string;
   /** Whether or not this button is disabled */
@@ -104,15 +116,44 @@ export interface ButtonComponent extends BaseComponent {
 export interface StringSelectComponent extends BaseComponent {
   type: MessageComponentTypes.StringSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
-  /** The choices! Maximum of 25 items. */
+  /**
+   * The choices!
+   *
+   * @remarks
+   * Maximum 25 items.
+   */
   options: SelectOption[];
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be selected.
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be selected.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   maxValues?: number;
   /**
    * Whether this component is required to be filled
@@ -136,11 +177,26 @@ export interface StringSelectComponent extends BaseComponent {
 
 /** https://docs.discord.com/developers/components/reference#string-select-select-option-structure */
 export interface SelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
+  /**
+   * The user-facing name of the option.
+   *
+   * @remarks
+   * Maximum 25 characters.
+   */
   label: string;
-  /** The dev-defined value of the option. Maximum 100 characters. */
+  /**
+   * The dev-defined value of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   value: string;
-  /** An additional description of the option. Maximum 50 characters. */
+  /**
+   * An additional description of the option.
+   *
+   * @remarks
+   * Maximum 50 characters.
+   */
   description?: string;
   /** The id, name, and animated properties of an emoji. */
   emoji?: {
@@ -188,18 +244,44 @@ export interface TextInputComponent extends BaseComponent {
 export interface UserSelectComponent extends BaseComponent {
   type: MessageComponentTypes.UserSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `minValues` and `maxValues`.
    */
   defaultValues?: SelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be selected.
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be selected.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   maxValues?: number;
   /**
    * Whether this component is required to be filled
@@ -233,18 +315,44 @@ export interface SelectMenuDefaultValue {
 export interface RoleSelectComponent extends BaseComponent {
   type: MessageComponentTypes.RoleSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `minValues` and `maxValues`.
    */
   defaultValues?: SelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be selected.
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be selected.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   maxValues?: number;
   /**
    * Whether this component is required to be filled
@@ -270,18 +378,44 @@ export interface RoleSelectComponent extends BaseComponent {
 export interface MentionableSelectComponent extends BaseComponent {
   type: MessageComponentTypes.MentionableSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `minValues` and `maxValues`.
    */
   defaultValues?: SelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be selected.
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be selected.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   maxValues?: number;
   /**
    * Whether this component is required to be filled
@@ -307,20 +441,46 @@ export interface MentionableSelectComponent extends BaseComponent {
 export interface ChannelSelectComponent extends BaseComponent {
   type: MessageComponentTypes.ChannelSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
   /** List of channel types to include in the options list */
   channelTypes?: ChannelTypes[];
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `minValues` and `maxValues`.
    */
   defaultValues?: SelectMenuDefaultValue[];
-  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  /**
+   * The minimum number of items that must be selected.
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** The maximum number of items that can be selected. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be selected.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   maxValues?: number;
   /**
    * Whether this component is required to be filled
@@ -368,7 +528,11 @@ export interface ThumbnailComponent extends BaseComponent {
   media: DiscordUnfurledMediaItem;
   /** Alt text for the media */
   description?: string | null;
-  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the thumbnail should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
 }
 
@@ -386,7 +550,11 @@ export interface FileComponent extends BaseComponent {
 
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
   file: DiscordUnfurledMediaItem;
-  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the media should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
   /** The name of the file. This field is ignored and provided by the API as part of the response */
   name?: string;
@@ -398,9 +566,17 @@ export interface FileComponent extends BaseComponent {
 export interface SeparatorComponent extends BaseComponent {
   type: MessageComponentTypes.Separator;
 
-  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
+  /**
+   * Whether a visual divider should be displayed in the component.
+   *
+   * @default true
+   */
   divider?: boolean;
-  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
+  /**
+   * Size of separator padding — `1` for small padding, `2` for large padding.
+   *
+   * @default 1
+   */
   spacing?: SeparatorSpacingSize;
 }
 
@@ -412,7 +588,11 @@ export interface ContainerComponent extends BaseComponent {
   components: Array<ActionRow | TextDisplayComponent | SectionComponent | MediaGalleryComponent | SeparatorComponent | FileComponent>;
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accentColor?: number | null;
-  /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the container should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
 }
 
@@ -424,14 +604,14 @@ export interface LabelComponent extends BaseComponent {
    * The label text
    *
    * @remarks
-   * Max 45 characters.
+   * Maximum 45 characters.
    */
   label: string;
   /**
    * An optional description text for the label
    *
    * @remarks
-   * Max 100 characters.
+   * Maximum 100 characters.
    */
   description?: string;
   /** The component within the label */
@@ -477,6 +657,8 @@ export interface FileUploadComponent extends BaseComponent {
    * The accepted file types for the file upload
    *
    * @remarks
+   * Maximum 10 file types.
+   *
    * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
    *
    * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
@@ -487,8 +669,6 @@ export interface FileUploadComponent extends BaseComponent {
    *
    * This feature only checks the file extension against the filename and does not inspect the file contents.
    * You are still responsible for validating the actual contents of the file.
-   *
-   * Up to 10 file types.
    */
   fileTypes?: string[];
 }
@@ -496,21 +676,50 @@ export interface FileUploadComponent extends BaseComponent {
 /** https://docs.discord.com/developers/components/reference#radio-group-structure */
 export interface RadioGroupComponent extends BaseComponent {
   type: MessageComponentTypes.RadioGroup;
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
-  /** List of options to show; min 2, max 10. */
+  /**
+   * List of options to show.
+   *
+   * @remarks
+   * Between 2-10.
+   */
   options: RadioGroupOption[];
-  /** Whether a selection is required to submit the modal. Defaults to `true`. */
+  /**
+   * Whether a selection is required to submit the modal.
+   *
+   * @default true
+   */
   required?: boolean;
 }
 
 /** https://docs.discord.com/developers/components/reference#radio-group-option-structure */
 export interface RadioGroupOption {
-  /** The dev-defined value of the option. Maximum 100 characters. */
+  /**
+   * The dev-defined value of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   value: string;
-  /** The user-facing label of the option. Maximum 100 characters. */
+  /**
+   * The user-facing label of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   label: string;
-  /** An optional description for the option. Maximum 100 characters. */
+  /**
+   * An optional description for the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   description?: string;
   /** Will render this option as already-selected by default. */
   default?: boolean;
@@ -519,25 +728,70 @@ export interface RadioGroupOption {
 /** https://docs.discord.com/developers/components/reference#checkbox-group-structure */
 export interface CheckboxGroupComponent extends BaseComponent {
   type: MessageComponentTypes.CheckboxGroup;
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
-  /** List of options to show; min 1, max 10. */
+  /**
+   * List of options to show
+   *
+   * @remarks
+   * Between 1-10.
+   */
   options: CheckboxGroupOption[];
-  /** Minimum number of items that must be chosen; min 0, max 10. Defaults to 1; if set to 0 required must be false. */
+  /**
+   * Minimum number of items that must be chosen
+   *
+   * @remarks
+   * Between 0-10.
+   *
+   * If set to `0`, `required` must be `false`.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** Maximum number of items that can be chosen; min 1, max 10. Defaults to the number of options. */
+  /**
+   * Maximum number of items that can be chosen
+   *
+   * @remarks
+   * Between 1-10.
+   *
+   * @default the number of options
+   */
   maxValues?: number;
-  /** Whether selecting within the group is required. Defaults to `true`. */
+  /**
+   * Whether selecting within the group is required.
+   *
+   * @default true
+   */
   required?: boolean;
 }
 
 /** https://docs.discord.com/developers/components/reference#checkbox-group-option-structure */
 export interface CheckboxGroupOption {
-  /** The dev-defined value of the option. Maximum 100 characters. */
+  /**
+   * The dev-defined value of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   value: string;
-  /** The user-facing label of the option. Maximum 100 characters. */
+  /**
+   * The user-facing label of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   label: string;
-  /** An optional description for the option. Maximum 100 characters. */
+  /**
+   * An optional description for the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   description?: string;
   /** Will render this option as already-selected by default. */
   default?: boolean;
@@ -546,7 +800,12 @@ export interface CheckboxGroupOption {
 /** https://docs.discord.com/developers/components/reference#checkbox-structure */
 export interface CheckboxComponent extends BaseComponent {
   type: MessageComponentTypes.Checkbox;
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId: string;
   /** Whether the checkbox is selected by default. */
   default?: boolean;

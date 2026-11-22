@@ -10,6 +10,7 @@ export interface CreateRestManagerOptions {
   token: string;
   /**
    * For old bots that have a different bot id and application id.
+   *
    * @default bot id from token
    */
   applicationId?: BigString;
@@ -17,6 +18,7 @@ export interface CreateRestManagerOptions {
   proxy?: {
     /**
      * The base url to connect to. If you create a proxy rest, that url would go here.
+     *
      * @default https://discord.com/api
      */
     baseUrl: string;
@@ -27,18 +29,18 @@ export interface CreateRestManagerOptions {
      *
      * @remarks
      * If the header name is set to `authorization`, it will override any authorization that is given even if
-     * the requests uses OAuth2 Bearer tokens / Basic tokens
+     * the request uses OAuth2 Bearer tokens / Basic tokens.
      *
-     * @default "authorization" // For compatibility purposes
+     * @default "authorization" (for compatibility purposes)
      */
     authorizationHeader?: string;
     /**
      * The endpoint to use in the rest proxy to update the bearer tokens
      *
      * @remarks
-     * Should not include a `/` in the start
+     * Should not start with a `/`.
      *
-     * This value is actually required if you want to use `updateTokenQueues`
+     * This value is required if you want to use `updateTokenQueues`.
      */
     updateBearerTokenEndpoint?: string;
     /**
@@ -63,12 +65,14 @@ export interface CreateRestManagerOptions {
   };
   /**
    * The api versions which can be used to make requests.
+   *
    * @default 10
    */
   version?: ApiVersions;
   /**
    * The logger that the rest manager will use
-   * @default logger // The logger exported by `@discordeno/utils`
+   *
+   * @default logger (the logger exported by `@discordeno/utils`)
    */
   logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>;
   /** Events for the rest manager */
@@ -92,7 +96,7 @@ export interface CreateRestManagerOptions {
    *
    * Set to `0` to disable it and rely on the runtime's default fetch timeouts.
    *
-   * @default 30000 // 30 seconds
+   * @default 30000 (30 seconds)
    */
   requestTimeout?: number;
 }
@@ -106,7 +110,10 @@ export interface RestManager extends CamelizedRestEndpoints {
   version: ApiVersions;
   /**
    * The base url to connect to. If you create a proxy rest, that url would go here.
-   * IT SHOULD NOT END WITH A /
+   *
+   * @remarks
+   * Should not end with a `/`.
+   *
    * @default https://discord.com/api
    */
   baseUrl: string;
@@ -122,12 +129,20 @@ export interface RestManager extends CamelizedRestEndpoints {
   authorizationHeader: string;
   /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
   updateBearerTokenEndpoint?: string;
-  /** Whether a proxied attempt that failed without producing a response is re-sent to the proxy. Only safe when re-sending against the proxy is. Defaults to false. */
+  /**
+   * Whether a proxied attempt that failed without producing a response is re-sent to the proxy. Only safe when re-sending against the proxy is.
+   *
+   * @default false
+   */
   retryProxiedRequests: boolean;
-  /** The maximum amount of times a request should be retried. Defaults to Infinity */
+  /**
+   * The maximum amount of times a request should be retried.
+   *
+   * @default Infinity
+   */
   maxRetryCount: number;
   /**
-   * The maximum amount of times a proxied request should be re-sent. Defaults to 15.
+   * The maximum amount of times a proxied request should be re-sent.
    *
    * @remarks
    * This has its own limit because {@link RestManager.maxRetryCount} is Infinity by default, which would keep every request alive for as
@@ -137,10 +152,12 @@ export interface RestManager extends CamelizedRestEndpoints {
    * in total, enough to sit out a proxy being restarted or redeployed.
    *
    * Whichever of the two is lower applies. Only used when {@link RestManager.retryProxiedRequests} is enabled.
+   *
+   * @default 15
    */
   maxProxyRetryCount: number;
   /**
-   * How much longer to wait before each further re-send to a proxy, in milliseconds. Defaults to 250.
+   * How much longer to wait before each further re-send to a proxy, in milliseconds.
    *
    * @remarks
    * The nth attempt waits n times this (250ms, then 500ms, then 750ms, ...), so a proxy that is down isn't hammered in a tight loop while
@@ -149,10 +166,12 @@ export interface RestManager extends CamelizedRestEndpoints {
    * An attempt that timed out already sat out {@link RestManager.requestTimeout}, so it is re-sent right away without this delay.
    *
    * Only used when {@link RestManager.retryProxiedRequests} is enabled.
+   *
+   * @default 250
    */
   proxyRetryDelayStep: number;
   /**
-   * The maximum amount of times a request should be re-sent after a server error. Defaults to 3.
+   * The maximum amount of times a request should be re-sent after a server error.
    *
    * @remarks
    * Only the statuses in `RETRYABLE_SERVER_ERRORS` are re-sent, the ones a gateway in front of the api answers with rather than the api
@@ -162,22 +181,42 @@ export interface RestManager extends CamelizedRestEndpoints {
    * long as a Discord outage lasts.
    *
    * Whichever of the two is lower applies.
+   *
+   * @default 3
    */
   maxServerErrorRetryCount: number;
   /**
-   * How much longer to wait before each further re-send after a server error, in milliseconds. Defaults to 1000.
+   * How much longer to wait before each further re-send after a server error, in milliseconds.
    *
    * @remarks
    * Discord sends no `retry-after` with a server error, so the nth attempt waits n times this (1s, then 2s, then 3s, ...) instead.
+   *
+   * @default 1000
    */
   serverErrorRetryDelayStep: number;
-  /** The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequests` is enabled. Defaults to 30000 (30 seconds). Set to 0 to disable. */
+  /**
+   * The maximum time in milliseconds a single request attempt may take before it is aborted. Timed-out attempts are only retried when talking to Discord directly, or through a proxy when `retryProxiedRequests` is enabled. Set to 0 to disable.
+   *
+   * @default 30000 (30 seconds)
+   */
   requestTimeout: number;
-  /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
+  /**
+   * Whether or not the manager is rate limited globally across all requests.
+   *
+   * @default false
+   */
   globallyRateLimited: boolean;
-  /** Whether or not the rate limited paths are being processed to allow requests to be made once time is up. Defaults to false. */
+  /**
+   * Whether or not the rate limited paths are being processed to allow requests to be made once time is up.
+   *
+   * @default false
+   */
   processingRateLimitedPaths: boolean;
-  /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
+  /**
+   * The time in milliseconds to wait before deleting this queue if it is empty.
+   *
+   * @default 60000 (one minute)
+   */
   deleteQueueDelay: number;
   /** The queues that hold all the requests to be processed. */
   queues: Map<string, Queue>;

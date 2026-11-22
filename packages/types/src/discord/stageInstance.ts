@@ -8,7 +8,12 @@ export interface DiscordStageInstance {
   guild_id: string;
   /** The id of the associated Stage channel */
   channel_id: string;
-  /** The topic of the Stage instance (1-120 characters) */
+  /**
+   * The topic of the Stage instance
+   *
+   * @remarks
+   * Between 1-120 characters.
+   */
   topic: string;
   /** The privacy level of the Stage instance */
   privacy_level: DiscordStageInstancePrivacyLevel;

@@ -12,11 +12,23 @@ export interface SendSoundboardSound {
 
 /** https://docs.discord.com/developers/resources/soundboard#create-guild-soundboard-sound-json-params */
 export interface CreateGuildSoundboardSound {
-  /** Name of the soundboard sound (2-32 characters) */
+  /**
+   * Name of the soundboard sound
+   *
+   * @remarks
+   * Between 2-32 characters.
+   */
   name: string;
   /** The mp3 or ogg sound data, base64 encoded, similar to image data */
   sound: string;
-  /** The volume of the soundboard sound, from 0 to 1, defaults to 1 */
+  /**
+   * The volume of the soundboard sound
+   *
+   * @remarks
+   * Between 0-1.
+   *
+   * @default 1
+   */
   volume?: number | null;
   /** The id of the custom emoji for the soundboard sound */
   emojiId?: BigString | null;
@@ -26,9 +38,21 @@ export interface CreateGuildSoundboardSound {
 
 /** https://docs.discord.com/developers/resources/soundboard#modify-guild-soundboard-sound-json-params */
 export interface ModifyGuildSoundboardSound {
-  /** Name of the soundboard sound (2-32 characters) */
+  /**
+   * Name of the soundboard sound
+   *
+   * @remarks
+   * Between 2-32 characters.
+   */
   name?: string;
-  /** The volume of the soundboard sound, from 0 to 1, defaults to 1 */
+  /**
+   * The volume of the soundboard sound
+   *
+   * @remarks
+   * Between 0-1.
+   *
+   * @default 1
+   */
   volume?: number | null;
   /** The id of the custom emoji for the soundboard sound */
   emojiId?: BigString | null;

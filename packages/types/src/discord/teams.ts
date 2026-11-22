@@ -7,9 +7,9 @@ export enum DiscordTeamMemberRole {
   /**
    * Owners are the most permissiable role, and can take destructive, irreversible actions like deleting the team itself.
    *
+   * @remarks
    * Teams are limited to 1 owner.
    *
-   * @remarks
    * The owner role is not represented in the role field on the team member object. Instead, the owner_user_id field on the team object should be used to identify which user has the owner role for the team.
    */
   Owner = '',

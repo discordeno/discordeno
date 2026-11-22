@@ -132,7 +132,12 @@ export interface Activity {
   instance?: boolean;
   /** Activity flags `OR`d together, describes what the payload includes */
   flags?: number;
-  /** The custom buttons shown in the Rich Presence (max 2) */
+  /**
+   * The custom buttons shown in the Rich Presence
+   *
+   * @remarks
+   * Maximum 2.
+   */
   buttons?: ActivityButton[];
 }
 
@@ -254,15 +259,29 @@ export interface ApplicationCommand {
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  /**
+   * Name matching lowercase `^[\w-]{1,32}$`
+   *
+   * @remarks
+   * Between 1-32 characters.
+   */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   nameLocalizations?: Localization;
-  /** 1-100 character description */
+  /**
+   * Description of the command option
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   descriptionLocalizations?: Localization;
-  /** If the parameter is required or optional--default `false` */
+  /**
+   * If the parameter is required or optional
+   *
+   * @default false
+   */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
   choices?: ApplicationCommandOptionChoice[];
@@ -284,6 +303,8 @@ export interface ApplicationCommandOption {
    * The accepted file types for the file upload
    *
    * @remarks
+   * Maximum 10 file types.
+   *
    * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
    *
    * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
@@ -294,8 +315,6 @@ export interface ApplicationCommandOption {
    *
    * This feature only checks the file extension against the filename and does not inspect the file contents.
    * You are still responsible for validating the actual contents of the file.
-   *
-   * Up to 10 file types.
    */
   fileTypes?: string[];
 }
@@ -342,7 +361,12 @@ export interface Attachment {
   proxyUrl: string;
   /** Attachment id */
   id: bigint;
-  /** description for the file (max 1024 characters) */
+  /**
+   * Description for the file
+   *
+   * @remarks
+   * Maximum 1024 characters.
+   */
   description?: string;
   /** Height of file (if image or video) */
   height?: number;
@@ -478,9 +502,9 @@ export interface AutoModerationRuleTriggerMetadata {
    * Total number of unique role and user mentions allowed per message.
    *
    * @remarks
-   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   * Maximum 50.
    *
-   * Maximum of 50
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
    */
   mentionTotalLimit?: number;
   /**
@@ -510,9 +534,19 @@ export interface Channel {
   guildId?: bigint;
   /** Sorting position of the channel */
   position?: number;
-  /** The name of the channel (1-100 characters) */
+  /**
+   * The name of the channel
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name?: string;
-  /** The channel topic (0-4096 characters for GUILD_FORUM channels, 0-1024 characters for all others) */
+  /**
+   * The channel topic
+   *
+   * @remarks
+   * Between 0-4096 characters for `GUILD_FORUM` channels and 0-1024 characters for all others.
+   */
   topic?: string;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
@@ -520,11 +554,23 @@ export interface Channel {
   bitrate?: number;
   /** The user limit of the voice or stage channel */
   userLimit?: number;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `BYPASS_SLOWMODE`, are unaffected */
+  /**
+   * Amount of seconds a user has to wait before sending another message
+   *
+   * @remarks
+   * Between 0-21600.
+   *
+   * Bots, as well as users with the permission `BYPASS_SLOWMODE`, are unaffected.
+   */
   rateLimitPerUser?: number;
   /** Id of the creator of the thread */
   ownerId?: bigint;
-  /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
+  /**
+   * For guild channels: Id of the parent category for a channel, for threads: id of the text channel this thread was created
+   *
+   * @remarks
+   * Each parent category can contain up to 50 channels.
+   */
   parentId?: bigint;
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   lastPinTimestamp?: number;
@@ -575,7 +621,14 @@ export interface Channel {
   defaultReactionEmoji?: DefaultReactionEmoji;
   /** the initial `rateLimitPerUser` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
   defaultThreadRateLimitPerUser?: number;
-  /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
+  /**
+   * The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels.
+   *
+   * @remarks
+   * A `null` value indicates a preferred sort order hasn't been set by a channel admin.
+   *
+   * @default null
+   */
   defaultSortOrder?: SortOrderTypes | null;
   defaultForumLayout?: ForumLayout;
   /** Whether the channel is age-restricted */
@@ -608,11 +661,21 @@ export interface Channel {
 export interface ForumTag {
   /** The id of the tag */
   id: bigint;
-  /** The name of the tag (0-20 characters) */
+  /**
+   * The name of the tag
+   *
+   * @remarks
+   * Between 0-20 characters.
+   */
   name: string;
   /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
   moderated: boolean;
-  /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+  /**
+   * The id of a guild's custom emoji
+   *
+   * @remarks
+   * At most one of `emojiId` and `emojiName` may be set.
+   */
   emojiId: bigint;
   /** The unicode character of the emoji */
   emojiName: string | null;
@@ -649,17 +712,40 @@ export interface ChannelThreadMetadata {
 export interface Component {
   /** component type */
   type: MessageComponentTypes;
-  /** a developer-defined identifier for the component, max 100 characters */
+  /**
+   * A developer-defined identifier for the component
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   customId?: string;
-  /** whether this component is required to be filled, default true */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @default true
+   */
   required?: boolean;
-  /** whether the component is disabled, default false */
+  /**
+   * Whether the component is disabled
+   *
+   * @default false
+   */
   disabled?: boolean;
   /** For different styles/colors of the buttons */
   style?: ButtonStyles | TextStyles;
-  /** text that appears on the button (max 80 characters) */
+  /**
+   * Text that appears on the button
+   *
+   * @remarks
+   * Maximum 80 characters.
+   */
   label?: string;
-  /** the dev-define value of the option, max 100 characters for select or 4000 for input; or boolean for checkbox response. */
+  /**
+   * The dev-define value of the option; or boolean for checkbox response.
+   *
+   * @remarks
+   * Maximum 100 characters for select or 4000 for input.
+   */
   value?: string | boolean;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: Pick<Partial<Emoji>, 'id' | 'name' | 'animated'>;
@@ -667,22 +753,60 @@ export interface Component {
   url?: string;
   /** List of channel types to include in a channel select menu options list */
   channelTypes?: ChannelTypes[];
-  /** The choices! Maximum of 25 items. */
-  /** The string select options or the radio or checkbox group options */
+  /**
+   * The string select options or the radio or checkbox group options
+   *
+   * @remarks
+   * Maximum 25 items for string selects.
+   */
   options?: SelectOption[] | RadioGroupOption[] | CheckboxGroupOption[];
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /**
+   * The minimum number of items that must be selected.
+   *
+   * @remarks
+   * Between 0-25.
+   *
+   * @default 1
+   */
   minValues?: number;
-  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  /**
+   * The maximum number of items that can be selected.
+   *
+   * @remarks
+   * Between 1-25.
+   *
+   * @default 1
+   */
   maxValues?: number;
-  /** The minimum input length for a text input. Between 0-4000. */
+  /**
+   * The minimum input length for a text input.
+   *
+   * @remarks
+   * Between 0-4000.
+   */
   minLength?: number;
-  /** The maximum input length for a text input. Between 1-4000. */
+  /**
+   * The maximum input length for a text input.
+   *
+   * @remarks
+   * Between 1-4000.
+   */
   maxLength?: number;
   /** a list of child components */
   components?: Component[];
-  /** List of default values for auto-populated select menu components; number of default values must be in the range defined by min_values and max_values */
+  /**
+   * List of default values for auto-populated select menu components
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `minValues` and `maxValues`.
+   */
   defaultValues?: ComponentDefaultValue[];
   /** Identifier for a purchasable SKU, only available when using premium-style buttons */
   skuId?: bigint;
@@ -694,13 +818,25 @@ export interface Component {
   content?: string;
   /** Alt text for the media */
   description?: string;
-  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the thumbnail should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
   /** 1 to 10 media gallery items */
   items?: MediaGalleryItem[];
-  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
+  /**
+   * Whether a visual divider should be displayed in the component.
+   *
+   * @default true
+   */
   divider?: boolean;
-  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
+  /**
+   * Size of separator padding — `1` for small padding, `2` for large padding.
+   *
+   * @default 1
+   */
   spacing?: SeparatorSpacingSize;
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
   file?: UnfurledMediaItem;
@@ -724,6 +860,8 @@ export interface Component {
    * The accepted file types for the file upload
    *
    * @remarks
+   * Maximum 10 file types.
+   *
    * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
    *
    * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
@@ -734,8 +872,6 @@ export interface Component {
    *
    * This feature only checks the file extension against the filename and does not inspect the file contents.
    * You are still responsible for validating the actual contents of the file.
-   *
-   * Up to 10 file types.
    */
   fileTypes?: string[];
 }
@@ -775,7 +911,11 @@ export interface MediaGalleryItem {
   media: UnfurledMediaItem;
   /** Alt text for the media */
   description?: string;
-  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the media should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
 }
 
@@ -927,7 +1067,12 @@ export interface SessionStartLimit {
 }
 
 export interface Guild {
-  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
+  /**
+   * Guild name
+   *
+   * @remarks
+   * Between 2-100 characters, excluding trailing and leading whitespace.
+   */
   name: string;
   /** True if the user is the owner of the guild */
   owner?: boolean;
@@ -953,7 +1098,12 @@ export interface Guild {
   unavailable?: boolean;
   /** Total number of members in this guild */
   memberCount: number;
-  /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
+  /**
+   * The maximum number of presences for the guild
+   *
+   * @remarks
+   * The default value, currently 25000, is in effect when `null` is returned.
+   */
   maxPresences?: number;
   /** The maximum number of members for the guild */
   maxMembers?: number;
@@ -1021,7 +1171,11 @@ export interface Guild {
   presences?: Partial<PresenceUpdate>[];
   /** Banner hash */
   banner?: bigint;
-  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
+  /**
+   * The preferred locale of a Community guild; used in server discovery and notices from Discord
+   *
+   * @default "en-US"
+   */
   preferredLocale: string;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
   publicUpdatesChannelId?: bigint;
@@ -1546,11 +1700,26 @@ export interface MessagePin {
 }
 
 export interface SharedClientTheme {
-  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  /**
+   * The hexadecimal-encoded colors of the theme
+   *
+   * @remarks
+   * Maximum 5.
+   */
   colors: string[];
-  /** The direction of the theme's colors (max of 360) */
+  /**
+   * The direction of the theme's colors
+   *
+   * @remarks
+   * Maximum 360.
+   */
   gradientAngle: number;
-  /** The intensity of the theme's colors (max of 100) */
+  /**
+   * The intensity of the theme's colors
+   *
+   * @remarks
+   * Maximum 100.
+   */
   baseMix: number;
   /** The mode of the theme */
   baseTheme?: DiscordBaseTheme;
@@ -1625,7 +1794,12 @@ export interface GuildOnboardingPromptOption {
 export interface Poll {
   /** The question of the poll. Only `text` is supported. */
   question: PollMedia;
-  /** Each of the answers available in the poll. There is a maximum of 10 answers per poll. */
+  /**
+   * Each of the answers available in the poll.
+   *
+   * @remarks
+   * Maximum 10 answers per poll.
+   */
   answers: PollAnswer[];
   /**
    * The time when the poll ends.
@@ -1837,13 +2011,23 @@ export interface ScheduledEventRecurrenceRule {
   interval: number;
   /** Set of specific days within a week for the event to recur on */
   byWeekday: DiscordScheduledEventRecurrenceRuleWeekday[] | null;
-  /** List of specific days within a specific week (1-5) to recur on */
+  /**
+   * List of specific days within a specific week to recur on
+   *
+   * @remarks
+   * Between 1-5.
+   */
   byNWeekday: DiscordScheduledEventRecurrenceRuleNWeekday[] | null;
   /** Set of specific months to recur on */
   byMonth: DiscordScheduledEventRecurrenceRuleMonth[] | null;
   /** Set of specific dates within a month to recur on */
   byMonthDay: number[] | null;
-  /** Set of days within a year to recur on (1-364) */
+  /**
+   * Set of days within a year to recur on
+   *
+   * @remarks
+   * Between 1-364.
+   */
   byYearDay: number[] | null;
   /** The total amount of times that the event is allowed to recur before stopping */
   count: number | null;
@@ -1865,7 +2049,12 @@ export interface Sku {
 }
 
 export interface StageInstance {
-  /** The topic of the Stage instance (1-120 characters) */
+  /**
+   * The topic of the Stage instance
+   *
+   * @remarks
+   * Between 1-120 characters.
+   */
   topic: string;
   /** The id of this Stage instance */
   id: bigint;
@@ -1884,7 +2073,12 @@ export interface InviteStageInstance {
   participantCount: number;
   /** The number of users speaking in the Stage */
   speakerCount: number;
-  /** The topic of the Stage instance (1-120 characters) */
+  /**
+   * The topic of the Stage instance
+   *
+   * @remarks
+   * Between 1-120 characters.
+   */
   topic: string;
 }
 
@@ -2059,7 +2253,12 @@ export interface UserPrimaryGuild {
    * This will be `false` if the user manually removes their tag.
    */
   identityEnabled?: boolean;
-  /** The text of the user's server tag. Limited to 4 characters */
+  /**
+   * The text of the user's server tag.
+   *
+   * @remarks
+   * Limited to 4 characters.
+   */
   tag?: string;
   /** The server tag badge hash */
   badge?: bigint;
@@ -2164,7 +2363,12 @@ export interface SoundboardSound {
   name: string;
   /** The id of this sound */
   soundId: bigint;
-  /** The volume of this sound, from 0 to 1 */
+  /**
+   * The volume of this sound
+   *
+   * @remarks
+   * Between 0-1.
+   */
   volume: number;
   /** The id of this sound's custom emoji */
   emojiId?: bigint;
@@ -2184,7 +2388,12 @@ export interface Lobby {
   id: bigint;
   /** application that created the lobby */
   applicationId: bigint;
-  /** dictionary of string key/value pairs. The max total length is 1000. */
+  /**
+   * Dictionary of string key/value pairs.
+   *
+   * @remarks
+   * Maximum total length 1000.
+   */
   metadata?: Record<string, string>;
   /** members of the lobby */
   members: LobbyMember[];
@@ -2196,12 +2405,20 @@ export interface Lobby {
 export interface LobbyMember {
   /** The id of the user */
   id: bigint;
-  /** dictionary of string key/value pairs. The max total length is 1000. */
+  /**
+   * Dictionary of string key/value pairs.
+   *
+   * @remarks
+   * Maximum total length 1000.
+   */
   metadata?: Record<string, string>;
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
   /**
-   * An additional 1-80 character display name for the member, such as an in-game character name.
+   * An additional display name for the member, such as an in-game character name.
+   *
+   * @remarks
+   * Between 1-80 characters.
    *
    * Can only be set via Add a Member to a Lobby or Bulk Update Lobby Members.
    */

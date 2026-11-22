@@ -65,9 +65,20 @@ export interface EditScheduledEvent {
 }
 
 export interface GetScheduledEventUsers {
-  /** number of users to return (up to maximum 100), defaults to 100 */
+  /**
+   * Number of users to return
+   *
+   * @remarks
+   * Maximum 100.
+   *
+   * @default 100
+   */
   limit?: number;
-  /** whether to also have member objects provided, defaults to false */
+  /**
+   * Whether to also have member objects provided
+   *
+   * @default false
+   */
   withMember?: boolean;
   /** consider only users before given user id */
   before?: BigString;

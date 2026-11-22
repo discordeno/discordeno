@@ -13,6 +13,13 @@ export interface GetGuildAuditLog {
   before?: BigString;
   /** Entries with ID greater than a specific audit log entry ID. */
   after?: BigString;
-  /** Maximum number of entries (between 1-100) to return, defaults to 50 */
+  /**
+   * Maximum number of entries to return
+   *
+   * @remarks
+   * Between 1-100.
+   *
+   * @default 50
+   */
   limit?: number;
 }

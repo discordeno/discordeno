@@ -53,7 +53,12 @@ export interface DiscordAuditLogEntry {
   action_type: AuditLogEvents;
   /** Additional info for certain event types */
   options?: DiscordOptionalAuditEntryInfo;
-  /** Reason for the change (1-512 characters) */
+  /**
+   * Reason for the change
+   *
+   * @remarks
+   * Between 1-512 characters.
+   */
   reason?: string;
 }
 

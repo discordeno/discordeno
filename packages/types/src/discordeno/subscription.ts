@@ -8,7 +8,12 @@ export interface ListSkuSubscriptionsOptions {
   before?: BigString;
   /** List subscriptions after this ID */
   after?: BigString;
-  /** Number of results to return (1-100) */
+  /**
+   * Number of results to return
+   *
+   * @remarks
+   * Between 1-100.
+   */
   limit?: number;
   /** User ID for which to return subscriptions. Required except for OAuth queries. */
   userId?: BigString;

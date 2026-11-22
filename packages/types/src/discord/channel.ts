@@ -26,7 +26,12 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   position?: number;
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: DiscordOverwrite[];
-  /** The name of the channel (1-100 characters) */
+  /**
+   * The name of the channel
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name?: string;
   /**
    * The channel topic
@@ -44,10 +49,13 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
   /** The user limit of the voice or stage channel */
   user_limit?: number;
   /**
-   * Amount of seconds a user has to wait before sending another message (0-21600)
+   * Amount of seconds a user has to wait before sending another message
    *
    * @remarks
-   * Bots, as well as users with the permission `BYPASS_SLOWMODE`, are unaffected
+   * Between 0-21600.
+   *
+   * Bots, as well as users with the permission `BYPASS_SLOWMODE`, are unaffected.
+   *
    * `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.
    */
   rate_limit_per_user?: number;
@@ -137,9 +145,23 @@ export interface DiscordChannel extends Partial<DiscordThreadCreateExtra> {
    * This field is copied to the thread at creation time and does not live update.
    */
   default_thread_rate_limit_per_user?: number;
-  /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
+  /**
+   * The default sort order type used to order posts in GUILD_FORUM channels.
+   *
+   * @remarks
+   * A `null` value indicates a preferred sort order hasn't been set by a channel admin.
+   *
+   * @default null
+   */
   default_sort_order?: SortOrderTypes | null;
-  /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
+  /**
+   * The default forum layout view used to display posts in `GUILD_FORUM` channels.
+   *
+   * @remarks
+   * A value of `0` indicates a layout view has not been set by a channel admin.
+   *
+   * @default 0
+   */
   default_forum_layout?: ForumLayout;
 }
 
@@ -153,7 +175,12 @@ export enum ChannelTypes {
   GuildVoice,
   /** A direct message between multiple users */
   GroupDm,
-  /** An organizational category that contains up to 50 channels */
+  /**
+   * An organizational category that contains channels
+   *
+   * @remarks
+   * Maximum 50 channels.
+   */
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
   GuildAnnouncement,
@@ -313,13 +340,28 @@ export interface DiscordDefaultReactionEmoji {
 export interface DiscordForumTag {
   /** The id of the tag */
   id: string;
-  /** The name of the tag (0-20 characters) */
+  /**
+   * The name of the tag
+   *
+   * @remarks
+   * Between 0-20 characters.
+   */
   name: string;
   /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
   moderated: boolean;
-  /** The id of a guild's custom emoji. At most one of emoji_id and emoji_name may be set. */
+  /**
+   * The id of a guild's custom emoji
+   *
+   * @remarks
+   * At most one of `emoji_id` and `emoji_name` may be set.
+   */
   emoji_id: string | null;
-  /** The unicode character of the emoji. At most one of emoji_id and emoji_name may be set. */
+  /**
+   * The unicode character of the emoji
+   *
+   * @remarks
+   * At most one of `emoji_id` and `emoji_name` may be set.
+   */
   emoji_name: string | null;
 }
 

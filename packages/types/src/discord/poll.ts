@@ -7,7 +7,12 @@ import type { DiscordUser } from './user.js';
 export interface DiscordPoll {
   /** The question of the poll. Only `text` is supported. */
   question: DiscordPollMedia;
-  /** Each of the answers available in the poll. There is a maximum of 10 answers per poll. */
+  /**
+   * Each of the answers available in the poll.
+   *
+   * @remarks
+   * Maximum 10 answers per poll.
+   */
   answers: DiscordPollAnswer[];
   /**
    * The time when the poll ends.

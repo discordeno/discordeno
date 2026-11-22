@@ -42,10 +42,12 @@ export interface EditApplication {
    */
   interactionsEndpointUrl?: string;
   /**
-   * List of tags describing the content and functionality of the app (max of 20 characters per tag)
+   * List of tags describing the content and functionality of the app
    *
    * @remarks
-   * There can only be a max of 5 tags
+   * Maximum 5 tags.
+   *
+   * Each tag can have a maximum of 20 characters.
    */
   tags?: string[];
   /** Event webhook URL for the app to receive webhook events */

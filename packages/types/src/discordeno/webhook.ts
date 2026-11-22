@@ -9,7 +9,12 @@ import type { FileContent } from './reference.js';
 
 /** https://docs.discord.com/developers/resources/webhook#create-webhook-json-params */
 export interface CreateWebhook {
-  /** Name of the webhook (1-80 characters) */
+  /**
+   * Name of the webhook
+   *
+   * @remarks
+   * Between 1-80 characters.
+   */
   name: string;
   /**
    * Image data for the default webhook avatar
@@ -33,7 +38,14 @@ export interface ModifyWebhook {
 export interface ExecuteWebhook {
   // Query Parameters
 
-  /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
+  /**
+   * Waits for server confirmation of message send before response, and returns the created message body
+   *
+   * @remarks
+   * When `false` a message that is not saved does not return an error.
+   *
+   * @default false
+   */
   wait?: boolean;
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
   threadId?: BigString;
@@ -47,7 +59,12 @@ export interface ExecuteWebhook {
 
   // JSON Parameters
 
-  /** The message contents (up to 2000 characters) */
+  /**
+   * The message contents
+   *
+   * @remarks
+   * Maximum 2000 characters.
+   */
   content?: string;
   /** Override the default username of the webhook */
   username?: string;
@@ -106,7 +123,12 @@ export interface EditWebhookMessageOptions {
 
   // JSON parameters
 
-  /** The message contents (up to 2000 characters) */
+  /**
+   * The message contents
+   *
+   * @remarks
+   * Maximum 2000 characters.
+   */
   content?: string;
   /** Embedded `rich` content */
   embeds?: Camelize<DiscordEmbed>[];

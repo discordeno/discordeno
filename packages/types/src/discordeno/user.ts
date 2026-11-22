@@ -8,7 +8,14 @@ export interface GetUserGuilds {
   before?: BigString;
   /** Get guilds after this guild ID */
   after?: BigString;
-  /** Maximum number of entries (between 1-200) to return, defaults to 200 */
+  /**
+   * Maximum number of entries to return
+   *
+   * @remarks
+   * Between 1-200.
+   *
+   * @default 200
+   */
   limit?: number;
   /**
    * Only return guilds in this shard (`0` to `max_concurrency - 1`)
@@ -16,7 +23,11 @@ export interface GetUserGuilds {
    * @remarks Only required when using large bot sharding.
    */
   shard?: number;
-  /** Include approximate member and presence counts in response, defaults to false */
+  /**
+   * Include approximate member and presence counts in response
+   *
+   * @default false
+   */
   withCounts?: boolean;
 }
 

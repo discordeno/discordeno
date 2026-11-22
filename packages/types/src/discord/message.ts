@@ -310,7 +310,11 @@ export interface DiscordMessageReference {
   channel_id?: string;
   /** id of the originating message's guild */
   guild_id?: string;
-  /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+  /**
+   * When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message
+   *
+   * @default true
+   */
   fail_if_not_exists?: boolean;
 }
 
@@ -543,7 +547,12 @@ export interface DiscordAttachment {
   filename: string;
   /** The title of the file */
   title?: string;
-  /** description for the file (max 1024 characters) */
+  /**
+   * Description for the file
+   *
+   * @remarks
+   * Maximum 1024 characters.
+   */
   description?: string;
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
   content_type?: string;
@@ -638,11 +647,25 @@ export enum AllowedMentionsTypes {
 export interface DiscordAllowedMentions {
   /** An array of allowed mention types to parse from the content. */
   parse?: AllowedMentionsTypes[];
-  /** Array of role_ids to mention (Max size of 100) */
+  /**
+   * Array of role_ids to mention
+   *
+   * @remarks
+   * Maximum size of 100.
+   */
   roles?: string[];
-  /** Array of user_ids to mention (Max size of 100) */
+  /**
+   * Array of user_ids to mention
+   *
+   * @remarks
+   * Maximum size of 100.
+   */
   users?: string[];
-  /** For replies, whether to mention the author of the message being replied to (default false) */
+  /**
+   * For replies, whether to mention the author of the message being replied to
+   *
+   * @default false
+   */
   replied_user?: boolean;
 }
 
@@ -668,11 +691,26 @@ export interface DiscordMessagePin {
 
 /** https://docs.discord.com/developers/resources/message#shared-client-theme-object-shared-client-theme-object-structure */
 export interface DiscordSharedClientTheme {
-  /** The hexadecimal-encoded colors of the theme (max of 5) */
+  /**
+   * The hexadecimal-encoded colors of the theme
+   *
+   * @remarks
+   * Maximum 5.
+   */
   colors: string[];
-  /** The direction of the theme's colors (max of 360) */
+  /**
+   * The direction of the theme's colors
+   *
+   * @remarks
+   * Maximum 360.
+   */
   gradient_angle: number;
-  /** The intensity of the theme's colors (max of 100) */
+  /**
+   * The intensity of the theme's colors
+   *
+   * @remarks
+   * Maximum 100.
+   */
   base_mix: number;
   /** The mode of the theme */
   base_theme?: DiscordBaseTheme | null;

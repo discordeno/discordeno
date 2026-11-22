@@ -37,13 +37,28 @@ export interface DiscordenoDefaultReactionEmoji {
 export interface DiscordenoForumTag {
   /** The id of the tag */
   id: string;
-  /** The name of the tag (0-20 characters) */
+  /**
+   * The name of the tag
+   *
+   * @remarks
+   * Between 0-20 characters.
+   */
   name: string;
   /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
   moderated: boolean;
-  /** The id of a guild's custom emoji. At most one of emoji_id and emoji_name may be set. */
+  /**
+   * The id of a guild's custom emoji
+   *
+   * @remarks
+   * At most one of `emoji_id` and `emoji_name` may be set.
+   */
   emoji_id: BigString | null;
-  /** The unicode character of the emoji. At most one of emoji_id and emoji_name may be set. */
+  /**
+   * The unicode character of the emoji
+   *
+   * @remarks
+   * At most one of `emoji_id` and `emoji_name` may be set.
+   */
   emoji_name: string | null;
 }
 
@@ -56,10 +71,12 @@ export interface DiscordenoForumTag {
 export interface ModifyChannel {
   // Group DM
   /**
-   * 1-100 character channel name
+   * Channel name
    *
    * @remarks
-   * This is valid only when editing group dms, any guild channel type, or a thread
+   * Between 1-100 characters.
+   *
+   * This is valid only when editing group dms, any guild channel type, or a thread.
    */
   name?: string;
   /**
@@ -104,9 +121,11 @@ export interface ModifyChannel {
    */
   nsfw?: boolean | null;
   /**
-   * Amount of seconds a user has to wait before sending another message in seconds (0-21600)
+   * Amount of seconds a user has to wait before sending another message in seconds
    *
    * @remarks
+   * Between 0-21600.
+   *
    * Bots and users with the permission `BYPASS_SLOWMODE`, are unaffected
    *
    * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
@@ -293,13 +312,35 @@ export interface EditChannelPermissionOverridesOptions {
 
 /** https://docs.discord.com/developers/resources/channel#create-channel-invite-json-params */
 export interface CreateChannelInvite {
-  /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
+  /**
+   * Duration of invite in seconds before expiry, or 0 for never.
+   *
+   * @remarks
+   * Between 0-604800 (7 days).
+   *
+   * @default 86400 (24 hours)
+   */
   maxAge?: number;
-  /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
+  /**
+   * Max number of users or 0 for unlimited.
+   *
+   * @remarks
+   * Between 0-100.
+   *
+   * @default 0
+   */
   maxUses?: number;
-  /** Whether this invite only grants temporary membership. Default: false */
+  /**
+   * Whether this invite only grants temporary membership.
+   *
+   * @default false
+   */
   temporary?: boolean;
-  /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
+  /**
+   * If true, don't try to reuse similar invite (useful for creating many unique one time use invites).
+   *
+   * @default false
+   */
   unique?: boolean;
   /** The type of target for this voice channel invite */
   targetType?: TargetTypes;
@@ -315,9 +356,11 @@ export interface CreateChannelInvite {
    */
   targetUsersFile?: Blob;
   /**
-   * An array of IDs of all users able to see and accept this invite. Max of 1000 IDs
+   * An array of IDs of all users able to see and accept this invite.
    *
    * @remarks
+   * Maximum 1000 IDs.
+   *
    * `targetUserIds` and `targetUsersFile` are mutually exclusive, only one can be sent at a time.
    */
   targetUserIds?: BigString[];
@@ -340,35 +383,69 @@ export interface AddDmRecipientOptions {
 
 /** https://docs.discord.com/developers/resources/channel#start-thread-from-message-json-params */
 export interface StartThreadWithMessage {
-  /** 1-100 character thread name */
+  /**
+   * Thread name
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
   autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
-  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  /**
+   * Amount of seconds a user has to wait before sending another message
+   *
+   * @remarks
+   * Between 0-21600.
+   */
   rateLimitPerUser?: number | null;
 }
 
 /** https://docs.discord.com/developers/resources/channel#start-thread-without-message-json-params */
 export interface StartThreadWithoutMessage {
-  /** 1-100 character thread name */
+  /**
+   * Thread name
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
   autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
-  /** The type of thread to create. Defaults to PrivateThread */
+  /**
+   * The type of thread to create.
+   *
+   * @default PrivateThread
+   */
   type?: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread;
   /** Whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
   invitable?: boolean;
-  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  /**
+   * Amount of seconds a user has to wait before sending another message
+   *
+   * @remarks
+   * Between 0-21600.
+   */
   rateLimitPerUser?: number | null;
 }
 
 /** https://docs.discord.com/developers/resources/channel#start-thread-in-forum-or-media-channel-jsonform-params*/
 export interface CreateForumPostWithMessage {
-  /** 1-100 character thread name */
+  /**
+   * Thread name
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
   autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
-  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  /**
+   * Amount of seconds a user has to wait before sending another message
+   *
+   * @remarks
+   * Between 0-21600.
+   */
   rateLimitPerUser?: number | null;
   /** contents of the first message in the forum/media thread */
   message: ForumAndMediaThreadMessage;
@@ -380,15 +457,30 @@ export interface CreateForumPostWithMessage {
 
 /** https://docs.discord.com/developers/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object */
 export interface ForumAndMediaThreadMessage {
-  /** The message contents (up to 2000 characters) */
+  /**
+   * The message contents
+   *
+   * @remarks
+   * Maximum 2000 characters.
+   */
   content?: string;
-  /** Embedded `rich` content (up to 6000 characters) */
+  /**
+   * Embedded `rich` content
+   *
+   * @remarks
+   * Maximum 6000 characters.
+   */
   embeds?: Camelize<DiscordEmbed>[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions;
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-  /** IDs of up to 3 stickers in the server to send in the message */
+  /**
+   * IDs of stickers in the server to send in the message
+   *
+   * @remarks
+   * Maximum 3.
+   */
   stickerIds?: BigString[];
   /** Metadata for the attachments */
   attachments?: Partial<AttachmentRequest>[];
@@ -412,7 +504,14 @@ export interface ListThreadMembers {
   withMember?: boolean;
   /** Get thread members after this user ID */
   after?: BigString;
-  /** Max number of thread members to return (1-100). Defaults to 100. */
+  /**
+   * Max number of thread members to return
+   *
+   * @remarks
+   * Between 1-100.
+   *
+   * @default 100
+   */
   limit?: BigString;
 }
 

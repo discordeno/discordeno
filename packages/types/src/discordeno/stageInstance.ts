@@ -7,11 +7,21 @@ import type { BigString } from '../shared.js';
 export interface CreateStageInstance {
   /** The id of the Stage channel */
   channelId: BigString;
-  /** The topic of the Stage instance (1-120 characters) */
+  /**
+   * The topic of the Stage instance
+   *
+   * @remarks
+   * Between 1-120 characters.
+   */
   topic: string;
   /** The privacy level of the Stage instance */
   privacyLevel?: DiscordStageInstancePrivacyLevel;
-  /** Notify \@everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
+  /**
+   * Notify \@everyone that the stage instance has started.
+   *
+   * @remarks
+   * Requires the `MENTION_EVERYONE` permission.
+   */
   sendStartNotification?: boolean;
   /** The guild scheduled event associated with this Stage instance */
   guildScheduledEventId?: BigString;
@@ -19,7 +29,12 @@ export interface CreateStageInstance {
 
 /** https://docs.discord.com/developers/resources/stage-instance#modify-stage-instance-json-params */
 export interface EditStageInstanceOptions {
-  /** The topic of the Stage instance (1-120 characters) */
+  /**
+   * The topic of the Stage instance
+   *
+   * @remarks
+   * Between 1-120 characters.
+   */
   topic?: string;
   /** The privacy level of the Stage instance */
   privacyLevel?: DiscordStageInstancePrivacyLevel;

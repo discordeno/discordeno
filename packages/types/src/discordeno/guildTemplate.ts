@@ -10,8 +10,18 @@ export interface CreateTemplate {
 
 /** https://docs.discord.com/developers/resources/guild-template#modify-guild-template-json-params */
 export interface ModifyGuildTemplate {
-  /** Name of the template (1-100 characters) */
+  /**
+   * Name of the template
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name?: string;
-  /** Description of the template (0-120 characters) */
+  /**
+   * Description of the template
+   *
+   * @remarks
+   * Between 0-120 characters.
+   */
   description?: string | null;
 }

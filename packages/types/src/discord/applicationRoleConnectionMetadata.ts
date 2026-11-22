@@ -10,14 +10,16 @@ export interface DiscordApplicationRoleConnectionMetadata {
    * Dictionary key for the metadata field
    *
    * @remarks
-   * Must be a-z, 0-9, or _ characters; 1-50 characters
+   * Between 1-50 characters.
+   *
+   * Must be a-z, 0-9, or _ characters.
    */
   key: string;
   /**
    * Name of the metadata field
    *
    * @remarks
-   * 1-100 characters
+   * Between 1-100 characters.
    */
   name: string;
   /** Translations of the name */
@@ -26,7 +28,7 @@ export interface DiscordApplicationRoleConnectionMetadata {
    * Description of the metadata field
    *
    * @remarks
-   * 1-200 characters
+   * Between 1-200 characters.
    */
   description: string;
   /** Translations of the description */

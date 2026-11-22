@@ -20,23 +20,58 @@ export interface DiscordAutoModerationRule {
   actions: DiscordAutoModerationAction[];
   /** Whether the rule is enabled. */
   enabled: boolean;
-  /** The role ids that are whitelisted. Max 20. */
+  /**
+   * The role ids that are whitelisted.
+   *
+   * @remarks
+   * Maximum 20.
+   */
   exempt_roles: string[];
-  /** The channel ids that are whitelisted. Max 50. */
+  /**
+   * The channel ids that are whitelisted.
+   *
+   * @remarks
+   * Maximum 50.
+   */
   exempt_channels: string[];
 }
 
 /** https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-trigger-types */
 export enum AutoModerationTriggerTypes {
-  /** Check if content contains words from a user defined list of keywords. Max 6 per guild */
+  /**
+   * Check if content contains words from a user defined list of keywords
+   *
+   * @remarks
+   * Maximum 6 per guild.
+   */
   Keyword = 1,
-  /** Check if content represents generic spam. Max 1 per guild */
+  /**
+   * Check if content represents generic spam
+   *
+   * @remarks
+   * Maximum 1 per guild.
+   */
   Spam = 3,
-  /** Check if content contains words from internal pre-defined word sets. Max 1 per guild */
+  /**
+   * Check if content contains words from internal pre-defined word sets
+   *
+   * @remarks
+   * Maximum 1 per guild.
+   */
   KeywordPreset,
-  /** Check if content contains more unique mentions than allowed. Max 1 per guild */
+  /**
+   * Check if content contains more unique mentions than allowed
+   *
+   * @remarks
+   * Maximum 1 per guild.
+   */
   MentionSpam,
-  /** Check if member profile contains words from a user defined list of keywords. Max 1 per guild */
+  /**
+   * Check if member profile contains words from a user defined list of keywords
+   *
+   * @remarks
+   * Maximum 1 per guild.
+   */
   MemberProfile,
 }
 
@@ -81,9 +116,9 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
    * Total number of unique role and user mentions allowed per message.
    *
    * @remarks
-   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   * Maximum 50.
    *
-   * Maximum of 50
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
    */
   mention_total_limit?: number;
   /**
@@ -153,9 +188,9 @@ export interface DiscordAutoModerationActionMetadata {
    * Timeout duration in seconds.
    *
    * @remarks
-   * Only for actions of type {@link AutoModerationActionType.Timeout}.
+   * Maximum 2419200 seconds (4 weeks).
    *
-   * Maximum of 2419200 seconds (4 weeks).
+   * Only for actions of type {@link AutoModerationActionType.Timeout}.
    */
   duration_seconds?: number;
   /**
@@ -164,9 +199,9 @@ export interface DiscordAutoModerationActionMetadata {
    * This may set to undefined if no custom message is provided.
    *
    * @remarks
-   * Only for actions of type {@link AutoModerationActionType.BlockMessage}.
+   * Maximum 150 characters.
    *
-   * Maximum of 150 characters.
+   * Only for actions of type {@link AutoModerationActionType.BlockMessage}.
    */
   custom_message?: string | null;
 }
