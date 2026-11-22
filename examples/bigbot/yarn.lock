@@ -502,16 +502,16 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^3.0.0, fast-uri@npm:^3.0.1":
-  version: 3.1.2
-  resolution: "fast-uri@npm:3.1.2"
-  checksum: 10c0/5b35641895959f3f7ab7a7b1b5542bded159346f25ec9f256817b206d50b64eda5828e90d605a2e2fc645c90519a7259c2bab2c942ee728c88b88e5be21b090d
+  version: 3.1.9
+  resolution: "fast-uri@npm:3.1.9"
+  checksum: 10c0/052757540d8c0bbc16bb124a45b8f5cb5d0932f9b89f019221ee41cdb3cafc1db44b2e809d6b888b87922af3e5560a863124454e9d9193e1fc955887357b5add
   languageName: node
   linkType: hard
 
 "fast-uri@npm:^4.0.0":
-  version: 4.1.2
-  resolution: "fast-uri@npm:4.1.2"
-  checksum: 10c0/539fda19fbc7ada89ac8c5beca3c7ab57d643789485ca25f2b88f94edaea3fc90d553ecd55d85b95d5c819ab2bf57f6ff7880aa0a92d0883e25bd35f30860e6a
+  version: 4.2.3
+  resolution: "fast-uri@npm:4.2.3"
+  checksum: 10c0/de121e1d98e5cf75ad31971ac799d6fd12edff6c4c62c7ad0aa64d87d669e9b0418eb5880588dba7e6a991a686c1ec0f8e91654ad2f6440a1f4ad48b8657c3df
   languageName: node
   linkType: hard
 
