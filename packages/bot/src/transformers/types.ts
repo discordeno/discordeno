@@ -25,6 +25,7 @@ import type {
   DiscordAuditLogChange,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordBaseTheme,
+  DiscordContentScanMetadata,
   DiscordEmbedFlags,
   DiscordEmbedMediaFlags,
   DiscordEntitlementType,
@@ -332,7 +333,12 @@ export interface Attachment {
   size: number;
   /** Source url of file */
   url: string;
-  /** A proxied url of file */
+  /**
+   * A proxied url of file
+   *
+   * @remarks
+   * The proxy url supports images and videos (which have a defined `width` and `height`) as well as audio files, which are passed through unmodified. For all other attachment types, the proxy returns a `415: Unsupported Media Type` error.
+   */
   proxyUrl: string;
   /** Attachment id */
   id: bigint;
@@ -346,7 +352,12 @@ export interface Attachment {
   placeholder?: string;
   /** Version of the placeholder (if image or video) */
   placeholderVersion?: number;
-  /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
+  /**
+   * Whether this attachment is ephemeral.
+   *
+   * @remarks
+   * Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
+   */
   ephemeral?: boolean;
   /** The duration of the audio file for a voice message */
   duration_secs?: number;
@@ -385,6 +396,7 @@ export interface OptionalAuditEntryInfo {
   roleName?: string;
   type?: number;
   integrationType?: string;
+  status?: string;
 }
 
 export interface AutoModerationActionExecution {
@@ -752,6 +764,8 @@ export interface UnfurledMediaItem {
    * @see {@link DiscordUnfurledMediaItemFlags}
    */
   flags?: ToggleBitfield;
+  /** Results of Discord's content scanning, if the media item has been scanned */
+  contentScanMetadata?: DiscordContentScanMetadata;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
   attachmentId?: bigint;
 }
@@ -786,6 +800,7 @@ export interface Embed {
   provider?: EmbedProvider;
   author?: EmbedAuthor;
   fields?: EmbedField[];
+  components?: Component[];
   /** @see {@link DiscordEmbedFlags} */
   flags?: ToggleBitfield;
 }
@@ -1048,7 +1063,7 @@ export interface Integration {
   id: bigint;
   name: string;
   guildId: bigint;
-  type: 'twitch' | 'youtube' | 'discord';
+  type: 'twitch' | 'youtube' | 'discord' | 'guild_subscription';
   account: IntegrationAccount;
   scopes: OAuth2Scope[];
 }
@@ -2185,6 +2200,30 @@ export interface LobbyMember {
   metadata?: Record<string, string>;
   /** lobby member flags combined as as bitfield */
   flags?: ToggleBitfield;
+  /**
+   * An additional 1-80 character display name for the member, such as an in-game character name.
+   *
+   * Can only be set via Add a Member to a Lobby or Bulk Update Lobby Members.
+   */
+  additionalName?: string;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-structure */
+export interface ChannelInfo {
+  /** The guild id */
+  guildId: bigint;
+  /** Ephemeral data for channels in the guild */
+  channels: ChannelInfoData[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-channel-structure */
+export interface ChannelInfoData {
+  /** The channel id */
+  id: bigint;
+  /** The voice channel status */
+  status?: string;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voiceStartTime?: number;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-message-object */
@@ -2201,6 +2240,8 @@ export interface LobbyMessage {
   channelId: bigint;
   /** The user who sent the message */
   author: User;
+  /** Additional informations about the lobby member */
+  lobbyMember?: LobbyMessageLobbyMember;
   /** Dispatch-only metadata sent with the message */
   metadata?: Record<string, string>;
   /** Moderation metadata set via Update Lobby Message Moderation Metadata */
@@ -2213,6 +2254,15 @@ export interface LobbyMessage {
   flags: ToggleBitfield;
   /** The application that sent the message */
   applicationId: bigint;
+}
+
+export interface LobbyMessageLobbyMember {
+  /**
+   * The author's lobby member additional display name, captured when the message was sent.
+   *
+   * Omitted if the author had no `additional_name` set.
+   */
+  additionalName?: string;
 }
 
 /** https://docs.discord.com/developers/resources/lobby#lobby-invite-object */

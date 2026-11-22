@@ -3,6 +3,7 @@ import type {
   DiscordGatewayPayload,
   DiscordIntentifyConnectionProperties,
   DiscordVoiceStateUpdate,
+  GatewayCapabilities,
   TransportCompression,
 } from '@discordeno/types';
 import type Shard from './Shard.js';
@@ -74,6 +75,14 @@ export interface ShardGatewayConfig {
    * @default 1
    */
   totalShards: number;
+  /**
+   * Bitfield representing the capabilities of the client.
+   *
+   * @default 0
+   *
+   * @see {@link GatewayCapabilities}
+   */
+  capabilities?: number;
 }
 
 export interface ShardHeart {

@@ -20,7 +20,7 @@ export class LeakyBucket implements LeakyBucketOptions {
   logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>;
 
   constructor(options?: LeakyBucketOptions) {
-    this.max = options?.max ?? 1;
+    this.max = Math.max(1, options?.max ?? 1);
     this.refillAmount = options?.refillAmount ? (options.refillAmount > this.max ? this.max : options.refillAmount) : 1;
     this.refillInterval = options?.refillInterval ?? 5000;
     this.logger = options?.logger ?? logger;
@@ -33,7 +33,7 @@ export class LeakyBucket implements LeakyBucketOptions {
 
   /** Refills the bucket as needed. */
   refillBucket(): void {
-    this.logger.debug(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`);
+    this.logger.debug(`[LeakyBucket] Refilling bucket.`);
     // Lower the used amount by the refill amount
     this.used = this.refillAmount > this.used ? 0 : this.used - this.refillAmount;
     // Reset the refillsAt timestamp since it just got refilled

@@ -96,6 +96,8 @@ export const BitwisePermissionFlags = {
   USE_EXTERNAL_SOUNDS: 1n << 45n,
   /** Allows sending voice messages */
   SEND_VOICE_MESSAGES: 1n << 46n,
+  /** Allows setting voice channel status */
+  SET_VOICE_CHANNEL_STATUS: 1n << 48n,
   /** Allows sending polls */
   SEND_POLLS: 1n << 49n,
   /** Allows user-installed apps to send public responses. When disabled, users will still be allowed to use their apps but the responses will be ephemeral. This only applies to apps not also installed to the server. */
@@ -173,4 +175,15 @@ export enum RoleFlags {
   None,
   /** Role can be selected by members in an onboarding prompt */
   InPrompt = 1 << 0,
+}
+
+/**
+ * https://docs.discord.com/developers/resources/channel#get-channel-member-permissions-permissions-response
+ * https://docs.discord.com/developers/resources/channel#get-channel-role-permissions-permissions-response
+ * https://docs.discord.com/developers/resources/guild#get-guild-member-permissions-permissions-response
+ * https://docs.discord.com/developers/resources/guild#get-guild-role-permissions-permissions-response
+ */
+export interface DiscordPermissionsResponse {
+  /** The computed permissions as a stringified bitfield */
+  permissions: string;
 }

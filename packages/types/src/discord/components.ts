@@ -976,6 +976,8 @@ export interface DiscordUnfurledMediaItem {
    * @see {@link DiscordUnfurledMediaItemFlags}
    */
   flags?: number;
+  /** Results of Discord's content scanning, if the media item has been scanned */
+  content_scan_metadata?: DiscordContentScanMetadata;
   /** The id of the uploaded attachment. Only present if the media was uploaded as an attachment. This field is ignored and provided by the API as part of the response */
   attachment_id?: string | null;
 }
@@ -984,4 +986,24 @@ export interface DiscordUnfurledMediaItem {
 export enum DiscordUnfurledMediaItemFlags {
   /** This image is animated */
   IsAnimated = 1 << 0,
+}
+
+/** https://docs.discord.com/developers/components/reference#unfurled-media-item-content-scan-metadata-structure */
+export interface DiscordContentScanMetadata {
+  /**
+   * Content scan metadata flags combined as a bitfield
+   *
+   * @see {@link DiscordContentScanMetadataFlags}
+   */
+  flags: number;
+}
+
+/** https://docs.discord.com/developers/components/reference#unfurled-media-item-content-scan-metadata-flags */
+export enum DiscordContentScanMetadataFlags {
+  /** This media was flagged as explicit by Discord's content scanning */
+  IsExplicitContent = 1 << 0,
+  /** This media was flagged as gore by Discord's content scanning */
+  IsGoreContent = 1 << 1,
+  /** This media was flagged as self-harm by Discord's content scanning */
+  IsSelfHarmContent = 1 << 2,
 }

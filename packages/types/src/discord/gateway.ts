@@ -42,6 +42,8 @@ export enum GatewayIntents {
    * - STAGE_INSTANCE_CREATE
    * - STAGE_INSTANCE_UPDATE
    * - STAGE_INSTANCE_DELETE
+   * - VOICE_CHANNEL_STATUS_UPDATE
+   * - VOICE_CHANNEL_START_TIME_UPDATE
    */
   Guilds = 1 << 0,
   /**
@@ -223,6 +225,7 @@ export type GatewayDispatchEventNames =
   | 'CHANNEL_CREATE'
   | 'CHANNEL_UPDATE'
   | 'CHANNEL_DELETE'
+  | 'CHANNEL_INFO'
   | 'CHANNEL_PINS_UPDATE'
   | 'THREAD_CREATE'
   | 'THREAD_UPDATE'
@@ -277,6 +280,8 @@ export type GatewayDispatchEventNames =
   | 'TYPING_START'
   | 'USER_UPDATE'
   | 'VOICE_CHANNEL_EFFECT_SEND'
+  | 'VOICE_CHANNEL_START_TIME_UPDATE'
+  | 'VOICE_CHANNEL_STATUS_UPDATE'
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
@@ -336,6 +341,16 @@ export interface DiscordIdentify {
   capabilities?: number;
 }
 
+/**
+ * https://docs.discord.com/developers/events/gateway-events#identify-gateway-capabilities
+ *
+ * This differs from intents in that intents control which events your bot client receives, while capabilities affects gateway behaviors.
+ *
+ * @remarks
+ * There are currently no capabilities available to modify gateway behavior.
+ */
+export enum GatewayCapabilities {}
+
 /** https://docs.discord.com/developers/events/gateway-events#identify-identify-connection-properties */
 export interface DiscordIntentifyConnectionProperties {
   /** Your operating system */
@@ -376,6 +391,18 @@ export interface DiscordRequestGuildMembers {
 export interface DiscordRequestSoundboardSounds {
   /** IDs of the guilds to get soundboard sounds for */
   guild_ids: string[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#request-channel-info-request-channel-info-structure */
+export interface DiscordRequestChannelInfo {
+  /** The guild id to request channel info for */
+  guild_id: string;
+  /** The fields to request
+   *
+   * @remarks
+   * The current available fields are `status` and `voice_start_time`.
+   */
+  fields: Array<'status' | 'voice_start_time'>;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#update-voice-state-gateway-voice-state-update-structure */
@@ -432,7 +459,7 @@ export interface DiscordReady {
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** Contains id and flags */
-  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags'>;
+  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags' | 'flags_new'>;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#auto-moderation-action-execution-auto-moderation-action-execution-event-fields */
@@ -459,6 +486,44 @@ export interface DiscordAutoModerationActionExecution {
   matched_keyword: string | null;
   /** The substring in content that triggered the rule */
   matched_content: string | null;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-structure */
+export interface DiscordChannelInfo {
+  /** The guild id */
+  guild_id: string;
+  /** Ephemeral data for channels in the guild */
+  channels: DiscordChannelInfoData[];
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#channel-info-channel-info-channel-structure */
+export interface DiscordChannelInfoData {
+  /** The channel id */
+  id: string;
+  /** The voice channel status */
+  status?: string | null;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voice_start_time?: number | null;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#voice-channel-status-update */
+export interface DiscordVoiceChannelStatusUpdate {
+  /** The channel id */
+  id: string;
+  /** The guild id */
+  guild_id: string;
+  /** The voice channel status */
+  status: string | null;
+}
+
+/** https://docs.discord.com/developers/events/gateway-events#voice-channel-start-time-update */
+export interface DiscordVoiceChannelStartTimeUpdate {
+  /** The channel id */
+  id: string;
+  /** The guild id */
+  guild_id: string;
+  /** Unix timestamp (in seconds) of when the voice session started */
+  voice_start_time?: number | null;
 }
 
 /** https://docs.discord.com/developers/events/gateway-events#thread-create */
