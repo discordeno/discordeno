@@ -125,7 +125,7 @@ function Flow() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        colorMode={colorMode === 'dark' ? 'dark' : 'light'}
+        forceColorMode={colorMode === 'dark' ? 'dark' : 'light'}
         nodeTypes={{
           baseLineNodeText: (n) => (
             <div
