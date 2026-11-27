@@ -953,7 +953,12 @@ export interface DiscordActivity {
   instance?: boolean;
   /** Activity flags `OR`d together, describes what the payload includes */
   flags?: number;
-  /** The custom buttons shown in the Rich Presence (max 2) */
+  /**
+   * The custom buttons shown in the Rich Presence
+   *
+   * @remarks
+   * Maximum 2.
+   */
   buttons?: DiscordActivityButton[];
 }
 
@@ -1049,9 +1054,19 @@ export enum ActivityFlags {
 
 /** https://docs.discord.com/developers/events/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
-  /** The text shown on the button (1-32 characters) */
+  /**
+   * The text shown on the button
+   *
+   * @remarks
+   * Between 1-32 characters.
+   */
   label: string;
-  /** The url opened when clicking the button (1-512 characters) */
+  /**
+   * The url opened when clicking the button
+   *
+   * @remarks
+   * Between 1-512 characters.
+   */
   url: string;
 }
 

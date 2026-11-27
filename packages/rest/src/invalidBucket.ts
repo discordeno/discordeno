@@ -103,13 +103,25 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
 export interface InvalidRequestBucketOptions {
   /** current invalid amount */
   current?: number;
-  /** max invalid requests allowed until ban. Defaults to 10,000 */
+  /**
+   * Max invalid requests allowed until ban.
+   *
+   * @default 10000
+   */
   max?: number;
-  /** The time that discord allows to make the max number of invalid requests. Defaults to 10 minutes */
+  /**
+   * The time that discord allows to make the max number of invalid requests.
+   *
+   * @default 600000 (10 minutes)
+   */
   interval?: number;
   /** When the timeout for the bucket has started at. */
   resetAt?: number;
-  /** how safe to be from max. Defaults to 1 */
+  /**
+   * How safe to be from max.
+   *
+   * @default 1
+   */
   safety?: number;
   /** The request statuses that count as an invalid request. */
   errorStatuses?: number[];
@@ -122,13 +134,25 @@ export interface InvalidRequestBucketOptions {
 export interface InvalidRequestBucket {
   /** current invalid amount */
   invalidRequests: number;
-  /** max invalid requests allowed until ban. Defaults to 10,000 */
+  /**
+   * Max invalid requests allowed until ban.
+   *
+   * @default 10000
+   */
   max: number;
-  /** The time that discord allows to make the max number of invalid requests. Defaults to 10 minutes */
+  /**
+   * The time that discord allows to make the max number of invalid requests.
+   *
+   * @default 600000 (10 minutes)
+   */
   interval: number;
   /** When the timeout for this bucket has started at. */
   resetAt: number | undefined;
-  /** how safe to be from max. Defaults to 1 */
+  /**
+   * How safe to be from max.
+   *
+   * @default 1
+   */
   safety: number;
   /** The request statuses that count as an invalid request. */
   errorStatuses: number[];

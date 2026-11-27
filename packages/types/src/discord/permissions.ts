@@ -118,7 +118,10 @@ export interface DiscordRole {
   /** Role name */
   name: string;
   /**
-   * RGB color value, default: 0
+   * RGB color value
+   *
+   * @default 0
+   *
    * @deprecated the {@link colors} field is recommended for use instead of this field
    */
   color: number;

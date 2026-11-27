@@ -108,7 +108,7 @@ export interface DiscordActionRow extends DiscordBaseComponent {
    * The components in this row
    *
    * @remarks
-   * Up to 5 button components, a single select component or a single text input component
+   * Maximum 5 button components, a single select component or a single text input component.
    *
    * Using a {@link DiscordTextInputComponent} inside the Action Row is deprecated,
    * use a {@link DiscordLabelComponent} for modals
@@ -146,9 +146,11 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
    */
   emoji?: Partial<Pick<DiscordEmoji, 'id' | 'name' | 'animated'>>;
   /**
-   * A dev-defined unique string sent on click (max 100 characters).
+   * A dev-defined unique string sent on click
    *
    * @remarks
+   * Maximum 100 characters.
+   *
    * A button of style {@link ButtonStyles.Link | Link} or {@link ButtonStyles.Premium | Premium} cannot have a custom_id
    */
   custom_id?: string;
@@ -163,9 +165,9 @@ export interface DiscordButtonComponent extends DiscordBaseComponent {
    * Url for {@link ButtonStyles.Link | link} buttons that can navigate a user to the web.
    *
    * @remarks
-   * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
-   *
    * Maximum 512 characters.
+   *
+   * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
    */
   url?: string;
   /** Whether or not this button is disabled */
@@ -192,24 +194,46 @@ export enum ButtonStyles {
 export interface DiscordStringSelectComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.StringSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   custom_id: string;
-  /** The choices! Maximum of 25 items. */
+  /**
+   * The choices!
+   *
+   * @remarks
+   * Maximum 25 items.
+   */
   options: DiscordSelectOption[];
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * The minimum number of items that must be chosen.
-   *
-   * @default 1
    *
    * @remarks
    * Between 0-25.
    *
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
+   * @default 1
    */
   min_values?: number;
-  /** The maximum number of items that can be chosen. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be chosen.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -233,11 +257,26 @@ export interface DiscordStringSelectComponent extends DiscordBaseComponent {
 
 /** https://docs.discord.com/developers/components/reference#string-select-select-option-structure */
 export interface DiscordSelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
+  /**
+   * The user-facing name of the option.
+   *
+   * @remarks
+   * Maximum 25 characters.
+   */
   label: string;
-  /** The dev-defined value of the option. Maximum 100 characters. */
+  /**
+   * The dev-defined value of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   value: string;
-  /** An additional description of the option. Maximum 50 characters. */
+  /**
+   * An additional description of the option.
+   *
+   * @remarks
+   * Maximum 50 characters.
+   */
   description?: string;
   /** The id, name, and animated properties of an emoji. */
   emoji?: Partial<Pick<DiscordEmoji, 'id' | 'name' | 'animated'>>;
@@ -294,7 +333,11 @@ export interface DiscordTextInputComponent extends DiscordBaseComponent {
   min_length?: number;
   /** The maximum length of the text the user has to provide */
   max_length?: number;
-  /** whether this component is required to be filled, default true */
+  /**
+   * Whether this component is required to be filled
+   *
+   * @default true
+   */
   required?: boolean;
   /** Pre-filled value for input text. */
   value?: string;
@@ -325,27 +368,46 @@ export interface DiscordTextInputInteractionResponse {
 export interface DiscordUserSelectComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.UserSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   custom_id: string;
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `min_values` and `max_values`.
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
    * The minimum number of items that must be chosen.
    *
-   * @default 1
-   *
    * @remarks
    * Between 0-25.
    *
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
+   * @default 1
    */
   min_values?: number;
-  /** The maximum number of items that can be chosen. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be chosen.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -406,27 +468,46 @@ export type DiscordUserSelectInteractionResponseFromMessageComponent = Require<O
 export interface DiscordRoleSelectComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.RoleSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   custom_id: string;
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `min_values` and `max_values`.
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
    * The minimum number of items that must be chosen.
    *
-   * @default 1
-   *
    * @remarks
    * Between 0-25.
    *
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
+   * @default 1
    */
   min_values?: number;
-  /** The maximum number of items that can be chosen. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be chosen.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -479,27 +560,46 @@ export type DiscordRoleSelectInteractionResponseFromMessageComponent = Require<O
 export interface DiscordMentionableSelectComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.MentionableSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   custom_id: string;
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `min_values` and `max_values`.
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
    * The minimum number of items that must be chosen.
    *
-   * @default 1
-   *
    * @remarks
    * Between 0-25.
    *
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
+   * @default 1
    */
   min_values?: number;
-  /** The maximum number of items that can be chosen. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be chosen.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -558,29 +658,48 @@ export type DiscordMentionableSelectInteractionResponseFromMessageComponent = Re
 export interface DiscordChannelSelectComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.ChannelSelect;
 
-  /** A custom identifier for this component. Maximum 100 characters. */
+  /**
+   * A custom identifier for this component.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   custom_id: string;
   /** List of channel types to include in the options list */
   channel_types?: ChannelTypes[];
-  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  /**
+   * A custom placeholder text if nothing is selected.
+   *
+   * @remarks
+   * Maximum 150 characters.
+   */
   placeholder?: string;
   /**
    * List of default values for auto-populated select menu components
-   * The number of default values must be in the range defined by minValues and maxValues
+   *
+   * @remarks
+   * The number of default values must be in the range defined by `min_values` and `max_values`.
    */
   default_values?: DiscordSelectMenuDefaultValue[];
   /**
    * The minimum number of items that must be chosen.
    *
-   * @default 1
-   *
    * @remarks
    * Between 0-25.
    *
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
+   * @default 1
    */
   min_values?: number;
-  /** The maximum number of items that can be chosen. Default 1. Max 25. */
+  /**
+   * The maximum number of items that can be chosen.
+   *
+   * @remarks
+   * Maximum 25.
+   *
+   * @default 1
+   */
   max_values?: number;
   /**
    * Whether this component is required to be filled
@@ -662,9 +781,18 @@ export interface DiscordThumbnailComponent extends DiscordBaseComponent {
 
   /** A url or attachment */
   media: DiscordUnfurledMediaItem;
-  /** Alt text for the media, max 1024 characters */
+  /**
+   * Alt text for the media
+   *
+   * @remarks
+   * Maximum 1024 characters.
+   */
   description?: string | null;
-  /** Whether the thumbnail should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the thumbnail should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
 }
 
@@ -680,9 +808,18 @@ export interface DiscordMediaGalleryComponent extends DiscordBaseComponent {
 export interface DiscordMediaGalleryItem {
   /** A url or attachment */
   media: DiscordUnfurledMediaItem;
-  /** Alt text for the media, max 1024 characters */
+  /**
+   * Alt text for the media
+   *
+   * @remarks
+   * Maximum 1024 characters.
+   */
   description?: string | null;
-  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the media should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
 }
 
@@ -692,7 +829,11 @@ export interface DiscordFileComponent extends DiscordBaseComponent {
 
   /** This unfurled media item is unique in that it only supports attachment references using the attachment://<filename> syntax */
   file: DiscordUnfurledMediaItem;
-  /** Whether the media should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the media should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
   /** The name of the file. This field is ignored and provided by the API as part of the response */
   name?: string;
@@ -704,9 +845,17 @@ export interface DiscordFileComponent extends DiscordBaseComponent {
 export interface DiscordSeparatorComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Separator;
 
-  /** Whether a visual divider should be displayed in the component. Defaults to `true` */
+  /**
+   * Whether a visual divider should be displayed in the component.
+   *
+   * @default true
+   */
   divider?: boolean;
-  /** Size of separator padding — `1` for small padding, `2` for large padding. Defaults to `1` */
+  /**
+   * Size of separator padding — `1` for small padding, `2` for large padding.
+   *
+   * @default 1
+   */
   spacing?: SeparatorSpacingSize;
 }
 
@@ -731,7 +880,11 @@ export interface DiscordContainerComponent extends DiscordBaseComponent {
   >;
   /** Color for the accent on the container as RGB from 0x000000 to 0xFFFFFF */
   accent_color?: number | null;
-  /** Whether the container should be a spoiler (or blurred out). Defaults to `false` */
+  /**
+   * Whether the container should be a spoiler (or blurred out).
+   *
+   * @default false
+   */
   spoiler?: boolean;
 }
 
@@ -743,14 +896,14 @@ export interface DiscordLabelComponent extends DiscordBaseComponent {
    * The label text
    *
    * @remarks
-   * Max 45 characters.
+   * Maximum 45 characters.
    */
   label: string;
   /**
    * An optional description text for the label
    *
    * @remarks
-   * Max 100 characters.
+   * Maximum 100 characters.
    */
   description?: string;
   /** The component within the label */
@@ -822,6 +975,8 @@ export interface DiscordFileUploadComponent extends DiscordBaseComponent {
    * The accepted file types for the file upload
    *
    * @remarks
+   * Maximum 10 file types.
+   *
    * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
    *
    * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
@@ -832,8 +987,6 @@ export interface DiscordFileUploadComponent extends DiscordBaseComponent {
    *
    * This feature only checks the file extension against the filename and does not inspect the file contents.
    * You are still responsible for validating the actual contents of the file.
-   *
-   * Up to 10 file types.
    */
   file_types?: string[];
 }
@@ -853,21 +1006,50 @@ export interface DiscordFileUploadInteractionResponse {
 /** https://docs.discord.com/developers/components/reference#radio-group-structure */
 export interface DiscordRadioGroupComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.RadioGroup;
-  /** A dev-defined unique string for the component; 1-100 characters. */
+  /**
+   * A dev-defined unique string for the component
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   custom_id: string;
-  /** List of options to show; min 2, max 10. */
+  /**
+   * List of options to show
+   *
+   * @remarks
+   * Between 2-10.
+   */
   options: DiscordRadioGroupOption[];
-  /** Whether a selection is required to submit the modal. Defaults to `true`. */
+  /**
+   * Whether a selection is required to submit the modal.
+   *
+   * @default true
+   */
   required?: boolean;
 }
 
 /** https://docs.discord.com/developers/components/reference#radio-group-option-structure */
 export interface DiscordRadioGroupOption {
-  /** The dev-defined value of the option. Maximum 100 characters. */
+  /**
+   * The dev-defined value of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   value: string;
-  /** The user-facing label of the option. Maximum 100 characters. */
+  /**
+   * The user-facing label of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   label: string;
-  /** An optional description for the option. Maximum 100 characters. */
+  /**
+   * An optional description for the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   description?: string;
   /** Will render this option as already-selected by default. */
   default?: boolean;
@@ -887,34 +1069,70 @@ export interface DiscordRadioGroupInteractionResponse {
 /** https://docs.discord.com/developers/components/reference#checkbox-group-structure */
 export interface DiscordCheckboxGroupComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.CheckboxGroup;
-  /** A dev-defined unique string for the component; 1-100 characters. */
+  /**
+   * A dev-defined unique string for the component
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   custom_id: string;
-  /** List of options to show; min 1, max 10. */
+  /**
+   * List of options to show
+   *
+   * @remarks
+   * Between 1-10.
+   */
   options: DiscordCheckboxGroupOption[];
   /**
    * Minimum number of items that must be chosen.
-   *
-   * @default 1
    *
    * @remarks
    * Between 0-25.
    *
    * Must be either omitted or at least `1` if `required` is omitted or `true`.
+   *
+   * @default 1
    */
   min_values?: number;
-  /** Maximum number of items that can be chosen; min 1, max 10. Defaults to the number of options. */
+  /**
+   * Maximum number of items that can be chosen.
+   *
+   * @remarks
+   * Between 1-10.
+   *
+   * @default the number of options
+   */
   max_values?: number;
-  /** Whether selecting within the group is required. Defaults to `true`. */
+  /**
+   * Whether selecting within the group is required.
+   *
+   * @default true
+   */
   required?: boolean;
 }
 
 /** https://docs.discord.com/developers/components/reference#checkbox-group-option-structure */
 export interface DiscordCheckboxGroupOption {
-  /** The dev-defined value of the option. Maximum 100 characters. */
+  /**
+   * The dev-defined value of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   value: string;
-  /** The user-facing label of the option. Maximum 100 characters. */
+  /**
+   * The user-facing label of the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   label: string;
-  /** An optional description for the option. Maximum 100 characters. */
+  /**
+   * An optional description for the option.
+   *
+   * @remarks
+   * Maximum 100 characters.
+   */
   description?: string;
   /** Will render this option as already-selected by default. */
   default?: boolean;
@@ -934,7 +1152,12 @@ export interface DiscordCheckboxGroupInteractionResponse {
 /** https://docs.discord.com/developers/components/reference#checkbox-structure */
 export interface DiscordCheckboxComponent extends DiscordBaseComponent {
   type: MessageComponentTypes.Checkbox;
-  /** A dev-defined unique string for the component; 1-100 characters. */
+  /**
+   * A dev-defined unique string for the component
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   custom_id: string;
   /** Whether the checkbox is selected by default. */
   default?: boolean;

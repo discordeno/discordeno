@@ -58,7 +58,12 @@ export function transformGuild(bot: Bot, payload: Partial<DiscordGuild>, extra?:
       guildId,
       /** The id of the associated Stage channel */
       channelId: bot.transformers.snowflake(si.channel_id),
-      /** The topic of the Stage instance (1-120 characters) */
+      /**
+       * The topic of the Stage instance
+       *
+       * @remarks
+       * Between 1-120 characters.
+       */
       topic: si.topic,
     }));
   if (props.channels && (!!payload.channels || !!payload.threads))

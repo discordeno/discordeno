@@ -12,13 +12,28 @@ export interface GetEntitlements {
   before?: BigString;
   /** Retrieve entitlements after this entitlement ID */
   after?: BigString;
-  /** Number of entitlements to return, 1-100, default 100 */
+  /**
+   * Number of entitlements to return
+   *
+   * @remarks
+   * Between 1-100.
+   *
+   * @default 100
+   */
   limit?: number;
   /** Guild ID to look up entitlements for */
   guildId?: BigString;
-  /** Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default. */
+  /**
+   * Whether or not ended entitlements should be omitted.
+   *
+   * @default false
+   */
   excludeEnded?: boolean;
-  /** Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default. */
+  /**
+   * Whether or not deleted entitlements should be omitted.
+   *
+   * @default true
+   */
   excludeDeleted?: boolean;
 }
 

@@ -8,7 +8,12 @@ export interface DiscordSoundboardSound {
   name: string;
   /** The id of this sound */
   sound_id: string;
-  /** The volume of this sound, from 0 to 1 */
+  /**
+   * The volume of this sound
+   *
+   * @remarks
+   * Between 0-1.
+   */
   volume: number;
   /** The id of this sound's custom emoji */
   emoji_id: string | null;

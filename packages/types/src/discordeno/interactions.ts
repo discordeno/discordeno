@@ -39,9 +39,19 @@ export interface InteractionCallbackData {
   // Messages
   /** True if this is a TTS message */
   tts?: boolean;
-  /** The message contents (up to 2000 characters) */
+  /**
+   * The message contents
+   *
+   * @remarks
+   * Maximum 2000 characters.
+   */
   content?: string;
-  /** Embedded `rich` content (up to 6000 characters) */
+  /**
+   * Embedded `rich` content
+   *
+   * @remarks
+   * Maximum 6000 characters.
+   */
   embeds?: Camelize<DiscordEmbed>[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions;
@@ -61,7 +71,12 @@ export interface InteractionCallbackData {
   poll?: CreatePoll;
 
   // Autocomplete
-  /** Autocomplete choices (max of 25 choices) */
+  /**
+   * Autocomplete choices
+   *
+   * @remarks
+   * Maximum 25 choices.
+   */
   choices?: Camelize<DiscordApplicationCommandOptionChoice>[];
 
   // Modal
@@ -80,6 +95,7 @@ export interface InteractionCallbackOptions {
 export interface GetGlobalApplicationCommandsOptions {
   /**
    * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
+   *
    * @default false
    */
   withLocalizations?: boolean;
@@ -101,18 +117,26 @@ export interface CreateGlobalApplicationCommandOptions {
  */
 export interface CreateApplicationCommand {
   /**
-   * Name of command, 1-32 characters.
+   * Name of command
    *
    * @remarks
+   * Between 1-32 characters.
+   *
    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\u02BC\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
-   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   *
+   * `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
    */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   nameLocalizations?: Localization | null;
-  /** 1-100 character description */
+  /**
+   * Description of the command
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   description?: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   descriptionLocalizations?: Localization | null;
@@ -126,7 +150,9 @@ export interface CreateApplicationCommand {
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: string | null;
   /**
-   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands.
+   *
+   * @default true
    *
    * @deprecated use {@link contexts} instead
    */
@@ -152,9 +178,17 @@ export interface CreateApplicationCommand {
    * This value is available only for globally-scoped commands.
    */
   contexts?: DiscordInteractionContextType[];
-  /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
+  /**
+   * Type of command
+   *
+   * @default ApplicationCommandTypes.ChatInput
+   */
   type?: ApplicationCommandTypes;
-  /** Indicates whether the command is age-restricted, defaults to `false` */
+  /**
+   * Indicates whether the command is age-restricted
+   *
+   * @default false
+   */
   nsfw?: boolean;
   /**
    * Determines whether the interaction is handled by the app's interactions handler or by Discord
@@ -191,6 +225,7 @@ export interface CreateGuildApplicationCommandOptions {
 export interface GetGuildApplicationCommandsOptions {
   /**
    * Whether to include full localization dictionaries (`nameLocalizations` and `descriptionLocalizations`) in the returned objects, instead of the `nameLocalized` and `descriptionLocalized` fields.
+   *
    * @default false
    */
   withLocalizations?: boolean;

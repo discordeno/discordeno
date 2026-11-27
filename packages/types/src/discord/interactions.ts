@@ -24,7 +24,9 @@ export interface DiscordInteraction {
   type: InteractionTypes;
   /**
    * The command data payload
-   * @remarks This is always present on application command, message component, and modal submit interaction types. It is optional for future-proofing against new interaction types
+   *
+   * @remarks
+   * This is always present on application command, message component, and modal submit interaction types. It is optional for future-proofing against new interaction types.
    */
   data?: DiscordInteractionData;
   /** Guild that the interaction was sent from */
@@ -52,7 +54,9 @@ export interface DiscordInteraction {
   message?: DiscordMessage;
   /**
    * Bitwise set of permissions the app has in the source location of the interaction
-   * @remarks app_permissions includes ATTACH_FILES | EMBED_LINKS | MENTION_EVERYONE permissions for (G)DMs with other users, and additionally includes USE_EXTERNAL_EMOJIS for DMs with the app's bot user
+   *
+   * @remarks
+   * `app_permissions` includes `ATTACH_FILES | EMBED_LINKS | MENTION_EVERYONE` permissions for (G)DMs with other users, and additionally includes `USE_EXTERNAL_EMOJIS` for DMs with the app's bot user.
    */
   app_permissions: string;
   /** The selected language of the invoking user */
@@ -287,32 +291,53 @@ export interface DiscordActivityInstanceResource {
 export interface DiscordApplicationCommand {
   /** Unique ID of command */
   id: string;
-  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  /**
+   * Type of command
+   *
+   * @default ApplicationCommandTypes.ChatInput
+   */
   type?: ApplicationCommandTypes;
   /** ID of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
   /**
-   * Name of command, 1-32 characters.
+   * Name of command
+   *
+   * @remarks
+   * Between 1-32 characters.
+   *
    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\u02BC\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
-   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   *
+   * `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
    */
   name: string;
   /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
-  /** Description for `ApplicationCommandTypes.ChatInput` and `ApplicationCommandTypes.PrimaryEntryPoint` commands, 1-100 characters. */
+  /**
+   * Description for `ApplicationCommandTypes.ChatInput` and `ApplicationCommandTypes.PrimaryEntryPoint` commands
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   description: string;
   /** Localization object for `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null;
-  /** Parameters for the command, max of 25 */
+  /**
+   * Parameters for the command
+   *
+   * @remarks
+   * Maximum 25.
+   */
   options?: DiscordApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
   default_member_permissions: string | null;
   /**
-   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands.
+   *
+   * @default true
    *
    * @deprecated use {@link contexts} instead
    */
@@ -326,7 +351,11 @@ export interface DiscordApplicationCommand {
    * @default true
    */
   default_permission?: boolean;
-  /** Indicates whether the command is age-restricted, defaults to false */
+  /**
+   * Indicates whether the command is age-restricted
+   *
+   * @default false
+   */
   nsfw?: boolean;
   /**
    * Installation contexts where the command is available
@@ -371,9 +400,11 @@ export interface DiscordApplicationCommandOption {
   /** Type of option */
   type: ApplicationCommandOptionTypes;
   /**
-   * Name of command, 1-32 characters.
+   * Name of command
    *
    * @remarks
+   * Between 1-32 characters.
+   *
    * This value should be unique within an array of {@link DiscordApplicationCommandOption}
    *
    * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_\u02BC\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
@@ -385,21 +416,30 @@ export interface DiscordApplicationCommandOption {
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
-  /** 1-100 character description */
+  /**
+   * Description of the option
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null;
   /**
-   * If the parameter is required or optional. default `false`
+   * If the parameter is required or optional.
    *
    * @remarks
    * Valid in all option types except {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} and {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   *
+   * @default false
    */
   required?: boolean;
   /**
-   * Choices for the option from which the user can choose, max 25
+   * Choices for the option from which the user can choose
    *
    * @remarks
+   * Maximum 25.
+   *
    * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
    *
    * If you provide an array of choices, they will be the ONLY accepted values for this option
@@ -434,16 +474,20 @@ export interface DiscordApplicationCommandOption {
    */
   max_value?: number;
   /**
-   * The minimum permitted length, should be in the range of from 0 to 600
+   * The minimum permitted length
    *
    * @remarks
+   * Between 0-6000.
+   *
    * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
    */
   min_length?: number;
   /**
-   * The maximum permitted length, should be in the range of from 0 to 600
+   * The maximum permitted length
    *
    * @remarks
+   * Between 1-6000.
+   *
    * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
    */
   max_length?: number;
@@ -460,6 +504,8 @@ export interface DiscordApplicationCommandOption {
    * The accepted file types for the file upload
    *
    * @remarks
+   * Maximum 10 file types.
+   *
    * The supported values are `image`, `video`, `audio` or any dot prefixed extension (e.g. `.pdf`)
    *
    * Extensions are case-insensitive and are normalized to lowercase, so `.PDF` and `.pdf` are equivalent.
@@ -470,8 +516,6 @@ export interface DiscordApplicationCommandOption {
    *
    * This feature only checks the file extension against the filename and does not inspect the file contents.
    * You are still responsible for validating the actual contents of the file.
-   *
-   * Up to 10 file types.
    *
    * Only valid in options of type {@link ApplicationCommandOptionTypes.Attachment | Attachment}
    */
@@ -500,11 +544,21 @@ export enum ApplicationCommandOptionTypes {
 
 /** https://docs.discord.com/developers/interactions/application-commands#application-command-object-application-command-option-choice-structure */
 export interface DiscordApplicationCommandOptionChoice {
-  /** 1-100 character choice name */
+  /**
+   * Name of the choice
+   *
+   * @remarks
+   * Between 1-100 characters.
+   */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
-  /** Value for the choice, up to 100 characters if string */
+  /**
+   * Value for the choice
+   *
+   * @remarks
+   * Maximum 100 characters if string.
+   */
   value: string | number;
 }
 
@@ -524,7 +578,12 @@ export interface DiscordGuildApplicationCommandPermissions {
   application_id: string;
   /** ID of the guild */
   guild_id: string;
-  /** Permissions for the command in the guild, max of 100 */
+  /**
+   * Permissions for the command in the guild
+   *
+   * @remarks
+   * Maximum 100.
+   */
   permissions: DiscordApplicationCommandPermissions[];
 }
 

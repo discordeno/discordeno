@@ -36,9 +36,9 @@ export interface DiscordenoAutoModerationActionMetadata {
    * Timeout duration in seconds.
    *
    * @remarks
-   * Only for actions of type {@link AutoModerationActionType.Timeout}.
+   * Maximum 2419200 seconds (4 weeks).
    *
-   * Maximum of 2419200 seconds (4 weeks).
+   * Only for actions of type {@link AutoModerationActionType.Timeout}.
    */
   durationSeconds?: number;
   /**
@@ -47,9 +47,9 @@ export interface DiscordenoAutoModerationActionMetadata {
    * This may set to undefined if no custom message is provided.
    *
    * @remarks
-   * Only for actions of type {@link AutoModerationActionType.BlockMessage}.
+   * Maximum 150 characters.
    *
-   * Maximum of 150 characters.
+   * Only for actions of type {@link AutoModerationActionType.BlockMessage}.
    */
   customMessage?: string | null;
 }
@@ -66,7 +66,11 @@ export interface CreateAutoModerationRuleOptions {
   triggerMetadata: Camelize<DiscordAutoModerationRuleTriggerMetadata>;
   /** The actions that will trigger for this rule */
   actions: DiscordenoAutoModerationAction[];
-  /** Whether the rule should be enabled, true by default. */
+  /**
+   * Whether the rule should be enabled
+   *
+   * @default true
+   */
   enabled?: boolean;
   /** The role ids that should not be effected by the rule */
   exemptRoles?: BigString[];

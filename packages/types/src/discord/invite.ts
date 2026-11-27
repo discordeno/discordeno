@@ -89,7 +89,12 @@ export interface DiscordInviteStageInstance {
   participant_count: number;
   /** The number of users speaking in the Stage */
   speaker_count: number;
-  /** The topic of the Stage instance (1-120 characters) */
+  /**
+   * The topic of the Stage instance
+   *
+   * @remarks
+   * Between 1-120 characters.
+   */
   topic: string;
 }
 

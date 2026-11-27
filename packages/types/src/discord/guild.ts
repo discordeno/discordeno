@@ -13,7 +13,12 @@ import type { DiscordAvatarDecorationData, DiscordCollectibles, DiscordUser } fr
 export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   /** Guild id */
   id: string;
-  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
+  /**
+   * Guild name
+   *
+   * @remarks
+   * Between 2-100 characters, excluding trailing and leading whitespace.
+   */
   name: string;
   /** Icon hash */
   icon: string | null;
@@ -76,7 +81,12 @@ export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   system_channel_flags: SystemChannelFlags;
   /** The id of the channel where community guilds can display rules and/or guidelines */
   rules_channel_id: string | null;
-  /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
+  /**
+   * The maximum number of presences for the guild
+   *
+   * @remarks
+   * The default value, currently 25000, is in effect when `null` is returned.
+   */
   max_presences?: number | null;
   /** The maximum number of members for the guild */
   max_members?: number;
@@ -90,7 +100,11 @@ export interface DiscordGuild extends Partial<DiscordGuildCreateExtra> {
   premium_tier: PremiumTiers;
   /** The number of boosts this guild currently has */
   premium_subscription_count?: number;
-  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
+  /**
+   * The preferred locale of a Community guild; used in server discovery and notices from Discord
+   *
+   * @default "en-US"
+   */
   preferred_locale: string;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
   public_updates_channel_id: string | null;
@@ -289,7 +303,12 @@ export interface DiscordUnavailableGuild extends Pick<DiscordGuild, 'id' | 'unav
 export interface DiscordGuildPreview {
   /** Guild id */
   id: string;
-  /** Guild name (2-100 characters) */
+  /**
+   * Guild name
+   *
+   * @remarks
+   * Between 2-100 characters.
+   */
   name: string;
   /** Icon hash */
   icon: string | null;
@@ -518,7 +537,12 @@ export interface DiscordBan {
 export interface DiscordWelcomeScreen {
   /** The server description shown in the welcome screen */
   description: string | null;
-  /** The channels shown in the welcome screen, up to 5 */
+  /**
+   * The channels shown in the welcome screen
+   *
+   * @remarks
+   * Maximum 5.
+   */
   welcome_channels: DiscordWelcomeScreenChannel[];
 }
 
