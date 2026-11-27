@@ -71,16 +71,16 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
       },
       reactions: {
         bot: (channelId, messageId, emoji) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/@me`;
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeComponent(emoji)}/@me`;
         },
         user: (channelId, messageId, emoji, userId) => {
-          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}/${encode(userId)}`;
+          return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeComponent(emoji)}/${encode(userId)}`;
         },
         all: (channelId, messageId) => {
           return `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions`;
         },
         emoji: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`;
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeComponent(emoji)}?`;
 
           if (options) {
             if (options.type) url += `type=${encode(options.type)}`;
@@ -91,7 +91,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
           return url;
         },
         message: (channelId, messageId, emoji, options) => {
-          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeURIComponent(emoji)}?`;
+          let url = `/channels/${encode(channelId)}/messages/${encode(messageId)}/reactions/${encodeComponent(emoji)}?`;
 
           if (options) {
             if (options.type) url += `type=${encode(options.type)}`;
@@ -824,6 +824,7 @@ export function createRoutes(disableURIEncode: boolean = false): RestRoutes {
 function encodeComponent(uriComponent: string | number | bigint | boolean): string {
   if (typeof uriComponent !== 'string') return uriComponent.toString();
   if (/^\d+$/.test(uriComponent)) return uriComponent;
+  if (uriComponent === '.' || uriComponent === '..') throw new Error(`Invalid route parameter: ${uriComponent}`);
 
   return encodeURIComponent(uriComponent);
 }
