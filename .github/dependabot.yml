@@ -5,6 +5,8 @@ updates:
     labels: ['dependencies', 't-build']
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 3
     groups:
       library-bumps:
         patterns: ['*']
@@ -13,6 +15,8 @@ updates:
     labels: ['dependencies', 't-ci']
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 3
     groups:
       ci-bumps:
         patterns: ['*']
@@ -21,6 +25,8 @@ updates:
     labels: ['dependencies', 't-build', 'website']
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 3
     groups:
       website-bumps:
         patterns: ['*']
@@ -29,6 +35,8 @@ updates:
     labels: ['dependencies', 't-build', 'template']
     schedule:
       interval: 'monthly'
+    cooldown:
+      default-days: 3
     groups:
       example-deps:
         patterns: ['*']

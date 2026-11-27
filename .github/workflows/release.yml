@@ -1,8 +1,6 @@
 name: Release
 permissions:
   contents: read
-  packages: write
-  id-token: write
 on:
   push:
     branches:
@@ -15,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -27,15 +25,36 @@ jobs:
         with:
           node-version: 22
           cache: yarn
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@discordeno'
       - run: yarn install --immutable
       - name: build Package
         run: yarn release-build --filter=./packages/${{ matrix.package }}
       - name: Bump Package Version
         if: ${{ github.event_name != 'release' && github.event.action != 'published' }}
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
+      - run: yarn pack
+        working-directory: packages/${{ matrix.package }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.package }}
+          path: packages/${{ matrix.package }}/package.tgz
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ['gateway', 'rest', 'types', 'utils', 'bot', 'discordeno']
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ matrix.package }}
 
       # If the action is running from a release, if prerelease use beta tag else use latest tag, otherwise use the next tag
-      - run: yarn npm publish --tag ${{ github.event_name == 'release' && github.event.action == 'published' && (github.event.release.prerelease && 'beta' || 'latest') || 'next' }} --access public --provenance
-        working-directory: packages/${{ matrix.package }}
+      - run: npm publish package.tgz --tag ${{ github.event_name == 'release' && github.event.action == 'published' && (github.event.release.prerelease && 'beta' || 'latest') || 'next' }} --access public --provenance --ignore-scripts

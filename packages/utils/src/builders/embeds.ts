@@ -17,7 +17,7 @@ import type {
  *  .newEmbed()
  *  .setTitle('My Second Embed')
  */
-export class EmbedsBuilder extends Array<DiscordEmbed> {
+export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   #currentEmbedIndex: number = 0;
 
   /**
