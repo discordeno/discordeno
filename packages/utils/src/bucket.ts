@@ -1,3 +1,4 @@
+import { setTimeout } from 'node:timers';
 import logger from './logger.js';
 import { delay } from './utils.js';
 
@@ -45,7 +46,7 @@ export class LeakyBucket implements LeakyBucketOptions {
     if (this.used > 0) {
       this.timeoutId = setTimeout(() => {
         this.refillBucket();
-      }, this.refillInterval);
+      }, this.refillInterval).unref();
       this.refillsAt = Date.now() + this.refillInterval;
     }
   }
@@ -74,7 +75,7 @@ export class LeakyBucket implements LeakyBucketOptions {
 
           this.timeoutId = setTimeout(() => {
             this.refillBucket();
-          }, this.refillInterval);
+          }, this.refillInterval).unref();
           // Set the time for when this refill will occur.
           this.refillsAt = Date.now() + this.refillInterval;
         }
