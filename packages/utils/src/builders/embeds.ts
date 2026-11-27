@@ -23,10 +23,9 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Adds a new field to the current embed.
    *
-   * @param {string} name - Field name
-   * @param {string} value - Field value
-   * @param {?boolean} [inline=false] - Field should be inline or not.
-   * @returns {EmbedsBuilder}
+   * @param name - Field name
+   * @param value - Field value
+   * @param inline - Field should be inline or not.
    */
   addField(name: string, value: string, inline?: boolean): this {
     if (this.#currentEmbed.fields === undefined) {
@@ -45,8 +44,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Adds multiple new fields to the current embed.
    *
-   * @param {DiscordEmbedField[]} fields - The fields to add
-   * @returns {EmbedsBuilder}
+   * @param fields - The fields to add
    */
   addFields(fields: DiscordEmbedField[]): this {
     if (this.#currentEmbed.fields === undefined) {
@@ -61,7 +59,6 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Creates a blank embed.
    *
-   * @returns {EmbedsBuilder}
    */
   newEmbed(): this {
     if (this.length >= 10) {
@@ -77,9 +74,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the current embed author.
    *
-   * @param {string} name - Name of the author
-   * @param {?Omit<DiscordEmbedAuthor, 'name'>} [options] - Extra author options
-   * @returns {EmbedsBuilder}
+   * @param name - Name of the author
+   * @param options - Extra author options
    */
   setAuthor(name: string, options?: Omit<DiscordEmbedAuthor, 'name'>): this {
     this.#currentEmbed.author = {
@@ -94,8 +90,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the color on the side of the current embed.
    *
-   * @param {(number | string)} color - The color, in base16 or hex color code
-   * @returns {EmbedsBuilder}
+   * @param color - The color, in base16 or hex color code
    */
   setColor(color: number | string): this {
     if (typeof color === 'string') {
@@ -117,8 +112,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
    *
    * WARNING: Only use this method if you know what you're doing. Make sure to set it back to the latest when you're done.
    *
-   * @param {?number} [index] - The index of the embed in the EmbedsBuilder array
-   * @returns {EmbedsBuilder}
+   * @param index - The index of the embed in the EmbedsBuilder array
    */
   setCurrentEmbed(index?: number): this {
     if (index === undefined) {
@@ -139,8 +133,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the description of the current embed.
    *
-   * @param {string} description - Description
-   * @returns {EmbedsBuilder}
+   * @param description - Description
    */
   setDescription(description: string): this {
     this.#currentEmbed.description = description;
@@ -151,8 +144,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Overwrite all fields on the current embed.
    *
-   * @param {DiscordEmbedField[]} fields
-   * @returns {EmbedsBuilder}
+   * @param fields
    */
   setFields(fields: DiscordEmbedField[]): this {
     this.#currentEmbed.fields = fields;
@@ -163,9 +155,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the footer in the current embed.
    *
-   * @param {string} text - The text to display in the footer
-   * @param {?Omit<DiscordEmbedFooter, 'text'>} [options]
-   * @returns {EmbedsBuilder}
+   * @param text - The text to display in the footer
+   * @param options
    */
   setFooter(text: string, options?: Omit<DiscordEmbedFooter, 'text'>): this {
     this.#currentEmbed.footer = {
@@ -180,9 +171,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the image in the current embed.
    *
-   * @param {string} url - URL of the image
-   * @param {?Omit<DiscordEmbedImage, 'url'>} [options]
-   * @returns {EmbedsBuilder}
+   * @param url - URL of the image
+   * @param options
    */
   setImage(url: string, options?: Omit<DiscordEmbedImage, 'url'>): this {
     this.#currentEmbed.image = {
@@ -197,9 +187,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the provider of the current embed.
    *
-   * @param {string} name
-   * @param {?string} [url]
-   * @returns {EmbedsBuilder}
+   * @param name
+   * @param url
    */
   setProvider(name: string, url?: string): this {
     this.#currentEmbed.provider = {
@@ -213,7 +202,6 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the color of the current embed to a random value.
    *
-   * @returns {EmbedsBuilder}
    */
   setRandomColor(): this {
     return this.setColor(Math.floor(Math.random() * (0xffffff + 1)));
@@ -222,9 +210,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the title of the current embed.
    *
-   * @param {string} title
-   * @param {?string} [url]
-   * @returns {EmbedsBuilder}
+   * @param title
+   * @param url
    */
   setTitle(title: string, url?: string): this {
     this.#currentEmbed.title = title;
@@ -239,8 +226,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the timestamp of the current embed.
    *
-   * @param {?(string | number | Date)} [timestamp]
-   * @returns {EmbedsBuilder}
+   * @param timestamp
    */
   setTimestamp(timestamp?: string | number | Date): this {
     this.#currentEmbed.timestamp = new Date(timestamp ?? Date.now()).toISOString();
@@ -251,9 +237,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the thumbnail of the current embed.
    *
-   * @param {string} url - URL of the image
-   * @param {?Omit<DiscordEmbedImage, 'url'>} [options]
-   * @returns {EmbedsBuilder}
+   * @param url - URL of the image
+   * @param options
    */
   setThumbnail(url: string, options?: Omit<DiscordEmbedImage, 'url'>): this {
     this.#currentEmbed.thumbnail = {
@@ -268,8 +253,7 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the URL of the current embed title.
    *
-   * @param {string} url
-   * @returns {EmbedsBuilder}
+   * @param url
    */
   setUrl(url: string): this {
     this.#currentEmbed.url = url;
@@ -280,9 +264,8 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Set the video of the current embed.
    *
-   * @param {string} url
-   * @param {?Omit<DiscordEmbedVideo, 'url'>} [options]
-   * @returns {EmbedsBuilder}
+   * @param url
+   * @param options
    */
   setVideo(url: string, options?: Omit<DiscordEmbedVideo, 'url'>): this {
     this.#currentEmbed.video = {
@@ -297,7 +280,6 @@ export class EmbedsBuilder extends Array<Omit<DiscordEmbed, 'components'>> {
   /**
    * Validate all embeds available against current known Discord limits to help prevent bad requests.
    *
-   * @returns {EmbedsBuilder}
    */
   validate(): this {
     let totalCharacters = 0;

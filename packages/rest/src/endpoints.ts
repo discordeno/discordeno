@@ -180,7 +180,6 @@ export const restEndpoints = {
    * @param channelId - The ID of the channel the message to add a reaction to is in.
    * @param messageId - The ID of the message to add a reaction to.
    * @param reaction - The reaction to add to the message.
-   * @returns
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -235,7 +234,7 @@ export const restEndpoints = {
    * @param guildId - The ID of the guild the member to add the role to is in.
    * @param userId - The user ID of the member to add the role to.
    * @param roleId - The ID of the role to add to the member.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -304,7 +303,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to create the rule in.
    * @param options - The parameters for the creation of the rule.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordAutoModerationRule}.
    *
    * @remarks
@@ -327,7 +326,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to create the channel within.
    * @param options - The parameters for the creation of the channel.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordChannel}.
    *
    * @remarks
@@ -349,7 +348,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild in which to create the emoji.
    * @param options - The parameters for the creation of the emoji.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordEmoji}.
    *
    * @remarks
@@ -380,7 +379,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the forum channel to create the thread within.
    * @param options - The parameters for the creation of the thread.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of {@link DiscordChannel} with a nested {@link DiscordChannel} object.
    *
    * @remarks
@@ -465,7 +464,7 @@ export const restEndpoints = {
    * Create a new sticker for the guild.
    *
    * @param guildId The ID of the guild to get
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @return A {@link DiscordSticker}
    *
    * @remarks
@@ -507,7 +506,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to create the invite to.
    * @param options - The parameters for the creation of the invite.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordInvite}.
    *
    * @remarks
@@ -552,7 +551,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to create the role in.
    * @param options - The parameters for the creation of the role.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordRole}.
    *
    * @remarks
@@ -570,7 +569,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to create the scheduled event in.
    * @param options - The parameters for the creation of the scheduled event.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordScheduledEvent}.
    *
    * @remarks
@@ -589,7 +588,7 @@ export const restEndpoints = {
    * Creates a stage instance associated with a stage channel.
    *
    * @param options - The parameters for the creation of the stage instance.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordStageInstance}.
    *
    * @remarks
@@ -607,7 +606,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to create the webhook in.
    * @param options - The parameters for the creation of the webhook.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordWebhook}.
    *
    * @remarks
@@ -630,7 +629,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to delete the rule from.
    * @param ruleId - The ID of the automod rule to delete.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -647,7 +646,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to set the status of.
    * @param options - The parameters for the status of the voice channel.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns Nothing
    *
    * @remarks
@@ -664,7 +663,7 @@ export const restEndpoints = {
    * Deletes a channel from within a guild.
    *
    * @param channelId - The ID of the channel to delete.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns nothing
    *
    * @remarks
@@ -695,7 +694,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to delete the permission override of.
    * @param overwriteId - The ID of the permission override to delete.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -712,7 +711,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild from which to delete the emoji.
    * @param id - The ID of the emoji to delete.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * For emojis created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
@@ -776,7 +775,7 @@ export const restEndpoints = {
    * Delete a new sticker for the guild.
    *
    * @param guildId The ID of the guild to get
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @return A {@link DiscordSticker}
    *
    * @remarks
@@ -812,7 +811,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild from which to delete the integration.
    * @param integrationId - The ID of the integration to delete from the guild.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -831,7 +830,7 @@ export const restEndpoints = {
    * Deletes an invite to a channel.
    *
    * @param inviteCode - The invite code of the invite to delete.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_CHANNELS` permission.
@@ -972,7 +971,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to delete the messages from.
    * @param messageIds - The IDs of the messages to delete from the channel.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_MESSAGES` permission.
@@ -1069,7 +1068,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to delete the role from.
    * @param roleId - The ID of the role to delete.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -1101,7 +1100,7 @@ export const restEndpoints = {
    * Deletes the stage instance associated with a stage channel, if one exists.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the user to be a moderator of the stage channel.
@@ -1225,7 +1224,7 @@ export const restEndpoints = {
    * @param guildId - The ID of the guild to edit the rule in.
    * @param ruleId - The ID of the rule to edit.
    * @param options - The parameters for the edit of the rule.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordAutoModerationRule}.
    *
    * @remarks
@@ -1270,7 +1269,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to edit.
    * @param options - The parameters for the edit of the channel.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordChannel}.
    *
    * @remarks
@@ -1303,7 +1302,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel to edit the permission overrides of.
    * @param options - The permission override.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -1417,7 +1416,7 @@ export const restEndpoints = {
    * @param guildId - The ID of the guild in which to edit the emoji.
    * @param id - The ID of the emoji to edit.
    * @param options - The parameters for the edit of the emoji.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the updated {@link DiscordEmoji}.
    *
    * @remarks
@@ -1484,7 +1483,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to edit.
    * @param options - The parameters for the edit of the guild.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordGuild}.
    *
    * @remarks
@@ -1524,7 +1523,7 @@ export const restEndpoints = {
    * Edit the given sticker.
    *
    * @param guildId The ID of the guild to get
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @return A {@link DiscordSticker}
    *
    * @remarks
@@ -1637,7 +1636,7 @@ export const restEndpoints = {
    * @param guildId - The ID of the guild to edit the role in.
    * @param roleId - The ID of the role to edit.
    * @param options - The parameters for the edit of the role.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordRole}.
    *
    * @remarks
@@ -1655,7 +1654,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to edit the role positions in.
    * @param options - The parameters for the edit of the role positions.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns A collection of {@link DiscordRole} objects assorted by role ID.
    *
    * @remarks
@@ -1673,7 +1672,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to edit the scheduled event in.
    * @param eventId - The ID of the scheduled event to edit.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordScheduledEvent}.
    *
    * @remarks
@@ -1701,7 +1700,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
    * @param topic - Topic of the Stage instance (1-120 characters).
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the updated {@link DiscordStageInstance}.
    *
    * @remarks
@@ -1736,7 +1735,7 @@ export const restEndpoints = {
    * @param bearerToken - The access token of the user
    * @param applicationId - The id of the application to edit the role connection
    * @param options - The options to edit
-   * @returns {DiscordApplicationRoleConnection}
+   * @returns An instance of {@link DiscordApplicationRoleConnection}.
    *
    * @remarks
    * This requires the `role_connections.write` scope.
@@ -1780,7 +1779,7 @@ export const restEndpoints = {
    * Edits a webhook.
    *
    * @param webhookId - The ID of the webhook to edit.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordWebhook}.
    *
    * @remarks
@@ -1850,7 +1849,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to edit the welcome screen of.
    * @param options - The parameters for the edit of the welcome screen.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordWelcomeScreen}.
    *
    * @remarks
@@ -1867,7 +1866,7 @@ export const restEndpoints = {
    * Edits the settings of a guild's widget.
    *
    * @param guildId - The ID of the guild to edit the settings of the widget of.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordGuildWidgetSettings}.
    *
    * @remarks
@@ -1910,7 +1909,7 @@ export const restEndpoints = {
    *
    * @param sourceChannelId - The ID of the announcement channel to follow.
    * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of {@link DiscordFollowedChannel}.
    *
    * @remarks
@@ -2947,7 +2946,7 @@ export const restEndpoints = {
    * Get a user's data from the api
    *
    * @param id The user's id
-   * @returns {DiscordUser}
+   * @returns An instance of {@link DiscordUser}.
    */
   async getUser(rest: RestManager, id: BigString): Promise<DiscordUser> {
     return await rest.get<DiscordUser>(rest.routes.user(id));
@@ -2956,7 +2955,7 @@ export const restEndpoints = {
    * Get the current user data.
    *
    * @param bearerToken - The access token of the user
-   * @returns {DiscordUser}
+   * @returns An instance of {@link DiscordUser}.
    *
    * @remarks
    * This requires the `identify` scope.
@@ -2975,7 +2974,7 @@ export const restEndpoints = {
    * Get the current user connections.
    *
    * @param bearerToken - The access token of the user
-   * @returns {DiscordConnection[]}
+   * @returns An array of {@link DiscordConnection}.
    *
    * @remarks
    * This requires the `connections` scope.
@@ -2993,7 +2992,7 @@ export const restEndpoints = {
    *
    * @param bearerToken - The access token of the user
    * @param applicationId - The id of the application to get the role connection
-   * @returns {DiscordApplicationRoleConnection}
+   * @returns An instance of {@link DiscordApplicationRoleConnection}.
    *
    * @remarks
    * The access token requires the `role_connections.write` scope.
@@ -3201,7 +3200,7 @@ export const restEndpoints = {
    * @param guildId - The ID of the guild the member to remove the role from is in.
    * @param userId - The user ID of the member to remove the role from.
    * @param roleId - The ID of the role to remove from the member.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -3344,7 +3343,7 @@ export const restEndpoints = {
    * @param channelId - The ID of the channel in which to create the thread.
    * @param messageId - The ID of the message to use as the thread's point of origin.
    * @param options - The parameters to use for the creation of the thread.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordChannel}.
    *
    * @remarks
@@ -3372,7 +3371,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel in which to create the thread.
    * @param options - The parameters to use for the creation of the thread.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link DiscordChannel | Thread}.
    *
    * @remarks
@@ -3530,7 +3529,7 @@ export const restEndpoints = {
    * @param guildId - The ID of the guild to ban the user from.
    * @param userId - The ID of the user to ban from the guild.
    * @param options - The parameters for the creation of the ban.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -3547,7 +3546,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to ban the users from.
    * @param options - The users to ban and the other options for the ban.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` and `MANAGE_GUILD` permissions.
@@ -3566,7 +3565,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to edit the nickname of the bot user in.
    * @param options - The parameters for the edit of the nickname.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link DiscordMember}
    *
    * @remarks
@@ -3582,7 +3581,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to edit the member of.
    * @param userId - The user ID of the member to edit.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @param options - The parameters for the edit of the user.
    *
    * @remarks
@@ -3665,7 +3664,7 @@ export const restEndpoints = {
   
    * @param guildId - The ID of the guild to kick the member from.
    * @param userId - The user ID of the member to kick from the guild.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `KICK_MEMBERS` permission.
@@ -3684,7 +3683,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel where the message is to be pinned.
    * @param messageId - The ID of the message to pin.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `PIN_MESSAGES` permission.
@@ -3702,7 +3701,7 @@ export const restEndpoints = {
   
    * @param guildId - The ID of the guild to prune the members of.
    * @param options - The parameters for the pruning of members.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    * @returns A number indicating how many members were pruned.
    *
    * @remarks
@@ -3743,7 +3742,7 @@ export const restEndpoints = {
    *
    * @param guildId - The ID of the guild to unban the user in.
    * @param userId - The ID of the user to unban.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -3760,7 +3759,7 @@ export const restEndpoints = {
    *
    * @param channelId - The ID of the channel where the message is pinned.
    * @param messageId - The ID of the message to unpin.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `PIN_MESSAGES` permission.
@@ -3784,7 +3783,7 @@ export const restEndpoints = {
    * Modifies the onboarding configuration of the guild.
    *
    * @param guildId - The guild to edit the onboarding from
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   * @param reason - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` and `MANAGE_ROLES` permissions.
@@ -3817,7 +3816,7 @@ export const restEndpoints = {
    * Returns all entitlements for a given app, active and expired.
    *
    * @param applicationId - The id of the application to get the entitlements
-   * @param {GetEntitlements} [options] - The optional query params for the endpoint
+   * @param options - The optional query params for the endpoint
    */
   async listEntitlements(rest: RestManager, applicationId: BigString, options?: GetEntitlements): Promise<DiscordEntitlement[]> {
     return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options));
