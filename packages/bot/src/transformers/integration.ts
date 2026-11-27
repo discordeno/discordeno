@@ -34,7 +34,7 @@ export function transformIntegration(bot: Bot, payload: Partial<DiscordIntegrati
 export function transformIntegrationAccount(bot: Bot, payload: Partial<DiscordIntegrationAccount>, extra?: { partial?: boolean }) {
   const integrationAccount = {} as SetupDesiredProps<IntegrationAccount, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.id !== undefined) integrationAccount.id = bot.transformers.snowflake(payload.id);
+  if (payload.id !== undefined) integrationAccount.id = payload.id;
   if (payload.name !== undefined) integrationAccount.name = payload.name;
 
   return callCustomizer('integrationAccount', bot, payload, integrationAccount, {

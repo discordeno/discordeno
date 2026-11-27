@@ -1077,7 +1077,7 @@ export interface IntegrationApplication {
 }
 
 export interface IntegrationAccount {
-  id: bigint;
+  id: string;
   name: string;
 }
 
