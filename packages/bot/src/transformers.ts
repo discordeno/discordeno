@@ -23,6 +23,7 @@ import type {
   DiscordChannel,
   DiscordChannelInfo,
   DiscordChannelInfoData,
+  DiscordChannelMention,
   DiscordCollectibles,
   DiscordDefaultReactionEmoji,
   DiscordEmbed,
@@ -128,7 +129,13 @@ import {
 } from './transformers/automodActionExecution.js';
 import { transformAutoModerationRule, transformAutoModerationRuleTriggerMetadata } from './transformers/automodRule.js';
 import { transformAvatarDecorationData } from './transformers/avatarDecorationData.js';
-import { transformChannel, transformChannelInfo, transformChannelInfoData, transformForumTag } from './transformers/channel.js';
+import {
+  transformChannel,
+  transformChannelInfo,
+  transformChannelInfoData,
+  transformChannelMention,
+  transformForumTag,
+} from './transformers/channel.js';
 import {
   type ComponentTransformerExtra,
   transformComponent,
@@ -219,6 +226,7 @@ import type {
   Channel,
   ChannelInfo,
   ChannelInfoData,
+  ChannelMention,
   Collectibles,
   Component,
   DefaultReactionEmoji,
@@ -323,6 +331,7 @@ export type TransformerInformations = {
   channel: TransformerInformation<DiscordChannel, Channel, { guildId?: BigString }>;
   channelInfo: TransformerInformation<DiscordChannelInfo, ChannelInfo>;
   channelInfoData: TransformerInformation<DiscordChannelInfoData, ChannelInfoData>;
+  channelMention: TransformerInformation<DiscordChannelMention, ChannelMention>;
   collectibles: TransformerInformation<DiscordCollectibles, Collectibles>;
   component: TransformerInformation<
     DiscordMessageComponent | DiscordMessageComponentFromModalInteractionResponse,
@@ -461,6 +470,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
       channel: _options.customizers?.channel ?? defaultCustomizer,
       channelInfo: _options.customizers?.channelInfo ?? defaultCustomizer,
       channelInfoData: _options.customizers?.channelInfoData ?? defaultCustomizer,
+      channelMention: _options.customizers?.channelMention ?? defaultCustomizer,
       collectibles: _options.customizers?.collectibles ?? defaultCustomizer,
       component: _options.customizers?.component ?? defaultCustomizer,
       defaultReactionEmoji: _options.customizers?.defaultReactionEmoji ?? defaultCustomizer,
@@ -578,6 +588,7 @@ export function createTransformers<TProps extends TransformersDesiredProperties,
     channel: _options.channel ?? transformChannel,
     channelInfo: _options.channelInfo ?? transformChannelInfo,
     channelInfoData: _options.channelInfoData ?? transformChannelInfoData,
+    channelMention: _options.channelMention ?? transformChannelMention,
     collectibles: _options.collectibles ?? transformCollectibles,
     component: _options.component ?? transformComponent,
     defaultReactionEmoji: _options.defaultReactionEmoji ?? transformDefaultReactionEmoji,

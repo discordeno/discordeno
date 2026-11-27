@@ -1,11 +1,18 @@
-import type { BigString, DiscordChannel, DiscordChannelInfo, DiscordChannelInfoData, DiscordForumTag } from '@discordeno/types';
+import type {
+  BigString,
+  DiscordChannel,
+  DiscordChannelInfo,
+  DiscordChannelInfoData,
+  DiscordChannelMention,
+  DiscordForumTag,
+} from '@discordeno/types';
 import { iconHashToBigInt } from '@discordeno/utils';
 import type { Bot } from '../bot.js';
 import type { DesiredPropertiesBehavior, SetupDesiredProps, TransformersDesiredProperties } from '../desiredProperties.js';
 import { callCustomizer } from '../transformers.js';
 import { ChannelToggles } from './toggles/channel.js';
 import { Permissions } from './toggles/Permissions.js';
-import type { Channel, ChannelInfo, ChannelInfoData, ForumTag } from './types.js';
+import type { Channel, ChannelInfo, ChannelInfoData, ChannelMention, ForumTag } from './types.js';
 
 const Mask = (1n << 64n) - 1n;
 
@@ -166,6 +173,20 @@ export function transformChannelInfoData(bot: Bot, payload: Partial<DiscordChann
   if (props.voiceStartTime && payload.voice_start_time) channelInfoData.voiceStartTime = payload.voice_start_time;
 
   return callCustomizer('channelInfoData', bot, payload, channelInfoData, {
+    partial: extra?.partial ?? false,
+  });
+}
+
+export function transformChannelMention(bot: Bot, payload: Partial<DiscordChannelMention>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.channelMention;
+  const channelMention = {} as SetupDesiredProps<ChannelMention, TransformersDesiredProperties, DesiredPropertiesBehavior>;
+
+  if (props.id && payload.id) channelMention.id = bot.transformers.snowflake(payload.id);
+  if (props.guildId && payload.guild_id) channelMention.guildId = bot.transformers.snowflake(payload.guild_id);
+  if (props.type && payload.type !== undefined) channelMention.type = payload.type;
+  if (props.name && payload.name) channelMention.name = payload.name;
+
+  return callCustomizer('channelMention', bot, payload, channelMention, {
     partial: extra?.partial ?? false,
   });
 }
