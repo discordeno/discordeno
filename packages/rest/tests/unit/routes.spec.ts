@@ -20,4 +20,12 @@ describe('routes.ts', () => {
 
     expect(parsedUrl.href).to.be.equal('https://discord.com/gateway/bot');
   });
+
+  it('Rejects dot segments', () => {
+    const routes = createRoutes();
+
+    expect(() => routes.guilds.roles.member('111', '..', '333')).to.throw();
+    expect(() => routes.channels.message('444', '.')).to.throw();
+    expect(() => routes.channels.reactions.emoji('444', '555', '..')).to.throw();
+  });
 });
