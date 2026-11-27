@@ -9,16 +9,18 @@ export function transformGuildApplicationCommandPermissions(
   payload: Partial<DiscordGuildApplicationCommandPermissions>,
   extra?: { partial?: boolean },
 ) {
+  const props = bot.transformers.desiredProperties.guildApplicationCommandPermissions;
   const guildApplicationCommandPermissions = {} as SetupDesiredProps<
     GuildApplicationCommandPermissions,
     TransformersDesiredProperties,
     DesiredPropertiesBehavior
   >;
 
-  if (payload.id) guildApplicationCommandPermissions.id = bot.transformers.snowflake(payload.id);
-  if (payload.application_id) guildApplicationCommandPermissions.applicationId = bot.transformers.snowflake(payload.application_id);
-  if (payload.guild_id) guildApplicationCommandPermissions.guildId = bot.transformers.snowflake(payload.guild_id);
-  if (payload.permissions)
+  if (props.id && payload.id) guildApplicationCommandPermissions.id = bot.transformers.snowflake(payload.id);
+  if (props.applicationId && payload.application_id)
+    guildApplicationCommandPermissions.applicationId = bot.transformers.snowflake(payload.application_id);
+  if (props.guildId && payload.guild_id) guildApplicationCommandPermissions.guildId = bot.transformers.snowflake(payload.guild_id);
+  if (props.permissions && payload.permissions)
     guildApplicationCommandPermissions.permissions = payload.permissions.map((x) => bot.transformers.applicationCommandPermissions(bot, x));
 
   return callCustomizer('guildApplicationCommandPermissions', bot, payload, guildApplicationCommandPermissions, {
@@ -31,15 +33,16 @@ export function transformApplicationCommandPermissions(
   payload: Partial<DiscordApplicationCommandPermissions>,
   extra?: { partial?: boolean },
 ) {
+  const props = bot.transformers.desiredProperties.applicationCommandPermissions;
   const applicationCommandPermissions = {} as SetupDesiredProps<
     ApplicationCommandPermissions,
     TransformersDesiredProperties,
     DesiredPropertiesBehavior
   >;
 
-  if (payload.id) applicationCommandPermissions.id = bot.transformers.snowflake(payload.id);
-  if (payload.type !== undefined) applicationCommandPermissions.type = payload.type;
-  if (payload.permission !== undefined) applicationCommandPermissions.permission = payload.permission;
+  if (props.id && payload.id) applicationCommandPermissions.id = bot.transformers.snowflake(payload.id);
+  if (props.type && payload.type !== undefined) applicationCommandPermissions.type = payload.type;
+  if (props.permission && payload.permission !== undefined) applicationCommandPermissions.permission = payload.permission;
 
   return callCustomizer('applicationCommandPermissions', bot, payload, applicationCommandPermissions, {
     partial: extra?.partial ?? false,

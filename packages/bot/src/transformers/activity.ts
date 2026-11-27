@@ -11,26 +11,27 @@ import { callCustomizer } from '../transformers.js';
 import type { Activity, ActivityAssets, ActivityEmoji, ActivityInstance, ActivityLocation } from './types.js';
 
 export function transformActivity(bot: Bot, payload: Partial<DiscordActivity>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.activity;
   const activity = {} as SetupDesiredProps<Activity, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.name) activity.name = payload.name;
-  if (payload.type !== undefined) activity.type = payload.type;
-  if (payload.url) activity.url = payload.url;
-  if (payload.created_at) activity.createdAt = payload.created_at;
-  if (payload.application_id) activity.applicationId = bot.transformers.snowflake(payload.application_id);
-  if (payload.status_display_type) activity.statusDisplayType = payload.status_display_type;
-  if (payload.details) activity.details = payload.details;
-  if (payload.details_url) activity.detailsUrl = payload.details_url;
-  if (payload.state) activity.state = payload.state;
-  if (payload.state_url) activity.stateUrl = payload.state_url;
-  if (payload.emoji) activity.emoji = bot.transformers.activityEmoji(bot, payload.emoji);
-  if (payload.party) activity.party = payload.party;
-  if (payload.assets) activity.assets = bot.transformers.activityAssets(bot, payload.assets);
-  if (payload.secrets) activity.secrets = payload.secrets;
-  if (payload.instance) activity.instance = payload.instance;
-  if (payload.flags) activity.flags = payload.flags;
-  if (payload.buttons) activity.buttons = payload.buttons;
-  if (payload.timestamps) activity.timestamps = payload.timestamps;
+  if (props.name && payload.name) activity.name = payload.name;
+  if (props.type && payload.type !== undefined) activity.type = payload.type;
+  if (props.url && payload.url) activity.url = payload.url;
+  if (props.createdAt && payload.created_at) activity.createdAt = payload.created_at;
+  if (props.applicationId && payload.application_id) activity.applicationId = bot.transformers.snowflake(payload.application_id);
+  if (props.statusDisplayType && payload.status_display_type) activity.statusDisplayType = payload.status_display_type;
+  if (props.details && payload.details) activity.details = payload.details;
+  if (props.detailsUrl && payload.details_url) activity.detailsUrl = payload.details_url;
+  if (props.state && payload.state) activity.state = payload.state;
+  if (props.stateUrl && payload.state_url) activity.stateUrl = payload.state_url;
+  if (props.emoji && payload.emoji) activity.emoji = bot.transformers.activityEmoji(bot, payload.emoji);
+  if (props.party && payload.party) activity.party = payload.party;
+  if (props.assets && payload.assets) activity.assets = bot.transformers.activityAssets(bot, payload.assets);
+  if (props.secrets && payload.secrets) activity.secrets = payload.secrets;
+  if (props.instance && payload.instance) activity.instance = payload.instance;
+  if (props.flags && payload.flags) activity.flags = payload.flags;
+  if (props.buttons && payload.buttons) activity.buttons = payload.buttons;
+  if (props.timestamps && payload.timestamps) activity.timestamps = payload.timestamps;
 
   return callCustomizer('activity', bot, payload, activity, {
     partial: extra?.partial ?? false,
@@ -67,15 +68,16 @@ export function transformActivityLocation(bot: Bot, payload: Partial<DiscordActi
 }
 
 export function transformActivityAssets(bot: Bot, payload: Partial<DiscordActivityAssets>, extra?: { partial?: boolean }): ActivityAssets {
+  const props = bot.transformers.desiredProperties.activityAssets;
   const activityAssets = {} as SetupDesiredProps<ActivityAssets, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.invite_cover_image) activityAssets.inviteCoverImage = payload.invite_cover_image;
-  if (payload.large_image) activityAssets.largeImage = payload.large_image;
-  if (payload.large_text) activityAssets.largeText = payload.large_text;
-  if (payload.large_url) activityAssets.largeUrl = payload.large_url;
-  if (payload.small_image) activityAssets.smallImage = payload.small_image;
-  if (payload.small_text) activityAssets.smallText = payload.small_text;
-  if (payload.small_url) activityAssets.smallUrl = payload.small_url;
+  if (props.inviteCoverImage && payload.invite_cover_image) activityAssets.inviteCoverImage = payload.invite_cover_image;
+  if (props.largeImage && payload.large_image) activityAssets.largeImage = payload.large_image;
+  if (props.largeText && payload.large_text) activityAssets.largeText = payload.large_text;
+  if (props.largeUrl && payload.large_url) activityAssets.largeUrl = payload.large_url;
+  if (props.smallImage && payload.small_image) activityAssets.smallImage = payload.small_image;
+  if (props.smallText && payload.small_text) activityAssets.smallText = payload.small_text;
+  if (props.smallUrl && payload.small_url) activityAssets.smallUrl = payload.small_url;
 
   return callCustomizer('activityAssets', bot, payload, activityAssets, {
     partial: extra?.partial ?? false,
@@ -83,11 +85,12 @@ export function transformActivityAssets(bot: Bot, payload: Partial<DiscordActivi
 }
 
 export function transformActivityEmoji(bot: Bot, payload: Partial<DiscordActivityEmoji>, extra?: { partial?: boolean }): ActivityEmoji {
+  const props = bot.transformers.desiredProperties.activityEmoji;
   const activityEmoji = {} as SetupDesiredProps<ActivityEmoji, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.id) activityEmoji.id = bot.transformers.snowflake(payload.id);
-  if (payload.animated) activityEmoji.animated = payload.animated;
-  if (payload.name) activityEmoji.name = payload.name;
+  if (props.id && payload.id) activityEmoji.id = bot.transformers.snowflake(payload.id);
+  if (props.animated && payload.animated) activityEmoji.animated = payload.animated;
+  if (props.name && payload.name) activityEmoji.name = payload.name;
 
   return callCustomizer('activityEmoji', bot, payload, activityEmoji, {
     partial: extra?.partial ?? false,

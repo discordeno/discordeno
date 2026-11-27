@@ -9,15 +9,16 @@ export function transformApplicationCommandOptionChoice(
   payload: Partial<DiscordApplicationCommandOptionChoice>,
   extra?: { partial?: boolean },
 ) {
+  const props = bot.transformers.desiredProperties.applicationCommandOptionChoice;
   const applicationCommandOptionChoice = {} as SetupDesiredProps<
     ApplicationCommandOptionChoice,
     TransformersDesiredProperties,
     DesiredPropertiesBehavior
   >;
 
-  if (payload.name) applicationCommandOptionChoice.name = payload.name;
-  if (payload.name_localizations) applicationCommandOptionChoice.nameLocalizations = payload.name_localizations;
-  if (payload.value !== undefined) applicationCommandOptionChoice.value = payload.value;
+  if (props.name && payload.name) applicationCommandOptionChoice.name = payload.name;
+  if (props.nameLocalizations && payload.name_localizations) applicationCommandOptionChoice.nameLocalizations = payload.name_localizations;
+  if (props.value && payload.value !== undefined) applicationCommandOptionChoice.value = payload.value;
 
   return callCustomizer('applicationCommandOptionChoice', bot, payload, applicationCommandOptionChoice, {
     partial: extra?.partial ?? false,

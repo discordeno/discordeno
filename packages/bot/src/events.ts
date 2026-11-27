@@ -72,7 +72,7 @@ export type EventHandlers<TProps extends TransformersDesiredProperties, TBehavio
   interactionCreate: (interaction: SetupDesiredProps<Interaction, TProps, TBehavior>) => unknown;
   integrationCreate: (integration: SetupDesiredProps<Integration, TProps, TBehavior>) => unknown;
   integrationDelete: (payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => unknown;
-  integrationUpdate: (payload: { guildId: bigint }) => unknown;
+  integrationUpdate: (integration: SetupDesiredProps<Integration, TProps, TBehavior>) => unknown;
   inviteCreate: (invite: {
     channelId: bigint;
     code: string;

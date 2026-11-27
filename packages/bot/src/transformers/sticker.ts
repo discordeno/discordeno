@@ -26,15 +26,16 @@ export function transformSticker(bot: Bot, payload: Partial<DiscordSticker>, ext
 }
 
 export function transformStickerPack(bot: Bot, payload: Partial<DiscordStickerPack>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.stickerPack;
   const stickerPack = {} as SetupDesiredProps<StickerPack, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.id) stickerPack.id = bot.transformers.snowflake(payload.id);
-  if (payload.stickers) stickerPack.stickers = payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker));
-  if (payload.name) stickerPack.name = payload.name;
-  if (payload.sku_id) stickerPack.skuId = bot.transformers.snowflake(payload.sku_id);
-  if (payload.cover_sticker_id) stickerPack.coverStickerId = bot.transformers.snowflake(payload.cover_sticker_id);
-  if (payload.description) stickerPack.description = payload.description;
-  if (payload.banner_asset_id) stickerPack.bannerAssetId = bot.transformers.snowflake(payload.banner_asset_id);
+  if (props.id && payload.id) stickerPack.id = bot.transformers.snowflake(payload.id);
+  if (props.stickers && payload.stickers) stickerPack.stickers = payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker));
+  if (props.name && payload.name) stickerPack.name = payload.name;
+  if (props.skuId && payload.sku_id) stickerPack.skuId = bot.transformers.snowflake(payload.sku_id);
+  if (props.coverStickerId && payload.cover_sticker_id) stickerPack.coverStickerId = bot.transformers.snowflake(payload.cover_sticker_id);
+  if (props.description && payload.description) stickerPack.description = payload.description;
+  if (props.bannerAssetId && payload.banner_asset_id) stickerPack.bannerAssetId = bot.transformers.snowflake(payload.banner_asset_id);
 
   return callCustomizer('stickerPack', bot, payload, stickerPack, {
     partial: extra?.partial ?? false,

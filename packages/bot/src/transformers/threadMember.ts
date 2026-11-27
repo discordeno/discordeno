@@ -5,13 +5,14 @@ import { callCustomizer } from '../transformers.js';
 import type { ThreadMember, ThreadMemberGuildCreate } from './types.js';
 
 export function transformThreadMember(bot: Bot, payload: Partial<DiscordThreadMember>, extra?: ThreadMemberTransformerExtra & { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.threadMember;
   const threadMember = {} as SetupDesiredProps<ThreadMember, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.id) threadMember.id = bot.transformers.snowflake(payload.id);
-  if (payload.user_id) threadMember.userId = bot.transformers.snowflake(payload.user_id);
-  if (payload.join_timestamp) threadMember.joinTimestamp = Date.parse(payload.join_timestamp);
-  if (payload.flags !== undefined) threadMember.flags = payload.flags;
-  if (payload.member) {
+  if (props.id && payload.id) threadMember.id = bot.transformers.snowflake(payload.id);
+  if (props.userId && payload.user_id) threadMember.userId = bot.transformers.snowflake(payload.user_id);
+  if (props.joinTimestamp && payload.join_timestamp) threadMember.joinTimestamp = Date.parse(payload.join_timestamp);
+  if (props.flags && payload.flags !== undefined) threadMember.flags = payload.flags;
+  if (props.member && payload.member) {
     threadMember.member = bot.transformers.member(bot, payload.member, {
       guildId: extra?.guildId,
       userId: payload.user_id,
@@ -35,9 +36,10 @@ export interface ThreadMemberTransformerExtra {
 }
 
 export function transformThreadMemberGuildCreate(bot: Bot, payload: Partial<DiscordThreadMemberGuildCreate>, extra?: { partial?: boolean }) {
+  const props = bot.transformers.desiredProperties.threadMemberGuildCreate;
   const threadMember = {} as SetupDesiredProps<ThreadMemberGuildCreate, TransformersDesiredProperties, DesiredPropertiesBehavior>;
 
-  if (payload.join_timestamp) threadMember.joinTimestamp = Date.parse(payload.join_timestamp);
+  if (props.joinTimestamp && payload.join_timestamp) threadMember.joinTimestamp = Date.parse(payload.join_timestamp);
 
   return callCustomizer('threadMemberGuildCreate', bot, payload, threadMember, {
     partial: extra?.partial ?? false,
