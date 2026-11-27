@@ -1,3 +1,4 @@
+import type { ExecuteWebhook } from '@discordeno/types';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { EmbedsBuilder } from '../src/builders.js';
@@ -95,5 +96,11 @@ describe('builders/embeds.ts', () => {
     const embeds = new EmbedsBuilder().addField('name', 'a'.repeat(1024));
 
     expect(() => embeds.validate()).to.not.throw();
+  });
+
+  it('should be assignable to the embeds of the helpers options', () => {
+    const options: ExecuteWebhook = { embeds: new EmbedsBuilder().setTitle('Title') };
+
+    expect(options.embeds).to.have.lengthOf(1);
   });
 });

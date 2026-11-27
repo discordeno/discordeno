@@ -124,16 +124,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^10.1.6":
-  version: 10.1.6
-  resolution: "@fastify/multipart@npm:10.1.6"
+"@fastify/multipart@npm:^10.1.9":
+  version: 10.1.9
+  resolution: "@fastify/multipart@npm:10.1.9"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
     "@fastify/deepmerge": "npm:^3.0.0"
     "@fastify/error": "npm:^4.0.0"
     fastify-plugin: "npm:^6.0.0"
     secure-json-parse: "npm:^4.0.0"
-  checksum: 10c0/42544cf5239a323f07eae3f72e48f1c6b137cdda4f6fe3f4ae7aebed5df8a9140513f40961bc22270da9cd10cdca7226dde9e942e90fa39b2cf61f44f72c7276
+  checksum: 10c0/8e4ecfa3ee1d23c179d947e9fe242619812e17d68e796699af548a1e49edc2406868ccb5b22b19eb02740971398b80542a418e7353a9b4a04c00445a678486be
   languageName: node
   linkType: hard
 
@@ -179,12 +179,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.6.6":
-  version: 26.6.6
-  resolution: "@types/node@npm:26.6.6"
+"@types/node@npm:^26.6.7":
+  version: 26.6.7
+  resolution: "@types/node@npm:26.6.7"
   dependencies:
     undici-types: "npm:~8.9.0"
-  checksum: 10c0/5cb63f644f6e85a257a9cd2403cbcbe196760e2a35fd3ec9fb8b5cff663e14cc832b198cc17b53f870a2e30900ed45a1fb3f53e6589aba26b8e8c484aa672053
+  checksum: 10c0/54ffee68394be0df0f92405b6df75a2f75041bbbd5386fb88292c5e9947800c109baafbc73cbc75957d8238a9487245e4ed57fd91c3e19bda675f3039a403b4b
   languageName: node
   linkType: hard
 
@@ -361,10 +361,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"amqplib@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "amqplib@npm:2.2.0"
-  checksum: 10c0/2ece1ee491d573f79ff9181f0460010ebb3e4b99186e0569ab292f3c5c8bd23d1eec553314d4e84eea9f8cea5a5fa87b4187eb3b4ead78abaa7c8db3c885a120
+"amqplib@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "amqplib@npm:2.4.1"
+  checksum: 10c0/745c7ae0fd1533ea79b7cfcdde650930d7c2dc1fe5cdd39ff1247eef09a06982d08ac41c50f841aadb54c0355bd00d2a381ed01a7dcb4d877aa562213b3f0742
   languageName: node
   linkType: hard
 
@@ -413,15 +413,15 @@ __metadata:
   resolution: "dd-bigbot@workspace:."
   dependencies:
     "@discordeno/bot": "npm:22.0.1-next.9832342"
-    "@fastify/multipart": "npm:^10.1.6"
+    "@fastify/multipart": "npm:^10.1.9"
     "@influxdata/influxdb-client": "npm:^1.35.0"
     "@types/amqplib": "npm:^0.10.8"
-    "@types/node": "npm:^26.6.6"
-    amqplib: "npm:^2.2.0"
+    "@types/node": "npm:^26.6.7"
+    amqplib: "npm:^2.4.1"
     chalk: "npm:^6.0.1"
     chokidar: "npm:^6.0.0"
-    dotenv: "npm:^18.0.9"
-    fastify: "npm:^5.12.7"
+    dotenv: "npm:^18.0.10"
+    fastify: "npm:^5.12.8"
     typescript: "npm:^7.0.2"
   languageName: unknown
   linkType: soft
@@ -433,12 +433,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^18.0.9":
-  version: 18.0.9
-  resolution: "dotenv@npm:18.0.9"
+"dotenv@npm:^18.0.10":
+  version: 18.0.10
+  resolution: "dotenv@npm:18.0.10"
   bin:
-    dotenv: dist/index.cjs
-  checksum: 10c0/62a70960e611f1d26bf5ade0e0baa7850513f65d56789ba282c8ae7f690411d364457d33d4302b2611cc18157d03dea589ac7e33f1aa85b8f69737b8c05cf726
+    dotenv: dist/cli.cjs
+  checksum: 10c0/f07945aeb35f78fe54495025fb10c155cbefa15bdd04a4063aba8519d2756c647ce43f3e0cacbab1e5a7200376f740cbe3e4e7432571ecf4d99eeade7c1dd3a7
   languageName: node
   linkType: hard
 
@@ -502,16 +502,16 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^3.0.0, fast-uri@npm:^3.0.1":
-  version: 3.1.2
-  resolution: "fast-uri@npm:3.1.2"
-  checksum: 10c0/5b35641895959f3f7ab7a7b1b5542bded159346f25ec9f256817b206d50b64eda5828e90d605a2e2fc645c90519a7259c2bab2c942ee728c88b88e5be21b090d
+  version: 3.1.9
+  resolution: "fast-uri@npm:3.1.9"
+  checksum: 10c0/052757540d8c0bbc16bb124a45b8f5cb5d0932f9b89f019221ee41cdb3cafc1db44b2e809d6b888b87922af3e5560a863124454e9d9193e1fc955887357b5add
   languageName: node
   linkType: hard
 
 "fast-uri@npm:^4.0.0":
-  version: 4.1.2
-  resolution: "fast-uri@npm:4.1.2"
-  checksum: 10c0/539fda19fbc7ada89ac8c5beca3c7ab57d643789485ca25f2b88f94edaea3fc90d553ecd55d85b95d5c819ab2bf57f6ff7880aa0a92d0883e25bd35f30860e6a
+  version: 4.2.3
+  resolution: "fast-uri@npm:4.2.3"
+  checksum: 10c0/de121e1d98e5cf75ad31971ac799d6fd12edff6c4c62c7ad0aa64d87d669e9b0418eb5880588dba7e6a991a686c1ec0f8e91654ad2f6440a1f4ad48b8657c3df
   languageName: node
   linkType: hard
 
@@ -522,9 +522,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^5.12.7":
-  version: 5.12.7
-  resolution: "fastify@npm:5.12.7"
+"fastify@npm:^5.12.8":
+  version: 5.12.8
+  resolution: "fastify@npm:5.12.8"
   dependencies:
     "@fastify/ajv-compiler": "npm:^4.0.5"
     "@fastify/error": "npm:^4.0.0"
@@ -533,7 +533,7 @@ __metadata:
     abstract-logging: "npm:^2.0.1"
     avvio: "npm:^9.0.0"
     fast-json-stringify: "npm:^7.0.0"
-    find-my-way: "npm:^9.6.0"
+    find-my-way: "npm:^9.10.0"
     light-my-request: "npm:^6.0.0"
     pino: "npm:^9.14.0 || ^10.1.0"
     process-warning: "npm:^5.1.0"
@@ -541,7 +541,7 @@ __metadata:
     secure-json-parse: "npm:^4.0.0"
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
-  checksum: 10c0/e0c02ee75cff47f840043bd8904e00d6eff5cfcb5e9c8cefaa4659dfbe676905ecff061fbcd37a76aed0c3ae8a5ff556410cb1a2d9e6cd817a182c84fd70fd7f
+  checksum: 10c0/cd79733f38d738a087200d430a7d55e76b2c20ece8b7746c7ec06e2b22251a342b38a54adfe4ae8ef953655fd448e2804d3814cab26f9af117ba5d769e61a577
   languageName: node
   linkType: hard
 
@@ -554,14 +554,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-my-way@npm:^9.6.0":
-  version: 9.7.0
-  resolution: "find-my-way@npm:9.7.0"
+"find-my-way@npm:^9.10.0":
+  version: 9.10.2
+  resolution: "find-my-way@npm:9.10.2"
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
     fast-querystring: "npm:^1.0.0"
     safe-regex2: "npm:^5.0.0"
-  checksum: 10c0/0c7c15397075fe916ea11bb42e3464aec9025dfec01aef515e2fc70c362e662c4a8626e27cebe263fe5c31cfed7ce792a2a6b411b73dac996d0c2b2202af4a88
+  checksum: 10c0/540e8c12afc50fc40a0ec1c40141a2f434b2fbc248155dc1b512d156f3fb42bd07064d2c53e0b7a9ad2b5abced963056977e8b3d873c561c965320afdb6c1182
   languageName: node
   linkType: hard
 

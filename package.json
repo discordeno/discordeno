@@ -25,10 +25,10 @@
     "postinstall": "husky"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.7",
+    "@biomejs/biome": "2.6.9",
     "husky": "^9.1.7",
-    "lint-staged": "^17.6.0",
-    "turbo": "^2.11.11",
+    "lint-staged": "^17.6.2",
+    "turbo": "^2.11.13",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.14.1",
     "typescript": "^6.0.3"
@@ -38,5 +38,10 @@
   },
   "lint-staged": {
     "*": "biome check --no-errors-on-unmatched --write"
+  },
+  "resolutions": {
+    "glob": "^14.0.6",
+    "minimatch@npm:^9.0.3": "^11.0.9",
+    "minimatch@npm:^10.2.2": "^11.0.9"
   }
 }

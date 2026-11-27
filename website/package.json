@@ -25,20 +25,20 @@
     "@docusaurus/theme-common": "^3.10.2",
     "@easyops-cn/docusaurus-search-local": "^0.55.3",
     "@mdx-js/react": "^3.1.1",
-    "@xyflow/react": "^12.12.1",
+    "@xyflow/react": "^13.0.3",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.3.1",
     "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.7",
+    "@biomejs/biome": "2.6.9",
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
-    "@types/react": "^19.3.0",
-    "turbo": "^2.11.11",
+    "@types/react": "^19.3.1",
+    "turbo": "^2.11.13",
     "typescript": "7.0.2",
-    "webpack": "5.112.2"
+    "webpack": "5.113.0"
   },
   "browserslist": {
     "production": [
@@ -53,6 +53,14 @@
     ]
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=20.0"
+  },
+  "resolutions": {
+    "glob@npm:^13.0.0": "^14.0.6",
+    "qs@npm:~6.14.0": "^6.17.1",
+    "serialize-javascript@npm:^6.0.0": "^7.1.4",
+    "serialize-javascript@npm:^6.0.1": "^7.1.4",
+    "tinypool@npm:^1.0.2": "^2.2.0",
+    "uuid@npm:^8.3.2": "^11.1.1"
   }
 }
