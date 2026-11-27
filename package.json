@@ -38,5 +38,10 @@
   },
   "lint-staged": {
     "*": "biome check --no-errors-on-unmatched --write"
+  },
+  "resolutions": {
+    "glob": "^14.0.6",
+    "minimatch@npm:^9.0.3": "^11.0.9",
+    "minimatch@npm:^10.2.2": "^11.0.9"
   }
 }
