@@ -1,16 +1,8 @@
 import { createInflate, createZstdDecompress, type Inflate, inflateSync, type ZstdDecompress, constants as zlibConstants } from 'node:zlib';
-import type { DiscordGatewayPayload, DiscordHello, DiscordReady, DiscordUpdatePresence } from '@discordeno/types';
-import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types';
+import type { DiscordGatewayPayload, DiscordHello, DiscordIdentify, DiscordReady, DiscordResume, DiscordUpdatePresence } from '@discordeno/types';
+import { GatewayCloseEventCodes, GatewayOpcodes, TransportCompression } from '@discordeno/types';
 import { delay, LeakyBucket, logger } from '@discordeno/utils';
-import {
-  type ShardEvents,
-  type ShardGatewayConfig,
-  type ShardHeart,
-  ShardSocketCloseCodes,
-  type ShardSocketRequest,
-  ShardState,
-  TransportCompression,
-} from './types.js';
+import { type ShardEvents, type ShardGatewayConfig, type ShardHeart, ShardSocketCloseCodes, type ShardSocketRequest, ShardState } from './types.js';
 
 const ZLIB_SYNC_FLUSH = new Uint8Array([0x0, 0x0, 0xff, 0xff]);
 
@@ -323,7 +315,7 @@ export class DiscordenoShard {
           shard: [this.id, this.gatewayConfig.totalShards],
           presence: await this.makePresence(),
           capabilities: this.gatewayConfig.capabilities,
-        },
+        } satisfies DiscordIdentify,
       },
       true,
     );
@@ -454,7 +446,7 @@ export class DiscordenoShard {
           token: `Bot ${this.gatewayConfig.token}`,
           session_id: this.sessionId,
           seq: this.previousSequenceNumber ?? 0,
-        },
+        } satisfies DiscordResume,
       },
       true,
     );
