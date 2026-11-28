@@ -13,7 +13,8 @@ export function transformApplicationCommandToDiscordApplicationCommand(bot: Bot,
     description: payload.description,
     description_localizations: payload.descriptionLocalizations,
     options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option)),
-    default_member_permissions: payload.defaultMemberPermissions ? bot.transformers.reverse.snowflake(payload.defaultMemberPermissions) : null,
+    default_member_permissions:
+      payload.defaultMemberPermissions !== undefined ? bot.transformers.reverse.snowflake(payload.defaultMemberPermissions) : null,
     dm_permission: payload.dmPermission,
     version: payload.version,
   };
