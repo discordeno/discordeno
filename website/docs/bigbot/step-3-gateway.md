@@ -672,10 +672,3 @@ const GATEWAY = createGatewayManager({
 ```
 
 Take your time to check out all the other properties and methods you can change inside `GATEWAY.resharding`.
-  
-
-## Evals
-
-One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way, we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command.
-
-Please review the [Evals section in Step 2 - REST](./step-2-rest.md#evals) portion of this guide to see how we made an eval in that process. The entire setup would be repeated here for the gateway portion as well. That way, you can dynamically change anything in your gateway, should you need.
